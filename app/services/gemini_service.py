@@ -1,8 +1,10 @@
-import google.generativeai as genai
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part, GenerationConfig, HarmCategory, HarmBlockThreshold
 from typing import Dict, Optional
 import json
 import logging
-from google.generativeai.types import HarmCategory, HarmBlockThreshold
+from PIL import Image
+import io
 
 logger = logging.getLogger(__name__)
 
@@ -41,17 +43,19 @@ MEAL_ANALYSIS_GEMINI_SCHEMA = {
 
 
 class GeminiMealAnalyzer:
-    """Gemini APIを使用して食事画像を分析するクラス"""
+    """Vertex AI経由でGeminiを使用して食事画像を分析するクラス"""
     
-    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash"):
+    def __init__(self, project_id: str, location: str, model_name: str = "gemini-1.5-flash"):
         """
         初期化
         
         Args:
-            api_key: Gemini API キー
+            project_id: GCPプロジェクトID
+            location: Vertex AIのロケーション（例: us-central1）
             model_name: 使用するモデル名
         """
-        genai.configure(api_key=api_key)
+        # Vertex AIの初期化
+        vertexai.init(project=project_id, location=location)
         
         # システムインストラクション
         system_instruction = """あなたは熟練した料理分析家です。あなたのタスクは、食事の画像を分析し、料理とその材料の詳細な内訳をJSON形式で提供することです。
@@ -64,26 +68,27 @@ class GeminiMealAnalyzer:
 5. 応答には、提供されたJSONスキーマに厳密に従ってください。"""
         
         # モデルの初期化
-        # 新しいAPIでは、generation_configを後で設定します
-        self.model = genai.GenerativeModel(
+        self.model = GenerativeModel(
             model_name=model_name,
-            system_instruction=system_instruction,
-            safety_settings={
-                HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-            }
+            system_instruction=[system_instruction]  # Vertex AIではリストで渡す
         )
         
         # generation_configを作成
-        self.generation_config = {
-            "temperature": 0.2,
-            "top_p": 0.9,
-            "top_k": 20,
-            "max_output_tokens": 2048,
-            "response_mime_type": "application/json",
-            "response_schema": MEAL_ANALYSIS_GEMINI_SCHEMA
+        self.generation_config = GenerationConfig(
+            temperature=0.2,
+            top_p=0.9,
+            top_k=20,
+            max_output_tokens=2048,
+            response_mime_type="application/json",
+            response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
+        )
+        
+        # セーフティ設定
+        self.safety_settings = {
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         }
     
     async def analyze_image_and_text(
@@ -108,15 +113,14 @@ class GeminiMealAnalyzer:
         """
         try:
             # プロンプトの構築
-            prompt_parts = []
+            contents = []
             
-            # 画像データの追加（新しいAPIでは辞書形式ではなく、Imageオブジェクトを使用）
-            from PIL import Image
-            import io
-            
-            # バイトデータからPIL Imageオブジェクトを作成
-            image = Image.open(io.BytesIO(image_bytes))
-            prompt_parts.append(image)
+            # 画像データの追加（Vertex AIではPartオブジェクトを使用）
+            image_part = Part.from_data(
+                data=image_bytes,
+                mime_type=image_mime_type
+            )
+            contents.append(image_part)
             
             # テキストプロンプトの追加
             if optional_text and optional_text.strip():
@@ -124,12 +128,14 @@ class GeminiMealAnalyzer:
             else:
                 text_prompt = "提供された食事の画像を分析してください。"
             
-            prompt_parts.append(text_prompt)
+            text_part = Part.from_text(text_prompt)
+            contents.append(text_part)
             
-            # Gemini APIを呼び出し（generation_configを渡す）
-            response = self.model.generate_content(
-                prompt_parts,
-                generation_config=self.generation_config
+            # Gemini APIを呼び出し（非同期メソッドを使用）
+            response = await self.model.generate_content_async(
+                contents=contents,
+                generation_config=self.generation_config,
+                safety_settings=self.safety_settings
             )
             
             # レスポンスのテキストを取得
@@ -146,5 +152,5 @@ class GeminiMealAnalyzer:
             logger.error(f"JSON parsing error: {e}")
             raise RuntimeError(f"Geminiからの応答処理中にエラーが発生しました: {e}") from e
         except Exception as e:
-            logger.error(f"Gemini API error: {e}")
-            raise RuntimeError(f"Gemini APIリクエストが失敗しました: {e}") from e 
+            logger.error(f"Vertex AI/Gemini API error: {e}")
+            raise RuntimeError(f"Vertex AI/Gemini APIリクエストが失敗しました: {e}") from e 

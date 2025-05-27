@@ -8,8 +8,9 @@ class Settings(BaseSettings):
     API設定クラス
     環境変数から設定値を読み込む
     """
-    # Gemini API設定
-    GEMINI_API_KEY: str
+    # Vertex AI設定
+    GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
+    GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
     GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
     
     # API設定
@@ -23,10 +24,9 @@ class Settings(BaseSettings):
     # APIバージョン
     API_VERSION: str = "v1"
     
-    # 追加の設定（将来のVertex AI移行用）
-    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None
-    GEMINI_PROJECT_ID: Optional[str] = None
-    GEMINI_LOCATION: Optional[str] = None
+    # Google Cloud認証設定
+    # GOOGLE_APPLICATION_CREDENTIALSは通常環境変数で設定するため、ここでは不要
+    # gcloud auth application-default login でも可
     
     class Config:
         env_file = ".env"

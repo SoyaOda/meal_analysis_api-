@@ -21,7 +21,8 @@ async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings
     global _gemini_analyzer
     if _gemini_analyzer is None:
         _gemini_analyzer = GeminiMealAnalyzer(
-            api_key=settings.GEMINI_API_KEY,
+            project_id=settings.GEMINI_PROJECT_ID,
+            location=settings.GEMINI_LOCATION,
             model_name=settings.GEMINI_MODEL_NAME
         )
     return _gemini_analyzer
