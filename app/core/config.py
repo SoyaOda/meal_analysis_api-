@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -12,6 +12,20 @@ class Settings(BaseSettings):
     GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
     GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
     GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
+    
+    # USDA API設定
+    USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）
+    USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
+    USDA_API_TIMEOUT: float = 10.0  # APIタイムアウト秒数
+    USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
+    USDA_KEY_NUTRIENT_NUMBERS: List[str] = ["208", "203", "204", "205", "291", "269", "307"]  # 主要栄養素番号
+    # 208: Energy (kcal), 203: Protein, 204: Total lipid (fat), 
+    # 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
+    
+    # キャッシュ設定
+    CACHE_TYPE: str = "simple"  # "simple", "redis", "memcached"
+    CACHE_REDIS_URL: Optional[str] = None  # Redisを使用する場合のURL
+    USDA_CACHE_TTL_SECONDS: int = 3600  # USDAレスポンスのキャッシュ有効期間（1時間）
     
     # API設定
     API_LOG_LEVEL: str = "INFO"

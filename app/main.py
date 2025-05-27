@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 
-from .api.v1.endpoints import meal_analyses
+from .api.v1.endpoints import meal_analyses, meal_analyses_refine
 from .core.config import get_settings
 
 # ロギングの設定
@@ -19,8 +19,8 @@ settings = get_settings()
 # FastAPIアプリケーションの作成
 app = FastAPI(
     title="食事分析API (Meal Analysis API)",
-    description="食事の画像とテキストを分析し、料理と材料を特定するAPI",
-    version="1.0.0",
+    description="食事の画像とテキストを分析し、料理と材料を特定するAPI。USDAデータベースとの連携により栄養価計算の精度を向上。",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -41,7 +41,7 @@ async def root():
     """APIのルートエンドポイント"""
     return {
         "message": "食事分析API (Meal Analysis API)",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "docs": "/docs",
         "health": "/health"
     }
@@ -62,6 +62,13 @@ app.include_router(
     tags=["Meal Analysis"]
 )
 
+# v1 API フェーズ2ルーターの登録（/refineエンドポイント）
+app.include_router(
+    meal_analyses_refine.router,
+    prefix=f"/api/{settings.API_VERSION}/meal-analyses",
+    tags=["Meal Analysis"]
+)
+
 # スタートアップイベント
 @app.on_event("startup")
 async def startup_event():
@@ -70,6 +77,7 @@ async def startup_event():
     logger.info(f"Environment: {settings.FASTAPI_ENV}")
     logger.info(f"API Version: {settings.API_VERSION}")
     logger.info(f"Gemini Model: {settings.GEMINI_MODEL_NAME}")
+    logger.info("Phase 2 features with USDA integration enabled")
 
 # シャットダウンイベント
 @app.on_event("shutdown")
