@@ -52,13 +52,13 @@ gcloud services enable aiplatform.googleapis.com
 
 ### 4. 環境変数の設定
 
-`.env`ファイルを更新：
+`.env`ファイルを作成し、以下の環境変数を設定します：
 
 ```bash
-# Google Cloud/Vertex AI Configuration
-GEMINI_PROJECT_ID=your-actual-project-id
-GEMINI_LOCATION=us-central1
-GEMINI_MODEL_NAME=gemini-1.5-flash
+# Vertex AI設定
+GEMINI_PROJECT_ID=your-gcp-project-id
+GEMINI_LOCATION=us-central1  # またはあなたのプロジェクトのリージョン
+GEMINI_MODEL_NAME=gemini-2.5-flash-preview-05-20  # 最新のGemini 2.5 Flashモデル
 
 # API Configuration
 API_LOG_LEVEL=INFO
