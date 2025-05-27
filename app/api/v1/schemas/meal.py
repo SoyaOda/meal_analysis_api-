@@ -120,8 +120,8 @@ REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA = {
                             "properties": {
                                 "ingredient_name": {"type": "string", "description": "材料の名称（USDA情報に基づき精緻化される可能性あり）。"},
                                 "weight_g": {"type": "number", "description": "その材料の推定重量（グラム単位）。"},
-                                "fdc_id": {"type": ["integer", "null"], "description": "選択されたUSDA食品のFDC ID。該当なしの場合はnull。"},
-                                "usda_source_description": {"type": ["string", "null"], "description": "選択されたUSDA食品の公式名称。"}
+                                "fdc_id": {"type": "integer", "nullable": True, "description": "選択されたUSDA食品のFDC ID。該当なしの場合はnull。"},
+                                "usda_source_description": {"type": "string", "nullable": True, "description": "選択されたUSDA食品の公式名称。"}
                             },
                             "required": ["ingredient_name", "weight_g"]
                         }

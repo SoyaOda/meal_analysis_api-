@@ -31,42 +31,33 @@ async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings
 @router.post(
     "/",
     response_model=MealAnalysisResponse,
-    summary="食事画像の分析",
-    description="送信された食事画像（およびオプションのテキスト）を分析し、料理と材料の構造化JSONを返します。",
-    responses={
-        400: {
-            "description": "不正なリクエスト",
-            "model": ErrorResponse
-        },
-        500: {
-            "description": "内部サーバーエラー",
-            "model": ErrorResponse
-        }
-    }
+    summary="Analyze meal image",
+    description="Upload a meal image to identify dishes, types, quantities, and ingredients using AI analysis."
 )
-async def create_meal_analysis(
-    image: Annotated[UploadFile, File(description="食事の画像ファイル。")],
-    text: Annotated[Optional[str], Form(description="食事に関するオプションのテキスト記述。")] = None,
-    analyzer: Annotated[GeminiMealAnalyzer, Depends(get_gemini_analyzer)] = None
+async def analyze_meal(
+    image: Annotated[UploadFile, File(description="Meal image file to analyze.")],
+    settings: Annotated[Settings, Depends(get_settings)],
+    gemini_service: Annotated[GeminiMealAnalyzer, Depends(get_gemini_analyzer)],
+    optional_text: Annotated[Optional[str], Form(description="Optional additional information about the meal.")] = None
 ):
     """
-    食事画像を分析して、料理と材料の情報を返すエンドポイント
+    Analyze uploaded meal image and return structured dish information.
     
-    - **image**: 分析対象の食事画像（JPEG, PNG, WEBP等）
-    - **text**: 画像に関する補足情報（オプション）
-    
+    Args:
+        image: Uploaded image file
+        optional_text: Optional user context (not used in current implementation)
+        
     Returns:
-        料理と材料の詳細情報を含むJSON
+        MealAnalysisResponse: Structured analysis including dishes and ingredients
     """
-    # 画像ファイルの検証
+    # Validate image file
     if not image.content_type or not image.content_type.startswith("image/"):
-        logger.warning(f"Invalid image file type: {image.content_type}")
         raise HTTPException(
-            status_code=400, 
+            status_code=400,
             detail={
                 "error": {
                     "code": "INVALID_IMAGE_FORMAT",
-                    "message": "無効な画像ファイル形式です。画像（例: JPEG, PNG）をアップロードしてください。"
+                    "message": "Invalid image file format. Please upload an image (e.g., JPEG, PNG)."
                 }
             }
         )
@@ -117,10 +108,10 @@ async def create_meal_analysis(
         logger.info(f"Starting meal analysis for image: {image.filename}, size: {len(image_bytes)} bytes")
         
         # Geminiサービスを使用して画像を分析
-        analysis_result = await analyzer.analyze_image_and_text(
+        analysis_result = await gemini_service.analyze_image_and_text(
             image_bytes=image_bytes,
             image_mime_type=image.content_type,
-            optional_text=text
+            optional_text=optional_text
         )
         
         logger.info(f"Meal analysis completed successfully for image: {image.filename}")
@@ -137,7 +128,7 @@ async def create_meal_analysis(
             detail={
                 "error": {
                     "code": "ANALYSIS_ERROR",
-                    "message": f"食事分析処理中にエラーが発生しました: {str(e)}"
+                    "message": f"Failed to analyze meal image: {str(e)}"
                 }
             }
         )

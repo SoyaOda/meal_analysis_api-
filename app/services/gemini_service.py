@@ -59,44 +59,15 @@ class GeminiMealAnalyzer:
         # Vertex AIの初期化
         vertexai.init(project=project_id, location=location)
         
-        # システムインストラクション
-        system_instruction = """あなたは熟練した料理分析家です。あなたのタスクは、食事の画像を分析し、料理とその材料の詳細な内訳をJSON形式で提供することです。
-
-以下の点に注意してください：
-1. 皿を含む画像を注意深く観察し、周囲の文脈に基づいて詳細な推定を行ってください。
-2. 画像に存在するすべての料理を特定し、それらの種類、皿の上の各料理の量、そして含まれる材料とそれぞれの量を決定してください。
-3. 1つの画像に複数の料理が含まれる場合があるため、各料理とその材料に関する情報を個別に提供してください。
-4. あなたの出力は栄養価計算に使用されるため、推定が可能な限り正確であることを確認してください。
-5. 応答には、提供されたJSONスキーマに厳密に従ってください。"""
-
-        # フェーズ2用のシステムインストラクション
-        system_instruction_phase2 = """あなたは経験豊富な栄養士であり、食事分析の専門家です。提供された食事画像、初期AI分析結果、およびUSDA食品データベースからの候補情報を総合的に評価し、初期AI分析結果を精緻化してください。
-
-あなたのタスクは以下の通りです：
-1. 初期AI分析結果に含まれる各料理および食材について、提示されたUSDA食品候補の中から最も適切と思われるものを一つ選択してください。選択の際には、画像の内容、食材の一般的な使われ方、栄養価の妥当性を考慮してください。
-2. 選択したUSDA食品のFDC IDを特定してください。
-3. 最終的な料理・食材名、その種類、皿の上の量、そして各材料（選択したUSDA食品に対応する）の名称、推定重量（グラム）、およびFDC IDを、指定されたJSONスキーマに厳密に従って出力してください。
-4. もし初期AI分析結果の食材がUSDA候補に適切なものがない場合、または画像と著しく異なる場合は、その旨を考慮し、最も妥当な判断を下してください。
-5. あなたの出力は、正確な栄養価計算の基礎となります。"""
-        
         # モデルの初期化
-        self.model = GenerativeModel(
-            model_name=model_name,
-            system_instruction=system_instruction  # Vertex AIでは文字列で渡す
-        )
-        
-        # フェーズ2用のモデル初期化
-        self.model_phase2 = GenerativeModel(
-            model_name=model_name,
-            system_instruction=system_instruction_phase2  # 文字列で渡す
-        )
+        self.model = GenerativeModel(model_name=model_name)
         
         # generation_configを作成
         self.generation_config = GenerationConfig(
             temperature=0.2,
             top_p=0.9,
             top_k=20,
-            max_output_tokens=2048,
+            max_output_tokens=8192,
             response_mime_type="application/json",
             response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
         )
@@ -131,23 +102,35 @@ class GeminiMealAnalyzer:
         """
         try:
             # プロンプトの構築
-            contents = []
-            
-            # 画像データの追加（Vertex AIではPartオブジェクトを使用）
-            image_part = Part.from_data(
-                data=image_bytes,
-                mime_type=image_mime_type
-            )
-            contents.append(image_part)
-            
+            system_prompt = """You are an experienced culinary analyst. Your task is to analyze meal images and provide a detailed breakdown of dishes and their ingredients in JSON format.
+
+IMPORTANT: You MUST provide ALL responses in English only. This includes dish names, ingredient names, types, and any other text fields.
+
+Please note the following:
+1. Carefully observe the image including the plate and make detailed estimates based on surrounding context.
+2. Identify all dishes present in the image, determine their types, the quantity of each dish on the plate, and the ingredients contained with their respective amounts.
+3. There may be multiple dishes in a single image, so provide information about each dish and its ingredients separately.
+4. Your output will be used for nutritional calculations, so ensure your estimates are as accurate as possible.
+5. Strictly follow the provided JSON schema in your response.
+6. ALL text must be in English (dish names, ingredient names, types, etc.)."""
+
             # テキストプロンプトの追加
             if optional_text and optional_text.strip():
-                text_prompt = f"提供された食事の画像を分析してください。ユーザーからの補足情報: {optional_text}"
+                user_prompt = f"Please analyze the provided meal image and respond in English. Additional information from user: {optional_text}"
             else:
-                text_prompt = "提供された食事の画像を分析してください。"
+                user_prompt = "Please analyze the provided meal image and respond in English."
             
-            text_part = Part.from_text(text_prompt)
-            contents.append(text_part)
+            # 完全なプロンプトを構築
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            
+            # コンテンツリストを作成
+            contents = [
+                Part.from_text(full_prompt),
+                Part.from_data(
+                    data=image_bytes,
+                    mime_type=image_mime_type
+                )
+            ]
             
             # Gemini APIを呼び出し（非同期メソッドを使用）
             response = await self.model.generate_content_async(
@@ -158,7 +141,7 @@ class GeminiMealAnalyzer:
             
             # レスポンスのテキストを取得
             if not response.text:
-                raise ValueError("Geminiからレスポンスが返されませんでした。")
+                raise ValueError("No response returned from Gemini.")
             
             # JSONレスポンスをパース
             result = json.loads(response.text)
@@ -168,10 +151,10 @@ class GeminiMealAnalyzer:
             
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error: {e}")
-            raise RuntimeError(f"Geminiからの応答処理中にエラーが発生しました: {e}") from e
+            raise RuntimeError(f"Error processing response from Gemini: {e}") from e
         except Exception as e:
             logger.error(f"Vertex AI/Gemini API error: {e}")
-            raise RuntimeError(f"Vertex AI/Gemini APIリクエストが失敗しました: {e}") from e
+            raise RuntimeError(f"Vertex AI/Gemini API request failed: {e}") from e
     
     async def analyze_image_with_usda_context(
         self,
@@ -196,41 +179,52 @@ class GeminiMealAnalyzer:
             RuntimeError: Gemini APIエラー時
         """
         try:
+            # フェーズ2用のシステムプロンプト
+            system_prompt = """You are an experienced nutritionist and food analysis expert. Comprehensively evaluate the provided meal image, initial AI analysis results, and candidate information from the USDA food database, then refine the initial AI analysis results.
+
+IMPORTANT: You MUST provide ALL responses in English only. This includes dish names, ingredient names, types, and any other text fields.
+
+Your tasks are as follows:
+1. For each dish and ingredient included in the initial AI analysis results, select the most appropriate option from the presented USDA food candidates. When making your selection, consider the content of the image, typical uses of ingredients, and the plausibility of nutritional values.
+2. Identify the FDC ID of the selected USDA food.
+3. Output the final dish/ingredient names, their types, quantities on the plate, and each ingredient (corresponding to the selected USDA food) with its name, estimated weight (in grams), and FDC ID, strictly following the specified JSON schema.
+4. If an ingredient from the initial AI analysis results doesn't have appropriate candidates in USDA, or differs significantly from the image, take this into consideration and make the most reasonable judgment.
+5. Your output will form the basis for accurate nutritional calculations.
+6. ALL text must be in English."""
+            
             # プロンプトの構築
-            contents = []
-            
-            # 画像データの追加
-            image_part = Part.from_data(
-                data=image_bytes,
-                mime_type=image_mime_type
-            )
-            contents.append(image_part)
-            
-            # テキストプロンプトの構築
             prompt_parts = []
             
             if initial_ai_output_text:
-                prompt_parts.append(f"初期AI分析結果:\n{initial_ai_output_text}\n")
+                prompt_parts.append(f"Initial AI analysis results:\n{initial_ai_output_text}\n")
             
-            prompt_parts.append(f"上記分析結果と画像に関するUSDA食品データベースの候補情報:\n{usda_candidates_text}\n")
-            prompt_parts.append("これらの情報を踏まえ、システムインストラクションに従って最終的な分析結果をJSON形式で生成してください。")
+            prompt_parts.append(f"USDA food database candidate information for the above analysis results and image:\n{usda_candidates_text}\n")
+            prompt_parts.append("Based on this information, generate the final analysis results in JSON format following the system instructions.")
             
-            full_prompt_text = "\n".join(prompt_parts)
-            text_part = Part.from_text(full_prompt_text)
-            contents.append(text_part)
+            # 完全なプロンプトを構築
+            full_prompt = f"{system_prompt}\n\n" + "\n".join(prompt_parts)
+            
+            # コンテンツリストを作成
+            contents = [
+                Part.from_text(full_prompt),
+                Part.from_data(
+                    data=image_bytes,
+                    mime_type=image_mime_type
+                )
+            ]
             
             # フェーズ2用のGeneration Config
             phase2_generation_config = GenerationConfig(
                 temperature=0.2,
                 top_p=0.9,
                 top_k=20,
-                max_output_tokens=2048,
+                max_output_tokens=8192,
                 response_mime_type="application/json",
                 response_schema=REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
             )
             
-            # Gemini APIを呼び出し（フェーズ2モデルを使用）
-            response = await self.model_phase2.generate_content_async(
+            # Gemini APIを呼び出し
+            response = await self.model.generate_content_async(
                 contents=contents,
                 generation_config=phase2_generation_config,
                 safety_settings=self.safety_settings
@@ -238,7 +232,7 @@ class GeminiMealAnalyzer:
             
             # レスポンスのテキストを取得
             if not response.text:
-                raise ValueError("Gemini（フェーズ2）からレスポンスが返されませんでした。")
+                raise ValueError("No response returned from Gemini (Phase 2).")
             
             # JSONレスポンスをパース
             result = json.loads(response.text)
@@ -248,7 +242,9 @@ class GeminiMealAnalyzer:
             
         except json.JSONDecodeError as e:
             logger.error(f"JSON parsing error in phase 2: {e}. Raw response: {getattr(response, 'text', 'N/A')}")
-            raise RuntimeError(f"Gemini（フェーズ2）からの応答処理中にエラー: {e}") from e
+            raise RuntimeError(f"Error processing response from Gemini (Phase 2): {e}") from e
         except Exception as e:
+            import traceback
             logger.error(f"Vertex AI/Gemini API error in phase 2: {e}")
-            raise RuntimeError(f"Vertex AI/Gemini（フェーズ2）APIリクエスト失敗: {e}") from e 
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            raise RuntimeError(f"Vertex AI/Gemini (Phase 2) API request failed: {e}") from e 
