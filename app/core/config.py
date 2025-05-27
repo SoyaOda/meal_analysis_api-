@@ -18,9 +18,15 @@ class Settings(BaseSettings):
     USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
     USDA_API_TIMEOUT: float = 10.0  # APIタイムアウト秒数
     USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
-    USDA_KEY_NUTRIENT_NUMBERS: List[str] = ["208", "203", "204", "205", "291", "269", "307"]  # 主要栄養素番号
+    # 主要栄養素番号（カンマ区切り文字列として環境変数から読み込む）
+    USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,203,204,205,291,269,307"
     # 208: Energy (kcal), 203: Protein, 204: Total lipid (fat), 
     # 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
+    
+    @property
+    def USDA_KEY_NUTRIENT_NUMBERS(self) -> List[str]:
+        """主要栄養素番号のリストを返す"""
+        return self.USDA_KEY_NUTRIENT_NUMBERS_STR.split(",")
     
     # キャッシュ設定
     CACHE_TYPE: str = "simple"  # "simple", "redis", "memcached"

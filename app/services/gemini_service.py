@@ -82,13 +82,13 @@ class GeminiMealAnalyzer:
         # モデルの初期化
         self.model = GenerativeModel(
             model_name=model_name,
-            system_instruction=[system_instruction]  # Vertex AIではリストで渡す
+            system_instruction=system_instruction  # Vertex AIでは文字列で渡す
         )
         
         # フェーズ2用のモデル初期化
         self.model_phase2 = GenerativeModel(
             model_name=model_name,
-            system_instruction=[system_instruction_phase2]
+            system_instruction=system_instruction_phase2  # 文字列で渡す
         )
         
         # generation_configを作成

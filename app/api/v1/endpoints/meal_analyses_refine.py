@@ -18,12 +18,26 @@ from ....services.usda_service import USDAService, get_usda_service, USDASearchR
 from ....services.gemini_service import GeminiMealAnalyzer
 from ....core.config import Settings, get_settings
 
-# 依存性注入
-from ....dependencies import get_gemini_analyzer
-
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# Geminiサービスインスタンスのキャッシュ
+_gemini_analyzer = None
+
+
+async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings)]) -> GeminiMealAnalyzer:
+    """
+    Geminiサービスインスタンスを取得（シングルトン）
+    """
+    global _gemini_analyzer
+    if _gemini_analyzer is None:
+        _gemini_analyzer = GeminiMealAnalyzer(
+            project_id=settings.GEMINI_PROJECT_ID,
+            location=settings.GEMINI_LOCATION,
+            model_name=settings.GEMINI_MODEL_NAME
+        )
+    return _gemini_analyzer
 
 
 @router.post(
