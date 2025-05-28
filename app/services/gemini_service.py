@@ -7,6 +7,7 @@ from PIL import Image
 import io
 
 from ..api.v1.schemas.meal import REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
+from ..prompts import PromptLoader
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,9 @@ class GeminiMealAnalyzer:
         # モデルの初期化
         self.model = GenerativeModel(model_name=model_name)
         
+        # プロンプトローダーの初期化
+        self.prompt_loader = PromptLoader()
+        
         # generation_configを作成
         self.generation_config = GenerationConfig(
             temperature=0.2,
@@ -101,24 +105,9 @@ class GeminiMealAnalyzer:
             RuntimeError: Gemini APIエラー時
         """
         try:
-            # プロンプトの構築
-            system_prompt = """You are an experienced culinary analyst. Your task is to analyze meal images and provide a detailed breakdown of dishes and their ingredients in JSON format.
-
-IMPORTANT: You MUST provide ALL responses in English only. This includes dish names, ingredient names, types, and any other text fields.
-
-Please note the following:
-1. Carefully observe the image including the plate and make detailed estimates based on surrounding context.
-2. Identify all dishes present in the image, determine their types, the quantity of each dish on the plate, and the ingredients contained with their respective amounts.
-3. There may be multiple dishes in a single image, so provide information about each dish and its ingredients separately.
-4. Your output will be used for nutritional calculations, so ensure your estimates are as accurate as possible.
-5. Strictly follow the provided JSON schema in your response.
-6. ALL text must be in English (dish names, ingredient names, types, etc.)."""
-
-            # テキストプロンプトの追加
-            if optional_text and optional_text.strip():
-                user_prompt = f"Please analyze the provided meal image and respond in English. Additional information from user: {optional_text}"
-            else:
-                user_prompt = "Please analyze the provided meal image and respond in English."
+            # プロンプトローダーからプロンプトを取得
+            system_prompt = self.prompt_loader.get_phase1_system_prompt()
+            user_prompt = self.prompt_loader.get_phase1_user_prompt(optional_text)
             
             # 完全なプロンプトを構築
             full_prompt = f"{system_prompt}\n\n{user_prompt}"
@@ -179,30 +168,15 @@ Please note the following:
             RuntimeError: Gemini APIエラー時
         """
         try:
-            # フェーズ2用のシステムプロンプト
-            system_prompt = """You are an experienced nutritionist and food analysis expert. Comprehensively evaluate the provided meal image, initial AI analysis results, and candidate information from the USDA food database, then refine the initial AI analysis results.
-
-IMPORTANT: You MUST provide ALL responses in English only. This includes dish names, ingredient names, types, and any other text fields.
-
-Your tasks are as follows:
-1. For each dish and ingredient included in the initial AI analysis results, select the most appropriate option from the presented USDA food candidates. When making your selection, consider the content of the image, typical uses of ingredients, and the plausibility of nutritional values.
-2. Identify the FDC ID of the selected USDA food.
-3. Output the final dish/ingredient names, their types, quantities on the plate, and each ingredient (corresponding to the selected USDA food) with its name, estimated weight (in grams), and FDC ID, strictly following the specified JSON schema.
-4. If an ingredient from the initial AI analysis results doesn't have appropriate candidates in USDA, or differs significantly from the image, take this into consideration and make the most reasonable judgment.
-5. Your output will form the basis for accurate nutritional calculations.
-6. ALL text must be in English."""
-            
-            # プロンプトの構築
-            prompt_parts = []
-            
-            if initial_ai_output_text:
-                prompt_parts.append(f"Initial AI analysis results:\n{initial_ai_output_text}\n")
-            
-            prompt_parts.append(f"USDA food database candidate information for the above analysis results and image:\n{usda_candidates_text}\n")
-            prompt_parts.append("Based on this information, generate the final analysis results in JSON format following the system instructions.")
+            # プロンプトローダーからプロンプトを取得
+            system_prompt = self.prompt_loader.get_phase2_system_prompt()
+            user_prompt = self.prompt_loader.get_phase2_user_prompt(
+                usda_candidates=usda_candidates_text,
+                initial_ai_output=initial_ai_output_text
+            )
             
             # 完全なプロンプトを構築
-            full_prompt = f"{system_prompt}\n\n" + "\n".join(prompt_parts)
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
             
             # コンテンツリストを作成
             contents = [
