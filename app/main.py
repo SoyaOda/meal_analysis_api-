@@ -8,8 +8,11 @@ from .core.config import get_settings
 
 # ロギングの設定
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.DEBUG,  # 一時的にDEBUGレベルに変更
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+    ]
 )
 logger = logging.getLogger(__name__)
 
