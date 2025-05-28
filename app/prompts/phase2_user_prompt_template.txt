@@ -1,0 +1,4 @@
+{initial_ai_output_section}USDA food database candidate information for the above analysis results and image:
+{usda_candidates}
+
+Based on this information, generate the final analysis results in JSON format following the system instructions. 
