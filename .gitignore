@@ -39,7 +39,7 @@ env/
 .cursor/
 
 # Environment variables
-.env
+# .env
 .env.local
 .env.*.local
 
