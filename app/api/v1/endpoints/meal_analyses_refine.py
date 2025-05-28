@@ -113,11 +113,13 @@ async def refine_meal_analysis(
         logger.info(f"Searching USDA for: {search_term}")
         
         try:
+            logger.debug(f"Before USDA search call for '{search_term}', preferred_data_types: {preferred_data_types}")
             usda_results: List[USDAServiceItem] = await usda_service.search_foods(
                 query=search_term,
                 data_types=preferred_data_types,
                 page_size=settings.USDA_SEARCH_CANDIDATES_LIMIT
             )
+            logger.debug(f"After USDA search call for '{search_term}', got {len(usda_results)} results")
             
             if usda_results:
                 segment = f"USDA candidates for '{search_term}':\n"
@@ -163,6 +165,8 @@ async def refine_meal_analysis(
     # 4. Call Gemini service (phase 2) for strategy determination and FDC ID matching
     try:
         logger.info("Calling Gemini for phase 2 analysis with dynamic strategy determination")
+        logger.debug(f"usda_candidates_prompt_text length: {len(usda_candidates_prompt_text)}")
+        logger.debug(f"initial_analysis_data type: {type(initial_analysis_data)}, length: {len(initial_analysis_data)}")
         refined_gemini_output_dict = await gemini_service.analyze_image_with_usda_context(
             image_bytes=image_bytes,
             image_mime_type=image.content_type,

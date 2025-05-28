@@ -173,12 +173,12 @@ REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA = {
                         "enum": ["dish_level", "ingredient_level"],
                         "description": "このアイテムの栄養計算方針。"
                     },
-                    "fdc_id": {  # NEW: dish_levelの場合のFDC ID
-                        "type": ["integer", "null"],
+                    "fdc_id": {  # NEW: dish_levelの場合のFDC ID (null可能)
+                        "type": "integer",
                         "description": "calculation_strategyが'dish_level'の場合、この料理/食品アイテム全体のFDC ID。それ以外はnull。"
                     },
-                    "usda_source_description": {  # NEW: dish_levelの場合の説明
-                        "type": ["string", "null"],
+                    "usda_source_description": {  # NEW: dish_levelの場合の説明 (null可能)
+                        "type": "string",
                         "description": "calculation_strategyが'dish_level'の場合、この料理/食品アイテム全体のUSDA公式名称。それ以外はnull。"
                     },
                     "ingredients": {
@@ -190,11 +190,11 @@ REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA = {
                                 "ingredient_name": {"type": "string", "description": "材料の名称。"},
                                 # weight_g はフェーズ1から引き継がれるため、Geminiは出力不要
                                 "fdc_id": {
-                                    "type": ["integer", "null"],
+                                    "type": "integer",
                                     "description": "calculation_strategyが'ingredient_level'の場合、この材料のFDC ID。それ以外はnullまたは省略可。"
                                 },
                                 "usda_source_description": {
-                                    "type": ["string", "null"],
+                                    "type": "string",
                                     "description": "calculation_strategyが'ingredient_level'の場合、この材料のUSDA公式名称。それ以外はnullまたは省略可。"
                                 }
                             },
