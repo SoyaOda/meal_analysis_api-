@@ -10,12 +10,14 @@ from ..schemas.meal import (
     USDASearchResultItem,
     USDANutrient,
     RefinedIngredient,
-    RefinedDish
+    RefinedDish,
+    CalculatedNutrients
 )
 
 # サービス
 from ....services.usda_service import USDAService, get_usda_service, USDASearchResultItem as USDAServiceItem
 from ....services.gemini_service import GeminiMealAnalyzer
+from ....services.nutrition_calculation_service import NutritionCalculationService
 from ....core.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
@@ -42,8 +44,8 @@ async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings
 @router.post(
     "/refine",
     response_model=MealAnalysisRefinementResponse,
-    summary="Refine Meal Analysis with USDA Data",
-    description="Refine meal analysis results using USDA FoodData Central database and Gemini AI for more accurate nutritional information."
+    summary="Refine Meal Analysis with USDA Data and Dynamic Nutrition Calculation",
+    description="Refine meal analysis results using USDA FoodData Central database and Gemini AI with dynamic calculation strategy (dish_level or ingredient_level) for accurate nutritional information."
 )
 async def refine_meal_analysis(
     settings: Annotated[Settings, Depends(get_settings)],
@@ -53,13 +55,18 @@ async def refine_meal_analysis(
     gemini_service: Annotated[GeminiMealAnalyzer, Depends(get_gemini_analyzer)]
 ):
     """
-    Meal analysis refinement endpoint
+    Meal analysis refinement endpoint with dynamic nutrition calculation strategy
     
-    1. Receive image and Phase 1 analysis results
-    2. Search USDA database for each ingredient
-    3. Re-analyze with Gemini using USDA candidates
-    4. Return refined results
+    処理フロー（仕様書準拠）:
+    1. 画像とフェーズ1分析データを受信
+    2. 各食材についてUSDAデータベースを検索
+    3. GeminiにUSDA候補情報を提供してcalculation_strategyを決定
+    4. calculation_strategyに基づいて栄養計算を実行
+    5. 精緻化された結果を返す
     """
+    warnings = []
+    errors = []
+    
     # 1. Image validation
     if not image.content_type or not image.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Invalid image file format.")
@@ -83,121 +90,255 @@ async def refine_meal_analysis(
         logger.error(f"Validation error for initial_analysis_data: {e}")
         raise HTTPException(status_code=422, detail=f"initial_analysis_data format error: {str(e)}")
     
-    # 3. USDA candidate information collection and prompt text generation
+    # 3. USDA candidate information collection
     usda_candidates_prompt_segments = []
-    # Dictionary to store USDA search results for later key_nutrients_per_100g assignment (key_nutrients_per_100g will be added later)
     all_usda_search_results_map: Dict[int, USDAServiceItem] = {}
     
     # Data type priority
-    preferred_data_types = ["Foundation", "SR Legacy", "Branded"]
+    preferred_data_types = ["Foundation", "SR Legacy", "FNDDS", "Branded"]
     
+    # Search for both individual ingredients and potential dish-level items
+    all_search_terms = set()
+    
+    # Add ingredient names
     for dish in initial_analysis.dishes:
+        # Add dish name for potential dish-level calculation
+        all_search_terms.add(dish.dish_name)
+        
         for ingredient in dish.ingredients:
-            search_query = ingredient.ingredient_name
-            logger.info(f"Searching USDA for ingredient: {search_query}")
+            all_search_terms.add(ingredient.ingredient_name)
+    
+    # Execute USDA searches
+    for search_term in all_search_terms:
+        logger.info(f"Searching USDA for: {search_term}")
+        
+        try:
+            usda_results: List[USDAServiceItem] = await usda_service.search_foods(
+                query=search_term,
+                data_types=preferred_data_types,
+                page_size=settings.USDA_SEARCH_CANDIDATES_LIMIT
+            )
             
-            try:
-                # Execute USDA search
-                usda_results: List[USDAServiceItem] = await usda_service.search_foods(
-                    query=search_query,
-                    data_types=preferred_data_types,
-                    page_size=settings.USDA_SEARCH_CANDIDATES_LIMIT
-                )
+            if usda_results:
+                segment = f"USDA candidates for '{search_term}':\n"
+                for i, item in enumerate(usda_results):
+                    all_usda_search_results_map[item.fdc_id] = item
+                    
+                    # Format nutrient information for prompt
+                    nutrients_str_parts = []
+                    for nutr in item.food_nutrients:
+                        if nutr.name and nutr.amount is not None and nutr.unit_name:
+                            nutrient_display_name = _get_nutrient_display_name(nutr.name, nutr.nutrient_number)
+                            nutrients_str_parts.append(f"{nutrient_display_name}: {nutr.amount}{nutr.unit_name}")
+                    
+                    nutrients_str = ", ".join(nutrients_str_parts) if nutrients_str_parts else "No nutrient information"
+                    
+                    segment += (
+                        f"{i+1}. FDC ID: {item.fdc_id}, Name: {item.description} ({item.data_type or 'N/A'}), "
+                        f"Nutrients (per 100g): {nutrients_str}"
+                    )
+                    if item.brand_owner:
+                        segment += f", Brand: {item.brand_owner}"
+                    if item.ingredients_text:
+                        segment += f", Ingredients: {item.ingredients_text[:100]}..."
+                    segment += "\n"
                 
-                if usda_results:
-                    segment = f"USDA candidates for ingredient '{ingredient.ingredient_name}':\n"
-                    for i, item in enumerate(usda_results):
-                        all_usda_search_results_map[item.fdc_id] = item  # Save for later reference
-                        
-                        # Format nutrient information for prompt
-                        nutrients_str_parts = []
-                        for nutr in item.food_nutrients:
-                            if nutr.name and nutr.amount is not None and nutr.unit_name:
-                                # Convert nutrient name to a more readable format
-                                nutrient_display_name = _get_nutrient_display_name(nutr.name, nutr.nutrient_number)
-                                nutrients_str_parts.append(f"{nutrient_display_name}: {nutr.amount}{nutr.unit_name}")
-                        
-                        nutrients_str = ", ".join(nutrients_str_parts) if nutrients_str_parts else "No nutrient information"
-                        
-                        segment += (
-                            f"{i+1}. FDC ID: {item.fdc_id}, Name: {item.description} ({item.data_type or 'N/A'}), "
-                            f"Nutrients (per 100g): {nutrients_str}"
-                        )
-                        if item.brand_owner:
-                            segment += f", Brand: {item.brand_owner}"
-                        if item.ingredients_text:  # Branded Foods ingredient information
-                            segment += f", Ingredients: {item.ingredients_text[:100]}..."  # If too long, omit
-                        segment += "\n"
-                    
-                    usda_candidates_prompt_segments.append(segment)
-                else:
-                    logger.warning(f"No USDA results found for ingredient: {search_query}")
-                    usda_candidates_prompt_segments.append(f"No USDA candidates found for ingredient '{ingredient.ingredient_name}'.\n")
-                    
-            except RuntimeError as e:  # USDA service error
-                logger.error(f"USDA search error for ingredient '{search_query}': {e}")
-                # Even if some USDA searches fail, let Gemini decide
-                usda_candidates_prompt_segments.append(f"Error searching USDA candidates for ingredient '{ingredient.ingredient_name}': {str(e)}\n")
-            except Exception as e:
-                logger.error(f"Unexpected error during USDA search for '{search_query}': {e}")
-                usda_candidates_prompt_segments.append(f"Unexpected error searching USDA candidates for ingredient '{ingredient.ingredient_name}': {str(e)}\n")
+                usda_candidates_prompt_segments.append(segment)
+            else:
+                logger.warning(f"No USDA results found for: {search_term}")
+                usda_candidates_prompt_segments.append(f"No USDA candidates found for '{search_term}'.\n")
+                
+        except RuntimeError as e:
+            error_msg = f"USDA search error for '{search_term}': {e}"
+            logger.error(error_msg)
+            errors.append(error_msg)
+            usda_candidates_prompt_segments.append(f"Error searching USDA candidates for '{search_term}': {str(e)}\n")
+        except Exception as e:
+            error_msg = f"Unexpected error during USDA search for '{search_term}': {e}"
+            logger.error(error_msg)
+            errors.append(error_msg)
     
     usda_candidates_prompt_text = "\n---\n".join(usda_candidates_prompt_segments) if usda_candidates_prompt_segments else "No USDA candidate information available."
     
-    # 4. Call Gemini service (phase 2 method)
+    # 4. Call Gemini service (phase 2) for strategy determination and FDC ID matching
     try:
-        logger.info("Calling Gemini for phase 2 analysis")
+        logger.info("Calling Gemini for phase 2 analysis with dynamic strategy determination")
         refined_gemini_output_dict = await gemini_service.analyze_image_with_usda_context(
             image_bytes=image_bytes,
             image_mime_type=image.content_type,
             usda_candidates_text=usda_candidates_prompt_text,
-            initial_ai_output_text=initial_analysis_data  # Pass Phase 1 output as is
+            initial_ai_output_text=initial_analysis_data
         )
         
-        # 5. Parse Gemini output and optionally add key_nutrients_per_100g
-        # Parse with Pydantic model to verify it's in the correct schema format
-        refined_analysis_response = MealAnalysisRefinementResponse(**refined_gemini_output_dict)
+        logger.info(f"Gemini phase 2 completed. Processing {len(refined_gemini_output_dict.get('dishes', []))} dishes.")
         
-        # Add key_nutrients_per_100g in backend
-        for dish_resp in refined_analysis_response.dishes:
-            for ing_resp in dish_resp.ingredients:
-                if ing_resp.fdc_id and ing_resp.fdc_id in all_usda_search_results_map:
-                    usda_item = all_usda_search_results_map[ing_resp.fdc_id]
-                    key_nutrients = {}
-                    
-                    # Extract necessary items from USDASearchResultItemPydantic.food_nutrients
-                    for nutr in usda_item.food_nutrients:
-                        if nutr.name and nutr.amount is not None:
-                            # Determine key name based on nutrient number
-                            if nutr.nutrient_number == "208":  # Energy
-                                key_nutrients["calories_kcal"] = nutr.amount
-                            elif nutr.nutrient_number == "203":  # Protein
-                                key_nutrients["protein_g"] = nutr.amount
-                            elif nutr.nutrient_number == "204":  # Total lipid (fat)
-                                key_nutrients["fat_g"] = nutr.amount
-                            elif nutr.nutrient_number == "205":  # Carbohydrate
-                                key_nutrients["carbohydrate_g"] = nutr.amount
-                            elif nutr.nutrient_number == "291":  # Fiber
-                                key_nutrients["fiber_g"] = nutr.amount
-                            elif nutr.nutrient_number == "269":  # Total sugars
-                                key_nutrients["sugars_g"] = nutr.amount
-                            elif nutr.nutrient_number == "307":  # Sodium
-                                key_nutrients["sodium_mg"] = nutr.amount
-                    
-                    ing_resp.key_nutrients_per_100g = key_nutrients if key_nutrients else None
-        
-        logger.info(f"Phase 2 analysis completed successfully. Refined {len(refined_analysis_response.dishes)} dishes.")
-        return refined_analysis_response
-        
-    except RuntimeError as e:  # Gemini service or USDA service error
-        logger.error(f"External service error: {e}")
+    except RuntimeError as e:
+        error_msg = f"Gemini service error: {e}"
+        logger.error(error_msg)
         raise HTTPException(status_code=503, detail=f"External service integration error: {str(e)}")
-    except ValueError as e:  # JSON parsing error
-        logger.error(f"Processing error: {e}")
+    except Exception as e:
+        error_msg = f"Unexpected error in Gemini phase 2: {e}"
+        logger.error(error_msg)
         raise HTTPException(status_code=500, detail=f"Processing error: {str(e)}")
-    except Exception as e:  # Unexpected other error
-        logger.error(f"Unexpected error in refine_meal_analysis: {e}")
-        raise HTTPException(status_code=500, detail=f"Unexpected internal error occurred: {str(e)}")
+    
+    # 5. Process Gemini output with dynamic calculation strategy (仕様書準拠)
+    refined_dishes = []
+    nutrition_service = NutritionCalculationService()
+    
+    for i, dish_response in enumerate(refined_gemini_output_dict.get('dishes', [])):
+        try:
+            strategy = dish_response.get('calculation_strategy')
+            dish_name = dish_response.get('dish_name', f'Dish {i+1}')
+            
+            logger.info(f"Processing dish '{dish_name}' with strategy '{strategy}'")
+            
+            dish_total_actual_nutrients = None
+            refined_ingredients = []
+            
+            # Get corresponding initial analysis dish for weight information
+            initial_dish = None
+            if i < len(initial_analysis.dishes):
+                initial_dish = initial_analysis.dishes[i]
+            
+            if strategy == "dish_level":
+                # Dish-level calculation
+                dish_fdc_id = dish_response.get('fdc_id')
+                
+                if dish_fdc_id and initial_dish:
+                    # Calculate dish total weight from initial analysis ingredients
+                    dish_weight_g = sum(ing.weight_g for ing in initial_dish.ingredients)
+                    
+                    # Get nutrition data for the dish
+                    key_nutrients_100g = await usda_service.get_food_details_for_nutrition(dish_fdc_id)
+                    
+                    if key_nutrients_100g and dish_weight_g > 0:
+                        dish_total_actual_nutrients = nutrition_service.calculate_actual_nutrients(
+                            key_nutrients_100g, dish_weight_g
+                        )
+                        logger.info(f"Dish-level calculation completed for '{dish_name}': {dish_total_actual_nutrients}")
+                    else:
+                        warning_msg = f"Could not calculate dish-level nutrition for '{dish_name}' (FDC ID: {dish_fdc_id})"
+                        logger.warning(warning_msg)
+                        warnings.append(warning_msg)
+                
+                # Process ingredients (descriptive purpose, no nutrition calculation)
+                for ing_data in dish_response.get('ingredients', []):
+                    # Find corresponding initial ingredient for weight
+                    initial_weight = 0.0
+                    if initial_dish:
+                        for initial_ing in initial_dish.ingredients:
+                            if initial_ing.ingredient_name.lower() in ing_data.get('ingredient_name', '').lower() or \
+                               ing_data.get('ingredient_name', '').lower() in initial_ing.ingredient_name.lower():
+                                initial_weight = initial_ing.weight_g
+                                break
+                    
+                    refined_ingredient = RefinedIngredient(
+                        ingredient_name=ing_data.get('ingredient_name', ''),
+                        weight_g=initial_weight,
+                        fdc_id=None,  # Not used in dish_level strategy
+                        usda_source_description=None,
+                        key_nutrients_per_100g=None,
+                        actual_nutrients=None  # Not calculated in dish_level
+                    )
+                    refined_ingredients.append(refined_ingredient)
+            
+            elif strategy == "ingredient_level":
+                # Ingredient-level calculation
+                ingredient_actual_nutrients_list = []
+                
+                for ing_data in dish_response.get('ingredients', []):
+                    ing_fdc_id = ing_data.get('fdc_id')
+                    ing_name = ing_data.get('ingredient_name', '')
+                    
+                    # Find corresponding initial ingredient for weight
+                    initial_weight = 0.0
+                    if initial_dish:
+                        for initial_ing in initial_dish.ingredients:
+                            if initial_ing.ingredient_name.lower() in ing_name.lower() or \
+                               ing_name.lower() in initial_ing.ingredient_name.lower():
+                                initial_weight = initial_ing.weight_g
+                                break
+                    
+                    actual_ing_nutrients = None
+                    key_nutrients_100g = None
+                    
+                    if ing_fdc_id and initial_weight > 0:
+                        # Get nutrition data for the ingredient
+                        key_nutrients_100g = await usda_service.get_food_details_for_nutrition(ing_fdc_id)
+                        
+                        if key_nutrients_100g:
+                            actual_ing_nutrients = nutrition_service.calculate_actual_nutrients(
+                                key_nutrients_100g, initial_weight
+                            )
+                            ingredient_actual_nutrients_list.append(actual_ing_nutrients)
+                            logger.debug(f"Ingredient-level calculation for '{ing_name}': {actual_ing_nutrients}")
+                        else:
+                            warning_msg = f"Could not get nutrition data for ingredient '{ing_name}' (FDC ID: {ing_fdc_id})"
+                            logger.warning(warning_msg)
+                            warnings.append(warning_msg)
+                    else:
+                        warning_msg = f"Missing FDC ID or weight for ingredient '{ing_name}'"
+                        logger.warning(warning_msg)
+                        warnings.append(warning_msg)
+                    
+                    refined_ingredient = RefinedIngredient(
+                        ingredient_name=ing_name,
+                        weight_g=initial_weight,
+                        fdc_id=ing_fdc_id,
+                        usda_source_description=ing_data.get('usda_source_description'),
+                        key_nutrients_per_100g=key_nutrients_100g,
+                        actual_nutrients=actual_ing_nutrients
+                    )
+                    refined_ingredients.append(refined_ingredient)
+                
+                # Aggregate nutrients from ingredients
+                if ingredient_actual_nutrients_list:
+                    dish_total_actual_nutrients = nutrition_service.aggregate_nutrients_for_dish_from_ingredients(
+                        refined_ingredients
+                    )
+                    logger.info(f"Ingredient-level aggregation completed for '{dish_name}': {dish_total_actual_nutrients}")
+            
+            else:
+                error_msg = f"Unknown calculation_strategy '{strategy}' for dish '{dish_name}'"
+                logger.error(error_msg)
+                errors.append(error_msg)
+            
+            # Create refined dish
+            refined_dish = RefinedDish(
+                dish_name=dish_name,
+                type=dish_response.get('type', 'Unknown'),
+                quantity_on_plate=dish_response.get('quantity_on_plate', ''),
+                calculation_strategy=strategy,
+                fdc_id=dish_response.get('fdc_id') if strategy == "dish_level" else None,
+                usda_source_description=dish_response.get('usda_source_description') if strategy == "dish_level" else None,
+                key_nutrients_per_100g=key_nutrients_100g if strategy == "dish_level" and 'key_nutrients_100g' in locals() else None,
+                ingredients=refined_ingredients,
+                dish_total_actual_nutrients=dish_total_actual_nutrients
+            )
+            
+            refined_dishes.append(refined_dish)
+            
+        except Exception as e:
+            error_msg = f"Error processing dish {i+1}: {e}"
+            logger.error(error_msg)
+            errors.append(error_msg)
+    
+    # 6. Calculate total meal nutrients
+    total_meal_nutrients = None
+    if refined_dishes:
+        total_meal_nutrients = nutrition_service.aggregate_nutrients_for_meal(refined_dishes)
+        logger.info(f"Total meal nutrients calculated: {total_meal_nutrients}")
+    
+    # 7. Create final response
+    response = MealAnalysisRefinementResponse(
+        dishes=refined_dishes,
+        total_meal_nutrients=total_meal_nutrients,
+        warnings=warnings if warnings else None,
+        errors=errors if errors else None
+    )
+    
+    logger.info(f"Phase 2 analysis completed successfully. Processed {len(refined_dishes)} dishes with {len(warnings)} warnings and {len(errors)} errors.")
+    return response
 
 
 def _get_nutrient_display_name(name: str, nutrient_number: Optional[str]) -> str:
