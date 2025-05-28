@@ -227,6 +227,130 @@ class USDAService:
         except Exception as e:
             logger.error(f"Error fetching food details for FDC ID {fdc_id}: {str(e)}")
             return None
+
+    async def get_food_details_for_nutrition(self, fdc_id: int) -> Optional[Dict[str, float]]:
+        """
+        栄養計算用の食品詳細情報を取得（仕様書準拠）
+        
+        入力: FDC ID
+        処理: キャッシュ確認後、必要ならUSDA APIから食品詳細を取得し、主要栄養素（設定ファイルで定義されたID）を100gあたりで抽出・パース。結果をキャッシュに保存。
+        出力: 100gあたりの主要栄養素辞書、または None。
+        
+        Args:
+            fdc_id: 食品のFDC ID
+            
+        Returns:
+            Optional[Dict[str, float]]: 100gあたりの主要栄養素辞書、または None
+        """
+        if not fdc_id:
+            logger.warning("Invalid FDC ID provided")
+            return None
+        
+        try:
+            # TODO: 将来的にキャッシュ戦略を実装（Redis等）
+            # 現状は直接APIから取得
+            
+            logger.info(f"USDA API get food details for nutrition: fdc_id={fdc_id}")
+            
+            params = {
+                "api_key": self.api_key,
+                "format": "full",  # 詳細な栄養情報が必要
+                "nutrients": ",".join(self.key_nutrient_numbers)  # 主要栄養素のみを取得
+            }
+            
+            response = await self.client.get(f"{self.base_url}/food/{fdc_id}", params=params)
+            
+            # レートリミット情報のログ
+            if "X-RateLimit-Remaining" in response.headers:
+                logger.info(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
+            
+            response.raise_for_status()
+            food_data_raw = response.json()
+            
+            # 主要栄養素を抽出・パース
+            key_nutrients = self._parse_nutrients_for_calculation(food_data_raw)
+            
+            if key_nutrients:
+                logger.info(f"Successfully extracted {len(key_nutrients)} key nutrients for FDC ID {fdc_id}")
+                # TODO: 将来的にここでキャッシュに保存
+                return key_nutrients
+            else:
+                logger.warning(f"No key nutrients found for FDC ID {fdc_id}")
+                return None
+                
+        except httpx.HTTPStatusError as e:
+            logger.error(f"USDA API HTTP error for FDC ID {fdc_id}: {e.response.status_code} - {e.response.text}")
+            if e.response.status_code == 404:
+                logger.warning(f"Food with FDC ID {fdc_id} not found")
+                return None
+            elif e.response.status_code == 429:
+                raise RuntimeError(f"USDA API rate limit exceeded for FDC ID {fdc_id}") from e
+            raise RuntimeError(f"USDA API error for FDC ID {fdc_id}: {e.response.status_code}") from e
+        except httpx.RequestError as e:
+            logger.error(f"USDA API request failed for FDC ID {fdc_id}: {str(e)}")
+            raise RuntimeError(f"USDA API request failed for FDC ID {fdc_id}: {str(e)}") from e
+        except Exception as e:
+            logger.error(f"Unexpected error getting food details for nutrition (FDC ID {fdc_id}): {str(e)}")
+            return None
+
+    def _parse_nutrients_for_calculation(self, food_data_raw: dict) -> Dict[str, float]:
+        """
+        USDA APIレスポンスから栄養計算用の主要栄養素を抽出（内部メソッド）
+        
+        Args:
+            food_data_raw: USDA APIからの生の食品データ
+            
+        Returns:
+            Dict[str, float]: 主要栄養素辞書（キーは標準化された名前）
+        """
+        key_nutrients = {}
+        
+        try:
+            food_nutrients = food_data_raw.get("foodNutrients", [])
+            
+            for nutrient_entry in food_nutrients:
+                # 栄養素情報の抽出（データ構造はフォーマットによって異なる）
+                nutrient_detail = nutrient_entry.get("nutrient", {})
+                amount = nutrient_entry.get("amount")
+                
+                # Branded Foodsのabridgedフォーマットへの対応
+                if not nutrient_detail and "nutrientId" in nutrient_entry:
+                    number = nutrient_entry.get("nutrientNumber")
+                    amount = nutrient_entry.get("value")  # Branded abridgedでは"value"
+                else:
+                    # SR Legacy, Foundation, または full Branded
+                    number = nutrient_detail.get("number")
+                
+                # 主要栄養素のマッピング（栄養素番号から標準化されたキー名へ）
+                if number and str(number) in self.key_nutrient_numbers and amount is not None:
+                    if str(number) == "208":  # Energy (calories)
+                        key_nutrients["calories_kcal"] = float(amount)
+                    elif str(number) == "203":  # Protein
+                        key_nutrients["protein_g"] = float(amount)
+                    elif str(number) == "204":  # Total lipid (fat)
+                        key_nutrients["fat_g"] = float(amount)
+                    elif str(number) == "205":  # Carbohydrate, by difference
+                        key_nutrients["carbohydrates_g"] = float(amount)
+                    elif str(number) == "291":  # Fiber, total dietary (optional)
+                        key_nutrients["fiber_g"] = float(amount)
+                    elif str(number) == "269":  # Sugars, total (optional)
+                        key_nutrients["sugars_g"] = float(amount)
+                    elif str(number) == "307":  # Sodium (optional)
+                        key_nutrients["sodium_mg"] = float(amount)
+            
+            # 必須栄養素が見つからない場合は0.0として設定
+            essential_nutrients = ["calories_kcal", "protein_g", "fat_g", "carbohydrates_g"]
+            for nutrient in essential_nutrients:
+                if nutrient not in key_nutrients:
+                    key_nutrients[nutrient] = 0.0
+                    logger.debug(f"Missing essential nutrient {nutrient}, set to 0.0")
+            
+            logger.debug(f"Parsed key nutrients: {key_nutrients}")
+            return key_nutrients
+            
+        except Exception as e:
+            logger.error(f"Error parsing nutrients for calculation: {str(e)}")
+            return {}
     
     async def close_client(self):
         """HTTPクライアントをクローズ"""
