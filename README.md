@@ -49,6 +49,8 @@ meal_analysis_api/
 ├── test_images/                          # テスト用画像
 ├── test_english_phase2.py                # 統合テストスクリプト (v2.0)
 ├── test_english_phase2_v2.py             # 高度戦略テストスクリプト (v2.1)
+├── analyze_logs.py                       # ログ分析ツール
+├── logs/                                 # ログファイル（自動生成）
 ├── requirements.txt                      # Python依存関係
 └── service-account-key.json             # GCP認証キー
 ```
@@ -422,3 +424,65 @@ gcloud services enable aiplatform.googleapis.com
 ## 注意事項
 
 **セキュリティ**: API キーやサービスアカウントキーは絶対にリポジトリにコミットしないでください。環境変数として安全に管理してください。
+
+## 📊 ログ分析機能
+
+API の実行ログを詳細に記録・分析する機能が実装されています。
+
+### ログファイル
+
+以下のログファイルが自動的に生成されます：
+
+```
+logs/
+├── meal_analysis_sessions.jsonl     # セッション詳細ログ（JSONL形式）
+├── meal_analysis_detailed.jsonl     # 詳細処理ログ（JSONL形式）
+└── *.log                           # 従来のテキストログファイル
+```
+
+### ログ分析ツール
+
+```bash
+# 基本分析レポート表示
+python analyze_logs.py --report
+
+# CSVエクスポート
+python analyze_logs.py --export sessions.csv
+
+# 遅いセッション分析（5秒以上）
+python analyze_logs.py --slow --threshold 5000
+
+# エラーパターン分析
+python analyze_logs.py --errors
+
+# 過去7日間のデータのみ分析
+python analyze_logs.py --report --days 7
+
+# 日付範囲指定
+python analyze_logs.py --report --start-date 2025-05-01 --end-date 2025-05-31
+```
+
+### ログ分析レポート例
+
+```
+📊 食事分析API ログレポート
+
+## 📊 基本統計
+- **総セッション数**: 50
+- **成功セッション**: 48 (96.0%)
+- **失敗セッション**: 2 (4.0%)
+
+## ⏱️ パフォーマンス統計
+- **平均総実行時間**: 8542.3ms
+- **平均Phase1時間**: 2156.7ms
+- **平均USDA検索時間**: 1834.2ms
+- **平均Phase2時間**: 3251.8ms
+- **平均栄養計算時間**: 1299.6ms
+
+## 🎯 戦略統計
+- **Dish Level戦略**: 85回
+- **Ingredient Level戦略**: 127回
+- **戦略比率**: Dish 40.1% vs Ingredient 59.9%
+```
+
+## 🚀 本番環境での使用

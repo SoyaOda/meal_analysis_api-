@@ -1,9 +1,11 @@
 from fastapi import APIRouter, File, Form, UploadFile, HTTPException, Depends
 from typing import Annotated, Optional
 import logging
+import time  # 実行時間測定のため
 
 from ....services.gemini_service import GeminiMealAnalyzer
 from ..schemas.meal import Phase1AnalysisResponse, MealAnalysisResponse, ErrorResponse
+from ....services.logging_service import get_meal_analysis_logger, ProcessingPhase, LogLevel
 from ....core.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
@@ -29,126 +31,138 @@ async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings
 
 
 @router.post(
-    "/",
+    "",
     response_model=Phase1AnalysisResponse,
-    summary="Analyze meal image (Phase 1 - v2.1)",
-    description="v2.1: 食事画像を分析して料理・食材を特定し、USDAクエリ候補を生成。Phase 2でより精度の高い栄養計算を可能にする。"
+    summary="Analyze Meal Image (Phase 1 v2.1)",
+    description="v2.1: 食事画像を分析し、料理・食材識別とUSDAクエリ候補生成を行います。"
 )
-async def analyze_meal(
-    image: Annotated[UploadFile, File(description="Meal image file to analyze.")],
+async def analyze_meal_v2_1(
     settings: Annotated[Settings, Depends(get_settings)],
-    gemini_service: Annotated[GeminiMealAnalyzer, Depends(get_gemini_analyzer)],
-    optional_text: Annotated[Optional[str], Form(description="Optional additional information about the meal.")] = None
+    image: Annotated[UploadFile, File(description="Meal image file.")],
+    optional_text: Annotated[Optional[str], None] = None
 ):
     """
-    v2.1仕様：食事画像分析エンドポイント（Phase 1）
+    v2.1仕様：食事画像の基本分析
     
-    処理内容:
-    1. 画像から料理・食材を特定
-    2. 各料理に対してUSDAクエリ候補を複数粒度で生成
-    3. 重量推定と理由を含む構造化されたデータを返す
-    
-    Args:
-        image: アップロードされた画像ファイル
-        optional_text: オプションの補助情報
-        
-    Returns:
-        Phase1AnalysisResponse: USDAクエリ候補を含む構造化された分析結果
+    処理フロー:
+    1. 画像の基本バリデーション
+    2. Gemini AI による食事分析（Phase 1）
+    3. USDAクエリ候補の生成
+    4. 結果返却
     """
-    # Validate image file
-    if not image.content_type or not image.content_type.startswith("image/"):
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "code": "INVALID_IMAGE_FORMAT",
-                    "message": "Invalid image file format. Please upload an image (e.g., JPEG, PNG)."
-                }
-            }
-        )
+    # ログサービス初期化
+    meal_logger = get_meal_analysis_logger()
+    session_id = meal_logger.start_session(
+        endpoint="/api/v1/meal-analyses",
+        image_filename=getattr(image, 'filename', None),
+        image_size_bytes=None  # 後で設定
+    )
     
-    # サポートされている画像形式の確認
-    supported_formats = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
-    if image.content_type not in supported_formats:
-        logger.warning(f"Unsupported image format: {image.content_type}")
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "code": "UNSUPPORTED_IMAGE_FORMAT",
-                    "message": f"サポートされていない画像形式です。サポート形式: {', '.join(supported_formats)}"
-                }
-            }
-        )
-    
-    # 画像サイズの制限（例: 10MB）
-    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
-    image_bytes = await image.read()
-    
-    if len(image_bytes) > MAX_FILE_SIZE:
-        logger.warning(f"Image file too large: {len(image_bytes)} bytes")
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "code": "FILE_TOO_LARGE",
-                    "message": f"画像ファイルサイズが大きすぎます。最大サイズ: {MAX_FILE_SIZE // (1024 * 1024)}MB"
-                }
-            }
-        )
-    
-    if len(image_bytes) == 0:
-        logger.warning("Empty image file uploaded")
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": {
-                    "code": "EMPTY_FILE",
-                    "message": "空の画像ファイルです。"
-                }
-            }
-        )
+    start_time = time.time()
     
     try:
-        logger.info(f"Starting Phase 1 meal analysis for image: {image.filename}, size: {len(image_bytes)} bytes")
-        
-        # 新しいPhase 1メソッドを使用
-        analysis_result = await gemini_service.analyze_image_phase1(
-            image_bytes=image_bytes,
-            image_mime_type=image.content_type,
-            optional_text=optional_text
+        # 1. Image validation
+        meal_logger.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.REQUEST_RECEIVED,
+            message="Starting Phase 1 meal analysis"
         )
         
-        logger.info(f"Phase 1 meal analysis completed successfully for image: {image.filename}")
+        if not image.content_type or not image.content_type.startswith("image/"):
+            raise HTTPException(status_code=400, detail="Invalid image file format.")
         
-        # Pydanticモデルでバリデーション
-        response = Phase1AnalysisResponse(**analysis_result)
+        try:
+            image_bytes = await image.read()
+            # Update image size in session
+            if session_id in meal_logger.active_sessions:
+                meal_logger.active_sessions[session_id].image_size_bytes = len(image_bytes)
+            
+            # File size check (e.g., 10MB)
+            if len(image_bytes) > 10 * 1024 * 1024:
+                raise HTTPException(status_code=400, detail="Image file size too large (max 10MB).")
+        except Exception as e:
+            logger.error(f"Error reading image file: {e}")
+            meal_logger.log_error(
+                session_id=session_id,
+                phase=ProcessingPhase.REQUEST_RECEIVED,
+                error_message="Failed to read image file",
+                error_details=str(e)
+            )
+            raise HTTPException(status_code=400, detail="Failed to read image file.")
+
+        # 2. Geminiサービスインスタンス取得
+        gemini_service = await get_gemini_analyzer(settings)
+
+        # 3. Call Gemini service (Phase 1)
+        meal_logger.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.PHASE1_START,
+            message="Starting Gemini Phase 1 analysis"
+        )
+        
+        phase1_start_time = time.time()
+        try:
+            result = await gemini_service.analyze_image_phase1(
+                image_bytes=image_bytes,
+                image_mime_type=image.content_type,
+                optional_text=optional_text
+            )
+            phase1_duration = (time.time() - phase1_start_time) * 1000
+            
+            # Phase 1結果をログに記録
+            dishes_count = len(result.get('dishes', []))
+            usda_queries_count = sum(
+                len(dish.get('usda_query_candidates', [])) 
+                for dish in result.get('dishes', [])
+            )
+            
+            meal_logger.update_phase1_results(
+                session_id=session_id,
+                duration_ms=phase1_duration,
+                dishes_count=dishes_count,
+                usda_queries_count=usda_queries_count,
+                phase1_output=result
+            )
+            
+        except Exception as e:
+            meal_logger.log_error(
+                session_id=session_id,
+                phase=ProcessingPhase.PHASE1_START,
+                error_message="Gemini Phase 1 analysis failed",
+                error_details=str(e)
+            )
+            raise HTTPException(status_code=503, detail=f"Gemini API error: {e}")
+
+        # 4. レスポンス作成とセッション終了
+        response = Phase1AnalysisResponse(**result)
+        
+        meal_logger.end_session(
+            session_id=session_id,
+            warnings=None,
+            errors=None
+        )
+        
         return response
         
-    except RuntimeError as e:
-        # Geminiサービスからの具体的なエラー
-        logger.error(f"Error during Phase 1 meal analysis: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": {
-                    "code": "ANALYSIS_ERROR",
-                    "message": f"Failed to analyze meal image: {str(e)}"
-                }
-            }
-        )
     except Exception as e:
-        # その他の予期せぬエラー
-        logger.error(f"Unexpected error: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "error": {
-                    "code": "INTERNAL_SERVER_ERROR",
-                    "message": "予期せぬエラーが発生しました。"
-                }
-            }
+        # 予期しないエラーのログ記録
+        meal_logger.log_error(
+            session_id=session_id,
+            phase=ProcessingPhase.ERROR_OCCURRED,
+            error_message="Unexpected error during Phase 1 processing",
+            error_details=str(e)
         )
+        
+        # セッション終了（エラー時）
+        meal_logger.end_session(
+            session_id=session_id,
+            warnings=None,
+            errors=[str(e)]
+        )
+        
+        raise
 
 
 # 後方互換性のため、古いエンドポイントも維持
