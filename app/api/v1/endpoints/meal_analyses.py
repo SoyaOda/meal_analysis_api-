@@ -3,7 +3,7 @@ from typing import Annotated, Optional
 import logging
 
 from ....services.gemini_service import GeminiMealAnalyzer
-from ..schemas.meal import MealAnalysisResponse, ErrorResponse
+from ..schemas.meal import Phase1AnalysisResponse, MealAnalysisResponse, ErrorResponse
 from ....core.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
@@ -30,9 +30,9 @@ async def get_gemini_analyzer(settings: Annotated[Settings, Depends(get_settings
 
 @router.post(
     "/",
-    response_model=MealAnalysisResponse,
-    summary="Analyze meal image",
-    description="Upload a meal image to identify dishes, types, quantities, and ingredients using AI analysis."
+    response_model=Phase1AnalysisResponse,
+    summary="Analyze meal image (Phase 1 - v2.1)",
+    description="v2.1: 食事画像を分析して料理・食材を特定し、USDAクエリ候補を生成。Phase 2でより精度の高い栄養計算を可能にする。"
 )
 async def analyze_meal(
     image: Annotated[UploadFile, File(description="Meal image file to analyze.")],
@@ -41,14 +41,19 @@ async def analyze_meal(
     optional_text: Annotated[Optional[str], Form(description="Optional additional information about the meal.")] = None
 ):
     """
-    Analyze uploaded meal image and return structured dish information.
+    v2.1仕様：食事画像分析エンドポイント（Phase 1）
+    
+    処理内容:
+    1. 画像から料理・食材を特定
+    2. 各料理に対してUSDAクエリ候補を複数粒度で生成
+    3. 重量推定と理由を含む構造化されたデータを返す
     
     Args:
-        image: Uploaded image file
-        optional_text: Optional user context (not used in current implementation)
+        image: アップロードされた画像ファイル
+        optional_text: オプションの補助情報
         
     Returns:
-        MealAnalysisResponse: Structured analysis including dishes and ingredients
+        Phase1AnalysisResponse: USDAクエリ候補を含む構造化された分析結果
     """
     # Validate image file
     if not image.content_type or not image.content_type.startswith("image/"):
@@ -105,24 +110,24 @@ async def analyze_meal(
         )
     
     try:
-        logger.info(f"Starting meal analysis for image: {image.filename}, size: {len(image_bytes)} bytes")
+        logger.info(f"Starting Phase 1 meal analysis for image: {image.filename}, size: {len(image_bytes)} bytes")
         
-        # Geminiサービスを使用して画像を分析
-        analysis_result = await gemini_service.analyze_image_and_text(
+        # 新しいPhase 1メソッドを使用
+        analysis_result = await gemini_service.analyze_image_phase1(
             image_bytes=image_bytes,
             image_mime_type=image.content_type,
             optional_text=optional_text
         )
         
-        logger.info(f"Meal analysis completed successfully for image: {image.filename}")
+        logger.info(f"Phase 1 meal analysis completed successfully for image: {image.filename}")
         
         # Pydanticモデルでバリデーション
-        response = MealAnalysisResponse(**analysis_result)
+        response = Phase1AnalysisResponse(**analysis_result)
         return response
         
     except RuntimeError as e:
         # Geminiサービスからの具体的なエラー
-        logger.error(f"Error during meal analysis: {e}")
+        logger.error(f"Error during Phase 1 meal analysis: {e}")
         raise HTTPException(
             status_code=500,
             detail={
@@ -143,4 +148,44 @@ async def analyze_meal(
                     "message": "予期せぬエラーが発生しました。"
                 }
             }
-        ) 
+        )
+
+
+# 後方互換性のため、古いエンドポイントも維持
+@router.post(
+    "/legacy",
+    response_model=MealAnalysisResponse,
+    summary="Legacy Meal Analysis (v1.0 compatibility)",
+    description="後方互換性のための旧バージョンエンドポイント。新しい機能にはメインエンドポイント `/` を使用してください。"
+)
+async def analyze_meal_legacy(
+    image: Annotated[UploadFile, File(description="Meal image file to analyze.")],
+    settings: Annotated[Settings, Depends(get_settings)],
+    gemini_service: Annotated[GeminiMealAnalyzer, Depends(get_gemini_analyzer)],
+    optional_text: Annotated[Optional[str], Form(description="Optional additional information about the meal.")] = None
+):
+    """
+    後方互換性のための旧フォーマット
+    """
+    # 同じ検証を実行
+    if not image.content_type or not image.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Invalid image file format.")
+    
+    image_bytes = await image.read()
+    if len(image_bytes) > 10 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="File too large.")
+    
+    try:
+        # 旧メソッドを使用（存在する場合）
+        analysis_result = await gemini_service.analyze_image_and_text(
+            image_bytes=image_bytes,
+            image_mime_type=image.content_type,
+            optional_text=optional_text
+        )
+        
+        response = MealAnalysisResponse(**analysis_result)
+        return response
+        
+    except Exception as e:
+        logger.error(f"Legacy analysis error: {e}")
+        raise HTTPException(status_code=500, detail=str(e)) 

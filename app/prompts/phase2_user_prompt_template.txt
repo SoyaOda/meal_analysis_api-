@@ -1,10 +1,18 @@
-{initial_ai_output_section}
-Above is the initial AI analysis of the meal.
+Here is the initial meal analysis (Phase 1 Output):
+```json
+{initial_ai_output}
+```
 
-USDA food database candidate information for the items in the initial analysis and potentially for the overall dishes:
+Here are the potential USDA FDC ID candidates based on queries from Phase 1. Review these carefully, noting the FDC ID, Name, Data Type, Brand, and Score:
+
 {usda_candidates}
 
-Based on all this information (initial analysis, USDA candidates, and implicitly the image context from the initial analysis), please refine the analysis. For each dish/food item:
-1. Determine its `calculation_strategy` ('dish_level' or 'ingredient_level').
-2. Provide the `fdc_id` and `usda_source_description` according to that strategy, as detailed in the system instructions.
-Remember to follow the JSON schema strictly. Do not calculate or return any nutritional values. 
+Based on the initial analysis, the image context (implicitly known from Phase 1), and ALL the provided USDA candidates, please perform the Phase 2 refinement as per the system instructions. For each dish:
+
+1. Decide the calculation_strategy.
+2. Provide the reason_for_strategy.
+3. Select the best FDC ID(s) according to the chosen strategy.
+4. Provide the usda_source_description for each selected FDC ID.
+5. Provide the reason_for_choice for each selected FDC ID.
+
+Ensure your response is in English and strictly follows the Phase2GeminiResponse JSON schema. 

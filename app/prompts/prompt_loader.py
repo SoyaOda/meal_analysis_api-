@@ -91,28 +91,23 @@ class PromptLoader:
     
     def get_phase2_user_prompt(
         self, 
-        usda_candidates: str, 
-        initial_ai_output: Optional[str] = None
+        initial_ai_output: str,
+        usda_candidates: str
     ) -> str:
         """
         フェーズ2のユーザープロンプトを取得
         
         Args:
+            initial_ai_output: フェーズ1のAI出力（JSON文字列）
             usda_candidates: USDA候補情報
-            initial_ai_output: フェーズ1のAI出力
             
         Returns:
             フォーマット済みのユーザープロンプト
         """
         template = self._load_prompt_file("phase2_user_prompt_template.txt")
         
-        if initial_ai_output:
-            initial_ai_output_section = f"Initial AI analysis results:\n{initial_ai_output}\n\n"
-        else:
-            initial_ai_output_section = ""
-        
         return template.format(
-            initial_ai_output_section=initial_ai_output_section,
+            initial_ai_output=initial_ai_output,
             usda_candidates=usda_candidates
         )
     
