@@ -6,7 +6,8 @@ import logging
 from PIL import Image
 import io
 
-from ..api.v1.schemas.meal import REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
+# 新しいスキーマをインポート
+from ..api.v1.schemas.meal import PHASE_1_GEMINI_SCHEMA, PHASE_2_GEMINI_SCHEMA, MEAL_ANALYSIS_GEMINI_SCHEMA, REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
 from ..prompts import PromptLoader
 
 logger = logging.getLogger(__name__)
@@ -46,9 +47,9 @@ MEAL_ANALYSIS_GEMINI_SCHEMA = {
 
 
 class GeminiMealAnalyzer:
-    """Vertex AI経由でGeminiを使用して食事画像を分析するクラス"""
+    """Vertex AI経由でGeminiを使用して食事画像を分析するクラス (v2.1対応)"""
     
-    def __init__(self, project_id: str, location: str, model_name: str = "gemini-1.5-flash"):
+    def __init__(self, project_id: str, location: str, model_name: str = "gemini-2.5-flash-preview-05-20"):
         """
         初期化
         
@@ -63,18 +64,8 @@ class GeminiMealAnalyzer:
         # モデルの初期化
         self.model = GenerativeModel(model_name=model_name)
         
-        # プロンプトローダーの初期化
+        # プロンプトローダーの初期化（必須）
         self.prompt_loader = PromptLoader()
-        
-        # generation_configを作成
-        self.generation_config = GenerationConfig(
-            temperature=0.2,
-            top_p=0.9,
-            top_k=20,
-            max_output_tokens=8192,
-            response_mime_type="application/json",
-            response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
-        )
         
         # セーフティ設定
         self.safety_settings = {
@@ -83,7 +74,96 @@ class GeminiMealAnalyzer:
             HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
             HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         }
-    
+
+    async def analyze_image_phase1(
+        self,
+        image_bytes: bytes,
+        image_mime_type: str,
+        optional_text: Optional[str] = None
+    ) -> Dict:
+        """
+        Phase 1: 画像を分析し、料理・食材とUSDAクエリ候補を抽出 (v2.1仕様)
+        """
+        try:
+            system_prompt = self.prompt_loader.get_phase1_system_prompt()
+            user_prompt = self.prompt_loader.get_phase1_user_prompt(optional_text)
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            contents = [Part.from_text(full_prompt), Part.from_data(data=image_bytes, mime_type=image_mime_type)]
+
+            generation_config = GenerationConfig(
+                temperature=0.3, # 候補を広げるために少し上げることも検討
+                top_p=0.9,
+                top_k=20,
+                max_output_tokens=16384, # トークン制限を増やす
+                response_mime_type="application/json",
+                # NEW: Phase 1 用のスキーマを使用
+                response_schema=PHASE_1_GEMINI_SCHEMA
+            )
+
+            response = await self.model.generate_content_async(
+                contents=contents,
+                generation_config=generation_config,
+                safety_settings=self.safety_settings
+            )
+
+            if not response.text:
+                raise ValueError("No response returned from Gemini (Phase 1).")
+
+            result = json.loads(response.text)
+            logger.info(f"Gemini Phase 1 analysis completed. Found {len(result.get('dishes', []))} dishes.")
+            return result
+
+        except Exception as e:
+            logger.error(f"Vertex AI/Gemini API error (Phase 1): {e}")
+            raise RuntimeError(f"Vertex AI/Gemini (Phase 1) API request failed: {e}") from e
+
+    async def refine_analysis_phase2(
+        self,
+        image_bytes: bytes,
+        image_mime_type: str,
+        phase1_output_text: str, # Phase 1 の生 JSON 出力
+        usda_results_text: str # 整形された全 USDA 検索結果
+    ) -> Dict:
+        """
+        Phase 2: USDA候補に基づき、calculation_strategy を決定し、FDC ID を選択 (v2.1仕様)
+        """
+        try:
+            system_prompt = self.prompt_loader.get_phase2_system_prompt()
+            user_prompt = self.prompt_loader.get_phase2_user_prompt(
+                initial_ai_output=phase1_output_text,
+                usda_candidates=usda_results_text
+            )
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            contents = [Part.from_text(full_prompt), Part.from_data(data=image_bytes, mime_type=image_mime_type)]
+
+            generation_config = GenerationConfig(
+                temperature=0.1, # 決定論的な出力を目指すため低めに設定
+                top_p=0.8,
+                top_k=10,
+                max_output_tokens=16384, # トークン制限を増やす
+                response_mime_type="application/json",
+                # NEW: Phase 2 用のスキーマを使用
+                response_schema=PHASE_2_GEMINI_SCHEMA
+            )
+
+            response = await self.model.generate_content_async(
+                contents=contents,
+                generation_config=generation_config,
+                safety_settings=self.safety_settings
+            )
+
+            if not response.text:
+                raise ValueError("No response returned from Gemini (Phase 2).")
+
+            result = json.loads(response.text)
+            logger.info(f"Gemini Phase 2 analysis completed. Processed {len(result.get('dishes', []))} dishes.")
+            return result
+
+        except Exception as e:
+            logger.error(f"Vertex AI/Gemini API error (Phase 2): {e}")
+            raise RuntimeError(f"Vertex AI/Gemini (Phase 2) API request failed: {e}") from e
+
+    # 後方互換性のために既存メソッドも保持
     async def analyze_image_and_text(
         self, 
         image_bytes: bytes, 
@@ -91,18 +171,7 @@ class GeminiMealAnalyzer:
         optional_text: Optional[str] = None
     ) -> Dict:
         """
-        画像とテキストを分析して食事情報を抽出
-        
-        Args:
-            image_bytes: 画像のバイトデータ
-            image_mime_type: 画像のMIMEタイプ
-            optional_text: オプションのテキスト説明
-            
-        Returns:
-            分析結果の辞書
-            
-        Raises:
-            RuntimeError: Gemini APIエラー時
+        後方互換性のための既存メソッド（既存のPhase 1として動作）
         """
         try:
             # プロンプトローダーからプロンプトを取得
@@ -121,10 +190,20 @@ class GeminiMealAnalyzer:
                 )
             ]
             
+            # 後方互換性のため既存スキーマを使用
+            generation_config = GenerationConfig(
+                temperature=0.2,
+                top_p=0.9,
+                top_k=20,
+                max_output_tokens=8192,
+                response_mime_type="application/json",
+                response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
+            )
+            
             # Gemini APIを呼び出し（非同期メソッドを使用）
             response = await self.model.generate_content_async(
                 contents=contents,
-                generation_config=self.generation_config,
+                generation_config=generation_config,
                 safety_settings=self.safety_settings
             )
             
@@ -153,26 +232,14 @@ class GeminiMealAnalyzer:
         initial_ai_output_text: Optional[str] = None
     ) -> Dict:
         """
-        USDAコンテキストを使用して画像を再分析（フェーズ2）
-        
-        Args:
-            image_bytes: 画像のバイトデータ
-            image_mime_type: 画像のMIMEタイプ
-            usda_candidates_text: USDA候補情報のフォーマット済みテキスト
-            initial_ai_output_text: フェーズ1のAI出力（JSON文字列）
-            
-        Returns:
-            精緻化された分析結果の辞書
-            
-        Raises:
-            RuntimeError: Gemini APIエラー時
+        後方互換性のための既存メソッド（既存のPhase 2として動作）
         """
         try:
             # プロンプトローダーからプロンプトを取得
             system_prompt = self.prompt_loader.get_phase2_system_prompt()
             user_prompt = self.prompt_loader.get_phase2_user_prompt(
-                usda_candidates=usda_candidates_text,
-                initial_ai_output=initial_ai_output_text
+                initial_ai_output=initial_ai_output_text or "{}",
+                usda_candidates=usda_candidates_text
             )
             
             # 完全なプロンプトを構築
@@ -206,19 +273,22 @@ class GeminiMealAnalyzer:
             
             # レスポンスのテキストを取得
             if not response.text:
-                raise ValueError("No response returned from Gemini (Phase 2).")
+                raise ValueError("No response returned from Gemini Phase 2.")
             
             # JSONレスポンスをパース
             result = json.loads(response.text)
             
-            logger.info(f"Gemini phase 2 analysis completed successfully. Found {len(result.get('dishes', []))} dishes.")
+            logger.info(f"Gemini Phase 2 refinement completed successfully. Processed {len(result.get('dishes', []))} dishes.")
             return result
             
         except json.JSONDecodeError as e:
-            logger.error(f"JSON parsing error in phase 2: {e}. Raw response: {getattr(response, 'text', 'N/A')}")
-            raise RuntimeError(f"Error processing response from Gemini (Phase 2): {e}") from e
+            logger.error(f"JSON parsing error in Phase 2: {e}")
+            raise RuntimeError(f"Error processing Phase 2 response from Gemini: {e}") from e
         except Exception as e:
-            import traceback
-            logger.error(f"Vertex AI/Gemini API error in phase 2: {e}")
-            logger.error(f"Traceback: {traceback.format_exc()}")
-            raise RuntimeError(f"Vertex AI/Gemini (Phase 2) API request failed: {e}") from e 
+            logger.error(f"Vertex AI/Gemini API error in Phase 2: {e}")
+            raise RuntimeError(f"Vertex AI/Gemini Phase 2 API request failed: {e}") from e
+
+
+def get_gemini_analyzer(project_id: str, location: str, model_name: str) -> GeminiMealAnalyzer:
+    """GeminiMealAnalyzerのインスタンスを作成して返す"""
+    return GeminiMealAnalyzer(project_id=project_id, location=location, model_name=model_name) 

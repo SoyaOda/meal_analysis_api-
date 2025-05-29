@@ -1,4 +1,4 @@
-# 食事分析 API (Meal Analysis API) v2.0
+# 食事分析 API (Meal Analysis API) v2.1
 
 ## 概要
 
@@ -47,7 +47,8 @@ meal_analysis_api/
 │   │   └── phase2_user_prompt_template.txt
 │   └── main.py                           # FastAPIアプリケーション
 ├── test_images/                          # テスト用画像
-├── test_english_phase2.py                # 統合テストスクリプト
+├── test_english_phase2.py                # 統合テストスクリプト (v2.0)
+├── test_english_phase2_v2.py             # 高度戦略テストスクリプト (v2.1)
 ├── requirements.txt                      # Python依存関係
 └── service-account-key.json             # GCP認証キー
 ```
@@ -161,28 +162,46 @@ python test_phase1_only.py
 
 **重要**: サーバーが起動している状態で実行してください。
 
+#### v2.0 統合テスト
+
 ```bash
 # 別のターミナルで実行
 python test_english_phase2.py
 ```
 
+#### v2.1 高度戦略テスト（推奨）
+
+```bash
+# v2.1仕様の高度な戦略決定とFDC ID選択をテスト
+python test_english_phase2_v2.py
+```
+
 このテストは以下を実行します：
 
-1. **フェーズ 1**: 食事画像の分析（英語の食材名で出力）
+1. **フェーズ 1**: 食事画像の分析（英語の食材名で出力）+ USDA クエリ候補生成
 2. **フェーズ 2**:
-   - Gemini AI による最適計算戦略の決定
-   - USDA データベースとの自動照合
-   - 動的栄養計算（dish_level/ingredient_level）
-   - 食事全体の栄養集計
+   - 25+個の USDA クエリ候補を並列検索
+   - Gemini AI による最適計算戦略の決定（dish_level/ingredient_level）
+   - 戦略理由と FDC ID 選択理由の詳細出力
+   - 動的栄養計算と食事全体の栄養集計
 
 **期待される結果例**:
 
 ```
-食事全体の栄養価:
-- カロリー: 337.95 kcal
-- たんぱく質: 13.32g
-- 炭水化物: 56.19g
-- 脂質: 6.67g
+📊 Response status: 200
+🍽️  Found 7 dishes
+📌 DISH 1: White Rice
+   🎯 Calculation Strategy: dish_level
+   📝 Strategy Reason: Simple ingredient with accurate FDC ID available
+   🏷️  Dish FDC ID: 168932
+   📄 USDA Source: Rice, white, short-grain, cooked, unenriched
+   🧮 Nutrition (Total): 260.0 kcal, 4.7g protein, 57.5g carbs, 0.4g fat
+
+🍽️  MEAL TOTAL NUTRITION:
+   Energy: 777.1 kcal
+   Protein: 38.2g
+   Carbohydrates: 81.5g
+   Fat: 31.8g
 ```
 
 ### 3. その他のテスト
