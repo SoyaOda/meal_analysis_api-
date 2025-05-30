@@ -16,7 +16,10 @@ class Settings(BaseSettings):
     # USDA API設定
     USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）
     USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
-    USDA_API_TIMEOUT: float = 10.0  # APIタイムアウト秒数
+    USDA_API_TIMEOUT: float = 15.0  # APIタイムアウト秒数（FDC ID 746952のような遅いレスポンスに対応）
+    USDA_API_MAX_RETRIES: int = 3  # 最大リトライ回数
+    USDA_API_RETRY_DELAY: float = 1.0  # 初回リトライ前の待機時間（秒）
+    USDA_API_RETRY_BACKOFF: float = 2.0  # リトライ間隔の倍率（exponential backoff）
     USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
     # 主要栄養素番号（カンマ区切り文字列として環境変数から読み込む）
     USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,203,204,205,291,269,307"
