@@ -126,13 +126,16 @@ class USDAService:
         self,
         query: str,
         data_types: Optional[List[str]] = None,
-        page_size: int = 10, # 候補数を増やす (設定可能に)
+        page_size: int = 10,
         page_number: int = 1,
         sort_by: str = "score",
-        sort_order: str = "desc"
+        sort_order: str = "desc",
+        require_all_words: bool = False,  # 新機能: 精度向上のオプション
+        brand_owner_filter: Optional[str] = None  # 新機能: ブランド特定検索
     ) -> List[USDASearchResultItem]:
         """
         USDA FoodData Central APIで食品を検索し、詳細な情報を返す (v2.1仕様)
+        改善提案に基づいて検索精度とブランド対応を強化
         
         Args:
             query: 検索クエリ文字列
@@ -141,12 +144,13 @@ class USDAService:
             page_number: 取得するページ番号
             sort_by: ソートキー
             sort_order: ソート順（"asc" または "desc"）
+            require_all_words: 検索クエリの全単語を含む結果のみ取得（精度向上）
+            brand_owner_filter: 特定ブランドオーナーでの検索強化
             
         Returns:
             USDASearchResultItemのリスト（新しいPydanticモデル）
         """
         params = {
-            "query": query,
             "api_key": self.api_key,
             "pageSize": page_size,
             "pageNumber": page_number,
@@ -154,20 +158,39 @@ class USDAService:
             "sortOrder": sort_order
         }
         
+        # ブランドフィルターが指定された場合、クエリを強化
+        if brand_owner_filter:
+            # ブランド名をクエリに含めてBranded Foodsを優先検索
+            enhanced_query = f"{brand_owner_filter} {query}"
+            params["query"] = enhanced_query
+            logger.info(f"Enhanced query with brand filter: '{enhanced_query}'")
+            
+            # Branded Foodsを優先するよう data_types を調整
+            if not data_types:
+                data_types = ["Branded", "FNDDS", "Foundation", "SR Legacy"]
+            elif "Branded" not in data_types:
+                data_types = ["Branded"] + data_types
+        else:
+            params["query"] = query
+        
         if data_types:
             # データタイプをカンマ区切り文字列として渡す
             params["dataType"] = ",".join(data_types)
         
-        # NEW: requireAllWords を True に設定して精度を上げることも検討 (ただしヒット数が減る)
-        # params["requireAllWords"] = "true"
+        # 精度向上オプション
+        if require_all_words:
+            params["requireAllWords"] = "true"
+            logger.debug(f"Using require_all_words=true for enhanced precision")
         
         try:
-            logger.info(f"USDA API rich search: query='{query}', page_size={page_size}")
+            context = f"USDA API enhanced search (brand:{brand_owner_filter}, precise:{require_all_words})"
+            logger.info(f"USDA API enhanced search: query='{params['query']}', page_size={page_size}")
+            
             response = await self._make_request_with_retry(
                 method="GET",
                 url=f"{self.base_url}/foods/search",
                 params=params,
-                context="USDA API rich search"
+                context=context
             )
             
             if response:
@@ -175,10 +198,14 @@ class USDAService:
                 
                 results = []
                 for food_data in data.get("foods", [])[:page_size]:
-                    # NEW: foodNutrients を詳細に取得・パース
-                    # NOTE: 検索結果の foodNutrients は限定的なことが多い。
-                    # 詳細な栄養素は get_food_details_for_nutrition で取得する。
-                    # ここでは主に FDC ID, description, dataType, brandOwner, ingredients を重視。
+                    # ブランドフィルターが指定されている場合、後処理でさらなるフィルタリング
+                    if brand_owner_filter:
+                        food_brand = food_data.get("brandOwner", "").lower()
+                        if brand_owner_filter.lower() not in food_brand:
+                            # ブランドが一致しない場合はスキップ（ただし、多少の柔軟性は保持）
+                            if food_data.get("dataType") == "Branded":
+                                continue
+                    
                     nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
                     
                     results.append(USDASearchResultItem(
@@ -186,13 +213,18 @@ class USDAService:
                         description=food_data.get("description"),
                         data_type=food_data.get("dataType"),
                         brand_owner=food_data.get("brandOwner"),
-                        # NEW: ingredientsText を取得
                         ingredients_text=food_data.get("ingredients"),
                         food_nutrients=nutrients_extracted,
                         score=food_data.get("score")
                     ))
                 
-                logger.info(f"USDA API rich search returned {len(results)} results for query '{query}'")
+                logger.info(f"USDA API enhanced search returned {len(results)} results for query '{params['query']}'")
+                
+                # ブランドフィルターが指定された場合のログ強化
+                if brand_owner_filter:
+                    branded_count = sum(1 for r in results if r.data_type == "Branded")
+                    logger.info(f"Brand-filtered search: {branded_count}/{len(results)} results are Branded Foods")
+                
                 return results
             
         except Exception as e:
