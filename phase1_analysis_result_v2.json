@@ -1,0 +1,146 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One large bowl serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta, cooked",
+          "weight_g": 320.0
+        },
+        {
+          "ingredient_name": "Chicken breast, cooked, diced",
+          "weight_g": 50.0
+        },
+        {
+          "ingredient_name": "Tomatoes, diced, raw",
+          "weight_g": 30.0
+        },
+        {
+          "ingredient_name": "Green bell pepper, diced, raw",
+          "weight_g": 20.0
+        },
+        {
+          "ingredient_name": "Creamy pasta dressing",
+          "weight_g": 60.0
+        },
+        {
+          "ingredient_name": "Feta cheese, crumbled",
+          "weight_g": 20.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Penne Pasta Salad",
+          "granularity_level": "branded_product",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "Specific branded product query, likely to be in USDA's Branded Foods database due to visible 'La Madeleine' tray."
+        },
+        {
+          "query_term": "Penne pasta salad with chicken",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "General dish query for a common food item, useful if branded product is not found."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta, cooked",
+          "reason_for_query": "Specific ingredient query with cooking state for accurate nutritional data."
+        },
+        {
+          "query_term": "Chicken breast, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Chicken breast, cooked, diced",
+          "reason_for_query": "Specific ingredient query with cooking state for protein content."
+        },
+        {
+          "query_term": "Tomato, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Tomatoes, diced, raw",
+          "reason_for_query": "Common raw vegetable ingredient query."
+        },
+        {
+          "query_term": "Bell pepper, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Green bell pepper, diced, raw",
+          "reason_for_query": "Common raw vegetable ingredient query."
+        },
+        {
+          "query_term": "Feta cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Feta cheese, crumbled",
+          "reason_for_query": "Common cheese ingredient query."
+        },
+        {
+          "query_term": "Creamy pasta dressing",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy pasta dressing",
+          "reason_for_query": "General dressing query, as specific type is unknown but 'creamy' indicates fat content."
+        }
+      ]
+    },
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One side plate serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce, raw",
+          "weight_g": 120.0
+        },
+        {
+          "ingredient_name": "Croutons, baked",
+          "weight_g": 25.0
+        },
+        {
+          "ingredient_name": "Parmesan cheese, grated",
+          "weight_g": 15.0
+        },
+        {
+          "ingredient_name": "Caesar dressing, processed",
+          "weight_g": 50.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Caesar Salad",
+          "granularity_level": "branded_product",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "Specific branded product query, likely to be in USDA's Branded Foods database due to visible 'La Madeleine' tray."
+        },
+        {
+          "query_term": "Caesar salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "General dish query for a very common salad type."
+        },
+        {
+          "query_term": "Romaine lettuce, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce, raw",
+          "reason_for_query": "Specific ingredient query with cooking state for accurate nutritional data."
+        },
+        {
+          "query_term": "Croutons",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons, baked",
+          "reason_for_query": "Common ingredient query for baked bread pieces."
+        },
+        {
+          "query_term": "Parmesan cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese, grated",
+          "reason_for_query": "Common cheese ingredient query."
+        },
+        {
+          "query_term": "Caesar dressing",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing, processed",
+          "reason_for_query": "Specific dressing query, as it's a well-known type."
+        }
+      ]
+    }
+  ]
+}

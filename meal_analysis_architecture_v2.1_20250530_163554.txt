@@ -1,133 +1,725 @@
 ================================================================================
-MEAL ANALYSIS API - アーキテクチャ構造とファイル分析
+MEAL ANALYSIS API v2.1 - アーキテクチャ構造とファイル分析
 ================================================================================
-生成日時: 2025-05-30 16:35:01
-分析対象: test_english_phase2.py 実行時に呼び出される全ファイル
+生成日時: 2025-05-30 16:35:54
+分析対象: test_english_phase1_v2.py & test_english_phase2_v2.py 実行時に呼び出される全Pythonファイル
 ================================================================================
 
-📊 ARCHITECTURE OVERVIEW
+📊 ARCHITECTURE OVERVIEW v2.1
 ----------------------------------------
 
-🔄 EXECUTION FLOW (2-Phase Approach):
-Phase 1: 画像 → Gemini AI → 料理・食材識別 (英語名)
-Phase 2: Phase1結果 + 画像 → USDA検索 → Gemini再分析 → 栄養成分精緻化
+🔄 EXECUTION FLOW (Advanced 2-Phase Approach):
+Phase 1: 画像 → Gemini AI → 料理・食材識別 + USDAクエリ候補生成
+Phase 2: Phase1結果 → 並列USDA検索 → 戦略決定AI → FDC ID選択 → 動的栄養計算
 
-🏗️ LAYER STRUCTURE:
+🏗️ LAYER STRUCTURE v2.1:
 ├── API層 (FastAPI)
-│   ├── meal_analyses.py (Phase 1 endpoint)
-│   └── meal_analyses_refine.py (Phase 2 endpoint)
-├── サービス層
-│   ├── gemini_service.py (Vertex AI Gemini連携)
-│   └── usda_service.py (USDA FoodData Central API連携)
-├── データモデル層
-│   └── meal.py (Pydantic schemas)
-├── プロンプト管理層
-│   ├── prompt_loader.py (Template management)
-│   └── prompt templates (*.txt)
-└── 設定層
-    └── config.py (Environment configuration)
+│   ├── meal_analyses.py (Phase 1 v2.1: USDAクエリ候補生成)
+│   └── meal_analyses_refine.py (Phase 2 v2.1: 高度戦略決定 + 栄養計算)
+├── サービス層 (Enhanced)
+│   ├── gemini_service.py (2フェーズメソッド: analyze_image_phase1, refine_analysis_phase2)
+│   ├── usda_service.py (Rich search + 栄養詳細取得)
+│   ├── nutrition_calculation_service.py (動的計算エンジン)
+│   └── logging_service.py (セッション管理 + 詳細ログ記録)
+├── データモデル層 (v2.1 Schemas)
+│   └── meal.py (Phase1AnalysisResponse, Phase2GeminiResponse, MealAnalysisRefinementResponse)
+└── プロンプト管理層 (2-Phase Templates)
+    ├── prompt_loader.py (フェーズ別プロンプト管理)
+    └── prompt templates (phase1_*, phase2_*)
 
-🔧 TECHNICAL FEATURES:
-- 非同期処理 (async/await)
-- 構造化JSON出力 (Gemini response_schema)
-- USDA栄養データベース連携
-- キャッシュ機能
-- 包括的エラーハンドリング
+🔧 TECHNICAL FEATURES v2.1:
+- ✨ 高度戦略決定システム (dish_level vs ingredient_level)
+- 🔍 並列USDA検索 (25+候補の同時処理)
+- 📊 動的栄養計算 (戦略ベース計算)
+- 📈 包括的ログ機能 (セッション追跡 + パフォーマンス分析)
+- 🎯 FDC ID選択とソース説明
+- 🔄 3層栄養集計 (食材 → 料理 → 食事)
+- ⚡ 非同期処理最適化
+- 📋 構造化JSON出力 (Gemini response_schema)
+
+🆕 NEW FEATURES v2.1:
+- USDAクエリ候補の自動生成
+- 戦略理由と選択理由の詳細記録
+- リアルタイムログ分析
+- CSV/JSONLログエクスポート
+- パフォーマンス統計とエラー分析
 
 ================================================================================
 
-📁 メインテストファイル
+📁 v2.1メインテストファイル
 ============================================================
 
-📄 FILE: test_english_phase2.py
+📄 FILE: test_english_phase1_v2.py
 --------------------------------------------------
-ファイルサイズ: 2808 bytes
-最終更新: 2025-05-29 16:53:14
+ファイルサイズ: 10100 bytes
+最終更新: 2025-05-30 16:11:18
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
+#!/usr/bin/env python3
+"""
+Phase 1 Analysis Test Script (v2.1) - USDAクエリ候補を含む新しい出力をテスト
+
+Usage:
+    python test_english_phase1_v2.py [image_path]
+    
+Examples:
+    python test_english_phase1_v2.py test_images/food1.jpg
+    python test_english_phase1_v2.py  # デフォルト画像を使用
+"""
+
 import requests
 import json
-import asyncio
-import httpx
+import sys
+import time
+import argparse
+from pathlib import Path
+from datetime import datetime
 
 # API設定
-BASE_URL = "http://localhost:8000/api/v1"
+BASE_URL = "http://localhost:8000"
+MEAL_ANALYSES_ENDPOINT = f"{BASE_URL}/api/v1/meal-analyses/"
 
-# テスト画像のパス（英語の食材名を含む画像を使用）
-image_path = "test_images/food3.jpg"
+def get_default_image_paths():
+    """デフォルトの画像パスリストを返す"""
+    return [
+        "test_images/food1.jpg",  # 存在することを確認済み
+        "test_images/food2.jpg",
+        "test_images/food3.jpg",
+        "tests/assets/test_meal.jpg",
+        "test_meal.jpg", 
+        "sample_meal.jpg",
+        # 他の一般的な場所も試す
+        Path.home() / "Downloads" / "meal.jpg",
+        Path.cwd() / "meal.jpg"
+    ]
 
-async def run_phase1_and_phase2():
-    """フェーズ1→フェーズ2の流れをテスト"""
+def find_test_image(specified_path=None):
+    """テスト画像のパスを見つける"""
+    if specified_path:
+        path = Path(specified_path)
+        if path.exists():
+            return path
+        else:
+            print(f"❌ Specified image not found: {specified_path}")
+            return None
     
-    print("=== Phase 1: Initial Analysis ===")
+    # デフォルトの画像を探す
+    for path in get_default_image_paths():
+        if Path(path).exists():
+            return Path(path)
     
-    # フェーズ1: 画像分析
-    with open(image_path, "rb") as f:
-        files = {"image": ("food3.jpg", f, "image/jpeg")}
-        response = requests.post(f"{BASE_URL}/meal-analyses", files=files)
+    return None
+
+def test_phase1_analysis_v2(image_path):
+    """Phase 1の新しい仕様（v2.1）をテスト"""
     
-    if response.status_code != 200:
-        print(f"Phase 1 failed: {response.status_code}")
-        print(response.text)
-        return
+    print(f"📷 Using test image: {image_path}")
     
-    phase1_result = response.json()
-    print("Phase 1 successful!")
-    print(json.dumps(phase1_result, indent=2))
-    
-    # 食材名を表示（英語になっているはず）
-    print("\nDetected ingredients:")
-    for dish in phase1_result.get("dishes", []):
-        print(f"  Dish: {dish['dish_name']}")
-        for ingredient in dish.get("ingredients", []):
-            print(f"    - {ingredient['ingredient_name']}: {ingredient['weight_g']}g")
-    
-    print("\n=== Phase 2: USDA Refinement ===")
-    
-    # フェーズ2: USDA精緻化
-    with open(image_path, "rb") as f:
-        files = {
-            "image": ("food3.jpg", f, "image/jpeg"),
-            "initial_analysis_data": (None, json.dumps(phase1_result), "application/json")
-        }
-        response = requests.post(f"{BASE_URL}/meal-analyses/refine", files=files)
-    
-    print(f"Phase 2 status: {response.status_code}")
-    
-    if response.status_code == 200:
-        phase2_result = response.json()
-        print("Phase 2 successful!")
-        print(json.dumps(phase2_result, indent=2))
+    # API リクエスト
+    try:
+        print("🚀 Sending Phase 1 analysis request...")
+        start_time = time.time()
         
-        # USDA FDC IDを表示
-        print("\nUSDA matches:")
-        for dish in phase2_result.get("dishes", []):
-            print(f"  Dish: {dish['dish_name']}")
-            for ingredient in dish.get("ingredients", []):
-                if ingredient.get("fdc_id"):
-                    print(f"    - {ingredient['ingredient_name']}: FDC ID {ingredient['fdc_id']} ({ingredient.get('usda_source_description', 'N/A')})")
+        with open(image_path, 'rb') as image_file:
+            files = {
+                'image': ('test_meal.jpg', image_file, 'image/jpeg')
+            }
+            data = {
+                'optional_text': 'This is a test meal for Phase 1 analysis with USDA query candidates.'
+            }
+            
+            response = requests.post(
+                MEAL_ANALYSES_ENDPOINT,
+                files=files,
+                data=data,
+                timeout=60
+            )
+        
+        elapsed_time = time.time() - start_time
+        print(f"⏱️  Request completed in {elapsed_time:.2f} seconds")
+        
+        # レスポンス確認
+        print(f"📊 Response status: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ Error response: {response.text}")
+            return False, None
+        
+        # JSON パース
+        result = response.json()
+        
+        # 結果の表示と検証
+        print("\n" + "="*80)
+        print("📋 PHASE 1 ANALYSIS RESULTS (v2.1)")
+        print("="*80)
+        
+        # 基本構造の確認
+        if 'dishes' not in result:
+            print("❌ Missing 'dishes' field in response")
+            return False, None
+        
+        dishes = result['dishes']
+        print(f"🍽️  Found {len(dishes)} dishes")
+        
+        # 各料理の詳細表示
+        for i, dish in enumerate(dishes, 1):
+            print(f"\n📌 DISH {i}: {dish.get('dish_name', 'Unknown')}")
+            print(f"   Type: {dish.get('type', 'N/A')}")
+            print(f"   Quantity: {dish.get('quantity_on_plate', 'N/A')}")
+            
+            # 材料リスト
+            ingredients = dish.get('ingredients', [])
+            print(f"   🥗 Ingredients ({len(ingredients)}):")
+            for ing in ingredients:
+                print(f"      - {ing.get('ingredient_name', 'Unknown')}: {ing.get('weight_g', 0)}g")
+            
+            # NEW: USDAクエリ候補の確認 (v2.1の重要な新機能)
+            usda_candidates = dish.get('usda_query_candidates', [])
+            print(f"   🔍 USDA Query Candidates ({len(usda_candidates)}):")
+            
+            if not usda_candidates:
+                print("      ❌ No USDA query candidates found - this is a problem for v2.1!")
+                return False, None
+            
+            for j, candidate in enumerate(usda_candidates, 1):
+                print(f"      {j}. Query: '{candidate.get('query_term', 'N/A')}'")
+                print(f"         Granularity: {candidate.get('granularity_level', 'N/A')}")
+                print(f"         Original: {candidate.get('original_term', 'N/A')}")
+                print(f"         Reason: {candidate.get('reason_for_query', 'N/A')}")
+        
+        # v2.1 仕様の検証
+        print(f"\n🔍 V2.1 SPECIFICATION VALIDATION:")
+        
+        validation_passed = True
+        
+        # 1. 全ての料理にUSDAクエリ候補があるか
+        for dish in dishes:
+            if not dish.get('usda_query_candidates'):
+                print(f"   ❌ Dish '{dish.get('dish_name')}' has no USDA query candidates")
+                validation_passed = False
+            else:
+                print(f"   ✅ Dish '{dish.get('dish_name')}' has {len(dish.get('usda_query_candidates'))} USDA query candidates")
+        
+        # 2. クエリ候補の粒度レベルが適切か
+        granularity_levels = set()
+        for dish in dishes:
+            for candidate in dish.get('usda_query_candidates', []):
+                level = candidate.get('granularity_level')
+                if level in ['dish', 'ingredient', 'branded_product']:
+                    granularity_levels.add(level)
                 else:
-                    print(f"    - {ingredient['ingredient_name']}: No USDA match")
-                    
-                # 栄養素情報を表示
-                nutrients = ingredient.get("key_nutrients_per_100g", {})
-                if nutrients:
-                    print(f"      Nutrients per 100g: {nutrients}")
-    else:
-        print("Phase 2 failed!")
-        print(response.text)
+                    print(f"   ❌ Invalid granularity level: {level}")
+                    validation_passed = False
+        
+        print(f"   📊 Granularity levels found: {list(granularity_levels)}")
+        
+        # 3. 理由付けがあるか
+        reasoning_count = 0
+        total_candidates = 0
+        for dish in dishes:
+            for candidate in dish.get('usda_query_candidates', []):
+                total_candidates += 1
+                if candidate.get('reason_for_query'):
+                    reasoning_count += 1
+        
+        reasoning_percentage = (reasoning_count / total_candidates * 100) if total_candidates > 0 else 0
+        print(f"   📝 Query reasoning coverage: {reasoning_percentage:.1f}% ({reasoning_count}/{total_candidates})")
+        
+        if reasoning_percentage < 80:
+            print(f"   ⚠️  Low reasoning coverage - should be > 80%")
+            validation_passed = False
+        
+        # 最終判定
+        if validation_passed:
+            print(f"\n✅ Phase 1 v2.1 test PASSED!")
+            print("   - All dishes have USDA query candidates")
+            print("   - Granularity levels are valid") 
+            print("   - Reasoning coverage is sufficient")
+        else:
+            print(f"\n❌ Phase 1 v2.1 test FAILED!")
+            print("   Please check the validation errors above.")
+        
+        return validation_passed, result
+        
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Request error: {e}")
+        return False, None
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON decode error: {e}")
+        print(f"Raw response: {response.text}")
+        return False, None
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        return False, None
+
+def save_result(result, image_path):
+    """結果をtest_resultsフォルダに保存"""
+    # 出力ディレクトリを作成
+    output_dir = Path("test_results")
+    output_dir.mkdir(exist_ok=True)
+    
+    # タイムスタンプ付きファイル名
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    image_name = Path(image_path).stem
+    output_file = output_dir / f"phase1_result_{image_name}_{timestamp}.json"
+    
+    # 結果を保存
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Full result saved to: {output_file}")
+    
+    # デフォルトファイル名でもコピー保存（Phase 2で使用するため）
+    default_file = "phase1_analysis_result_v2.json"
+    with open(default_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Also saved as: {default_file} (for Phase 2 test)")
+    
+    return output_file
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Phase 1 Analysis Test (v2.1) - USDA Query Candidates",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python test_english_phase1_v2.py test_images/food1.jpg
+  python test_english_phase1_v2.py ~/Downloads/meal.jpg
+  python test_english_phase1_v2.py  # Use default image
+        """
+    )
+    parser.add_argument(
+        'image_path', 
+        nargs='?', 
+        help='Path to the meal image file (optional, will search for default images if not provided)'
+    )
+    
+    args = parser.parse_args()
+    
+    print("🧪 Phase 1 Analysis Test (v2.1) - USDA Query Candidates")
+    print("-" * 60)
+    
+    # ヘルスチェック
+    try:
+        health_response = requests.get(f"{BASE_URL}/health", timeout=5)
+        if health_response.status_code == 200:
+            print("✅ Server is healthy")
+        else:
+            print("❌ Server health check failed")
+            return 1
+    except requests.exceptions.RequestException:
+        print("❌ Server is not reachable")
+        return 1
+    
+    # 画像ファイルを探す
+    image_path = find_test_image(args.image_path)
+    
+    if not image_path:
+        print("❌ No test image found. Please specify an image path or place a meal image in one of these locations:")
+        for path in get_default_image_paths():
+            print(f"   - {path}")
+        print(f"\nUsage: python {sys.argv[0]} [image_path]")
+        return 1
+    
+    # テスト実行
+    success, result = test_phase1_analysis_v2(image_path)
+    
+    # 結果を保存
+    if result:
+        save_result(result, image_path)
+    
+    return 0 if success else 1
 
 if __name__ == "__main__":
-    print("Testing Meal Analysis API (English version)")
-    print(f"Using image: {image_path}")
-    asyncio.run(run_phase1_and_phase2()) 
+    sys.exit(main()) 
 ```
 
 ============================================================
 
-📁 API エンドポイント層
+📄 FILE: test_english_phase2_v2.py
+--------------------------------------------------
+ファイルサイズ: 13840 bytes
+最終更新: 2025-05-30 16:11:19
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Phase 2 Analysis Test Script (v2.1) - calculation_strategyとFDC ID選択をテスト
+
+Usage:
+    python test_english_phase2_v2.py [image_path] [phase1_result_file]
+    
+Examples:
+    python test_english_phase2_v2.py test_images/food1.jpg
+    python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+    python test_english_phase2_v2.py  # デフォルト画像とPhase1結果を使用
+"""
+
+import requests
+import json
+import sys
+import time
+import argparse
+from pathlib import Path
+from datetime import datetime
+
+# API設定
+BASE_URL = "http://localhost:8000"
+PHASE1_ENDPOINT = f"{BASE_URL}/api/v1/meal-analyses/"
+PHASE2_ENDPOINT = f"{BASE_URL}/api/v1/meal-analyses/refine"
+
+def get_default_image_paths():
+    """デフォルトの画像パスリストを返す"""
+    return [
+        "test_images/food1.jpg",
+        "test_images/food2.jpg",
+        "test_images/food3.jpg",
+        "tests/assets/test_meal.jpg",
+        "test_meal.jpg", 
+        "sample_meal.jpg",
+        Path.home() / "Downloads" / "meal.jpg",
+        Path.cwd() / "meal.jpg"
+    ]
+
+def find_test_image(specified_path=None):
+    """テスト画像のパスを見つける"""
+    if specified_path:
+        path = Path(specified_path)
+        if path.exists():
+            return path
+        else:
+            print(f"❌ Specified image not found: {specified_path}")
+            return None
+    
+    # デフォルトの画像を探す
+    for path in get_default_image_paths():
+        if Path(path).exists():
+            return Path(path)
+    
+    return None
+
+def find_phase1_result(specified_path=None):
+    """Phase1結果ファイルを見つける"""
+    if specified_path:
+        path = Path(specified_path)
+        if path.exists():
+            return path
+        else:
+            print(f"❌ Specified Phase 1 result file not found: {specified_path}")
+            return None
+    
+    # デフォルトファイルまたは最新のファイルを探す
+    default_paths = [
+        "phase1_analysis_result_v2.json",  # デフォルトファイル
+    ]
+    
+    # test_resultsフォルダ内の最新ファイルも確認
+    test_results_dir = Path("test_results")
+    if test_results_dir.exists():
+        phase1_files = list(test_results_dir.glob("phase1_result_*.json"))
+        # 最新のファイルを先頭に
+        phase1_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+        default_paths.extend(phase1_files)
+    
+    for path in default_paths:
+        if Path(path).exists():
+            return Path(path)
+    
+    return None
+
+def test_phase2_analysis_v2(image_path, phase1_result_file):
+    """Phase 2の新しい仕様（v2.1）をテスト"""
+    
+    print(f"📷 Using test image: {image_path}")
+    print(f"📄 Using Phase 1 result: {phase1_result_file}")
+    
+    # Phase 1結果を読み込み
+    try:
+        with open(phase1_result_file, 'r', encoding='utf-8') as f:
+            phase1_result = json.load(f)
+        print(f"✅ Phase 1 result loaded from {phase1_result_file}")
+    except Exception as e:
+        print(f"❌ Error loading Phase 1 result: {e}")
+        return False, None
+    
+    # Phase 2 API リクエスト
+    try:
+        print("🚀 Sending Phase 2 analysis request...")
+        start_time = time.time()
+        
+        with open(image_path, 'rb') as image_file:
+            files = {
+                'image': ('test_meal.jpg', image_file, 'image/jpeg')
+            }
+            data = {
+                'phase1_analysis_json': json.dumps(phase1_result, ensure_ascii=False)
+            }
+            
+            response = requests.post(
+                PHASE2_ENDPOINT,
+                files=files,
+                data=data,
+                timeout=120  # Phase 2は時間がかかる可能性
+            )
+        
+        elapsed_time = time.time() - start_time
+        print(f"⏱️  Request completed in {elapsed_time:.2f} seconds")
+        
+        # レスポンス確認
+        print(f"📊 Response status: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ Error response: {response.text}")
+            return False, None
+        
+        # JSON パース
+        result = response.json()
+        
+        # 結果の表示と検証
+        print("\n" + "="*80)
+        print("📋 PHASE 2 ANALYSIS RESULTS (v2.1)")
+        print("="*80)
+        
+        # 基本構造の確認
+        if 'dishes' not in result:
+            print("❌ Missing 'dishes' field in response")
+            return False, None
+        
+        dishes = result['dishes']
+        print(f"🍽️  Found {len(dishes)} dishes")
+        
+        # 各料理の詳細表示と検証
+        validation_passed = True
+        strategy_counts = {"dish_level": 0, "ingredient_level": 0}
+        total_fdc_ids_selected = 0
+        
+        for i, dish in enumerate(dishes, 1):
+            print(f"\n📌 DISH {i}: {dish.get('dish_name', 'Unknown')}")
+            print(f"   Type: {dish.get('type', 'N/A')}")
+            
+            # NEW v2.1: calculation_strategy の確認
+            strategy = dish.get('calculation_strategy')
+            print(f"   🎯 Calculation Strategy: {strategy}")
+            
+            if strategy not in ['dish_level', 'ingredient_level']:
+                print(f"      ❌ Invalid calculation strategy: {strategy}")
+                validation_passed = False
+            else:
+                strategy_counts[strategy] += 1
+                print(f"   📝 Strategy Reason: {dish.get('reason_for_strategy', 'N/A')}")
+            
+            # FDC ID情報の確認
+            dish_fdc_id = dish.get('fdc_id')
+            if strategy == 'dish_level':
+                if dish_fdc_id:
+                    print(f"   🏷️  Dish FDC ID: {dish_fdc_id}")
+                    print(f"   📄 USDA Source: {dish.get('usda_source_description', 'N/A')}")
+                    print(f"   💭 Choice Reason: {dish.get('reason_for_choice', 'N/A')}")
+                    total_fdc_ids_selected += 1
+                else:
+                    print(f"      ⚠️  No FDC ID for dish-level strategy")
+            
+            # 材料の詳細
+            ingredients = dish.get('ingredients', [])
+            print(f"   🥗 Ingredients ({len(ingredients)}):")
+            
+            for ing in ingredients:
+                ing_name = ing.get('ingredient_name', 'Unknown')
+                weight = ing.get('weight_g', 0)
+                ing_fdc_id = ing.get('fdc_id')
+                
+                print(f"      - {ing_name}: {weight}g", end="")
+                if ing_fdc_id:
+                    print(f" [FDC ID: {ing_fdc_id}]")
+                    total_fdc_ids_selected += 1
+                    if ing.get('reason_for_choice'):
+                        print(f"        Reason: {ing.get('reason_for_choice')}")
+                else:
+                    print(f" [No FDC ID]")
+            
+            # 栄養素情報の確認
+            nutrients = dish.get('dish_total_actual_nutrients')
+            if nutrients:
+                print(f"   🧮 Nutrition (Total): {nutrients.get('calories_kcal', 0):.1f} kcal, "
+                      f"{nutrients.get('protein_g', 0):.1f}g protein, "
+                      f"{nutrients.get('carbohydrates_g', 0):.1f}g carbs, "
+                      f"{nutrients.get('fat_g', 0):.1f}g fat")
+            else:
+                print(f"   ⚠️  No nutritional data calculated")
+        
+        # 食事全体の栄養
+        total_nutrients = result.get('total_meal_nutrients')
+        if total_nutrients:
+            print(f"\n🍽️  MEAL TOTAL NUTRITION:")
+            print(f"   Energy: {total_nutrients.get('calories_kcal', 0):.1f} kcal")
+            print(f"   Protein: {total_nutrients.get('protein_g', 0):.1f}g")
+            print(f"   Carbohydrates: {total_nutrients.get('carbohydrates_g', 0):.1f}g")
+            print(f"   Fat: {total_nutrients.get('fat_g', 0):.1f}g")
+            if total_nutrients.get('fiber_g'):
+                print(f"   Fiber: {total_nutrients.get('fiber_g', 0):.1f}g")
+            if total_nutrients.get('sodium_mg'):
+                print(f"   Sodium: {total_nutrients.get('sodium_mg', 0):.1f}mg")
+        else:
+            print(f"\n⚠️  No total meal nutrition calculated")
+            validation_passed = False
+        
+        # v2.1 仕様の検証
+        print(f"\n🔍 V2.1 SPECIFICATION VALIDATION:")
+        print(f"   📊 Strategy Distribution:")
+        print(f"      - Dish Level: {strategy_counts['dish_level']} dishes")
+        print(f"      - Ingredient Level: {strategy_counts['ingredient_level']} dishes") 
+        print(f"   🏷️  Total FDC IDs Selected: {total_fdc_ids_selected}")
+        
+        # 警告とエラーの確認
+        warnings = result.get('warnings', [])
+        errors = result.get('errors', [])
+        
+        if warnings:
+            print(f"   ⚠️  Warnings ({len(warnings)}):")
+            for warning in warnings:
+                print(f"      - {warning}")
+        
+        if errors:
+            print(f"   ❌ Errors ({len(errors)}):")
+            for error in errors:
+                print(f"      - {error}")
+            validation_passed = False
+        
+        # 最終判定
+        if validation_passed:
+            print(f"\n✅ Phase 2 v2.1 test PASSED!")
+            print("   - All calculation strategies are valid")
+            print("   - FDC IDs are properly selected")
+            print("   - Total meal nutrition is calculated")
+        else:
+            print(f"\n❌ Phase 2 v2.1 test FAILED!")
+            print("   Please check the validation errors above.")
+        
+        return validation_passed, result
+        
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Request error: {e}")
+        return False, None
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON decode error: {e}")
+        print(f"Raw response: {response.text}")
+        return False, None
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+        return False, None
+
+def save_result(result, image_path, phase1_result_file):
+    """結果をtest_resultsフォルダに保存"""
+    # 出力ディレクトリを作成
+    output_dir = Path("test_results")
+    output_dir.mkdir(exist_ok=True)
+    
+    # タイムスタンプ付きファイル名
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    image_name = Path(image_path).stem
+    output_file = output_dir / f"phase2_result_{image_name}_{timestamp}.json"
+    
+    # 結果を保存
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Full result saved to: {output_file}")
+    
+    # デフォルトファイル名でもコピー保存（後続処理で使用するため）
+    default_file = "phase2_analysis_result_v2.json"
+    with open(default_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Also saved as: {default_file}")
+    
+    return output_file
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Phase 2 Analysis Test (v2.1) - Calculation Strategy & FDC ID Selection",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python test_english_phase2_v2.py test_images/food1.jpg
+  python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+  python test_english_phase2_v2.py  # Use default image and latest Phase 1 result
+        """
+    )
+    parser.add_argument(
+        'image_path', 
+        nargs='?', 
+        help='Path to the meal image file (optional, will search for default images if not provided)'
+    )
+    parser.add_argument(
+        'phase1_result_file', 
+        nargs='?', 
+        help='Path to Phase 1 result JSON file (optional, will use latest if not provided)'
+    )
+    
+    args = parser.parse_args()
+    
+    print("🧪 Phase 2 Analysis Test (v2.1) - Calculation Strategy & FDC ID Selection")
+    print("-" * 80)
+    
+    # ヘルスチェック
+    try:
+        health_response = requests.get(f"{BASE_URL}/health", timeout=5)
+        if health_response.status_code == 200:
+            print("✅ Server is healthy")
+        else:
+            print("❌ Server health check failed")
+            return 1
+    except requests.exceptions.RequestException:
+        print("❌ Server is not reachable")
+        return 1
+    
+    # 画像ファイルを探す
+    image_path = find_test_image(args.image_path)
+    
+    if not image_path:
+        print("❌ No test image found. Please specify an image path or place a meal image in one of these locations:")
+        for path in get_default_image_paths():
+            print(f"   - {path}")
+        print(f"\nUsage: python {sys.argv[0]} [image_path] [phase1_result_file]")
+        return 1
+    
+    # Phase 1結果ファイルを探す
+    phase1_result_file = find_phase1_result(args.phase1_result_file)
+    
+    if not phase1_result_file:
+        print("❌ No Phase 1 result file found. Please run Phase 1 test first or specify a result file:")
+        print("   python test_english_phase1_v2.py")
+        print(f"   OR: python {sys.argv[0]} {image_path} <phase1_result_file>")
+        return 1
+    
+    # テスト実行
+    success, result = test_phase2_analysis_v2(image_path, phase1_result_file)
+    
+    # 結果を保存
+    if result:
+        save_result(result, image_path, phase1_result_file)
+    
+    if success:
+        print("\n🎉 Phase 2 test completed successfully!")
+        return 0
+    else:
+        print("\n💥 Phase 2 test failed! Please check the implementation.")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main()) 
+```
+
+============================================================
+
+📁 API エンドポイント層 (v2.1)
 ============================================================
 
 📄 FILE: app/main.py
@@ -135,6 +727,7 @@ if __name__ == "__main__":
 ファイルサイズ: 3235 bytes
 最終更新: 2025-05-29 16:07:57
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -246,11 +839,54 @@ async def global_exception_handler(request, exc):
 
 ============================================================
 
+📄 FILE: app/api/__init__.py
+--------------------------------------------------
+ファイルサイズ: 0 bytes
+最終更新: 2025-05-27 15:03:55
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+
+```
+
+============================================================
+
+📄 FILE: app/api/v1/__init__.py
+--------------------------------------------------
+ファイルサイズ: 0 bytes
+最終更新: 2025-05-27 15:03:55
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+
+```
+
+============================================================
+
+📄 FILE: app/api/v1/endpoints/__init__.py
+--------------------------------------------------
+ファイルサイズ: 0 bytes
+最終更新: 2025-05-27 15:03:55
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+
+```
+
+============================================================
+
 📄 FILE: app/api/v1/endpoints/meal_analyses.py
 --------------------------------------------------
 ファイルサイズ: 7582 bytes
 最終更新: 2025-05-29 17:57:41
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -468,6 +1104,7 @@ async def analyze_meal_legacy(
 ファイルサイズ: 20965 bytes
 最終更新: 2025-05-30 14:13:27
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -930,7 +1567,21 @@ async def refine_meal_analysis(
 
 ============================================================
 
-📁 サービス層
+📁 サービス層 (v2.1対応)
+============================================================
+
+📄 FILE: app/services/__init__.py
+--------------------------------------------------
+ファイルサイズ: 0 bytes
+最終更新: 2025-05-27 15:03:55
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+
+```
+
 ============================================================
 
 📄 FILE: app/services/gemini_service.py
@@ -938,6 +1589,7 @@ async def refine_meal_analysis(
 ファイルサイズ: 12578 bytes
 最終更新: 2025-05-29 17:41:52
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -1244,6 +1896,7 @@ def get_gemini_analyzer(project_id: str, location: str, model_name: str) -> Gemi
 ファイルサイズ: 16322 bytes
 最終更新: 2025-05-30 11:20:31
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -1629,7 +2282,655 @@ def get_usda_service():
 
 ============================================================
 
-📁 データモデル層
+📄 FILE: app/services/nutrition_calculation_service.py
+--------------------------------------------------
+ファイルサイズ: 10114 bytes
+最終更新: 2025-05-29 17:21:23
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+"""
+栄養素計算サービス (v2.1対応)
+
+このサービスは純粋な計算ロジックを提供します：
+1. 100gあたりの栄養素データから実際の栄養素を計算
+2. 食材リストから料理全体の栄養素を集計
+3. 料理リストから食事全体の栄養素を集計
+"""
+
+import logging
+from typing import List, Optional, Dict
+from ..api.v1.schemas.meal import CalculatedNutrients, RefinedIngredientResponse, RefinedDishResponse
+
+logger = logging.getLogger(__name__)
+
+
+class NutritionCalculationService:
+    """栄養素計算サービスクラス (v2.1対応)"""
+    
+    @staticmethod
+    def calculate_actual_nutrients(
+        key_nutrients_per_100g: Dict[str, float], 
+        estimated_weight_g: float
+    ) -> CalculatedNutrients:
+        """
+        100gあたりの主要栄養素データから実際の栄養素量を計算 (v2.1仕様)
+        
+        Args:
+            key_nutrients_per_100g: 100gあたりの主要栄養素データ
+            estimated_weight_g: 推定グラム数
+            
+        Returns:
+            CalculatedNutrients: 計算済み栄養素オブジェクト
+        """
+        if not key_nutrients_per_100g or estimated_weight_g <= 0:
+            logger.warning(f"Invalid input: key_nutrients_per_100g={key_nutrients_per_100g}, estimated_weight_g={estimated_weight_g}")
+            return CalculatedNutrients()  # デフォルト値（全て0.0）を返す
+        
+        try:
+            # 計算式: (Nutrient_Value_per_100g / 100) × estimated_weight_g
+            multiplier = estimated_weight_g / 100.0
+            
+            # 各栄養素を計算（見つからない/Noneの場合は0.0として扱う）
+            calories_kcal = round((key_nutrients_per_100g.get('calories_kcal', 0.0) or 0.0) * multiplier, 2)
+            protein_g = round((key_nutrients_per_100g.get('protein_g', 0.0) or 0.0) * multiplier, 2)
+            carbohydrates_g = round((key_nutrients_per_100g.get('carbohydrates_g', 0.0) or 0.0) * multiplier, 2)
+            fat_g = round((key_nutrients_per_100g.get('fat_g', 0.0) or 0.0) * multiplier, 2)
+            
+            # v2.1で追加された栄養素も計算
+            fiber_g = key_nutrients_per_100g.get('fiber_g')
+            fiber_g = round(fiber_g * multiplier, 2) if fiber_g is not None else None
+            
+            sugars_g = key_nutrients_per_100g.get('sugars_g')
+            sugars_g = round(sugars_g * multiplier, 2) if sugars_g is not None else None
+            
+            sodium_mg = key_nutrients_per_100g.get('sodium_mg')
+            sodium_mg = round(sodium_mg * multiplier, 2) if sodium_mg is not None else None
+            
+            result = CalculatedNutrients(
+                calories_kcal=calories_kcal,
+                protein_g=protein_g,
+                carbohydrates_g=carbohydrates_g,
+                fat_g=fat_g,
+                fiber_g=fiber_g,
+                sugars_g=sugars_g,
+                sodium_mg=sodium_mg
+            )
+            
+            logger.debug(f"Calculated nutrients for {estimated_weight_g}g: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error calculating actual nutrients: {e}")
+            return CalculatedNutrients()  # エラー時はデフォルト値を返す
+    
+    @staticmethod
+    def aggregate_nutrients_for_dish_from_ingredients(
+        ingredients: List[RefinedIngredientResponse]
+    ) -> CalculatedNutrients:
+        """
+        材料リストから料理全体の栄養素を集計 (v2.1仕様)
+        
+        Args:
+            ingredients: RefinedIngredientResponseのリスト（各要素は計算済みのactual_nutrientsを持つ）
+            
+        Returns:
+            CalculatedNutrients: 料理の集計栄養素
+        """
+        if not ingredients:
+            logger.warning("No ingredients provided for aggregation")
+            return CalculatedNutrients()
+        
+        try:
+            total_calories = 0.0
+            total_protein = 0.0
+            total_carbohydrates = 0.0
+            total_fat = 0.0
+            total_fiber = 0.0
+            total_sugars = 0.0
+            total_sodium = 0.0
+            
+            # Optional栄養素のカウンター
+            fiber_count = 0
+            sugars_count = 0
+            sodium_count = 0
+            calculated_count = 0
+            
+            for ingredient in ingredients:
+                if ingredient.actual_nutrients:
+                    total_calories += ingredient.actual_nutrients.calories_kcal
+                    total_protein += ingredient.actual_nutrients.protein_g
+                    total_carbohydrates += ingredient.actual_nutrients.carbohydrates_g
+                    total_fat += ingredient.actual_nutrients.fat_g
+                    
+                    # Optional栄養素の処理
+                    if ingredient.actual_nutrients.fiber_g is not None:
+                        total_fiber += ingredient.actual_nutrients.fiber_g
+                        fiber_count += 1
+                    
+                    if ingredient.actual_nutrients.sugars_g is not None:
+                        total_sugars += ingredient.actual_nutrients.sugars_g
+                        sugars_count += 1
+                    
+                    if ingredient.actual_nutrients.sodium_mg is not None:
+                        total_sodium += ingredient.actual_nutrients.sodium_mg
+                        sodium_count += 1
+                    
+                    calculated_count += 1
+                else:
+                    logger.warning(f"Ingredient '{ingredient.ingredient_name}' has no actual_nutrients")
+            
+            # 小数点以下2桁に丸める
+            result = CalculatedNutrients(
+                calories_kcal=round(total_calories, 2),
+                protein_g=round(total_protein, 2),
+                carbohydrates_g=round(total_carbohydrates, 2),
+                fat_g=round(total_fat, 2),
+                fiber_g=round(total_fiber, 2) if fiber_count > 0 else None,
+                sugars_g=round(total_sugars, 2) if sugars_count > 0 else None,
+                sodium_mg=round(total_sodium, 2) if sodium_count > 0 else None
+            )
+            
+            logger.info(f"Aggregated nutrients from {calculated_count}/{len(ingredients)} ingredients: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error aggregating nutrients for dish: {e}")
+            return CalculatedNutrients()
+    
+    @staticmethod
+    def aggregate_nutrients_for_meal(
+        dishes: List[RefinedDishResponse]
+    ) -> CalculatedNutrients:
+        """
+        料理リストから食事全体の栄養素を集計 (v2.1仕様)
+        
+        Args:
+            dishes: RefinedDishResponseのリスト（各要素は計算済みのdish_total_actual_nutrientsを持つ）
+            
+        Returns:
+            CalculatedNutrients: 食事全体の総栄養素
+        """
+        if not dishes:
+            logger.warning("No dishes provided for meal aggregation")
+            return CalculatedNutrients()
+        
+        try:
+            total_calories = 0.0
+            total_protein = 0.0
+            total_carbohydrates = 0.0
+            total_fat = 0.0
+            total_fiber = 0.0
+            total_sugars = 0.0
+            total_sodium = 0.0
+            
+            # Optional栄養素のカウンター
+            fiber_count = 0
+            sugars_count = 0
+            sodium_count = 0
+            calculated_count = 0
+            
+            for dish in dishes:
+                if dish.dish_total_actual_nutrients:
+                    total_calories += dish.dish_total_actual_nutrients.calories_kcal
+                    total_protein += dish.dish_total_actual_nutrients.protein_g
+                    total_carbohydrates += dish.dish_total_actual_nutrients.carbohydrates_g
+                    total_fat += dish.dish_total_actual_nutrients.fat_g
+                    
+                    # Optional栄養素の処理
+                    if dish.dish_total_actual_nutrients.fiber_g is not None:
+                        total_fiber += dish.dish_total_actual_nutrients.fiber_g
+                        fiber_count += 1
+                    
+                    if dish.dish_total_actual_nutrients.sugars_g is not None:
+                        total_sugars += dish.dish_total_actual_nutrients.sugars_g
+                        sugars_count += 1
+                    
+                    if dish.dish_total_actual_nutrients.sodium_mg is not None:
+                        total_sodium += dish.dish_total_actual_nutrients.sodium_mg
+                        sodium_count += 1
+                    
+                    calculated_count += 1
+                else:
+                    logger.warning(f"Dish '{dish.dish_name}' has no dish_total_actual_nutrients")
+            
+            # 小数点以下2桁に丸める
+            result = CalculatedNutrients(
+                calories_kcal=round(total_calories, 2),
+                protein_g=round(total_protein, 2),
+                carbohydrates_g=round(total_carbohydrates, 2),
+                fat_g=round(total_fat, 2),
+                fiber_g=round(total_fiber, 2) if fiber_count > 0 else None,
+                sugars_g=round(total_sugars, 2) if sugars_count > 0 else None,
+                sodium_mg=round(total_sodium, 2) if sodium_count > 0 else None
+            )
+            
+            logger.info(f"Aggregated meal nutrients from {calculated_count}/{len(dishes)} dishes: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error aggregating nutrients for meal: {e}")
+            return CalculatedNutrients()
+
+
+# サービスインスタンスを取得するファクトリ関数
+def get_nutrition_calculation_service() -> NutritionCalculationService:
+    """
+    栄養計算サービスインスタンスを取得
+    
+    Returns:
+        NutritionCalculationService: 栄養計算サービスインスタンス
+    """
+    return NutritionCalculationService() 
+```
+
+============================================================
+
+📄 FILE: app/services/logging_service.py
+--------------------------------------------------
+ファイルサイズ: 13198 bytes
+最終更新: 2025-05-29 17:54:52
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+import json
+import logging
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict, Any, Optional, List
+from dataclasses import dataclass, asdict
+from enum import Enum
+
+logger = logging.getLogger(__name__)
+
+class LogLevel(str, Enum):
+    """ログレベル定義"""
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+class ProcessingPhase(str, Enum):
+    """処理フェーズ定義"""
+    REQUEST_RECEIVED = "REQUEST_RECEIVED"
+    PHASE1_START = "PHASE1_START"
+    PHASE1_COMPLETE = "PHASE1_COMPLETE"
+    USDA_SEARCH_START = "USDA_SEARCH_START"
+    USDA_SEARCH_COMPLETE = "USDA_SEARCH_COMPLETE"
+    PHASE2_START = "PHASE2_START"
+    PHASE2_COMPLETE = "PHASE2_COMPLETE"
+    NUTRITION_CALC_START = "NUTRITION_CALC_START"
+    NUTRITION_CALC_COMPLETE = "NUTRITION_CALC_COMPLETE"
+    RESPONSE_SENT = "RESPONSE_SENT"
+    ERROR_OCCURRED = "ERROR_OCCURRED"
+
+@dataclass
+class LogEntry:
+    """ログエントリの標準構造"""
+    timestamp: str
+    request_id: str
+    log_level: LogLevel
+    phase: ProcessingPhase
+    message: str
+    data: Optional[Dict[str, Any]] = None
+    execution_time_ms: Optional[float] = None
+    error_details: Optional[str] = None
+
+@dataclass
+class MealAnalysisSession:
+    """食事分析セッション全体のログ"""
+    session_id: str
+    start_time: str
+    end_time: Optional[str] = None
+    endpoint: str = ""
+    image_filename: Optional[str] = None
+    image_size_bytes: Optional[int] = None
+    
+    # フェーズ1結果
+    phase1_duration_ms: Optional[float] = None
+    phase1_dishes_count: Optional[int] = None
+    phase1_usda_queries_count: Optional[int] = None
+    phase1_output: Optional[Dict[str, Any]] = None
+    
+    # USDA検索結果
+    usda_search_duration_ms: Optional[float] = None
+    usda_queries_executed: Optional[int] = None
+    usda_results_found: Optional[int] = None
+    usda_search_details: Optional[List[Dict[str, Any]]] = None
+    
+    # フェーズ2結果
+    phase2_duration_ms: Optional[float] = None
+    phase2_strategy_decisions: Optional[Dict[str, Any]] = None
+    phase2_fdc_selections: Optional[Dict[str, Any]] = None
+    phase2_output: Optional[Dict[str, Any]] = None
+    
+    # 栄養計算結果
+    nutrition_calc_duration_ms: Optional[float] = None
+    total_calories: Optional[float] = None
+    final_nutrition: Optional[Dict[str, Any]] = None
+    
+    # エラー・警告
+    warnings: Optional[List[str]] = None
+    errors: Optional[List[str]] = None
+    
+    # パフォーマンス
+    total_duration_ms: Optional[float] = None
+    gemini_api_calls: Optional[int] = None
+    usda_api_calls: Optional[int] = None
+
+class MealAnalysisLogger:
+    """食事分析専用ログ管理クラス"""
+    
+    def __init__(self, log_dir: str = "logs"):
+        self.log_dir = Path(log_dir)
+        self.log_dir.mkdir(exist_ok=True)
+        
+        # セッション管理
+        self.active_sessions: Dict[str, MealAnalysisSession] = {}
+        
+        # ログファイル設定
+        self.setup_file_logging()
+    
+    def setup_file_logging(self):
+        """ファイルログの設定"""
+        # 詳細ログファイル
+        detailed_log_file = self.log_dir / "meal_analysis_detailed.jsonl"
+        
+        # セッションログファイル
+        session_log_file = self.log_dir / "meal_analysis_sessions.jsonl"
+        
+        # エラーログファイル
+        error_log_file = self.log_dir / "meal_analysis_errors.log"
+        
+        self.detailed_log_file = detailed_log_file
+        self.session_log_file = session_log_file
+        self.error_log_file = error_log_file
+    
+    def start_session(
+        self, 
+        endpoint: str,
+        image_filename: Optional[str] = None,
+        image_size_bytes: Optional[int] = None
+    ) -> str:
+        """新しい分析セッションを開始"""
+        session_id = str(uuid.uuid4())
+        
+        session = MealAnalysisSession(
+            session_id=session_id,
+            start_time=datetime.now(timezone.utc).isoformat(),
+            endpoint=endpoint,
+            image_filename=image_filename,
+            image_size_bytes=image_size_bytes
+        )
+        
+        self.active_sessions[session_id] = session
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.REQUEST_RECEIVED,
+            message=f"Started meal analysis session for endpoint: {endpoint}",
+            data={
+                "endpoint": endpoint,
+                "image_filename": image_filename,
+                "image_size_bytes": image_size_bytes
+            }
+        )
+        
+        return session_id
+    
+    def log_entry(
+        self,
+        session_id: str,
+        level: LogLevel,
+        phase: ProcessingPhase,
+        message: str,
+        data: Optional[Dict[str, Any]] = None,
+        execution_time_ms: Optional[float] = None,
+        error_details: Optional[str] = None
+    ):
+        """個別のログエントリを記録"""
+        entry = LogEntry(
+            timestamp=datetime.now(timezone.utc).isoformat(),
+            request_id=session_id,
+            log_level=level,
+            phase=phase,
+            message=message,
+            data=data,
+            execution_time_ms=execution_time_ms,
+            error_details=error_details
+        )
+        
+        # JSONLファイルに追記
+        try:
+            with open(self.detailed_log_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(asdict(entry), ensure_ascii=False) + "\n")
+        except Exception as e:
+            logger.error(f"Failed to write detailed log: {e}")
+        
+        # エラーレベルの場合は専用ファイルにも記録
+        if level in [LogLevel.ERROR, LogLevel.CRITICAL]:
+            try:
+                with open(self.error_log_file, "a", encoding="utf-8") as f:
+                    f.write(f"[{entry.timestamp}] {session_id} - {message}\n")
+                    if error_details:
+                        f.write(f"  Error Details: {error_details}\n")
+                    if data:
+                        f.write(f"  Data: {json.dumps(data, ensure_ascii=False)}\n")
+                    f.write("\n")
+            except Exception as e:
+                logger.error(f"Failed to write error log: {e}")
+    
+    def update_phase1_results(
+        self,
+        session_id: str,
+        duration_ms: float,
+        dishes_count: int,
+        usda_queries_count: int,
+        phase1_output: Dict[str, Any]
+    ):
+        """フェーズ1結果を記録"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session.phase1_duration_ms = duration_ms
+            session.phase1_dishes_count = dishes_count
+            session.phase1_usda_queries_count = usda_queries_count
+            session.phase1_output = phase1_output
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.PHASE1_COMPLETE,
+            message=f"Phase 1 completed: {dishes_count} dishes, {usda_queries_count} USDA queries",
+            data={
+                "duration_ms": duration_ms,
+                "dishes_count": dishes_count,
+                "usda_queries_count": usda_queries_count,
+                "phase1_output": phase1_output
+            },
+            execution_time_ms=duration_ms
+        )
+    
+    def update_usda_search_results(
+        self,
+        session_id: str,
+        duration_ms: float,
+        queries_executed: int,
+        results_found: int,
+        search_details: List[Dict[str, Any]]
+    ):
+        """USDA検索結果を記録"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session.usda_search_duration_ms = duration_ms
+            session.usda_queries_executed = queries_executed
+            session.usda_results_found = results_found
+            session.usda_search_details = search_details
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.USDA_SEARCH_COMPLETE,
+            message=f"USDA search completed: {queries_executed} queries, {results_found} results",
+            data={
+                "duration_ms": duration_ms,
+                "queries_executed": queries_executed,
+                "results_found": results_found,
+                "search_summary": search_details
+            },
+            execution_time_ms=duration_ms
+        )
+    
+    def update_phase2_results(
+        self,
+        session_id: str,
+        duration_ms: float,
+        strategy_decisions: Dict[str, Any],
+        fdc_selections: Dict[str, Any],
+        phase2_output: Dict[str, Any]
+    ):
+        """フェーズ2結果を記録"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session.phase2_duration_ms = duration_ms
+            session.phase2_strategy_decisions = strategy_decisions
+            session.phase2_fdc_selections = fdc_selections
+            session.phase2_output = phase2_output
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.PHASE2_COMPLETE,
+            message="Phase 2 completed: Strategy decisions and FDC ID selections made",
+            data={
+                "duration_ms": duration_ms,
+                "strategy_decisions": strategy_decisions,
+                "fdc_selections": fdc_selections,
+                "phase2_output": phase2_output
+            },
+            execution_time_ms=duration_ms
+        )
+    
+    def update_nutrition_results(
+        self,
+        session_id: str,
+        duration_ms: float,
+        total_calories: float,
+        final_nutrition: Dict[str, Any]
+    ):
+        """栄養計算結果を記録"""
+        if session_id in self.active_sessions:
+            session = self.active_sessions[session_id]
+            session.nutrition_calc_duration_ms = duration_ms
+            session.total_calories = total_calories
+            session.final_nutrition = final_nutrition
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.NUTRITION_CALC_COMPLETE,
+            message=f"Nutrition calculation completed: {total_calories:.1f} kcal total",
+            data={
+                "duration_ms": duration_ms,
+                "total_calories": total_calories,
+                "final_nutrition": final_nutrition
+            },
+            execution_time_ms=duration_ms
+        )
+    
+    def end_session(
+        self,
+        session_id: str,
+        warnings: Optional[List[str]] = None,
+        errors: Optional[List[str]] = None
+    ):
+        """セッションを終了し、完全なログを保存"""
+        if session_id not in self.active_sessions:
+            return
+        
+        session = self.active_sessions[session_id]
+        session.end_time = datetime.now(timezone.utc).isoformat()
+        session.warnings = warnings
+        session.errors = errors
+        
+        # 総実行時間を計算
+        if session.start_time and session.end_time:
+            start = datetime.fromisoformat(session.start_time.replace('Z', '+00:00'))
+            end = datetime.fromisoformat(session.end_time.replace('Z', '+00:00'))
+            session.total_duration_ms = (end - start).total_seconds() * 1000
+        
+        # セッションログファイルに保存
+        try:
+            with open(self.session_log_file, "a", encoding="utf-8") as f:
+                f.write(json.dumps(asdict(session), ensure_ascii=False) + "\n")
+        except Exception as e:
+            logger.error(f"Failed to write session log: {e}")
+        
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.RESPONSE_SENT,
+            message=f"Session completed in {session.total_duration_ms:.1f}ms",
+            data={
+                "total_duration_ms": session.total_duration_ms,
+                "warnings_count": len(warnings) if warnings else 0,
+                "errors_count": len(errors) if errors else 0
+            },
+            execution_time_ms=session.total_duration_ms
+        )
+        
+        # アクティブセッションから削除
+        del self.active_sessions[session_id]
+    
+    def log_error(
+        self,
+        session_id: str,
+        phase: ProcessingPhase,
+        error_message: str,
+        error_details: str,
+        data: Optional[Dict[str, Any]] = None
+    ):
+        """エラーログを記録"""
+        self.log_entry(
+            session_id=session_id,
+            level=LogLevel.ERROR,
+            phase=phase,
+            message=error_message,
+            data=data,
+            error_details=error_details
+        )
+
+# グローバルロガーインスタンス
+meal_analysis_logger = MealAnalysisLogger()
+
+def get_meal_analysis_logger() -> MealAnalysisLogger:
+    """ロガーインスタンスを取得"""
+    return meal_analysis_logger 
+```
+
+============================================================
+
+📁 データモデル層 (v2.1スキーマ)
+============================================================
+
+📄 FILE: app/api/v1/schemas/__init__.py
+--------------------------------------------------
+ファイルサイズ: 0 bytes
+最終更新: 2025-05-27 15:03:55
+存在: ✅
+タイプ: 🐍 Python モジュール
+
+CONTENT:
+```
+
+```
+
 ============================================================
 
 📄 FILE: app/api/v1/schemas/meal.py
@@ -1637,6 +2938,7 @@ def get_usda_service():
 ファイルサイズ: 17460 bytes
 最終更新: 2025-05-29 17:37:41
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -1948,86 +3250,7 @@ REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA = PHASE_2_GEMINI_SCHEMA
 
 ============================================================
 
-📁 設定管理
-============================================================
-
-📄 FILE: app/core/config.py
---------------------------------------------------
-ファイルサイズ: 2486 bytes
-最終更新: 2025-05-30 11:20:23
-存在: ✅
-
-CONTENT:
-```
-from typing import Optional, List
-from pydantic_settings import BaseSettings
-from functools import lru_cache
-
-
-class Settings(BaseSettings):
-    """
-    API設定クラス
-    環境変数から設定値を読み込む
-    """
-    # Vertex AI設定
-    GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
-    GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
-    GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
-    
-    # USDA API設定
-    USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）
-    USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
-    USDA_API_TIMEOUT: float = 15.0  # APIタイムアウト秒数（FDC ID 746952のような遅いレスポンスに対応）
-    USDA_API_MAX_RETRIES: int = 3  # 最大リトライ回数
-    USDA_API_RETRY_DELAY: float = 1.0  # 初回リトライ前の待機時間（秒）
-    USDA_API_RETRY_BACKOFF: float = 2.0  # リトライ間隔の倍率（exponential backoff）
-    USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
-    # 主要栄養素番号（カンマ区切り文字列として環境変数から読み込む）
-    USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,203,204,205,291,269,307"
-    # 208: Energy (kcal), 203: Protein, 204: Total lipid (fat), 
-    # 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
-    
-    @property
-    def USDA_KEY_NUTRIENT_NUMBERS(self) -> List[str]:
-        """主要栄養素番号のリストを返す"""
-        return self.USDA_KEY_NUTRIENT_NUMBERS_STR.split(",")
-    
-    # キャッシュ設定
-    CACHE_TYPE: str = "simple"  # "simple", "redis", "memcached"
-    CACHE_REDIS_URL: Optional[str] = None  # Redisを使用する場合のURL
-    USDA_CACHE_TTL_SECONDS: int = 3600  # USDAレスポンスのキャッシュ有効期間（1時間）
-    
-    # API設定
-    API_LOG_LEVEL: str = "INFO"
-    FASTAPI_ENV: str = "development"
-    
-    # サーバー設定
-    HOST: str = "0.0.0.0"
-    PORT: int = 8000
-    
-    # APIバージョン
-    API_VERSION: str = "v1"
-    
-    # Google Cloud認証設定
-    # GOOGLE_APPLICATION_CREDENTIALSは通常環境変数で設定するため、ここでは不要
-    # gcloud auth application-default login でも可
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-
-
-@lru_cache()
-def get_settings() -> Settings:
-    """
-    設定インスタンスを取得（キャッシュされる）
-    """
-    return Settings() 
-```
-
-============================================================
-
-📁 プロンプト管理
+📁 プロンプト管理層 (v2.1)
 ============================================================
 
 📄 FILE: app/prompts/__init__.py
@@ -2035,6 +3258,7 @@ def get_settings() -> Settings:
 ファイルサイズ: 114 bytes
 最終更新: 2025-05-29 16:07:57
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -2054,6 +3278,7 @@ __all__ = ['PromptLoader']
 ファイルサイズ: 4029 bytes
 最終更新: 2025-05-29 17:41:19
 存在: ✅
+タイプ: 🐍 Python モジュール
 
 CONTENT:
 ```
@@ -2178,144 +3403,19 @@ class PromptLoader:
 
 ============================================================
 
-📁 プロンプトテンプレート
-============================================================
-
-📄 FILE: app/prompts/phase1_system_prompt.txt
---------------------------------------------------
-ファイルサイズ: 2004 bytes
-最終更新: 2025-05-29 17:15:57
-存在: ✅
-
-CONTENT:
-```
-You are an expert culinary analyst and food database specialist. Your primary task is to analyze meal images and identify potential dishes and ingredients, focusing on generating *effective query terms for the USDA FoodData Central database*.
-
-**Your Goals:**
-
-1.  **Identify Dishes & Ingredients:** Recognize distinct dishes and their likely core ingredients from the image.
-2.  **Estimate Weights:** Provide a reasonable weight estimate (in grams) for each ingredient.
-3.  **Generate USDA Query Candidates:** This is CRITICAL. For each identified dish AND its key ingredients, suggest *multiple, plausible query terms* in English that are likely to yield good results in the USDA FoodData Central database.
-    * **Think like a database search:** Consider common names, specific names, and *especially Branded Food names* if recognizable packaging or product types are visible.
-    * **Consider Granularity:** Provide queries at different levels:
-        * `dish`: For the whole dish (e.g., "Lasagna", "Tuna Salad Sandwich").
-        * `ingredient`: For core components (e.g., "Ground Beef", "Cheddar Cheese", "Tuna, canned in oil", "Whole wheat bread").
-        * `branded_product`: If a specific brand or product is likely (e.g., "Kraft Macaroni & Cheese", "Hellmann's Real Mayonnaise", "StarKist Chunk Light Tuna in Oil").
-    * **Prioritize USDA Likelihood:** Avoid overly generic terms ("Sauce", "Seasoning") or terms unlikely to be in USDA (e.g., "Homemade Dashi Broth"). Focus on searchable food items.
-    * **Provide Reasons:** Briefly explain why each query term is suggested.
-4.  **Output Format:** Strictly adhere to the provided JSON schema (`Phase1AnalysisResponse`).
-5.  **Language:** ALL text outputs MUST be in English.
-
-**Instructions:**
-
-* Analyze the provided image carefully.
-* For each dish, list its name, type, quantity, and ingredients (with weights).
-* For each dish, provide a list of `USDACandidateQuery` objects.
-* Ensure your JSON output is valid according to the schema. 
-```
-
-============================================================
-
-📄 FILE: app/prompts/phase1_user_prompt_template.txt
---------------------------------------------------
-ファイルサイズ: 86 bytes
-最終更新: 2025-05-29 16:53:14
-存在: ✅
-
-CONTENT:
-```
-Please analyze the provided meal image and respond in English.{optional_text_section} 
-```
-
-============================================================
-
-📄 FILE: app/prompts/phase2_system_prompt.txt
---------------------------------------------------
-ファイルサイズ: 3717 bytes
-最終更新: 2025-05-29 17:18:17
-存在: ✅
-
-CONTENT:
-```
-You are an advanced Nutritional Analysis Strategist and USDA Data Matcher. Your mission is to analyze an initial meal assessment and a comprehensive list of USDA FoodData Central (FDC) search results to determine the *optimal strategy for nutritional calculation* for each dish and select the *most accurate FDC IDs*. Your decisions must be **deterministic** and aimed at maximizing **accuracy and stability**.
-
-**Your Core Tasks for EACH Dish:**
-
-1.  **Determine `calculation_strategy`:** Choose either `"dish_level"` or `"ingredient_level"`.
-    * **`dish_level`:** Use when a *single, representative FDC ID* accurately describes the *entire dish* and its likely nutritional profile. This is often suitable for:
-        * **Specific Branded Products:** If a high-confidence match exists (e.g., "McDonald's Big Mac", "Stouffer's Lasagna"). **Prioritize Branded Foods if a strong match exists.**
-        * **Simple, Standardized Items:** If a good Foundation or SR Legacy match exists (e.g., "Apple", "Chicken Breast, grilled", "Milk, 2%").
-        * **Standardized Recipes in FNDDS/SR Legacy:** If a *good* FNDDS or SR Legacy entry exists for a common prepared dish (e.g., "Macaroni and Cheese, prepared").
-    * **`ingredient_level`:** Use when the dish is complex, highly variable, homemade, or lacks a suitable single FDC ID. This is often suitable for:
-        * **Salads, Stir-fries, Stews, Casseroles:** Dishes with many variable components.
-        * **Standardized dishes *without* a good FDC match:** If the available dish-level FDC IDs seem inaccurate.
-        * When *breaking down* provides higher accuracy (e.g., a specific sandwich where you can identify bread, meat, cheese, and sauce FDC IDs).
-    * **Provide `reason_for_strategy`:** Clearly explain *why* you chose this strategy based on the dish and the available USDA data.
-
-2.  **Select FDC IDs:**
-    * **If `dish_level`:**
-        * Select the *single best FDC ID* for the *entire dish* from the provided USDA candidates.
-        * Provide this as the dish `fdc_id` and `usda_source_description`.
-        * Provide `reason_for_choice` for this FDC ID.
-        * For *each ingredient* listed in the initial analysis, *still attempt to find a plausible FDC ID* and list it. This serves as a **fallback/verification** mechanism, but these FDC IDs *won't* be used for the primary calculation in this strategy. Provide a reason for each ingredient FDC ID selection.
-    * **If `ingredient_level`:**
-        * Set the dish `fdc_id` and `usda_source_description` to `null`.
-        * For *each ingredient*, select the *single best FDC ID* from the provided USDA candidates for that ingredient.
-        * Provide these as the `fdc_id` and `usda_source_description` for each ingredient.
-        * Provide `reason_for_choice` for each FDC ID selection. If no good match exists, set FDC ID to `null` and explain why.
-
-**FDC ID Selection Guidelines:**
-
-* **Prioritize:** 1. Branded (if strong match) -> 2. Foundation -> 3. SR Legacy -> 4. FNDDS.
-* **Relevance:** Choose the ID that best matches the *context* (image, initial name) and has a high score/good description.
-* **Data Type:** Consider the nature of the USDA type. Foundation is analytical, SR/FNDDS can be averaged/calculated, Branded is label-based.
-* **Ingredients Text (Branded/FNDDS):** Use this to verify if a Branded/FNDDS entry is a reasonable match.
-
-**Output Requirements:**
-
-* Strictly adhere to the provided JSON schema (`Phase2GeminiResponse`).
-* Include all required fields, especially `calculation_strategy`, `reason_for_strategy`, `fdc_id`, `usda_source_description`, and `reason_for_choice`.
-* ALL text outputs MUST be in English.
-* DO NOT perform any nutritional calculations. 
-```
-
-============================================================
-
-📄 FILE: app/prompts/phase2_user_prompt_template.txt
---------------------------------------------------
-ファイルサイズ: 820 bytes
-最終更新: 2025-05-29 17:18:37
-存在: ✅
-
-CONTENT:
-```
-Here is the initial meal analysis (Phase 1 Output):
-```json
-{initial_ai_output}
-```
-
-Here are the potential USDA FDC ID candidates based on queries from Phase 1. Review these carefully, noting the FDC ID, Name, Data Type, Brand, and Score:
-
-{usda_candidates}
-
-Based on the initial analysis, the image context (implicitly known from Phase 1), and ALL the provided USDA candidates, please perform the Phase 2 refinement as per the system instructions. For each dish:
-
-1. Decide the calculation_strategy.
-2. Provide the reason_for_strategy.
-3. Select the best FDC ID(s) according to the chosen strategy.
-4. Provide the usda_source_description for each selected FDC ID.
-5. Provide the reason_for_choice for each selected FDC ID.
-
-Ensure your response is in English and strictly follows the Phase2GeminiResponse JSON schema. 
-```
-
-============================================================
-
-🎯 SUMMARY
+🎯 SUMMARY v2.1
 ----------------------------------------
-総ファイル数: 14
-存在ファイル数: 14
-分析完了時刻: 2025-05-30 16:35:01
+総ファイル数: 17
+存在ファイル数: 17
+分析完了時刻: 2025-05-30 16:35:54
 
-このファイルには、test_english_phase2.py実行時に関わる全ての
-アプリケーションファイルの完全な内容が含まれています。
+📋 v2.1の主要改善点:
+✅ USDAクエリ候補の自動生成
+✅ 高度な戦略決定システム
+✅ 動的栄養計算エンジン
+✅ 包括的ログ機能
+✅ リアルタイム分析ツール
+
+このファイルには、test_english_phase1_v2.py および
+test_english_phase2_v2.py実行時に関わる全ての
+Pythonファイルの完全な内容が含まれています。

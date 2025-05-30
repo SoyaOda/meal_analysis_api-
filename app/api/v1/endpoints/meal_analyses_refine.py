@@ -141,29 +141,105 @@ async def refine_meal_analysis(
             )
             raise HTTPException(status_code=400, detail=f"Invalid Phase 1 JSON: {e}")
 
-        # 3. Execute ALL USDA searches based on Phase 1 candidates
+        # 3. Execute Enhanced USDA searches based on Phase 1 candidates (improved v2.1)
         meal_logger.log_entry(
             session_id=session_id,
             level=LogLevel.INFO,
             phase=ProcessingPhase.USDA_SEARCH_START,
-            message="Starting USDA searches for all query candidates"
+            message="Starting enhanced USDA searches with brand-aware strategy"
         )
         
         usda_search_start_time = time.time()
         usda_search_tasks = []
         query_map = {}  # クエリと元の料理/食材名をマッピング
         unique_queries = set()
+        
+        # 改善: ブランド認識と検索戦略の強化
+        detected_brands = set()
+        branded_queries = []
+        regular_queries = []
 
         for dish in phase1_analysis.dishes:
             for candidate in dish.usda_query_candidates:
                 if candidate.query_term not in unique_queries:
-                    # NEW: search_foods_rich を使用
-                    usda_search_tasks.append(usda_service.search_foods_rich(candidate.query_term))
-                    query_map[candidate.query_term] = candidate.original_term or dish.dish_name
                     unique_queries.add(candidate.query_term)
+                    query_map[candidate.query_term] = candidate.original_term or dish.dish_name
+                    
+                    # ブランド検索の特定とカテゴライズ
+                    if candidate.granularity_level == "branded_product":
+                        branded_queries.append(candidate)
+                        # ブランド名を抽出（例: "La Madeleine Caesar Salad" → "La Madeleine"）
+                        query_parts = candidate.query_term.split()
+                        if len(query_parts) >= 2:
+                            potential_brand = query_parts[0] + (" " + query_parts[1] if len(query_parts) > 2 else "")
+                            detected_brands.add(potential_brand)
+                    else:
+                        regular_queries.append(candidate)
+
+        logger.info(f"Enhanced USDA search strategy: {len(branded_queries)} branded queries, {len(regular_queries)} regular queries")
+        if detected_brands:
+            logger.info(f"Detected brands: {list(detected_brands)}")
+
+        # 1. ブランド優先検索を実行
+        for candidate in branded_queries:
+            # ブランド名を抽出してフィルター検索
+            query_parts = candidate.query_term.split()
+            if len(query_parts) >= 2:
+                brand_name = query_parts[0] + (" " + query_parts[1] if len(query_parts) > 2 else "")
+                remaining_query = " ".join(query_parts[2:]) if len(query_parts) > 2 else query_parts[-1]
+                
+                # ブランドフィルター付きで高精度検索
+                usda_search_tasks.append(
+                    usda_service.search_foods_rich(
+                        query=remaining_query,
+                        data_types=["Branded", "FNDDS"],  # Brandedを優先
+                        page_size=15,  # ブランド検索では結果を多めに取得
+                        require_all_words=True,  # 精度重視
+                        brand_owner_filter=brand_name
+                    )
+                )
+            else:
+                # フォールバック: 通常検索
+                usda_search_tasks.append(
+                    usda_service.search_foods_rich(
+                        query=candidate.query_term,
+                        data_types=["Branded", "FNDDS", "Foundation"]
+                    )
+                )
+
+        # 2. 通常検索を実行（調理状態を考慮した最適化）
+        for candidate in regular_queries:
+            # 調理状態キーワードの検出と検索最適化
+            cooking_keywords = ["cooked", "raw", "grilled", "fried", "baked", "steamed", "processed"]
+            has_cooking_state = any(keyword in candidate.query_term.lower() for keyword in cooking_keywords)
+            
+            if candidate.granularity_level == "dish":
+                # 料理レベル: FNDDSを優先
+                data_types = ["FNDDS", "Branded", "Foundation"]
+                require_all_words = True  # 料理名は精度重視
+            elif candidate.granularity_level == "ingredient":
+                # 材料レベル: 調理状態に応じて最適化
+                if has_cooking_state:
+                    data_types = ["FNDDS", "Foundation"]  # 調理済み材料
+                else:
+                    data_types = ["Foundation", "FNDDS"]  # 生材料
+                require_all_words = False  # 材料は柔軟性重視
+            else:
+                # デフォルト
+                data_types = ["Foundation", "FNDDS", "SR Legacy"]
+                require_all_words = False
+            
+            usda_search_tasks.append(
+                usda_service.search_foods_rich(
+                    query=candidate.query_term,
+                    data_types=data_types,
+                    page_size=12,
+                    require_all_words=require_all_words
+                )
+            )
 
         # 非同期でUSDA検索を実行
-        logger.info(f"Starting {len(usda_search_tasks)} USDA searches")
+        logger.info(f"Starting {len(usda_search_tasks)} enhanced USDA searches")
         usda_search_results_list = await asyncio.gather(*usda_search_tasks, return_exceptions=True)
         usda_search_duration = (time.time() - usda_search_start_time) * 1000
 
