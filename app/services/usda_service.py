@@ -2,6 +2,8 @@
 import httpx
 import json
 import logging
+import asyncio
+import time
 from typing import List, Optional, Dict, Any
 from functools import lru_cache
 
@@ -19,6 +21,9 @@ class USDAService:
         self.api_key = settings.USDA_API_KEY
         self.base_url = settings.USDA_API_BASE_URL
         self.timeout = settings.USDA_API_TIMEOUT
+        self.max_retries = settings.USDA_API_MAX_RETRIES
+        self.retry_delay = settings.USDA_API_RETRY_DELAY
+        self.retry_backoff = settings.USDA_API_RETRY_BACKOFF
         self.key_nutrient_numbers = settings.USDA_KEY_NUTRIENT_NUMBERS
         
         if not self.api_key:
@@ -30,6 +35,92 @@ class USDAService:
             timeout=self.timeout,
             headers={"X-Api-Key": self.api_key}
         )
+    
+    async def _make_request_with_retry(
+        self, 
+        method: str, 
+        url: str, 
+        params: Optional[Dict[str, Any]] = None,
+        context: str = "API request"
+    ) -> Optional[httpx.Response]:
+        """
+        リトライ機構付きHTTPリクエスト
+        
+        Args:
+            method: HTTPメソッド（'GET', 'POST'など）
+            url: リクエストURL
+            params: クエリパラメータ
+            context: ログ用のコンテキスト情報
+            
+        Returns:
+            httpx.Response or None（全てのリトライが失敗した場合）
+        """
+        last_exception = None
+        
+        for attempt in range(self.max_retries + 1):  # 初回 + リトライ回数
+            try:
+                if attempt > 0:
+                    # リトライの場合は待機
+                    delay = self.retry_delay * (self.retry_backoff ** (attempt - 1))
+                    logger.info(f"Retrying {context} (attempt {attempt + 1}/{self.max_retries + 1}) after {delay:.1f}s delay...")
+                    await asyncio.sleep(delay)
+                
+                logger.debug(f"Making {method} request to {url} (attempt {attempt + 1}/{self.max_retries + 1})")
+                start_time = time.time()
+                
+                response = await self.client.request(method, url, params=params)
+                
+                end_time = time.time()
+                duration_ms = (end_time - start_time) * 1000
+                
+                if "X-RateLimit-Remaining" in response.headers:
+                    logger.debug(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
+                
+                response.raise_for_status()
+                
+                if attempt > 0:
+                    logger.info(f"{context} succeeded on attempt {attempt + 1} after {duration_ms:.1f}ms")
+                else:
+                    logger.debug(f"{context} succeeded on first attempt in {duration_ms:.1f}ms")
+                
+                return response
+                
+            except httpx.TimeoutException as e:
+                last_exception = e
+                logger.warning(f"{context} timed out on attempt {attempt + 1}/{self.max_retries + 1}: {str(e)}")
+                if attempt == self.max_retries:
+                    logger.error(f"{context} failed after {self.max_retries + 1} attempts due to timeout")
+                    break
+                    
+            except httpx.HTTPStatusError as e:
+                # 404やクライアントエラー（4xx）はリトライしない
+                if 400 <= e.response.status_code < 500:
+                    logger.warning(f"{context} failed with client error {e.response.status_code}, not retrying")
+                    last_exception = e
+                    break
+                # サーバーエラー（5xx）はリトライする
+                elif e.response.status_code >= 500:
+                    last_exception = e
+                    logger.warning(f"{context} failed with server error {e.response.status_code} on attempt {attempt + 1}/{self.max_retries + 1}")
+                    if attempt == self.max_retries:
+                        logger.error(f"{context} failed after {self.max_retries + 1} attempts due to server errors")
+                        break
+                else:
+                    # その他のHTTPエラー
+                    logger.error(f"{context} failed with HTTP error {e.response.status_code}: {e.response.text}")
+                    last_exception = e
+                    break
+                    
+            except Exception as e:
+                last_exception = e
+                logger.warning(f"{context} failed with exception on attempt {attempt + 1}/{self.max_retries + 1}: {str(e)}")
+                if attempt == self.max_retries:
+                    logger.error(f"{context} failed after {self.max_retries + 1} attempts due to: {str(e)}")
+                    break
+        
+        # すべてのリトライが失敗した場合
+        logger.error(f"{context} ultimately failed after {self.max_retries + 1} attempts. Last error: {last_exception}")
+        return None
     
     async def search_foods_rich(
         self,
@@ -72,48 +163,38 @@ class USDAService:
         
         try:
             logger.info(f"USDA API rich search: query='{query}', page_size={page_size}")
-            response = await self.client.get(f"{self.base_url}/foods/search", params=params)
+            response = await self._make_request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/foods/search",
+                params=params,
+                context="USDA API rich search"
+            )
             
-            # レートリミット情報のログ
-            if "X-RateLimit-Remaining" in response.headers:
-                logger.info(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
-            
-            response.raise_for_status()
-            data = response.json()
-            
-            results = []
-            for food_data in data.get("foods", [])[:page_size]:
-                # NEW: foodNutrients を詳細に取得・パース
-                # NOTE: 検索結果の foodNutrients は限定的なことが多い。
-                # 詳細な栄養素は get_food_details_for_nutrition で取得する。
-                # ここでは主に FDC ID, description, dataType, brandOwner, ingredients を重視。
-                nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
+            if response:
+                data = response.json()
                 
-                results.append(USDASearchResultItem(
-                    fdc_id=food_data.get("fdcId"),
-                    description=food_data.get("description"),
-                    data_type=food_data.get("dataType"),
-                    brand_owner=food_data.get("brandOwner"),
-                    # NEW: ingredientsText を取得
-                    ingredients_text=food_data.get("ingredients"),
-                    food_nutrients=nutrients_extracted,
-                    score=food_data.get("score")
-                ))
+                results = []
+                for food_data in data.get("foods", [])[:page_size]:
+                    # NEW: foodNutrients を詳細に取得・パース
+                    # NOTE: 検索結果の foodNutrients は限定的なことが多い。
+                    # 詳細な栄養素は get_food_details_for_nutrition で取得する。
+                    # ここでは主に FDC ID, description, dataType, brandOwner, ingredients を重視。
+                    nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
+                    
+                    results.append(USDASearchResultItem(
+                        fdc_id=food_data.get("fdcId"),
+                        description=food_data.get("description"),
+                        data_type=food_data.get("dataType"),
+                        brand_owner=food_data.get("brandOwner"),
+                        # NEW: ingredientsText を取得
+                        ingredients_text=food_data.get("ingredients"),
+                        food_nutrients=nutrients_extracted,
+                        score=food_data.get("score")
+                    ))
+                
+                logger.info(f"USDA API rich search returned {len(results)} results for query '{query}'")
+                return results
             
-            logger.info(f"USDA API rich search returned {len(results)} results for query '{query}'")
-            return results
-            
-        except httpx.HTTPStatusError as e:
-            logger.error(f"USDA API HTTP error: {e.response.status_code} - {e.response.text}")
-            if e.response.status_code == 429:
-                raise RuntimeError(f"USDA API rate limit exceeded. Detail: {e.response.text}") from e
-            raise RuntimeError(f"USDA API error: {e.response.status_code} - {e.response.text}") from e
-        except httpx.RequestError as e:
-            logger.error(f"USDA API request failed: {str(e)}")
-            raise RuntimeError(f"USDA API request failed: {str(e)}") from e
-        except (json.JSONDecodeError, TypeError, KeyError) as e:
-            logger.error(f"USDA API response parsing error: {str(e)}")
-            raise RuntimeError(f"USDA API response parsing error: {str(e)}") from e
         except Exception as e:
             logger.error(f"Unexpected error in USDAService.search_foods_rich: {str(e)}")
             raise RuntimeError(f"Unexpected error in USDA service: {str(e)}") from e
@@ -164,33 +245,29 @@ class USDAService:
         
         try:
             logger.info(f"Getting USDA food details for FDC ID: {fdc_id}")
-            response = await self.client.get(f"{self.base_url}/food/{fdc_id}", params=params)
-            
-            if "X-RateLimit-Remaining" in response.headers:
-                logger.debug(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
-            
-            response.raise_for_status()
-            food_data = response.json()
-            
-            # _extract_key_nutrients を使用して栄養素をパース
-            nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
-            
-            return USDASearchResultItem(
-                fdc_id=food_data.get("fdcId"),
-                description=food_data.get("description"),
-                data_type=food_data.get("dataType"),
-                brand_owner=food_data.get("brandOwner"),
-                ingredients_text=food_data.get("ingredients"),
-                food_nutrients=nutrients_extracted,
-                score=None  # 詳細取得時はスコアなし
+            response = await self._make_request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/food/{fdc_id}",
+                params=params,
+                context="Getting USDA food details"
             )
             
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code == 404:
-                logger.warning(f"Food with FDC ID {fdc_id} not found")
-                return None
-            logger.error(f"USDA API error getting food details: {e.response.status_code} - {e.response.text}")
-            raise RuntimeError(f"USDA API error: {e.response.status_code}") from e
+            if response:
+                food_data = response.json()
+                
+                # _extract_key_nutrients を使用して栄養素をパース
+                nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
+                
+                return USDASearchResultItem(
+                    fdc_id=food_data.get("fdcId"),
+                    description=food_data.get("description"),
+                    data_type=food_data.get("dataType"),
+                    brand_owner=food_data.get("brandOwner"),
+                    ingredients_text=food_data.get("ingredients"),
+                    food_nutrients=nutrients_extracted,
+                    score=None  # 詳細取得時はスコアなし
+                )
+            
         except Exception as e:
             logger.error(f"Error getting food details for FDC ID {fdc_id}: {str(e)}")
             raise RuntimeError(f"Error getting food details: {str(e)}") from e
@@ -208,22 +285,18 @@ class USDAService:
         
         try:
             logger.debug(f"Getting nutrition data for FDC ID: {fdc_id}")
-            response = await self.client.get(f"{self.base_url}/food/{fdc_id}", params=params)
+            response = await self._make_request_with_retry(
+                method="GET",
+                url=f"{self.base_url}/food/{fdc_id}",
+                params=params,
+                context="Getting nutrition data"
+            )
             
-            if "X-RateLimit-Remaining" in response.headers:
-                logger.debug(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
+            if response:
+                food_data = response.json()
+                
+                return self._parse_nutrients_for_calculation(food_data)
             
-            response.raise_for_status()
-            food_data = response.json()
-            
-            return self._parse_nutrients_for_calculation(food_data)
-            
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code == 404:
-                logger.warning(f"Food with FDC ID {fdc_id} not found for nutrition calculation")
-                return None
-            logger.error(f"USDA API error getting nutrition data: {e.response.status_code} - {e.response.text}")
-            return None
         except Exception as e:
             logger.error(f"Error getting nutrition data for FDC ID {fdc_id}: {str(e)}")
             return None

@@ -5,10 +5,10 @@
       "type": "Main course",
       "quantity_on_plate": "One bowl, approximately 200g",
       "calculation_strategy": "dish_level",
-      "reason_for_strategy": "White Rice is a single-ingredient dish, and there are highly relevant SR Legacy and FNDDS entries for cooked white rice that can accurately represent the dish at a dish level.",
+      "reason_for_strategy": "White rice is a common, standardized food item, and a highly relevant SR Legacy FDC ID for cooked white rice is available, providing an accurate representation of the dish as a whole.",
       "fdc_id": 168932,
       "usda_source_description": "Rice, white, short-grain, cooked, unenriched",
-      "reason_for_choice": "This SR Legacy entry is a direct and accurate match for cooked white short-grain rice, which is typical for Japanese meals. It provides a foundational nutritional profile.",
+      "reason_for_choice": "This SR Legacy FDC ID is the most appropriate and accurate match for plain cooked white rice, specifically short-grain, which is commonly used in Japanese cuisine.",
       "key_nutrients_per_100g": {
         "calories_kcal": 130.0,
         "protein_g": 2.36,
@@ -22,7 +22,7 @@
           "weight_g": 200.0,
           "fdc_id": 168932,
           "usda_source_description": "Rice, white, short-grain, cooked, unenriched",
-          "reason_for_choice": "Selected as the most appropriate SR Legacy entry for cooked white rice, aligning with the dish-level choice.",
+          "reason_for_choice": "Selected as the best SR Legacy match for cooked white rice, consistent with the dish-level choice.",
           "key_nutrients_per_100g": {
             "calories_kcal": 130.0,
             "protein_g": 2.36,
@@ -48,10 +48,10 @@
       "type": "Side dish",
       "quantity_on_plate": "One bowl, approximately 200ml",
       "calculation_strategy": "dish_level",
-      "reason_for_strategy": "Several branded FDC entries for 'Miso Soup' are available and appear to be comprehensive, including common ingredients like miso, tofu, and wakame. This approach provides a more accurate representation of the prepared dish than summing individual ingredients, especially given the variability in dashi preparation.",
+      "reason_for_strategy": "Specific branded FDC entries for 'Miso Soup' are available that include the main components (miso, tofu, wakame, fish broth), offering a comprehensive and efficient calculation at the dish level.",
       "fdc_id": 2147271,
-      "usda_source_description": "MISO SOUP (Brand: Ito, Inc.)",
-      "reason_for_choice": "This branded FDC entry explicitly lists miso, tofu, wakame, and fish broth as ingredients, which perfectly matches the components of the Miso Soup in the meal. It is a high-confidence, comprehensive match.",
+      "usda_source_description": "MISO SOUP",
+      "reason_for_choice": "This branded FDC ID has a high relevance score and its ingredient list (miso, tofu, wakame, fish broth) closely matches the typical components of miso soup and the ingredients identified in Phase 1.",
       "key_nutrients_per_100g": {
         "calories_kcal": 26.0,
         "sugars_g": 1.12,
@@ -65,34 +65,33 @@
         {
           "ingredient_name": "Miso Paste",
           "weight_g": 15.0,
-          "fdc_id": 2027667,
-          "usda_source_description": "MISO PASTE (Brand: Marukome USA.,Inc)",
-          "reason_for_choice": "Selected a highly relevant branded miso paste for fallback, which is a key component of miso soup.",
+          "fdc_id": 2707439,
+          "usda_source_description": "Miso",
+          "reason_for_choice": "Best available FNDDS match for generic miso paste, serving as a fallback/verification for the dish-level calculation.",
           "key_nutrients_per_100g": {
-            "calories_kcal": 167.0,
-            "fat_g": 5.56,
-            "sugars_g": 11.11,
-            "carbohydrates_g": 22.22,
-            "protein_g": 11.11,
-            "sodium_mg": 4611.0,
-            "fiber_g": 5.6
+            "protein_g": 12.8,
+            "fat_g": 6.01,
+            "carbohydrates_g": 25.4,
+            "calories_kcal": 198.0,
+            "sugars_g": 6.2,
+            "fiber_g": 5.4,
+            "sodium_mg": 3730.0
           },
           "actual_nutrients": null
         },
         {
           "ingredient_name": "Tofu",
           "weight_g": 30.0,
-          "fdc_id": 174290,
-          "usda_source_description": "Tofu, extra firm, prepared with nigari",
-          "reason_for_choice": "Selected a representative SR Legacy entry for firm tofu, a common ingredient in miso soup.",
+          "fdc_id": 172475,
+          "usda_source_description": "Tofu, raw, firm, prepared with calcium sulfate",
+          "reason_for_choice": "Best available SR Legacy match for firm tofu, serving as a fallback/verification for the dish-level calculation.",
           "key_nutrients_per_100g": {
-            "calories_kcal": 83.0,
-            "protein_g": 9.98,
-            "fat_g": 5.26,
-            "carbohydrates_g": 1.18,
-            "fiber_g": 1.0,
-            "sugars_g": 0.71,
-            "sodium_mg": 4.0
+            "calories_kcal": 144.0,
+            "protein_g": 17.27,
+            "fat_g": 8.72,
+            "carbohydrates_g": 2.78,
+            "fiber_g": 2.3,
+            "sodium_mg": 14.0
           },
           "actual_nutrients": null
         },
@@ -101,7 +100,7 @@
           "weight_g": 5.0,
           "fdc_id": 170496,
           "usda_source_description": "Seaweed, wakame, raw",
-          "reason_for_choice": "Selected the SR Legacy entry for wakame seaweed, a direct match for the ingredient.",
+          "reason_for_choice": "Best available SR Legacy match for wakame seaweed, serving as a fallback/verification for the dish-level calculation.",
           "key_nutrients_per_100g": {
             "calories_kcal": 45.0,
             "protein_g": 3.03,
@@ -118,7 +117,7 @@
           "weight_g": 150.0,
           "fdc_id": 171606,
           "usda_source_description": "Fish broth",
-          "reason_for_choice": "Selected the SR Legacy entry for fish broth as the closest available match for dashi broth, which is typically fish-based.",
+          "reason_for_choice": "Direct and best available SR Legacy match for fish broth, serving as a fallback/verification for the dish-level calculation.",
           "key_nutrients_per_100g": {
             "calories_kcal": 16.0,
             "protein_g": 2.0,
@@ -146,7 +145,7 @@
       "type": "Side dish",
       "quantity_on_plate": "One bowl",
       "calculation_strategy": "ingredient_level",
-      "reason_for_strategy": "The 'Mixed Salad' consists of several distinct ingredients (lettuce, tomato, egg, ham, dressing) that can be individually identified and quantified. An ingredient-level calculation will provide a more precise nutritional analysis than a generic 'mixed salad' entry, which may not match the specific composition.",
+      "reason_for_strategy": "Salads are inherently variable and composed of multiple distinct ingredients. Calculating at the ingredient level allows for greater accuracy by accounting for each specific component (lettuce, tomato, egg, ham, dressing) rather than relying on a generic dish-level entry.",
       "fdc_id": 0,
       "usda_source_description": "",
       "reason_for_choice": "",
@@ -157,7 +156,7 @@
           "weight_g": 50.0,
           "fdc_id": 2346391,
           "usda_source_description": "Lettuce, leaf, green, raw",
-          "reason_for_choice": "Selected the Foundation data entry for raw green leaf lettuce, which is a direct and accurate match for the primary leafy green.",
+          "reason_for_choice": "Best available Foundation data type match for green leaf lettuce.",
           "key_nutrients_per_100g": {
             "protein_g": 1.09375,
             "fat_g": 0.1563,
@@ -177,26 +176,26 @@
         {
           "ingredient_name": "Tomato",
           "weight_g": 80.0,
-          "fdc_id": 170457,
-          "usda_source_description": "Tomatoes, red, ripe, raw, year round average",
-          "reason_for_choice": "Selected the SR Legacy entry for raw red ripe tomatoes, which is a standard and accurate representation.",
+          "fdc_id": 2709719,
+          "usda_source_description": "Tomatoes, raw",
+          "reason_for_choice": "Best available FNDDS match for raw tomatoes.",
           "key_nutrients_per_100g": {
-            "calories_kcal": 18.0,
-            "protein_g": 0.88,
-            "fat_g": 0.2,
-            "carbohydrates_g": 3.89,
-            "fiber_g": 1.2,
+            "protein_g": 0.82,
+            "fat_g": 0.31,
+            "carbohydrates_g": 4.04,
+            "calories_kcal": 20.0,
             "sugars_g": 2.63,
-            "sodium_mg": 5.0
+            "fiber_g": 1.2,
+            "sodium_mg": 4.0
           },
           "actual_nutrients": {
-            "calories_kcal": 14.4,
-            "protein_g": 0.7,
-            "carbohydrates_g": 3.11,
-            "fat_g": 0.16,
+            "calories_kcal": 16.0,
+            "protein_g": 0.66,
+            "carbohydrates_g": 3.23,
+            "fat_g": 0.25,
             "fiber_g": 0.96,
             "sugars_g": 2.1,
-            "sodium_mg": 4.0
+            "sodium_mg": 3.2
           }
         },
         {
@@ -204,7 +203,7 @@
           "weight_g": 50.0,
           "fdc_id": 173424,
           "usda_source_description": "Egg, whole, cooked, hard-boiled",
-          "reason_for_choice": "Selected the SR Legacy entry for hard-boiled whole egg, which is a direct and accurate match.",
+          "reason_for_choice": "Direct and best available SR Legacy match for hard-boiled egg.",
           "key_nutrients_per_100g": {
             "calories_kcal": 155.0,
             "protein_g": 12.58,
@@ -229,16 +228,30 @@
           "weight_g": 30.0,
           "fdc_id": 746952,
           "usda_source_description": "Ham, sliced, restaurant",
-          "reason_for_choice": "Selected the Foundation data entry for sliced ham, which is a suitable representation for deli ham.",
-          "key_nutrients_per_100g": null,
-          "actual_nutrients": null
+          "reason_for_choice": "Best available Foundation data type match for sliced ham.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 121.0,
+            "protein_g": 19.6,
+            "fat_g": 3.68,
+            "carbohydrates_g": 2.36,
+            "sodium_mg": 1030.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 36.3,
+            "protein_g": 5.88,
+            "carbohydrates_g": 0.71,
+            "fat_g": 1.1,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 309.0
+          }
         },
         {
           "ingredient_name": "Salad Dressing",
           "weight_g": 30.0,
           "fdc_id": 2710211,
           "usda_source_description": "Sesame dressing",
-          "reason_for_choice": "Selected the FNDDS entry for sesame dressing, as it is a common type of dressing in Japanese cuisine and a good match from the provided candidates.",
+          "reason_for_choice": "Best available FNDDS match for a common Japanese-style salad dressing, 'Sesame dressing', which aligns with the visual context.",
           "key_nutrients_per_100g": {
             "protein_g": 3.1,
             "fat_g": 45.2,
@@ -260,44 +273,60 @@
         }
       ],
       "dish_total_actual_nutrients": {
-        "calories_kcal": 224.8,
-        "protein_g": 8.47,
-        "carbohydrates_g": 8.28,
-        "fat_g": 19.1,
+        "calories_kcal": 262.7,
+        "protein_g": 14.31,
+        "carbohydrates_g": 9.11,
+        "fat_g": 20.29,
         "fiber_g": 1.26,
         "sugars_g": 5.16,
-        "sodium_mg": 380.44
+        "sodium_mg": 688.64
       }
     },
     {
       "dish_name": "Shirasu (Boiled Whitebait)",
       "type": "Side dish",
       "quantity_on_plate": "One small bowl, approximately 50g",
-      "calculation_strategy": "ingredient_level",
-      "reason_for_strategy": "While a single-ingredient dish, no direct or highly relevant FDC ID for 'Boiled Whitebait' was found among the provided candidates. An ingredient-level approach is necessary to explicitly state the lack of a suitable FDC ID for this specific item.",
-      "fdc_id": 0,
-      "usda_source_description": "",
-      "reason_for_choice": "",
-      "key_nutrients_per_100g": null,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "This dish consists of a single primary ingredient, 'Boiled Whitebait'. While a direct FDC ID is not available, a close proxy can be used at the dish level for a simplified and direct calculation.",
+      "fdc_id": 2706293,
+      "usda_source_description": "Fish, sardines, canned",
+      "reason_for_choice": "No direct FDC ID for 'whitebait' or 'boiled whitebait' was found. 'Fish, sardines, canned' is chosen as the closest available proxy for a small, whole fish, sharing some nutritional similarities with whitebait.",
+      "key_nutrients_per_100g": {
+        "protein_g": 24.6,
+        "fat_g": 11.4,
+        "carbohydrates_g": 0.0,
+        "calories_kcal": 208.0,
+        "sugars_g": 0.0,
+        "fiber_g": 0.0,
+        "sodium_mg": 307.0
+      },
       "ingredients": [
         {
           "ingredient_name": "Boiled Whitebait",
           "weight_g": 50.0,
-          "fdc_id": 0,
-          "usda_source_description": "",
-          "reason_for_choice": "No suitable FDC ID for 'Boiled Whitebait' or 'Whitebait' was found in the provided USDA candidates. The closest options were for sardines, which are not an accurate substitute.",
-          "key_nutrients_per_100g": null,
+          "fdc_id": 2706293,
+          "usda_source_description": "Fish, sardines, canned",
+          "reason_for_choice": "Used as the best available proxy for whitebait, consistent with the dish-level choice due to lack of a direct match.",
+          "key_nutrients_per_100g": {
+            "protein_g": 24.6,
+            "fat_g": 11.4,
+            "carbohydrates_g": 0.0,
+            "calories_kcal": 208.0,
+            "sugars_g": 0.0,
+            "fiber_g": 0.0,
+            "sodium_mg": 307.0
+          },
           "actual_nutrients": null
         }
       ],
       "dish_total_actual_nutrients": {
-        "calories_kcal": 0.0,
-        "protein_g": 0.0,
+        "calories_kcal": 104.0,
+        "protein_g": 12.3,
         "carbohydrates_g": 0.0,
-        "fat_g": 0.0,
-        "fiber_g": null,
-        "sugars_g": null,
-        "sodium_mg": null
+        "fat_g": 5.7,
+        "fiber_g": 0.0,
+        "sugars_g": 0.0,
+        "sodium_mg": 153.5
       }
     },
     {
@@ -305,7 +334,7 @@
       "type": "Side dish",
       "quantity_on_plate": "One small bowl, approximately 50g",
       "calculation_strategy": "ingredient_level",
-      "reason_for_strategy": "Hijiki Nimono is a complex prepared dish with multiple distinct ingredients and seasonings. No specific FDC entry exists for the dish as a whole, making an ingredient-level calculation essential for accurate nutritional analysis.",
+      "reason_for_strategy": "This is a complex, prepared Japanese dish with multiple distinct ingredients and specific seasonings. An ingredient-level calculation will provide a more accurate nutritional profile than attempting to find a single, likely non-existent, FDC ID for 'Hijiki Nimono'.",
       "fdc_id": 0,
       "usda_source_description": "",
       "reason_for_choice": "",
@@ -316,7 +345,7 @@
           "weight_g": 30.0,
           "fdc_id": 2709989,
           "usda_source_description": "Seaweed, cooked, no added fat",
-          "reason_for_choice": "Selected the FNDDS entry for cooked seaweed, which is the best available match for cooked hijiki seaweed.",
+          "reason_for_choice": "Best available FNDDS match for cooked seaweed, suitable for hijiki.",
           "key_nutrients_per_100g": {
             "protein_g": 3.51,
             "fat_g": 0.49,
@@ -341,7 +370,7 @@
           "weight_g": 10.0,
           "fdc_id": 2710793,
           "usda_source_description": "Carrots, cooked, as ingredient",
-          "reason_for_choice": "Selected the FNDDS entry for cooked carrots, suitable for a component in a simmered dish.",
+          "reason_for_choice": "Best available FNDDS match for cooked carrots used as an ingredient.",
           "key_nutrients_per_100g": {
             "protein_g": 0.98,
             "fat_g": 0.36,
@@ -366,7 +395,7 @@
           "weight_g": 10.0,
           "fdc_id": 172451,
           "usda_source_description": "Tofu, fried",
-          "reason_for_choice": "Selected the SR Legacy entry for fried tofu, which accurately represents 'Aburaage'.",
+          "reason_for_choice": "Direct and best available SR Legacy match for fried tofu.",
           "key_nutrients_per_100g": {
             "calories_kcal": 270.0,
             "protein_g": 18.82,
@@ -391,7 +420,7 @@
           "weight_g": 5.0,
           "fdc_id": 2707442,
           "usda_source_description": "Soy sauce",
-          "reason_for_choice": "Selected the FNDDS entry for soy sauce, a common seasoning in this dish.",
+          "reason_for_choice": "Direct and best available FNDDS match for soy sauce.",
           "key_nutrients_per_100g": {
             "protein_g": 8.14,
             "fat_g": 0.57,
@@ -415,8 +444,8 @@
           "ingredient_name": "Mirin",
           "weight_g": 5.0,
           "fdc_id": 2114521,
-          "usda_source_description": "MIRIN SWEET COOKING SEASONING (Brand: Mizkan America, Inc.)",
-          "reason_for_choice": "Selected a relevant branded entry for Mirin, a key seasoning in Japanese cooking.",
+          "usda_source_description": "MIRIN SWEET COOKING SEASONING",
+          "reason_for_choice": "Best available branded FDC ID for Mirin, as no generic SR Legacy or Foundation match was found.",
           "key_nutrients_per_100g": {
             "sugars_g": 33.33,
             "protein_g": 0.0,
@@ -451,7 +480,7 @@
       "type": "Side dish",
       "quantity_on_plate": "One small plate, assorted",
       "calculation_strategy": "ingredient_level",
-      "reason_for_strategy": "The dish is an assortment of distinct pickled vegetables, and no single FDC entry exists for 'Assorted Pickles' or 'Tsukemono'. An ingredient-level calculation is required to account for each specific pickled item.",
+      "reason_for_strategy": "This dish is an assortment of different pickled vegetables. To accurately assess its nutritional content, it's necessary to calculate based on the individual components rather than a single, generic 'pickles' FDC ID.",
       "fdc_id": 0,
       "usda_source_description": "",
       "reason_for_choice": "",
@@ -462,7 +491,7 @@
           "weight_g": 30.0,
           "fdc_id": 169379,
           "usda_source_description": "Pickles, cucumber, sour",
-          "reason_for_choice": "Selected the SR Legacy entry for sour pickled cucumber, which is a common type of pickle.",
+          "reason_for_choice": "Best available SR Legacy match for pickled cucumber.",
           "key_nutrients_per_100g": {
             "calories_kcal": 11.0,
             "protein_g": 0.33,
@@ -486,8 +515,8 @@
           "ingredient_name": "Pickled Daikon Radish",
           "weight_g": 30.0,
           "fdc_id": 2109917,
-          "usda_source_description": "DAIKON RADISH PICKLED WITH RICE BRAN (Brand: Eden Foods, Inc.)",
-          "reason_for_choice": "Selected a direct branded match for pickled daikon radish, which is highly specific and relevant.",
+          "usda_source_description": "DAIKON RADISH PICKLED WITH RICE BRAN",
+          "reason_for_choice": "Best available branded FDC ID for pickled daikon radish, as no generic SR Legacy or Foundation match was found.",
           "key_nutrients_per_100g": {
             "protein_g": 0.0,
             "sodium_mg": 1923.0,
@@ -510,7 +539,7 @@
           "weight_g": 20.0,
           "fdc_id": 2710077,
           "usda_source_description": "Kimchi",
-          "reason_for_choice": "Selected the FNDDS entry for Kimchi, which is a widely recognized and relevant form of pickled napa cabbage.",
+          "reason_for_choice": "Kimchi is a well-known type of pickled napa cabbage, making this FNDDS entry a suitable proxy for pickled napa cabbage.",
           "key_nutrients_per_100g": {
             "protein_g": 1.1,
             "fat_g": 0.5,
@@ -546,10 +575,10 @@
       "type": "Drink",
       "quantity_on_plate": "One glass, approximately 200ml",
       "calculation_strategy": "dish_level",
-      "reason_for_strategy": "Water is a single, simple ingredient, and a direct FDC entry for tap water is available, making a dish-level calculation appropriate.",
+      "reason_for_strategy": "Water is a single, universally recognized substance with a well-defined nutritional profile (primarily zero calories and macronutrients). A dish-level FDC ID is the most direct and accurate approach.",
       "fdc_id": 2710707,
       "usda_source_description": "Water, tap",
-      "reason_for_choice": "Selected the FNDDS entry for tap water, which is a direct and accurate representation of the dish.",
+      "reason_for_choice": "Direct and highly relevant FNDDS match for tap water, which is the most common form of drinking water.",
       "key_nutrients_per_100g": {
         "protein_g": 0.0,
         "fat_g": 0.0,
@@ -565,7 +594,7 @@
           "weight_g": 200.0,
           "fdc_id": 2710707,
           "usda_source_description": "Water, tap",
-          "reason_for_choice": "Selected the FNDDS entry for tap water, aligning with the dish-level choice for this single-ingredient item.",
+          "reason_for_choice": "Consistent with the dish-level choice, as it is the best available FDC ID for water.",
           "key_nutrients_per_100g": {
             "protein_g": 0.0,
             "fat_g": 0.0,
@@ -598,9 +627,6 @@
     "sugars_g": null,
     "sodium_mg": null
   },
-  "warnings": [
-    "Could not get nutrition for ingredient 'Deli Ham' (FDC ID: 746952)",
-    "Missing FDC ID or weight for ingredient 'Boiled Whitebait'"
-  ],
+  "warnings": null,
   "errors": null
 }
