@@ -154,66 +154,100 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## 🧪 テストの実行
 
-### 1. 基本テスト（フェーズ 1 のみ）
+### 1. **Phase 1 テスト（USDA クエリ候補生成）**
+
+#### 基本的な使用方法
 
 ```bash
-python test_phase1_only.py
+# デフォルト画像を使用（自動検索）
+python test_english_phase1_v2.py
+
+# 特定の画像を指定
+python test_english_phase1_v2.py test_images/food1.jpg
+
+# カスタム画像パスを指定
+python test_english_phase1_v2.py ~/Downloads/my_meal.jpg
 ```
 
-### 2. **🔥 統合テスト（動的栄養計算システム）**
+#### ヘルプとオプション
 
-**重要**: サーバーが起動している状態で実行してください。
+```bash
+# ヘルプ表示
+python test_english_phase1_v2.py --help
+
+# 利用可能なオプション:
+#   image_path: 解析する画像ファイルのパス（省略可能）
+```
+
+**結果の保存**:
+
+- `test_results/phase1_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
+- `phase1_analysis_result_v2.json` - Phase 2 テスト用のデフォルトファイル
+
+### 2. **Phase 2 テスト（動的栄養計算システム）**
+
+#### 基本的な使用方法
+
+```bash
+# デフォルト画像と最新のPhase 1結果を使用
+python test_english_phase2_v2.py
+
+# 特定の画像を指定（Phase 1結果は自動検索）
+python test_english_phase2_v2.py test_images/food1.jpg
+
+# 画像とPhase 1結果ファイルを両方指定
+python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+```
+
+#### ヘルプとオプション
+
+```bash
+# ヘルプ表示
+python test_english_phase2_v2.py --help
+
+# 利用可能なオプション:
+#   image_path: 解析する画像ファイルのパス（省略可能）
+#   phase1_result_file: Phase 1結果JSONファイルのパス（省略可能）
+```
+
+**結果の保存**:
+
+- `test_results/phase2_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
+- `phase2_analysis_result_v2.json` - 後続処理用のデフォルトファイル
+
+### 3. **統合テストワークフロー例**
+
+```bash
+# 1. Phase 1: 画像分析とUSDAクエリ候補生成
+python test_english_phase1_v2.py test_images/food1.jpg
+
+# 2. Phase 2: 戦略決定と栄養計算
+python test_english_phase2_v2.py test_images/food1.jpg
+
+# または、一度に実行（推奨）:
+python test_english_phase1_v2.py test_images/food1.jpg && python test_english_phase2_v2.py test_images/food1.jpg
+```
+
+### 4. **テスト結果の確認**
+
+```bash
+# 保存された結果ファイルの確認
+ls -la test_results/
+
+# 最新のPhase 1結果を確認
+cat test_results/phase1_result_*.json | jq '.dishes[0].usda_query_candidates'
+
+# 最新のPhase 2結果を確認
+cat test_results/phase2_result_*.json | jq '.dishes[0].calculation_strategy'
+```
+
+### 5. **旧バージョンテスト（参考）**
 
 #### v2.0 統合テスト
 
 ```bash
 # 別のターミナルで実行
 python test_english_phase2.py
-```
-
-#### v2.1 高度戦略テスト（推奨）
-
-```bash
-# v2.1仕様の高度な戦略決定とFDC ID選択をテスト
-python test_english_phase2_v2.py
-```
-
-このテストは以下を実行します：
-
-1. **フェーズ 1**: 食事画像の分析（英語の食材名で出力）+ USDA クエリ候補生成
-2. **フェーズ 2**:
-   - 25+個の USDA クエリ候補を並列検索
-   - Gemini AI による最適計算戦略の決定（dish_level/ingredient_level）
-   - 戦略理由と FDC ID 選択理由の詳細出力
-   - 動的栄養計算と食事全体の栄養集計
-
-**期待される結果例**:
-
-```
-📊 Response status: 200
-🍽️  Found 7 dishes
-📌 DISH 1: White Rice
-   🎯 Calculation Strategy: dish_level
-   📝 Strategy Reason: Simple ingredient with accurate FDC ID available
-   🏷️  Dish FDC ID: 168932
-   📄 USDA Source: Rice, white, short-grain, cooked, unenriched
-   🧮 Nutrition (Total): 260.0 kcal, 4.7g protein, 57.5g carbs, 0.4g fat
-
-🍽️  MEAL TOTAL NUTRITION:
-   Energy: 777.1 kcal
-   Protein: 38.2g
-   Carbohydrates: 81.5g
-   Fat: 31.8g
-```
-
-### 3. その他のテスト
-
-```bash
-# USDA APIのみのテスト
-python test_usda_only.py
-
-# Vertex AI直接テスト
-python test_direct_vertexai.py
 ```
 
 ## 📡 API 使用方法

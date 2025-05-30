@@ -1,0 +1,259 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "No specific branded FDC ID for 'La Madeleine Caesar Salad' was found. Calculating at the ingredient level allows for more accurate representation of the individual components of a restaurant-prepared salad, which can vary in composition from pre-packaged branded salads.",
+      "fdc_id": 0,
+      "usda_source_description": "",
+      "reason_for_choice": "",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 120.0,
+          "fdc_id": 2709590,
+          "usda_source_description": "Romaine lettuce, raw",
+          "reason_for_choice": "Selected a general FNDDS entry for raw romaine lettuce, which is suitable for a salad ingredient.",
+          "key_nutrients_per_100g": {
+            "protein_g": 0.98,
+            "fat_g": 0.07,
+            "carbohydrates_g": 4.06,
+            "calories_kcal": 21.0,
+            "sugars_g": 1.19,
+            "fiber_g": 1.8,
+            "sodium_mg": 23.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 25.2,
+            "protein_g": 1.18,
+            "carbohydrates_g": 4.87,
+            "fat_g": 0.08,
+            "fiber_g": 2.16,
+            "sugars_g": 1.43,
+            "sodium_mg": 27.6
+          }
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0,
+          "fdc_id": 2707697,
+          "usda_source_description": "Croutons",
+          "reason_for_choice": "Selected a general FNDDS entry for croutons, suitable for a common salad topping.",
+          "key_nutrients_per_100g": {
+            "protein_g": 10.8,
+            "fat_g": 18.3,
+            "carbohydrates_g": 63.5,
+            "calories_kcal": 465.0,
+            "sugars_g": 4.41,
+            "fiber_g": 5.0,
+            "sodium_mg": 1330.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 93.0,
+            "protein_g": 2.16,
+            "carbohydrates_g": 12.7,
+            "fat_g": 3.66,
+            "fiber_g": 1.0,
+            "sugars_g": 0.88,
+            "sodium_mg": 266.0
+          }
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 15.0,
+          "fdc_id": 2096212,
+          "usda_source_description": "PARMESAN CHEESE",
+          "reason_for_choice": "Selected a high-scoring branded Parmesan cheese entry, which is representative of the ingredient.",
+          "key_nutrients_per_100g": {
+            "fat_g": 30.0,
+            "carbohydrates_g": 0.0,
+            "protein_g": 40.0,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 2000.0,
+            "calories_kcal": 400.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 60.0,
+            "protein_g": 6.0,
+            "carbohydrates_g": 0.0,
+            "fat_g": 4.5,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 300.0
+          }
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 40.0,
+          "fdc_id": 2710199,
+          "usda_source_description": "Caesar dressing",
+          "reason_for_choice": "Selected the highest-scoring FNDDS entry for Caesar dressing, providing a general and accurate representation.",
+          "key_nutrients_per_100g": {
+            "protein_g": 2.17,
+            "fat_g": 57.8,
+            "carbohydrates_g": 3.3,
+            "calories_kcal": 542.0,
+            "sugars_g": 2.81,
+            "fiber_g": 0.5,
+            "sodium_mg": 1210.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 216.8,
+            "protein_g": 0.87,
+            "carbohydrates_g": 1.32,
+            "fat_g": 23.12,
+            "fiber_g": 0.2,
+            "sugars_g": 1.12,
+            "sodium_mg": 484.0
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 395.0,
+        "protein_g": 10.21,
+        "carbohydrates_g": 18.89,
+        "fat_g": 31.36,
+        "fiber_g": 3.36,
+        "sugars_g": 3.43,
+        "sodium_mg": 1077.6
+      }
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One large serving",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "A highly relevant FNDDS entry 'Macaroni or pasta salad with chicken' (FDC ID: 2708946) exists, which accurately describes the dish as a whole and is likely to provide a stable and accurate nutritional profile for a prepared pasta salad with chicken.",
+      "fdc_id": 2708946,
+      "usda_source_description": "Macaroni or pasta salad with chicken",
+      "reason_for_choice": "This FNDDS entry is the most appropriate and specific match for a 'Penne Pasta Salad' that includes chicken, providing a comprehensive nutritional profile for the entire dish.",
+      "key_nutrients_per_100g": {
+        "protein_g": 7.82,
+        "fat_g": 10.8,
+        "carbohydrates_g": 20.9,
+        "calories_kcal": 213.0,
+        "sugars_g": 1.57,
+        "fiber_g": 1.2,
+        "sodium_mg": 225.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta, cooked",
+          "weight_g": 220.0,
+          "fdc_id": 2708357,
+          "usda_source_description": "Pasta, cooked",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked pasta as a fallback, suitable for the main carbohydrate component.",
+          "key_nutrients_per_100g": {
+            "protein_g": 5.76,
+            "fat_g": 0.92,
+            "carbohydrates_g": 30.7,
+            "calories_kcal": 157.0,
+            "sugars_g": 0.56,
+            "fiber_g": 1.8,
+            "sodium_mg": 232.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 40.0,
+          "fdc_id": 333281,
+          "usda_source_description": "Tomatoes, canned, red, ripe, diced",
+          "reason_for_choice": "Selected a Foundation entry for diced tomatoes, which is a direct and accurate match.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 18.0,
+            "protein_g": 0.84,
+            "fat_g": 0.5,
+            "carbohydrates_g": 3.32,
+            "sodium_mg": 125.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Creamy tomato sauce",
+          "weight_g": 60.0,
+          "fdc_id": 2708826,
+          "usda_source_description": "Pasta with tomato-based sauce and cheese",
+          "reason_for_choice": "No direct FDC ID for 'creamy tomato sauce' was found. Selected a general FNDDS entry for pasta with tomato-based sauce and cheese as a proxy, as it represents a common sauce type for pasta dishes.",
+          "key_nutrients_per_100g": {
+            "protein_g": 3.74,
+            "fat_g": 4.83,
+            "carbohydrates_g": 15.0,
+            "calories_kcal": 119.0,
+            "sugars_g": 3.54,
+            "fiber_g": 1.7,
+            "sodium_mg": 403.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Cooked chicken pieces",
+          "weight_g": 60.0,
+          "fdc_id": 2705953,
+          "usda_source_description": "Chicken breast, NS as to cooking method, skin eaten",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked chicken breast, suitable for the protein component.",
+          "key_nutrients_per_100g": {
+            "protein_g": 26.4,
+            "fat_g": 7.67,
+            "carbohydrates_g": 0.09,
+            "calories_kcal": 175.0,
+            "sugars_g": 0.09,
+            "fiber_g": 0.0,
+            "sodium_mg": 329.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Feta cheese crumbles",
+          "weight_g": 25.0,
+          "fdc_id": 453820,
+          "usda_source_description": "FETA CHEESE",
+          "reason_for_choice": "Selected a high-scoring branded Feta cheese entry, which is representative of the ingredient.",
+          "key_nutrients_per_100g": {
+            "fiber_g": 0.0,
+            "fat_g": 21.43,
+            "sodium_mg": 1143.0,
+            "calories_kcal": 286.0,
+            "protein_g": 17.86,
+            "sugars_g": 0.0,
+            "carbohydrates_g": 3.57
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Fresh herbs (e.g., parsley, basil)",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "No specific FDC ID for 'Fresh herbs' was provided in the USDA candidates.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 873.3,
+        "protein_g": 32.06,
+        "carbohydrates_g": 85.69,
+        "fat_g": 44.28,
+        "fiber_g": 4.92,
+        "sugars_g": 6.44,
+        "sodium_mg": 922.5
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1268.3,
+    "protein_g": 42.27,
+    "carbohydrates_g": 104.58,
+    "fat_g": 75.64,
+    "fiber_g": 8.28,
+    "sugars_g": 9.87,
+    "sodium_mg": 2000.1
+  },
+  "warnings": null,
+  "errors": null
+}

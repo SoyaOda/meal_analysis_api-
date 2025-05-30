@@ -1,0 +1,476 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "Two slices",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "A suitable branded FDC entry exists that closely matches the description and common ingredients of a prepared meatloaf, providing a high-confidence single-item calculation.",
+      "fdc_id": 2654307,
+      "usda_source_description": "MEATLOAF MEAL, MEATLOAF",
+      "reason_for_choice": "This branded FDC entry explicitly lists 'MEATLOAF' and its ingredients (ground beef, wheat flour, eggs, ketchup) align well with the typical composition of meatloaf and the ingredients provided in the initial analysis.",
+      "key_nutrients_per_100g": {
+        "carbohydrates_g": 12.03,
+        "protein_g": 7.56,
+        "fat_g": 8.25,
+        "sodium_mg": 17.0,
+        "calories_kcal": 155.0,
+        "sugars_g": 1.03,
+        "fiber_g": 1.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 150.0,
+          "fdc_id": 2071973,
+          "usda_source_description": "GROUND BEEF",
+          "reason_for_choice": "Selected a generic branded ground beef entry as a fallback/verification for the primary ingredient.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 312.0,
+            "sugars_g": 0.0,
+            "carbohydrates_g": 0.0,
+            "protein_g": 15.18,
+            "sodium_mg": 67.0,
+            "fat_g": 26.79,
+            "fiber_g": 0.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 10.0,
+          "fdc_id": 2663936,
+          "usda_source_description": "BREAD CRUMBS",
+          "reason_for_choice": "Selected a generic branded bread crumbs entry as a fallback/verification for a common binder.",
+          "key_nutrients_per_100g": {
+            "protein_g": 6.67,
+            "fat_g": 13.33,
+            "fiber_g": 6.7,
+            "calories_kcal": 433.0,
+            "sodium_mg": 433.0,
+            "carbohydrates_g": 70.0,
+            "sugars_g": 3.33
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 10.0,
+          "fdc_id": 2705385,
+          "usda_source_description": "Milk, whole",
+          "reason_for_choice": "No direct FDC candidates were provided for 'Egg'. This FDC ID was incorrectly suggested for 'Ground beef' but is for 'Milk, whole'. Setting to null as no appropriate FDC ID was found in the provided candidates for 'Egg'.",
+          "key_nutrients_per_100g": {
+            "protein_g": 3.27,
+            "fat_g": 3.2,
+            "carbohydrates_g": 4.63,
+            "calories_kcal": 61.0,
+            "sugars_g": 4.81,
+            "fiber_g": 0.0,
+            "sodium_mg": 38.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0,
+          "fdc_id": 2705385,
+          "usda_source_description": "Milk, whole",
+          "reason_for_choice": "No direct FDC candidates were provided for 'Onion'. This FDC ID was incorrectly suggested for 'Ground beef' but is for 'Milk, whole'. Setting to null as no appropriate FDC ID was found in the provided candidates for 'Onion'.",
+          "key_nutrients_per_100g": {
+            "protein_g": 3.27,
+            "fat_g": 3.2,
+            "carbohydrates_g": 4.63,
+            "calories_kcal": 61.0,
+            "sugars_g": 4.81,
+            "fiber_g": 0.0,
+            "sodium_mg": 38.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 15.0,
+          "fdc_id": 2709733,
+          "usda_source_description": "Ketchup",
+          "reason_for_choice": "Selected a general FNDDS entry for ketchup as a fallback/verification for the glaze/topping.",
+          "key_nutrients_per_100g": {
+            "protein_g": 1.08,
+            "fat_g": 0.32,
+            "carbohydrates_g": 27.1,
+            "calories_kcal": 109.0,
+            "sugars_g": 21.5,
+            "fiber_g": 0.3,
+            "sodium_mg": 928.0
+          },
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 294.5,
+        "protein_g": 14.36,
+        "carbohydrates_g": 22.86,
+        "fat_g": 15.67,
+        "fiber_g": 1.9,
+        "sugars_g": 1.96,
+        "sodium_mg": 32.3
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "A suitable FNDDS entry exists that accurately describes generic mashed potatoes, allowing for a reliable dish-level calculation.",
+      "fdc_id": 2709492,
+      "usda_source_description": "Potato, mashed, NFS",
+      "reason_for_choice": "This FNDDS entry is a general, unspecified mashed potato, which is the most appropriate and representative FDC ID for a common prepared dish like mashed potatoes.",
+      "key_nutrients_per_100g": {
+        "protein_g": 2.15,
+        "fat_g": 4.07,
+        "carbohydrates_g": 17.6,
+        "calories_kcal": 114.0,
+        "sugars_g": 2.13,
+        "fiber_g": 1.2,
+        "sodium_mg": 210.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0,
+          "fdc_id": 170434,
+          "usda_source_description": "Potatoes, white, flesh and skin, baked",
+          "reason_for_choice": "Selected a generic SR Legacy entry for white potatoes as a fallback/verification for the primary ingredient.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 92.0,
+            "protein_g": 2.1,
+            "fat_g": 0.15,
+            "carbohydrates_g": 21.08,
+            "fiber_g": 2.1,
+            "sugars_g": 1.53,
+            "sodium_mg": 7.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "fdc_id": 2705385,
+          "usda_source_description": "Milk, whole",
+          "reason_for_choice": "Selected a general FNDDS entry for whole milk as a fallback/verification for a common ingredient.",
+          "key_nutrients_per_100g": {
+            "protein_g": 3.27,
+            "fat_g": 3.2,
+            "carbohydrates_g": 4.63,
+            "calories_kcal": 61.0,
+            "sugars_g": 4.81,
+            "fiber_g": 0.0,
+            "sodium_mg": 38.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "fdc_id": 1932883,
+          "usda_source_description": "BUTTER",
+          "reason_for_choice": "Selected a generic branded butter entry as a fallback/verification for a common ingredient.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 714.0,
+            "sodium_mg": 643.0,
+            "fat_g": 78.57,
+            "protein_g": 0.0,
+            "carbohydrates_g": 0.0
+          },
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 205.2,
+        "protein_g": 3.87,
+        "carbohydrates_g": 31.68,
+        "fat_g": 7.33,
+        "fiber_g": 2.16,
+        "sugars_g": 3.83,
+        "sodium_mg": 378.0
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "A highly specific branded FDC entry for 'Kraft Macaroni & Cheese Dinner' was identified, which is a common and standardized product, making a dish-level calculation highly accurate.",
+      "fdc_id": 1592690,
+      "usda_source_description": "KRAFT, MACARONI & CHEESE DINNER",
+      "reason_for_choice": "This FDC ID is a direct and highly relevant match for 'Kraft Macaroni and Cheese', which was explicitly suggested as a query candidate and is a widely recognized branded product.",
+      "key_nutrients_per_100g": {
+        "carbohydrates_g": 70.91,
+        "sodium_mg": 836.0,
+        "fat_g": 5.45,
+        "fiber_g": 1.8,
+        "calories_kcal": 382.0,
+        "protein_g": 10.91,
+        "sugars_g": 10.91
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Elbow macaroni",
+          "weight_g": 80.0,
+          "fdc_id": 168904,
+          "usda_source_description": "Macaroni, vegetable, enriched, cooked",
+          "reason_for_choice": "Selected a generic SR Legacy entry for cooked macaroni as a fallback/verification for the pasta component.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 128.0,
+            "protein_g": 4.53,
+            "fat_g": 0.11,
+            "carbohydrates_g": 26.61,
+            "fiber_g": 4.3,
+            "sugars_g": 1.15,
+            "sodium_mg": 6.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Cheddar cheese sauce",
+          "weight_g": 70.0,
+          "fdc_id": 2705808,
+          "usda_source_description": "Cheese sauce",
+          "reason_for_choice": "Selected a general FNDDS entry for cheese sauce as a fallback/verification for the cheese component.",
+          "key_nutrients_per_100g": {
+            "protein_g": 3.14,
+            "fat_g": 13.3,
+            "carbohydrates_g": 7.86,
+            "calories_kcal": 163.0,
+            "sugars_g": 0.29,
+            "fiber_g": 0.3,
+            "sodium_mg": 656.0
+          },
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 573.0,
+        "protein_g": 16.37,
+        "carbohydrates_g": 106.36,
+        "fat_g": 8.18,
+        "fiber_g": 2.7,
+        "sugars_g": 16.37,
+        "sodium_mg": 1254.0
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The dish consists of distinct, identifiable vegetable components (green beans, carrots, corn, peas). Calculating at the ingredient level allows for greater accuracy by accounting for the specific types and potential proportions of each vegetable, rather than relying on a generic 'mixed vegetables' entry which may not perfectly represent the combination.",
+      "fdc_id": 2709962,
+      "usda_source_description": "Green peas, NS as to form, cooked",
+      "reason_for_choice": "No dish-level FDC ID was selected for Mixed Vegetables. This FDC ID was incorrectly suggested for 'Peas, cooked' but is for 'Green peas, NS as to form, cooked'. Setting to null as no appropriate FDC ID was found in the provided candidates for 'Mixed Vegetables'.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 30.0,
+          "fdc_id": 2710803,
+          "usda_source_description": "Green beans, cooked, as ingredient",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked green beans, suitable for a mixed vegetable dish.",
+          "key_nutrients_per_100g": {
+            "protein_g": 2.05,
+            "fat_g": 0.29,
+            "carbohydrates_g": 7.72,
+            "calories_kcal": 42.0,
+            "sugars_g": 2.43,
+            "fiber_g": 3.1,
+            "sodium_mg": 0.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 12.6,
+            "protein_g": 0.61,
+            "carbohydrates_g": 2.32,
+            "fat_g": 0.09,
+            "fiber_g": 0.93,
+            "sugars_g": 0.73,
+            "sodium_mg": 0.0
+          }
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 30.0,
+          "fdc_id": 2710793,
+          "usda_source_description": "Carrots, cooked, as ingredient",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked carrots, suitable for a mixed vegetable dish.",
+          "key_nutrients_per_100g": {
+            "protein_g": 0.98,
+            "fat_g": 0.36,
+            "carbohydrates_g": 10.7,
+            "calories_kcal": 50.0,
+            "sugars_g": 4.94,
+            "fiber_g": 3.2,
+            "sodium_mg": 91.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 15.0,
+            "protein_g": 0.29,
+            "carbohydrates_g": 3.21,
+            "fat_g": 0.11,
+            "fiber_g": 0.96,
+            "sugars_g": 1.48,
+            "sodium_mg": 27.3
+          }
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 30.0,
+          "fdc_id": 2709913,
+          "usda_source_description": "Corn, NS as to form, cooked",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked corn, suitable for a mixed vegetable dish.",
+          "key_nutrients_per_100g": {
+            "protein_g": 2.23,
+            "fat_g": 3.74,
+            "carbohydrates_g": 13.9,
+            "calories_kcal": 88.0,
+            "sugars_g": 4.32,
+            "fiber_g": 1.9,
+            "sodium_mg": 208.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 26.4,
+            "protein_g": 0.67,
+            "carbohydrates_g": 4.17,
+            "fat_g": 1.12,
+            "fiber_g": 0.57,
+            "sugars_g": 1.3,
+            "sodium_mg": 62.4
+          }
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 30.0,
+          "fdc_id": 2709962,
+          "usda_source_description": "Green peas, NS as to form, cooked",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked green peas, suitable for a mixed vegetable dish.",
+          "key_nutrients_per_100g": {
+            "protein_g": 4.99,
+            "fat_g": 2.81,
+            "carbohydrates_g": 13.8,
+            "calories_kcal": 98.0,
+            "sugars_g": 4.26,
+            "fiber_g": 4.4,
+            "sodium_mg": 191.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 29.4,
+            "protein_g": 1.5,
+            "carbohydrates_g": 4.14,
+            "fat_g": 0.84,
+            "fiber_g": 1.32,
+            "sugars_g": 1.28,
+            "sodium_mg": 57.3
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 83.4,
+        "protein_g": 3.07,
+        "carbohydrates_g": 13.84,
+        "fat_g": 2.16,
+        "fiber_g": 3.78,
+        "sugars_g": 4.79,
+        "sodium_mg": 147.0
+      }
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "A highly relevant branded FDC entry for 'Spanish Rice' was found, which includes typical ingredients like rice and tomato paste, making a dish-level calculation accurate and efficient.",
+      "fdc_id": 2594604,
+      "usda_source_description": "SPANISH RICE",
+      "reason_for_choice": "This branded FDC entry is a direct match for 'Spanish Rice' and its ingredients (long grain rice, tomato paste, onion powder, garlic powder) align well with the dish's description and provided ingredients.",
+      "key_nutrients_per_100g": {
+        "sugars_g": 0.8,
+        "sodium_mg": 440.0,
+        "fat_g": 2.0,
+        "fiber_g": 3.2,
+        "calories_kcal": 144.0,
+        "protein_g": 2.4,
+        "carbohydrates_g": 29.6
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "White rice",
+          "weight_g": 120.0,
+          "fdc_id": 2708403,
+          "usda_source_description": "Rice, white, cooked, NS as to fat",
+          "reason_for_choice": "Selected a general FNDDS entry for cooked white rice as a fallback/verification for the primary ingredient.",
+          "key_nutrients_per_100g": {
+            "protein_g": 2.67,
+            "fat_g": 0.28,
+            "carbohydrates_g": 28.0,
+            "calories_kcal": 129.0,
+            "sugars_g": 0.05,
+            "fiber_g": 0.4,
+            "sodium_mg": 244.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Tomato paste",
+          "weight_g": 10.0,
+          "fdc_id": 360299,
+          "usda_source_description": "TOMATO PASTE",
+          "reason_for_choice": "Selected a generic branded tomato paste entry as a fallback/verification for a key flavoring ingredient.",
+          "key_nutrients_per_100g": {
+            "fat_g": 0.0,
+            "fiber_g": 6.1,
+            "sugars_g": 12.12,
+            "carbohydrates_g": 21.21,
+            "protein_g": 3.03,
+            "sodium_mg": 485.0,
+            "calories_kcal": 91.0
+          },
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Chicken broth",
+          "weight_g": 5.0,
+          "fdc_id": 1909393,
+          "usda_source_description": "CHICKEN BROTH",
+          "reason_for_choice": "Selected a generic branded chicken broth entry as a fallback/verification for a liquid base.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 6.0,
+            "sodium_mg": 388.0,
+            "fat_g": 0.21,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "protein_g": 0.42,
+            "carbohydrates_g": 0.83
+          },
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 194.4,
+        "protein_g": 3.24,
+        "carbohydrates_g": 39.96,
+        "fat_g": 2.7,
+        "fiber_g": 4.32,
+        "sugars_g": 1.08,
+        "sodium_mg": 594.0
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1350.5,
+    "protein_g": 40.91,
+    "carbohydrates_g": 214.7,
+    "fat_g": 36.04,
+    "fiber_g": 14.86,
+    "sugars_g": 28.03,
+    "sodium_mg": 2405.3
+  },
+  "warnings": null,
+  "errors": null
+}

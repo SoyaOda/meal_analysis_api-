@@ -1,0 +1,146 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 120.0
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 15.0
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 40.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Caesar salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "Common name for the entire dish."
+        },
+        {
+          "query_term": "Romaine lettuce",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Primary green vegetable in the salad."
+        },
+        {
+          "query_term": "Croutons",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Common topping for Caesar salad."
+        },
+        {
+          "query_term": "Parmesan cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Typical cheese used in Caesar salad."
+        },
+        {
+          "query_term": "Caesar dressing",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "The characteristic dressing for this salad."
+        },
+        {
+          "query_term": "La Madeleine Caesar salad",
+          "granularity_level": "branded_product",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "The tray indicates the restaurant 'La Madeleine', suggesting a branded item."
+        }
+      ]
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One large serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta, cooked",
+          "weight_g": 220.0
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 40.0
+        },
+        {
+          "ingredient_name": "Creamy tomato sauce",
+          "weight_g": 60.0
+        },
+        {
+          "ingredient_name": "Cooked chicken pieces",
+          "weight_g": 60.0
+        },
+        {
+          "ingredient_name": "Feta cheese crumbles",
+          "weight_g": 25.0
+        },
+        {
+          "ingredient_name": "Fresh herbs (e.g., parsley, basil)",
+          "weight_g": 5.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Penne pasta salad",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "General name for the dish based on pasta type and form."
+        },
+        {
+          "query_term": "Pasta salad with chicken",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "More specific dish name including a likely protein."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta, cooked",
+          "reason_for_query": "The main carbohydrate component of the dish."
+        },
+        {
+          "query_term": "Tomato, diced",
+          "granularity_level": "ingredient",
+          "original_term": "Diced tomatoes",
+          "reason_for_query": "Visible vegetable component."
+        },
+        {
+          "query_term": "Chicken breast, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Cooked chicken pieces",
+          "reason_for_query": "Likely protein source in the pasta salad."
+        },
+        {
+          "query_term": "Feta cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Feta cheese crumbles",
+          "reason_for_query": "Visible cheese component."
+        },
+        {
+          "query_term": "Pasta sauce, creamy tomato",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy tomato sauce",
+          "reason_for_query": "The base sauce coating the pasta."
+        },
+        {
+          "query_term": "La Madeleine pasta salad",
+          "granularity_level": "branded_product",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "The tray indicates the restaurant 'La Madeleine', suggesting a branded item."
+        }
+      ]
+    }
+  ]
+}
