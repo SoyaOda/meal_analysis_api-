@@ -1,28 +1,93 @@
 #!/usr/bin/env python3
 """
 Phase 2 Analysis Test Script (v2.1) - calculation_strategyとFDC ID選択をテスト
+
+Usage:
+    python test_english_phase2_v2.py [image_path] [phase1_result_file]
+    
+Examples:
+    python test_english_phase2_v2.py test_images/food1.jpg
+    python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+    python test_english_phase2_v2.py  # デフォルト画像とPhase1結果を使用
 """
 
 import requests
 import json
 import sys
 import time
+import argparse
 from pathlib import Path
+from datetime import datetime
 
 # API設定
 BASE_URL = "http://localhost:8000"
 PHASE1_ENDPOINT = f"{BASE_URL}/api/v1/meal-analyses/"
 PHASE2_ENDPOINT = f"{BASE_URL}/api/v1/meal-analyses/refine"
 
-def test_phase2_analysis_v2():
+def get_default_image_paths():
+    """デフォルトの画像パスリストを返す"""
+    return [
+        "test_images/food1.jpg",
+        "test_images/food2.jpg",
+        "test_images/food3.jpg",
+        "tests/assets/test_meal.jpg",
+        "test_meal.jpg", 
+        "sample_meal.jpg",
+        Path.home() / "Downloads" / "meal.jpg",
+        Path.cwd() / "meal.jpg"
+    ]
+
+def find_test_image(specified_path=None):
+    """テスト画像のパスを見つける"""
+    if specified_path:
+        path = Path(specified_path)
+        if path.exists():
+            return path
+        else:
+            print(f"❌ Specified image not found: {specified_path}")
+            return None
+    
+    # デフォルトの画像を探す
+    for path in get_default_image_paths():
+        if Path(path).exists():
+            return Path(path)
+    
+    return None
+
+def find_phase1_result(specified_path=None):
+    """Phase1結果ファイルを見つける"""
+    if specified_path:
+        path = Path(specified_path)
+        if path.exists():
+            return path
+        else:
+            print(f"❌ Specified Phase 1 result file not found: {specified_path}")
+            return None
+    
+    # デフォルトファイルまたは最新のファイルを探す
+    default_paths = [
+        "phase1_analysis_result_v2.json",  # デフォルトファイル
+    ]
+    
+    # test_resultsフォルダ内の最新ファイルも確認
+    test_results_dir = Path("test_results")
+    if test_results_dir.exists():
+        phase1_files = list(test_results_dir.glob("phase1_result_*.json"))
+        # 最新のファイルを先頭に
+        phase1_files.sort(key=lambda x: x.stat().st_mtime, reverse=True)
+        default_paths.extend(phase1_files)
+    
+    for path in default_paths:
+        if Path(path).exists():
+            return Path(path)
+    
+    return None
+
+def test_phase2_analysis_v2(image_path, phase1_result_file):
     """Phase 2の新しい仕様（v2.1）をテスト"""
     
-    # 1. Phase 1結果ファイルの確認
-    phase1_result_file = "phase1_analysis_result_v2.json"
-    if not Path(phase1_result_file).exists():
-        print(f"❌ Phase 1 result file not found: {phase1_result_file}")
-        print("   Please run test_english_phase1_v2.py first")
-        return False
+    print(f"📷 Using test image: {image_path}")
+    print(f"📄 Using Phase 1 result: {phase1_result_file}")
     
     # Phase 1結果を読み込み
     try:
@@ -31,33 +96,14 @@ def test_phase2_analysis_v2():
         print(f"✅ Phase 1 result loaded from {phase1_result_file}")
     except Exception as e:
         print(f"❌ Error loading Phase 1 result: {e}")
-        return False
+        return False, None
     
-    # 2. テスト画像の確認
-    test_image_paths = [
-        "test_images/food1.jpg",
-        "test_images/food2.jpg",
-        "test_images/food3.jpg",
-    ]
-    
-    test_image_path = None
-    for path in test_image_paths:
-        if Path(path).exists():
-            test_image_path = Path(path)
-            break
-    
-    if not test_image_path:
-        print("❌ Test image not found")
-        return False
-    
-    print(f"📷 Using test image: {test_image_path}")
-    
-    # 3. Phase 2 API リクエスト
+    # Phase 2 API リクエスト
     try:
         print("🚀 Sending Phase 2 analysis request...")
         start_time = time.time()
         
-        with open(test_image_path, 'rb') as image_file:
+        with open(image_path, 'rb') as image_file:
             files = {
                 'image': ('test_meal.jpg', image_file, 'image/jpeg')
             }
@@ -80,7 +126,7 @@ def test_phase2_analysis_v2():
         
         if response.status_code != 200:
             print(f"❌ Error response: {response.text}")
-            return False
+            return False, None
         
         # JSON パース
         result = response.json()
@@ -93,7 +139,7 @@ def test_phase2_analysis_v2():
         # 基本構造の確認
         if 'dishes' not in result:
             print("❌ Missing 'dishes' field in response")
-            return False
+            return False, None
         
         dishes = result['dishes']
         print(f"🍽️  Found {len(dishes)} dishes")
@@ -169,6 +215,9 @@ def test_phase2_analysis_v2():
                 print(f"   Fiber: {total_nutrients.get('fiber_g', 0):.1f}g")
             if total_nutrients.get('sodium_mg'):
                 print(f"   Sodium: {total_nutrients.get('sodium_mg', 0):.1f}mg")
+        else:
+            print(f"\n⚠️  No total meal nutrition calculated")
+            validation_passed = False
         
         # v2.1 仕様の検証
         print(f"\n🔍 V2.1 SPECIFICATION VALIDATION:")
@@ -192,47 +241,81 @@ def test_phase2_analysis_v2():
                 print(f"      - {error}")
             validation_passed = False
         
-        # 結果保存
-        output_file = "phase2_analysis_result_v2.json"
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(result, f, indent=2, ensure_ascii=False)
-        print(f"\n💾 Full result saved to: {output_file}")
-        
         # 最終判定
-        success_criteria = [
-            len(dishes) > 0,
-            all(d.get('calculation_strategy') in ['dish_level', 'ingredient_level'] for d in dishes),
-            total_fdc_ids_selected > 0,
-            total_nutrients is not None,
-            not errors  # エラーがないこと
-        ]
-        
-        if all(success_criteria) and validation_passed:
+        if validation_passed:
             print(f"\n✅ Phase 2 v2.1 test PASSED!")
-            print("   - All dishes have valid calculation strategies")
-            print("   - FDC IDs were successfully selected")
-            print("   - Nutritional calculations completed")
-            print("   - No critical errors")
-            return True
+            print("   - All calculation strategies are valid")
+            print("   - FDC IDs are properly selected")
+            print("   - Total meal nutrition is calculated")
         else:
             print(f"\n❌ Phase 2 v2.1 test FAILED!")
             print("   Please check the validation errors above.")
-            return False
+        
+        return validation_passed, result
         
     except requests.exceptions.RequestException as e:
         print(f"❌ Request error: {e}")
-        return False
+        return False, None
     except json.JSONDecodeError as e:
         print(f"❌ JSON decode error: {e}")
         print(f"Raw response: {response.text}")
-        return False
+        return False, None
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
-        return False
+        return False, None
+
+def save_result(result, image_path, phase1_result_file):
+    """結果をtest_resultsフォルダに保存"""
+    # 出力ディレクトリを作成
+    output_dir = Path("test_results")
+    output_dir.mkdir(exist_ok=True)
+    
+    # タイムスタンプ付きファイル名
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    image_name = Path(image_path).stem
+    output_file = output_dir / f"phase2_result_{image_name}_{timestamp}.json"
+    
+    # 結果を保存
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Full result saved to: {output_file}")
+    
+    # デフォルトファイル名でもコピー保存（後続処理で使用するため）
+    default_file = "phase2_analysis_result_v2.json"
+    with open(default_file, 'w', encoding='utf-8') as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    
+    print(f"💾 Also saved as: {default_file}")
+    
+    return output_file
 
 def main():
-    print("🧪 Phase 2 Analysis Test (v2.1) - Strategy & FDC ID Selection")
-    print("-" * 70)
+    parser = argparse.ArgumentParser(
+        description="Phase 2 Analysis Test (v2.1) - Calculation Strategy & FDC ID Selection",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python test_english_phase2_v2.py test_images/food1.jpg
+  python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+  python test_english_phase2_v2.py  # Use default image and latest Phase 1 result
+        """
+    )
+    parser.add_argument(
+        'image_path', 
+        nargs='?', 
+        help='Path to the meal image file (optional, will search for default images if not provided)'
+    )
+    parser.add_argument(
+        'phase1_result_file', 
+        nargs='?', 
+        help='Path to Phase 1 result JSON file (optional, will use latest if not provided)'
+    )
+    
+    args = parser.parse_args()
+    
+    print("🧪 Phase 2 Analysis Test (v2.1) - Calculation Strategy & FDC ID Selection")
+    print("-" * 80)
     
     # ヘルスチェック
     try:
@@ -242,13 +325,38 @@ def main():
         else:
             print("❌ Server health check failed")
             return 1
-    except:
-        print("❌ Cannot connect to server. Is it running on http://localhost:8000?")
+    except requests.exceptions.RequestException:
+        print("❌ Server is not reachable")
         return 1
     
-    # Phase 2テスト実行
-    if test_phase2_analysis_v2():
-        print("\n🎉 Phase 2 test passed! v2.1 implementation is working correctly.")
+    # 画像ファイルを探す
+    image_path = find_test_image(args.image_path)
+    
+    if not image_path:
+        print("❌ No test image found. Please specify an image path or place a meal image in one of these locations:")
+        for path in get_default_image_paths():
+            print(f"   - {path}")
+        print(f"\nUsage: python {sys.argv[0]} [image_path] [phase1_result_file]")
+        return 1
+    
+    # Phase 1結果ファイルを探す
+    phase1_result_file = find_phase1_result(args.phase1_result_file)
+    
+    if not phase1_result_file:
+        print("❌ No Phase 1 result file found. Please run Phase 1 test first or specify a result file:")
+        print("   python test_english_phase1_v2.py")
+        print(f"   OR: python {sys.argv[0]} {image_path} <phase1_result_file>")
+        return 1
+    
+    # テスト実行
+    success, result = test_phase2_analysis_v2(image_path, phase1_result_file)
+    
+    # 結果を保存
+    if result:
+        save_result(result, image_path, phase1_result_file)
+    
+    if success:
+        print("\n🎉 Phase 2 test completed successfully!")
         return 0
     else:
         print("\n💥 Phase 2 test failed! Please check the implementation.")

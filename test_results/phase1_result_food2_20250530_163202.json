@@ -1,0 +1,279 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "Two slices",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 150.0
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 10.0
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 10.0
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 15.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "Common name for the dish."
+        },
+        {
+          "query_term": "Beef meatloaf",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "More specific dish name, likely to be in USDA."
+        },
+        {
+          "query_term": "Ground beef",
+          "granularity_level": "ingredient",
+          "original_term": "Ground beef",
+          "reason_for_query": "Primary ingredient of meatloaf."
+        },
+        {
+          "query_term": "Bread crumbs",
+          "granularity_level": "ingredient",
+          "original_term": "Breadcrumbs",
+          "reason_for_query": "Common binder in meatloaf."
+        },
+        {
+          "query_term": "Ketchup",
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "Common topping/glaze for meatloaf."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Mashed potatoes",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Common name for the dish."
+        },
+        {
+          "query_term": "Potatoes, mashed",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Alternative common name for the dish."
+        },
+        {
+          "query_term": "Potatoes, white",
+          "granularity_level": "ingredient",
+          "original_term": "Potatoes",
+          "reason_for_query": "Primary ingredient of mashed potatoes."
+        },
+        {
+          "query_term": "Milk, whole",
+          "granularity_level": "ingredient",
+          "original_term": "Milk",
+          "reason_for_query": "Common ingredient in mashed potatoes."
+        },
+        {
+          "query_term": "Butter",
+          "granularity_level": "ingredient",
+          "original_term": "Butter",
+          "reason_for_query": "Common ingredient in mashed potatoes."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Elbow macaroni",
+          "weight_g": 80.0
+        },
+        {
+          "ingredient_name": "Cheddar cheese sauce",
+          "weight_g": 70.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Common name for the dish."
+        },
+        {
+          "query_term": "Mac and cheese",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Abbreviated common name for the dish."
+        },
+        {
+          "query_term": "Kraft Macaroni and Cheese",
+          "granularity_level": "branded_product",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Looks like a common boxed variety, which often has branded entries."
+        },
+        {
+          "query_term": "Macaroni, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Elbow macaroni",
+          "reason_for_query": "Primary pasta type used in the dish."
+        },
+        {
+          "query_term": "Cheddar cheese sauce",
+          "granularity_level": "ingredient",
+          "original_term": "Cheddar cheese sauce",
+          "reason_for_query": "Key component of the dish's flavor."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 30.0
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 30.0
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 30.0
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 30.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Mixed vegetables, frozen",
+          "granularity_level": "dish",
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "Common form of mixed vegetables, likely to have USDA entries."
+        },
+        {
+          "query_term": "Mixed vegetables, canned",
+          "granularity_level": "dish",
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "Another common form of mixed vegetables, likely to have USDA entries."
+        },
+        {
+          "query_term": "Green beans, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "Individual component of the mixed vegetables."
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "Individual component of the mixed vegetables."
+        },
+        {
+          "query_term": "Corn, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "Individual component of the mixed vegetables."
+        },
+        {
+          "query_term": "Peas, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Peas",
+          "reason_for_query": "Individual component of the mixed vegetables."
+        }
+      ]
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "ingredients": [
+        {
+          "ingredient_name": "White rice",
+          "weight_g": 120.0
+        },
+        {
+          "ingredient_name": "Tomato paste",
+          "weight_g": 10.0
+        },
+        {
+          "ingredient_name": "Chicken broth",
+          "weight_g": 5.0
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Spanish rice",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Common name for this type of seasoned rice."
+        },
+        {
+          "query_term": "Mexican rice",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Alternative common name for this type of seasoned rice."
+        },
+        {
+          "query_term": "Rice pilaf",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Broader category for seasoned rice dishes."
+        },
+        {
+          "query_term": "White rice, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "White rice",
+          "reason_for_query": "Primary ingredient of the dish."
+        },
+        {
+          "query_term": "Tomato paste",
+          "granularity_level": "ingredient",
+          "original_term": "Tomato paste",
+          "reason_for_query": "Likely ingredient for color and flavor."
+        },
+        {
+          "query_term": "Chicken broth",
+          "granularity_level": "ingredient",
+          "original_term": "Chicken broth",
+          "reason_for_query": "Common liquid base for flavored rice."
+        }
+      ]
+    }
+  ]
+}
