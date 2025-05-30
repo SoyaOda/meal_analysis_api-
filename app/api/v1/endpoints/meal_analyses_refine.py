@@ -400,7 +400,7 @@ async def refine_meal_analysis(
 
         # 7. Calculate total meal nutrients
         total_meal_nutrients = nutrition_service.aggregate_nutrients_for_meal(
-            [dish.dish_total_actual_nutrients for dish in refined_dishes_response if dish.dish_total_actual_nutrients]
+            refined_dishes_response
         )
         
         nutrition_calc_duration = (time.time() - nutrition_calc_start_time) * 1000
