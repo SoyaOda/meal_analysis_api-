@@ -141,14 +141,7 @@ async def refine_meal_analysis(
             )
             raise HTTPException(status_code=400, detail=f"Invalid Phase 1 JSON: {e}")
 
-        # 3. Execute Enhanced USDA searches based on Phase 1 candidates (improved v2.1)
-        meal_logger.log_entry(
-            session_id=session_id,
-            level=LogLevel.INFO,
-            phase=ProcessingPhase.USDA_SEARCH_START,
-            message="Starting enhanced USDA searches with brand-aware strategy and explicit query-result mapping"
-        )
-        
+        # 3. Enhanced USDA Search with Tiered Strategy
         usda_search_start_time = time.time()
         
         # query_map は Phase 1 の query_term と original_term (表示用) のマッピングに引き続き使用
@@ -157,286 +150,129 @@ async def refine_meal_analysis(
             for candidate in dish.usda_query_candidates:
                 query_map[candidate.query_term] = candidate.original_term or dish.dish_name
 
-        # 各Phase 1クエリ候補と、それに対するUSDA検索パラメータをペアで保持するリスト
-        # これにより、結果とのマッピングが崩れないようにする
-        query_tasks_with_context = []
-
-        # ブランドクエリと通常クエリの準備ロジック
-        branded_candidates_from_phase1 = []
-        regular_candidates_from_phase1 = []
-        detected_brands = set()
-
-        for dish in phase1_analysis.dishes:
-            for candidate in dish.usda_query_candidates:
-                # 重複排除: 同じquery_termは一度だけ処理
-                existing_query_terms = [task['phase1_candidate'].query_term for task in query_tasks_with_context]
-                if candidate.query_term in existing_query_terms:
-                    continue
-                    
-                if candidate.granularity_level == "branded_product":
-                    branded_candidates_from_phase1.append(candidate)
-                    # ブランド名を抽出
-                    query_parts = candidate.query_term.split()
-                    if len(query_parts) >= 2:
-                        potential_brand = query_parts[0] + (" " + query_parts[1] if len(query_parts) > 2 else "")
-                        detected_brands.add(potential_brand)
-                else:
-                    regular_candidates_from_phase1.append(candidate)
-        
-        logger.info(f"Preparing USDA search tasks: {len(branded_candidates_from_phase1)} branded, {len(regular_candidates_from_phase1)} regular candidates")
-        if detected_brands:
-            logger.info(f"Detected brands: {list(detected_brands)}")
-
-        # 1. ブランド優先検索タスクの準備
-        for candidate in branded_candidates_from_phase1:
-            query_parts = candidate.query_term.split()
-            brand_name_filter = None
-            search_query = candidate.query_term
-
-            # ブランド名抽出ロジックの改善
-            if "la madeleine" in candidate.query_term.lower():
-                brand_name_filter = "La Madeleine"
-                # クエリからブランド名部分を除去
-                search_query = candidate.query_term.lower().replace("la madeleine", "").strip()
-                if not search_query: 
-                    search_query = candidate.query_term
-            elif len(query_parts) > 1:
-                # 一般的なブランド名抽出の試み
-                potential_brand = query_parts[0]
-                if len(query_parts) > 2 and not query_parts[1].lower() in ["salad", "pasta", "chicken", "beef", "cheese", "dressing"]:
-                    potential_brand = f"{query_parts[0]} {query_parts[1]}"
-                    search_query = " ".join(query_parts[2:])
-                else:
-                    search_query = " ".join(query_parts[1:])
-                if not search_query: 
-                    search_query = candidate.query_term
-                brand_name_filter = potential_brand
-
-            search_params = {
-                "query": search_query,
-                "data_types": ["Branded", "FNDDS"],
-                "page_size": 15,
-                "require_all_words": True,
-                "brand_owner_filter": brand_name_filter
-            }
-            query_tasks_with_context.append({'phase1_candidate': candidate, 'search_params': search_params})
-
-        # 2. 通常検索タスクの準備
-        for candidate in regular_candidates_from_phase1:
-            cooking_keywords = ["cooked", "raw", "grilled", "fried", "baked", "steamed", "processed"]
-            query_lower = candidate.query_term.lower()
-            has_cooking_state = any(keyword in query_lower for keyword in cooking_keywords)
-            
-            data_types_for_regular = ["Foundation", "FNDDS", "SR Legacy"]
-            require_all_words_for_regular = False
-
-            if candidate.granularity_level == "dish":
-                data_types_for_regular = ["FNDDS", "Branded", "Foundation"]
-                require_all_words_for_regular = True
-            elif candidate.granularity_level == "ingredient":
-                if has_cooking_state:
-                    data_types_for_regular = ["FNDDS", "Foundation"]
-                else:
-                    data_types_for_regular = ["Foundation", "FNDDS"]
-        
-            search_params = {
-                "query": candidate.query_term,
-                "data_types": data_types_for_regular,
-                "page_size": 12,
-                "require_all_words": require_all_words_for_regular,
-                "brand_owner_filter": None
-            }
-            query_tasks_with_context.append({'phase1_candidate': candidate, 'search_params': search_params})
-
-        # USDA検索タスクの非同期実行
-        usda_search_api_tasks = []
-        for task_info in query_tasks_with_context:
-            usda_search_api_tasks.append(
-                usda_service.search_foods_rich(**task_info['search_params'])
-            )
-        
-        logger.info(f"Executing {len(usda_search_api_tasks)} USDA search API tasks.")
-        usda_search_results_list = await asyncio.gather(*usda_search_api_tasks, return_exceptions=True)
-        usda_search_duration = (time.time() - usda_search_start_time) * 1000
-        logger.info(f"USDA searches completed in {usda_search_duration:.2f} ms.")
-
-        # 4. Enhanced USDA results processing with Tiered Search fallback
-        augmented_usda_search_results_map = {}  # Store results per original query_term
+        # Enhanced USDA search with tiered approach
         all_usda_search_results_map: Dict[int, USDASearchResultItem] = {}
         search_details_for_log = []
+        
+        # Detect brand context from image or Phase 1 analysis
+        brand_context = None
+        brand_indicators = ["la madeleine", "madeleine"]
+        for dish in phase1_analysis.dishes:
+            for candidate in dish.usda_query_candidates:
+                query_lower = candidate.query_term.lower()
+                for brand in brand_indicators:
+                    if brand in query_lower:
+                        brand_context = "La Madeleine"
+                        break
+                if brand_context:
+                    break
 
-        if len(query_tasks_with_context) != len(usda_search_results_list):
-            logger.error("Mismatch between number of query tasks and results. This should not happen.")
-            errors.append("Internal error: USDA search task-result mismatch")
+        logger.info(f"Starting enhanced tiered USDA search for {len(phase1_analysis.dishes)} dishes, brand_context: {brand_context}")
 
-        for i, task_info in enumerate(query_tasks_with_context):
-            original_phase1_candidate = task_info['phase1_candidate']
-            original_query_term = original_phase1_candidate.query_term
-            current_results_or_exc = usda_search_results_list[i]
-            
-            # Initialize with original search results
-            final_candidates_for_query = list(current_results_or_exc) if isinstance(current_results_or_exc, list) else []
-            
-            log_detail_for_query = {
-                "phase1_query_term": original_query_term,
-                "original_term_from_phase1": query_map.get(original_query_term, original_phase1_candidate.original_term),
-                "granularity": original_phase1_candidate.granularity_level,
-                "usda_search_params_initial": task_info['search_params'],
-                "status_initial_search": "error" if isinstance(current_results_or_exc, Exception) else ("no_results" if not final_candidates_for_query else "success"),
-                "results_count_initial": len(final_candidates_for_query) if isinstance(final_candidates_for_query, list) else 0,
-                "fallback_searches_attempted": []
+        # Execute tiered search for each unique query candidate
+        processed_query_terms = set()
+        
+        for dish in phase1_analysis.dishes:
+            for candidate in dish.usda_query_candidates:
+                if candidate.query_term in processed_query_terms:
+                    continue
+                
+                processed_query_terms.add(candidate.query_term)
+                
+                try:
+                    # Use new tiered search strategy
+                    tiered_results = await usda_service.execute_tiered_usda_search(
+                        phase1_candidate=candidate,
+                        brand_context=brand_context,
+                        max_results_cap=15
+                    )
+                    
+                    # Add results to global map for deduplication
+                    for result in tiered_results:
+                        if result.fdc_id not in all_usda_search_results_map:
+                            all_usda_search_results_map[result.fdc_id] = result
+                    
+                    search_details_for_log.append({
+                        "phase1_query_term": candidate.query_term,
+                        "original_term": query_map.get(candidate.query_term, candidate.original_term),
+                        "granularity": candidate.granularity_level,
+                        "search_strategy": "tiered_search",
+                        "results_count": len(tiered_results),
+                        "status": "success" if tiered_results else "no_results"
+                    })
+                    
+                    logger.info(f"Tiered search for '{candidate.query_term}': {len(tiered_results)} results")
+                    
+                except Exception as e:
+                    logger.error(f"Tiered search failed for '{candidate.query_term}': {str(e)}")
+                    search_details_for_log.append({
+                        "phase1_query_term": candidate.query_term,
+                        "original_term": query_map.get(candidate.query_term, candidate.original_term),
+                        "granularity": candidate.granularity_level,
+                        "search_strategy": "tiered_search",
+                        "results_count": 0,
+                        "status": "error",
+                        "error_message": str(e)
+                    })
+
+        usda_search_duration = (time.time() - usda_search_start_time) * 1000
+        logger.info(f"Enhanced tiered USDA searches completed in {usda_search_duration:.2f} ms. Total unique results: {len(all_usda_search_results_map)}")
+
+        # Log comprehensive search summary
+        meal_logger.log_entry(
+            session_id=session_id,
+            level=LogLevel.INFO,
+            phase=ProcessingPhase.USDA_SEARCH_COMPLETE,
+            message=f"Tiered USDA search completed: {len(search_details_for_log)} queries processed, {len(all_usda_search_results_map)} unique FDC IDs found",
+            data={
+                "total_queries": len(search_details_for_log),
+                "unique_fdc_ids": len(all_usda_search_results_map),
+                "brand_context": brand_context,
+                "search_duration_ms": usda_search_duration,
+                "search_details": search_details_for_log
             }
-            if isinstance(current_results_or_exc, Exception):
-                log_detail_for_query["error_message_initial"] = str(current_results_or_exc)
+        )
 
-            # --- Tiered Fallback Logic for Ingredients ---
-            is_ingredient_query = original_phase1_candidate.granularity_level == "ingredient"
-            
-            # Enhanced criteria for "poor results"
-            is_poor_results = False
-            if not final_candidates_for_query:
-                is_poor_results = True
-            elif len(final_candidates_for_query) < 2:
-                is_poor_results = True
-            else:
-                # Check if results are compositionally relevant
-                query_keywords = set(original_query_term.lower().replace(',', ' ').split())
-                relevant_results = 0
-                for result in final_candidates_for_query:
-                    desc_keywords = set(result.description.lower().split())
-                    # Check for any keyword overlap (basic relevance check)
-                    if query_keywords.intersection(desc_keywords):
-                        relevant_results += 1
-                
-                if relevant_results == 0:
-                    is_poor_results = True
-                    logger.info(f"No compositionally relevant results found for '{original_query_term}' - triggering fallback")
-
-            if is_ingredient_query and is_poor_results and not isinstance(current_results_or_exc, Exception):
-                fallback_queries = []
-                
-                # Generate smart fallback queries
-                term_lower = original_query_term.lower()
-                
-                # 1. Remove cooking state (e.g., "Penne pasta, cooked" -> "Penne pasta")
-                term_parts = original_query_term.split(',')
-                if len(term_parts) > 1:
-                    base_term = term_parts[0].strip()
-                    fallback_queries.append(base_term)
-                
-                # 2. Pasta-specific fallbacks
-                if "pasta" in term_lower:
-                    if "penne" in term_lower:
-                        fallback_queries.extend(["Pasta, cooked", "Pasta, wheat, cooked", "Pasta"])
-                    else:
-                        fallback_queries.extend(["Pasta, cooked", "Pasta"])
-                
-                # 3. Dressing-specific fallbacks
-                elif "dressing" in term_lower:
-                    if "creamy" in term_lower or "cream" in term_lower:
-                        fallback_queries.extend(["Salad dressing, creamy", "Salad dressing", "Dressing"])
-                    else:
-                        fallback_queries.extend(["Salad dressing", "Dressing"])
-                
-                # 4. Meat-specific fallbacks
-                elif "chicken" in term_lower:
-                    fallback_queries.extend(["Chicken, cooked", "Chicken"])
-                
-                # 5. Vegetable-specific fallbacks
-                elif any(veg in term_lower for veg in ["lettuce", "tomato", "pepper", "onion"]):
-                    base_veg = None
-                    if "lettuce" in term_lower:
-                        base_veg = "Lettuce"
-                    elif "tomato" in term_lower:
-                        base_veg = "Tomato"
-                    elif "pepper" in term_lower:
-                        base_veg = "Pepper"
-                    elif "onion" in term_lower:
-                        base_veg = "Onion"
-                    
-                    if base_veg:
-                        fallback_queries.extend([f"{base_veg}, raw", base_veg])
-                
-                # 6. Generic term extraction (remove specific adjectives)
-                generic_term = original_query_term
-                for specific in ["penne", "romaine", "caesar", "italian", "greek"]:
-                    generic_term = generic_term.replace(specific, "").strip()
-                generic_term = ' '.join(generic_term.split())  # Clean up extra spaces
-                if generic_term and generic_term != original_query_term:
-                    fallback_queries.append(generic_term)
-                
-                # Remove duplicates and empty queries
-                fallback_queries = [q for q in list(dict.fromkeys(fallback_queries)) if q and q.lower() != original_query_term.lower()]
-                
-                seen_fallback_fdc_ids = {item.fdc_id for item in final_candidates_for_query}
-
-                for fb_idx, fallback_query in enumerate(fallback_queries[:3]):  # Limit to 3 fallback attempts
-                    logger.info(f"Attempting fallback search #{fb_idx+1} for '{original_query_term}' with query: '{fallback_query}'")
-                    
-                    fallback_search_params = {
-                        "query": fallback_query,
-                        "data_types": ["Foundation", "FNDDS", "SR Legacy"],
-                        "page_size": 5,
-                        "require_all_words": False,
-                        "search_context": "ingredient"
-                    }
-                    
-                    fallback_attempt_log = {
-                        "fallback_query": fallback_query,
-                        "params": fallback_search_params,
-                        "attempt_number": fb_idx + 1
-                    }
-                    
-                    try:
-                        fb_results = await usda_service.search_foods_rich(**fallback_search_params)
-                        fallback_attempt_log["status"] = "success"
-                        fallback_attempt_log["results_count"] = len(fb_results) if fb_results else 0
-                        
-                        if fb_results:
-                            logger.info(f"Fallback search #{fb_idx+1} for '{fallback_query}' found {len(fb_results)} results.")
-                            new_results_added = 0
-                            for item in fb_results:
-                                if item.fdc_id not in seen_fallback_fdc_ids:
-                                    # Mark as fallback for tracking
-                                    item.fallback_query_used = fallback_query
-                                    item.fallback_attempt = fb_idx + 1
-                                    final_candidates_for_query.append(item)
-                                    seen_fallback_fdc_ids.add(item.fdc_id)
-                                    new_results_added += 1
-                            
-                            fallback_attempt_log["new_results_added"] = new_results_added
-                            
-                            if new_results_added > 0:
-                                logger.info(f"Added {new_results_added} new candidates from fallback search")
-                        
-                        log_detail_for_query["fallback_searches_attempted"].append(fallback_attempt_log)
-                        
-                        # Stop if we have sufficient results now
-                        if len(final_candidates_for_query) >= 3:
-                            break
-                            
-                    except Exception as fb_e:
-                        logger.error(f"Error during fallback USDA search #{fb_idx+1} for '{fallback_query}': {fb_e}")
-                        fallback_attempt_log["status"] = "error"
-                        fallback_attempt_log["error_message"] = str(fb_e)
-                        log_detail_for_query["fallback_searches_attempted"].append(fallback_attempt_log)
-                
-                # Update log with final results
-                log_detail_for_query["final_results_count"] = len(final_candidates_for_query)
-                log_detail_for_query["fallback_success"] = len(final_candidates_for_query) > log_detail_for_query["results_count_initial"]
-                        
-            augmented_usda_search_results_map[original_query_term] = final_candidates_for_query
-            search_details_for_log.append(log_detail_for_query)
-
-        # 5. Format USDA results for Gemini prompt using augmented results
+        # 4. Format USDA results for Gemini prompt using enhanced results
         usda_candidates_prompt_segments = []
+        
+        # Create a mapping from query_term to results for Gemini prompt generation
+        query_to_results_map = {}
+        for dish in phase1_analysis.dishes:
+            for candidate in dish.usda_query_candidates:
+                query_to_results_map[candidate.query_term] = []
+        
+        # Populate the mapping with relevant results based on query similarity
+        for fdc_id, result in all_usda_search_results_map.items():
+            # Check which query this result best matches
+            best_match_query = None
+            best_match_score = 0
+            
+            for query_term in query_to_results_map.keys():
+                # Simple keyword-based matching
+                query_keywords = set(query_term.lower().replace(',', ' ').split())
+                result_keywords = set(result.description.lower().replace(',', ' ').split())
+                match_score = len(query_keywords.intersection(result_keywords))
+                
+                if match_score > best_match_score:
+                    best_match_score = match_score
+                    best_match_query = query_term
+            
+            # Add result to the best matching query (or first query if no good match)
+            if best_match_query and best_match_score > 0:
+                query_to_results_map[best_match_query].append(result)
+            else:
+                # Fallback: add to first query if no good match found
+                first_query = next(iter(query_to_results_map.keys()), None)
+                if first_query:
+                    query_to_results_map[first_query].append(result)
         
         for dish in phase1_analysis.dishes:
             for candidate in dish.usda_query_candidates:
                 phase1_query_term = candidate.query_term
                 
-                # Retrieve the (potentially augmented) list of results for this phase1_query_term
-                results_for_this_query = augmented_usda_search_results_map.get(phase1_query_term, [])
+                # Retrieve the results for this phase1_query_term
+                results_for_this_query = query_to_results_map.get(phase1_query_term, [])
                 
                 prompt_segment_header = (
                     f"USDA candidates for Phase 1 query: '{phase1_query_term}' "
@@ -447,49 +283,27 @@ async def refine_meal_analysis(
                 
                 segment_content = ""
                 if not results_for_this_query:
-                    segment_content = f"  No USDA candidates found for this query (including fallbacks).\n"
+                    segment_content = f"  No USDA candidates found for this query.\n"
                 else:
-                    for j, item in enumerate(results_for_this_query):
-                        # Store all results for later FDC ID lookup during nutrition calculation
-                        all_usda_search_results_map[item.fdc_id] = item
-                        
+                    for j, item in enumerate(results_for_this_query):                        
                         brand_part = f", Brand: {item.brand_owner}" if item.brand_owner else ""
                         score_part = f"{item.score:.2f}" if item.score is not None else "N/A"
-                        fallback_info = f" (from fallback: '{item.fallback_query_used}')" if hasattr(item, 'fallback_query_used') else ""
+                        tier_info = f" (Tier {getattr(item, 'search_tier', 'N/A')})" if hasattr(item, 'search_tier') else ""
                         
                         segment_content += (
                             f"  {j+1}. FDC ID: {item.fdc_id}, Name: {item.description} "
                             f"(Type: {item.data_type or 'N/A'}{brand_part}), "
-                            f"Score: {score_part}{fallback_info}\n"
+                            f"Score: {score_part}{tier_info}\n"
                         )
-                        if item.ingredients_text:
-                            segment_content += f"     Ingredients (partial): {item.ingredients_text[:100]}...\n"
+                        if getattr(item, 'ingredients', None):
+                            ingredients_preview = str(item.ingredients)[:100] if item.ingredients else ""
+                            if ingredients_preview:
+                                segment_content += f"     Ingredients (partial): {ingredients_preview}...\n"
                 
                 usda_candidates_prompt_segments.append(prompt_segment_header + segment_content)
 
         usda_candidates_prompt_text = "\n---\n".join(usda_candidates_prompt_segments)
         
-        # Update USDA search duration to include fallback time
-        usda_search_duration = (time.time() - usda_search_start_time) * 1000
-        
-        # Enhanced USDA search results logging
-        total_initial_results = sum(detail["results_count_initial"] for detail in search_details_for_log)
-        total_final_results = sum(detail.get("final_results_count", detail["results_count_initial"]) for detail in search_details_for_log)
-        fallback_successes = sum(1 for detail in search_details_for_log if detail.get("fallback_success", False))
-        
-        meal_logger.update_usda_search_results(
-            session_id=session_id,
-            duration_ms=usda_search_duration,
-            queries_executed=len(query_tasks_with_context),
-            results_found=total_final_results,
-            search_details={
-                "initial_results": total_initial_results,
-                "final_results": total_final_results,
-                "fallback_successes": fallback_successes,
-                "detailed_searches": search_details_for_log
-            }
-        )
-
         # 6. Call Gemini service (Phase 2) for strategy and FDC ID selection
         meal_logger.log_entry(
             session_id=session_id,
@@ -750,6 +564,316 @@ async def refine_meal_analysis(
             errors=errors if errors else None
         )
         
+        # 8. Iterative Improvement Loop for Missing FDC IDs
+        MAX_RETRY_ATTEMPTS = 1  # Maximum retry attempts per missing ingredient
+        retry_summary = []
+        
+        for dish_response in response.dishes:
+            for ingredient_response in dish_response.ingredients:
+                if ingredient_response.fdc_id is None and ingredient_response.weight_g > 0:
+                    # This ingredient lacks FDC ID and has significant weight - candidate for retry
+                    
+                    for attempt in range(MAX_RETRY_ATTEMPTS):
+                        meal_logger.log_entry(
+                            session_id=session_id, 
+                            level=LogLevel.INFO, 
+                            phase=ProcessingPhase.PHASE1_START,
+                            message=f"Retry attempt {attempt + 1} for missing ingredient: {ingredient_response.ingredient_name} in dish {dish_response.dish_name}",
+                            data={
+                                "missing_ingredient": ingredient_response.ingredient_name,
+                                "dish_name": dish_response.dish_name,
+                                "weight_g": ingredient_response.weight_g,
+                                "attempt_number": attempt + 1
+                            }
+                        )
+                        
+                        try:
+                            # 1. Targeted Phase 1 Gemini call for specific ingredient
+                            targeted_phase1_prompt = f"""
+Focus ONLY on the ingredient '{ingredient_response.ingredient_name}' visible in the dish '{dish_response.dish_name}' in this image.
+
+Generate diverse USDA query candidates for this specific ingredient:
+1. Very specific terms with cooking states
+2. Moderately specific category terms  
+3. Generic fallback terms
+4. Alternative synonyms and preparation methods
+
+Include terms like '{ingredient_response.ingredient_name.lower()}', broader categories, and cooking state variations.
+
+Provide 5-7 strategic query candidates to maximize USDA database matching success.
+"""
+                            
+                            # Note: This would require a new targeted Gemini method
+                            # For now, generate fallback queries programmatically
+                            
+                            # 2. Generate enhanced fallback queries for the missing ingredient
+                            ingredient_name_lower = ingredient_response.ingredient_name.lower()
+                            targeted_queries = []
+                            
+                            # Enhanced query generation based on ingredient type
+                            if "pasta" in ingredient_name_lower:
+                                targeted_queries.extend([
+                                    "Pasta, cooked, enriched",
+                                    "Pasta, wheat, cooked", 
+                                    "Pasta",
+                                    "Noodles, cooked",
+                                    "Macaroni, cooked"
+                                ])
+                            elif "dressing" in ingredient_name_lower:
+                                if "creamy" in ingredient_name_lower or "cream" in ingredient_name_lower:
+                                    targeted_queries.extend([
+                                        "Salad dressing, creamy",
+                                        "Dressing, mayonnaise type",
+                                        "Sauce, cream based",
+                                        "Salad dressing, ranch",
+                                        "Salad dressing"
+                                    ])
+                                else:
+                                    targeted_queries.extend([
+                                        "Salad dressing",
+                                        "Vinaigrette",
+                                        "Dressing",
+                                        "Sauce, salad"
+                                    ])
+                            elif "chicken" in ingredient_name_lower:
+                                targeted_queries.extend([
+                                    "Chicken, breast, cooked",
+                                    "Chicken, cooked",
+                                    "Poultry, cooked",
+                                    "Chicken, roasted",
+                                    "Chicken"
+                                ])
+                            elif "lettuce" in ingredient_name_lower:
+                                targeted_queries.extend([
+                                    "Lettuce, cos or romaine, raw",
+                                    "Lettuce, raw",
+                                    "Lettuce, romaine",
+                                    "Greens, raw",
+                                    "Lettuce"
+                                ])
+                            elif "cheese" in ingredient_name_lower:
+                                if "parmesan" in ingredient_name_lower:
+                                    targeted_queries.extend([
+                                        "Cheese, parmesan, grated",
+                                        "Cheese, parmesan",
+                                        "Cheese, hard type",
+                                        "Cheese, grated"
+                                    ])
+                                else:
+                                    targeted_queries.extend([
+                                        "Cheese",
+                                        "Cheese, processed",
+                                        "Cheese, natural"
+                                    ])
+                            else:
+                                # Generic fallback
+                                words = ingredient_name_lower.split()
+                                if words:
+                                    base_word = words[0]
+                                    targeted_queries.extend([
+                                        base_word.capitalize(),
+                                        f"{base_word.capitalize()}, cooked",
+                                        f"{base_word.capitalize()}, raw"
+                                    ])
+                            
+                            # Remove duplicates while preserving order
+                            unique_targeted_queries = list(dict.fromkeys(targeted_queries))
+                            
+                            meal_logger.log_entry(
+                                session_id=session_id,
+                                level=LogLevel.INFO,
+                                phase=ProcessingPhase.USDA_SEARCH_START,
+                                message=f"Generated {len(unique_targeted_queries)} targeted queries for retry: {ingredient_response.ingredient_name}",
+                                data={"targeted_queries": unique_targeted_queries}
+                            )
+                            
+                            # 3. Execute targeted tiered USDA searches
+                            retry_usda_results = {}
+                            
+                            for query in unique_targeted_queries[:5]:  # Limit to top 5 queries
+                                try:
+                                    # Create a mock phase1 candidate for the tiered search
+                                    from app.api.v1.schemas.meal import USDACandidateQuery
+                                    
+                                    mock_candidate = USDACandidateQuery(
+                                        query_term=query,
+                                        granularity_level='ingredient',
+                                        original_term=ingredient_response.ingredient_name,
+                                        reason_for_query=f"Retry query for missing ingredient: {ingredient_response.ingredient_name}"
+                                    )
+                                    
+                                    query_results = await usda_service.execute_tiered_usda_search(
+                                        phase1_candidate=mock_candidate,
+                                        brand_context=brand_context,
+                                        max_results_cap=10
+                                    )
+                                    
+                                    for result in query_results:
+                                        if result.fdc_id not in retry_usda_results:
+                                            retry_usda_results[result.fdc_id] = result
+                                    
+                                    logger.info(f"Retry query '{query}' for '{ingredient_response.ingredient_name}': {len(query_results)} results")
+                                    
+                                except Exception as query_e:
+                                    logger.warning(f"Retry query '{query}' failed: {str(query_e)}")
+                            
+                            # 4. If new results found, attempt targeted Phase 2 selection
+                            if retry_usda_results:
+                                retry_results_list = list(retry_usda_results.values())
+                                
+                                # Format results for targeted Phase 2 prompt
+                                retry_usda_prompt = f"""
+TARGETED INGREDIENT ANALYSIS - Focus on ingredient: '{ingredient_response.ingredient_name}'
+
+Original context: Part of dish '{dish_response.dish_name}' (estimated weight: {ingredient_response.weight_g}g)
+
+Available USDA Results for this ingredient:
+"""
+                                for i, result in enumerate(retry_results_list[:10]):
+                                    retry_usda_prompt += f"""
+{i+1}. FDC ID: {result.fdc_id}
+   Description: {result.description}
+   Data Type: {result.data_type or 'Unknown'}
+   Score: {result.score or 'N/A'}
+   Brand: {result.brand_owner or 'N/A'}
+"""
+                                
+                                retry_usda_prompt += f"""
+TASK: Select the best FDC ID for '{ingredient_response.ingredient_name}' from the above results.
+
+Consider:
+1. Compositional relevance to the observed ingredient
+2. Appropriate cooking/processing state
+3. Nutritional plausibility for the context
+4. Data type quality (Foundation > FNDDS > Branded for basic ingredients)
+
+If no suitable match exists, respond with fdc_id: null and explain why.
+
+Provide response in this format:
+{{
+  "ingredient_name": "{ingredient_response.ingredient_name}",
+  "fdc_id": [selected FDC ID or null],
+  "reason_for_choice": "[detailed reasoning for selection or rejection]"
+}}
+"""
+                                
+                                # This would ideally use a targeted Phase 2 Gemini call
+                                # For now, implement simple rule-based selection
+                                
+                                # Simple selection logic: prefer Foundation or FNDDS results with good scores
+                                best_result = None
+                                best_score = 0
+                                
+                                for result in retry_results_list:
+                                    score = 0
+                                    
+                                    # Score based on data type preference for ingredients
+                                    if result.data_type == "Foundation":
+                                        score += 40
+                                    elif result.data_type == "FNDDS":
+                                        score += 30
+                                    elif result.data_type == "SR Legacy":
+                                        score += 20
+                                    elif result.data_type == "Branded":
+                                        score += 10
+                                    
+                                    # Score based on USDA search score
+                                    if result.score:
+                                        score += min(result.score / 20, 30)  # Max 30 points from search score
+                                    
+                                    # Score based on description relevance
+                                    desc_lower = result.description.lower()
+                                    ingredient_words = ingredient_name_lower.split()
+                                    
+                                    for word in ingredient_words:
+                                        if word in desc_lower:
+                                            score += 15
+                                    
+                                    if score > best_score:
+                                        best_score = score
+                                        best_result = result
+                                
+                                # Update ingredient if good result found
+                                if best_result and best_score > 50:  # Threshold for acceptable match
+                                    ingredient_response.fdc_id = best_result.fdc_id
+                                    ingredient_response.usda_source_description = best_result.description
+                                    ingredient_response.reason_for_choice = f"Retry successful - selected {best_result.description} (FDC: {best_result.fdc_id}, Score: {best_score:.1f}) from targeted search with enhanced query set"
+                                    
+                                    retry_summary.append({
+                                        "ingredient_name": ingredient_response.ingredient_name,
+                                        "dish_name": dish_response.dish_name,
+                                        "attempt": attempt + 1,
+                                        "success": True,
+                                        "fdc_id": best_result.fdc_id,
+                                        "description": best_result.description,
+                                        "score": best_score
+                                    })
+                                    
+                                    meal_logger.log_entry(
+                                        session_id=session_id,
+                                        level=LogLevel.INFO,
+                                        phase=ProcessingPhase.NUTRITION_CALC_COMPLETE,
+                                        message=f"Retry successful for {ingredient_response.ingredient_name}: FDC ID {best_result.fdc_id}",
+                                        data={
+                                            "fdc_id": best_result.fdc_id,
+                                            "description": best_result.description,
+                                            "final_score": best_score,
+                                            "total_candidates_evaluated": len(retry_results_list)
+                                        }
+                                    )
+                                    
+                                    break  # Success, exit retry loop for this ingredient
+                                else:
+                                    meal_logger.log_entry(
+                                        session_id=session_id,
+                                        level=LogLevel.WARNING,
+                                        phase=ProcessingPhase.PHASE2_COMPLETE,
+                                        message=f"Retry attempt {attempt + 1} failed for {ingredient_response.ingredient_name} - insufficient match quality",
+                                        data={
+                                            "best_score": best_score,
+                                            "threshold": 50,
+                                            "candidates_evaluated": len(retry_results_list)
+                                        }
+                                    )
+                            else:
+                                meal_logger.log_entry(
+                                    session_id=session_id,
+                                    level=LogLevel.WARNING,
+                                    phase=ProcessingPhase.USDA_SEARCH_COMPLETE,
+                                    message=f"Retry attempt {attempt + 1} failed for {ingredient_response.ingredient_name} - no additional USDA results found"
+                                )
+                                
+                        except Exception as retry_e:
+                            logger.error(f"Error during retry for ingredient '{ingredient_response.ingredient_name}': {str(retry_e)}")
+                            meal_logger.log_entry(
+                                session_id=session_id,
+                                level=LogLevel.ERROR,
+                                phase=ProcessingPhase.PHASE2_COMPLETE,
+                                message=f"Retry attempt {attempt + 1} error for {ingredient_response.ingredient_name}: {str(retry_e)}"
+                            )
+                            
+                            retry_summary.append({
+                                "ingredient_name": ingredient_response.ingredient_name,
+                                "dish_name": dish_response.dish_name,
+                                "attempt": attempt + 1,
+                                "success": False,
+                                "error": str(retry_e)
+                            })
+        
+        # Log retry summary
+        if retry_summary:
+            successful_retries = [r for r in retry_summary if r.get("success", False)]
+            meal_logger.log_entry(
+                session_id=session_id,
+                level=LogLevel.INFO,
+                phase=ProcessingPhase.RESPONSE_SENT,
+                message=f"Iterative improvement completed: {len(successful_retries)}/{len(retry_summary)} retry attempts successful",
+                data={
+                    "retry_summary": retry_summary,
+                    "success_rate": len(successful_retries) / len(retry_summary) if retry_summary else 0
+                }
+            )
+
         # セッション終了
         meal_logger.end_session(
             session_id=session_id,

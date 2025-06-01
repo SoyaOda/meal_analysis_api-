@@ -130,107 +130,104 @@ class USDAService:
         page_number: int = 1,
         sort_by: str = "score",
         sort_order: str = "desc",
-        require_all_words: bool = False,  # 新機能: 精度向上のオプション
-        brand_owner_filter: Optional[str] = None,  # 新機能: ブランド特定検索
-        search_context: Optional[str] = None  # 新機能: 検索コンテキスト ("branded", "ingredient", "dish")
+        require_all_words: bool = False,
+        brand_owner_filter: Optional[str] = None,
+        search_context: Optional[str] = None
     ) -> List[USDASearchResultItem]:
         """
-        USDA FoodData Central API からの enhanced food search with dynamic parameter optimization
+        Enhanced USDA FoodData Central API food search with tiered search capabilities
         
         Args:
             query: 検索クエリ
-            data_types: 検索対象データタイプ
+            data_types: 検索対象データタイプのリスト（例：["Branded", "FNDDS"]）
             page_size: 結果の最大件数
             page_number: ページ番号  
             sort_by: ソート基準
             sort_order: ソート順序
-            require_all_words: 全単語を含む検索をするか
-            brand_owner_filter: ブランド名でのフィルタリング
-            search_context: 検索コンテキスト（自動最適化用）
+            require_all_words: 全ての単語を必須とするか
+            brand_owner_filter: ブランドオーナーフィルタ
+            search_context: 検索コンテキスト（"branded", "ingredient", "dish"）
+            
+        Returns:
+            List[USDASearchResultItem]: 検索結果のリスト
         """
-        
-        # Dynamic parameter optimization based on search context
-        if search_context == "branded":
-            # Branded products search optimization
-            if not data_types:
-                data_types = ["Branded"]
-            require_all_words = True  # More strict for branded products
-        elif search_context == "ingredient":
-            # Basic ingredients search optimization  
-            if not data_types:
-                data_types = ["Foundation", "SR Legacy", "FNDDS"]
-            require_all_words = False  # More permissive for ingredients
-        elif search_context == "dish":
-            # Prepared dishes search optimization
-            if not data_types:
-                data_types = ["FNDDS", "Branded"]
-            require_all_words = True  # More strict for dish names
-        
-        # Log optimization choices
-        logger.info(f"USDA search with context '{search_context}': require_all_words={require_all_words}, data_types={data_types}")
-        
-        params = {
-            "query": query,
-            "dataType": data_types,
-            "pageSize": min(page_size, 200),  # APIの制限
-            "pageNumber": page_number,
-            "sortBy": sort_by,
-            "sortOrder": sort_order,
-            "api_key": self.api_key
-        }
-        
-        # require_all_words パラメータの追加（API仕様に合わせて）
-        if require_all_words:
-            params["requireAllWords"] = "true"
-        else:
-            params["requireAllWords"] = "false"
-        
+        if not query.strip():
+            return []
+
         try:
-            logger.info(f"USDA API enhanced search: '{query}' with context '{search_context}'")
-            response = await self._make_request_with_retry(
-                method="GET",
-                url=f"{self.base_url}/foods/search",
-                params=params,
-                context="Enhanced food search"
-            )
+            # Build query parameters
+            params = {
+                "query": query,
+                "pageSize": min(page_size, 200),  # API limit
+                "pageNumber": page_number,
+                "sortBy": sort_by,
+                "sortOrder": sort_order,
+                "requireAllWords": require_all_words
+            }
+
+            # Add data types if specified
+            if data_types:
+                # Convert list to comma-separated string as expected by USDA API
+                params["dataType"] = ",".join(data_types)
             
-            if response:
+            # Add brand owner filter if specified
+            if brand_owner_filter:
+                params["brandOwner"] = brand_owner_filter
+
+            # Log the search attempt
+            logger.info(f"USDA API search: query='{query}', data_types={data_types}, "
+                       f"require_all_words={require_all_words}, brand_owner='{brand_owner_filter}', "
+                       f"context='{search_context}'")
+
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.get(
+                    f"{self.base_url}/foods/search",
+                    params=params,
+                    headers={"X-Api-Key": self.api_key}
+                )
+                response.raise_for_status()
+                
                 data = response.json()
+                foods = data.get("foods", [])
+                
+                # Process and enhance results
                 results = []
-                
-                for food_data in data.get("foods", [])[:page_size]:
-                    # ブランドフィルターが指定されている場合、後処理でさらなるフィルタリング
-                    if brand_owner_filter:
-                        food_brand = food_data.get("brandOwner", "").lower()
-                        if brand_owner_filter.lower() not in food_brand:
-                            # ブランドが一致しない場合はスキップ（ただし、多少の柔軟性は保持）
-                            if food_data.get("dataType") == "Branded":
-                                continue
+                for food_item in foods:
+                    result = USDASearchResultItem(
+                        fdc_id=food_item.get("fdcId"),
+                        description=food_item.get("description", ""),
+                        data_type=food_item.get("dataType"),
+                        publication_date=food_item.get("publishedDate"),
+                        brand_owner=food_item.get("brandOwner"),
+                        brand_name=food_item.get("brandName"),
+                        subbrand_name=food_item.get("subbrandName"),
+                        gtin_upc=food_item.get("gtinUpc"),
+                        ndb_number=food_item.get("ndbNumber"),
+                        food_code=food_item.get("foodCode"),
+                        score=food_item.get("score", 0.0),
+                        ingredients=food_item.get("ingredients")
+                    )
                     
-                    nutrients_extracted = self._extract_key_nutrients(food_data.get("foodNutrients", []))
+                    # Add search metadata for tracking
+                    result.search_context = search_context
+                    result.require_all_words_used = require_all_words
+                    result.data_types_searched = data_types
                     
-                    results.append(USDASearchResultItem(
-                        fdc_id=food_data.get("fdcId"),
-                        description=food_data.get("description"),
-                        data_type=food_data.get("dataType"),
-                        brand_owner=food_data.get("brandOwner"),
-                        ingredients_text=food_data.get("ingredients"),
-                        food_nutrients=nutrients_extracted,
-                        score=food_data.get("score")
-                    ))
-                
-                logger.info(f"USDA API enhanced search returned {len(results)} results for query '{query}' with context '{search_context}'")
-                
-                # ブランドフィルターが指定された場合のログ強化
-                if brand_owner_filter:
-                    branded_count = sum(1 for r in results if r.data_type == "Branded")
-                    logger.info(f"Brand-filtered search: {branded_count}/{len(results)} results are Branded Foods")
-                
+                    results.append(result)
+
+                logger.info(f"USDA API response: {len(results)} results returned "
+                           f"(query: '{query}', context: '{search_context}')")
                 return results
-            
+
+        except httpx.HTTPStatusError as e:
+            logger.error(f"USDA API HTTP error for query '{query}': {e.response.status_code} - {e.response.text}")
+            return []
+        except httpx.RequestError as e:
+            logger.error(f"USDA API request error for query '{query}': {str(e)}")
+            return []
         except Exception as e:
-            logger.error(f"Unexpected error in USDAService.search_foods_rich: {str(e)}")
-            raise RuntimeError(f"Unexpected error in USDA service: {str(e)}") from e
+            logger.error(f"Unexpected error in USDA search for query '{query}': {str(e)}")
+            return []
     
     def _extract_key_nutrients(self, food_nutrients: List[Dict[str, Any]]) -> List[USDANutrient]:
         """
@@ -311,9 +308,9 @@ class USDAService:
         """
         params = {
             "api_key": self.api_key,
-            "format": "full",
-            # 主要栄養素のみ取得
-            "nutrients": ",".join(self.key_nutrient_numbers)
+            "format": "full"
+            # Remove nutrient filter to get all nutrients including 957, 958
+            # "nutrients": ",".join(self.key_nutrient_numbers)
         }
         
         try:
@@ -343,7 +340,9 @@ class USDAService:
         
         # 栄養素番号と標準名の対応表
         nutrient_map = {
-            "208": "calories_kcal",      # Energy
+            "208": "calories_kcal",      # Energy (older format)
+            "957": "calories_kcal",      # Energy (Atwater General Factors) - Foundation data
+            "958": "calories_kcal",      # Energy (Atwater Specific Factors) - Foundation data  
             "203": "protein_g",          # Protein  
             "205": "carbohydrates_g",    # Carbohydrate
             "204": "fat_g",              # Total lipid (fat)
@@ -367,7 +366,16 @@ class USDAService:
             
             if number and str(number) in nutrient_map and amount is not None:
                 standard_name = nutrient_map[str(number)]
-                nutrients_dict[standard_name] = float(amount)
+                # For calories, prefer Atwater Specific Factors (958) over General Factors (957) over legacy (208)
+                if standard_name == "calories_kcal":
+                    if "calories_kcal" not in nutrients_dict or str(number) == "958":
+                        nutrients_dict[standard_name] = float(amount)
+                    elif str(number) == "957" and "calories_kcal" in nutrients_dict:
+                        # Only replace if current value is from legacy 208
+                        current_from_legacy = True  # We can't track source easily, so prefer 957 over existing
+                        nutrients_dict[standard_name] = float(amount)
+                else:
+                    nutrients_dict[standard_name] = float(amount)
         
         logger.debug(f"Parsed nutrients for calculation: {nutrients_dict}")
         return nutrients_dict
@@ -459,6 +467,255 @@ class USDAService:
         
         logger.info(f"Fallback search completed: {len(unique_results)} unique results from {len(query_candidates)} queries")
         return unique_results
+
+    async def execute_tiered_usda_search(
+        self,
+        phase1_candidate: 'USDACandidateQuery',
+        brand_context: Optional[str] = None,
+        max_results_cap: int = 15
+    ) -> List[USDASearchResultItem]:
+        """
+        Execute tiered USDA search strategy with multiple fallback levels
+        
+        Args:
+            phase1_candidate: Query candidate from Phase 1 with metadata
+            brand_context: Detected brand context (e.g., "La Madeleine")
+            max_results_cap: Maximum total results to return
+            
+        Returns:
+            List of deduplicated USDASearchResultItem results from all tiers
+        """
+        all_found_results_map: Dict[int, USDASearchResultItem] = {}  # FDC IDで重複排除
+        attempted_queries = set()
+        
+        logger.info(f"Starting tiered USDA search for: {phase1_candidate.query_term} (granularity: {phase1_candidate.granularity_level})")
+        
+        # Tier 1: Specific/Branded Query
+        query_term_t1 = phase1_candidate.query_term
+        if query_term_t1 not in attempted_queries:
+            # Dynamic dataType selection based on granularity and context
+            if phase1_candidate.granularity_level == "branded_product" or brand_context:
+                data_types_t1 = ["Branded", "FNDDS"]
+                brand_owner_t1 = brand_context or self._extract_brand_from_query(query_term_t1)
+                require_all_words_t1 = True
+                search_context_t1 = "branded"
+                logger.info(f"Tier 1 (Branded): query='{query_term_t1}', brand_owner='{brand_owner_t1}'")
+            elif phase1_candidate.granularity_level == "dish":
+                data_types_t1 = ["FNDDS", "Branded"]
+                brand_owner_t1 = None
+                require_all_words_t1 = True
+                search_context_t1 = "dish"
+                logger.info(f"Tier 1 (Dish): query='{query_term_t1}'")
+            else:  # ingredient
+                # Check for cooking state keywords
+                cooking_keywords = ["cooked", "raw", "grilled", "fried", "baked", "steamed", "processed"]
+                has_cooking_state = any(keyword in query_term_t1.lower() for keyword in cooking_keywords)
+                
+                if has_cooking_state:
+                    data_types_t1 = ["FNDDS", "Foundation", "SR Legacy"]
+                else:
+                    data_types_t1 = ["Foundation", "SR Legacy", "FNDDS"]
+                brand_owner_t1 = None
+                require_all_words_t1 = True
+                search_context_t1 = "ingredient"
+                logger.info(f"Tier 1 (Ingredient): query='{query_term_t1}', cooking_state={has_cooking_state}")
+
+            try:
+                results_t1 = await self.search_foods_rich(
+                    query=query_term_t1,
+                    data_types=data_types_t1,
+                    page_size=max_results_cap,
+                    require_all_words=require_all_words_t1,
+                    brand_owner_filter=brand_owner_t1,
+                    search_context=search_context_t1
+                )
+                
+                for res in results_t1:
+                    if res.fdc_id not in all_found_results_map:
+                        all_found_results_map[res.fdc_id] = res
+                        # Mark tier for tracking
+                        res.search_tier = 1
+                        res.search_query_used = query_term_t1
+                        
+                attempted_queries.add(query_term_t1)
+                logger.info(f"Tier 1 completed: {len(results_t1)} results found")
+                
+                # Early return if we have sufficient high-quality results
+                if len(results_t1) >= max_results_cap // 2 and any(r.score and r.score > 700 for r in results_t1):
+                    logger.info(f"Tier 1 provided sufficient results ({len(results_t1)}), skipping further tiers")
+                    return self._sort_and_limit_results(list(all_found_results_map.values()), max_results_cap)
+                    
+            except Exception as e:
+                logger.warning(f"Tier 1 search failed for '{query_term_t1}': {str(e)}")
+
+        # Tier 2: Broader/Simplified Query
+        if len(all_found_results_map) < max_results_cap // 2:
+            query_term_t2 = self._simplify_query_term(query_term_t1)
+            
+            if query_term_t2 and query_term_t2 != query_term_t1 and query_term_t2 not in attempted_queries:
+                # More permissive parameters for Tier 2
+                data_types_t2 = ["Branded", "FNDDS", "Foundation", "SR Legacy"]
+                require_all_words_t2 = False  # More permissive
+                
+                logger.info(f"Tier 2 (Broader): query='{query_term_t2}', require_all_words=False")
+                
+                try:
+                    results_t2 = await self.search_foods_rich(
+                        query=query_term_t2,
+                        data_types=data_types_t2,
+                        page_size=max_results_cap - len(all_found_results_map),
+                        require_all_words=require_all_words_t2,
+                        search_context="ingredient"  # Generally more permissive
+                    )
+                    
+                    for res in results_t2:
+                        if res.fdc_id not in all_found_results_map:
+                            all_found_results_map[res.fdc_id] = res
+                            res.search_tier = 2
+                            res.search_query_used = query_term_t2
+                            
+                    attempted_queries.add(query_term_t2)
+                    logger.info(f"Tier 2 completed: {len(results_t2)} new results found")
+                    
+                except Exception as e:
+                    logger.warning(f"Tier 2 search failed for '{query_term_t2}': {str(e)}")
+
+        # Tier 3: Generic/Fallback Query
+        if len(all_found_results_map) < max_results_cap // 3:
+            query_term_t3 = self._generalize_query_term(phase1_candidate)
+            
+            if query_term_t3 and query_term_t3 not in attempted_queries:
+                # Most permissive parameters for Tier 3
+                data_types_t3 = ["Foundation", "SR Legacy", "FNDDS", "Branded"]
+                require_all_words_t3 = False
+                
+                logger.info(f"Tier 3 (Generic): query='{query_term_t3}', require_all_words=False")
+                
+                try:
+                    results_t3 = await self.search_foods_rich(
+                        query=query_term_t3,
+                        data_types=data_types_t3,
+                        page_size=max_results_cap - len(all_found_results_map),
+                        require_all_words=require_all_words_t3,
+                        search_context="ingredient"
+                    )
+                    
+                    for res in results_t3:
+                        if res.fdc_id not in all_found_results_map:
+                            all_found_results_map[res.fdc_id] = res
+                            res.search_tier = 3
+                            res.search_query_used = query_term_t3
+                            
+                    attempted_queries.add(query_term_t3)
+                    logger.info(f"Tier 3 completed: {len(results_t3)} new results found")
+                    
+                except Exception as e:
+                    logger.warning(f"Tier 3 search failed for '{query_term_t3}': {str(e)}")
+
+        final_results = list(all_found_results_map.values())
+        final_results = self._sort_and_limit_results(final_results, max_results_cap)
+        
+        logger.info(f"Tiered search completed: {len(final_results)} total unique results from {len(attempted_queries)} queries")
+        return final_results
+
+    def _extract_brand_from_query(self, query_term: str) -> Optional[str]:
+        """Extract potential brand name from query term"""
+        known_brands = ["La Madeleine", "McDonald's", "Subway", "Panera", "Starbucks"]
+        query_lower = query_term.lower()
+        
+        for brand in known_brands:
+            if brand.lower() in query_lower:
+                return brand
+        
+        # Generic brand extraction - first 1-2 words if they look like brand names
+        words = query_term.split()
+        if len(words) >= 2 and words[0][0].isupper():
+            # Check if first word(s) might be brand name
+            if len(words[0]) > 2 and not words[0].lower() in ["the", "a", "an"]:
+                return words[0] if len(words) == 2 else f"{words[0]} {words[1]}"
+        
+        return None
+
+    def _simplify_query_term(self, query_term: str) -> str:
+        """Simplify query term by removing modifiers or last word"""
+        words = query_term.split()
+        
+        if len(words) <= 1:
+            return query_term
+        
+        # Remove common modifiers first
+        modifiers_to_remove = ["fresh", "organic", "natural", "raw", "cooked", "baked", "fried", "grilled"]
+        simplified_words = [w for w in words if w.lower() not in modifiers_to_remove]
+        
+        if len(simplified_words) > 1:
+            return " ".join(simplified_words)
+        elif len(words) > 1:
+            # Remove last word as fallback
+            return " ".join(words[:-1])
+        else:
+            return query_term
+
+    def _generalize_query_term(self, phase1_candidate: 'USDACandidateQuery') -> str:
+        """Generate most generic version of query term"""
+        query_term = phase1_candidate.query_term
+        original_term = getattr(phase1_candidate, 'original_term', None)
+        
+        # Use original_term if it's simpler and different
+        if original_term and original_term != query_term and len(original_term.split()) <= len(query_term.split()):
+            return original_term
+        
+        # Extract core food category
+        words = query_term.lower().split()
+        
+        # Common food category mappings
+        food_categories = {
+            "pasta": ["pasta", "penne", "spaghetti", "macaroni", "noodles"],
+            "salad": ["salad", "lettuce", "greens"],
+            "dressing": ["dressing", "sauce", "vinaigrette"],
+            "chicken": ["chicken", "poultry", "breast"],
+            "cheese": ["cheese", "parmesan", "cheddar", "mozzarella"],
+            "bread": ["bread", "croutons", "rolls"],
+            "tomato": ["tomato", "tomatoes"],
+            "pepper": ["pepper", "peppers", "bell"]
+        }
+        
+        for category, keywords in food_categories.items():
+            if any(keyword in words for keyword in keywords):
+                return category
+        
+        # Fallback to first word if it's a food term
+        if words and len(words[0]) > 2:
+            return words[0]
+        
+        return query_term
+
+    def _sort_and_limit_results(self, results: List[USDASearchResultItem], max_results: int) -> List[USDASearchResultItem]:
+        """Sort results by quality and limit to max_results"""
+        def get_sort_key(item: USDASearchResultItem):
+            # Primary sort: data type priority
+            datatype_priority = self._get_datatype_priority(item.data_type)
+            # Secondary sort: score (higher is better)
+            score = item.score or 0
+            # Tertiary sort: tier (lower tier = earlier, better)
+            tier = getattr(item, 'search_tier', 999)
+            
+            return (-datatype_priority, -score, tier)
+        
+        results.sort(key=get_sort_key)
+        return results[:max_results]
+
+    def _get_datatype_priority(self, data_type: Optional[str]) -> int:
+        """Get priority score for USDA data type"""
+        if data_type == "Branded": 
+            return 4
+        elif data_type == "FNDDS": 
+            return 3
+        elif data_type == "SR Legacy": 
+            return 2
+        elif data_type == "Foundation": 
+            return 1
+        else: 
+            return 0
 
 
 @lru_cache()

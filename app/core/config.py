@@ -22,9 +22,9 @@ class Settings(BaseSettings):
     USDA_API_RETRY_BACKOFF: float = 2.0  # リトライ間隔の倍率（exponential backoff）
     USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
     # 主要栄養素番号（カンマ区切り文字列として環境変数から読み込む）
-    USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,203,204,205,291,269,307"
-    # 208: Energy (kcal), 203: Protein, 204: Total lipid (fat), 
-    # 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
+    USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,957,958,203,204,205,291,269,307"
+    # 208: Energy (kcal) - legacy, 957: Energy (Atwater General) - Foundation, 958: Energy (Atwater Specific) - Foundation
+    # 203: Protein, 204: Total lipid (fat), 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
     
     @property
     def USDA_KEY_NUTRIENT_NUMBERS(self) -> List[str]:

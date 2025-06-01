@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Literal
+from typing import List, Optional, Dict, Literal, Union
 from pydantic import BaseModel, Field, field_validator
 
 # --- 共通モデル ---
@@ -26,13 +26,36 @@ class USDASearchResultItem(BaseModel):
     fdc_id: int = Field(..., description="USDA FoodData Central ID")
     description: str = Field(..., description="食品の公式名称")
     data_type: Optional[str] = Field(None, description="USDAデータタイプ (例: SR Legacy, Branded)")
+    publication_date: Optional[str] = Field(None, description="公開日")
     brand_owner: Optional[str] = Field(None, description="ブランド所有者 (Branded Foodsの場合)")
+    brand_name: Optional[str] = Field(None, description="ブランド名")
+    subbrand_name: Optional[str] = Field(None, description="サブブランド名")
+    gtin_upc: Optional[str] = Field(None, description="GTIN/UPCコード")
+    ndb_number: Optional[Union[str, int]] = Field(None, description="NDB番号 (文字列または整数)")
+    food_code: Optional[str] = Field(None, description="食品コード")
+    score: Optional[float] = Field(None, description="検索結果の関連度スコア")
+    ingredients: Optional[str] = Field(None, description="原材料リスト文字列 (Branded/FNDDSの場合)")
     ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded/FNDDSの場合, **Assumption: String**)")
     food_nutrients: List[USDANutrient] = Field(default_factory=list, description="主要な栄養素情報のリスト")
-    score: Optional[float] = Field(None, description="検索結果の関連度スコア")
-    # Fallback search tracking attributes
+    
+    # Enhanced search tracking attributes
+    search_tier: Optional[int] = Field(None, description="検索階層 (1=specific, 2=broader, 3=generic)")
+    search_query_used: Optional[str] = Field(None, description="実際に使用された検索クエリ")
+    search_context: Optional[str] = Field(None, description="検索コンテキスト (branded, ingredient, dish)")
+    require_all_words_used: Optional[bool] = Field(None, description="requireAllWordsパラメータが使用されたか")
+    data_types_searched: Optional[List[str]] = Field(None, description="検索対象となったデータタイプのリスト")
+    
+    # Legacy fallback search tracking attributes (for backward compatibility)
     fallback_query_used: Optional[str] = Field(None, description="フォールバック検索で使用されたクエリ（該当する場合）")
     fallback_attempt: Optional[int] = Field(None, description="フォールバック検索の試行回数（該当する場合）")
+
+    @field_validator('ndb_number')
+    @classmethod
+    def validate_ndb_number(cls, v):
+        """ndb_numberを文字列に正規化"""
+        if v is not None:
+            return str(v)
+        return v
 
 # --- Phase 1 Gemini 出力モデル ---
 
