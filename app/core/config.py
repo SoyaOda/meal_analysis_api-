@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Vertex AI設定
     GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
     GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
-    GEMINI_MODEL_NAME: str = "gemini-1.5-flash"
+    GEMINI_MODEL_NAME: str = "gemini-2.5-flash-preview-05-20"
     
     # USDA API設定
     USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）

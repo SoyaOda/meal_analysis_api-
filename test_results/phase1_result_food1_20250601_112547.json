@@ -1,0 +1,147 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One plate",
+      "estimated_total_dish_weight_g": 150.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 100.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 15.0,
+          "state": "baked"
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 10.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 25.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Caesar Salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "This query targets a specific branded product from La Madeleine, which is likely to be found in the Branded Foods database for precise nutritional information."
+        },
+        {
+          "query_term": "Caesar Salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "A generic query for Caesar Salad, useful if the branded product is not found. Likely found in Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Romaine lettuce, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Specific ingredient query with its raw state, suitable for Foundation or FNDDS databases to get basic nutrient data."
+        },
+        {
+          "query_term": "Croutons, baked",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Specific ingredient query with its baked state, suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Parmesan cheese, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Specific ingredient query for processed cheese, suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Caesar dressing, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Specific ingredient query for a processed dressing, suitable for Foundation or FNDDS databases."
+        }
+      ]
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One bowl",
+      "estimated_total_dish_weight_g": 300.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 30.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Cooked chicken",
+          "weight_g": 40.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Creamy pasta dressing",
+          "weight_g": 20.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Green bell pepper",
+          "weight_g": 10.0,
+          "state": "raw"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Penne Pasta Salad",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "This query targets a specific branded product from La Madeleine, which is likely to be found in the Branded Foods database for precise nutritional information."
+        },
+        {
+          "query_term": "Penne Pasta Salad",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "A generic query for Penne Pasta Salad, useful if the branded product is not found. Likely found in Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Specific ingredient query for cooked penne pasta, crucial for accurate calorie and nutrient estimation compared to dry pasta. Suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Tomatoes, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Diced tomatoes",
+          "reason_for_query": "Specific ingredient query for raw tomatoes, suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Chicken breast, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Cooked chicken",
+          "reason_for_query": "Specific ingredient query for cooked chicken, suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Pasta salad dressing, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy pasta dressing",
+          "reason_for_query": "Specific ingredient query for a processed pasta dressing, suitable for Foundation or FNDDS databases."
+        },
+        {
+          "query_term": "Bell pepper, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Green bell pepper",
+          "reason_for_query": "Specific ingredient query for raw bell pepper, suitable for Foundation or FNDDS databases."
+        }
+      ]
+    }
+  ]
+}

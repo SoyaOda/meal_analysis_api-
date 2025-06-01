@@ -131,72 +131,73 @@ class USDAService:
         sort_by: str = "score",
         sort_order: str = "desc",
         require_all_words: bool = False,  # 新機能: 精度向上のオプション
-        brand_owner_filter: Optional[str] = None  # 新機能: ブランド特定検索
+        brand_owner_filter: Optional[str] = None,  # 新機能: ブランド特定検索
+        search_context: Optional[str] = None  # 新機能: 検索コンテキスト ("branded", "ingredient", "dish")
     ) -> List[USDASearchResultItem]:
         """
-        USDA FoodData Central APIで食品を検索し、詳細な情報を返す (v2.1仕様)
-        改善提案に基づいて検索精度とブランド対応を強化
+        USDA FoodData Central API からの enhanced food search with dynamic parameter optimization
         
         Args:
-            query: 検索クエリ文字列
-            data_types: データタイプのリスト（例: ["Foundation", "SR Legacy", "Branded"]）
-            page_size: 1ページあたりの結果数
-            page_number: 取得するページ番号
-            sort_by: ソートキー
-            sort_order: ソート順（"asc" または "desc"）
-            require_all_words: 検索クエリの全単語を含む結果のみ取得（精度向上）
-            brand_owner_filter: 特定ブランドオーナーでの検索強化
-            
-        Returns:
-            USDASearchResultItemのリスト（新しいPydanticモデル）
+            query: 検索クエリ
+            data_types: 検索対象データタイプ
+            page_size: 結果の最大件数
+            page_number: ページ番号  
+            sort_by: ソート基準
+            sort_order: ソート順序
+            require_all_words: 全単語を含む検索をするか
+            brand_owner_filter: ブランド名でのフィルタリング
+            search_context: 検索コンテキスト（自動最適化用）
         """
+        
+        # Dynamic parameter optimization based on search context
+        if search_context == "branded":
+            # Branded products search optimization
+            if not data_types:
+                data_types = ["Branded"]
+            require_all_words = True  # More strict for branded products
+        elif search_context == "ingredient":
+            # Basic ingredients search optimization  
+            if not data_types:
+                data_types = ["Foundation", "SR Legacy", "FNDDS"]
+            require_all_words = False  # More permissive for ingredients
+        elif search_context == "dish":
+            # Prepared dishes search optimization
+            if not data_types:
+                data_types = ["FNDDS", "Branded"]
+            require_all_words = True  # More strict for dish names
+        
+        # Log optimization choices
+        logger.info(f"USDA search with context '{search_context}': require_all_words={require_all_words}, data_types={data_types}")
+        
         params = {
-            "api_key": self.api_key,
-            "pageSize": page_size,
+            "query": query,
+            "dataType": data_types,
+            "pageSize": min(page_size, 200),  # APIの制限
             "pageNumber": page_number,
             "sortBy": sort_by,
-            "sortOrder": sort_order
+            "sortOrder": sort_order,
+            "api_key": self.api_key
         }
         
-        # ブランドフィルターが指定された場合、クエリを強化
-        if brand_owner_filter:
-            # ブランド名をクエリに含めてBranded Foodsを優先検索
-            enhanced_query = f"{brand_owner_filter} {query}"
-            params["query"] = enhanced_query
-            logger.info(f"Enhanced query with brand filter: '{enhanced_query}'")
-            
-            # Branded Foodsを優先するよう data_types を調整
-            if not data_types:
-                data_types = ["Branded", "FNDDS", "Foundation", "SR Legacy"]
-            elif "Branded" not in data_types:
-                data_types = ["Branded"] + data_types
-        else:
-            params["query"] = query
-        
-        if data_types:
-            # データタイプをカンマ区切り文字列として渡す
-            params["dataType"] = ",".join(data_types)
-        
-        # 精度向上オプション
+        # require_all_words パラメータの追加（API仕様に合わせて）
         if require_all_words:
             params["requireAllWords"] = "true"
-            logger.debug(f"Using require_all_words=true for enhanced precision")
+        else:
+            params["requireAllWords"] = "false"
         
         try:
-            context = f"USDA API enhanced search (brand:{brand_owner_filter}, precise:{require_all_words})"
-            logger.info(f"USDA API enhanced search: query='{params['query']}', page_size={page_size}")
-            
+            logger.info(f"USDA API enhanced search: '{query}' with context '{search_context}'")
             response = await self._make_request_with_retry(
                 method="GET",
                 url=f"{self.base_url}/foods/search",
                 params=params,
-                context=context
+                context="Enhanced food search"
             )
             
             if response:
                 data = response.json()
-                
                 results = []
+                
                 for food_data in data.get("foods", [])[:page_size]:
                     # ブランドフィルターが指定されている場合、後処理でさらなるフィルタリング
                     if brand_owner_filter:
@@ -218,7 +219,7 @@ class USDAService:
                         score=food_data.get("score")
                     ))
                 
-                logger.info(f"USDA API enhanced search returned {len(results)} results for query '{params['query']}'")
+                logger.info(f"USDA API enhanced search returned {len(results)} results for query '{query}' with context '{search_context}'")
                 
                 # ブランドフィルターが指定された場合のログ強化
                 if brand_owner_filter:
@@ -402,6 +403,62 @@ class USDAService:
         """HTTPクライアントのクリーンアップ"""
         if self.client:
             await self.client.aclose()
+
+    async def search_foods_with_fallback(
+        self,
+        query_candidates: List[str],
+        search_context: str = "ingredient",
+        max_results: int = 5
+    ) -> List[USDASearchResultItem]:
+        """
+        Multiple query candidates with intelligent fallback searching
+        
+        Args:
+            query_candidates: List of query terms to try in order of preference
+            search_context: Search context for optimization
+            max_results: Maximum results to return
+        """
+        all_results = []
+        
+        for i, query in enumerate(query_candidates):
+            try:
+                results = await self.search_foods_rich(
+                    query=query,
+                    page_size=max_results,
+                    search_context=search_context
+                )
+                
+                if results:
+                    logger.info(f"Fallback search #{i+1} successful with query '{query}': {len(results)} results")
+                    # Add query source info to results
+                    for result in results:
+                        result.fallback_query_used = query
+                        result.fallback_attempt = i + 1
+                    all_results.extend(results)
+                    
+                    # Stop after first successful search unless we need more results
+                    if len(all_results) >= max_results:
+                        break
+                else:
+                    logger.info(f"Fallback search #{i+1} returned no results for query '{query}'")
+                    
+            except Exception as e:
+                logger.warning(f"Fallback search #{i+1} failed for query '{query}': {str(e)}")
+                continue
+        
+        # Remove duplicates and limit results
+        unique_results = []
+        seen_fdc_ids = set()
+        
+        for result in all_results:
+            if result.fdc_id not in seen_fdc_ids:
+                unique_results.append(result)
+                seen_fdc_ids.add(result.fdc_id)
+                if len(unique_results) >= max_results:
+                    break
+        
+        logger.info(f"Fallback search completed: {len(unique_results)} unique results from {len(query_candidates)} queries")
+        return unique_results
 
 
 @lru_cache()

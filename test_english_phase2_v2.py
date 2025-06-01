@@ -351,7 +351,7 @@ Examples:
     # テスト実行
     success, result = test_phase2_analysis_v2(image_path, phase1_result_file)
     
-    # 結果を保存
+    # 結果を保存 (常に実行)
     if result:
         save_result(result, image_path, phase1_result_file)
     

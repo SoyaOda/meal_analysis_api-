@@ -197,6 +197,9 @@ python test_english_phase2_v2.py test_images/food1.jpg
 
 # 画像とPhase 1結果ファイルを両方指定
 python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_result_food1_20240530_120000.json
+
+# 結果を自動保存するオプション付き
+python test_english_phase2_v2.py test_images/food1.jpg --save-results
 ```
 
 #### ヘルプとオプション
@@ -208,12 +211,28 @@ python test_english_phase2_v2.py --help
 # 利用可能なオプション:
 #   image_path: 解析する画像ファイルのパス（省略可能）
 #   phase1_result_file: Phase 1結果JSONファイルのパス（省略可能）
+#   --save-results: 結果をtest_results/ディレクトリに自動保存
 ```
 
 **結果の保存**:
 
 - `test_results/phase2_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
 - `phase2_analysis_result_v2.json` - 後続処理用のデフォルトファイル
+
+#### 🆕 v2.1 の改善点
+
+**Phase 1 の機能強化**:
+
+- **料理全体重量推定**: 各料理の総重量を`estimated_total_dish_weight_g`として出力
+- **調理状態必須指定**: 全ての材料について`state`フィールド（raw, cooked, fried, baked, processed, dry）を必須指定
+- **ブランド認識強化**: レストラン・ブランドの詳細検出と USDA クエリへの反映
+
+**Phase 2 の機能強化**:
+
+- **クエリ-結果マッピング修正**: Phase 1 クエリ候補と検索結果の正確な対応付け
+- **FDC ID 選択透明性**: 詳細な選択理由とブランド代替選択の説明
+- **調理状態一致検証**: 乾燥パスタ vs 調理済みパスタなどの状態ミスマッチ防止
+- **候補不適切時の処理**: 不適切な候補に対する明確なエラーハンドリング
 
 ### 3. **統合テストワークフロー例**
 

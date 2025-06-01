@@ -1,0 +1,147 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "A generous side portion served on a small plate, approximately 1.5 times the size of a standard fork.",
+      "estimated_total_dish_weight_g": 170.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 120.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 30.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 10.0,
+          "state": "baked"
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 10.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Caesar Salad",
+          "granularity_level": "branded_product",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "This query targets a specific branded product from La Madeleine, which is identified from the tray. This is the most precise query for nutritional data if available in the Branded Foods database."
+        },
+        {
+          "query_term": "Caesar Salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "A general query for Caesar Salad, useful if the branded product is not found. Likely to be found in FNDDS or Foundation databases."
+        },
+        {
+          "query_term": "Romaine lettuce, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Specific ingredient query for raw romaine lettuce, important for accurate nutrient calculation. Likely found in Foundation database."
+        },
+        {
+          "query_term": "Caesar dressing",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Specific ingredient query for Caesar dressing, which is a processed food item. Likely found in Foundation or Branded Foods database."
+        },
+        {
+          "query_term": "Croutons",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Specific ingredient query for croutons, a baked and processed item. Likely found in Foundation or Branded Foods database."
+        },
+        {
+          "query_term": "Parmesan cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Specific ingredient query for Parmesan cheese, a processed dairy product. Likely found in Foundation or Branded Foods database."
+        }
+      ]
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "A large side portion or small main course portion served in a white bowl, approximately 1.5 cups in volume.",
+      "estimated_total_dish_weight_g": 320.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Creamy tomato dressing",
+          "weight_g": 60.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Shredded chicken",
+          "weight_g": 40.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 15.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Green onion",
+          "weight_g": 5.0,
+          "state": "raw"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "La Madeleine Penne Pasta Salad",
+          "granularity_level": "branded_product",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "This query targets a specific branded product from La Madeleine, which is identified from the tray. This is the most precise query for nutritional data if available in the Branded Foods database."
+        },
+        {
+          "query_term": "Penne Pasta Salad",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad",
+          "reason_for_query": "A general query for Penne Pasta Salad, useful if the branded product is not found. Likely to be found in FNDDS or Foundation databases."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Specific ingredient query for cooked penne pasta, crucial for accurate carbohydrate and calorie content. Likely found in Foundation database."
+        },
+        {
+          "query_term": "Tomato cream sauce",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy tomato dressing",
+          "reason_for_query": "Specific ingredient query for a common type of processed sauce/dressing. Likely found in Foundation or Branded Foods database."
+        },
+        {
+          "query_term": "Chicken breast, cooked, shredded",
+          "granularity_level": "ingredient",
+          "original_term": "Shredded chicken",
+          "reason_for_query": "Specific ingredient query for cooked and shredded chicken, important for protein content. Likely found in Foundation database."
+        },
+        {
+          "query_term": "Tomatoes, raw, diced",
+          "granularity_level": "ingredient",
+          "original_term": "Diced tomatoes",
+          "reason_for_query": "Specific ingredient query for raw diced tomatoes. Likely found in Foundation database."
+        },
+        {
+          "query_term": "Green onion, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Green onion",
+          "reason_for_query": "Specific ingredient query for raw green onion. Likely found in Foundation database."
+        }
+      ]
+    }
+  ]
+}
