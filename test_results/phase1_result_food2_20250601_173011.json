@@ -1,0 +1,326 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "Two slices with a red glaze",
+      "estimated_total_dish_weight_g": 220.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Meatloaf is a well-defined, commonly prepared dish with specific FDC entries, making a dish-level query efficient.",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 180.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 10.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 5.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup/Tomato Glaze",
+          "weight_g": 20.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, home-prepared",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "Specific USDA entry for home-prepared meatloaf."
+        },
+        {
+          "query_term": "Meatloaf, beef",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "General dish-level query for beef meatloaf."
+        },
+        {
+          "query_term": "Meatloaf, cooked",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "Broad dish-level query for cooked meatloaf."
+        },
+        {
+          "query_term": "Ground beef, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Ground beef",
+          "reason_for_query": "Ingredient-level query for the primary meat component."
+        },
+        {
+          "query_term": "Ketchup",
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup/Tomato Glaze",
+          "reason_for_query": "Ingredient-level query for the glaze."
+        },
+        {
+          "query_term": "Bread crumbs, dry",
+          "granularity_level": "ingredient",
+          "original_term": "Breadcrumbs",
+          "reason_for_query": "Ingredient-level query for breadcrumbs."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "A small serving of mixed green beans, corn, peas, and carrots",
+      "estimated_total_dish_weight_g": 90.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The specific proportions of individual vegetables can vary significantly, making ingredient-level calculation more accurate for nutrient breakdown.",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 20.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Mixed vegetables, frozen, cooked",
+          "granularity_level": "dish",
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "General dish-level query for cooked mixed vegetables."
+        },
+        {
+          "query_term": "Green beans, cooked, boiled, drained",
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "Specific ingredient-level query for cooked green beans."
+        },
+        {
+          "query_term": "Corn, sweet, yellow, cooked, boiled, drained",
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "Specific ingredient-level query for cooked corn."
+        },
+        {
+          "query_term": "Peas, green, cooked, boiled, drained",
+          "granularity_level": "ingredient",
+          "original_term": "Peas",
+          "reason_for_query": "Specific ingredient-level query for cooked peas."
+        },
+        {
+          "query_term": "Carrots, cooked, boiled, drained",
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "Specific ingredient-level query for cooked carrots."
+        }
+      ]
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "A mound of reddish-orange rice",
+      "estimated_total_dish_weight_g": 180.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Spanish rice is a common prepared dish with specific FDC entries, making dish-level calculation appropriate.",
+      "ingredients": [
+        {
+          "ingredient_name": "White rice",
+          "weight_g": 60.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Tomato sauce",
+          "weight_g": 20.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Vegetable oil",
+          "weight_g": 5.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Spanish rice, home-prepared",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Specific USDA entry for home-prepared Spanish rice."
+        },
+        {
+          "query_term": "Mexican rice, home-prepared",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Alternative common name for this dish type."
+        },
+        {
+          "query_term": "Rice, cooked, with tomato",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Generic dish-level query for rice cooked with tomato."
+        },
+        {
+          "query_term": "Rice, white, cooked, enriched",
+          "granularity_level": "ingredient",
+          "original_term": "White rice",
+          "reason_for_query": "Ingredient-level query for the cooked rice component."
+        },
+        {
+          "query_term": "Tomato sauce, canned",
+          "granularity_level": "ingredient",
+          "original_term": "Tomato sauce",
+          "reason_for_query": "Ingredient-level query for the tomato sauce component."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "A scoop of elbow macaroni in a creamy orange cheese sauce",
+      "estimated_total_dish_weight_g": 180.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a widely recognized and common prepared dish, likely to have good FDC coverage.",
+      "ingredients": [
+        {
+          "ingredient_name": "Elbow macaroni",
+          "weight_g": 60.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheddar cheese",
+          "weight_g": 30.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 5.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, home-prepared",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Specific USDA entry for home-prepared macaroni and cheese."
+        },
+        {
+          "query_term": "Macaroni and cheese, prepared from mix",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Alternative common preparation method."
+        },
+        {
+          "query_term": "Macaroni, with cheese sauce",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Generic dish-level query for macaroni with cheese."
+        },
+        {
+          "query_term": "Macaroni, cooked, enriched",
+          "granularity_level": "ingredient",
+          "original_term": "Elbow macaroni",
+          "reason_for_query": "Ingredient-level query for the cooked pasta component."
+        },
+        {
+          "query_term": "Cheese, cheddar",
+          "granularity_level": "ingredient",
+          "original_term": "Cheddar cheese",
+          "reason_for_query": "Ingredient-level query for the cheese component."
+        },
+        {
+          "query_term": "Milk, whole, 3.25% milkfat",
+          "granularity_level": "ingredient",
+          "original_term": "Milk",
+          "reason_for_query": "Ingredient-level query for the milk component."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "A scoop of white, fluffy mashed potatoes",
+      "estimated_total_dish_weight_g": 180.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a very common and well-defined prepared dish, making dish-level calculation efficient and accurate.",
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, home-prepared, whole milk and butter added",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Specific USDA entry for home-prepared mashed potatoes with common additions."
+        },
+        {
+          "query_term": "Potatoes, mashed, prepared",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Generic dish-level query for prepared mashed potatoes."
+        },
+        {
+          "query_term": "Potatoes, white, cooked, boiled, without skin",
+          "granularity_level": "ingredient",
+          "original_term": "Potatoes",
+          "reason_for_query": "Ingredient-level query for the cooked potato component."
+        },
+        {
+          "query_term": "Milk, whole, 3.25% milkfat",
+          "granularity_level": "ingredient",
+          "original_term": "Milk",
+          "reason_for_query": "Ingredient-level query for the milk component."
+        },
+        {
+          "query_term": "Butter, salted",
+          "granularity_level": "ingredient",
+          "original_term": "Butter",
+          "reason_for_query": "Ingredient-level query for the butter component."
+        }
+      ]
+    }
+  ]
+}

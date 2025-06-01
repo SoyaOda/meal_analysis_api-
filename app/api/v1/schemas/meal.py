@@ -78,6 +78,8 @@ class Phase1Dish(BaseModel):
     type: str = Field(..., description="料理の種類（例: Main course, Side dish）")
     quantity_on_plate: str = Field(..., description="皿の上の量や個数")
     estimated_total_dish_weight_g: Optional[float] = Field(None, description="料理全体の推定総重量（グラム単位）")
+    calculation_strategy: Literal["dish_level", "ingredient_level"] = Field(..., description="この料理の栄養計算方針")
+    reason_for_strategy: str = Field(..., description="この計算戦略を選択した理由")
     ingredients: List[Phase1Ingredient] = Field(..., description="含まれる材料のリスト")
     # NEW: Phase 1でクエリ候補を出力
     usda_query_candidates: List[USDACandidateQuery] = Field(..., description="この料理/食材に関連するUSDAクエリ候補リスト")
@@ -126,6 +128,9 @@ class RefinedDishResponse(BaseModel):
     dish_name: str
     type: str # From Phase 1
     quantity_on_plate: str # From Phase 1
+    estimated_total_dish_weight_g: Optional[float] = Field(None, description="Phase1で推定された料理全体の重量（グラム）")
+    actual_weight_used_for_calculation_g: Optional[float] = Field(None, description="栄養計算で実際に使用された重量（グラム）")
+    weight_calculation_method: Optional[str] = Field(None, description="重量計算方法の説明")
     calculation_strategy: Literal["dish_level", "ingredient_level"] # From Gemini
     reason_for_strategy: Optional[str] # From Gemini
     fdc_id: Optional[int] # From Gemini (dish_level)
@@ -199,6 +204,12 @@ PHASE_1_GEMINI_SCHEMA = {
                     "type": {"type": "string", "description": "料理の種類（例: Main course, Side dish）"},
                     "quantity_on_plate": {"type": "string", "description": "皿の上の量や個数"},
                     "estimated_total_dish_weight_g": {"type": "number", "description": "料理全体の推定総重量（グラム単位）"},
+                    "calculation_strategy": {
+                        "type": "string",
+                        "enum": ["dish_level", "ingredient_level"],
+                        "description": "この料理の栄養計算方針"
+                    },
+                    "reason_for_strategy": {"type": "string", "description": "この計算戦略を選択した理由"},
                     "ingredients": {
                         "type": "array",
                         "description": "含まれる材料のリスト",
@@ -235,7 +246,7 @@ PHASE_1_GEMINI_SCHEMA = {
                         }
                     }
                 },
-                "required": ["dish_name", "type", "quantity_on_plate", "ingredients", "usda_query_candidates"]
+                "required": ["dish_name", "type", "quantity_on_plate", "calculation_strategy", "reason_for_strategy", "ingredients", "usda_query_candidates"]
             }
         }
     },

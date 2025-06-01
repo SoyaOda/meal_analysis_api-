@@ -5,13 +5,27 @@
 1. 100gあたりの栄養素データから実際の栄養素を計算
 2. 食材リストから料理全体の栄養素を集計
 3. 料理リストから食事全体の栄養素を集計
+4. Phase2での重量再計算とバランシング
 """
 
 import logging
-from typing import List, Optional, Dict
-from ..api.v1.schemas.meal import CalculatedNutrients, RefinedIngredientResponse, RefinedDishResponse
+from typing import List, Optional, Dict, Tuple
+from ..api.v1.schemas.meal import CalculatedNutrients, RefinedIngredientResponse, RefinedDishResponse, Phase1Ingredient
 
 logger = logging.getLogger(__name__)
+
+
+class WeightCalculationResult:
+    """重量計算結果を格納するクラス"""
+    def __init__(self, 
+                 final_weight_g: float, 
+                 calculation_method: str, 
+                 original_phase1_weight_g: Optional[float] = None,
+                 ingredient_weights: Optional[Dict[str, float]] = None):
+        self.final_weight_g = final_weight_g
+        self.calculation_method = calculation_method
+        self.original_phase1_weight_g = original_phase1_weight_g
+        self.ingredient_weights = ingredient_weights or {}
 
 
 class NutritionCalculationService:
@@ -220,6 +234,61 @@ class NutritionCalculationService:
         except Exception as e:
             logger.error(f"Error aggregating nutrients for meal: {e}")
             return CalculatedNutrients()
+    
+    @staticmethod
+    def calculate_refined_dish_weight(
+        phase1_total_dish_weight_g: Optional[float],
+        phase1_ingredients: List[Phase1Ingredient],
+        calculation_strategy: str,
+        has_valid_fdc_id: bool = True
+    ) -> WeightCalculationResult:
+        """
+        Phase2で使用する精密な重量を計算
+        
+        Args:
+            phase1_total_dish_weight_g: Phase1で推定された料理全体の重量
+            phase1_ingredients: Phase1で認識された材料リスト
+            calculation_strategy: 計算戦略 ("dish_level" or "ingredient_level")
+            has_valid_fdc_id: 有効なFDC IDが取得できているか
+            
+        Returns:
+            WeightCalculationResult: 計算結果
+        """
+        ingredients_total_weight = sum(ing.weight_g for ing in phase1_ingredients)
+        
+        # 材料重量の辞書を作成
+        ingredient_weights = {ing.ingredient_name: ing.weight_g for ing in phase1_ingredients}
+        
+        if calculation_strategy == "dish_level" and has_valid_fdc_id:
+            # dish_level戦略の場合、Phase1のdish全体重量を優先
+            if phase1_total_dish_weight_g and phase1_total_dish_weight_g > 0:
+                final_weight = phase1_total_dish_weight_g
+                method = f"Phase1推定dish重量を使用: {phase1_total_dish_weight_g}g (材料合計: {ingredients_total_weight}g)"
+            else:
+                # フォールバック: 材料重量の合計
+                final_weight = ingredients_total_weight
+                method = f"Phase1 dish重量が無効のため材料重量合計を使用: {ingredients_total_weight}g"
+        
+        elif calculation_strategy == "ingredient_level":
+            # ingredient_level戦略の場合、材料重量の合計を使用
+            final_weight = ingredients_total_weight
+            method = f"ingredient_level戦略により材料重量合計を使用: {ingredients_total_weight}g"
+            
+            # Phase1 dish重量との差異をチェック
+            if phase1_total_dish_weight_g and abs(phase1_total_dish_weight_g - ingredients_total_weight) > 5:
+                method += f" (Phase1 dish重量 {phase1_total_dish_weight_g}g との差異: {abs(phase1_total_dish_weight_g - ingredients_total_weight):.1f}g)"
+        
+        else:
+            # dish_level戦略だがFDC IDが無効な場合
+            final_weight = ingredients_total_weight
+            method = f"dish_level戦略だがFDC ID無効のため材料重量合計を使用: {ingredients_total_weight}g"
+        
+        return WeightCalculationResult(
+            final_weight_g=final_weight,
+            calculation_method=method,
+            original_phase1_weight_g=phase1_total_dish_weight_g,
+            ingredient_weights=ingredient_weights
+        )
 
 
 # サービスインスタンスを取得するファクトリ関数
