@@ -19,7 +19,7 @@ from ..schemas.meal import (
 # サービス
 from ....services.usda_service import USDAService, get_usda_service
 from ....services.gemini_service import GeminiMealAnalyzer
-from ....services.nutrition_calculation_service import NutritionCalculationService, get_nutrition_calculation_service
+from ....services.nutrition_calculation_service import NutritionCalculationService, get_nutrition_calculation_service, WeightCalculationResult
 from ....services.logging_service import get_meal_analysis_logger, ProcessingPhase, LogLevel
 from ....core.config import Settings, get_settings
 
@@ -389,32 +389,50 @@ async def refine_meal_analysis(
             dish_total_nutrients = None
             refined_ingredients_list: List[RefinedIngredientResponse] = []
             dish_key_nutrients_100g = None
+            weight_calculation_method = "Default: sum of ingredient weights"
+            actual_weight_used_g = sum(ing.weight_g for ing in p1_dish.ingredients)  # デフォルト値
 
             if gemini_dish.calculation_strategy == "dish_level":
                 dish_fdc_id = gemini_dish.fdc_id
                 
-                # Dish-level fallback processing implementation
-                if not dish_fdc_id:
-                    # Try fallback: if original search was branded, try generic dish search
-                    warnings.append(f"Original dish-level search failed for '{gemini_dish.dish_name}'. Attempting fallback to ingredient-level calculation.")
-                    
-                    # Force switch to ingredient_level strategy
-                    gemini_dish.calculation_strategy = "ingredient_level"
-                    meal_logger.log_entry(
-                        session_id=session_id,
-                        level=LogLevel.INFO,
-                        phase=ProcessingPhase.NUTRITION_CALC_START,
-                        message=f"Switching from dish_level to ingredient_level for '{gemini_dish.dish_name}' due to missing FDC ID"
+                if dish_fdc_id:
+                    # Phase2での精密な重量計算
+                    weight_calc_result = nutrition_service.calculate_refined_dish_weight(
+                        phase1_total_dish_weight_g=p1_dish.estimated_total_dish_weight_g,
+                        phase1_ingredients=p1_dish.ingredients,
+                        calculation_strategy="dish_level",
+                        has_valid_fdc_id=True
                     )
-                
-                if gemini_dish.calculation_strategy == "dish_level" and dish_fdc_id:
-                    dish_weight_g = sum(ing.weight_g for ing in p1_dish.ingredients)
+                    
+                    dish_weight_g = weight_calc_result.final_weight_g
+                    weight_calculation_method = weight_calc_result.calculation_method
+                    actual_weight_used_g = dish_weight_g
+                    
                     dish_key_nutrients_100g = await usda_service.get_food_details_for_nutrition(dish_fdc_id)
                     if dish_key_nutrients_100g and dish_weight_g > 0:
                         dish_total_nutrients = nutrition_service.calculate_actual_nutrients(dish_key_nutrients_100g, dish_weight_g)
+                        
+                        meal_logger.log_entry(
+                            session_id=session_id,
+                            level=LogLevel.INFO,
+                            phase=ProcessingPhase.NUTRITION_CALC_START,
+                            message=f"Dish-level nutrition calculated for '{gemini_dish.dish_name}': {dish_weight_g}g using FDC {dish_fdc_id}",
+                            data={"dish_weight_g": dish_weight_g, "fdc_id": dish_fdc_id, "calculation_method": weight_calculation_method}
+                        )
                     else:
                         warnings.append(f"Could not calculate dish-level nutrition for '{gemini_dish.dish_name}'. Switching to ingredient-level.")
                         gemini_dish.calculation_strategy = "ingredient_level"
+                        weight_calculation_method = "Fallback to ingredient-level due to nutrition calculation failure"
+                else:
+                    # dish_level戦略だがFDC IDが無効
+                    weight_calc_result = nutrition_service.calculate_refined_dish_weight(
+                        phase1_total_dish_weight_g=p1_dish.estimated_total_dish_weight_g,
+                        phase1_ingredients=p1_dish.ingredients,
+                        calculation_strategy="dish_level",
+                        has_valid_fdc_id=False
+                    )
+                    weight_calculation_method = weight_calc_result.calculation_method
+                    actual_weight_used_g = weight_calc_result.final_weight_g
 
                 # Material information for dish_level (fallback FDC IDs for reference)
                 if gemini_dish.calculation_strategy == "dish_level":
@@ -433,6 +451,18 @@ async def refine_meal_analysis(
 
             # Handle ingredient_level (including fallback cases)
             if gemini_dish.calculation_strategy == "ingredient_level":
+                # Phase2での精密な重量計算
+                weight_calc_result = nutrition_service.calculate_refined_dish_weight(
+                    phase1_total_dish_weight_g=p1_dish.estimated_total_dish_weight_g,
+                    phase1_ingredients=p1_dish.ingredients,
+                    calculation_strategy="ingredient_level",
+                    has_valid_fdc_id=True
+                )
+                
+                total_dish_weight_g = weight_calc_result.final_weight_g
+                weight_calculation_method = weight_calc_result.calculation_method
+                actual_weight_used_g = total_dish_weight_g
+                
                 ingredient_nutrients_list = []
                 for gemini_ing in gemini_dish.ingredients:
                     weight = phase1_weights_map.get((gemini_dish.dish_name, gemini_ing.ingredient_name), 0.0)
@@ -520,11 +550,21 @@ async def refine_meal_analysis(
                     [ing for ing in refined_ingredients_list if ing.actual_nutrients]  # None を除外
                 )
 
+            # 重量計算メソッドの初期化（各戦略で設定されない場合の default）
+            if 'weight_calculation_method' not in locals():
+                weight_calculation_method = "Default: sum of ingredient weights"
+            
+            if 'total_dish_weight_g' not in locals():
+                total_dish_weight_g = sum(ing.weight_g for ing in p1_dish.ingredients)
+
             # RefinedDishResponse を作成
             refined_dishes_response.append(RefinedDishResponse(
                 dish_name=gemini_dish.dish_name,
                 type=p1_dish.type,
                 quantity_on_plate=p1_dish.quantity_on_plate,
+                estimated_total_dish_weight_g=p1_dish.estimated_total_dish_weight_g,
+                actual_weight_used_for_calculation_g=actual_weight_used_g,
+                weight_calculation_method=weight_calculation_method,
                 calculation_strategy=gemini_dish.calculation_strategy,
                 reason_for_strategy=gemini_dish.reason_for_strategy,
                 fdc_id=gemini_dish.fdc_id,

@@ -1,0 +1,401 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "Two slices with a red glaze",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Meatloaf is a well-defined, commonly prepared dish with specific FDC entries, making a dish-level query efficient. A suitable branded FDC ID was found that closely matches the visual and common preparation.",
+      "fdc_id": 2731091,
+      "usda_source_description": "AdvancePierre Fully Cooked Beef Meatloaf Topped with Ketchup, 3.00 oz",
+      "reason_for_choice": "Selected FDC ID 2731091 (AdvancePierre Fully Cooked Beef Meatloaf Topped with Ketchup) because: (1) It directly matches the visual evidence of the meatloaf having a red glaze (ketchup). (2) The description 'Beef Meatloaf' aligns with the expected primary ingredient. (3) While a branded item, its specific description and ingredients (ground beef, catsup) are highly relevant to the observed dish, making it the best available dish-level match among the candidates. Other candidates were either full meals, seasoning mixes, or did not specify the ketchup topping.",
+      "key_nutrients_per_100g": {
+        "sodium_mg": 679.0,
+        "carbohydrates_g": 9.52,
+        "sugars_g": 5.95,
+        "calories_kcal": 214.0,
+        "fiber_g": 1.2,
+        "protein_g": 14.29,
+        "fat_g": 13.1
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 180.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 10.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Ketchup/Tomato Glaze",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 470.8,
+        "protein_g": 31.44,
+        "carbohydrates_g": 20.94,
+        "fat_g": 28.82,
+        "fiber_g": 2.64,
+        "sugars_g": 13.09,
+        "sodium_mg": 1493.8
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "A small serving of mixed green beans, corn, peas, and carrots",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The specific proportions of individual vegetables can vary significantly, making ingredient-level calculation more accurate for nutrient breakdown. This strategy allows for precise FDC ID selection for each distinct vegetable component.",
+      "fdc_id": 0,
+      "usda_source_description": "",
+      "reason_for_choice": "Not applicable for ingredient-level calculation. The dish itself does not have a single FDC ID.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 25.0,
+          "fdc_id": 169321,
+          "usda_source_description": "Beans, snap, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169321 (Beans, snap, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, which is highly preferred for basic ingredients due to its comprehensive and reliable data. (2) The description perfectly matches 'Green beans' in a 'cooked, boiled, drained' state, consistent with the appearance of the vegetables in the image. (3) It includes 'with salt', which is a common preparation for cooked vegetables. Other branded options were less general or less compositionally relevant.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 1.89,
+            "fat_g": 0.28,
+            "carbohydrates_g": 7.88,
+            "fiber_g": 3.2,
+            "sugars_g": 3.63,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 8.75,
+            "protein_g": 0.47,
+            "carbohydrates_g": 1.97,
+            "fat_g": 0.07,
+            "fiber_g": 0.8,
+            "sugars_g": 0.91,
+            "sodium_mg": 59.75
+          }
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 25.0,
+          "fdc_id": 168525,
+          "usda_source_description": "Corn, sweet, yellow, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 168525 (Corn, sweet, yellow, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, ideal for basic ingredients. (2) The description 'sweet, yellow, cooked, boiled, drained, with salt' precisely matches the visual and common preparation of corn in mixed vegetables. (3) This option is compositionally accurate for the observed corn kernels, unlike other candidates that were part of complex meals or raw corn grain.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 96.0,
+            "protein_g": 3.41,
+            "fat_g": 1.5,
+            "carbohydrates_g": 20.98,
+            "fiber_g": 2.4,
+            "sugars_g": 4.54,
+            "sodium_mg": 253.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 24.0,
+            "protein_g": 0.85,
+            "carbohydrates_g": 5.25,
+            "fat_g": 0.38,
+            "fiber_g": 0.6,
+            "sugars_g": 1.14,
+            "sodium_mg": 63.25
+          }
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 20.0,
+          "fdc_id": 170102,
+          "usda_source_description": "Peas, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 170102 (Peas, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, providing high-quality data for a basic ingredient. (2) The description accurately reflects 'green peas' in a 'cooked, boiled, drained' state, consistent with the mixed vegetables. (3) This choice is compositionally superior to branded options or mixed vegetable entries that include other components.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 84.0,
+            "protein_g": 5.36,
+            "fat_g": 0.22,
+            "carbohydrates_g": 15.63,
+            "fiber_g": 5.5,
+            "sugars_g": 5.93,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 16.8,
+            "protein_g": 1.07,
+            "carbohydrates_g": 3.13,
+            "fat_g": 0.04,
+            "fiber_g": 1.1,
+            "sugars_g": 1.19,
+            "sodium_mg": 47.8
+          }
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 20.0,
+          "fdc_id": 169339,
+          "usda_source_description": "Carrots, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169339 (Carrots, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, which is preferred for basic ingredients. (2) The description 'cooked, boiled, drained, with salt' perfectly matches the appearance and likely preparation of the carrots in the mixed vegetables. (3) This option provides the most accurate compositional data for cooked carrots among the available candidates.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 0.76,
+            "fat_g": 0.18,
+            "carbohydrates_g": 8.22,
+            "fiber_g": 3.0,
+            "sugars_g": 3.45,
+            "sodium_mg": 302.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 7.0,
+            "protein_g": 0.15,
+            "carbohydrates_g": 1.64,
+            "fat_g": 0.04,
+            "fiber_g": 0.6,
+            "sugars_g": 0.69,
+            "sodium_mg": 60.4
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 56.55,
+        "protein_g": 2.54,
+        "carbohydrates_g": 11.99,
+        "fat_g": 0.53,
+        "fiber_g": 3.1,
+        "sugars_g": 3.93,
+        "sodium_mg": 231.2
+      }
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "A mound of reddish-orange rice",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Spanish rice is a common prepared dish with specific FDC entries, making dish-level calculation appropriate. A suitable SR Legacy FDC ID was found that represents a general preparation of this dish.",
+      "fdc_id": 167665,
+      "usda_source_description": "Restaurant, Mexican, spanish rice",
+      "reason_for_choice": "Selected FDC ID 167665 (Restaurant, Mexican, spanish rice) because: (1) It is an SR Legacy entry, which is generally preferred for prepared dishes when a good match exists, as it represents a more generalized and reliable composition than specific branded products. (2) 'Mexican' rice is a common alternative name for 'Spanish rice', and the visual appearance aligns with this dish type. (3) This entry provides a good average for a prepared Spanish rice, avoiding the specificities of branded products that might not perfectly match a home-prepared version.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 185.0,
+        "protein_g": 3.28,
+        "fat_g": 5.29,
+        "carbohydrates_g": 31.16,
+        "fiber_g": 1.2,
+        "sugars_g": 1.3,
+        "sodium_mg": 528.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "White rice",
+          "weight_g": 60.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Tomato sauce",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Vegetable oil",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 166.5,
+        "protein_g": 2.95,
+        "carbohydrates_g": 28.04,
+        "fat_g": 4.76,
+        "fiber_g": 1.08,
+        "sugars_g": 1.17,
+        "sodium_mg": 475.2
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "A scoop of elbow macaroni in a creamy orange cheese sauce",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a widely recognized and common prepared dish, likely to have good FDC coverage. A suitable branded FDC ID was found that closely matches the visual and common preparation.",
+      "fdc_id": 2397261,
+      "usda_source_description": "MACARONI & CHEESE FRESHLY MADE PASTA IN A REAL CHEDDAR CHEESE SAUCE",
+      "reason_for_choice": "Selected FDC ID 2397261 (MACARONI & CHEESE FRESHLY MADE PASTA IN A REAL CHEDDAR CHEESE SAUCE) because: (1) The description 'freshly made' and 'real cheddar cheese sauce' aligns well with the appearance of the macaroni and cheese in the image, suggesting a quality similar to home-prepared. (2) It explicitly mentions 'macaroni' and 'cheddar cheese sauce', which are the key components of the dish. (3) While a branded item, it provides a more specific and compositionally relevant match than other generic or less descriptive branded options, and no ideal SR Legacy 'home-prepared' option was available.",
+      "key_nutrients_per_100g": {
+        "fiber_g": 0.4,
+        "protein_g": 6.22,
+        "sugars_g": 1.33,
+        "sodium_mg": 391.0,
+        "carbohydrates_g": 16.0,
+        "fat_g": 7.56,
+        "calories_kcal": 156.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Elbow macaroni",
+          "weight_g": 60.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Cheddar cheese",
+          "weight_g": 30.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 5.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 179.4,
+        "protein_g": 7.15,
+        "carbohydrates_g": 18.4,
+        "fat_g": 8.69,
+        "fiber_g": 0.46,
+        "sugars_g": 1.53,
+        "sodium_mg": 449.65
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "A scoop of white, fluffy mashed potatoes",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a very common and well-defined prepared dish, making dish-level calculation efficient and accurate. A suitable branded FDC ID was found that closely matches the visual and common preparation, including milk and butter.",
+      "fdc_id": 2038561,
+      "usda_source_description": "MASHED POTATOES",
+      "reason_for_choice": "Selected FDC ID 2038561 (MASHED POTATOES, Bob Evans Farms Inc) because: (1) The description 'MASHED POTATOES' directly matches the dish. (2) The listed ingredients (POTATOES, MILK, BUTTER) align perfectly with the Phase 1 description of 'home-prepared, whole milk and butter added'. (3) Bob Evans is a widely recognized brand for prepared mashed potatoes, making this a representative and compositionally relevant choice for a dish-level calculation. (4) No SR Legacy entry for 'home-prepared mashed potatoes with milk and butter' was available, making this branded option the best fit.",
+      "key_nutrients_per_100g": {
+        "protein_g": 2.42,
+        "sugars_g": 1.61,
+        "calories_kcal": 121.0,
+        "fat_g": 6.45,
+        "carbohydrates_g": 15.32,
+        "sodium_mg": 331.0,
+        "fiber_g": 1.6
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "Not applicable for dish-level calculation. Ingredient FDC IDs are not selected when the dish is calculated at the dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 217.8,
+        "protein_g": 4.36,
+        "carbohydrates_g": 27.58,
+        "fat_g": 11.61,
+        "fiber_g": 2.88,
+        "sugars_g": 2.9,
+        "sodium_mg": 595.8
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1091.05,
+    "protein_g": 48.44,
+    "carbohydrates_g": 106.95,
+    "fat_g": 54.41,
+    "fiber_g": 10.16,
+    "sugars_g": 22.62,
+    "sodium_mg": 3245.65
+  },
+  "warnings": null,
+  "errors": null
+}

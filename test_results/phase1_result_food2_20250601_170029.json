@@ -1,0 +1,221 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf with Ketchup Glaze",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": 180.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 160.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 20.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, beef, cooked",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "Specific dish name with primary ingredient and cooking method"
+        },
+        {
+          "query_term": "Beef, ground, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Ground beef",
+          "reason_for_query": "Core ingredient of meatloaf"
+        },
+        {
+          "query_term": "Ketchup",
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "Glaze ingredient on meatloaf"
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 scoop",
+      "estimated_total_dish_weight_g": 180.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 160.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 10.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, prepared with milk and butter",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Specific preparation of potatoes with common additions"
+        },
+        {
+          "query_term": "Potatoes, white, cooked, boiled",
+          "granularity_level": "ingredient",
+          "original_term": "Potatoes",
+          "reason_for_query": "Generic cooked potato for fallback"
+        },
+        {
+          "query_term": "Butter, salted",
+          "granularity_level": "ingredient",
+          "original_term": "Butter",
+          "reason_for_query": "Common ingredient in mashed potatoes"
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 180.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Macaroni pasta",
+          "weight_g": 90.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "weight_g": 90.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared from mix",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Common prepared dish, likely from a mix due to appearance"
+        },
+        {
+          "query_term": "Pasta, elbow macaroni, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Macaroni pasta",
+          "reason_for_query": "Specific pasta type and cooking state"
+        },
+        {
+          "query_term": "Cheese sauce, prepared",
+          "granularity_level": "ingredient",
+          "original_term": "Cheese sauce",
+          "reason_for_query": "Primary component of the dish"
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 100.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 25.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Mixed vegetables, frozen, cooked, boiled",
+          "granularity_level": "dish",
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "Common form of mixed vegetables, likely frozen and boiled"
+        },
+        {
+          "query_term": "Green beans, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "Individual component of the mix"
+        },
+        {
+          "query_term": "Carrots, cooked, boiled",
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "Individual component of the mix"
+        },
+        {
+          "query_term": "Corn, sweet, yellow, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "Individual component of the mix"
+        },
+        {
+          "query_term": "Peas, green, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Peas",
+          "reason_for_query": "Individual component of the mix"
+        }
+      ]
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 120.0,
+      "ingredients": [
+        {
+          "ingredient_name": "White rice",
+          "weight_g": 100.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Tomato sauce/seasoning",
+          "weight_g": 20.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice, Spanish, prepared",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Specific dish name based on color and texture"
+        },
+        {
+          "query_term": "Rice, white, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "White rice",
+          "reason_for_query": "Core ingredient of the dish"
+        },
+        {
+          "query_term": "Rice pilaf, prepared",
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Alternative dish name for seasoned rice"
+        }
+      ]
+    }
+  ]
+}
