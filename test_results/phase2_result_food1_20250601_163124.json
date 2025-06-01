@@ -1,0 +1,198 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One side serving",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "High-quality branded dish-level entries for 'Caesar Salad' were available in the USDA candidates, specifically FDC ID 1916135, which compositionally aligns well with the observed salad (romaine, dressing, parmesan). This approach is preferred as it provides a comprehensive nutritional profile for the entire prepared dish, maximizing accuracy and completeness without needing to sum individual components.",
+      "fdc_id": 1916135,
+      "usda_source_description": "CAESAR SALAD",
+      "reason_for_choice": "Selected FDC ID 1916135 (CAESAR SALAD, Branded, Taylor Fresh Foods, Inc.) because: (1) Its ingredient list (Romaine lettuce, Caesar dressing, Parmesan cheese) closely matches the visible components of the Caesar salad in the image, representing a typical composition. (2) The branded nature of this entry often provides comprehensive nutritional data for a prepared dish. (3) It was preferred over other branded Caesar salad entries that included additional ingredients not present in the observed salad (e.g., tomatoes, kale) or were specifically 'pasta salad' variants. (4) The high score indicates a strong relevance to the query.",
+      "key_nutrients_per_100g": {
+        "sugars_g": 2.0,
+        "carbohydrates_g": 8.0,
+        "fiber_g": 1.0,
+        "calories_kcal": 190.0,
+        "fat_g": 16.0,
+        "protein_g": 4.0,
+        "sodium_mg": 500.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 100.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID is set to 0 as the calculation strategy for the dish is 'dish_level', meaning the nutritional data for the entire dish is derived from a single FDC ID, not from individual ingredients.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID is set to 0 as the calculation strategy for the dish is 'dish_level', meaning the nutritional data for the entire dish is derived from a single FDC ID, not from individual ingredients.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 15.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID is set to 0 as the calculation strategy for the dish is 'dish_level', meaning the nutritional data for the entire dish is derived from a single FDC ID, not from individual ingredients.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 15.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID is set to 0 as the calculation strategy for the dish is 'dish_level', meaning the nutritional data for the entire dish is derived from a single FDC ID, not from individual ingredients.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 285.0,
+        "protein_g": 6.0,
+        "carbohydrates_g": 12.0,
+        "fat_g": 24.0,
+        "fiber_g": 1.5,
+        "sugars_g": 3.0,
+        "sodium_mg": 750.0
+      }
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One generous serving in a bowl",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Dish-level search for 'Penne Pasta Salad' was unsuccessful. No suitable FDC ID was found that accurately represents the observed dish's specific combination of penne pasta, creamy tomato sauce, diced tomatoes, and feta cheese without including unobserved ingredients (e.g., tuna, bacon, cheddar). Therefore, switching to ingredient-level calculation to ensure higher accuracy by matching individual components.",
+      "fdc_id": null,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 250.0,
+          "fdc_id": 169751,
+          "usda_source_description": "Pasta, cooked, enriched, with added salt",
+          "reason_for_choice": "Selected FDC ID 169751 (Pasta, cooked, enriched, with added salt, SR Legacy) because: (1) It accurately represents cooked pasta, which is the primary component of the dish. (2) 'Enriched' and 'with added salt' are common characteristics for commercially prepared pasta. (3) This SR Legacy entry is a high-quality generic match when a specific 'penne' cooked entry is not available or less suitable, ensuring compositional relevance for the observed penne pasta.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 157.0,
+            "protein_g": 5.8,
+            "fat_g": 0.93,
+            "carbohydrates_g": 30.59,
+            "fiber_g": 1.8,
+            "sugars_g": 0.56,
+            "sodium_mg": 131.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 392.5,
+            "protein_g": 14.5,
+            "carbohydrates_g": 76.47,
+            "fat_g": 2.33,
+            "fiber_g": 4.5,
+            "sugars_g": 1.4,
+            "sodium_mg": 327.5
+          }
+        },
+        {
+          "ingredient_name": "Creamy tomato sauce",
+          "weight_g": 70.0,
+          "fdc_id": 1900770,
+          "usda_source_description": "CREAMY TOMATO SAUCE",
+          "reason_for_choice": "Selected FDC ID 1900770 (CREAMY TOMATO SAUCE, Branded, Finlay Extracts & Ingredients USA, Inc.) because: (1) It is an exact name match for 'Creamy tomato sauce' and its ingredients confirm the presence of both tomato and cream. (2) This branded entry provides specific data for a prepared sauce, aligning with the observed dish component. (3) It was preferred over other generic tomato sauces that lacked the 'creamy' characteristic, ensuring compositional accuracy.",
+          "key_nutrients_per_100g": {
+            "fiber_g": 0.8,
+            "sodium_mg": 464.0,
+            "fat_g": 4.8,
+            "protein_g": 0.8,
+            "sugars_g": 1.6,
+            "carbohydrates_g": 6.4,
+            "calories_kcal": 72.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 50.4,
+            "protein_g": 0.56,
+            "carbohydrates_g": 4.48,
+            "fat_g": 3.36,
+            "fiber_g": 0.56,
+            "sugars_g": 1.12,
+            "sodium_mg": 324.8
+          }
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 20.0,
+          "fdc_id": 333281,
+          "usda_source_description": "Tomatoes, canned, red, ripe, diced",
+          "reason_for_choice": "Selected FDC ID 333281 (Tomatoes, canned, red, ripe, diced, Foundation) because: (1) It is the most compositionally relevant match for 'diced tomatoes' among the provided candidates, despite being canned. (2) The visual evidence suggests small, diced red tomatoes are present. (3) While 'raw' was specified, no suitable FDC ID for 'diced, raw' tomatoes was available, and the nutritional profile of plain canned diced tomatoes is very similar to fresh diced tomatoes, making this an acceptable substitution to maintain accuracy.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 18.0,
+            "protein_g": 0.84,
+            "fat_g": 0.5,
+            "carbohydrates_g": 3.32,
+            "sodium_mg": 125.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 3.6,
+            "protein_g": 0.17,
+            "carbohydrates_g": 0.66,
+            "fat_g": 0.1,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 25.0
+          }
+        },
+        {
+          "ingredient_name": "Feta cheese",
+          "weight_g": 10.0,
+          "fdc_id": 2259796,
+          "usda_source_description": "Cheese, feta, whole milk, crumbled",
+          "reason_for_choice": "Selected FDC ID 2259796 (Cheese, feta, whole milk, crumbled, Foundation) because: (1) It is an excellent compositional match for 'Feta cheese' and specifically mentions 'crumbled', aligning with the typical form in a pasta salad. (2) The Foundation data type is highly reliable for basic food items. (3) It was preferred over branded options to provide a more generic and widely applicable nutritional profile for feta cheese.",
+          "key_nutrients_per_100g": {
+            "protein_g": 19.70782,
+            "fat_g": 19.08,
+            "carbohydrates_g": 5.58318,
+            "sodium_mg": 1034.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 0.0,
+            "protein_g": 1.97,
+            "carbohydrates_g": 0.56,
+            "fat_g": 1.91,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 103.4
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 446.5,
+        "protein_g": 17.2,
+        "carbohydrates_g": 82.17,
+        "fat_g": 7.7,
+        "fiber_g": 5.06,
+        "sugars_g": 2.52,
+        "sodium_mg": 780.7
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 731.5,
+    "protein_g": 23.2,
+    "carbohydrates_g": 94.17,
+    "fat_g": 31.7,
+    "fiber_g": 6.56,
+    "sugars_g": 5.52,
+    "sodium_mg": 1530.7
+  },
+  "warnings": null,
+  "errors": null
+}
