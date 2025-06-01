@@ -139,7 +139,7 @@ class USDAService:
         
         Args:
             query: 検索クエリ
-            data_types: 検索対象データタイプのリスト（例：["Branded", "FNDDS"]）
+            data_types: 検索対象データタイプのリスト（例：["Branded", "SR Legacy"]）
             page_size: 結果の最大件数
             page_number: ページ番号  
             sort_by: ソート基準
@@ -476,6 +476,7 @@ class USDAService:
     ) -> List[USDASearchResultItem]:
         """
         Execute tiered USDA search strategy with multiple fallback levels
+        Each tier returns up to 5 results for structured Phase2 analysis
         
         Args:
             phase1_candidate: Query candidate from Phase 1 with metadata
@@ -487,49 +488,59 @@ class USDAService:
         """
         all_found_results_map: Dict[int, USDASearchResultItem] = {}  # FDC IDで重複排除
         attempted_queries = set()
+        tier_results_count = {}  # Track results per tier
+        RESULTS_PER_TIER = 5  # Fixed number per tier for structured analysis
         
         logger.info(f"Starting tiered USDA search for: {phase1_candidate.query_term} (granularity: {phase1_candidate.granularity_level})")
         
         # Tier 1: Specific/Branded Query
         query_term_t1 = phase1_candidate.query_term
         if query_term_t1 not in attempted_queries:
-            # Dynamic dataType selection based on granularity and context
-            if phase1_candidate.granularity_level == "branded_product" or brand_context:
-                data_types_t1 = ["Branded", "FNDDS"]
-                brand_owner_t1 = brand_context or self._extract_brand_from_query(query_term_t1)
+            # Use Phase1 preferred_data_types if available, otherwise fall back to dynamic selection
+            if hasattr(phase1_candidate, 'preferred_data_types') and phase1_candidate.preferred_data_types:
+                data_types_t1 = phase1_candidate.preferred_data_types
+                search_context_t1 = phase1_candidate.granularity_level
+                brand_owner_t1 = brand_context if "Branded" in data_types_t1 else None
                 require_all_words_t1 = True
-                search_context_t1 = "branded"
-                logger.info(f"Tier 1 (Branded): query='{query_term_t1}', brand_owner='{brand_owner_t1}'")
-            elif phase1_candidate.granularity_level == "dish":
-                data_types_t1 = ["FNDDS", "Branded"]
-                brand_owner_t1 = None
-                require_all_words_t1 = True
-                search_context_t1 = "dish"
-                logger.info(f"Tier 1 (Dish): query='{query_term_t1}'")
-            else:  # ingredient
-                # Check for cooking state keywords
-                cooking_keywords = ["cooked", "raw", "grilled", "fried", "baked", "steamed", "processed"]
-                has_cooking_state = any(keyword in query_term_t1.lower() for keyword in cooking_keywords)
-                
-                if has_cooking_state:
-                    data_types_t1 = ["FNDDS", "Foundation", "SR Legacy"]
+                logger.info(f"Tier 1 (Phase1 Guided): query='{query_term_t1}', data_types={data_types_t1}")
+            else:
+                # Dynamic dataType selection based on granularity and dish complexity
+                if phase1_candidate.granularity_level == "dish":
+                    # For dish-level queries, prefer SR Legacy for prepared dishes, then Branded as backup
+                    data_types_t1 = ["SR Legacy", "Branded"]
+                    search_context_t1 = "dish"
+                    brand_owner_t1 = brand_context
+                    require_all_words_t1 = True
+                elif phase1_candidate.granularity_level == "ingredient":
+                    # For ingredient-level queries, prefer Foundation and SR Legacy
+                    data_types_t1 = ["Foundation", "SR Legacy"]
+                    search_context_t1 = "ingredient"
+                    brand_owner_t1 = None
+                    require_all_words_t1 = True
+                elif phase1_candidate.granularity_level == "branded_product":
+                    # For branded products, use Branded database
+                    data_types_t1 = ["Branded"]
+                    search_context_t1 = "branded_product"
+                    brand_owner_t1 = brand_context
+                    require_all_words_t1 = True
                 else:
-                    data_types_t1 = ["Foundation", "SR Legacy", "FNDDS"]
-                brand_owner_t1 = None
-                require_all_words_t1 = True
-                search_context_t1 = "ingredient"
-                logger.info(f"Tier 1 (Ingredient): query='{query_term_t1}', cooking_state={has_cooking_state}")
+                    # Fallback for unknown granularity
+                    data_types_t1 = ["SR Legacy", "Foundation", "Branded"]
+                    search_context_t1 = "general"
+                    brand_owner_t1 = brand_context
+                    require_all_words_t1 = False
 
             try:
                 results_t1 = await self.search_foods_rich(
                     query=query_term_t1,
                     data_types=data_types_t1,
-                    page_size=max_results_cap,
+                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
                     require_all_words=require_all_words_t1,
                     brand_owner_filter=brand_owner_t1,
                     search_context=search_context_t1
                 )
                 
+                tier_results_count[1] = len(results_t1)
                 for res in results_t1:
                     if res.fdc_id not in all_found_results_map:
                         all_found_results_map[res.fdc_id] = res
@@ -539,83 +550,79 @@ class USDAService:
                         
                 attempted_queries.add(query_term_t1)
                 logger.info(f"Tier 1 completed: {len(results_t1)} results found")
-                
-                # Early return if we have sufficient high-quality results
-                if len(results_t1) >= max_results_cap // 2 and any(r.score and r.score > 700 for r in results_t1):
-                    logger.info(f"Tier 1 provided sufficient results ({len(results_t1)}), skipping further tiers")
-                    return self._sort_and_limit_results(list(all_found_results_map.values()), max_results_cap)
                     
             except Exception as e:
                 logger.warning(f"Tier 1 search failed for '{query_term_t1}': {str(e)}")
 
-        # Tier 2: Broader/Simplified Query
-        if len(all_found_results_map) < max_results_cap // 2:
-            query_term_t2 = self._simplify_query_term(query_term_t1)
+        # Tier 2: Broader/Simplified Query - Always execute for comprehensive analysis
+        query_term_t2 = self._simplify_query_term(query_term_t1)
+        
+        if query_term_t2 and query_term_t2 != query_term_t1 and query_term_t2 not in attempted_queries:
+            # More permissive parameters for Tier 2
+            data_types_t2 = ["SR Legacy", "Branded", "Foundation"]  # Fixed: Remove FNDDS
+            require_all_words_t2 = False  # More permissive
             
-            if query_term_t2 and query_term_t2 != query_term_t1 and query_term_t2 not in attempted_queries:
-                # More permissive parameters for Tier 2
-                data_types_t2 = ["Branded", "FNDDS", "Foundation", "SR Legacy"]
-                require_all_words_t2 = False  # More permissive
+            logger.info(f"Tier 2 (Broader): query='{query_term_t2}', require_all_words=False")
+            
+            try:
+                results_t2 = await self.search_foods_rich(
+                    query=query_term_t2,
+                    data_types=data_types_t2,
+                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
+                    require_all_words=require_all_words_t2,
+                    search_context="ingredient"  # Generally more permissive
+                )
                 
-                logger.info(f"Tier 2 (Broader): query='{query_term_t2}', require_all_words=False")
+                tier_results_count[2] = len(results_t2)
+                for res in results_t2:
+                    if res.fdc_id not in all_found_results_map:
+                        all_found_results_map[res.fdc_id] = res
+                        res.search_tier = 2
+                        res.search_query_used = query_term_t2
+                        
+                attempted_queries.add(query_term_t2)
+                logger.info(f"Tier 2 completed: {len(results_t2)} new results found")
                 
-                try:
-                    results_t2 = await self.search_foods_rich(
-                        query=query_term_t2,
-                        data_types=data_types_t2,
-                        page_size=max_results_cap - len(all_found_results_map),
-                        require_all_words=require_all_words_t2,
-                        search_context="ingredient"  # Generally more permissive
-                    )
-                    
-                    for res in results_t2:
-                        if res.fdc_id not in all_found_results_map:
-                            all_found_results_map[res.fdc_id] = res
-                            res.search_tier = 2
-                            res.search_query_used = query_term_t2
-                            
-                    attempted_queries.add(query_term_t2)
-                    logger.info(f"Tier 2 completed: {len(results_t2)} new results found")
-                    
-                except Exception as e:
-                    logger.warning(f"Tier 2 search failed for '{query_term_t2}': {str(e)}")
+            except Exception as e:
+                logger.warning(f"Tier 2 search failed for '{query_term_t2}': {str(e)}")
 
-        # Tier 3: Generic/Fallback Query
-        if len(all_found_results_map) < max_results_cap // 3:
-            query_term_t3 = self._generalize_query_term(phase1_candidate)
+        # Tier 3: Generic/Fallback Query - Always execute for comprehensive analysis
+        query_term_t3 = self._generalize_query_term(phase1_candidate)
+        
+        if query_term_t3 and query_term_t3 not in attempted_queries:
+            # Most permissive parameters for Tier 3
+            data_types_t3 = ["Foundation", "SR Legacy", "Branded"]  # Fixed: Remove FNDDS
+            require_all_words_t3 = False
             
-            if query_term_t3 and query_term_t3 not in attempted_queries:
-                # Most permissive parameters for Tier 3
-                data_types_t3 = ["Foundation", "SR Legacy", "FNDDS", "Branded"]
-                require_all_words_t3 = False
+            logger.info(f"Tier 3 (Generic): query='{query_term_t3}', require_all_words=False")
+            
+            try:
+                results_t3 = await self.search_foods_rich(
+                    query=query_term_t3,
+                    data_types=data_types_t3,
+                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
+                    require_all_words=require_all_words_t3,
+                    search_context="ingredient"
+                )
                 
-                logger.info(f"Tier 3 (Generic): query='{query_term_t3}', require_all_words=False")
+                tier_results_count[3] = len(results_t3)
+                for res in results_t3:
+                    if res.fdc_id not in all_found_results_map:
+                        all_found_results_map[res.fdc_id] = res
+                        res.search_tier = 3
+                        res.search_query_used = query_term_t3
+                        
+                attempted_queries.add(query_term_t3)
+                logger.info(f"Tier 3 completed: {len(results_t3)} new results found")
                 
-                try:
-                    results_t3 = await self.search_foods_rich(
-                        query=query_term_t3,
-                        data_types=data_types_t3,
-                        page_size=max_results_cap - len(all_found_results_map),
-                        require_all_words=require_all_words_t3,
-                        search_context="ingredient"
-                    )
-                    
-                    for res in results_t3:
-                        if res.fdc_id not in all_found_results_map:
-                            all_found_results_map[res.fdc_id] = res
-                            res.search_tier = 3
-                            res.search_query_used = query_term_t3
-                            
-                    attempted_queries.add(query_term_t3)
-                    logger.info(f"Tier 3 completed: {len(results_t3)} new results found")
-                    
-                except Exception as e:
-                    logger.warning(f"Tier 3 search failed for '{query_term_t3}': {str(e)}")
+            except Exception as e:
+                logger.warning(f"Tier 3 search failed for '{query_term_t3}': {str(e)}")
 
         final_results = list(all_found_results_map.values())
         final_results = self._sort_and_limit_results(final_results, max_results_cap)
         
         logger.info(f"Tiered search completed: {len(final_results)} total unique results from {len(attempted_queries)} queries")
+        logger.info(f"Results per tier: {tier_results_count}")
         return final_results
 
     def _extract_brand_from_query(self, query_term: str) -> Optional[str]:
@@ -637,54 +644,42 @@ class USDAService:
         return None
 
     def _simplify_query_term(self, query_term: str) -> str:
-        """Simplify query term by removing modifiers or last word"""
+        """
+        Simplify query term by mechanically removing rightmost comma-separated component
+        Simple hierarchical strategy: "A, B, C" → "A, B" → "A"
+        """
+        # Handle comma-separated format - simply remove rightmost component
+        if ',' in query_term:
+            parts = [part.strip() for part in query_term.split(',')]
+            if len(parts) > 1:
+                # Remove rightmost component: "Meatloaf, prepared, cooked" → "Meatloaf, prepared"
+                return ", ".join(parts[:-1])
+            else:
+                return query_term
+        
+        # Handle space-separated format (fallback) - remove last word
         words = query_term.split()
-        
-        if len(words) <= 1:
-            return query_term
-        
-        # Remove common modifiers first
-        modifiers_to_remove = ["fresh", "organic", "natural", "raw", "cooked", "baked", "fried", "grilled"]
-        simplified_words = [w for w in words if w.lower() not in modifiers_to_remove]
-        
-        if len(simplified_words) > 1:
-            return " ".join(simplified_words)
-        elif len(words) > 1:
-            # Remove last word as fallback
+        if len(words) > 1:
             return " ".join(words[:-1])
-        else:
-            return query_term
+        
+        return query_term
 
     def _generalize_query_term(self, phase1_candidate: 'USDACandidateQuery') -> str:
-        """Generate most generic version of query term"""
+        """
+        Generate the most generic term by extracting leftmost comma-separated component
+        Simple rule: "A, B, C" → "A" (core food category)
+        """
         query_term = phase1_candidate.query_term
-        original_term = getattr(phase1_candidate, 'original_term', None)
         
-        # Use original_term if it's simpler and different
-        if original_term and original_term != query_term and len(original_term.split()) <= len(query_term.split()):
-            return original_term
+        # Extract core category from comma-separated format
+        if ',' in query_term:
+            # Return the first part (core category) from "Category, Type, Method"
+            core_category = query_term.split(',')[0].strip()
+            return core_category
         
-        # Extract core food category
-        words = query_term.lower().split()
-        
-        # Common food category mappings
-        food_categories = {
-            "pasta": ["pasta", "penne", "spaghetti", "macaroni", "noodles"],
-            "salad": ["salad", "lettuce", "greens"],
-            "dressing": ["dressing", "sauce", "vinaigrette"],
-            "chicken": ["chicken", "poultry", "breast"],
-            "cheese": ["cheese", "parmesan", "cheddar", "mozzarella"],
-            "bread": ["bread", "croutons", "rolls"],
-            "tomato": ["tomato", "tomatoes"],
-            "pepper": ["pepper", "peppers", "bell"]
-        }
-        
-        for category, keywords in food_categories.items():
-            if any(keyword in words for keyword in keywords):
-                return category
-        
-        # Fallback to first word if it's a food term
-        if words and len(words[0]) > 2:
+        # Handle space-separated format (fallback) - return first word
+        words = query_term.split()
+        if words:
             return words[0]
         
         return query_term
@@ -706,16 +701,132 @@ class USDAService:
 
     def _get_datatype_priority(self, data_type: Optional[str]) -> int:
         """Get priority score for USDA data type"""
-        if data_type == "Branded": 
-            return 4
-        elif data_type == "FNDDS": 
-            return 3
-        elif data_type == "SR Legacy": 
-            return 2
+        if data_type == "SR Legacy": 
+            return 4  # Highest priority for prepared dishes
         elif data_type == "Foundation": 
-            return 1
+            return 3  # High priority for basic ingredients
+        elif data_type == "Branded": 
+            return 2  # Medium priority for commercial products
         else: 
-            return 0
+            return 1  # Lowest priority for unknown types
+
+    def generate_tier_queries(self, query_components: List[str]) -> Dict[int, str]:
+        """
+        Generate tiered queries from structured query components
+        
+        Args:
+            query_components: List of query components ['Category', 'Type', 'Method']
+            
+        Returns:
+            Dict mapping tier number to query string
+        """
+        if not query_components:
+            return {}
+        
+        tiers = {}
+        
+        # Tier 1: Full query with all components
+        tiers[1] = ", ".join(query_components)
+        
+        # Tier 2: Remove rightmost component (method/modifier)
+        if len(query_components) > 1:
+            tiers[2] = ", ".join(query_components[:-1])
+        
+        # Tier 3: Core category only
+        if query_components:
+            tiers[3] = query_components[0]
+        
+        return tiers
+
+    def parse_query_components(self, query_term: str) -> List[str]:
+        """
+        Parse comma-separated query string into components
+        
+        Args:
+            query_term: Comma-separated query string like "Beef, ground, cooked"
+            
+        Returns:
+            List of query components
+        """
+        if ',' in query_term:
+            return [component.strip() for component in query_term.split(',')]
+        else:
+            # Handle space-separated or single word queries
+            return query_term.split()
+
+    def build_query_from_components(self, components: List[str]) -> str:
+        """
+        Build query string from components
+        
+        Args:
+            components: List of query components
+            
+        Returns:
+            Formatted query string
+        """
+        return ", ".join(components) if len(components) > 1 else components[0] if components else ""
+
+    def organize_results_by_tier(self, results: List[USDASearchResultItem]) -> Dict[int, List[USDASearchResultItem]]:
+        """
+        Organize search results by tier for structured Phase2 analysis
+        
+        Args:
+            results: List of search results from tiered search
+            
+        Returns:
+            Dict mapping tier number to list of results for that tier
+        """
+        tier_organized = {}
+        
+        for result in results:
+            tier = getattr(result, 'search_tier', 0)
+            if tier not in tier_organized:
+                tier_organized[tier] = []
+            tier_organized[tier].append(result)
+        
+        return tier_organized
+
+    def format_tier_results_for_prompt(self, results: List[USDASearchResultItem]) -> str:
+        """
+        Format tiered search results for Phase2 prompt inclusion
+        
+        Args:
+            results: List of search results from tiered search
+            
+        Returns:
+            Formatted string for prompt inclusion
+        """
+        if not results:
+            return "No USDA search results available."
+        
+        tier_organized = self.organize_results_by_tier(results)
+        formatted_sections = []
+        
+        for tier in sorted(tier_organized.keys()):
+            tier_results = tier_organized[tier]
+            if not tier_results:
+                continue
+                
+            # Get query used for this tier
+            query_used = getattr(tier_results[0], 'search_query_used', 'N/A')
+            
+            # Format tier header
+            tier_section = f"**TIER {tier} RESULTS** (Query: '{query_used}'):\n"
+            
+            # Format each result in this tier
+            for i, result in enumerate(tier_results, 1):
+                combo_indicator = ""
+                if any(combo in result.description.lower() for combo in ["with", "&", "and", "meal", "dinner", "plate", "combo"]):
+                    combo_indicator = " [COMBO MEAL]"
+                
+                tier_section += (
+                    f"{i}. FDC {result.fdc_id}: {result.description}{combo_indicator}\n"
+                    f"   Type: {result.data_type}, Score: {result.score:.1f}\n"
+                )
+            
+            formatted_sections.append(tier_section)
+        
+        return "\n".join(formatted_sections)
 
 
 @lru_cache()

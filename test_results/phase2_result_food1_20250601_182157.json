@@ -1,0 +1,322 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "estimated_total_dish_weight_g": 150.0,
+      "actual_weight_used_for_calculation_g": 150.0,
+      "weight_calculation_method": "ingredient_level戦略により材料重量合計を使用: 150.0g",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The proportions of ingredients in a Caesar salad can vary significantly, making ingredient-level calculation more accurate than relying on a generic dish entry.",
+      "fdc_id": 0,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 100.0,
+          "fdc_id": 746769,
+          "usda_source_description": "Lettuce, cos or romaine, raw",
+          "reason_for_choice": "Selected FDC ID 746769 (Lettuce, cos or romaine, raw) because: (1) It is a direct and accurate match for romaine lettuce in its raw state, as observed in the salad. (2) The Foundation data type is highly suitable for basic, unprocessed ingredients, providing reliable nutritional information. (3) It is compositionally appropriate and represents the primary leafy green component of the Caesar salad.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 17.0,
+            "protein_g": 1.24,
+            "fat_g": 0.26,
+            "carbohydrates_g": 3.24,
+            "fiber_g": 1.8
+          },
+          "actual_nutrients": {
+            "calories_kcal": 17.0,
+            "protein_g": 1.24,
+            "carbohydrates_g": 3.24,
+            "fat_g": 0.26,
+            "fiber_g": 1.8,
+            "sugars_g": null,
+            "sodium_mg": null
+          }
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0,
+          "fdc_id": 172751,
+          "usda_source_description": "Croutons, plain",
+          "reason_for_choice": "Selected FDC ID 172751 (Croutons, plain) because: (1) It directly matches the 'Croutons' ingredient, and the visual evidence suggests plain, unseasoned croutons. (2) The SR Legacy data type is appropriate for a common processed food item like croutons. (3) This choice provides a compositionally accurate representation of the bread component in the salad.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 407.0,
+            "protein_g": 11.9,
+            "fat_g": 6.6,
+            "carbohydrates_g": 73.5,
+            "fiber_g": 5.1,
+            "sodium_mg": 698.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 81.4,
+            "protein_g": 2.38,
+            "carbohydrates_g": 14.7,
+            "fat_g": 1.32,
+            "fiber_g": 1.02,
+            "sugars_g": null,
+            "sodium_mg": 139.6
+          }
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 15.0,
+          "fdc_id": 325036,
+          "usda_source_description": "Cheese, parmesan, grated",
+          "reason_for_choice": "Selected FDC ID 325036 (Cheese, parmesan, grated) because: (1) It accurately describes the form of Parmesan cheese visible in the salad (grated). (2) The Foundation data type is ideal for a basic dairy product like cheese, ensuring high data quality. (3) This FDC ID provides a compositionally relevant match for the cheese component.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 421.0,
+            "protein_g": 29.6,
+            "fat_g": 28.0,
+            "carbohydrates_g": 12.4,
+            "sodium_mg": 1750.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 63.15,
+            "protein_g": 4.44,
+            "carbohydrates_g": 1.86,
+            "fat_g": 4.2,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 262.5
+          }
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 15.0,
+          "fdc_id": 169055,
+          "usda_source_description": "Salad dressing, caesar dressing, regular",
+          "reason_for_choice": "Selected FDC ID 169055 (Salad dressing, caesar dressing, regular) because: (1) It is a direct and generic match for 'Caesar dressing', which is appropriate given no specific brand or dietary restriction is indicated. (2) The SR Legacy data type is suitable for common prepared food items like salad dressings. (3) This choice provides a standard compositional profile for Caesar dressing.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 542.0,
+            "protein_g": 2.17,
+            "fat_g": 57.85,
+            "carbohydrates_g": 3.3,
+            "fiber_g": 0.5,
+            "sugars_g": 2.81,
+            "sodium_mg": 1209.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 81.3,
+            "protein_g": 0.33,
+            "carbohydrates_g": 0.49,
+            "fat_g": 8.68,
+            "fiber_g": 0.07,
+            "sugars_g": 0.42,
+            "sodium_mg": 181.35
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 242.85,
+        "protein_g": 8.39,
+        "carbohydrates_g": 20.29,
+        "fat_g": 14.46,
+        "fiber_g": 2.89,
+        "sugars_g": 0.42,
+        "sodium_mg": 583.45
+      }
+    },
+    {
+      "dish_name": "Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One serving",
+      "estimated_total_dish_weight_g": 300.0,
+      "actual_weight_used_for_calculation_g": 300.0,
+      "weight_calculation_method": "ingredient_level戦略により材料重量合計を使用: 300.0g",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "This is a complex mixed dish with multiple distinct components whose proportions and specific types are not precisely known, making ingredient-level calculation more accurate.",
+      "fdc_id": 0,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Penne pasta'. All candidates were from incompatible food categories: Malabar spinach (vegetable), Spaghetti spinach (vegetable/pasta hybrid), Noodles (egg/spinach), Cereals (grain). Expected category: Wheat pasta/grain products. Nutritional data for this ingredient will be missing to maintain accuracy.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Tomato",
+          "weight_g": 30.0,
+          "fdc_id": 170457,
+          "usda_source_description": "Tomatoes, red, ripe, raw, year round average",
+          "reason_for_choice": "Selected FDC ID 170457 (Tomatoes, red, ripe, raw, year round average) because: (1) It is the most general and compositionally accurate representation of raw tomato, which is visible in the pasta salad. (2) The SR Legacy data type is highly reliable for common raw produce. (3) This choice best reflects the likely type of tomato used in a typical pasta salad.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 18.0,
+            "protein_g": 0.88,
+            "fat_g": 0.2,
+            "carbohydrates_g": 3.89,
+            "fiber_g": 1.2,
+            "sugars_g": 2.63,
+            "sodium_mg": 5.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 5.4,
+            "protein_g": 0.26,
+            "carbohydrates_g": 1.17,
+            "fat_g": 0.06,
+            "fiber_g": 0.36,
+            "sugars_g": 0.79,
+            "sodium_mg": 1.5
+          }
+        },
+        {
+          "ingredient_name": "Green leafy vegetable",
+          "weight_g": 10.0,
+          "fdc_id": 168462,
+          "usda_source_description": "Spinach, raw",
+          "reason_for_choice": "Selected FDC ID 168462 (Spinach, raw) because: (1) It aligns with the Phase 1 assumption for 'Green leafy vegetable' and is a common ingredient in pasta salads. (2) The SR Legacy data type provides robust nutritional data for raw vegetables. (3) This is the most compositionally relevant and generic option for a leafy green in this context.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 23.0,
+            "protein_g": 2.86,
+            "fat_g": 0.39,
+            "carbohydrates_g": 3.63,
+            "fiber_g": 2.2,
+            "sugars_g": 0.42,
+            "sodium_mg": 79.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 2.3,
+            "protein_g": 0.29,
+            "carbohydrates_g": 0.36,
+            "fat_g": 0.04,
+            "fiber_g": 0.22,
+            "sugars_g": 0.04,
+            "sodium_mg": 7.9
+          }
+        },
+        {
+          "ingredient_name": "Pasta sauce",
+          "weight_g": 50.0,
+          "fdc_id": 465354,
+          "usda_source_description": "PASTA SAUCE",
+          "reason_for_choice": "Selected FDC ID 465354 (PASTA SAUCE, Branded, LES ALIMENTS O'SOLE MIO INC) because: (1) The ingredient list explicitly includes 'CREAM', which matches the visually observed creamy texture and color of the pasta sauce in the image. (2) While a branded item, its specific composition is more relevant than generic SR Legacy marinara sauces which do not appear to match the visual. (3) This choice provides a better compositional fit for the specific type of sauce observed.",
+          "key_nutrients_per_100g": {
+            "sugars_g": 2.4,
+            "carbohydrates_g": 8.0,
+            "sodium_mg": 448.0,
+            "fat_g": 1.6,
+            "calories_kcal": 88.0,
+            "protein_g": 2.4,
+            "fiber_g": 1.6
+          },
+          "actual_nutrients": {
+            "calories_kcal": 44.0,
+            "protein_g": 1.2,
+            "carbohydrates_g": 4.0,
+            "fat_g": 0.8,
+            "fiber_g": 0.8,
+            "sugars_g": 1.2,
+            "sodium_mg": 224.0
+          }
+        },
+        {
+          "ingredient_name": "Chicken",
+          "weight_g": 10.0,
+          "fdc_id": 171534,
+          "usda_source_description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, grilled",
+          "reason_for_choice": "Selected FDC ID 171534 (Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, grilled) because: (1) It represents a common and compositionally accurate form of cooked chicken found in pasta salads. (2) The SR Legacy data type is highly reliable for basic meat products. (3) This choice provides a good generic match for the chicken pieces visible in the dish.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 151.0,
+            "protein_g": 30.54,
+            "fat_g": 3.17,
+            "carbohydrates_g": 0.0,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 52.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 15.1,
+            "protein_g": 3.05,
+            "carbohydrates_g": 0.0,
+            "fat_g": 0.32,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 5.2
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 66.8,
+        "protein_g": 4.8,
+        "carbohydrates_g": 5.53,
+        "fat_g": 1.22,
+        "fiber_g": 1.38,
+        "sugars_g": 2.03,
+        "sodium_mg": 238.6
+      }
+    },
+    {
+      "dish_name": "Iced Tea",
+      "type": "Beverage",
+      "quantity_on_plate": "One glass",
+      "estimated_total_dish_weight_g": 300.0,
+      "actual_weight_used_for_calculation_g": 300.0,
+      "weight_calculation_method": "Phase1推定dish重量を使用: 300.0g (材料合計: 300.0g)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "This is a simple, single-component beverage commonly found as a dish entry in databases.",
+      "fdc_id": 2031711,
+      "usda_source_description": "ICED TEA",
+      "reason_for_choice": "Selected FDC ID 2031711 (ICED TEA, Branded, The Kroger Co.) because: (1) It is a direct and generic match for 'Iced Tea' as a complete beverage. (2) As a simple, single-component beverage, a branded entry from a common retailer is suitable for dish-level calculation. (3) Its ingredient description 'BLACK TEA' aligns with typical iced tea composition.",
+      "key_nutrients_per_100g": {
+        "protein_g": 0.0,
+        "carbohydrates_g": 0.0,
+        "calories_kcal": 0.0,
+        "sodium_mg": 0.0,
+        "fat_g": 0.0,
+        "sugars_g": 0.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Tea",
+          "weight_g": 280.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Ice",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 0.0,
+        "protein_g": 0.0,
+        "carbohydrates_g": 0.0,
+        "fat_g": 0.0,
+        "fiber_g": null,
+        "sugars_g": 0.0,
+        "sodium_mg": 0.0
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 309.65,
+    "protein_g": 13.19,
+    "carbohydrates_g": 25.82,
+    "fat_g": 15.68,
+    "fiber_g": 4.27,
+    "sugars_g": 2.45,
+    "sodium_mg": 822.05
+  },
+  "warnings": [
+    "Missing FDC ID for ingredient 'Penne pasta' - no suitable fallback found",
+    "Missing FDC ID for ingredient 'Penne pasta'"
+  ],
+  "errors": null
+}

@@ -1,0 +1,272 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Common prepared dish with a standard USDA entry, and suitable branded FDC IDs are available that represent the dish accurately.",
+      "fdc_id": 2731091,
+      "usda_source_description": "AdvancePierre Fully Cooked Beef Meatloaf Topped with Ketchup, 3.00 oz",
+      "reason_for_choice": "Selected FDC ID 2731091 because: (1) It is a branded item for 'Fully Cooked Beef Meatloaf Topped with Ketchup', which aligns perfectly with the visual evidence of sliced meatloaf with ketchup on top. (2) The ingredients list confirms it's primarily ground beef with ketchup, matching the observed composition. (3) Other branded options were either part of larger meals (e.g., sandwiches, hoagies, or with other sides) or had additional components not visible (e.g., bacon, cheddar cheese, smoked), making this the most compositionally relevant and accurate choice for the standalone meatloaf.",
+      "key_nutrients_per_100g": {
+        "sodium_mg": 679.0,
+        "carbohydrates_g": 9.52,
+        "sugars_g": 5.95,
+        "calories_kcal": 214.0,
+        "fiber_g": 1.2,
+        "protein_g": 14.29,
+        "fat_g": 13.1
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 180.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID not selected as calculation is at dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 385.2,
+        "protein_g": 25.72,
+        "carbohydrates_g": 17.14,
+        "fat_g": 23.58,
+        "fiber_g": 2.16,
+        "sugars_g": 10.71,
+        "sodium_mg": 1222.2
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 120.0,
+      "weight_calculation_method": "Phase2 Gemini ingredient weights sum: 120.0g",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Consists of multiple distinct vegetables, making ingredient-level calculation more accurate for capturing the nutritional profile of each component rather than relying on a generic 'mixed vegetables' dish entry.",
+      "fdc_id": 0,
+      "usda_source_description": "",
+      "reason_for_choice": "",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 40.0,
+          "fdc_id": 169321,
+          "usda_source_description": "Beans, snap, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169321 because: (1) It is an SR Legacy entry for 'Beans, snap, green, cooked, boiled, drained, with salt', which accurately describes the appearance and likely preparation of the green beans in the image. (2) This FDC ID represents a basic, cooked form of green beans, which is compositionally relevant. (3) Branded options were too generic ('GREEN BEANS') without specifying cooking method, and other SR Legacy options were for peas or succotash, which are not green beans.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 1.89,
+            "fat_g": 0.28,
+            "carbohydrates_g": 7.88,
+            "fiber_g": 3.2,
+            "sugars_g": 3.63,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 14.0,
+            "protein_g": 0.76,
+            "carbohydrates_g": 3.15,
+            "fat_g": 0.11,
+            "fiber_g": 1.28,
+            "sugars_g": 1.45,
+            "sodium_mg": 95.6
+          }
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 30.0,
+          "fdc_id": 169339,
+          "usda_source_description": "Carrots, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169339 because: (1) It is an SR Legacy entry for 'Carrots, cooked, boiled, drained, with salt', which accurately describes the appearance and likely preparation of the diced carrots. (2) This FDC ID represents a basic, cooked form of carrots, which is compositionally relevant. (3) Branded options were too generic ('CARROTS') without specifying cooking method, and other SR Legacy options were for 'peas and carrots' which is less specific than individual components.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 0.76,
+            "fat_g": 0.18,
+            "carbohydrates_g": 8.22,
+            "fiber_g": 3.0,
+            "sugars_g": 3.45,
+            "sodium_mg": 302.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 10.5,
+            "protein_g": 0.23,
+            "carbohydrates_g": 2.47,
+            "fat_g": 0.05,
+            "fiber_g": 0.9,
+            "sugars_g": 1.03,
+            "sodium_mg": 90.6
+          }
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 30.0,
+          "fdc_id": 168525,
+          "usda_source_description": "Corn, sweet, yellow, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 168525 because: (1) It is an SR Legacy entry for 'Corn, sweet, yellow, cooked, boiled, drained, with salt', which accurately describes the visible yellow corn kernels and their likely preparation. (2) This FDC ID represents a basic, cooked form of corn, which is compositionally relevant. (3) Other candidates were for corn pasta or corn oil, which are compositionally incompatible with the observed corn kernels.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 96.0,
+            "protein_g": 3.41,
+            "fat_g": 1.5,
+            "carbohydrates_g": 20.98,
+            "fiber_g": 2.4,
+            "sugars_g": 4.54,
+            "sodium_mg": 253.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 28.8,
+            "protein_g": 1.02,
+            "carbohydrates_g": 6.29,
+            "fat_g": 0.45,
+            "fiber_g": 0.72,
+            "sugars_g": 1.36,
+            "sodium_mg": 75.9
+          }
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 20.0,
+          "fdc_id": 170102,
+          "usda_source_description": "Peas, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 170102 because: (1) It is an SR Legacy entry for 'Peas, green, cooked, boiled, drained, with salt', which accurately describes the visible green peas and their likely preparation. (2) This FDC ID represents a basic, cooked form of green peas, which is compositionally relevant. (3) Other candidates were for edible-podded peas or peas with onions, which are less specific or do not match the visual evidence as well.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 84.0,
+            "protein_g": 5.36,
+            "fat_g": 0.22,
+            "carbohydrates_g": 15.63,
+            "fiber_g": 5.5,
+            "sugars_g": 5.93,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 16.8,
+            "protein_g": 1.07,
+            "carbohydrates_g": 3.13,
+            "fat_g": 0.04,
+            "fiber_g": 1.1,
+            "sugars_g": 1.19,
+            "sodium_mg": 47.8
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 70.1,
+        "protein_g": 3.08,
+        "carbohydrates_g": 15.04,
+        "fat_g": 0.65,
+        "fiber_g": 4.0,
+        "sugars_g": 5.03,
+        "sodium_mg": 309.9
+      }
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Common prepared rice dish with a standard USDA entry, and suitable branded FDC IDs are available that represent the dish accurately.",
+      "fdc_id": 2604163,
+      "usda_source_description": "COOKED IN BONE BROTH SPANISH YELLOW RICE",
+      "reason_for_choice": "Selected FDC ID 2604163 because: (1) It is a branded item for 'COOKED IN BONE BROTH SPANISH YELLOW RICE', which closely matches the visual appearance and color of the rice in the image. (2) The ingredients list (parboiled rice, onions, spices) aligns well with typical Spanish rice composition. (3) Other branded options either included additional components (e.g., enchiladas, tamales) or were less descriptive of the 'yellow' appearance, making this the most compositionally relevant choice for the standalone Spanish rice.",
+      "key_nutrients_per_100g": {
+        "sodium_mg": 273.0,
+        "sugars_g": 0.0,
+        "fat_g": 1.56,
+        "carbohydrates_g": 39.06,
+        "fiber_g": 0.0,
+        "calories_kcal": 188.0,
+        "protein_g": 5.47
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "weight_g": 180.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "FDC ID not selected as calculation is at dish level.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 338.4,
+        "protein_g": 9.85,
+        "carbohydrates_g": 70.31,
+        "fat_g": 2.81,
+        "fiber_g": 0.0,
+        "sugars_g": 0.0,
+        "sodium_mg": 491.4
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 120.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 120.0g",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Very common prepared dish with a standard USDA entry, but no suitable standalone dish-level FDC ID was found in the provided candidates.",
+      "fdc_id": 0,
+      "usda_source_description": "",
+      "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Mashed Potatoes'. All top candidates were for full meals (e.g., 'Meatloaf with Mashed Potatoes', 'Grilled Chicken with Mashed Potatoes') which would incorrectly include the nutritional data for other main components not present in the 'Mashed Potatoes' dish itself. Expected category: Prepared mashed potatoes as a standalone side dish. Nutritional data for this ingredient will be missing to maintain accuracy.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [],
+      "dish_total_actual_nutrients": null
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 130.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 130.0g",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Very common prepared dish with a standard USDA entry, and suitable branded FDC IDs are available that represent the dish accurately.",
+      "fdc_id": 2064481,
+      "usda_source_description": "MACARONI & CHEESE",
+      "reason_for_choice": "Selected FDC ID 2064481 because: (1) It is a branded item for 'MACARONI & CHEESE' with a generic name, which aligns well with the visual evidence of a classic macaroni and cheese side dish. (2) The ingredients list (American cheese, milk, macaroni) confirms a standard composition. (3) Other branded options either included specific flavors not visible (e.g., 'Chipotle & Cheddar', 'Five Cheese Bacon') or were for 'Cauliflower Macaroni & Cheese', which is not observed. This choice provides the most accurate and general representation of the dish.",
+      "key_nutrients_per_100g": {
+        "sugars_g": 0.82,
+        "sodium_mg": 400.0,
+        "protein_g": 7.76,
+        "fiber_g": 0.4,
+        "calories_kcal": 200.0,
+        "carbohydrates_g": 16.33,
+        "fat_g": 11.02
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 260.0,
+        "protein_g": 10.09,
+        "carbohydrates_g": 21.23,
+        "fat_g": 14.33,
+        "fiber_g": 0.52,
+        "sugars_g": 1.07,
+        "sodium_mg": 520.0
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1053.7,
+    "protein_g": 48.74,
+    "carbohydrates_g": 123.72,
+    "fat_g": 41.37,
+    "fiber_g": 6.68,
+    "sugars_g": 16.81,
+    "sodium_mg": 2543.5
+  },
+  "warnings": null,
+  "errors": null
+}

@@ -1,0 +1,256 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": 220.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Meatloaf composition varies significantly (meat type, fat content, binders), making ingredient-level calculation more accurate for nutrient estimation.",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 150.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 15.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 10.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 25.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, cooked",
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "USDA standard format for prepared dish, enabling Tier2: 'Meatloaf' fallback"
+        },
+        {
+          "query_term": "Beef, ground, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Ground beef",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Beef, ground' and Tier3: 'Beef' fallbacks"
+        },
+        {
+          "query_term": "Ground beef",
+          "granularity_level": "ingredient",
+          "original_term": "Ground beef",
+          "reason_for_query": "Natural language format for specific ground beef products"
+        },
+        {
+          "query_term": "Ketchup, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Ketchup' fallback"
+        },
+        {
+          "query_term": "Ketchup",
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "Natural language format for branded ketchup products"
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 scoop",
+      "estimated_total_dish_weight_g": 180.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a common, well-defined prepared dish with consistent ingredients, making dish-level calculation appropriate.",
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, cooked",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "USDA standard format for prepared dish, enabling Tier2: 'Potatoes, mashed' and Tier3: 'Potatoes' fallbacks"
+        },
+        {
+          "query_term": "Mashed potatoes",
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Natural language format for dish-level entries"
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 160.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a widely recognized and standardized prepared dish, likely to have good database coverage at the dish level.",
+      "ingredients": [
+        {
+          "ingredient_name": "Pasta shells",
+          "weight_g": 80.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "weight_g": 80.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "USDA standard format for prepared dish, enabling Tier2: 'Macaroni and cheese' fallback"
+        },
+        {
+          "query_term": "Macaroni and cheese",
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Natural language format for dish-level entries"
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 100.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "This dish consists of distinct vegetables with varying proportions, making ingredient-level calculation more precise for nutrient estimation.",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 30.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 30.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 15.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Vegetables, mixed, cooked",
+          "granularity_level": "dish",
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "USDA standard format for prepared dish, enabling Tier2: 'Vegetables, mixed' and Tier3: 'Vegetables' fallbacks"
+        },
+        {
+          "query_term": "Green beans, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Green beans' fallback"
+        },
+        {
+          "query_term": "Corn, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Corn' fallback"
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Carrots' fallback"
+        },
+        {
+          "query_term": "Peas, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Peas",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Peas' fallback"
+        }
+      ]
+    },
+    {
+      "dish_name": "Rice Pilaf",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 170.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Rice pilaf is a common prepared rice dish with a relatively consistent composition, making dish-level calculation appropriate.",
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "weight_g": 120.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Vermicelli",
+          "weight_g": 20.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Tomato paste",
+          "weight_g": 15.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Broth",
+          "weight_g": 15.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice pilaf, prepared",
+          "granularity_level": "dish",
+          "original_term": "Rice Pilaf",
+          "reason_for_query": "USDA standard format for prepared dish, enabling Tier2: 'Rice pilaf' and Tier3: 'Rice' fallbacks"
+        },
+        {
+          "query_term": "Spanish rice, prepared",
+          "granularity_level": "dish",
+          "original_term": "Rice Pilaf",
+          "reason_for_query": "Alternative USDA standard format for similar prepared dish, enabling Tier2: 'Spanish rice' and Tier3: 'Rice' fallbacks"
+        },
+        {
+          "query_term": "Rice, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Rice",
+          "reason_for_query": "USDA standard format enabling Tier2: 'Rice' fallback"
+        }
+      ]
+    }
+  ]
+}

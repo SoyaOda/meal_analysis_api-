@@ -34,8 +34,8 @@ class USDASearchResultItem(BaseModel):
     ndb_number: Optional[Union[str, int]] = Field(None, description="NDB番号 (文字列または整数)")
     food_code: Optional[str] = Field(None, description="食品コード")
     score: Optional[float] = Field(None, description="検索結果の関連度スコア")
-    ingredients: Optional[str] = Field(None, description="原材料リスト文字列 (Branded/FNDDSの場合)")
-    ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded/FNDDSの場合, **Assumption: String**)")
+    ingredients: Optional[str] = Field(None, description="原材料リスト文字列 (Branded食品の場合)")
+    ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded食品の場合, **Assumption: String**)")
     food_nutrients: List[USDANutrient] = Field(default_factory=list, description="主要な栄養素情報のリスト")
     
     # Enhanced search tracking attributes
@@ -62,14 +62,15 @@ class USDASearchResultItem(BaseModel):
 class USDACandidateQuery(BaseModel):
     """Phase 1でGeminiが出力するUSDAクエリ候補"""
     query_term: str = Field(..., description="USDA検索に使用する具体的なクエリ文字列 (英語)")
+    query_components: Optional[List[str]] = Field(None, description="階層的クエリ構成要素のリスト ['Category', 'Type', 'Method']")
     granularity_level: Literal["dish", "ingredient", "branded_product"] = Field(..., description="このクエリが対象とする粒度レベル")
+    preferred_data_types: Optional[List[Literal["Foundation", "SR Legacy", "Branded"]]] = Field(None, description="推奨USDAデータベースタイプ（優先順）")
     original_term: str = Field("", description="このクエリが由来する元の料理名または食材名")
     reason_for_query: str = Field("", description="このクエリ候補を生成した簡単な理由")
 
 class Phase1Ingredient(BaseModel):
     """Phase 1 材料モデル"""
     ingredient_name: str = Field(..., description="材料の名称 (英語)")
-    weight_g: float = Field(..., description="推定重量（グラム単位）", ge=0.1)
     state: Optional[Literal["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"]] = Field("unknown", description="材料の調理・加工状態")
 
 class Phase1Dish(BaseModel):
@@ -77,9 +78,6 @@ class Phase1Dish(BaseModel):
     dish_name: str = Field(..., description="特定された料理の名称 (英語)")
     type: str = Field(..., description="料理の種類（例: Main course, Side dish）")
     quantity_on_plate: str = Field(..., description="皿の上の量や個数")
-    estimated_total_dish_weight_g: Optional[float] = Field(None, description="料理全体の推定総重量（グラム単位）")
-    calculation_strategy: Literal["dish_level", "ingredient_level"] = Field(..., description="この料理の栄養計算方針")
-    reason_for_strategy: str = Field(..., description="この計算戦略を選択した理由")
     ingredients: List[Phase1Ingredient] = Field(..., description="含まれる材料のリスト")
     # NEW: Phase 1でクエリ候補を出力
     usda_query_candidates: List[USDACandidateQuery] = Field(..., description="この料理/食材に関連するUSDAクエリ候補リスト")
@@ -93,6 +91,7 @@ class Phase1AnalysisResponse(BaseModel):
 class RefinedIngredientGeminiOutput(BaseModel):
     """Phase 2 Gemini出力用 - 材料モデル"""
     ingredient_name: str = Field(..., description="材料の名称 (英語)。Phase 1から引き継ぎ、必要なら修正。")
+    estimated_weight_g: Optional[float] = Field(None, description="画像から推定された材料の重量 (g)。ingredient_level計算の場合に設定。")
     fdc_id: Optional[int] = Field(None, description="選択されたFDC ID。ingredient_levelの場合、またはdish_levelのFallback時に設定。")
     usda_source_description: Optional[str] = Field(None, description="選択されたFDC IDの公式名称。")
     reason_for_choice: Optional[str] = Field(None, description="このFDC IDを選択した理由、または選択しなかった理由。")
@@ -100,12 +99,13 @@ class RefinedIngredientGeminiOutput(BaseModel):
 class RefinedDishGeminiOutput(BaseModel):
     """Phase 2 Gemini出力用 - 料理モデル"""
     dish_name: str = Field(..., description="料理の名称 (英語)。Phase 1から引き継ぎ、必要なら修正。")
-    calculation_strategy: Literal["dish_level", "ingredient_level"] = Field(..., description="この料理の栄養計算方針。")
-    reason_for_strategy: str = Field(..., description="この計算戦略を選択した理由。")
-    fdc_id: Optional[int] = Field(None, description="dish_levelの場合に選択されたFDC ID。")
-    usda_source_description: Optional[str] = Field(None, description="dish_levelの場合に選択されたFDC IDの公式名称。")
-    reason_for_choice: Optional[str] = Field(None, description="dish_levelの場合、このFDC IDを選択した理由。")
-    ingredients: List[RefinedIngredientGeminiOutput] = Field(..., description="材料リスト。各材料についてFDC IDと選択理由を記述。")
+    calculation_strategy: Literal["dish_level", "ingredient_level"] = Field(..., description="写真と検索結果に基づいて決定された最終計算戦略")
+    reason_for_strategy: str = Field(..., description="この計算戦略を選択した理由。写真の複雑さと検索結果の質を考慮。")
+    estimated_dish_weight_g: Optional[float] = Field(None, description="画像から推定された料理全体の重量 (g)。dish_level計算の場合に設定。")
+    fdc_id: Optional[int] = Field(None, description="選択されたFDC ID。dish_levelの場合に設定。")
+    usda_source_description: Optional[str] = Field(None, description="選択されたFDC IDの公式名称。")
+    reason_for_choice: Optional[str] = Field(None, description="このFDC IDを選択した理由、または選択しなかった理由。")
+    ingredients: List[RefinedIngredientGeminiOutput] = Field(..., description="材料リスト")
 
 class Phase2GeminiResponse(BaseModel):
     """Phase 2 Gemini出力用 - 全体モデル"""
@@ -203,13 +203,6 @@ PHASE_1_GEMINI_SCHEMA = {
                     "dish_name": {"type": "string", "description": "特定された料理の名称 (英語)"},
                     "type": {"type": "string", "description": "料理の種類（例: Main course, Side dish）"},
                     "quantity_on_plate": {"type": "string", "description": "皿の上の量や個数"},
-                    "estimated_total_dish_weight_g": {"type": "number", "description": "料理全体の推定総重量（グラム単位）"},
-                    "calculation_strategy": {
-                        "type": "string",
-                        "enum": ["dish_level", "ingredient_level"],
-                        "description": "この料理の栄養計算方針"
-                    },
-                    "reason_for_strategy": {"type": "string", "description": "この計算戦略を選択した理由"},
                     "ingredients": {
                         "type": "array",
                         "description": "含まれる材料のリスト",
@@ -217,14 +210,13 @@ PHASE_1_GEMINI_SCHEMA = {
                             "type": "object",
                             "properties": {
                                 "ingredient_name": {"type": "string", "description": "材料の名称 (英語)"},
-                                "weight_g": {"type": "number", "description": "推定重量（グラム単位）", "minimum": 0.1},
                                 "state": {
                                     "type": "string",
                                     "enum": ["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"],
                                     "description": "材料の調理・加工状態"
                                 }
                             },
-                            "required": ["ingredient_name", "weight_g", "state"]
+                            "required": ["ingredient_name", "state"]
                         }
                     },
                     "usda_query_candidates": {
@@ -239,6 +231,14 @@ PHASE_1_GEMINI_SCHEMA = {
                                     "enum": ["dish", "ingredient", "branded_product"],
                                     "description": "このクエリが対象とする粒度レベル"
                                 },
+                                "preferred_data_types": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": ["Foundation", "SR Legacy", "Branded"]
+                                    },
+                                    "description": "推奨USDAデータベースタイプ（優先順）"
+                                },
                                 "original_term": {"type": "string", "description": "このクエリが由来する元の料理名または食材名"},
                                 "reason_for_query": {"type": "string", "description": "このクエリ候補を生成した簡単な理由"}
                             },
@@ -246,7 +246,7 @@ PHASE_1_GEMINI_SCHEMA = {
                         }
                     }
                 },
-                "required": ["dish_name", "type", "quantity_on_plate", "calculation_strategy", "reason_for_strategy", "ingredients", "usda_query_candidates"]
+                "required": ["dish_name", "type", "quantity_on_plate", "ingredients", "usda_query_candidates"]
             }
         }
     },
@@ -267,9 +267,10 @@ PHASE_2_GEMINI_SCHEMA = {
                     "calculation_strategy": {
                         "type": "string",
                         "enum": ["dish_level", "ingredient_level"],
-                        "description": "この料理の栄養計算方針"
+                        "description": "写真と検索結果に基づいて決定された最終計算戦略"
                     },
-                    "reason_for_strategy": {"type": "string", "description": "この計算戦略を選択した理由"},
+                    "reason_for_strategy": {"type": "string", "description": "この計算戦略を選択した理由。写真の複雑さと検索結果の質を考慮。"},
+                    "estimated_dish_weight_g": {"type": "number", "description": "画像から推定された料理全体の重量 (g)。dish_level計算の場合に設定。"},
                     "fdc_id": {"type": "integer", "description": "dish_levelの場合に選択されたFDC ID"},
                     "usda_source_description": {"type": "string", "description": "dish_levelの場合に選択されたFDC IDの公式名称"},
                     "reason_for_choice": {"type": "string", "description": "dish_levelの場合、このFDC IDを選択した理由"},
@@ -280,6 +281,7 @@ PHASE_2_GEMINI_SCHEMA = {
                             "type": "object",
                             "properties": {
                                 "ingredient_name": {"type": "string", "description": "材料の名称 (英語)。Phase 1から引き継ぎ、必要なら修正"},
+                                "estimated_weight_g": {"type": "number", "description": "画像から推定された材料の重量 (g)。ingredient_level計算の場合に設定。"},
                                 "fdc_id": {"type": "integer", "description": "選択されたFDC ID。ingredient_levelの場合、またはdish_levelのFallback時に設定"},
                                 "usda_source_description": {"type": "string", "description": "選択されたFDC IDの公式名称"},
                                 "reason_for_choice": {"type": "string", "description": "このFDC IDを選択した理由、または選択しなかった理由"}

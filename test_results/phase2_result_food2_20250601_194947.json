@@ -1,0 +1,294 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 250.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 250.0g (Strategy: dish_level, Changed from Phase1: False)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Phase 1 recommended a dish-level calculation strategy for Meatloaf due to its commonality as a prepared dish. This strategy was maintained as per instructions.",
+      "fdc_id": 0,
+      "usda_source_description": "null",
+      "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Meatloaf'. All candidates were from incompatible food categories: 'Vegetarian meatloaf' (not meat), 'Horseradish', 'Edamame', 'Falafel', 'Hummus', 'Mustard', 'Baked beans', 'Cake', 'Cookies', 'Corn dogs', 'Beef, corned beef', 'Succotash'. Expected category: 'Meatloaf' or 'Beef, ground, prepared as meatloaf'. Nutritional data for this dish will be missing to maintain accuracy.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Meat",
+          "weight_g": 150.0,
+          "fdc_id": 175292,
+          "usda_source_description": "Game meat, antelope, raw",
+          "reason_for_choice": "Retry successful - selected Game meat, antelope, raw (FDC: 175292, Score: 62.1) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Ketchup/Tomato glaze",
+          "weight_g": 100.0,
+          "fdc_id": null,
+          "usda_source_description": null,
+          "reason_for_choice": null,
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": null
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 120.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 120.0g (Strategy: dish_level, Changed from Phase1: False)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Phase 1 recommended a dish-level calculation strategy for Mashed Potatoes due to its commonality as a prepared dish. This strategy was maintained as per instructions.",
+      "fdc_id": 170493,
+      "usda_source_description": "Potatoes, mashed, home-prepared, whole milk added",
+      "reason_for_choice": "Selected FDC ID 170493 (Potatoes, mashed, home-prepared, whole milk added) because: (1) It accurately describes the visual appearance of homemade mashed potatoes. (2) The 'whole milk added' variant is a common and representative preparation for mashed potatoes. (3) It is an SR Legacy data type, which is preferred for prepared dishes when FNDDS is not available. (4) Other options included butter/margarine or dehydrated versions, but this option provides a good general match without over-specifying ingredients not visually confirmed.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 83.0,
+        "protein_g": 1.91,
+        "fat_g": 0.57,
+        "carbohydrates_g": 17.57,
+        "fiber_g": 1.5,
+        "sugars_g": 1.48,
+        "sodium_mg": 302.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 120.0,
+          "fdc_id": 2346403,
+          "usda_source_description": "Potatoes, gold, without skin, raw",
+          "reason_for_choice": "Retry successful - selected Potatoes, gold, without skin, raw (FDC: 2346403, Score: 77.8) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 99.6,
+        "protein_g": 2.29,
+        "carbohydrates_g": 21.08,
+        "fat_g": 0.68,
+        "fiber_g": 1.8,
+        "sugars_g": 1.78,
+        "sodium_mg": 362.4
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 200.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 200.0g (Strategy: dish_level, Changed from Phase1: False)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Phase 1 recommended a dish-level calculation strategy for Macaroni and Cheese due to its commonality as a prepared dish. This strategy was maintained as per instructions.",
+      "fdc_id": 169770,
+      "usda_source_description": "Macaroni and cheese, box mix with cheese sauce, prepared",
+      "reason_for_choice": "Selected FDC ID 169770 (Macaroni and cheese, box mix with cheese sauce, prepared) because: (1) It is an SR Legacy entry, which is suitable for general prepared dishes like this. (2) The description 'box mix with cheese sauce' aligns well with the typical appearance of a home-prepared or generic macaroni and cheese, which is not clearly a specific branded product. (3) This option provides a good balance of specificity and generality for the observed dish, better than highly specific branded items or baby food versions.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 164.0,
+        "protein_g": 6.68,
+        "fat_g": 4.99,
+        "carbohydrates_g": 23.1,
+        "fiber_g": 1.2,
+        "sugars_g": 1.57,
+        "sodium_mg": 460.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Macaroni pasta",
+          "weight_g": 108.3,
+          "fdc_id": 169751,
+          "usda_source_description": "Pasta, cooked, enriched, with added salt",
+          "reason_for_choice": "Retry successful - selected Pasta, cooked, enriched, with added salt (FDC: 169751, Score: 65.0) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "weight_g": 91.7,
+          "fdc_id": 2647439,
+          "usda_source_description": "Cheese, pasteurized process cheese food or product, American, singles",
+          "reason_for_choice": "Retry successful - selected Cheese, pasteurized process cheese food or product, American, singles (FDC: 2647439, Score: 78.3) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 328.0,
+        "protein_g": 13.36,
+        "carbohydrates_g": 46.2,
+        "fat_g": 9.98,
+        "fiber_g": 2.4,
+        "sugars_g": 3.14,
+        "sodium_mg": 920.0
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 100.0,
+      "weight_calculation_method": "Phase2 Gemini ingredient weights: 100.0g total (Strategy: ingredient_level, Changed from Phase1: False)",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Phase 1 recommended an ingredient-level calculation strategy for Mixed Vegetables due to the variability in proportions and types of vegetables. This strategy was maintained as per instructions.",
+      "fdc_id": null,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 40.0,
+          "fdc_id": 169321,
+          "usda_source_description": "Beans, snap, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169321 (Beans, snap, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry that accurately describes cooked green beans. (2) The 'cooked, boiled, drained, with salt' preparation is typical for mixed vegetables. (3) This option is a general and appropriate match for the visible green beans, preferred over branded or frozen-specific options when a general cooked form is available.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 1.89,
+            "fat_g": 0.28,
+            "carbohydrates_g": 7.88,
+            "fiber_g": 3.2,
+            "sugars_g": 3.63,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 14.0,
+            "protein_g": 0.76,
+            "carbohydrates_g": 3.15,
+            "fat_g": 0.11,
+            "fiber_g": 1.28,
+            "sugars_g": 1.45,
+            "sodium_mg": 95.6
+          }
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 25.0,
+          "fdc_id": 169339,
+          "usda_source_description": "Carrots, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169339 (Carrots, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry that accurately describes cooked carrots. (2) The 'cooked, boiled, drained, with salt' preparation is typical for mixed vegetables. (3) This option is a general and appropriate match for the visible carrots, preferred over branded or frozen-specific options when a general cooked form is available.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 0.76,
+            "fat_g": 0.18,
+            "carbohydrates_g": 8.22,
+            "fiber_g": 3.0,
+            "sugars_g": 3.45,
+            "sodium_mg": 302.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 8.75,
+            "protein_g": 0.19,
+            "carbohydrates_g": 2.06,
+            "fat_g": 0.04,
+            "fiber_g": 0.75,
+            "sugars_g": 0.86,
+            "sodium_mg": 75.5
+          }
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 20.0,
+          "fdc_id": 168525,
+          "usda_source_description": "Corn, sweet, yellow, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 168525 (Corn, sweet, yellow, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry that accurately describes cooked yellow corn kernels, which are visible in the image. (2) The 'cooked, boiled, drained, with salt' preparation is typical for mixed vegetables. (3) This option is a precise match for the type and preparation of corn observed, distinguishing it from corn pasta or other corn products.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 96.0,
+            "protein_g": 3.41,
+            "fat_g": 1.5,
+            "carbohydrates_g": 20.98,
+            "fiber_g": 2.4,
+            "sugars_g": 4.54,
+            "sodium_mg": 253.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 19.2,
+            "protein_g": 0.68,
+            "carbohydrates_g": 4.2,
+            "fat_g": 0.3,
+            "fiber_g": 0.48,
+            "sugars_g": 0.91,
+            "sodium_mg": 50.6
+          }
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 15.0,
+          "fdc_id": 170102,
+          "usda_source_description": "Peas, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 170102 (Peas, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry that accurately describes the round green peas visible in the image. (2) The 'cooked, boiled, drained, with salt' preparation is typical for mixed vegetables. (3) This option is a precise match for the type and preparation of peas observed, and was found by cross-referencing candidates from the 'Green beans, cooked' query, as the direct 'Peas, cooked' query yielded less suitable options like edible-podded or split peas.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 84.0,
+            "protein_g": 5.36,
+            "fat_g": 0.22,
+            "carbohydrates_g": 15.63,
+            "fiber_g": 5.5,
+            "sugars_g": 5.93,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 12.6,
+            "protein_g": 0.8,
+            "carbohydrates_g": 2.34,
+            "fat_g": 0.03,
+            "fiber_g": 0.82,
+            "sugars_g": 0.89,
+            "sodium_mg": 35.85
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 54.55,
+        "protein_g": 2.43,
+        "carbohydrates_g": 11.75,
+        "fat_g": 0.48,
+        "fiber_g": 3.33,
+        "sugars_g": 4.11,
+        "sodium_mg": 257.55
+      }
+    },
+    {
+      "dish_name": "Seasoned Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 250.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 250.0g (Strategy: dish_level, Changed from Phase1: False)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Phase 1 recommended a dish-level calculation strategy for Seasoned Rice due to its commonality as a prepared dish. This strategy was maintained as per instructions.",
+      "fdc_id": 0,
+      "usda_source_description": "null",
+      "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Seasoned Rice'. All candidates were from incompatible food categories: 'Babyfood cereal', 'Puddings', 'Plain white rice', 'Soup'. Expected category: 'Seasoned rice' or 'Rice pilaf' or 'Spanish rice'. Nutritional data for this dish will be missing to maintain accuracy.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "weight_g": 250.0,
+          "fdc_id": 2710825,
+          "usda_source_description": "Rice, black, unenriched, raw",
+          "reason_for_choice": "Retry successful - selected Rice, black, unenriched, raw (FDC: 2710825, Score: 80.3) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": null
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 482.15,
+    "protein_g": 18.08,
+    "carbohydrates_g": 79.03,
+    "fat_g": 11.14,
+    "fiber_g": 7.53,
+    "sugars_g": 9.03,
+    "sodium_mg": 1539.95
+  },
+  "warnings": null,
+  "errors": null
+}
