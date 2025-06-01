@@ -1,0 +1,165 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One plate",
+      "estimated_total_dish_weight_g": 180.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 120.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0,
+          "state": "baked"
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 10.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 30.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Caesar salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "This is a common, well-defined dish likely to be found in the FNDDS database. The 'La Madeleine' tray suggests a restaurant context, which often has standard menu items."
+        },
+        {
+          "query_term": "Romaine lettuce, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Specific raw vegetable, highly likely to be in Foundation or SR Legacy databases. State 'raw' is crucial for accurate nutrient data."
+        },
+        {
+          "query_term": "Lettuce, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Broader term for lettuce, useful if 'Romaine lettuce' is not specific enough in some USDA datasets. State 'raw' is maintained."
+        },
+        {
+          "query_term": "Croutons, baked",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Common salad topping, likely found in FNDDS or SR Legacy. State 'baked' reflects its processing."
+        },
+        {
+          "query_term": "Parmesan cheese, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Common processed dairy product, likely in SR Legacy or Foundation. State 'processed' indicates its form."
+        },
+        {
+          "query_term": "Caesar dressing, processed",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Specific type of salad dressing, likely available in FNDDS or Branded databases. State 'processed' is appropriate for a prepared dressing."
+        },
+        {
+          "query_term": "Salad dressing, creamy",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Broader term for creamy salad dressings, useful for general nutrient data if 'Caesar dressing' is too specific or not found."
+        }
+      ]
+    },
+    {
+      "dish_name": "Penne Pasta Salad with Chicken",
+      "type": "Main course",
+      "quantity_on_plate": "One bowl",
+      "estimated_total_dish_weight_g": 350.0,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Chicken breast",
+          "weight_g": 80.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 30.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Diced green bell pepper",
+          "weight_g": 15.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Creamy pasta dressing",
+          "weight_g": 25.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Penne pasta salad with chicken",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad with Chicken",
+          "reason_for_query": "This is a descriptive dish name, likely to be found in FNDDS or similar prepared food databases. The 'La Madeleine' tray suggests a restaurant context, which often has standard menu items."
+        },
+        {
+          "query_term": "Pasta salad, chicken",
+          "granularity_level": "dish",
+          "original_term": "Penne Pasta Salad with Chicken",
+          "reason_for_query": "A more general term for chicken pasta salad, increasing the likelihood of a match in FNDDS."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Specific pasta shape, crucial to specify 'cooked' state for accurate nutrient data, likely in Foundation or SR Legacy."
+        },
+        {
+          "query_term": "Pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Broader term for cooked pasta, useful if 'Penne pasta' is too specific. State 'cooked' is essential."
+        },
+        {
+          "query_term": "Chicken breast, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Chicken breast",
+          "reason_for_query": "Common protein, specifying 'cooked' state is important for nutrient accuracy, likely in Foundation or SR Legacy."
+        },
+        {
+          "query_term": "Tomato, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Diced tomatoes",
+          "reason_for_query": "Common raw vegetable, likely in Foundation or SR Legacy. State 'raw' is appropriate."
+        },
+        {
+          "query_term": "Bell pepper, green, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Diced green bell pepper",
+          "reason_for_query": "Common raw vegetable, likely in Foundation or SR Legacy. State 'raw' is appropriate."
+        },
+        {
+          "query_term": "Pasta salad dressing, creamy",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy pasta dressing",
+          "reason_for_query": "Specific type of dressing for pasta salads, likely found in FNDDS or Branded databases. State 'processed' is appropriate for a prepared dressing."
+        },
+        {
+          "query_term": "Salad dressing, creamy",
+          "granularity_level": "ingredient",
+          "original_term": "Creamy pasta dressing",
+          "reason_for_query": "Broader term for creamy dressings, useful for general nutrient data if a specific pasta dressing is not found."
+        }
+      ]
+    }
+  ]
+}

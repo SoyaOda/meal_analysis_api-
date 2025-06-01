@@ -1,0 +1,194 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One plate",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The initial branded search for 'La Madeleine Caesar Salad' yielded no direct results. However, several suitable generic branded 'CAESAR SALAD' options were found. Choosing a dish-level strategy, specifically a branded food entry, is preferred for common prepared dishes like Caesar salad when a good compositional match is available. This approach leverages manufacturer-provided data, offering a more precise and representative nutritional profile for the entire pre-prepared salad compared to an ingredient-level calculation, which would require summing potentially less representative individual component data.",
+      "fdc_id": 1916135,
+      "usda_source_description": "CAESAR SALAD",
+      "reason_for_choice": "The initial search for 'La Madeleine Caesar Salad' yielded no results. FDC ID 1916135, 'CAESAR SALAD' by Taylor Fresh Foods, Inc., was selected as the best available branded dish-level match. This FDC ID is a Branded Food type, which is prioritized for specific products. Its partial ingredient list (Romaine lettuce, Caesar dressing, Parmesan cheese) aligns well with the components of the described Caesar Salad, indicating a strong compositional match. This choice provides a comprehensive nutritional profile for the entire salad as a single unit, which is more stable and representative than summing individual ingredients for a common prepared dish.",
+      "key_nutrients_per_100g": {
+        "sugars_g": 2.0,
+        "carbohydrates_g": 8.0,
+        "fiber_g": 1.0,
+        "calories_kcal": 190.0,
+        "fat_g": 16.0,
+        "protein_g": 4.0,
+        "sodium_mg": 500.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 100.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "This ingredient's FDC ID is not selected for calculation as a dish-level FDC ID (1916135) has been chosen to represent the entire Caesar Salad. The nutritional contribution of romaine lettuce is implicitly included in the selected dish-level entry.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 15.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "This ingredient's FDC ID is not selected for calculation as a dish-level FDC ID (1916135) has been chosen to represent the entire Caesar Salad. Additionally, the provided USDA candidates for 'Croutons, baked' were inappropriate (e.g., 'Bread', 'Cookies'), further supporting the dish-level approach.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 10.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "This ingredient's FDC ID is not selected for calculation as a dish-level FDC ID (1916135) has been chosen to represent the entire Caesar Salad. The nutritional contribution of Parmesan cheese is implicitly included in the selected dish-level entry.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 25.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "This ingredient's FDC ID is not selected for calculation as a dish-level FDC ID (1916135) has been chosen to represent the entire Caesar Salad. Furthermore, the provided USDA candidates for 'Caesar dressing, processed' were inappropriate (e.g., 'Cheese'), making an ingredient-level selection problematic.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 285.0,
+        "protein_g": 6.0,
+        "carbohydrates_g": 12.0,
+        "fat_g": 24.0,
+        "fiber_g": 1.5,
+        "sugars_g": 3.0,
+        "sodium_mg": 750.0
+      }
+    },
+    {
+      "dish_name": "Penne Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One bowl",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The initial branded search for 'La Madeleine Penne Pasta Salad' yielded no direct results. While some generic branded 'Penne Pasta Salad' FDC IDs were found, none of them accurately matched the specific ingredient list provided (e.g., type of protein, specific vegetables, or dressing). To ensure maximum precision and adherence to the actual dish composition, an ingredient-level calculation strategy is chosen. This allows for the selection of the most appropriate FDC ID for each individual component, accounting for cooking states and processing levels, especially given the significant mismatches in the dish-level candidates.",
+      "fdc_id": 0,
+      "usda_source_description": "null",
+      "reason_for_choice": "Calculation is performed at the ingredient level due to the lack of a suitable dish-level FDC ID that accurately represents the specific composition of this Penne Pasta Salad.",
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "Provided USDA candidates for 'Penne pasta, cooked' are all unrelated to pasta (e.g., 'Pork', 'Sauce', 'Kale', 'Sausage', 'Chicken', 'Beef', 'Buckwheat', 'Bulgur'). No suitable FDC ID for cooked penne pasta was found among the candidates. This is a critical data gap for accurate calculation, and manual intervention or a different data source would be required for this ingredient.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Diced tomatoes",
+          "weight_g": 30.0,
+          "fdc_id": 321360,
+          "usda_source_description": "Tomatoes, grape, raw",
+          "reason_for_choice": "FDC ID 321360, 'Tomatoes, grape, raw' (Foundation type), was selected as the most appropriate match for 'Diced tomatoes, raw'. This FDC ID accurately represents the raw state and type of vegetable, ensuring consistency with the Phase 1 description.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 27.0,
+            "protein_g": 0.83,
+            "fat_g": 0.63,
+            "carbohydrates_g": 5.51,
+            "fiber_g": 2.1,
+            "sodium_mg": 6.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 8.1,
+            "protein_g": 0.25,
+            "carbohydrates_g": 1.65,
+            "fat_g": 0.19,
+            "fiber_g": 0.63,
+            "sugars_g": null,
+            "sodium_mg": 1.8
+          }
+        },
+        {
+          "ingredient_name": "Cooked chicken",
+          "weight_g": 40.0,
+          "fdc_id": 331960,
+          "usda_source_description": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, braised",
+          "reason_for_choice": "FDC ID 331960, 'Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, braised' (Foundation type), was selected as the best match for 'Cooked chicken'. This FDC ID accurately reflects the cooked state and type of protein, which is crucial for precise nutritional analysis.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 166.0,
+            "protein_g": 32.1,
+            "fat_g": 3.24,
+            "carbohydrates_g": 0.0,
+            "sodium_mg": 47.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 66.4,
+            "protein_g": 12.84,
+            "carbohydrates_g": 0.0,
+            "fat_g": 1.3,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 18.8
+          }
+        },
+        {
+          "ingredient_name": "Creamy pasta dressing",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "null",
+          "reason_for_choice": "Provided USDA candidates for 'Creamy pasta dressing, processed' are inappropriate. FDC IDs 325198 and 2647439 are for 'Cheese', and FDC ID 332282 is for 'Sauce, pasta, spaghetti/marinara', none of which accurately represent a 'creamy pasta dressing'. No suitable FDC ID was found among the candidates, indicating a data gap for this ingredient.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Green bell pepper",
+          "weight_g": 10.0,
+          "fdc_id": 2258588,
+          "usda_source_description": "Peppers, bell, green, raw",
+          "reason_for_choice": "FDC ID 2258588, 'Peppers, bell, green, raw' (Foundation type), was selected as the most accurate and specific match for 'Green bell pepper, raw'. This FDC ID precisely aligns with the ingredient's description and raw state.",
+          "key_nutrients_per_100g": {
+            "protein_g": 0.715,
+            "fat_g": 0.1063,
+            "carbohydrates_g": 4.7781,
+            "fiber_g": 0.9419,
+            "sodium_mg": 0.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 0.0,
+            "protein_g": 0.07,
+            "carbohydrates_g": 0.48,
+            "fat_g": 0.01,
+            "fiber_g": 0.09,
+            "sugars_g": null,
+            "sodium_mg": 0.0
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 74.5,
+        "protein_g": 13.16,
+        "carbohydrates_g": 2.13,
+        "fat_g": 1.5,
+        "fiber_g": 0.72,
+        "sugars_g": null,
+        "sodium_mg": 20.6
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 359.5,
+    "protein_g": 19.16,
+    "carbohydrates_g": 14.13,
+    "fat_g": 25.5,
+    "fiber_g": 2.22,
+    "sugars_g": 3.0,
+    "sodium_mg": 770.6
+  },
+  "warnings": [
+    "Missing FDC ID or weight for ingredient 'Penne pasta'",
+    "Missing FDC ID or weight for ingredient 'Creamy pasta dressing'"
+  ],
+  "errors": null
+}

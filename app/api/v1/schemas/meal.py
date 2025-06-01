@@ -30,6 +30,9 @@ class USDASearchResultItem(BaseModel):
     ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded/FNDDSの場合, **Assumption: String**)")
     food_nutrients: List[USDANutrient] = Field(default_factory=list, description="主要な栄養素情報のリスト")
     score: Optional[float] = Field(None, description="検索結果の関連度スコア")
+    # Fallback search tracking attributes
+    fallback_query_used: Optional[str] = Field(None, description="フォールバック検索で使用されたクエリ（該当する場合）")
+    fallback_attempt: Optional[int] = Field(None, description="フォールバック検索の試行回数（該当する場合）")
 
 # --- Phase 1 Gemini 出力モデル ---
 
@@ -44,12 +47,14 @@ class Phase1Ingredient(BaseModel):
     """Phase 1 材料モデル"""
     ingredient_name: str = Field(..., description="材料の名称 (英語)")
     weight_g: float = Field(..., description="推定重量（グラム単位）", ge=0.1)
+    state: Optional[Literal["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"]] = Field("unknown", description="材料の調理・加工状態")
 
 class Phase1Dish(BaseModel):
     """Phase 1 料理モデル"""
     dish_name: str = Field(..., description="特定された料理の名称 (英語)")
     type: str = Field(..., description="料理の種類（例: Main course, Side dish）")
     quantity_on_plate: str = Field(..., description="皿の上の量や個数")
+    estimated_total_dish_weight_g: Optional[float] = Field(None, description="料理全体の推定総重量（グラム単位）")
     ingredients: List[Phase1Ingredient] = Field(..., description="含まれる材料のリスト")
     # NEW: Phase 1でクエリ候補を出力
     usda_query_candidates: List[USDACandidateQuery] = Field(..., description="この料理/食材に関連するUSDAクエリ候補リスト")
@@ -170,6 +175,7 @@ PHASE_1_GEMINI_SCHEMA = {
                     "dish_name": {"type": "string", "description": "特定された料理の名称 (英語)"},
                     "type": {"type": "string", "description": "料理の種類（例: Main course, Side dish）"},
                     "quantity_on_plate": {"type": "string", "description": "皿の上の量や個数"},
+                    "estimated_total_dish_weight_g": {"type": "number", "description": "料理全体の推定総重量（グラム単位）"},
                     "ingredients": {
                         "type": "array",
                         "description": "含まれる材料のリスト",
@@ -177,9 +183,14 @@ PHASE_1_GEMINI_SCHEMA = {
                             "type": "object",
                             "properties": {
                                 "ingredient_name": {"type": "string", "description": "材料の名称 (英語)"},
-                                "weight_g": {"type": "number", "description": "推定重量（グラム単位）", "minimum": 0.1}
+                                "weight_g": {"type": "number", "description": "推定重量（グラム単位）", "minimum": 0.1},
+                                "state": {
+                                    "type": "string",
+                                    "enum": ["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"],
+                                    "description": "材料の調理・加工状態"
+                                }
                             },
-                            "required": ["ingredient_name", "weight_g"]
+                            "required": ["ingredient_name", "weight_g", "state"]
                         }
                     },
                     "usda_query_candidates": {
