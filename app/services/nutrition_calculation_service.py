@@ -254,41 +254,130 @@ class NutritionCalculationService:
         Returns:
             WeightCalculationResult: 計算結果
         """
-        ingredients_total_weight = sum(ing.weight_g for ing in phase1_ingredients)
+        # Phase1には重量情報がないため、デフォルト重量推定を使用
+        if not phase1_ingredients:
+            return WeightCalculationResult(
+                final_weight_g=100.0,  # デフォルト重量
+                calculation_method="No ingredients found - using default weight",
+                original_phase1_weight_g=phase1_total_dish_weight_g,
+                ingredient_weights={}
+            )
         
-        # 材料重量の辞書を作成
-        ingredient_weights = {ing.ingredient_name: ing.weight_g for ing in phase1_ingredients}
+        # 簡単な画像ベース重量推定（材料数に基づく）
+        ingredient_count = len(phase1_ingredients)
         
-        if calculation_strategy == "dish_level" and has_valid_fdc_id:
-            # dish_level戦略の場合、Phase1のdish全体重量を優先
-            if phase1_total_dish_weight_g and phase1_total_dish_weight_g > 0:
-                final_weight = phase1_total_dish_weight_g
-                method = f"Phase1推定dish重量を使用: {phase1_total_dish_weight_g}g (材料合計: {ingredients_total_weight}g)"
-            else:
-                # フォールバック: 材料重量の合計
-                final_weight = ingredients_total_weight
-                method = f"Phase1 dish重量が無効のため材料重量合計を使用: {ingredients_total_weight}g"
-        
-        elif calculation_strategy == "ingredient_level":
-            # ingredient_level戦略の場合、材料重量の合計を使用
-            final_weight = ingredients_total_weight
-            method = f"ingredient_level戦略により材料重量合計を使用: {ingredients_total_weight}g"
-            
-            # Phase1 dish重量との差異をチェック
-            if phase1_total_dish_weight_g and abs(phase1_total_dish_weight_g - ingredients_total_weight) > 5:
-                method += f" (Phase1 dish重量 {phase1_total_dish_weight_g}g との差異: {abs(phase1_total_dish_weight_g - ingredients_total_weight):.1f}g)"
-        
+        # 基本的な重量推定ロジック
+        if ingredient_count == 1:
+            estimated_weight = 150.0  # 単一材料料理
+        elif ingredient_count <= 3:
+            estimated_weight = 200.0  # シンプルな料理
+        elif ingredient_count <= 5:
+            estimated_weight = 250.0  # 標準的な料理
         else:
-            # dish_level戦略だがFDC IDが無効な場合
-            final_weight = ingredients_total_weight
-            method = f"dish_level戦略だがFDC ID無効のため材料重量合計を使用: {ingredients_total_weight}g"
+            estimated_weight = 300.0  # 複雑な料理
+        
+        # 料理タイプに基づく調整
+        dish_weight_adjustments = {
+            'salad': 0.8,
+            'soup': 1.2,
+            'pasta': 1.1,
+            'rice': 1.0,
+            'meat': 1.3,
+            'sandwich': 1.1,
+            'dessert': 0.7
+        }
+        
+        # 材料名から料理タイプを推定
+        for ingredient in phase1_ingredients:
+            name = ingredient.ingredient_name.lower()
+            for dish_type, adjustment in dish_weight_adjustments.items():
+                if dish_type in name:
+                    estimated_weight *= adjustment
+                    break
+        
+        estimated_weight = round(estimated_weight, 1)
+        
+        # 材料重量の辞書を作成（Phase2で推定）
+        ingredient_weights = {}
+        if phase1_ingredients:
+            # estimate_ingredient_weights_from_dishを使用して材料重量を配分
+            ingredient_weights = NutritionCalculationService.estimate_ingredient_weights_from_dish(
+                estimated_weight, phase1_ingredients
+            )
+        
+        method = f"Phase2 image-based weight estimation: {estimated_weight}g ({ingredient_count} ingredients)"
         
         return WeightCalculationResult(
-            final_weight_g=final_weight,
+            final_weight_g=estimated_weight,
             calculation_method=method,
             original_phase1_weight_g=phase1_total_dish_weight_g,
             ingredient_weights=ingredient_weights
         )
+
+    @staticmethod
+    def estimate_ingredient_weights_from_dish(
+        total_dish_weight_g: float,
+        ingredients: List[Phase1Ingredient]
+    ) -> Dict[str, float]:
+        """
+        料理全体重量から各材料の重量を推定（Phase2重量計算用）
+        
+        Args:
+            total_dish_weight_g: 料理全体の重量
+            ingredients: Phase1で認識された材料リスト
+            
+        Returns:
+            Dict[str, float]: 材料名 -> 推定重量のマッピング
+        """
+        if not ingredients or total_dish_weight_g <= 0:
+            return {}
+        
+        # Phase1で重量情報がないため、基本的な推定ロジックを実装
+        # 簡単な割合ベースの推定（将来的にはより高度な推定に置換可能）
+        ingredient_count = len(ingredients)
+        
+        if ingredient_count == 1:
+            # 材料が1つの場合、全重量を割り当て
+            return {ingredients[0].ingredient_name: total_dish_weight_g}
+        
+        # 基本重量配分（均等分割からスタート）
+        base_weight = total_dish_weight_g / ingredient_count
+        
+        # 材料タイプに基づく調整係数
+        type_weights = {}
+        for ingredient in ingredients:
+            name = ingredient.ingredient_name.lower()
+            
+            # 肉類（高重量）
+            if any(meat in name for meat in ['beef', 'chicken', 'pork', 'fish', 'meat', 'ground']):
+                type_weights[ingredient.ingredient_name] = 1.5
+            # 主食類（高重量）
+            elif any(staple in name for staple in ['rice', 'pasta', 'noodle', 'bread', 'potato']):
+                type_weights[ingredient.ingredient_name] = 1.3
+            # チーズ・乳製品（中重量）
+            elif any(dairy in name for dairy in ['cheese', 'milk', 'cream', 'butter']):
+                type_weights[ingredient.ingredient_name] = 1.1
+            # 野菜類（標準重量）
+            elif any(veg in name for veg in ['lettuce', 'tomato', 'onion', 'pepper', 'carrot', 'bean', 'pea', 'corn']):
+                type_weights[ingredient.ingredient_name] = 1.0
+            # 調味料・ソース類（低重量）
+            elif any(sauce in name for sauce in ['sauce', 'dressing', 'oil', 'seasoning', 'ketchup']):
+                type_weights[ingredient.ingredient_name] = 0.3
+            # その他（標準重量）
+            else:
+                type_weights[ingredient.ingredient_name] = 1.0
+        
+        # 重量係数の合計
+        total_weight_factor = sum(type_weights.values())
+        
+        # 調整された重量配分
+        estimated_weights = {}
+        for ingredient in ingredients:
+            weight_ratio = type_weights[ingredient.ingredient_name] / total_weight_factor
+            estimated_weights[ingredient.ingredient_name] = round(total_dish_weight_g * weight_ratio, 1)
+        
+        logger.info(f"Estimated ingredient weights for dish ({total_dish_weight_g}g): {estimated_weights}")
+        return estimated_weights
 
 
 # サービスインスタンスを取得するファクトリ関数

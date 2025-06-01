@@ -1,0 +1,251 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "type": "Side dish",
+      "quantity_on_plate": "One serving",
+      "estimated_total_dish_weight_g": 150.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The proportions of ingredients in a Caesar salad can vary significantly, making ingredient-level calculation more accurate than relying on a generic dish entry.",
+      "ingredients": [
+        {
+          "ingredient_name": "Romaine lettuce",
+          "weight_g": 100.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Croutons",
+          "weight_g": 20.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Parmesan cheese",
+          "weight_g": 15.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Caesar dressing",
+          "weight_g": 15.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Caesar salad",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "Simple dish-level query for Caesar salad."
+        },
+        {
+          "query_term": "Salad, Caesar",
+          "granularity_level": "dish",
+          "original_term": "Caesar Salad",
+          "reason_for_query": "Alternative simple dish-level query for Caesar salad."
+        },
+        {
+          "query_term": "Romaine lettuce",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Basic ingredient query for romaine lettuce."
+        },
+        {
+          "query_term": "Lettuce, romaine",
+          "granularity_level": "ingredient",
+          "original_term": "Romaine lettuce",
+          "reason_for_query": "Alternative word order for romaine lettuce."
+        },
+        {
+          "query_term": "Croutons",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Basic ingredient query for croutons."
+        },
+        {
+          "query_term": "Bread, croutons",
+          "granularity_level": "ingredient",
+          "original_term": "Croutons",
+          "reason_for_query": "Alternative term for croutons."
+        },
+        {
+          "query_term": "Parmesan cheese",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Basic ingredient query for Parmesan cheese."
+        },
+        {
+          "query_term": "Cheese, Parmesan",
+          "granularity_level": "ingredient",
+          "original_term": "Parmesan cheese",
+          "reason_for_query": "Alternative word order for Parmesan cheese."
+        },
+        {
+          "query_term": "Caesar dressing",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Basic ingredient query for Caesar dressing."
+        },
+        {
+          "query_term": "Dressing, Caesar",
+          "granularity_level": "ingredient",
+          "original_term": "Caesar dressing",
+          "reason_for_query": "Alternative word order for Caesar dressing."
+        }
+      ]
+    },
+    {
+      "dish_name": "Pasta Salad",
+      "type": "Main course",
+      "quantity_on_plate": "One serving",
+      "estimated_total_dish_weight_g": 300.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "This is a complex mixed dish with multiple distinct components whose proportions and specific types are not precisely known, making ingredient-level calculation more accurate.",
+      "ingredients": [
+        {
+          "ingredient_name": "Penne pasta",
+          "weight_g": 200.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Tomato",
+          "weight_g": 30.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Green leafy vegetable",
+          "weight_g": 10.0,
+          "state": "raw"
+        },
+        {
+          "ingredient_name": "Pasta sauce",
+          "weight_g": 50.0,
+          "state": "processed"
+        },
+        {
+          "ingredient_name": "Chicken",
+          "weight_g": 10.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Pasta salad",
+          "granularity_level": "dish",
+          "original_term": "Pasta Salad",
+          "reason_for_query": "Simple dish-level query for pasta salad."
+        },
+        {
+          "query_term": "Penne pasta salad",
+          "granularity_level": "dish",
+          "original_term": "Pasta Salad",
+          "reason_for_query": "More specific dish-level query for penne pasta salad."
+        },
+        {
+          "query_term": "Penne pasta, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Basic ingredient query for cooked penne pasta."
+        },
+        {
+          "query_term": "Pasta, penne, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Penne pasta",
+          "reason_for_query": "Alternative word order for cooked penne pasta."
+        },
+        {
+          "query_term": "Tomato, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Tomato",
+          "reason_for_query": "Basic ingredient query for raw tomato."
+        },
+        {
+          "query_term": "Tomato",
+          "granularity_level": "ingredient",
+          "original_term": "Tomato",
+          "reason_for_query": "Generic ingredient query for tomato."
+        },
+        {
+          "query_term": "Spinach, raw",
+          "granularity_level": "ingredient",
+          "original_term": "Green leafy vegetable",
+          "reason_for_query": "Assuming spinach as a common green leafy vegetable in pasta salad."
+        },
+        {
+          "query_term": "Pasta sauce",
+          "granularity_level": "ingredient",
+          "original_term": "Pasta sauce",
+          "reason_for_query": "Generic ingredient query for pasta sauce."
+        },
+        {
+          "query_term": "Creamy pasta sauce",
+          "granularity_level": "ingredient",
+          "original_term": "Pasta sauce",
+          "reason_for_query": "More descriptive ingredient query for pasta sauce."
+        },
+        {
+          "query_term": "Chicken, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Chicken",
+          "reason_for_query": "Basic ingredient query for cooked chicken."
+        },
+        {
+          "query_term": "Chicken breast, cooked",
+          "granularity_level": "ingredient",
+          "original_term": "Chicken",
+          "reason_for_query": "More specific ingredient query for cooked chicken breast."
+        }
+      ]
+    },
+    {
+      "dish_name": "Iced Tea",
+      "type": "Beverage",
+      "quantity_on_plate": "One glass",
+      "estimated_total_dish_weight_g": 300.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "This is a simple, single-component beverage commonly found as a dish entry in databases.",
+      "ingredients": [
+        {
+          "ingredient_name": "Tea",
+          "weight_g": 280.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ice",
+          "weight_g": 20.0,
+          "state": "raw"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Iced tea",
+          "granularity_level": "dish",
+          "original_term": "Iced Tea",
+          "reason_for_query": "Simple dish-level query for iced tea."
+        },
+        {
+          "query_term": "Tea, iced",
+          "granularity_level": "dish",
+          "original_term": "Iced Tea",
+          "reason_for_query": "Alternative simple dish-level query for iced tea."
+        },
+        {
+          "query_term": "Tea, brewed",
+          "granularity_level": "ingredient",
+          "original_term": "Tea",
+          "reason_for_query": "Basic ingredient query for brewed tea."
+        },
+        {
+          "query_term": "Black tea, brewed",
+          "granularity_level": "ingredient",
+          "original_term": "Tea",
+          "reason_for_query": "More specific ingredient query for brewed black tea."
+        },
+        {
+          "query_term": "Water",
+          "granularity_level": "ingredient",
+          "original_term": "Ice",
+          "reason_for_query": "Ice is frozen water, so 'Water' is the appropriate query."
+        }
+      ]
+    }
+  ]
+}

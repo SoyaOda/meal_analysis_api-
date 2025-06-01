@@ -1,0 +1,154 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": 200.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Meatloaf composition can vary, making ingredient-level calculation more precise for nutritional analysis.",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 180.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 20.0,
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Beef, ground, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Meatloaf",
+          "reason_for_query": "Primary protein component of the meatloaf, using USDA hierarchical format for optimal search."
+        },
+        {
+          "query_term": "Ketchup, processed",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "Topping on the meatloaf, using USDA hierarchical format for optimal search."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 scoop",
+      "estimated_total_dish_weight_g": 150.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a standard prepared dish commonly found in food databases.",
+      "ingredients": [],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Common prepared dish, using USDA hierarchical format for optimal search."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 180.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a standard prepared dish commonly found in food databases.",
+      "ingredients": [],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Common prepared dish, using USDA hierarchical format for optimal search."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 100.0,
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "This is a simple mix of distinct vegetables, allowing for more precise calculation at the ingredient level.",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 25.0,
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 25.0,
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Green beans, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "Distinct vegetable component, using USDA hierarchical format for optimal search."
+        },
+        {
+          "query_term": "Corn, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "Distinct vegetable component, using USDA hierarchical format for optimal search."
+        },
+        {
+          "query_term": "Peas, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Peas",
+          "reason_for_query": "Distinct vegetable component, using USDA hierarchical format for optimal search."
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "Distinct vegetable component, using USDA hierarchical format for optimal search."
+        }
+      ]
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 150.0,
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Spanish rice is a standard prepared dish commonly found in food databases.",
+      "ingredients": [],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice, Spanish, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Common prepared dish, using USDA hierarchical format for optimal search."
+        }
+      ]
+    }
+  ]
+}

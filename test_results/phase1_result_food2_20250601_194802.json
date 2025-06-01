@@ -1,0 +1,187 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Meatloaf is a well-known prepared dish with a standard composition, likely found in USDA databases.",
+      "ingredients": [
+        {
+          "ingredient_name": "Meat",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup/Tomato glaze",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, prepared, cooked",
+          "query_components": null,
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "FNDDS"
+          ],
+          "original_term": "Meatloaf",
+          "reason_for_query": "Prepared dish query targeting SR Legacy and FNDDS for standard recipes."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Mashed potatoes are a simple, common prepared dish with a high likelihood of being found as a single entry in USDA databases.",
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "FNDDS"
+          ],
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Prepared dish query targeting SR Legacy and FNDDS for standard recipes."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Macaroni and cheese is a widely recognized prepared dish, often available as a single entry in USDA databases.",
+      "ingredients": [
+        {
+          "ingredient_name": "Macaroni pasta",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "FNDDS"
+          ],
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Prepared dish query targeting SR Legacy and FNDDS for standard recipes."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "ingredient_level",
+      "reason_for_recommendation": "The specific proportions and types of vegetables can vary significantly, making ingredient-level calculation more accurate.",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Green beans, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Green beans",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition."
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Carrots",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition."
+        },
+        {
+          "query_term": "Corn, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Corn",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition."
+        },
+        {
+          "query_term": "Peas, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Peas",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition."
+        }
+      ]
+    },
+    {
+      "dish_name": "Seasoned Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Seasoned rice (like Spanish rice or rice pilaf) is a common prepared dish that often has a standard entry in USDA databases.",
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice, seasoned, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "FNDDS"
+          ],
+          "original_term": "Seasoned Rice",
+          "reason_for_query": "Prepared dish query targeting SR Legacy and FNDDS for standard recipes."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "calculation_strategy_recommendation": "ingredient_level",
+      "reason_for_recommendation": "Meatloaf recipes vary widely, and an ingredient-level calculation allows for more accurate nutrient estimation based on its components.",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground meat",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, prepared, cooked",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Meatloaf",
+          "reason_for_query": "General dish query for fallback if ingredient-level is not feasible."
+        },
+        {
+          "query_term": "Beef, ground, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Ground meat",
+          "reason_for_query": "Primary ingredient query following USDA hierarchical format."
+        },
+        {
+          "query_term": "Ketchup, processed",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Ketchup",
+          "reason_for_query": "Ingredient query for the sauce, following USDA hierarchical format."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Mashed potatoes are a standard prepared dish commonly found in the USDA database, making a dish-level calculation efficient.",
+      "ingredients": [
+        {
+          "ingredient_name": "Potato",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Standard dish query following USDA hierarchical format."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "ingredient_level",
+      "reason_for_recommendation": "Breaking down mixed vegetables by individual components allows for more precise nutrient calculation.",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Green beans, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Green beans",
+          "reason_for_query": "Ingredient query following USDA hierarchical format."
+        },
+        {
+          "query_term": "Corn, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Corn",
+          "reason_for_query": "Ingredient query following USDA hierarchical format."
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "original_term": "Carrots",
+          "reason_for_query": "Ingredient query following USDA hierarchical format."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "Macaroni and cheese is a widely recognized and standardized prepared dish, suitable for a dish-level calculation.",
+      "ingredients": [
+        {
+          "ingredient_name": "Macaroni pasta",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Standard dish query following USDA hierarchical format."
+        }
+      ]
+    },
+    {
+      "dish_name": "Seasoned Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "calculation_strategy_recommendation": "dish_level",
+      "reason_for_recommendation": "The rice appears to be a specific prepared dish (e.g., Spanish rice) rather than plain rice, which often has a dedicated USDA entry.",
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice, Spanish, cooked",
+          "query_components": null,
+          "granularity_level": "dish",
+          "original_term": "Seasoned Rice",
+          "reason_for_query": "Specific prepared rice dish query following USDA hierarchical format."
+        }
+      ]
+    }
+  ]
+}

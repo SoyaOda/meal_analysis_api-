@@ -6,7 +6,7 @@
       "quantity_on_plate": "2 slices",
       "ingredients": [
         {
-          "ingredient_name": "Ground meat",
+          "ingredient_name": "Meatloaf",
           "state": "cooked"
         },
         {
@@ -16,7 +16,7 @@
       ],
       "usda_query_candidates": [
         {
-          "query_term": "Meatloaf, prepared",
+          "query_term": "Meatloaf, prepared, cooked",
           "query_components": null,
           "granularity_level": "dish",
           "preferred_data_types": [
@@ -27,18 +27,7 @@
           "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
         },
         {
-          "query_term": "Beef, ground, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Ground meat",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
-        },
-        {
-          "query_term": "Ketchup",
+          "query_term": "Ketchup, processed",
           "query_components": null,
           "granularity_level": "ingredient",
           "preferred_data_types": [
@@ -71,17 +60,6 @@
           ],
           "original_term": "Mashed Potatoes",
           "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
-        },
-        {
-          "query_term": "Potatoes, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Potatoes",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
         }
       ]
     },
@@ -96,7 +74,7 @@
         },
         {
           "ingredient_name": "Cheese sauce",
-          "state": "cooked"
+          "state": "processed"
         }
       ],
       "usda_query_candidates": [
@@ -110,28 +88,6 @@
           ],
           "original_term": "Macaroni and Cheese",
           "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
-        },
-        {
-          "query_term": "Pasta, macaroni, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Macaroni",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
-        },
-        {
-          "query_term": "Cheese sauce, prepared",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "SR Legacy",
-            "Foundation"
-          ],
-          "original_term": "Cheese sauce",
-          "reason_for_query": "Prepared ingredient query targeting SR Legacy database first, with Foundation as backup"
         }
       ]
     },
@@ -141,19 +97,19 @@
       "quantity_on_plate": "1 serving",
       "ingredients": [
         {
-          "ingredient_name": "Green beans",
-          "state": "cooked"
-        },
-        {
-          "ingredient_name": "Carrots",
-          "state": "cooked"
-        },
-        {
           "ingredient_name": "Corn",
           "state": "cooked"
         },
         {
           "ingredient_name": "Peas",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Green beans",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
           "state": "cooked"
         }
       ],
@@ -170,7 +126,29 @@
           "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
         },
         {
-          "query_term": "Green beans, cooked",
+          "query_term": "Corn, sweet, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Corn",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+        },
+        {
+          "query_term": "Peas, green, cooked",
+          "query_components": null,
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "Foundation",
+            "SR Legacy"
+          ],
+          "original_term": "Peas",
+          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+        },
+        {
+          "query_term": "Beans, green, cooked",
           "query_components": null,
           "granularity_level": "ingredient",
           "preferred_data_types": [
@@ -189,28 +167,6 @@
             "SR Legacy"
           ],
           "original_term": "Carrots",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
-        },
-        {
-          "query_term": "Corn, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Corn",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
-        },
-        {
-          "query_term": "Peas, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Peas",
           "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
         }
       ]
@@ -236,17 +192,6 @@
           ],
           "original_term": "Spanish Rice",
           "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
-        },
-        {
-          "query_term": "Rice, white, cooked",
-          "query_components": null,
-          "granularity_level": "ingredient",
-          "preferred_data_types": [
-            "Foundation",
-            "SR Legacy"
-          ],
-          "original_term": "Rice",
-          "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
         }
       ]
     }

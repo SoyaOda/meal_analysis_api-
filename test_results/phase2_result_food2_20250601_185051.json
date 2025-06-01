@@ -1,0 +1,427 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": 220.0,
+      "actual_weight_used_for_calculation_g": 220.0,
+      "weight_calculation_method": "ingredient_level戦略により材料重量合計を使用: 220.0g",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "Meatloaf composition varies significantly (meat type, fat content, binders), making ingredient-level calculation more accurate for nutrient estimation.",
+      "fdc_id": 0,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Ground beef",
+          "weight_g": 150.0,
+          "fdc_id": 172161,
+          "usda_source_description": "Beef, ground, unspecified fat content, cooked",
+          "reason_for_choice": "Selected FDC ID 172161 (Beef, ground, unspecified fat content, cooked) because: (1) It is a general SR Legacy entry for cooked ground beef, which is the primary component of meatloaf. (2) The 'cooked' state aligns with the prepared meatloaf. (3) It provides a representative nutritional profile without assuming a specific lean-to-fat ratio, which is not discernible from the image.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 240.0,
+            "protein_g": 25.07,
+            "fat_g": 14.53,
+            "carbohydrates_g": 0.62,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 85.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 360.0,
+            "protein_g": 37.61,
+            "carbohydrates_g": 0.93,
+            "fat_g": 21.79,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 127.5
+          }
+        },
+        {
+          "ingredient_name": "Breadcrumbs",
+          "weight_g": 20.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Breadcrumbs'. All candidates were from incompatible food categories: 'Meatloaf' (prepared dish), 'Ketchup' (condiment), 'Succotash' (vegetable mix). Expected category: 'Grain products/baked goods'. Nutritional data for this ingredient will be missing to maintain accuracy.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Egg",
+          "weight_g": 15.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Egg'. All candidates were from incompatible food categories: 'Meatloaf' (prepared dish), 'Ketchup' (condiment), 'Succotash' (vegetable mix). Expected category: 'Eggs'. Nutritional data for this ingredient will be missing to maintain accuracy.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Onion",
+          "weight_g": 10.0,
+          "fdc_id": 0,
+          "usda_source_description": "",
+          "reason_for_choice": "No compositionally appropriate FDC ID found in the provided USDA candidate list for 'Onion'. All candidates were from incompatible food categories: 'Meatloaf' (prepared dish), 'Ketchup' (condiment), 'Succotash' (vegetable mix). Expected category: 'Vegetables'. Nutritional data for this ingredient will be missing to maintain accuracy.",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 25.0,
+          "fdc_id": 747693,
+          "usda_source_description": "Ketchup, restaurant",
+          "reason_for_choice": "Selected FDC ID 747693 (Ketchup, restaurant) because: (1) It is a Foundation data type, providing a general and reliable nutritional profile for ketchup. (2) The term 'restaurant' implies a generic, widely used product, suitable for a non-branded visual. (3) It accurately represents the condiment visible on the meatloaf.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 117.0,
+            "protein_g": 1.11,
+            "fat_g": 0.55,
+            "carbohydrates_g": 26.8,
+            "sodium_mg": 949.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 29.25,
+            "protein_g": 0.28,
+            "carbohydrates_g": 6.7,
+            "fat_g": 0.14,
+            "fiber_g": null,
+            "sugars_g": null,
+            "sodium_mg": 237.25
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 389.25,
+        "protein_g": 37.89,
+        "carbohydrates_g": 7.63,
+        "fat_g": 21.93,
+        "fiber_g": 0.0,
+        "sugars_g": 0.0,
+        "sodium_mg": 364.75
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 scoop",
+      "estimated_total_dish_weight_g": 180.0,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase1推定dish重量を使用: 180.0g (材料合計: 180.0g)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a common, well-defined prepared dish with consistent ingredients, making dish-level calculation appropriate.",
+      "fdc_id": 2038561,
+      "usda_source_description": "MASHED POTATOES",
+      "reason_for_choice": "Selected FDC ID 2038561 (MASHED POTATOES, Bob Evans Farms Inc) because: (1) It is a direct match for 'Mashed Potatoes' and is a branded product, which often provides comprehensive data for prepared items. (2) The ingredient list (Potatoes, Milk, Butter) aligns perfectly with typical mashed potato composition. (3) Its high score and clear description make it a suitable representative for the dish-level calculation.",
+      "key_nutrients_per_100g": {
+        "protein_g": 2.42,
+        "sugars_g": 1.61,
+        "calories_kcal": 121.0,
+        "fat_g": 6.45,
+        "carbohydrates_g": 15.32,
+        "sodium_mg": 331.0,
+        "fiber_g": 1.6
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "weight_g": 150.0,
+          "fdc_id": 2346403,
+          "usda_source_description": "Potatoes, gold, without skin, raw",
+          "reason_for_choice": "Retry successful - selected Potatoes, gold, without skin, raw (FDC: 2346403, Score: 77.8) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Milk",
+          "weight_g": 20.0,
+          "fdc_id": 1909132,
+          "usda_source_description": "MILK",
+          "reason_for_choice": "Retry successful - selected MILK (FDC: 1909132, Score: 55.0) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Butter",
+          "weight_g": 10.0,
+          "fdc_id": 2262074,
+          "usda_source_description": "Almond butter, creamy",
+          "reason_for_choice": "Retry successful - selected Almond butter, creamy (FDC: 2262074, Score: 66.3) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 217.8,
+        "protein_g": 4.36,
+        "carbohydrates_g": 27.58,
+        "fat_g": 11.61,
+        "fiber_g": 2.88,
+        "sugars_g": 2.9,
+        "sodium_mg": 595.8
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 160.0,
+      "actual_weight_used_for_calculation_g": 160.0,
+      "weight_calculation_method": "Phase1推定dish重量を使用: 160.0g (材料合計: 160.0g)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a widely recognized and standardized prepared dish, likely to have good database coverage at the dish level.",
+      "fdc_id": 2618433,
+      "usda_source_description": "MACARONI AND CHEESE",
+      "reason_for_choice": "Selected FDC ID 2618433 (MACARONI AND CHEESE, Conagra Frozen Foods) because: (1) It is a direct and highly relevant match for 'Macaroni and Cheese' as a prepared dish. (2) The ingredient list (enriched macaroni, cheddar cheese) confirms its compositional accuracy. (3) As a branded product, it likely offers a complete nutritional profile for this common dish.",
+      "key_nutrients_per_100g": {
+        "sodium_mg": 370.0,
+        "calories_kcal": 102.0,
+        "carbohydrates_g": 14.34,
+        "sugars_g": 1.51,
+        "fat_g": 3.4,
+        "protein_g": 3.4,
+        "fiber_g": 1.1
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Pasta shells",
+          "weight_g": 80.0,
+          "fdc_id": 169751,
+          "usda_source_description": "Pasta, cooked, enriched, with added salt",
+          "reason_for_choice": "Retry successful - selected Pasta, cooked, enriched, with added salt (FDC: 169751, Score: 65.0) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "weight_g": 80.0,
+          "fdc_id": 2647439,
+          "usda_source_description": "Cheese, pasteurized process cheese food or product, American, singles",
+          "reason_for_choice": "Retry successful - selected Cheese, pasteurized process cheese food or product, American, singles (FDC: 2647439, Score: 78.3) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 163.2,
+        "protein_g": 5.44,
+        "carbohydrates_g": 22.94,
+        "fat_g": 5.44,
+        "fiber_g": 1.76,
+        "sugars_g": 2.42,
+        "sodium_mg": 592.0
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 100.0,
+      "actual_weight_used_for_calculation_g": 100.0,
+      "weight_calculation_method": "ingredient_level戦略により材料重量合計を使用: 100.0g",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "This dish consists of distinct vegetables with varying proportions, making ingredient-level calculation more precise for nutrient estimation.",
+      "fdc_id": 0,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "weight_g": 30.0,
+          "fdc_id": 169321,
+          "usda_source_description": "Beans, snap, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169321 (Beans, snap, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, providing a robust and generic nutritional profile for cooked green beans. (2) The 'cooked, boiled, drained' state accurately reflects the appearance of the green beans in the mixed vegetable medley. (3) It is a direct and compositionally accurate match.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 1.89,
+            "fat_g": 0.28,
+            "carbohydrates_g": 7.88,
+            "fiber_g": 3.2,
+            "sugars_g": 3.63,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 10.5,
+            "protein_g": 0.57,
+            "carbohydrates_g": 2.36,
+            "fat_g": 0.08,
+            "fiber_g": 0.96,
+            "sugars_g": 1.09,
+            "sodium_mg": 71.7
+          }
+        },
+        {
+          "ingredient_name": "Corn",
+          "weight_g": 30.0,
+          "fdc_id": 168525,
+          "usda_source_description": "Corn, sweet, yellow, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 168525 (Corn, sweet, yellow, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, providing a robust and generic nutritional profile for cooked yellow corn. (2) The 'cooked, boiled, drained' state accurately reflects the appearance of the corn in the mixed vegetable medley. (3) It is a direct and compositionally accurate match.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 96.0,
+            "protein_g": 3.41,
+            "fat_g": 1.5,
+            "carbohydrates_g": 20.98,
+            "fiber_g": 2.4,
+            "sugars_g": 4.54,
+            "sodium_mg": 253.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 28.8,
+            "protein_g": 1.02,
+            "carbohydrates_g": 6.29,
+            "fat_g": 0.45,
+            "fiber_g": 0.72,
+            "sugars_g": 1.36,
+            "sodium_mg": 75.9
+          }
+        },
+        {
+          "ingredient_name": "Carrots",
+          "weight_g": 25.0,
+          "fdc_id": 169339,
+          "usda_source_description": "Carrots, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 169339 (Carrots, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, providing a robust and generic nutritional profile for cooked carrots. (2) The 'cooked, boiled, drained' state accurately reflects the appearance of the carrots in the mixed vegetable medley. (3) It is a direct and compositionally accurate match.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 35.0,
+            "protein_g": 0.76,
+            "fat_g": 0.18,
+            "carbohydrates_g": 8.22,
+            "fiber_g": 3.0,
+            "sugars_g": 3.45,
+            "sodium_mg": 302.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 8.75,
+            "protein_g": 0.19,
+            "carbohydrates_g": 2.06,
+            "fat_g": 0.04,
+            "fiber_g": 0.75,
+            "sugars_g": 0.86,
+            "sodium_mg": 75.5
+          }
+        },
+        {
+          "ingredient_name": "Peas",
+          "weight_g": 15.0,
+          "fdc_id": 170102,
+          "usda_source_description": "Peas, green, cooked, boiled, drained, with salt",
+          "reason_for_choice": "Selected FDC ID 170102 (Peas, green, cooked, boiled, drained, with salt) because: (1) It is an SR Legacy entry, providing a robust and generic nutritional profile for cooked green peas. (2) The 'cooked, boiled, drained' state accurately reflects the appearance of the peas in the mixed vegetable medley. (3) It is a direct and compositionally accurate match.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 84.0,
+            "protein_g": 5.36,
+            "fat_g": 0.22,
+            "carbohydrates_g": 15.63,
+            "fiber_g": 5.5,
+            "sugars_g": 5.93,
+            "sodium_mg": 239.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 12.6,
+            "protein_g": 0.8,
+            "carbohydrates_g": 2.34,
+            "fat_g": 0.03,
+            "fiber_g": 0.82,
+            "sugars_g": 0.89,
+            "sodium_mg": 35.85
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 60.65,
+        "protein_g": 2.58,
+        "carbohydrates_g": 13.05,
+        "fat_g": 0.6,
+        "fiber_g": 3.25,
+        "sugars_g": 4.2,
+        "sodium_mg": 258.95
+      }
+    },
+    {
+      "dish_name": "Rice Pilaf",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": 170.0,
+      "actual_weight_used_for_calculation_g": 170.0,
+      "weight_calculation_method": "Phase1推定dish重量を使用: 170.0g (材料合計: 170.0g)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Rice pilaf is a common prepared rice dish with a relatively consistent composition, making dish-level calculation appropriate.",
+      "fdc_id": 168952,
+      "usda_source_description": "Rice and vermicelli mix, rice pilaf flavor, prepared with 80% margarine",
+      "reason_for_choice": "Selected FDC ID 168952 (Rice and vermicelli mix, rice pilaf flavor, prepared with 80% margarine) because: (1) It is an SR Legacy entry, providing a reliable and generic nutritional profile for prepared rice pilaf. (2) The description explicitly includes 'vermicelli mix' and 'prepared', which aligns well with the visual characteristics of rice pilaf. (3) It is a more compositionally specific and prepared-state-aligned option compared to generic branded 'Rice Pilaf' entries which might be dry mixes.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 148.0,
+        "protein_g": 2.94,
+        "fat_g": 3.7,
+        "carbohydrates_g": 25.67,
+        "fiber_g": 0.6,
+        "sugars_g": 0.26,
+        "sodium_mg": 430.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "weight_g": 120.0,
+          "fdc_id": 2710825,
+          "usda_source_description": "Rice, black, unenriched, raw",
+          "reason_for_choice": "Retry successful - selected Rice, black, unenriched, raw (FDC: 2710825, Score: 80.3) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Vermicelli",
+          "weight_g": 20.0,
+          "fdc_id": 169884,
+          "usda_source_description": "Vermicelli, made from soy",
+          "reason_for_choice": "Retry successful - selected Vermicelli, made from soy (FDC: 169884, Score: 59.1) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Tomato paste",
+          "weight_g": 15.0,
+          "fdc_id": 1999634,
+          "usda_source_description": "Tomato, roma",
+          "reason_for_choice": "Retry successful - selected Tomato, roma (FDC: 1999634, Score: 68.8) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        },
+        {
+          "ingredient_name": "Broth",
+          "weight_g": 15.0,
+          "fdc_id": 498006,
+          "usda_source_description": "BROTH",
+          "reason_for_choice": "Retry successful - selected BROTH (FDC: 498006, Score: 55.0) from targeted search with enhanced query set",
+          "key_nutrients_per_100g": null,
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 251.6,
+        "protein_g": 5.0,
+        "carbohydrates_g": 43.64,
+        "fat_g": 6.29,
+        "fiber_g": 1.02,
+        "sugars_g": 0.44,
+        "sodium_mg": 731.0
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1082.5,
+    "protein_g": 55.27,
+    "carbohydrates_g": 114.84,
+    "fat_g": 45.87,
+    "fiber_g": 8.91,
+    "sugars_g": 9.96,
+    "sodium_mg": 2542.5
+  },
+  "warnings": [
+    "Missing FDC ID for ingredient 'Breadcrumbs' - no suitable fallback found",
+    "Missing FDC ID for ingredient 'Breadcrumbs'",
+    "Missing FDC ID for ingredient 'Egg' - no suitable fallback found",
+    "Missing FDC ID for ingredient 'Egg'",
+    "Missing FDC ID for ingredient 'Onion' - no suitable fallback found",
+    "Missing FDC ID for ingredient 'Onion'"
+  ],
+  "errors": null
+}
