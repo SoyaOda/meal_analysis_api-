@@ -114,7 +114,9 @@ def test_phase1_analysis_v2(image_path):
             ingredients = dish.get('ingredients', [])
             print(f"   🥗 Ingredients ({len(ingredients)}):")
             for ing in ingredients:
-                print(f"      - {ing.get('ingredient_name', 'Unknown')}: {ing.get('weight_g', 0)}g")
+                state = ing.get('state', 'unknown')
+                prep_method = ing.get('preparation_method', 'unknown')
+                print(f"      - {ing.get('ingredient_name', 'Unknown')}: state={state}, prep={prep_method}")
             
             # NEW: USDAクエリ候補の確認 (v2.1の重要な新機能)
             usda_candidates = dish.get('usda_query_candidates', [])
