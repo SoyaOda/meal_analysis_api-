@@ -71,6 +71,10 @@ class Phase1Ingredient(BaseModel):
     """Phase 1 材料モデル"""
     ingredient_name: str = Field(..., description="材料の名称 (英語)")
     state: Optional[Literal["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"]] = Field("unknown", description="材料の調理・加工状態")
+    preparation_method: Optional[Literal[
+        "boiled", "fried", "baked", "roasted", "steamed", "grilled", 
+        "raw_marinated", "microwaved", "stewed", "sauteed", "unknown"
+    ]] = Field("unknown", description="具体的な調理方法（cookedの場合に特に重要）")
 
 class Phase1Dish(BaseModel):
     """Phase 1 料理モデル"""
@@ -213,9 +217,14 @@ PHASE_1_GEMINI_SCHEMA = {
                                     "type": "string",
                                     "enum": ["raw", "cooked", "fried", "baked", "processed", "dry", "unknown"],
                                     "description": "材料の調理・加工状態"
+                                },
+                                "preparation_method": {
+                                    "type": "string",
+                                    "enum": ["boiled", "fried", "baked", "roasted", "steamed", "grilled", "raw_marinated", "microwaved", "stewed", "sauteed", "unknown"],
+                                    "description": "具体的な調理方法（cookedの場合に特に重要）"
                                 }
                             },
-                            "required": ["ingredient_name", "state"]
+                            "required": ["ingredient_name", "state", "preparation_method"]
                         }
                     },
                     "usda_query_candidates": {
