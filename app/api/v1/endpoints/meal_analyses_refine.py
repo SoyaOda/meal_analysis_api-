@@ -179,10 +179,21 @@ async def refine_meal_analysis(
                 
                 processed_query_terms.add(candidate.query_term)
                 
+                # NEW: Find corresponding Phase1Ingredient details for enhanced tiered search
+                corresponding_ingredient = None
+                if candidate.granularity_level == "ingredient":
+                    # Find the ingredient from this dish that matches the original_term
+                    for ingredient in dish.ingredients:
+                        if (ingredient.ingredient_name.lower() in candidate.original_term.lower() or 
+                            candidate.original_term.lower() in ingredient.ingredient_name.lower()):
+                            corresponding_ingredient = ingredient
+                            break
+                
                 try:
-                    # Use new tiered search strategy
+                    # Use enhanced tiered search strategy with ingredient details
                     tiered_results = await usda_service.execute_tiered_usda_search(
                         phase1_candidate=candidate,
+                        phase1_ingredient_details=corresponding_ingredient,  # NEW: Pass ingredient details
                         brand_context=brand_context,
                         max_results_cap=15
                     )
@@ -192,24 +203,33 @@ async def refine_meal_analysis(
                         if result.fdc_id not in all_usda_search_results_map:
                             all_usda_search_results_map[result.fdc_id] = result
                     
+                    # Enhanced logging with ingredient state info
+                    ingredient_info = ""
+                    if corresponding_ingredient:
+                        ingredient_info = f" (ingredient: {corresponding_ingredient.ingredient_name}, state: {corresponding_ingredient.state}, prep: {corresponding_ingredient.preparation_method})"
+                    
                     search_details_for_log.append({
                         "phase1_query_term": candidate.query_term,
                         "original_term": query_map.get(candidate.query_term, candidate.original_term),
                         "granularity": candidate.granularity_level,
-                        "search_strategy": "tiered_search",
+                        "search_strategy": "enhanced_tiered_search",
+                        "ingredient_state": corresponding_ingredient.state if corresponding_ingredient else None,
+                        "ingredient_prep_method": corresponding_ingredient.preparation_method if corresponding_ingredient else None,
                         "results_count": len(tiered_results),
                         "status": "success" if tiered_results else "no_results"
                     })
                     
-                    logger.info(f"Tiered search for '{candidate.query_term}': {len(tiered_results)} results")
+                    logger.info(f"Enhanced tiered search for '{candidate.query_term}'{ingredient_info}: {len(tiered_results)} results")
                     
                 except Exception as e:
-                    logger.error(f"Tiered search failed for '{candidate.query_term}': {str(e)}")
+                    logger.error(f"Enhanced tiered search failed for '{candidate.query_term}': {str(e)}")
                     search_details_for_log.append({
                         "phase1_query_term": candidate.query_term,
                         "original_term": query_map.get(candidate.query_term, candidate.original_term),
                         "granularity": candidate.granularity_level,
-                        "search_strategy": "tiered_search",
+                        "search_strategy": "enhanced_tiered_search",
+                        "ingredient_state": corresponding_ingredient.state if corresponding_ingredient else None,
+                        "ingredient_prep_method": corresponding_ingredient.preparation_method if corresponding_ingredient else None,
                         "results_count": 0,
                         "status": "error",
                         "error_message": str(e)

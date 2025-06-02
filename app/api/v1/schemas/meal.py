@@ -48,6 +48,9 @@ class USDASearchResultItem(BaseModel):
     # Legacy fallback search tracking attributes (for backward compatibility)
     fallback_query_used: Optional[str] = Field(None, description="フォールバック検索で使用されたクエリ（該当する場合）")
     fallback_attempt: Optional[int] = Field(None, description="フォールバック検索の試行回数（該当する場合）")
+    
+    # NEW: Cooking conversion tracking (for v2.2 enhanced functionality)
+    requires_cooking_conversion: Optional[bool] = Field(None, description="このFDC IDが基本状態（生/乾燥）であり、調理済み状態への変換が必要かどうか")
 
     @field_validator('ndb_number')
     @classmethod

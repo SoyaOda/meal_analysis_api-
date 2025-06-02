@@ -471,15 +471,17 @@ class USDAService:
     async def execute_tiered_usda_search(
         self,
         phase1_candidate: 'USDACandidateQuery',
+        phase1_ingredient_details: Optional['Phase1Ingredient'] = None,  # NEW: Phase1の食材詳細情報
         brand_context: Optional[str] = None,
         max_results_cap: int = 15
     ) -> List[USDASearchResultItem]:
         """
-        Execute tiered USDA search strategy with multiple fallback levels
-        Each tier returns up to 5 results for structured Phase2 analysis
+        Enhanced tiered USDA search strategy with 5-tier approach (Tier 0-4)
+        Utilizes Phase 1 state and preparation_method for precise cooking state matching
         
         Args:
             phase1_candidate: Query candidate from Phase 1 with metadata
+            phase1_ingredient_details: Phase1Ingredient containing state & preparation_method (NEW)
             brand_context: Detected brand context (e.g., "La Madeleine")
             max_results_cap: Maximum total results to return
             
@@ -489,108 +491,129 @@ class USDAService:
         all_found_results_map: Dict[int, USDASearchResultItem] = {}  # FDC IDで重複排除
         attempted_queries = set()
         tier_results_count = {}  # Track results per tier
-        RESULTS_PER_TIER = 5  # Fixed number per tier for structured analysis
+        RESULTS_PER_TIER = 3  # Reduced to allow for more tiers
         
-        logger.info(f"Starting tiered USDA search for: {phase1_candidate.query_term} (granularity: {phase1_candidate.granularity_level})")
+        logger.info(f"Starting enhanced tiered USDA search for: {phase1_candidate.query_term} "
+                   f"(granularity: {phase1_candidate.granularity_level})")
         
-        # Tier 1: Specific/Branded Query
-        query_term_t1 = phase1_candidate.query_term
-        if query_term_t1 not in attempted_queries:
-            # Use Phase1 preferred_data_types if available, otherwise fall back to enhanced dynamic selection
+        if phase1_ingredient_details:
+            logger.info(f"Phase1 ingredient details: state={phase1_ingredient_details.state}, "
+                       f"prep_method={phase1_ingredient_details.preparation_method}")
+
+        # Tier 0: Complete State/Prep Match (NEW - highest precision)
+        if (phase1_ingredient_details and 
+            phase1_ingredient_details.state != "unknown" and 
+            phase1_ingredient_details.preparation_method != "unknown"):
+            
+            query_t0 = f"{phase1_candidate.query_term}, {phase1_ingredient_details.state}, {phase1_ingredient_details.preparation_method}"
+            if query_t0 not in attempted_queries:
+                data_types_t0 = ["SR Legacy", "Foundation"]  # High-quality databases for precise matches
+                logger.info(f"Tier 0 (Complete State/Prep Match): query='{query_t0}'")
+                
+                try:
+                    results_t0 = await self.search_foods_rich(
+                        query=query_t0,
+                        data_types=data_types_t0,
+                        page_size=RESULTS_PER_TIER,
+                        require_all_words=True,
+                        search_context="complete_state_match"
+                    )
+                    
+                    tier_results_count[0] = len(results_t0)
+                    for res in results_t0:
+                        if res.fdc_id not in all_found_results_map:
+                            all_found_results_map[res.fdc_id] = res
+                            res.search_tier = 0
+                            res.search_query_used = query_t0
+                            
+                    attempted_queries.add(query_t0)
+                    logger.info(f"Tier 0 completed: {len(results_t0)} results found")
+                        
+                except Exception as e:
+                    logger.warning(f"Tier 0 search failed for '{query_t0}': {str(e)}")
+
+        # Tier 1: State Match (NEW - state only, no specific prep method)
+        if (phase1_ingredient_details and 
+            phase1_ingredient_details.state != "unknown"):
+            
+            query_t1 = f"{phase1_candidate.query_term}, {phase1_ingredient_details.state}"
+            if query_t1 not in attempted_queries:
+                data_types_t1 = ["SR Legacy", "Foundation"]
+                logger.info(f"Tier 1 (State Match): query='{query_t1}'")
+                
+                try:
+                    results_t1 = await self.search_foods_rich(
+                        query=query_t1,
+                        data_types=data_types_t1,
+                        page_size=RESULTS_PER_TIER,
+                        require_all_words=True,
+                        search_context="state_match"
+                    )
+                    
+                    tier_results_count[1] = len(results_t1)
+                    for res in results_t1:
+                        if res.fdc_id not in all_found_results_map:
+                            all_found_results_map[res.fdc_id] = res
+                            res.search_tier = 1
+                            res.search_query_used = query_t1
+                            
+                    attempted_queries.add(query_t1)
+                    logger.info(f"Tier 1 completed: {len(results_t1)} results found")
+                        
+                except Exception as e:
+                    logger.warning(f"Tier 1 search failed for '{query_t1}': {str(e)}")
+
+        # Tier 2: Original Phase 1 Query (enhanced from previous Tier 1)
+        query_term_t2 = phase1_candidate.query_term
+        if query_term_t2 not in attempted_queries:
+            # Use Phase1 preferred_data_types if available
             if hasattr(phase1_candidate, 'preferred_data_types') and phase1_candidate.preferred_data_types:
-                data_types_t1 = phase1_candidate.preferred_data_types
-                search_context_t1 = phase1_candidate.granularity_level
-                brand_owner_t1 = brand_context if "Branded" in data_types_t1 else None
-                require_all_words_t1 = True
-                logger.info(f"Tier 1 (Phase1 Guided): query='{query_term_t1}', data_types={data_types_t1}")
+                data_types_t2 = phase1_candidate.preferred_data_types
+                search_context_t2 = phase1_candidate.granularity_level
+                brand_owner_t2 = brand_context if "Branded" in data_types_t2 else None
+                require_all_words_t2 = True
+                logger.info(f"Tier 2 (Phase1 Guided): query='{query_term_t2}', data_types={data_types_t2}")
             else:
-                # Enhanced dynamic dataType selection based on granularity and cooking state
-                is_cooked_query = any(term in query_term_t1.lower() for term in ["cooked", "prepared", "grilled", "fried", "baked", "boiled", "steamed"])
-                is_raw_query = "raw" in query_term_t1.lower()
+                # Dynamic dataType selection based on granularity and cooking state
+                is_cooked_query = any(term in query_term_t2.lower() for term in ["cooked", "prepared", "grilled", "fried", "baked", "boiled", "steamed"])
+                is_raw_query = "raw" in query_term_t2.lower()
                 
                 if phase1_candidate.granularity_level == "dish":
-                    # For dish-level queries, prefer SR Legacy for prepared dishes, then Branded as backup
-                    data_types_t1 = ["SR Legacy", "Branded"]
-                    search_context_t1 = "dish"
-                    brand_owner_t1 = brand_context
-                    require_all_words_t1 = True
-                    logger.info(f"Tier 1 (Dish Level): query='{query_term_t1}', data_types={data_types_t1}")
+                    data_types_t2 = ["SR Legacy", "Branded"]
+                    search_context_t2 = "dish"
+                    brand_owner_t2 = brand_context
+                    require_all_words_t2 = True
                 elif phase1_candidate.granularity_level == "ingredient":
-                    # Enhanced ingredient data type selection based on cooking state
                     if is_raw_query:
-                        # Raw ingredients: Foundation preferred for detailed raw composition
-                        data_types_t1 = ["Foundation", "SR Legacy"]
-                        search_context_t1 = "raw_ingredient"
-                        logger.info(f"Tier 1 (Raw Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
+                        data_types_t2 = ["Foundation", "SR Legacy"]
+                        search_context_t2 = "raw_ingredient"
                     elif is_cooked_query:
-                        # Cooked ingredients: SR Legacy preferred for standard cooked preparations
-                        data_types_t1 = ["SR Legacy", "Foundation"]
-                        search_context_t1 = "cooked_ingredient"
-                        logger.info(f"Tier 1 (Cooked Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
+                        data_types_t2 = ["SR Legacy", "Foundation"]
+                        search_context_t2 = "cooked_ingredient"
                     else:
-                        # Generic ingredient (cooking state unclear): try both
-                        data_types_t1 = ["Foundation", "SR Legacy"]
-                        search_context_t1 = "ingredient"
-                        logger.info(f"Tier 1 (Generic Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
-                    
-                    brand_owner_t1 = None
-                    require_all_words_t1 = True
+                        data_types_t2 = ["Foundation", "SR Legacy"]
+                        search_context_t2 = "ingredient"
+                    brand_owner_t2 = None
+                    require_all_words_t2 = True
                 elif phase1_candidate.granularity_level == "branded_product":
-                    # For branded products, use Branded database
-                    data_types_t1 = ["Branded"]
-                    search_context_t1 = "branded_product"
-                    brand_owner_t1 = brand_context
-                    require_all_words_t1 = True
-                    logger.info(f"Tier 1 (Branded Product): query='{query_term_t1}', data_types={data_types_t1}")
+                    data_types_t2 = ["Branded"]
+                    search_context_t2 = "branded_product"
+                    brand_owner_t2 = brand_context
+                    require_all_words_t2 = True
                 else:
-                    # Fallback for unknown granularity
-                    data_types_t1 = ["SR Legacy", "Foundation", "Branded"]
-                    search_context_t1 = "general"
-                    brand_owner_t1 = brand_context
-                    require_all_words_t1 = False
-                    logger.info(f"Tier 1 (Fallback): query='{query_term_t1}', data_types={data_types_t1}")
+                    data_types_t2 = ["SR Legacy", "Foundation", "Branded"]
+                    search_context_t2 = "general"
+                    brand_owner_t2 = brand_context
+                    require_all_words_t2 = False
 
-            try:
-                results_t1 = await self.search_foods_rich(
-                    query=query_term_t1,
-                    data_types=data_types_t1,
-                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
-                    require_all_words=require_all_words_t1,
-                    brand_owner_filter=brand_owner_t1,
-                    search_context=search_context_t1
-                )
-                
-                tier_results_count[1] = len(results_t1)
-                for res in results_t1:
-                    if res.fdc_id not in all_found_results_map:
-                        all_found_results_map[res.fdc_id] = res
-                        # Mark tier for tracking
-                        res.search_tier = 1
-                        res.search_query_used = query_term_t1
-                        
-                attempted_queries.add(query_term_t1)
-                logger.info(f"Tier 1 completed: {len(results_t1)} results found")
-                    
-            except Exception as e:
-                logger.warning(f"Tier 1 search failed for '{query_term_t1}': {str(e)}")
-
-        # Tier 2: Broader/Simplified Query - Always execute for comprehensive analysis
-        query_term_t2 = self._simplify_query_term(query_term_t1)
-        
-        if query_term_t2 and query_term_t2 != query_term_t1 and query_term_t2 not in attempted_queries:
-            # More permissive parameters for Tier 2
-            data_types_t2 = ["SR Legacy", "Branded", "Foundation"]  # Fixed: Remove FNDDS
-            require_all_words_t2 = False  # More permissive
-            
-            logger.info(f"Tier 2 (Broader): query='{query_term_t2}', require_all_words=False")
-            
             try:
                 results_t2 = await self.search_foods_rich(
                     query=query_term_t2,
                     data_types=data_types_t2,
-                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
+                    page_size=RESULTS_PER_TIER,
                     require_all_words=require_all_words_t2,
-                    search_context="ingredient"  # Generally more permissive
+                    brand_owner_filter=brand_owner_t2,
+                    search_context=search_context_t2
                 )
                 
                 tier_results_count[2] = len(results_t2)
@@ -601,28 +624,27 @@ class USDAService:
                         res.search_query_used = query_term_t2
                         
                 attempted_queries.add(query_term_t2)
-                logger.info(f"Tier 2 completed: {len(results_t2)} new results found")
-                
+                logger.info(f"Tier 2 completed: {len(results_t2)} results found")
+                    
             except Exception as e:
                 logger.warning(f"Tier 2 search failed for '{query_term_t2}': {str(e)}")
 
-        # Tier 3: Generic/Fallback Query - Always execute for comprehensive analysis
-        query_term_t3 = self._generalize_query_term(phase1_candidate)
+        # Tier 3: Simplified Query (enhanced from previous Tier 2)
+        query_term_t3 = self._simplify_query_term(query_term_t2)
         
-        if query_term_t3 and query_term_t3 not in attempted_queries:
-            # Most permissive parameters for Tier 3
-            data_types_t3 = ["Foundation", "SR Legacy", "Branded"]  # Fixed: Remove FNDDS
+        if query_term_t3 and query_term_t3 != query_term_t2 and query_term_t3 not in attempted_queries:
+            data_types_t3 = ["SR Legacy", "Branded", "Foundation"]
             require_all_words_t3 = False
             
-            logger.info(f"Tier 3 (Generic): query='{query_term_t3}', require_all_words=False")
+            logger.info(f"Tier 3 (Simplified): query='{query_term_t3}', require_all_words=False")
             
             try:
                 results_t3 = await self.search_foods_rich(
                     query=query_term_t3,
                     data_types=data_types_t3,
-                    page_size=RESULTS_PER_TIER,  # Fixed to 5 per tier
+                    page_size=RESULTS_PER_TIER,
                     require_all_words=require_all_words_t3,
-                    search_context="ingredient"
+                    search_context="simplified"
                 )
                 
                 tier_results_count[3] = len(results_t3)
@@ -638,10 +660,45 @@ class USDAService:
             except Exception as e:
                 logger.warning(f"Tier 3 search failed for '{query_term_t3}': {str(e)}")
 
+        # Tier 4: Base/Raw Form Query (NEW - for conversion purposes)
+        if (phase1_ingredient_details and 
+            phase1_ingredient_details.state == "cooked"):
+            
+            # Construct raw/base form query
+            raw_query_term = self._construct_raw_form_query(phase1_candidate.query_term, phase1_ingredient_details)
+            
+            if raw_query_term and raw_query_term not in attempted_queries:
+                data_types_t4 = ["Foundation", "SR Legacy"]  # Focus on base ingredient databases
+                logger.info(f"Tier 4 (Base/Raw Form - for conversion): query='{raw_query_term}'")
+                
+                try:
+                    results_t4 = await self.search_foods_rich(
+                        query=raw_query_term,
+                        data_types=data_types_t4,
+                        page_size=RESULTS_PER_TIER,
+                        require_all_words=False,
+                        search_context="raw_for_conversion"
+                    )
+                    
+                    tier_results_count[4] = len(results_t4)
+                    for res in results_t4:
+                        if res.fdc_id not in all_found_results_map:
+                            all_found_results_map[res.fdc_id] = res
+                            res.search_tier = 4
+                            res.search_query_used = raw_query_term
+                            # Flag for conversion requirement
+                            res.requires_cooking_conversion = True
+                            
+                    attempted_queries.add(raw_query_term)
+                    logger.info(f"Tier 4 completed: {len(results_t4)} base form results found")
+                        
+                except Exception as e:
+                    logger.warning(f"Tier 4 search failed for '{raw_query_term}': {str(e)}")
+
         final_results = list(all_found_results_map.values())
         final_results = self._sort_and_limit_results(final_results, max_results_cap)
         
-        logger.info(f"Tiered search completed: {len(final_results)} total unique results from {len(attempted_queries)} queries")
+        logger.info(f"Enhanced tiered search completed: {len(final_results)} total unique results from {len(attempted_queries)} queries")
         logger.info(f"Results per tier: {tier_results_count}")
         return final_results
 
@@ -791,6 +848,74 @@ class USDAService:
             formatted_sections.append(tier_section)
         
         return "\n".join(formatted_sections)
+
+    def _construct_raw_form_query(self, original_query: str, phase1_ingredient: 'Phase1Ingredient') -> Optional[str]:
+        """
+        Construct a raw/base form query for cooked ingredients to enable cooking conversion
+        
+        Args:
+            original_query: Original query term from Phase 1
+            phase1_ingredient: Phase1Ingredient with state and preparation_method info
+            
+        Returns:
+            Raw form query string or None if construction not applicable
+        """
+        if phase1_ingredient.state != "cooked":
+            return None
+            
+        # Remove cooking-related terms and replace with "raw" or "dry"
+        query_lower = original_query.lower()
+        
+        # Common cooked state patterns to replace
+        cooked_patterns = [
+            ("cooked", "raw"),
+            ("prepared", "raw"), 
+            ("grilled", "raw"),
+            ("fried", "raw"),
+            ("baked", "raw"),
+            ("roasted", "raw"),
+            ("boiled", "raw"),
+            ("steamed", "raw"),
+            ("sauteed", "raw"),
+            ("stewed", "raw"),
+            ("microwaved", "raw")
+        ]
+        
+        raw_query = original_query
+        
+        # Apply pattern replacements
+        for cooked_term, raw_term in cooked_patterns:
+            if cooked_term in query_lower:
+                # Case-sensitive replacement to maintain original formatting
+                import re
+                pattern = re.compile(re.escape(cooked_term), re.IGNORECASE)
+                raw_query = pattern.sub(raw_term, raw_query)
+                logger.debug(f"Raw form construction: '{original_query}' -> '{raw_query}' (replaced {cooked_term})")
+                return raw_query
+        
+        # If no direct pattern match, try intelligent construction based on ingredient type
+        words = original_query.split(', ')
+        if len(words) >= 1:
+            base_ingredient = words[0]  # e.g., "Chicken breast" from "Chicken breast, grilled"
+            
+            # Special cases for common ingredient categories
+            if any(meat in base_ingredient.lower() for meat in ["chicken", "beef", "pork", "turkey", "fish", "salmon", "tuna"]):
+                raw_query = f"{base_ingredient}, raw"
+            elif any(pasta in base_ingredient.lower() for pasta in ["pasta", "noodles", "macaroni", "spaghetti", "penne"]):
+                raw_query = f"{base_ingredient}, dry"  # Pasta is typically dry in base form
+            elif any(grain in base_ingredient.lower() for grain in ["rice", "quinoa", "barley", "oats"]):
+                raw_query = f"{base_ingredient}, dry"  # Grains are typically dry in base form
+            elif any(veg in base_ingredient.lower() for veg in ["potato", "carrot", "broccoli", "spinach", "onion"]):
+                raw_query = f"{base_ingredient}, raw"
+            else:
+                # Generic fallback
+                raw_query = f"{base_ingredient}, raw"
+            
+            logger.debug(f"Raw form construction (intelligent): '{original_query}' -> '{raw_query}' (category-based)")
+            return raw_query
+        
+        logger.debug(f"Raw form construction failed for: '{original_query}'")
+        return None
 
 
 @lru_cache()
