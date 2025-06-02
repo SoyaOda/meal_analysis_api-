@@ -62,7 +62,6 @@ class USDASearchResultItem(BaseModel):
 class USDACandidateQuery(BaseModel):
     """Phase 1でGeminiが出力するUSDAクエリ候補"""
     query_term: str = Field(..., description="USDA検索に使用する具体的なクエリ文字列 (英語)")
-    query_components: Optional[List[str]] = Field(None, description="階層的クエリ構成要素のリスト ['Category', 'Type', 'Method']")
     granularity_level: Literal["dish", "ingredient", "branded_product"] = Field(..., description="このクエリが対象とする粒度レベル")
     preferred_data_types: Optional[List[Literal["Foundation", "SR Legacy", "Branded"]]] = Field(None, description="推奨USDAデータベースタイプ（優先順）")
     original_term: str = Field("", description="このクエリが由来する元の料理名または食材名")

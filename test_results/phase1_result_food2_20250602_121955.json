@@ -1,0 +1,239 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "ingredients": [
+        {
+          "ingredient_name": "Ground meat",
+          "state": "baked"
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Meatloaf, prepared",
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Meatloaf",
+          "reason_for_query": "Prepared dish query for standard meatloaf."
+        },
+        {
+          "query_term": "Beef, ground, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Ground meat",
+          "reason_for_query": "Cooked ingredient query for the primary component of meatloaf."
+        },
+        {
+          "query_term": "Ketchup",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Ketchup",
+          "reason_for_query": "Processed ingredient query for the sauce on top."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Potatoes",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Potatoes, mashed, prepared",
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Mashed Potatoes",
+          "reason_for_query": "Prepared dish query for standard mashed potatoes."
+        },
+        {
+          "query_term": "Potatoes, white, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Potatoes",
+          "reason_for_query": "Cooked ingredient query for the base of mashed potatoes."
+        }
+      ]
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Green beans",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Carrots",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Corn",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Peas",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Vegetables, mixed, cooked",
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Mixed Vegetables",
+          "reason_for_query": "Prepared dish query for a common mix of cooked vegetables."
+        },
+        {
+          "query_term": "Green beans, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Green beans",
+          "reason_for_query": "Cooked ingredient query for green beans."
+        },
+        {
+          "query_term": "Carrots, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Carrots",
+          "reason_for_query": "Cooked ingredient query for carrots."
+        },
+        {
+          "query_term": "Corn, sweet, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Corn",
+          "reason_for_query": "Cooked ingredient query for corn."
+        },
+        {
+          "query_term": "Peas, green, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Peas",
+          "reason_for_query": "Cooked ingredient query for peas."
+        }
+      ]
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Rice",
+          "state": "cooked"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Rice, Spanish, prepared",
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Spanish Rice",
+          "reason_for_query": "Prepared dish query for Spanish-style rice."
+        },
+        {
+          "query_term": "Rice, white, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Rice",
+          "reason_for_query": "Cooked ingredient query for the base rice."
+        }
+      ]
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "ingredients": [
+        {
+          "ingredient_name": "Macaroni pasta",
+          "state": "cooked"
+        },
+        {
+          "ingredient_name": "Cheese sauce",
+          "state": "processed"
+        }
+      ],
+      "usda_query_candidates": [
+        {
+          "query_term": "Macaroni and cheese, prepared",
+          "granularity_level": "dish",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Macaroni and Cheese",
+          "reason_for_query": "Prepared dish query for standard macaroni and cheese."
+        },
+        {
+          "query_term": "Pasta, elbow, cooked",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Foundation"
+          ],
+          "original_term": "Macaroni pasta",
+          "reason_for_query": "Cooked ingredient query for the pasta component."
+        },
+        {
+          "query_term": "Cheese sauce, prepared",
+          "granularity_level": "ingredient",
+          "preferred_data_types": [
+            "SR Legacy",
+            "Branded"
+          ],
+          "original_term": "Cheese sauce",
+          "reason_for_query": "Processed ingredient query for the cheese sauce component."
+        }
+      ]
+    }
+  ]
+}

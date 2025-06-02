@@ -1,0 +1,193 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Meatloaf is a well-known prepared dish. While direct 'Meatloaf' SR Legacy entries were not ideal, FDC 169474 (Beef, ground, 70% lean meat / 30% fat, loaf, cooked, baked) is an SR Legacy entry that accurately describes the primary cooked form of the meatloaf. This provides a more accurate representation than attempting to break down the complex meatloaf into basic ingredients, which would miss its composite nature. The ketchup is a distinct topping, so it is included as an ingredient.",
+      "fdc_id": 169474,
+      "usda_source_description": "Beef, ground, 70% lean meat / 30% fat, loaf, cooked, baked",
+      "reason_for_choice": "This SR Legacy entry provides the most compositionally accurate representation for the main body of the meatloaf, describing a cooked ground beef loaf. It is preferred over branded options or less specific SR Legacy entries.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 241.0,
+        "protein_g": 23.87,
+        "fat_g": 15.37,
+        "carbohydrates_g": 0.0,
+        "fiber_g": 0.0,
+        "sugars_g": 0.0,
+        "sodium_mg": 73.0
+      },
+      "ingredients": [
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 15.0,
+          "fdc_id": 1896270,
+          "usda_source_description": "KETCHUP",
+          "reason_for_choice": "A suitable branded FDC for ketchup, which is a visible and distinct topping on the meatloaf.",
+          "key_nutrients_per_100g": {
+            "sodium_mg": 941.0,
+            "calories_kcal": 118.0,
+            "carbohydrates_g": 29.41,
+            "sugars_g": 17.65,
+            "fat_g": 0.0,
+            "fiber_g": 0.0,
+            "protein_g": 0.0
+          },
+          "actual_nutrients": null
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 433.8,
+        "protein_g": 42.97,
+        "carbohydrates_g": 0.0,
+        "fat_g": 27.67,
+        "fiber_g": 0.0,
+        "sugars_g": 0.0,
+        "sodium_mg": 131.4
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 150.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 150.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Mashed potatoes are a simple, well-known prepared dish. High-quality SR Legacy dish-level FDC entries are available that accurately represent the dish's composition and preparation, providing the best accuracy.",
+      "fdc_id": 168555,
+      "usda_source_description": "Potatoes, mashed, home-prepared, whole milk and butter added",
+      "reason_for_choice": "This SR Legacy entry is a direct and highly relevant match for home-prepared mashed potatoes, including common additions like milk and butter, which are visually consistent with the creamy texture observed in the image.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 113.0,
+        "protein_g": 1.86,
+        "fat_g": 4.22,
+        "carbohydrates_g": 16.81,
+        "fiber_g": 1.5,
+        "sugars_g": 1.43,
+        "sodium_mg": 317.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 169.5,
+        "protein_g": 2.79,
+        "carbohydrates_g": 25.21,
+        "fat_g": 6.33,
+        "fiber_g": 2.25,
+        "sugars_g": 2.15,
+        "sodium_mg": 475.5
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Macaroni and cheese is a simple, well-known prepared dish. High-quality SR Legacy dish-level FDC entries are available that accurately represent the dish's composition and preparation, offering comprehensive nutritional data for the combined dish.",
+      "fdc_id": 169770,
+      "usda_source_description": "Macaroni and cheese, box mix with cheese sauce, prepared",
+      "reason_for_choice": "This SR Legacy entry directly matches a common preparation of macaroni and cheese, which is visually consistent with the dish in the image. It provides a comprehensive nutritional profile for the combined dish.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 164.0,
+        "protein_g": 6.68,
+        "fat_g": 4.99,
+        "carbohydrates_g": 23.1,
+        "fiber_g": 1.2,
+        "sugars_g": 1.57,
+        "sodium_mg": 460.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 295.2,
+        "protein_g": 12.02,
+        "carbohydrates_g": 41.58,
+        "fat_g": 8.98,
+        "fiber_g": 2.16,
+        "sugars_g": 2.83,
+        "sodium_mg": 828.0
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 80.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 80.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The dish consists of a common mix of vegetables (green beans, carrots, corn, peas) typically found in frozen or canned mixed vegetable products. A suitable SR Legacy dish-level FDC exists that accurately represents this common combination, providing sufficient accuracy without needing to break down into individual ingredients given the small portion and typical pre-mixed nature.",
+      "fdc_id": 170142,
+      "usda_source_description": "Vegetables, mixed, frozen, cooked, boiled, drained, with salt",
+      "reason_for_choice": "This SR Legacy entry accurately describes a common preparation of mixed vegetables, which visually matches the components and cooking style in the image. It provides a good overall nutritional profile for the combined vegetable mix.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 60.0,
+        "protein_g": 2.86,
+        "fat_g": 0.15,
+        "carbohydrates_g": 13.09,
+        "fiber_g": 4.4,
+        "sugars_g": 3.12,
+        "sodium_mg": 271.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 48.0,
+        "protein_g": 2.29,
+        "carbohydrates_g": 10.47,
+        "fat_g": 0.12,
+        "fiber_g": 3.52,
+        "sugars_g": 2.5,
+        "sodium_mg": 216.8
+      }
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "Spanish rice is a prepared dish with distinct characteristics (rice cooked with tomato, seasonings). A high-quality SR Legacy dish-level FDC is available that accurately represents this common preparation, offering better accuracy than attempting an ingredient-level breakdown of a composite dish.",
+      "fdc_id": 169777,
+      "usda_source_description": "Spanish rice mix, dry mix, prepared (with canola/vegetable oil blend or diced tomatoes and margarine)",
+      "reason_for_choice": "This SR Legacy entry accurately describes a common preparation method for Spanish rice, which visually matches the appearance of the rice in the image (orange/reddish color from tomato, mixed with rice).",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 125.0,
+        "protein_g": 3.27,
+        "fat_g": 2.38,
+        "carbohydrates_g": 22.74,
+        "fiber_g": 1.5,
+        "sugars_g": 1.79,
+        "sodium_mg": 349.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 225.0,
+        "protein_g": 5.89,
+        "carbohydrates_g": 40.93,
+        "fat_g": 4.28,
+        "fiber_g": 2.7,
+        "sugars_g": 3.22,
+        "sodium_mg": 628.2
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1171.5,
+    "protein_g": 65.96,
+    "carbohydrates_g": 118.19,
+    "fat_g": 47.38,
+    "fiber_g": 10.63,
+    "sugars_g": 10.7,
+    "sodium_mg": 2279.9
+  },
+  "warnings": null,
+  "errors": null
+}
