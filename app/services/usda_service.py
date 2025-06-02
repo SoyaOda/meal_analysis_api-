@@ -496,7 +496,7 @@ class USDAService:
         # Tier 1: Specific/Branded Query
         query_term_t1 = phase1_candidate.query_term
         if query_term_t1 not in attempted_queries:
-            # Use Phase1 preferred_data_types if available, otherwise fall back to dynamic selection
+            # Use Phase1 preferred_data_types if available, otherwise fall back to enhanced dynamic selection
             if hasattr(phase1_candidate, 'preferred_data_types') and phase1_candidate.preferred_data_types:
                 data_types_t1 = phase1_candidate.preferred_data_types
                 search_context_t1 = phase1_candidate.granularity_level
@@ -504,17 +504,35 @@ class USDAService:
                 require_all_words_t1 = True
                 logger.info(f"Tier 1 (Phase1 Guided): query='{query_term_t1}', data_types={data_types_t1}")
             else:
-                # Dynamic dataType selection based on granularity and dish complexity
+                # Enhanced dynamic dataType selection based on granularity and cooking state
+                is_cooked_query = any(term in query_term_t1.lower() for term in ["cooked", "prepared", "grilled", "fried", "baked", "boiled", "steamed"])
+                is_raw_query = "raw" in query_term_t1.lower()
+                
                 if phase1_candidate.granularity_level == "dish":
                     # For dish-level queries, prefer SR Legacy for prepared dishes, then Branded as backup
                     data_types_t1 = ["SR Legacy", "Branded"]
                     search_context_t1 = "dish"
                     brand_owner_t1 = brand_context
                     require_all_words_t1 = True
+                    logger.info(f"Tier 1 (Dish Level): query='{query_term_t1}', data_types={data_types_t1}")
                 elif phase1_candidate.granularity_level == "ingredient":
-                    # For ingredient-level queries, prefer Foundation and SR Legacy
-                    data_types_t1 = ["Foundation", "SR Legacy"]
-                    search_context_t1 = "ingredient"
+                    # Enhanced ingredient data type selection based on cooking state
+                    if is_raw_query:
+                        # Raw ingredients: Foundation preferred for detailed raw composition
+                        data_types_t1 = ["Foundation", "SR Legacy"]
+                        search_context_t1 = "raw_ingredient"
+                        logger.info(f"Tier 1 (Raw Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
+                    elif is_cooked_query:
+                        # Cooked ingredients: SR Legacy preferred for standard cooked preparations
+                        data_types_t1 = ["SR Legacy", "Foundation"]
+                        search_context_t1 = "cooked_ingredient"
+                        logger.info(f"Tier 1 (Cooked Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
+                    else:
+                        # Generic ingredient (cooking state unclear): try both
+                        data_types_t1 = ["Foundation", "SR Legacy"]
+                        search_context_t1 = "ingredient"
+                        logger.info(f"Tier 1 (Generic Ingredient): query='{query_term_t1}', data_types={data_types_t1}")
+                    
                     brand_owner_t1 = None
                     require_all_words_t1 = True
                 elif phase1_candidate.granularity_level == "branded_product":
@@ -523,12 +541,14 @@ class USDAService:
                     search_context_t1 = "branded_product"
                     brand_owner_t1 = brand_context
                     require_all_words_t1 = True
+                    logger.info(f"Tier 1 (Branded Product): query='{query_term_t1}', data_types={data_types_t1}")
                 else:
                     # Fallback for unknown granularity
                     data_types_t1 = ["SR Legacy", "Foundation", "Branded"]
                     search_context_t1 = "general"
                     brand_owner_t1 = brand_context
                     require_all_words_t1 = False
+                    logger.info(f"Tier 1 (Fallback): query='{query_term_t1}', data_types={data_types_t1}")
 
             try:
                 results_t1 = await self.search_foods_rich(
@@ -709,62 +729,6 @@ class USDAService:
             return 2  # Medium priority for commercial products
         else: 
             return 1  # Lowest priority for unknown types
-
-    def generate_tier_queries(self, query_components: List[str]) -> Dict[int, str]:
-        """
-        Generate tiered queries from structured query components
-        
-        Args:
-            query_components: List of query components ['Category', 'Type', 'Method']
-            
-        Returns:
-            Dict mapping tier number to query string
-        """
-        if not query_components:
-            return {}
-        
-        tiers = {}
-        
-        # Tier 1: Full query with all components
-        tiers[1] = ", ".join(query_components)
-        
-        # Tier 2: Remove rightmost component (method/modifier)
-        if len(query_components) > 1:
-            tiers[2] = ", ".join(query_components[:-1])
-        
-        # Tier 3: Core category only
-        if query_components:
-            tiers[3] = query_components[0]
-        
-        return tiers
-
-    def parse_query_components(self, query_term: str) -> List[str]:
-        """
-        Parse comma-separated query string into components
-        
-        Args:
-            query_term: Comma-separated query string like "Beef, ground, cooked"
-            
-        Returns:
-            List of query components
-        """
-        if ',' in query_term:
-            return [component.strip() for component in query_term.split(',')]
-        else:
-            # Handle space-separated or single word queries
-            return query_term.split()
-
-    def build_query_from_components(self, components: List[str]) -> str:
-        """
-        Build query string from components
-        
-        Args:
-            components: List of query components
-            
-        Returns:
-            Formatted query string
-        """
-        return ", ".join(components) if len(components) > 1 else components[0] if components else ""
 
     def organize_results_by_tier(self, results: List[USDASearchResultItem]) -> Dict[int, List[USDASearchResultItem]]:
         """

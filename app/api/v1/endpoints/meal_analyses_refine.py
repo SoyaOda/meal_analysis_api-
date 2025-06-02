@@ -683,312 +683,227 @@ async def refine_meal_analysis(
             errors=errors if errors else None
         )
         
-        # 8. Iterative Improvement Loop for Missing FDC IDs
-        MAX_RETRY_ATTEMPTS = 1  # Maximum retry attempts per missing ingredient
+        # 8. Enhanced Iterative Improvement Loop with Cooking State Validation
+        MAX_RETRY_ATTEMPTS = 1  # Maximum retry attempts per problematic ingredient
         retry_summary = []
+        needs_recalculation = False
         
-        for dish_response in response.dishes:
-            for ingredient_response in dish_response.ingredients:
+        # Function to check cooking state mismatch
+        def has_cooking_state_mismatch(ingredient_name: str, usda_description: str, phase1_state: str) -> bool:
+            """Check if there's a cooking state mismatch between Phase1 and selected FDC ID"""
+            if not usda_description or not phase1_state:
+                return False
+            
+            usda_lower = usda_description.lower()
+            state_lower = phase1_state.lower()
+            
+            # Define cooking state indicators
+            cooked_indicators = ["cooked", "prepared", "grilled", "fried", "baked", "boiled", "steamed", "roasted"]
+            raw_indicators = ["raw", "fresh", "uncooked"]
+            dry_indicators = ["dry", "dried", "dehydrated", "uncooked"]
+            
+            # Check for mismatches
+            if state_lower == "cooked":
+                # Phase1 says cooked, but USDA suggests dry/raw
+                if any(indicator in usda_lower for indicator in dry_indicators + raw_indicators):
+                    return True
+            elif state_lower == "raw":
+                # Phase1 says raw, but USDA suggests cooked
+                if any(indicator in usda_lower for indicator in cooked_indicators):
+                    return True
+            elif state_lower == "dry":
+                # Phase1 says dry, but USDA suggests cooked
+                if any(indicator in usda_lower for indicator in cooked_indicators):
+                    return True
+            
+            return False
+        
+        for dish_idx, dish_response in enumerate(response.dishes):
+            for ing_idx, ingredient_response in enumerate(dish_response.ingredients):
+                # Find corresponding Phase1 ingredient for state comparison
+                p1_ingredient_state = None
+                for p1_dish in phase1_analysis.dishes:
+                    if p1_dish.dish_name == dish_response.dish_name:
+                        for p1_ing in p1_dish.ingredients:
+                            if p1_ing.ingredient_name == ingredient_response.ingredient_name:
+                                p1_ingredient_state = p1_ing.state
+                                break
+                    if p1_ingredient_state:
+                        break
+                
+                # Identify problematic ingredients
+                is_problematic = False
+                problem_reason = ""
+                
+                # Case 1: Missing FDC ID
                 if ingredient_response.fdc_id is None and ingredient_response.weight_g > 0:
-                    # This ingredient lacks FDC ID and has significant weight - candidate for retry
+                    is_problematic = True
+                    problem_reason = "Missing FDC ID"
+                
+                # Case 2: Cooking state mismatch
+                elif (ingredient_response.fdc_id and 
+                      ingredient_response.usda_source_description and 
+                      p1_ingredient_state and
+                      has_cooking_state_mismatch(ingredient_response.ingredient_name, 
+                                               ingredient_response.usda_source_description, 
+                                               p1_ingredient_state)):
+                    is_problematic = True
+                    problem_reason = f"Cooking state mismatch: Phase1='{p1_ingredient_state}' vs USDA='{ingredient_response.usda_source_description}'"
+                
+                if is_problematic and ingredient_response.weight_g > 0:  # Only retry significant ingredients
+                    meal_logger.log_entry(
+                        session_id=session_id,
+                        level=LogLevel.WARNING,
+                        phase=ProcessingPhase.NUTRITION_CALC_START,
+                        message=f"Problematic ingredient detected: {ingredient_response.ingredient_name} - {problem_reason}"
+                    )
                     
                     for attempt in range(MAX_RETRY_ATTEMPTS):
                         meal_logger.log_entry(
                             session_id=session_id, 
                             level=LogLevel.INFO, 
                             phase=ProcessingPhase.PHASE1_START,
-                            message=f"Retry attempt {attempt + 1} for missing ingredient: {ingredient_response.ingredient_name} in dish {dish_response.dish_name}",
+                            message=f"Retry attempt {attempt + 1} for problematic ingredient: {ingredient_response.ingredient_name} in dish {dish_response.dish_name}",
                             data={
-                                "missing_ingredient": ingredient_response.ingredient_name,
+                                "problematic_ingredient": ingredient_response.ingredient_name,
                                 "dish_name": dish_response.dish_name,
                                 "weight_g": ingredient_response.weight_g,
+                                "problem_reason": problem_reason,
                                 "attempt_number": attempt + 1
                             }
                         )
                         
                         try:
-                            # 1. Targeted Phase 1 Gemini call for specific ingredient
-                            targeted_phase1_prompt = f"""
-Focus ONLY on the ingredient '{ingredient_response.ingredient_name}' visible in the dish '{dish_response.dish_name}' in this image.
-
-Generate diverse USDA query candidates for this specific ingredient:
-1. Very specific terms with cooking states
-2. Moderately specific category terms  
-3. Generic fallback terms
-4. Alternative synonyms and preparation methods
-
-Include terms like '{ingredient_response.ingredient_name.lower()}', broader categories, and cooking state variations.
-
-Provide 5-7 strategic query candidates to maximize USDA database matching success.
-"""
+                            # Collect relevant USDA candidates from all_usda_search_results_map
+                            relevant_candidates = []
                             
-                            # Note: This would require a new targeted Gemini method
-                            # For now, generate fallback queries programmatically
-                            
-                            # 2. Generate enhanced fallback queries for the missing ingredient
-                            ingredient_name_lower = ingredient_response.ingredient_name.lower()
-                            targeted_queries = []
-                            
-                            # Enhanced query generation based on ingredient type
-                            if "pasta" in ingredient_name_lower:
-                                targeted_queries.extend([
-                                    "Pasta, cooked, enriched",
-                                    "Pasta, wheat, cooked", 
-                                    "Pasta",
-                                    "Noodles, cooked",
-                                    "Macaroni, cooked"
-                                ])
-                            elif "dressing" in ingredient_name_lower:
-                                if "creamy" in ingredient_name_lower or "cream" in ingredient_name_lower:
-                                    targeted_queries.extend([
-                                        "Salad dressing, creamy",
-                                        "Dressing, mayonnaise type",
-                                        "Sauce, cream based",
-                                        "Salad dressing, ranch",
-                                        "Salad dressing"
-                                    ])
-                                else:
-                                    targeted_queries.extend([
-                                        "Salad dressing",
-                                        "Vinaigrette",
-                                        "Dressing",
-                                        "Sauce, salad"
-                                    ])
-                            elif "chicken" in ingredient_name_lower:
-                                targeted_queries.extend([
-                                    "Chicken, breast, cooked",
-                                    "Chicken, cooked",
-                                    "Poultry, cooked",
-                                    "Chicken, roasted",
-                                    "Chicken"
-                                ])
-                            elif "lettuce" in ingredient_name_lower:
-                                targeted_queries.extend([
-                                    "Lettuce, cos or romaine, raw",
-                                    "Lettuce, raw",
-                                    "Lettuce, romaine",
-                                    "Greens, raw",
-                                    "Lettuce"
-                                ])
-                            elif "cheese" in ingredient_name_lower:
-                                if "parmesan" in ingredient_name_lower:
-                                    targeted_queries.extend([
-                                        "Cheese, parmesan, grated",
-                                        "Cheese, parmesan",
-                                        "Cheese, hard type",
-                                        "Cheese, grated"
-                                    ])
-                                else:
-                                    targeted_queries.extend([
-                                        "Cheese",
-                                        "Cheese, processed",
-                                        "Cheese, natural"
-                                    ])
-                            else:
-                                # Generic fallback
-                                words = ingredient_name_lower.split()
-                                if words:
-                                    base_word = words[0]
-                                    targeted_queries.extend([
-                                        base_word.capitalize(),
-                                        f"{base_word.capitalize()}, cooked",
-                                        f"{base_word.capitalize()}, raw"
-                                    ])
-                            
-                            # Remove duplicates while preserving order
-                            unique_targeted_queries = list(dict.fromkeys(targeted_queries))
-                            
-                            meal_logger.log_entry(
-                                session_id=session_id,
-                                level=LogLevel.INFO,
-                                phase=ProcessingPhase.USDA_SEARCH_START,
-                                message=f"Generated {len(unique_targeted_queries)} targeted queries for retry: {ingredient_response.ingredient_name}",
-                                data={"targeted_queries": unique_targeted_queries}
-                            )
-                            
-                            # 3. Execute targeted tiered USDA searches
-                            retry_usda_results = {}
-                            
-                            for query in unique_targeted_queries[:5]:  # Limit to top 5 queries
-                                try:
-                                    # Create a mock phase1 candidate for the tiered search
-                                    from app.api.v1.schemas.meal import USDACandidateQuery
+                            # Look for alternatives that better match the cooking state
+                            for fdc_id_key, usda_item in all_usda_search_results_map.items():
+                                if ingredient_response.ingredient_name.lower() in usda_item.description.lower():
+                                    # Prioritize candidates that match cooking state
+                                    if p1_ingredient_state:
+                                        state_match = False
+                                        if p1_ingredient_state.lower() == "cooked":
+                                            state_match = any(term in usda_item.description.lower() 
+                                                            for term in ["cooked", "prepared", "grilled", "fried", "baked", "boiled", "steamed"])
+                                        elif p1_ingredient_state.lower() == "raw":
+                                            state_match = any(term in usda_item.description.lower() 
+                                                            for term in ["raw", "fresh", "uncooked"])
+                                        elif p1_ingredient_state.lower() == "dry":
+                                            state_match = any(term in usda_item.description.lower() 
+                                                            for term in ["dry", "dried", "dehydrated"])
+                                        
+                                        if state_match:
+                                            relevant_candidates.append((usda_item, "cooking_state_match"))
                                     
-                                    mock_candidate = USDACandidateQuery(
-                                        query_term=query,
-                                        granularity_level='ingredient',
-                                        original_term=ingredient_response.ingredient_name,
-                                        reason_for_query=f"Retry query for missing ingredient: {ingredient_response.ingredient_name}"
-                                    )
-                                    
-                                    query_results = await usda_service.execute_tiered_usda_search(
-                                        phase1_candidate=mock_candidate,
-                                        brand_context=brand_context,
-                                        max_results_cap=10
-                                    )
-                                    
-                                    for result in query_results:
-                                        if result.fdc_id not in retry_usda_results:
-                                            retry_usda_results[result.fdc_id] = result
-                                    
-                                    logger.info(f"Retry query '{query}' for '{ingredient_response.ingredient_name}': {len(query_results)} results")
-                                    
-                                except Exception as query_e:
-                                    logger.warning(f"Retry query '{query}' failed: {str(query_e)}")
+                                    relevant_candidates.append((usda_item, "name_match"))
                             
-                            # 4. If new results found, attempt targeted Phase 2 selection
-                            if retry_usda_results:
-                                retry_results_list = list(retry_usda_results.values())
+                            # Sort candidates: cooking state matches first, then by score
+                            relevant_candidates.sort(key=lambda x: (0 if x[1] == "cooking_state_match" else 1, -(x[0].score or 0)))
+                            
+                            # Try top candidates
+                            selected_fallback = None
+                            best_fallback_reason = "No suitable fallback found after retry."
+                            
+                            for candidate_item, match_type in relevant_candidates[:3]:  # Try top 3
+                                # Additional validation for cooking state
+                                if p1_ingredient_state and match_type == "cooking_state_match":
+                                    selected_fallback = candidate_item
+                                    best_fallback_reason = f"Enhanced retry: Selected '{candidate_item.description}' for better cooking state match (Phase1: {p1_ingredient_state})"
+                                    break
+                                elif not selected_fallback and match_type == "name_match":
+                                    # Fallback to name match if no cooking state match
+                                    selected_fallback = candidate_item
+                                    best_fallback_reason = f"Enhanced retry: Selected '{candidate_item.description}' as best available match"
+                            
+                            if selected_fallback:
+                                # Update the ingredient with better FDC ID
+                                old_fdc_id = ingredient_response.fdc_id
+                                response.dishes[dish_idx].ingredients[ing_idx].fdc_id = selected_fallback.fdc_id
+                                response.dishes[dish_idx].ingredients[ing_idx].usda_source_description = selected_fallback.description
+                                response.dishes[dish_idx].ingredients[ing_idx].reason_for_choice = best_fallback_reason
                                 
-                                # Format results for targeted Phase 2 prompt
-                                retry_usda_prompt = f"""
-TARGETED INGREDIENT ANALYSIS - Focus on ingredient: '{ingredient_response.ingredient_name}'
-
-Original context: Part of dish '{dish_response.dish_name}' (estimated weight: {ingredient_response.weight_g}g)
-
-Available USDA Results for this ingredient:
-"""
-                                for i, result in enumerate(retry_results_list[:10]):
-                                    retry_usda_prompt += f"""
-{i+1}. FDC ID: {result.fdc_id}
-   Description: {result.description}
-   Data Type: {result.data_type or 'Unknown'}
-   Score: {result.score or 'N/A'}
-   Brand: {result.brand_owner or 'N/A'}
-"""
+                                # Get new nutrition data
+                                new_nutrition_100g = await usda_service.get_food_details_for_nutrition(selected_fallback.fdc_id)
+                                if new_nutrition_100g:
+                                    response.dishes[dish_idx].ingredients[ing_idx].key_nutrients_per_100g = new_nutrition_100g
+                                    response.dishes[dish_idx].ingredients[ing_idx].actual_nutrients = nutrition_service.calculate_actual_nutrients(new_nutrition_100g, ingredient_response.weight_g)
+                                    needs_recalculation = True
                                 
-                                retry_usda_prompt += f"""
-TASK: Select the best FDC ID for '{ingredient_response.ingredient_name}' from the above results.
-
-Consider:
-1. Compositional relevance to the observed ingredient
-2. Appropriate cooking/processing state
-3. Nutritional plausibility for the context
-4. Data type quality (Foundation > SR Legacy > Branded for basic ingredients)
-
-If no suitable match exists, respond with fdc_id: null and explain why.
-
-Provide response in this format:
-{{
-  "ingredient_name": "{ingredient_response.ingredient_name}",
-  "fdc_id": [selected FDC ID or null],
-  "reason_for_choice": "[detailed reasoning for selection or rejection]"
-}}
-"""
+                                retry_summary.append({
+                                    "ingredient": ingredient_response.ingredient_name,
+                                    "status": "success",
+                                    "old_fdc_id": old_fdc_id,
+                                    "new_fdc_id": selected_fallback.fdc_id,
+                                    "problem_reason": problem_reason,
+                                    "solution": best_fallback_reason
+                                })
                                 
-                                # This would ideally use a targeted Phase 2 Gemini call
-                                # For now, implement simple rule-based selection
-                                
-                                # Simple selection logic: prefer Foundation or SR Legacy results with good scores
-                                best_result = None
-                                best_score = 0
-                                
-                                for result in retry_results_list:
-                                    score = 0
-                                    
-                                    # Score based on data type preference for ingredients
-                                    if result.data_type == "Foundation":
-                                        score += 40
-                                    elif result.data_type == "SR Legacy":
-                                        score += 30
-                                    elif result.data_type == "Branded":
-                                        score += 10
-                                    
-                                    # Score based on USDA search score
-                                    if result.score:
-                                        score += min(result.score / 20, 30)  # Max 30 points from search score
-                                    
-                                    # Score based on description relevance
-                                    desc_lower = result.description.lower()
-                                    ingredient_words = ingredient_name_lower.split()
-                                    
-                                    for word in ingredient_words:
-                                        if word in desc_lower:
-                                            score += 15
-                                    
-                                    if score > best_score:
-                                        best_score = score
-                                        best_result = result
-                                
-                                # Update ingredient if good result found
-                                if best_result and best_score > 50:  # Threshold for acceptable match
-                                    ingredient_response.fdc_id = best_result.fdc_id
-                                    ingredient_response.usda_source_description = best_result.description
-                                    ingredient_response.reason_for_choice = f"Retry successful - selected {best_result.description} (FDC: {best_result.fdc_id}, Score: {best_score:.1f}) from targeted search with enhanced query set"
-                                    
-                                    retry_summary.append({
-                                        "ingredient_name": ingredient_response.ingredient_name,
-                                        "dish_name": dish_response.dish_name,
-                                        "attempt": attempt + 1,
-                                        "success": True,
-                                        "fdc_id": best_result.fdc_id,
-                                        "description": best_result.description,
-                                        "score": best_score
-                                    })
-                                    
-                                    meal_logger.log_entry(
-                                        session_id=session_id,
-                                        level=LogLevel.INFO,
-                                        phase=ProcessingPhase.NUTRITION_CALC_COMPLETE,
-                                        message=f"Retry successful for {ingredient_response.ingredient_name}: FDC ID {best_result.fdc_id}",
-                                        data={
-                                            "fdc_id": best_result.fdc_id,
-                                            "description": best_result.description,
-                                            "final_score": best_score,
-                                            "total_candidates_evaluated": len(retry_results_list)
-                                        }
-                                    )
-                                    
-                                    break  # Success, exit retry loop for this ingredient
-                                else:
-                                    meal_logger.log_entry(
-                                        session_id=session_id,
-                                        level=LogLevel.WARNING,
-                                        phase=ProcessingPhase.PHASE2_COMPLETE,
-                                        message=f"Retry attempt {attempt + 1} failed for {ingredient_response.ingredient_name} - insufficient match quality",
-                                        data={
-                                            "best_score": best_score,
-                                            "threshold": 50,
-                                            "candidates_evaluated": len(retry_results_list)
-                                        }
-                                    )
-                            else:
                                 meal_logger.log_entry(
                                     session_id=session_id,
-                                    level=LogLevel.WARNING,
-                                    phase=ProcessingPhase.USDA_SEARCH_COMPLETE,
-                                    message=f"Retry attempt {attempt + 1} failed for {ingredient_response.ingredient_name} - no additional USDA results found"
+                                    level=LogLevel.INFO,
+                                    phase=ProcessingPhase.NUTRITION_CALC_START,
+                                    message=f"Enhanced retry successful for {ingredient_response.ingredient_name}: {old_fdc_id} -> {selected_fallback.fdc_id}"
                                 )
                                 
+                                break  # Success, exit retry loop for this ingredient
+                            else:
+                                retry_summary.append({
+                                    "ingredient": ingredient_response.ingredient_name,
+                                    "status": "failed - no suitable candidate",
+                                    "problem_reason": problem_reason
+                                })
+                                
                         except Exception as retry_e:
-                            logger.error(f"Error during retry for ingredient '{ingredient_response.ingredient_name}': {str(retry_e)}")
                             meal_logger.log_entry(
                                 session_id=session_id,
                                 level=LogLevel.ERROR,
-                                phase=ProcessingPhase.PHASE2_COMPLETE,
-                                message=f"Retry attempt {attempt + 1} error for {ingredient_response.ingredient_name}: {str(retry_e)}"
+                                phase=ProcessingPhase.NUTRITION_CALC_START,
+                                message=f"Error during enhanced retry for {ingredient_response.ingredient_name}: {retry_e}"
                             )
-                            
                             retry_summary.append({
-                                "ingredient_name": ingredient_response.ingredient_name,
-                                "dish_name": dish_response.dish_name,
-                                "attempt": attempt + 1,
-                                "success": False,
-                                "error": str(retry_e)
+                                "ingredient": ingredient_response.ingredient_name,
+                                "status": "error",
+                                "details": str(retry_e),
+                                "problem_reason": problem_reason
                             })
+                            break
+                    
+                    # Log final outcome for this ingredient
+                    if not any(r["ingredient"] == ingredient_response.ingredient_name and r["status"] == "success" for r in retry_summary):
+                        meal_logger.log_entry(
+                            session_id=session_id,
+                            level=LogLevel.WARNING,
+                            phase=ProcessingPhase.NUTRITION_CALC_START,
+                            message=f"All retry attempts failed for {ingredient_response.ingredient_name} - {problem_reason}"
+                        )
         
-        # Log retry summary
-        if retry_summary:
-            successful_retries = [r for r in retry_summary if r.get("success", False)]
+        # Recalculate dish and meal totals if any ingredients were updated
+        if needs_recalculation:
             meal_logger.log_entry(
                 session_id=session_id,
                 level=LogLevel.INFO,
-                phase=ProcessingPhase.RESPONSE_SENT,
-                message=f"Iterative improvement completed: {len(successful_retries)}/{len(retry_summary)} retry attempts successful",
-                data={
-                    "retry_summary": retry_summary,
-                    "success_rate": len(successful_retries) / len(retry_summary) if retry_summary else 0
-                }
+                phase=ProcessingPhase.NUTRITION_CALC_START,
+                message="Recalculating nutrition after enhanced iterative improvements..."
+            )
+            
+            for dish_response in response.dishes:
+                if dish_response.calculation_strategy == "ingredient_level":
+                    # Recalculate dish total from updated ingredients
+                    valid_ingredients = [ing for ing in dish_response.ingredients if ing.actual_nutrients]
+                    dish_response.dish_total_actual_nutrients = nutrition_service.aggregate_nutrients_for_dish_from_ingredients(valid_ingredients)
+            
+            # Recalculate meal total
+            response.total_meal_nutrients = nutrition_service.aggregate_nutrients_for_meal(response.dishes)
+        
+        # Log retry summary
+        if retry_summary:
+            meal_logger.log_entry(
+                session_id=session_id,
+                level=LogLevel.INFO,
+                phase=ProcessingPhase.NUTRITION_CALC_START,
+                message=f"Enhanced iterative improvement completed: {len(retry_summary)} ingredients processed",
+                data={"retry_summary": retry_summary}
             )
 
         # セッション終了

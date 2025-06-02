@@ -1,0 +1,218 @@
+{
+  "dishes": [
+    {
+      "dish_name": "Meatloaf",
+      "type": "Main course",
+      "quantity_on_plate": "2 slices",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 160.0,
+      "weight_calculation_method": "Phase2 Gemini ingredient weights: 160.0g total (Strategy: ingredient_level, Phase2 decision)",
+      "calculation_strategy": "ingredient_level",
+      "reason_for_strategy": "The image shows a homemade-style meatloaf with a distinct layer of ketchup. While a 'Meatloaf, prepared' dish-level FDC was searched, the available SR Legacy option was 'Vegetarian meatloaf', which is a mismatch. Branded options were either for 'MEAL' combos or generic 'MEATLOAF' without specific preparation details. Breaking it down into 'Ground meat, cooked, baked' and 'Ketchup' allows for more precise FDC selection based on the visual evidence of a baked meatloaf and a distinct ketchup topping, leading to better nutritional accuracy.",
+      "fdc_id": null,
+      "usda_source_description": null,
+      "reason_for_choice": null,
+      "key_nutrients_per_100g": null,
+      "ingredients": [
+        {
+          "ingredient_name": "Ground meat",
+          "weight_g": 150.0,
+          "fdc_id": 169474,
+          "usda_source_description": "Beef, ground, 70% lean meat / 30% fat, loaf, cooked, baked",
+          "reason_for_choice": "COOKING STATE MATCH: The FDC description 'cooked, baked' and 'loaf' perfectly matches the visually observed state of the meatloaf, which appears to be a baked ground meat loaf. This SR Legacy entry is highly relevant for a homemade meatloaf.",
+          "key_nutrients_per_100g": {
+            "calories_kcal": 241.0,
+            "protein_g": 23.87,
+            "fat_g": 15.37,
+            "carbohydrates_g": 0.0,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 73.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 361.5,
+            "protein_g": 35.8,
+            "carbohydrates_g": 0.0,
+            "fat_g": 23.05,
+            "fiber_g": 0.0,
+            "sugars_g": 0.0,
+            "sodium_mg": 109.5
+          }
+        },
+        {
+          "ingredient_name": "Ketchup",
+          "weight_g": 10.0,
+          "fdc_id": 1896270,
+          "usda_source_description": "KETCHUP",
+          "reason_for_choice": "COOKING STATE MATCH: The FDC description 'KETCHUP' matches the visually observed processed sauce on top of the meatloaf. This branded FDC is a suitable representation for generic ketchup.",
+          "key_nutrients_per_100g": {
+            "sodium_mg": 941.0,
+            "calories_kcal": 118.0,
+            "carbohydrates_g": 29.41,
+            "sugars_g": 17.65,
+            "fat_g": 0.0,
+            "fiber_g": 0.0,
+            "protein_g": 0.0
+          },
+          "actual_nutrients": {
+            "calories_kcal": 11.8,
+            "protein_g": 0.0,
+            "carbohydrates_g": 2.94,
+            "fat_g": 0.0,
+            "fiber_g": 0.0,
+            "sugars_g": 1.76,
+            "sodium_mg": 94.1
+          }
+        }
+      ],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 373.3,
+        "protein_g": 35.8,
+        "carbohydrates_g": 2.94,
+        "fat_g": 23.05,
+        "fiber_g": 0.0,
+        "sugars_g": 1.76,
+        "sodium_mg": 203.6
+      }
+    },
+    {
+      "dish_name": "Mashed Potatoes",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The image clearly shows a standard serving of mashed potatoes. The USDA search results provided excellent SR Legacy FDC IDs specifically for 'Potatoes, mashed, home-prepared', which directly match the visual appearance and common preparation of this dish. Using a dish-level FDC is more accurate and efficient than attempting to break down mashed potatoes into raw potato, milk, and butter components, as the FDC already accounts for these common additions.",
+      "fdc_id": 168555,
+      "usda_source_description": "Potatoes, mashed, home-prepared, whole milk and butter added",
+      "reason_for_choice": "COOKING STATE MATCH: The FDC description 'mashed, home-prepared' perfectly matches the visually observed creamy, cooked mashed potatoes. This SR Legacy entry is highly representative of a typical homemade mashed potato dish, including common ingredients like milk and butter.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 113.0,
+        "protein_g": 1.86,
+        "fat_g": 4.22,
+        "carbohydrates_g": 16.81,
+        "fiber_g": 1.5,
+        "sugars_g": 1.43,
+        "sodium_mg": 317.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 203.4,
+        "protein_g": 3.35,
+        "carbohydrates_g": 30.26,
+        "fat_g": 7.6,
+        "fiber_g": 2.7,
+        "sugars_g": 2.57,
+        "sodium_mg": 570.6
+      }
+    },
+    {
+      "dish_name": "Mixed Vegetables",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 100.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 100.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The image displays a common mix of cooked vegetables (green beans, carrots, corn, peas). The USDA search results provided a highly relevant SR Legacy FDC ID for 'Vegetables, mixed, frozen, cooked'. This dish-level FDC accurately represents the composite nature and cooking state of the vegetables, making it a more practical and accurate choice than attempting to estimate and sum individual cooked vegetable components, especially given their small, mixed proportions.",
+      "fdc_id": 170142,
+      "usda_source_description": "Vegetables, mixed, frozen, cooked, boiled, drained, with salt",
+      "reason_for_choice": "COOKING STATE MATCH: The FDC description 'cooked, boiled, drained' matches the visually observed state of the mixed vegetables. This SR Legacy entry is a highly appropriate and common representation for a standard mix of cooked vegetables.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 60.0,
+        "protein_g": 2.86,
+        "fat_g": 0.15,
+        "carbohydrates_g": 13.09,
+        "fiber_g": 4.4,
+        "sugars_g": 3.12,
+        "sodium_mg": 271.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 60.0,
+        "protein_g": 2.86,
+        "carbohydrates_g": 13.09,
+        "fat_g": 0.15,
+        "fiber_g": 4.4,
+        "sugars_g": 3.12,
+        "sodium_mg": 271.0
+      }
+    },
+    {
+      "dish_name": "Spanish Rice",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 150.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 150.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The image shows a distinct serving of Spanish rice, characterized by its cooked state and reddish-orange color. The USDA search results provided an excellent SR Legacy FDC ID for 'Spanish rice mix, dry mix, prepared', which accurately describes a common method of preparing Spanish rice and matches the visual appearance. This dish-level FDC is more appropriate than using a generic 'cooked white rice' FDC, as it accounts for the specific ingredients and preparation that define Spanish rice.",
+      "fdc_id": 169777,
+      "usda_source_description": "Spanish rice mix, dry mix, prepared (with canola/vegetable oil blend or diced tomatoes and margarine)",
+      "reason_for_choice": "COOKING STATE MATCH: The FDC description 'prepared' matches the visually observed cooked state of the Spanish rice. This SR Legacy entry specifically details a prepared Spanish rice mix, which is highly representative of the dish shown.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 125.0,
+        "protein_g": 3.27,
+        "fat_g": 2.38,
+        "carbohydrates_g": 22.74,
+        "fiber_g": 1.5,
+        "sugars_g": 1.79,
+        "sodium_mg": 349.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 187.5,
+        "protein_g": 4.91,
+        "carbohydrates_g": 34.11,
+        "fat_g": 3.57,
+        "fiber_g": 2.25,
+        "sugars_g": 2.69,
+        "sodium_mg": 523.5
+      }
+    },
+    {
+      "dish_name": "Macaroni and Cheese",
+      "type": "Side dish",
+      "quantity_on_plate": "1 serving",
+      "estimated_total_dish_weight_g": null,
+      "actual_weight_used_for_calculation_g": 180.0,
+      "weight_calculation_method": "Phase2 Gemini visual estimation: 180.0g (Strategy: dish_level, Phase2 decision)",
+      "calculation_strategy": "dish_level",
+      "reason_for_strategy": "The image clearly depicts a classic serving of macaroni and cheese, with cooked pasta coated in a creamy cheese sauce. The USDA search results offered highly relevant SR Legacy FDC IDs for 'Macaroni and cheese, box mix with cheese sauce, prepared'. This dish-level FDC is ideal because it directly represents the entire prepared dish, which is a common and well-defined food item. Attempting an ingredient-level breakdown would be less accurate given the integrated nature of the pasta and cheese sauce.",
+      "fdc_id": 169770,
+      "usda_source_description": "Macaroni and cheese, box mix with cheese sauce, prepared",
+      "reason_for_choice": "COOKING STATE MATCH: The FDC description 'prepared' and 'with cheese sauce' perfectly matches the visually observed cooked macaroni coated in cheese sauce. This SR Legacy entry is a highly accurate and common representation for macaroni and cheese.",
+      "key_nutrients_per_100g": {
+        "calories_kcal": 164.0,
+        "protein_g": 6.68,
+        "fat_g": 4.99,
+        "carbohydrates_g": 23.1,
+        "fiber_g": 1.2,
+        "sugars_g": 1.57,
+        "sodium_mg": 460.0
+      },
+      "ingredients": [],
+      "dish_total_actual_nutrients": {
+        "calories_kcal": 295.2,
+        "protein_g": 12.02,
+        "carbohydrates_g": 41.58,
+        "fat_g": 8.98,
+        "fiber_g": 2.16,
+        "sugars_g": 2.83,
+        "sodium_mg": 828.0
+      }
+    }
+  ],
+  "total_meal_nutrients": {
+    "calories_kcal": 1119.4,
+    "protein_g": 58.94,
+    "carbohydrates_g": 121.98,
+    "fat_g": 43.35,
+    "fiber_g": 11.51,
+    "sugars_g": 12.97,
+    "sodium_mg": 2396.7
+  },
+  "warnings": null,
+  "errors": null
+}
