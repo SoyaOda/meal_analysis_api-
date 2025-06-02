@@ -19,6 +19,7 @@
 
 - **フェーズ 1**: Gemini AI による食事画像の分析（料理識別、食材抽出、重量推定）
 - **フェーズ 2**: USDA データベースによる栄養成分の精緻化と動的計算
+- **📦 一括分析スクリプト**: food1.jpg〜food5.jpg の全画像を自動処理し、統合レポートを生成
 - **複数料理対応**: 1 枚の画像で複数の料理を同時分析
 - **英語・日本語対応**: 多言語での食材・料理認識
 - **OpenAPI 3.0 準拠**: 完全な API 文書化とタイプ安全性
@@ -47,8 +48,11 @@ meal_analysis_api/
 │   │   └── phase2_user_prompt_template.txt
 │   └── main.py                           # FastAPIアプリケーション
 ├── test_images/                          # テスト用画像
+├── test_english_phase1_v2.py             # Phase1テストスクリプト
 ├── test_english_phase2.py                # 統合テストスクリプト (v2.0)
 ├── test_english_phase2_v2.py             # 高度戦略テストスクリプト (v2.1)
+├── run_all_food_analysis.sh             # 📦 一括分析スクリプト（food1-5全自動処理）
+├── README_batch_analysis.md              # 📚 一括分析スクリプト詳細ガイド
 ├── analyze_logs.py                       # ログ分析ツール
 ├── logs/                                 # ログファイル（自動生成）
 ├── requirements.txt                      # Python依存関係
@@ -154,9 +158,110 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## 🧪 テストの実行
 
-### 1. **Phase 1 テスト（USDA クエリ候補生成）**
+### 1. **📦 一括分析スクリプト（推奨）**
 
-#### 基本的な使用方法
+効率的な分析のために、**food1.jpg〜food5.jpg**の全画像を自動的に処理する一括分析スクリプトを提供しています。
+
+#### 🚀 **クイックスタート**
+
+```bash
+# サーバーが起動していることを確認
+curl http://localhost:8000/health
+
+# 一括分析の実行（全自動）
+./run_all_food_analysis.sh
+```
+
+#### ✨ **スクリプトの特徴**
+
+- **🔄 完全自動化**: food1.jpg〜food5.jpg までの 5 つの画像を順次処理
+- **📊 統合レポート**: 全結果をタイムスタンプ付きの 1 つの txt ファイルに保存
+- **🛡️ エラーハンドリング**: サーバー状況チェック、部分失敗対応、詳細ログ記録
+- **⏱️ 性能計測**: 各段階の実行時間と成功率を表示
+- **🎨 視覚的進捗**: カラフルなログ出力で進捗状況を確認
+
+#### 📄 **出力例**
+
+```bash
+========================================
+MEAL ANALYSIS API - BATCH PROCESSING
+========================================
+Processing food1.jpg through food5.jpg
+Results will be saved to: all_food_analysis_results_20250602_130517.txt
+
+[SUCCESS] Server is running and healthy
+[SUCCESS] All image files (food1.jpg - food5.jpg) found
+
+========================================
+ANALYZING FOOD1.JPG
+========================================
+[SUCCESS] Phase 1 completed in 16.0s
+[SUCCESS] Phase 2 completed in 80.0s
+Progress: 1 / 5 images completed
+
+... (各画像の処理) ...
+
+========================================
+BATCH PROCESSING COMPLETED
+========================================
+✅ Results saved to: all_food_analysis_results_20250602_130517.txt
+✅ Total execution time: 397.0s
+✅ Successful analyses: 5 / 5
+📄 Results file size: 79K
+```
+
+#### 📋 **結果ファイルの構造**
+
+生成されるファイル（`all_food_analysis_results_YYYYMMDD_HHMMSS.txt`）には以下が含まれます：
+
+```
+# 分析サマリー
+Total Images Processed: 5 (food1.jpg - food5.jpg)
+Successful Analyses: 5
+Total Execution Time: 397.0s
+Success Rate: 100.0%
+
+# 各画像の詳細結果
+================================================================================
+FOOD1.JPG ANALYSIS RESULTS - SUCCESS
+================================================================================
+Phase 1 Duration: 16.0s (Success: true)
+Phase 2 Duration: 80.0s (Success: true)
+
+--- PHASE 1 RESULTS ---
+{完全なPhase1 JSON}
+
+--- PHASE 2 RESULTS ---
+{完全なPhase2 JSON}
+```
+
+#### 🔍 **結果の確認方法**
+
+```bash
+# 最新の結果ファイルを表示
+cat all_food_analysis_results_*.txt
+
+# サマリーのみ確認
+head -20 all_food_analysis_results_*.txt
+
+# 特定画像の結果のみ抽出
+sed -n '/FOOD3.JPG ANALYSIS RESULTS/,/FOOD4.JPG ANALYSIS RESULTS/p' all_food_analysis_results_*.txt
+
+# ファイルサイズ確認
+ls -lh all_food_analysis_results_*.txt
+```
+
+**📚 詳細な使用方法**: `README_batch_analysis.md`を参照
+
+---
+
+### 4. **🔬 個別テスト（詳細分析用）**
+
+個別の画像や特定の段階をテストする場合は、以下の方法を使用してください。
+
+#### **Phase 1 テスト（USDA クエリ候補生成）**
+
+基本的な使用方法
 
 ```bash
 # デフォルト画像を使用（自動検索）
@@ -169,7 +274,7 @@ python test_english_phase1_v2.py test_images/food1.jpg
 python test_english_phase1_v2.py ~/Downloads/my_meal.jpg
 ```
 
-#### ヘルプとオプション
+ヘルプとオプション
 
 ```bash
 # ヘルプ表示
@@ -184,9 +289,9 @@ python test_english_phase1_v2.py --help
 - `test_results/phase1_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
 - `phase1_analysis_result_v2.json` - Phase 2 テスト用のデフォルトファイル
 
-### 2. **Phase 2 テスト（動的栄養計算システム）**
+#### **Phase 2 テスト（動的栄養計算システム）**
 
-#### 基本的な使用方法
+基本的な使用方法
 
 ```bash
 # デフォルト画像と最新のPhase 1結果を使用
@@ -202,7 +307,7 @@ python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_resul
 python test_english_phase2_v2.py test_images/food1.jpg --save-results
 ```
 
-#### ヘルプとオプション
+ヘルプとオプション
 
 ```bash
 # ヘルプ表示
@@ -234,20 +339,21 @@ python test_english_phase2_v2.py --help
 - **調理状態一致検証**: 乾燥パスタ vs 調理済みパスタなどの状態ミスマッチ防止
 - **候補不適切時の処理**: 不適切な候補に対する明確なエラーハンドリング
 
-### 3. **統合テストワークフロー例**
+### 5. **統合テストワークフロー例**
 
 ```bash
-# 1. Phase 1: 画像分析とUSDAクエリ候補生成
-python test_english_phase1_v2.py test_images/food1.jpg
+# 🚀 推奨: 一括分析スクリプト使用
+./run_all_food_analysis.sh
 
-# 2. Phase 2: 戦略決定と栄養計算
+# 🔬 個別テスト: Phase 1 → Phase 2
+python test_english_phase1_v2.py test_images/food1.jpg
 python test_english_phase2_v2.py test_images/food1.jpg
 
-# または、一度に実行（推奨）:
+# または、一度に実行:
 python test_english_phase1_v2.py test_images/food1.jpg && python test_english_phase2_v2.py test_images/food1.jpg
 ```
 
-### 4. **テスト結果の確認**
+### 6. **テスト結果の確認**
 
 ```bash
 # 保存された結果ファイルの確認
@@ -260,7 +366,7 @@ cat test_results/phase1_result_*.json | jq '.dishes[0].usda_query_candidates'
 cat test_results/phase2_result_*.json | jq '.dishes[0].calculation_strategy'
 ```
 
-### 5. **旧バージョンテスト（参考）**
+### 7. **旧バージョンテスト（参考）**
 
 #### v2.0 統合テスト
 
