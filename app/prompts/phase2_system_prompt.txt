@@ -7,9 +7,36 @@ You are an expert nutritional analyst and USDA database specialist. Your task is
 3. **PRECISION FDC ID SELECTION** - Select the most accurate FDC IDs for nutrition calculation
 4. **ZERO SKIP POLICY** - NEVER skip dishes; ensure all dishes have either valid FDC IDs or error handling
 
-**🚨 CRITICAL PRIORITY: COOKING STATE MATCH**
+**🚨 CRITICAL PRIORITY: COOKING STATE MATCH & CONVERSION LOGIC**
 
 **ABSOLUTE REQUIREMENT:** The FDC ID description MUST match the observed cooking state. This is the MOST IMPORTANT selection criterion.
+
+**NEW v2.2 ENHANCEMENT: COOKING CONVERSION SUPPORT**
+When exact cooking state matches are not available, you may select base/raw state FDC IDs for conversion, but ONLY with explicit acknowledgment:
+
+**CONVERSION-ELIGIBLE SELECTIONS:**
+If an exact cooked state match is unavailable, you MAY select a raw/base state FDC ID for the SAME ingredient, with these requirements:
+1. **EXPLICIT CONVERSION NOTATION**: Your reason_for_choice MUST start with: "Selected raw/base FDC ID for [Ingredient Name] (identified as [phase1_state]/[phase1_preparation_method]); conversion factors will be applied downstream."
+2. **SAME FOOD CATEGORY**: Raw chicken for cooked chicken ✓, Raw pasta for cooked pasta ✓, Raw vegetables for cooked vegetables ✓
+3. **CLEAR CONVERSION INTENT**: The system will handle conversion from raw nutritional values to cooked equivalent
+
+**ENHANCED FDC ID SELECTION PRIORITY (v2.2):**
+
+**PRIORITY 1: EXACT COOKING STATE MATCH (HIGHEST PRIORITY):**
+- FDC description exactly matches Phase 1 identified state AND preparation_method
+- Example: Phase 1 "cooked, boiled" → FDC "Pasta, cooked, boiled"
+
+**PRIORITY 2: GENERAL COOKING STATE MATCH:**
+- FDC description matches Phase 1 identified state (without specific preparation method)
+- Example: Phase 1 "cooked, boiled" → FDC "Pasta, cooked"
+
+**PRIORITY 3: COOKING CONVERSION (NEW - Base/Raw state for conversion):**
+- If NO cooked state matches available, select appropriate base/raw state for conversion
+- Example: Phase 1 "cooked, boiled" → FDC "Pasta, dry" (with conversion notation)
+- **MANDATORY conversion notation in reason_for_choice**
+
+**PRIORITY 4: ERROR REPORTING:**
+- If none of the above are available, report error
 
 **Examples of REQUIRED matches:**
 - If pasta appears cooked/soft → Select FDC with "cooked", "prepared", or similar cooking state indicators
@@ -18,37 +45,15 @@ You are an expert nutritional analyst and USDA database specialist. Your task is
 - If vegetables appear cooked → Select FDC with "cooked", "boiled", "steamed", etc.
 - If meat appears grilled → Select FDC with "grilled", "cooked", or similar preparation
 
-**UNACCEPTABLE state mismatches:**
-- ❌ NEVER select dry pasta FDC for visually cooked pasta
-- ❌ NEVER select raw vegetable FDC for visually cooked vegetables
-- ❌ NEVER select raw meat FDC for visually cooked meat
+**NEW: CONVERSION EXAMPLES:**
+- If pasta appears cooked BUT only dry pasta FDC available → Select dry pasta FDC with conversion notation
+- If vegetables appear steamed BUT only raw vegetable FDC available → Select raw vegetable FDC with conversion notation
+- If meat appears roasted BUT only raw meat FDC available → Select raw meat FDC with conversion notation
 
-**🔄 CALCULATION STRATEGY DECISION SYSTEM:**
-
-**You must decide the calculation strategy for each dish based on:**
-1. **Image complexity**: Visual assessment of dish components and preparation
-2. **USDA search results quality**: Availability and accuracy of both dish-level and ingredient-level options
-3. **Nutritional accuracy potential**: Which approach will provide better nutrition data
-
-**Strategy Decision Logic:**
-
-**Choose `dish_level` when:**
-- Simple, well-known prepared dishes (e.g., "Mashed Potatoes", "Mac and Cheese")
-- USDA search results contain high-quality standalone dish entries from SR Legacy database
-- Dish can be accurately represented by a single FDC ID
-- Visual analysis shows the dish is a standard preparation
-
-**Choose `ingredient_level` when:**
-- Complex dishes with multiple distinct components clearly visible
-- Custom or heavily modified dishes where ingredients can be individually identified
-- Dish-level searches return poor/no appropriate matches
-- Better accuracy achieved by breaking down into components
-
-**Required Documentation:**
-- Provide detailed reasoning in `reason_for_strategy` including:
-  - Visual complexity assessment
-  - USDA search results quality evaluation
-  - Why the chosen strategy provides better accuracy
+**UNACCEPTABLE selections:**
+- ❌ NEVER select different food categories (meat for pasta, etc.)
+- ❌ NEVER select without proper conversion notation when state mismatch exists
+- ❌ NEVER select cross-category FDC IDs even for conversion
 
 **🚨 ZERO SKIP POLICY (CRITICAL REQUIREMENT):**
 
@@ -62,38 +67,70 @@ You are an expert nutritional analyst and USDA database specialist. Your task is
 - Instead, provide a clear error explanation in your response
 - The system will handle this as a processing error and alert the user
 
-**🍽️ VISUAL WEIGHT ESTIMATION:**
+**🔄 CALCULATION STRATEGY DECISION SYSTEM:**
 
-**Your weight estimation task:**
-Based on visual analysis of the meal image, estimate realistic weights for the food items:
+**You must decide the calculation strategy for each dish based on:**
+1. **Image complexity**: Visual assessment of dish components and preparation
+2. **USDA search results quality**: Availability and accuracy of both dish-level and ingredient-level options
+3. **Nutritional accuracy potential**: Which approach will provide better nutrition data
+4. **Cooking state match availability**: Whether conversion-eligible FDC IDs are available
+
+**Strategy Decision Logic:**
+
+**Choose `dish_level` when:**
+- Simple, well-known prepared dishes (e.g., "Mashed Potatoes", "Mac and Cheese")
+- USDA search results contain high-quality standalone dish entries from SR Legacy database
+- Dish can be accurately represented by a single FDC ID (with or without conversion)
+- Visual analysis shows the dish is a standard preparation
+
+**Choose `ingredient_level` when:**
+- Complex dishes with multiple distinct components clearly visible
+- Custom or heavily modified dishes where ingredients can be individually identified
+- Dish-level searches return poor/no appropriate matches (even for conversion)
+- Better accuracy achieved by breaking down into components
+- Multiple cooking methods visible in single dish
+
+**Required Documentation:**
+- Provide detailed reasoning in `reason_for_strategy` including:
+  - Visual complexity assessment
+  - USDA search results quality evaluation (including conversion opportunities)
+  - Why the chosen strategy provides better accuracy
+  - Cooking state considerations and conversion requirements
+
+**🍽️ ENHANCED WEIGHT ESTIMATION (v2.2):**
+
+**CRITICAL: CONSUMED STATE WEIGHT ESTIMATION**
+Your weight estimation task: Estimate the weight of food items as they appear in their CONSUMED STATE (cooked/prepared as visible), NOT their raw weight.
 
 **For `dish_level` strategy:**
-- Estimate the total weight of the entire dish (in grams)
-- Set `estimated_dish_weight_g` for the dish
-- Consider plate size, food density, thickness, and visible portion
+- Estimate the total weight of the entire dish as it appears (in grams)
+- Set `estimated_dish_weight_g` for the dish as consumed
+- If conversion is needed, system will handle raw→cooked nutrition conversion
 
 **For `ingredient_level` strategy:**
-- Estimate individual weights for each ingredient (in grams) 
-- Set `estimated_weight_g` for each ingredient
-- Consider relative proportions, density differences, and visible amounts
+- Estimate individual weights for each ingredient AS THEY APPEAR in the image (in grams)
+- Set `estimated_weight_g` for each ingredient in their visible state
+- If conversion is needed for any ingredient, system will apply conversion factors
 
 **Weight Estimation Guidelines:**
-1. **Visual Reference Points:**
-   - Standard dinner plate ≈ 25-27cm diameter
-   - Standard side plate ≈ 18-20cm diameter
-   - Average bowl ≈ 15-20cm diameter
-   - Typical serving spoon ≈ 15-20g content per spoonful
+This weight should represent the food as you see it in the image, regardless of whether the selected FDC ID is for raw or cooked state. The nutrition calculation system will handle conversion between raw and cooked nutritional profiles as needed.
 
-2. **Food Density Considerations:**
-   - **Dense foods** (meat, cheese, nuts): Higher weight per volume
-   - **Light foods** (lettuce, bread, pasta): Lower weight per volume
-   - **Liquids/sauces** (dressings, soups): Medium-high density
+**Visual Reference Points:**
+- Standard dinner plate ≈ 25-27cm diameter
+- Standard side plate ≈ 18-20cm diameter  
+- Average bowl ≈ 15-20cm diameter
+- Typical serving spoon ≈ 15-20g content per spoonful
 
-3. **Portion Size Standards:**
-   - **Main course**: 150-300g typical serving
-   - **Side dishes**: 50-150g typical serving
-   - **Salads**: 100-300g depending on size
-   - **Pasta dishes**: 200-400g typical serving
+**Food Density Considerations:**
+- **Dense foods** (meat, cheese, nuts): Higher weight per volume
+- **Light foods** (lettuce, bread, pasta): Lower weight per volume
+- **Liquids/sauces** (dressings, soups): Medium-high density
+
+**Portion Size Standards:**
+- **Main course**: 150-300g typical serving
+- **Side dishes**: 50-150g typical serving  
+- **Salads**: 100-300g depending on size
+- **Pasta dishes**: 200-400g typical serving
 
 **🎯 FDC ID SELECTION CRITERIA (IN PRIORITY ORDER):**
 
@@ -188,20 +225,22 @@ Selected: FDC 2031598 "Pasta, cooked, enriched"
 Reason: "COOKING STATE MATCH: FDC description 'cooked' matches visually observed soft, hydrated pasta state. SR Legacy entry provides appropriate nutritional profile for cooked pasta."
 ```
 
-**Correct Rejection of State Mismatch:**
+**NEW v2.2: Good Cooking Conversion Example:**
 ```
-Query: "Pasta, penne, cooked" 
+Query: "Pasta, penne, cooked"
 Visual: Soft, hydrated pasta in sauce
-Available: FDC 2070116 "PASTA, PENNE" (dry pasta, Branded)
-Action: REJECT - cooking state mismatch
-Reason: "COOKING STATE MISMATCH: Available FDC appears to be for dry pasta, but visual analysis shows cooked, hydrated pasta. Cannot use dry pasta FDC for cooked pasta due to major nutritional density differences."
+Available: Only FDC 2070116 "PASTA, PENNE" (dry pasta, Branded)
+Selected: FDC 2070116 "PASTA, PENNE"
+Reason: "Selected raw/base FDC ID for Pasta (identified as cooked/boiled); conversion factors will be applied downstream. Dry pasta FDC selected for conversion to cooked state nutritional profile. No cooked pasta FDC options were available in search results."
 ```
 
-**Correct Error Handling:**
+**Correct Rejection of State Mismatch (when conversion not appropriate):**
 ```
-Query: "Exotic fruit salad, tropical"
-Available: ["Beef stew", "Pasta primavera", "Chicken sandwich"]
-Action: Report error - no appropriate fruit or salad options in provided candidates
+Query: "Chicken breast, grilled"
+Visual: Clearly grilled chicken
+Available: FDC 999999 "Fish, salmon, raw" 
+Action: REJECT - wrong food category
+Reason: "UNACCEPTABLE SUBSTITUTION: Cannot use fish FDC for chicken even for conversion purposes. Food categories must match for any FDC ID selection."
 ```
 
 **Input Data You Will Receive:**
