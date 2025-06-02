@@ -632,8 +632,68 @@ async def refine_meal_analysis(
                     if ing_fdc_id and estimated_weight > 0:
                         ing_nutrients_100g = await usda_service.get_food_details_for_nutrition(ing_fdc_id)
                         if ing_nutrients_100g:
-                            ing_actual_nutrients = nutrition_service.calculate_actual_nutrients(ing_nutrients_100g, estimated_weight)
+                            # NEW v2.2: Enhanced cooking state matching and conversion logic
+                            # Find corresponding Phase1 ingredient details for cooking conversion
+                            p1_ingredient_for_conversion = None
+                            for p1_ing in p1_dish.ingredients:
+                                if p1_ing.ingredient_name == gemini_ing.ingredient_name:
+                                    p1_ingredient_for_conversion = p1_ing
+                                    break
+                            
+                            # Check for cooking conversion requirement
+                            needs_cooking_conversion = False
+                            conversion_reason = ""
+                            
+                            if (p1_ingredient_for_conversion and 
+                                p1_ingredient_for_conversion.state == "cooked" and
+                                gemini_ing.reason_for_choice and
+                                "Selected raw/base FDC ID" in gemini_ing.reason_for_choice):
+                                # This indicates Phase2 selected a raw/base FDC ID for conversion
+                                needs_cooking_conversion = True
+                                conversion_reason = f"Cooking conversion: {p1_ingredient_for_conversion.state}/{p1_ingredient_for_conversion.preparation_method}"
+                            
+                            # Apply cooking conversion if needed
+                            final_nutrients_100g = ing_nutrients_100g
+                            if needs_cooking_conversion and p1_ingredient_for_conversion:
+                                # Map ingredient name to food category for conversion
+                                food_category = NutritionCalculationService._map_ingredient_to_food_category(
+                                    p1_ingredient_for_conversion.ingredient_name
+                                )
+                                target_prep_method = p1_ingredient_for_conversion.preparation_method or "unknown"
+                                
+                                try:
+                                    # Convert raw nutrients to cooked
+                                    final_nutrients_100g = nutrition_service.convert_raw_nutrients_to_cooked(
+                                        raw_nutrients_per_100g=ing_nutrients_100g,
+                                        food_category=food_category,
+                                        target_preparation_method=target_prep_method
+                                    )
+                                    
+                                    meal_logger.log_entry(
+                                        session_id=session_id,
+                                        level=LogLevel.INFO,
+                                        phase=ProcessingPhase.NUTRITION_CALC_START,
+                                        message=f"Applied cooking conversion for {gemini_ing.ingredient_name}: {food_category} -> {target_prep_method}",
+                                        data={
+                                            "ingredient": gemini_ing.ingredient_name,
+                                            "food_category": food_category,
+                                            "target_preparation": target_prep_method,
+                                            "conversion_applied": True
+                                        }
+                                    )
+                                    
+                                except Exception as conversion_error:
+                                    logger.warning(f"Cooking conversion failed for {gemini_ing.ingredient_name}: {conversion_error}")
+                                    # Use original nutrients if conversion fails
+                                    final_nutrients_100g = ing_nutrients_100g
+                                    warnings.append(f"Cooking conversion failed for '{gemini_ing.ingredient_name}': {conversion_error}")
+                            
+                            # Calculate actual nutrients using final (possibly converted) nutrition profile
+                            ing_actual_nutrients = nutrition_service.calculate_actual_nutrients(final_nutrients_100g, estimated_weight)
                             ingredient_nutrients_list.append(ing_actual_nutrients)
+                            
+                            # Update the stored nutrients for response
+                            ing_nutrients_100g = final_nutrients_100g  # Store converted nutrients for response
                         else:
                             warnings.append(f"Could not get nutrition data for ingredient '{gemini_ing.ingredient_name}' (FDC ID: {ing_fdc_id})")
                     elif not ing_fdc_id:
