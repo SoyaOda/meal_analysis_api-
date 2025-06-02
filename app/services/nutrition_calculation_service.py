@@ -379,6 +379,276 @@ class NutritionCalculationService:
         logger.info(f"Estimated ingredient weights for dish ({total_dish_weight_g}g): {estimated_weights}")
         return estimated_weights
 
+    @staticmethod
+    def convert_raw_nutrients_to_cooked(
+        raw_nutrients_per_100g: Dict[str, float],
+        food_category: str,  # 例: "pasta", "chicken_breast", "potatoes"
+        target_preparation_method: str,  # 例: "boiled", "roasted"
+        original_raw_weight_g: float = 100.0  # 通常は100gベースで変換
+    ) -> Dict[str, float]:
+        """
+        生の状態の100gあたり栄養素を、指定された調理方法適用後の
+        調理済み100gあたり栄養素に変換する (v2.2新機能)
+        
+        Args:
+            raw_nutrients_per_100g: 生の状態での100gあたり栄養素辞書
+            food_category: 食品カテゴリ（歩留まりと保持率の決定に使用）
+            target_preparation_method: 目標調理方法
+            original_raw_weight_g: 元の生重量（通常は100g）
+            
+        Returns:
+            Dict[str, float]: 調理済み100gあたりの栄養素辞書
+        """
+        # 1. food_category と target_preparation_method に基づいて、
+        #    重量変化率（歩留まり係数 cooked_weight / raw_weight）を取得。
+        yield_factor = NutritionCalculationService._get_yield_factor(food_category, target_preparation_method)
+        
+        # 2. 栄養素保持率を取得。
+        retention_factors = NutritionCalculationService._get_retention_factors(food_category, target_preparation_method)
+        
+        cooked_nutrients_per_100g = {}
+        for nutrient_name, raw_value_per_100g_raw in raw_nutrients_per_100g.items():
+            if raw_value_per_100g_raw is None:  # Optionalな栄養素がNoneの場合
+                cooked_nutrients_per_100g[nutrient_name] = None
+                continue
+            
+            # a. 重量変化による濃度変化を計算
+            #    調理済み100gあたりの栄養素量 = (元の100g中の栄養素量 / 歩留まり係数)
+            value_adjusted_for_yield = raw_value_per_100g_raw / yield_factor
+            
+            # b. 栄養素保持率を適用
+            retention = retention_factors.get(nutrient_name, 1.0)  # デフォルト保持率100%
+            final_value = value_adjusted_for_yield * retention
+            
+            cooked_nutrients_per_100g[nutrient_name] = round(final_value, 3)  # 有効数字3桁程度
+        
+        logger.info(f"Converted raw nutrients for {food_category} ({target_preparation_method}) to cooked state. "
+                   f"Yield: {yield_factor}, Retention applied: {len([k for k, v in retention_factors.items() if v != 1.0])} nutrients")
+        return cooked_nutrients_per_100g
+    
+    @staticmethod
+    def _get_yield_factor(food_category: str, prep_method: str) -> float:
+        """
+        食品カテゴリと調理方法に基づいて歩留まり係数を取得
+        歩留まり係数 = 調理後重量 / 調理前重量
+        
+        Args:
+            food_category: 食品カテゴリ
+            prep_method: 調理方法
+            
+        Returns:
+            float: 歩留まり係数
+        """
+        # 歩留まり係数データベース（実際の実装では外部ファイルまたはデータベースから読み込み）
+        yield_database = {
+            # パスタ類 - 乾燥から調理済みへ
+            ("pasta", "boiled"): 2.4,
+            ("pasta", "unknown"): 2.2,  # デフォルト
+            ("macaroni", "boiled"): 2.4,
+            ("noodles", "boiled"): 2.3,
+            ("spaghetti", "boiled"): 2.4,
+            ("penne", "boiled"): 2.4,
+            
+            # 肉類 - 生から調理済みへ（水分損失）
+            ("chicken_breast", "roasted"): 0.75,
+            ("chicken_breast", "grilled"): 0.72,
+            ("chicken_breast", "baked"): 0.76,
+            ("chicken", "roasted"): 0.74,
+            ("chicken", "grilled"): 0.71,
+            ("beef", "roasted"): 0.70,
+            ("beef", "grilled"): 0.68,
+            ("pork", "roasted"): 0.72,
+            ("ground_meat", "baked"): 0.73,
+            
+            # 野菜類 - 生から調理済みへ
+            ("potatoes", "boiled"): 0.98,  # 水分を吸収するが軽微
+            ("potatoes", "baked"): 0.79,   # 水分損失
+            ("carrots", "boiled"): 0.90,
+            ("green_beans", "boiled"): 0.88,
+            ("green_beans", "steamed"): 0.92,
+            ("corn", "boiled"): 0.95,
+            ("peas", "boiled"): 0.90,
+            ("spinach", "steamed"): 0.10,  # 大幅に体積減少
+            ("broccoli", "steamed"): 0.85,
+            
+            # 米・穀物類 - 乾燥から調理済みへ
+            ("rice", "boiled"): 3.0,  # 米は水分を大幅に吸収
+            ("quinoa", "boiled"): 2.8,
+            ("barley", "boiled"): 2.5,
+            
+            # その他
+            ("fish", "grilled"): 0.77,
+            ("fish", "baked"): 0.80,
+            ("eggs", "boiled"): 0.96,  # 重量変化は最小
+        }
+        
+        # 完全一致を試行
+        key = (food_category.lower(), prep_method.lower())
+        if key in yield_database:
+            return yield_database[key]
+        
+        # 部分一致を試行（カテゴリのみ）
+        for (cat, method), factor in yield_database.items():
+            if cat in food_category.lower() or food_category.lower() in cat:
+                if method == prep_method.lower() or prep_method.lower() == "unknown":
+                    return factor
+        
+        # デフォルト値
+        logger.warning(f"No yield factor found for {food_category} + {prep_method}, using default 1.0")
+        return 1.0  # 変化なし
+    
+    @staticmethod
+    def _get_retention_factors(food_category: str, prep_method: str) -> Dict[str, float]:
+        """
+        食品カテゴリと調理方法に基づいて栄養素保持率を取得
+        
+        Args:
+            food_category: 食品カテゴリ
+            prep_method: 調理方法
+            
+        Returns:
+            Dict[str, float]: 栄養素名と保持率（0.0-1.0）のマッピング
+        """
+        # 基本的な保持率（多くの栄養素は90-100%保持）
+        base_factors = {
+            "calories_kcal": 1.0,      # カロリーは通常変化なし
+            "protein_g": 0.95,         # タンパク質は若干の損失
+            "carbohydrates_g": 0.98,   # 炭水化物は大きく変化しない
+            "fat_g": 0.92,             # 脂質は調理により一部損失
+            "fiber_g": 0.98,           # 食物繊維は比較的安定
+            "sugars_g": 0.97,          # 糖類は比較的安定
+            "sodium_mg": 1.05          # ナトリウムは濃縮により若干増加
+        }
+        
+        # 特定の食品×調理方法の補正
+        specific_adjustments = {
+            # 野菜の茹で調理 - ビタミンなど水溶性栄養素の損失が大きい
+            ("potatoes", "boiled"): {"vitamin_c_mg": 0.75},
+            ("carrots", "boiled"): {"vitamin_c_mg": 0.80},
+            ("green_beans", "boiled"): {"vitamin_c_mg": 0.70},
+            ("broccoli", "steamed"): {"vitamin_c_mg": 0.85},  # 蒸しは保持率が高い
+            
+            # 肉類の調理 - 高温調理による損失
+            ("chicken", "grilled"): {"protein_g": 0.92, "fat_g": 0.85},
+            ("beef", "grilled"): {"protein_g": 0.90, "fat_g": 0.80},
+            ("fish", "baked"): {"protein_g": 0.94, "fat_g": 0.88},
+            
+            # パスタ類 - 栄養素は比較的安定
+            ("pasta", "boiled"): {"protein_g": 0.98, "carbohydrates_g": 0.99},
+            
+            # 葉物野菜 - 大幅な損失の可能性
+            ("spinach", "steamed"): {"vitamin_c_mg": 0.50, "fiber_g": 0.95},
+        }
+        
+        # 基本保持率から開始
+        retention_factors = base_factors.copy()
+        
+        # 特定調整を適用
+        key = (food_category.lower(), prep_method.lower())
+        if key in specific_adjustments:
+            retention_factors.update(specific_adjustments[key])
+        else:
+            # 部分一致を試行
+            for (cat, method), adjustments in specific_adjustments.items():
+                if (cat in food_category.lower() or food_category.lower() in cat) and method == prep_method.lower():
+                    retention_factors.update(adjustments)
+                    break
+        
+        return retention_factors
+
+    @staticmethod
+    def _map_ingredient_to_food_category(ingredient_name: str) -> str:
+        """
+        材料名から食品カテゴリにマッピングして、調理変換に使用
+        
+        Args:
+            ingredient_name: Phase1で識別された材料名
+            
+        Returns:
+            str: 調理変換に使用する食品カテゴリ
+        """
+        ingredient_lower = ingredient_name.lower()
+        
+        # パスタ類
+        pasta_terms = ["pasta", "penne", "spaghetti", "macaroni", "noodles", "linguine", "fettuccine", "rigatoni"]
+        if any(term in ingredient_lower for term in pasta_terms):
+            return "pasta"
+        
+        # 肉類
+        chicken_terms = ["chicken", "poultry"]
+        if any(term in ingredient_lower for term in chicken_terms):
+            if "breast" in ingredient_lower:
+                return "chicken_breast"
+            else:
+                return "chicken"
+        
+        beef_terms = ["beef", "steak", "hamburger"]
+        if any(term in ingredient_lower for term in beef_terms):
+            return "beef"
+        
+        pork_terms = ["pork", "ham", "bacon"]
+        if any(term in ingredient_lower for term in pork_terms):
+            return "pork"
+        
+        meat_terms = ["meat", "ground"]
+        if any(term in ingredient_lower for term in meat_terms):
+            return "ground_meat"
+        
+        fish_terms = ["fish", "salmon", "tuna", "cod", "tilapia", "trout"]
+        if any(term in ingredient_lower for term in fish_terms):
+            return "fish"
+        
+        # 野菜類
+        potato_terms = ["potato", "potatoes"]
+        if any(term in ingredient_lower for term in potato_terms):
+            return "potatoes"
+        
+        carrot_terms = ["carrot", "carrots"]
+        if any(term in ingredient_lower for term in carrot_terms):
+            return "carrots"
+        
+        green_bean_terms = ["green bean", "green beans", "string bean"]
+        if any(term in ingredient_lower for term in green_bean_terms):
+            return "green_beans"
+        
+        corn_terms = ["corn"]
+        if any(term in ingredient_lower for term in corn_terms):
+            return "corn"
+        
+        peas_terms = ["peas", "green peas"]
+        if any(term in ingredient_lower for term in peas_terms):
+            return "peas"
+        
+        spinach_terms = ["spinach"]
+        if any(term in ingredient_lower for term in spinach_terms):
+            return "spinach"
+        
+        broccoli_terms = ["broccoli"]
+        if any(term in ingredient_lower for term in broccoli_terms):
+            return "broccoli"
+        
+        # 穀物類
+        rice_terms = ["rice"]
+        if any(term in ingredient_lower for term in rice_terms):
+            return "rice"
+        
+        quinoa_terms = ["quinoa"]
+        if any(term in ingredient_lower for term in quinoa_terms):
+            return "quinoa"
+        
+        barley_terms = ["barley"]
+        if any(term in ingredient_lower for term in barley_terms):
+            return "barley"
+        
+        # その他
+        egg_terms = ["egg", "eggs"]
+        if any(term in ingredient_lower for term in egg_terms):
+            return "eggs"
+        
+        # デフォルト：食品名をそのまま使用（小文字化）
+        logger.info(f"No specific food category mapping found for '{ingredient_name}', using generic mapping")
+        return ingredient_lower.replace(" ", "_")
+
 
 # サービスインスタンスを取得するファクトリ関数
 def get_nutrition_calculation_service() -> NutritionCalculationService:
