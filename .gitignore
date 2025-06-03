@@ -142,3 +142,5 @@ test_images/*.png
 test_images/*.webp
 test_images/*.heic
 test_images/*.heif 
+
+raw_nutrition_data/
