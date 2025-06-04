@@ -3,6 +3,10 @@
 
 LOGGING_LEVEL: "INFO"
 
+# フェーズ出力保存設定
+SAVE_PHASE_OUTPUTS: true
+PHASE_OUTPUT_DIR: "test_results/phase_outputs"
+
 # Image Processor設定
 IMAGE_PROCESSOR_CONFIG:
   MAX_IMAGE_SIZE_MB: 10

@@ -5,8 +5,10 @@ Workflow Manager - メインオーケストレーター
 """
 
 import logging
-from typing import Dict, Any, Optional
+import json
+from datetime import datetime
 from pathlib import Path
+from typing import Dict, Any, Optional
 
 from ..image_processor.processor import ImageProcessor
 from ..image_processor.image_models import ImageInput, ProcessedImageData
@@ -33,6 +35,14 @@ class NutrientEstimationWorkflow:
             config: アプリケーション設定
         """
         self.config = config
+        
+        # フェーズ出力保存の設定
+        self.save_phase_outputs = config.get("SAVE_PHASE_OUTPUTS", True)
+        self.output_dir = Path(config.get("PHASE_OUTPUT_DIR", "test_results/phase_outputs"))
+        
+        # 出力ディレクトリの作成
+        if self.save_phase_outputs:
+            self.output_dir.mkdir(parents=True, exist_ok=True)
         
         # 各モジュールコンポーネントの初期化
         self._initialize_components()
@@ -81,6 +91,49 @@ class NutrientEstimationWorkflow:
         self.image_processor.set_gemini_service(gemini_service)
         logger.info("Gemini service configured for ImageProcessor")
     
+    def _save_phase_data(self, phase_name: str, input_data: Any, output_data: Any, image_name: str):
+        """フェーズの入出力データをJSONファイルに保存"""
+        if not self.save_phase_outputs:
+            return
+        
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{phase_name}_{image_name}_{timestamp}.json"
+            filepath = self.output_dir / filename
+            
+            # Pydanticモデルを辞書に変換
+            def serialize_data(data):
+                if hasattr(data, 'model_dump'):
+                    return data.model_dump()
+                elif hasattr(data, 'dict'):
+                    return data.dict()
+                elif isinstance(data, (list, tuple)):
+                    return [serialize_data(item) for item in data]
+                elif isinstance(data, dict):
+                    return {k: serialize_data(v) for k, v in data.items()}
+                else:
+                    return data
+            
+            phase_data = {
+                "phase_name": phase_name,
+                "timestamp": timestamp,
+                "image_name": image_name,
+                "input": serialize_data(input_data),
+                "output": serialize_data(output_data),
+                "metadata": {
+                    "workflow_version": "modular_v1.0",
+                    "processing_time": datetime.now().isoformat()
+                }
+            }
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(phase_data, f, indent=2, ensure_ascii=False)
+            
+            logger.info(f"Saved {phase_name} data to: {filepath}")
+            
+        except Exception as e:
+            logger.warning(f"Failed to save {phase_name} data: {e}")
+
     async def process_image_to_nutrition(
         self, 
         image_path: str, 
@@ -99,9 +152,16 @@ class NutrientEstimationWorkflow:
         try:
             logger.info(f"Starting nutrition estimation workflow for: {image_path}")
             
+            # 画像名を抽出（保存用）
+            image_name = Path(image_path).stem
+            
             # === Phase 1: 画像処理 ===
             logger.info("Phase 1: Image Processing")
-            processed_data = await self._execute_phase1(image_path, optional_text)
+            image_input = ImageInput(image_path=image_path)
+            processed_data = await self._execute_phase1(image_input, optional_text)
+            
+            # Phase 1の入出力を保存
+            self._save_phase_data("phase1", image_input, processed_data, image_name)
             
             if not processed_data.identified_items:
                 return self._create_empty_report("No food items identified in image", image_path)
@@ -110,7 +170,11 @@ class NutrientEstimationWorkflow:
             
             # === Phase 2: データベースクエリ ===
             logger.info("Phase 2: Database Query")
-            db_result = await self._execute_phase2(processed_data)
+            query_params = self._create_query_parameters(processed_data)
+            db_result = await self._execute_phase2(query_params)
+            
+            # USDA DB Query の入出力を保存
+            self._save_phase_data("usda_db_query", query_params, db_result, image_name)
             
             if not db_result.retrieved_foods:
                 return self._create_empty_report("No nutrition data found in database", image_path, db_result.errors)
@@ -119,7 +183,14 @@ class NutrientEstimationWorkflow:
             
             # === Phase 3: データ解釈 ===
             logger.info("Phase 3: Data Interpretation")
+            interpretation_input = {
+                "db_result": db_result,
+                "original_items": processed_data.identified_items
+            }
             structured_info = await self._execute_phase3(db_result, processed_data.identified_items)
+            
+            # Phase 2の入出力を保存
+            self._save_phase_data("phase2", interpretation_input, structured_info, image_name)
             
             if not structured_info.interpreted_foods:
                 return self._create_empty_report(
@@ -134,6 +205,21 @@ class NutrientEstimationWorkflow:
             logger.info("Phase 4: Nutrition Calculation")
             final_report = await self._execute_phase4(structured_info)
             
+            # Nutrition Calculation の入出力を保存
+            self._save_phase_data("nutrition_calculation", structured_info, final_report, image_name)
+            
+            # 全体のワークフロー結果も保存
+            workflow_summary = {
+                "image_path": image_path,
+                "total_phases": 4,
+                "phase1_items": len(processed_data.identified_items),
+                "usda_results": len(db_result.retrieved_foods),
+                "phase2_interpreted": len(structured_info.interpreted_foods),
+                "final_calories": final_report.total_calories,
+                "processing_complete": True
+            }
+            self._save_phase_data("workflow_summary", {"image_path": image_path}, workflow_summary, image_name)
+            
             logger.info("Nutrition estimation workflow completed successfully")
             return final_report
             
@@ -141,29 +227,28 @@ class NutrientEstimationWorkflow:
             logger.error(f"Workflow failed for image {image_path}: {e}", exc_info=True)
             return self._create_error_report(str(e), image_path)
     
-    async def _execute_phase1(self, image_path: str, optional_text: Optional[str]) -> ProcessedImageData:
+    def _create_query_parameters(self, processed_data: ProcessedImageData) -> QueryParameters:
+        """ProcessedImageDataからQueryParametersを作成"""
+        db_query_items = self._convert_to_db_items(processed_data.identified_items)
+        query_strategy = self.config.get("DB_CONFIG", {}).get("DEFAULT_QUERY_STRATEGY", "default_usda_search_v1")
+        
+        return QueryParameters(
+            items_to_query=db_query_items,
+            query_strategy_id=query_strategy,
+            max_results_per_item=5
+        )
+
+    async def _execute_phase1(self, image_input: ImageInput, optional_text: Optional[str]) -> ProcessedImageData:
         """Phase 1: 画像処理を実行"""
         try:
-            image_input = ImageInput(image_path=image_path)
             return await self.image_processor.process_image(image_input)
         except Exception as e:
             logger.error(f"Phase 1 failed: {e}")
             raise NutrientEstimationError(f"Image processing failed: {str(e)}") from e
     
-    async def _execute_phase2(self, processed_data: ProcessedImageData) -> RawDBResult:
+    async def _execute_phase2(self, query_params: QueryParameters) -> RawDBResult:
         """Phase 2: データベースクエリを実行"""
         try:
-            # IdentifiedItemをDBクエリ用に変換
-            db_query_items = self._convert_to_db_items(processed_data.identified_items)
-            
-            # クエリパラメータ作成
-            query_strategy = self.config.get("DB_CONFIG", {}).get("DEFAULT_QUERY_STRATEGY", "default_usda_search_v1")
-            query_params = QueryParameters(
-                items_to_query=db_query_items,
-                query_strategy_id=query_strategy,
-                max_results_per_item=5
-            )
-            
             # データベース接続と検索
             await self.db_handler.connect()
             try:

@@ -1,0 +1,1035 @@
+{
+  "phase_name": "nutrition_calculation",
+  "timestamp": "20250604_180331",
+  "image_name": "food2",
+  "input": {
+    "interpreted_foods": [
+      {
+        "matched_query_term": "Ground beef",
+        "selected_food_description": "Beef, ground, 80% lean meat / 20% fat, raw",
+        "db_source_id": "2514744",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 1.96,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 54.9,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 19.4,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 6.89,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 17.5,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 0.0,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Beef Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Ketchup",
+        "selected_food_description": "Ketchup, restaurant",
+        "db_source_id": "747693",
+        "processed_nutrients": {
+          "TOTAL_FAT": {
+            "amount": 0.55,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 14.0,
+            "unit": "MG"
+          },
+          "IRON": {
+            "amount": 0.43,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 949.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.11,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 26.8,
+            "unit": "G"
+          },
+          "CALORIES": {
+            "amount": 488.0,
+            "unit": "kJ"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Potatoes",
+        "selected_food_description": "Potatoes, gold, without skin, raw",
+        "db_source_id": "2346403",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.373,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 2.24,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 23.3,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.264,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 5.94,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.81,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 16.0,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Macaroni",
+        "selected_food_description": "Macaroni and Cheese, canned entree",
+        "db_source_id": "173325",
+        "processed_nutrients": {
+          "TOTAL_FAT": {
+            "amount": 2.46,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 35.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 3.38,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 0.5,
+            "unit": "G"
+          },
+          "IRON": {
+            "amount": 0.9,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "VITAMIN_A": {
+            "amount": 17.0,
+            "unit": "UG"
+          },
+          "CALORIES": {
+            "amount": 82.0,
+            "unit": "KCAL"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 11.5,
+            "unit": "G"
+          },
+          "SODIUM": {
+            "amount": 302.0,
+            "unit": "MG"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Meals, Entrees, and Side Dishes",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Cheese sauce",
+        "selected_food_description": "Cheese, cheddar",
+        "db_source_id": "328637",
+        "processed_nutrients": {
+          "CALCIUM": {
+            "amount": 707.0,
+            "unit": "MG"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 2.44,
+            "unit": "G"
+          },
+          "CALORIES": {
+            "amount": 1710.0,
+            "unit": "kJ"
+          },
+          "PROTEIN": {
+            "amount": 23.3,
+            "unit": "G"
+          },
+          "VITAMIN_A": {
+            "amount": 316.0,
+            "unit": "UG"
+          },
+          "TOTAL_FAT": {
+            "amount": 34.0,
+            "unit": "G"
+          },
+          "SODIUM": {
+            "amount": 654.0,
+            "unit": "MG"
+          },
+          "IRON": {
+            "amount": 0.16,
+            "unit": "MG"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Dairy and Egg Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Corn",
+        "selected_food_description": "Corn, sweet, yellow and white kernels,  fresh, raw",
+        "db_source_id": "2710826",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.388,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 1.63,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 2.43,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 0.656,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 2.79,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 14.7,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Green beans",
+        "selected_food_description": "Beans, snap, green, raw",
+        "db_source_id": "2346400",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.652,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.275,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 3.01,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 40.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.97,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 7.41,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Peas",
+        "selected_food_description": "Peas, green, raw",
+        "db_source_id": "170419",
+        "processed_nutrients": {
+          "CALORIES": {
+            "amount": 81.0,
+            "unit": "KCAL"
+          },
+          "VITAMIN_A": {
+            "amount": 38.0,
+            "unit": "UG"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 14.4,
+            "unit": "G"
+          },
+          "PROTEIN": {
+            "amount": 5.42,
+            "unit": "G"
+          },
+          "IRON": {
+            "amount": 1.47,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 5.0,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 40.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.4,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 25.0,
+            "unit": "MG"
+          },
+          "FIBER": {
+            "amount": 5.7,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Carrots",
+        "selected_food_description": "Carrots, mature, raw",
+        "db_source_id": "2258586",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.15,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 86.6,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.351,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 3.1,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 30.5,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 0.941,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 10.3,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Rice",
+        "selected_food_description": "Rice, black, unenriched, raw",
+        "db_source_id": "2710825",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 1.12,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 3.44,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 4.18,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 14.4,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 7.57,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 77.2,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Cereal Grains and Pasta",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      }
+    ],
+    "interpretation_strategy_used": "DefaultUSDAInterpretationStrategy",
+    "parsing_errors": [
+      "Error querying USDA for 'Meatloaf': USDA API HTTP error for '{'query_term': 'Meatloaf, cooked', 'granularity_level': 'dish', 'preferred_data_types': ['SR Legacy', 'Branded'], 'original_term': 'Meatloaf', 'reason_for_query': 'Prepared dish query targeting SR Legacy database first, with Branded as backup'}': 500 - {\"timestamp\":\"2025-06-04T09:03:25.356+0000\",\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"all shards failed\",\"path\":\"/portal-data/api/v1/foods/search\"}",
+      "Error querying USDA for 'Mashed Potatoes': USDA API HTTP error for '{'query_term': 'Potatoes, mashed, prepared', 'granularity_level': 'dish', 'preferred_data_types': ['SR Legacy', 'Branded'], 'original_term': 'Mashed Potatoes', 'reason_for_query': 'Prepared dish query targeting SR Legacy database first, with Branded as backup'}': 500 - {\"timestamp\":\"2025-06-04T09:03:26.579+0000\",\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"all shards failed\",\"path\":\"/portal-data/api/v1/foods/search\"}",
+      "Error querying USDA for 'Macaroni and Cheese': USDA API HTTP error for '{'query_term': 'Macaroni and cheese, prepared', 'granularity_level': 'dish', 'preferred_data_types': ['SR Legacy', 'Branded'], 'original_term': 'Macaroni and Cheese', 'reason_for_query': 'Prepared dish query targeting SR Legacy database first, with Branded as backup'}': 500 - {\"timestamp\":\"2025-06-04T09:03:27.252+0000\",\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"all shards failed\",\"path\":\"/portal-data/api/v1/foods/search\"}",
+      "Error querying USDA for 'Mixed Vegetables': USDA API HTTP error for '{'query_term': 'Vegetables, mixed, cooked', 'granularity_level': 'dish', 'preferred_data_types': ['SR Legacy', 'Branded'], 'original_term': 'Mixed Vegetables', 'reason_for_query': 'Prepared dish query targeting SR Legacy database first, with Branded as backup'}': 500 - {\"timestamp\":\"2025-06-04T09:03:28.540+0000\",\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"all shards failed\",\"path\":\"/portal-data/api/v1/foods/search\"}",
+      "Error querying USDA for 'Seasoned Rice': USDA API HTTP error for '{'query_term': 'Rice, seasoned, cooked', 'granularity_level': 'dish', 'preferred_data_types': ['SR Legacy', 'Branded'], 'original_term': 'Seasoned Rice', 'reason_for_query': 'Prepared dish query targeting SR Legacy database first, with Branded as backup'}': 500 - {\"timestamp\":\"2025-06-04T09:03:30.614+0000\",\"status\":500,\"error\":\"Internal Server Error\",\"message\":\"all shards failed\",\"path\":\"/portal-data/api/v1/foods/search\"}"
+    ],
+    "processing_metadata": {
+      "total_db_results": 50,
+      "successfully_interpreted": 10,
+      "processing_timestamp": "2025-06-04T09:03:31.181792Z",
+      "source_database": "USDA_FDC",
+      "unique_query_terms": 10,
+      "strategy_used": "DefaultUSDAInterpretationStrategy"
+    }
+  },
+  "output": {
+    "total_nutrients": {
+      "IRON": {
+        "total_amount": 7.6,
+        "unit": "MG",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (1.96 MG)",
+          "Ketchup, restaurant (0.43 MG)",
+          "Potatoes, gold, without skin, raw (0.373 MG)",
+          "Macaroni and Cheese, canned entree (0.9 MG)",
+          "Cheese, cheddar (0.16 MG)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (0.388 MG)",
+          "Beans, snap, green, raw (0.652 MG)",
+          "Peas, green, raw (1.47 MG)",
+          "Carrots, mature, raw (0.15 MG)",
+          "Rice, black, unenriched, raw (1.12 MG)"
+        ],
+        "daily_value_percentage": null
+      },
+      "SODIUM": {
+        "total_amount": 2053.74,
+        "unit": "MG",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (54.9 MG)",
+          "Ketchup, restaurant (949.0 MG)",
+          "Potatoes, gold, without skin, raw (2.24 MG)",
+          "Macaroni and Cheese, canned entree (302.0 MG)",
+          "Cheese, cheddar (654.0 MG)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (0.0 MG)",
+          "Beans, snap, green, raw (0.0 MG)",
+          "Peas, green, raw (5.0 MG)",
+          "Carrots, mature, raw (86.6 MG)",
+          "Rice, black, unenriched, raw (0.0 MG)"
+        ],
+        "daily_value_percentage": null
+      },
+      "TOTAL_FAT": {
+        "total_amount": 62.77,
+        "unit": "G",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (19.4 G)",
+          "Ketchup, restaurant (0.55 G)",
+          "Potatoes, gold, without skin, raw (0.264 G)",
+          "Macaroni and Cheese, canned entree (2.46 G)",
+          "Cheese, cheddar (34.0 G)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (1.63 G)",
+          "Beans, snap, green, raw (0.275 G)",
+          "Peas, green, raw (0.4 G)",
+          "Carrots, mature, raw (0.351 G)",
+          "Rice, black, unenriched, raw (3.44 G)"
+        ],
+        "daily_value_percentage": null
+      },
+      "CALCIUM": {
+        "total_amount": 879.39,
+        "unit": "MG",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (6.89 MG)",
+          "Ketchup, restaurant (14.0 MG)",
+          "Potatoes, gold, without skin, raw (5.94 MG)",
+          "Macaroni and Cheese, canned entree (35.0 MG)",
+          "Cheese, cheddar (707.0 MG)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (0.656 MG)",
+          "Beans, snap, green, raw (40.0 MG)",
+          "Peas, green, raw (25.0 MG)",
+          "Carrots, mature, raw (30.5 MG)",
+          "Rice, black, unenriched, raw (14.4 MG)"
+        ],
+        "daily_value_percentage": null
+      },
+      "PROTEIN": {
+        "total_amount": 65.79,
+        "unit": "G",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (17.5 G)",
+          "Ketchup, restaurant (1.11 G)",
+          "Potatoes, gold, without skin, raw (1.81 G)",
+          "Macaroni and Cheese, canned entree (3.38 G)",
+          "Cheese, cheddar (23.3 G)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (2.79 G)",
+          "Beans, snap, green, raw (1.97 G)",
+          "Peas, green, raw (5.42 G)",
+          "Carrots, mature, raw (0.941 G)",
+          "Rice, black, unenriched, raw (7.57 G)"
+        ],
+        "daily_value_percentage": null
+      },
+      "CARBOHYDRATE_BY_DIFFERENCE": {
+        "total_amount": 180.75,
+        "unit": "G",
+        "contributing_foods": [
+          "Beef, ground, 80% lean meat / 20% fat, raw (0.0 G)",
+          "Ketchup, restaurant (26.8 G)",
+          "Potatoes, gold, without skin, raw (16.0 G)",
+          "Macaroni and Cheese, canned entree (11.5 G)",
+          "Cheese, cheddar (2.44 G)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (14.7 G)",
+          "Beans, snap, green, raw (7.41 G)",
+          "Peas, green, raw (14.4 G)",
+          "Carrots, mature, raw (10.3 G)",
+          "Rice, black, unenriched, raw (77.2 G)"
+        ],
+        "daily_value_percentage": null
+      },
+      "CALORIES": {
+        "total_amount": 2361.0,
+        "unit": "kJ",
+        "contributing_foods": [
+          "Ketchup, restaurant (488.0 kJ)",
+          "Macaroni and Cheese, canned entree (82.0 KCAL)",
+          "Cheese, cheddar (1710.0 kJ)",
+          "Peas, green, raw (81.0 KCAL)"
+        ],
+        "daily_value_percentage": null
+      },
+      "VITAMIN_C": {
+        "total_amount": 63.3,
+        "unit": "MG",
+        "contributing_foods": [
+          "Potatoes, gold, without skin, raw (23.3 MG)",
+          "Macaroni and Cheese, canned entree (0.0 MG)",
+          "Peas, green, raw (40.0 MG)"
+        ],
+        "daily_value_percentage": null
+      },
+      "FIBER": {
+        "total_amount": 18.92,
+        "unit": "G",
+        "contributing_foods": [
+          "Macaroni and Cheese, canned entree (0.5 G)",
+          "Corn, sweet, yellow and white kernels,  fresh, raw (2.43 G)",
+          "Beans, snap, green, raw (3.01 G)",
+          "Peas, green, raw (5.7 G)",
+          "Carrots, mature, raw (3.1 G)",
+          "Rice, black, unenriched, raw (4.18 G)"
+        ],
+        "daily_value_percentage": null
+      },
+      "VITAMIN_A": {
+        "total_amount": 371.0,
+        "unit": "UG",
+        "contributing_foods": [
+          "Macaroni and Cheese, canned entree (17.0 UG)",
+          "Cheese, cheddar (316.0 UG)",
+          "Peas, green, raw (38.0 UG)"
+        ],
+        "daily_value_percentage": null
+      }
+    },
+    "detailed_items": [
+      {
+        "matched_query_term": "Ground beef",
+        "selected_food_description": "Beef, ground, 80% lean meat / 20% fat, raw",
+        "db_source_id": "2514744",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 1.96,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 54.9,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 19.4,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 6.89,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 17.5,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 0.0,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Beef Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Ketchup",
+        "selected_food_description": "Ketchup, restaurant",
+        "db_source_id": "747693",
+        "processed_nutrients": {
+          "TOTAL_FAT": {
+            "amount": 0.55,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 14.0,
+            "unit": "MG"
+          },
+          "IRON": {
+            "amount": 0.43,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 949.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.11,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 26.8,
+            "unit": "G"
+          },
+          "CALORIES": {
+            "amount": 488.0,
+            "unit": "kJ"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Potatoes",
+        "selected_food_description": "Potatoes, gold, without skin, raw",
+        "db_source_id": "2346403",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.373,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 2.24,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 23.3,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.264,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 5.94,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.81,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 16.0,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Macaroni",
+        "selected_food_description": "Macaroni and Cheese, canned entree",
+        "db_source_id": "173325",
+        "processed_nutrients": {
+          "TOTAL_FAT": {
+            "amount": 2.46,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 35.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 3.38,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 0.5,
+            "unit": "G"
+          },
+          "IRON": {
+            "amount": 0.9,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "VITAMIN_A": {
+            "amount": 17.0,
+            "unit": "UG"
+          },
+          "CALORIES": {
+            "amount": 82.0,
+            "unit": "KCAL"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 11.5,
+            "unit": "G"
+          },
+          "SODIUM": {
+            "amount": 302.0,
+            "unit": "MG"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Meals, Entrees, and Side Dishes",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Cheese sauce",
+        "selected_food_description": "Cheese, cheddar",
+        "db_source_id": "328637",
+        "processed_nutrients": {
+          "CALCIUM": {
+            "amount": 707.0,
+            "unit": "MG"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 2.44,
+            "unit": "G"
+          },
+          "CALORIES": {
+            "amount": 1710.0,
+            "unit": "kJ"
+          },
+          "PROTEIN": {
+            "amount": 23.3,
+            "unit": "G"
+          },
+          "VITAMIN_A": {
+            "amount": 316.0,
+            "unit": "UG"
+          },
+          "TOTAL_FAT": {
+            "amount": 34.0,
+            "unit": "G"
+          },
+          "SODIUM": {
+            "amount": 654.0,
+            "unit": "MG"
+          },
+          "IRON": {
+            "amount": 0.16,
+            "unit": "MG"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Dairy and Egg Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Corn",
+        "selected_food_description": "Corn, sweet, yellow and white kernels,  fresh, raw",
+        "db_source_id": "2710826",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.388,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 1.63,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 2.43,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 0.656,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 2.79,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 14.7,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Green beans",
+        "selected_food_description": "Beans, snap, green, raw",
+        "db_source_id": "2346400",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.652,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.275,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 3.01,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 40.0,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 1.97,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 7.41,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Peas",
+        "selected_food_description": "Peas, green, raw",
+        "db_source_id": "170419",
+        "processed_nutrients": {
+          "CALORIES": {
+            "amount": 81.0,
+            "unit": "KCAL"
+          },
+          "VITAMIN_A": {
+            "amount": 38.0,
+            "unit": "UG"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 14.4,
+            "unit": "G"
+          },
+          "PROTEIN": {
+            "amount": 5.42,
+            "unit": "G"
+          },
+          "IRON": {
+            "amount": 1.47,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 5.0,
+            "unit": "MG"
+          },
+          "VITAMIN_C": {
+            "amount": 40.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.4,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 25.0,
+            "unit": "MG"
+          },
+          "FIBER": {
+            "amount": 5.7,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Carrots",
+        "selected_food_description": "Carrots, mature, raw",
+        "db_source_id": "2258586",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 0.15,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 86.6,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 0.351,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 3.1,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 30.5,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 0.941,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 10.3,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Vegetables and Vegetable Products",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      },
+      {
+        "matched_query_term": "Rice",
+        "selected_food_description": "Rice, black, unenriched, raw",
+        "db_source_id": "2710825",
+        "processed_nutrients": {
+          "IRON": {
+            "amount": 1.12,
+            "unit": "MG"
+          },
+          "SODIUM": {
+            "amount": 0.0,
+            "unit": "MG"
+          },
+          "TOTAL_FAT": {
+            "amount": 3.44,
+            "unit": "G"
+          },
+          "FIBER": {
+            "amount": 4.18,
+            "unit": "G"
+          },
+          "CALCIUM": {
+            "amount": 14.4,
+            "unit": "MG"
+          },
+          "PROTEIN": {
+            "amount": 7.57,
+            "unit": "G"
+          },
+          "CARBOHYDRATE_BY_DIFFERENCE": {
+            "amount": 77.2,
+            "unit": "G"
+          }
+        },
+        "confidence_score": null,
+        "food_category": "Cereal Grains and Pasta",
+        "serving_size_g": 0.0,
+        "data_source": "USDA_FDC"
+      }
+    ],
+    "metadata": {
+      "calculation_timestamp": "2025-06-04T09:03:31.197639Z",
+      "num_food_items_processed": 10,
+      "interpretation_strategy_used": "DefaultUSDAInterpretationStrategy",
+      "has_interpretation_errors": true,
+      "interpretation_errors_count": 5,
+      "rounding_precision_used": 2,
+      "daily_values_enabled": false,
+      "processing_metadata": {
+        "total_db_results": 50,
+        "successfully_interpreted": 10,
+        "processing_timestamp": "2025-06-04T09:03:31.181792Z",
+        "source_database": "USDA_FDC",
+        "unique_query_terms": 10,
+        "strategy_used": "DefaultUSDAInterpretationStrategy"
+      }
+    },
+    "total_calories": 2361.0,
+    "total_weight_g": null,
+    "nutrition_completeness_score": 0.85,
+    "macro_breakdown": {
+      "protein_percentage": 17.0,
+      "fat_percentage": 36.4,
+      "carbohydrate_percentage": 46.6,
+      "total_macro_kcal": 1551.1
+    }
+  },
+  "metadata": {
+    "workflow_version": "modular_v1.0",
+    "processing_time": "2025-06-04T18:03:31.197762"
+  }
+}

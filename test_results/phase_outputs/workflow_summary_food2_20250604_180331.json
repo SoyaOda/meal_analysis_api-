@@ -1,0 +1,21 @@
+{
+  "phase_name": "workflow_summary",
+  "timestamp": "20250604_180331",
+  "image_name": "food2",
+  "input": {
+    "image_path": "test_images/food2.jpg"
+  },
+  "output": {
+    "image_path": "test_images/food2.jpg",
+    "total_phases": 4,
+    "phase1_items": 15,
+    "usda_results": 50,
+    "phase2_interpreted": 10,
+    "final_calories": 2361.0,
+    "processing_complete": true
+  },
+  "metadata": {
+    "workflow_version": "modular_v1.0",
+    "processing_time": "2025-06-04T18:03:31.198906"
+  }
+}

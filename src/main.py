@@ -56,6 +56,16 @@ async def main():
         action="store_true", 
         help="クワイエットモード（エラーのみ表示）"
     )
+    parser.add_argument(
+        "--save-phases",
+        action="store_true",
+        help="各フェーズの入出力をJSONファイルに保存"
+    )
+    parser.add_argument(
+        "--no-save-phases", 
+        action="store_true",
+        help="フェーズ出力保存を無効化"
+    )
     
     args = parser.parse_args()
     
@@ -71,6 +81,12 @@ async def main():
         
         if args.quiet:
             config["LOGGING_LEVEL"] = "ERROR"
+        
+        # フェーズ出力保存設定の調整
+        if args.save_phases:
+            config["SAVE_PHASE_OUTPUTS"] = True
+        elif args.no_save_phases:
+            config["SAVE_PHASE_OUTPUTS"] = False
         
         # ログ設定
         ConfigLoader.setup_logging(config)
@@ -151,7 +167,38 @@ async def main():
         # エラーや警告の表示
         if nutrition_report.metadata.get("has_interpretation_errors"):
             print(f"\n⚠️  解釈エラーが発生しました（件数: {nutrition_report.metadata.get('interpretation_errors_count', 0)}）")
+        
+        # フェーズ出力ファイルの保存状況を表示
+        if config.get("SAVE_PHASE_OUTPUTS", True):
+            phase_output_dir = Path(config.get("PHASE_OUTPUT_DIR", "test_results/phase_outputs"))
+            image_stem = Path(args.image_path).stem
             
+            print(f"\n📁 フェーズ出力ファイル:")
+            print(f"   保存先: {phase_output_dir}/")
+            
+            # 各フェーズのファイルを確認
+            phase_files = {
+                "Phase 1 (画像処理)": f"phase1_{image_stem}_*.json",
+                "USDA DB Query": f"usda_db_query_{image_stem}_*.json", 
+                "Phase 2 (データ解釈)": f"phase2_{image_stem}_*.json",
+                "Nutrition Calculation": f"nutrition_calculation_{image_stem}_*.json",
+                "Workflow Summary": f"workflow_summary_{image_stem}_*.json"
+            }
+            
+            for phase_name, pattern in phase_files.items():
+                matching_files = list(phase_output_dir.glob(pattern))
+                if matching_files:
+                    latest_file = max(matching_files, key=lambda p: p.stat().st_mtime)
+                    print(f"   ✅ {phase_name}: {latest_file.name}")
+                else:
+                    print(f"   ❌ {phase_name}: ファイルが見つかりません")
+            
+            print(f"\n💡 フェーズ詳細を確認するには:")
+            print(f"   cat {phase_output_dir}/phase1_{image_stem}_*.json | jq '.output.identified_items'")
+            print(f"   cat {phase_output_dir}/usda_db_query_{image_stem}_*.json | jq '.output.retrieved_foods[0]'")
+            print(f"   cat {phase_output_dir}/phase2_{image_stem}_*.json | jq '.output.interpreted_foods[0]'")
+            print(f"   cat {phase_output_dir}/nutrition_calculation_{image_stem}_*.json | jq '.output.total_nutrients'")
+        
         print("\n✅ 栄養推定が完了しました！")
         
     except KeyboardInterrupt:
@@ -172,8 +219,8 @@ async def _setup_gemini_service(config: dict) -> Optional[object]:
     """Geminiサービスをセットアップ（既存サービスとの統合）"""
     try:
         # 既存のGeminiサービスクラスをインポート
-        # (実際のファイル構造に応じて調整が必要)
         import sys
+        import os
         from pathlib import Path
         
         # プロジェクトルートを追加
@@ -183,26 +230,31 @@ async def _setup_gemini_service(config: dict) -> Optional[object]:
         
         # 既存のGeminiサービスをインポート
         try:
-            from gemini_service import GeminiService
+            from app.services.gemini_service import GeminiMealAnalyzer
             
             # 環境変数から設定を取得
-            import os
-            gemini_config = {
-                "api_key": os.getenv("GEMINI_API_KEY"),
-                "model": os.getenv("GEMINI_MODEL", "gemini-1.5-pro"),
-                # 他の設定
-            }
+            project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+            location = os.getenv("VERTEX_AI_LOCATION", "us-central1")
+            model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-preview-05-20")
             
-            gemini_service = GeminiService(gemini_config)
+            if not project_id:
+                print("⚠️  警告: GOOGLE_CLOUD_PROJECT環境変数が設定されていません")
+                return None
+            
+            gemini_service = GeminiMealAnalyzer(
+                project_id=project_id,
+                location=location,
+                model_name=model_name
+            )
             print("✅ Geminiサービスが正常に初期化されました")
             return gemini_service
             
-        except ImportError:
-            print("⚠️  既存のGeminiServiceクラスが見つかりません")
+        except ImportError as e:
+            print(f"⚠️  既存のGeminiServiceクラスが見つかりません: {e}")
             return None
             
     except Exception as e:
-        print(f"⚠️  Geminiサービスの初期化に失敗: {e}")
+        print(f"❌ Geminiサービスの初期化に失敗しました: {e}")
         return None
 
 
