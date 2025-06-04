@@ -6,6 +6,18 @@
 
 ## 🌟 主な機能
 
+### **🆕 v2.1 新機能: モジュラーアーキテクチャ**
+
+- **🏗️ 4 フェーズ分離設計**: 各処理段階を独立したコンポーネントとして完全分離
+  - `Phase 1`: 画像処理・食品認識 (`image_processor`)
+  - `USDA DB Query`: データベース検索・クエリ実行 (`db_interface`)
+  - `Phase 2`: データ解釈・栄養素マッピング (`data_interpreter`)
+  - `Nutrition Calculation`: 栄養計算・集計 (`nutrition_calculator`)
+- **📁 フェーズ出力保存機能**: 各フェーズの入出力を JSON 形式で自動保存・デバッグ支援
+- **⚙️ 設定駆動型設計**: データベースやプロンプト戦略をコード変更なしで修正可能
+- **🔧 抽象化レイヤー**: DB ハンドラーや解釈戦略のプラガブル実装
+- **📊 Pydantic モデル**: 全フェーズ間のタイプセーフなデータ転送
+
 ### **新機能: 動的栄養計算システム v2.0**
 
 - **🧠 AI 駆動の計算戦略決定**: Gemini AI が各料理に対して最適な栄養計算方法を自動選択
@@ -24,6 +36,8 @@
 - **OpenAPI 3.0 準拠**: 完全な API 文書化とタイプ安全性
 
 ## 🏗 プロジェクト構造
+
+### レガシー API 構造（FastAPI サーバー）
 
 ```
 meal_analysis_api/
@@ -46,9 +60,46 @@ meal_analysis_api/
 │   │   ├── phase2_system_prompt.txt      # フェーズ2システムプロンプト（戦略決定用）
 │   │   └── phase2_user_prompt_template.txt
 │   └── main.py                           # FastAPIアプリケーション
+```
+
+### 🆕 新モジュラーアーキテクチャ（v2.1）
+
+```
+meal_analysis_api/
+├── src/                                  # 🆕 新しいモジュラーコア
+│   ├── image_processor/                  # Phase 1: 画像処理
+│   │   ├── processor.py                  # 画像分析エンジン
+│   │   └── image_models.py               # 入出力Pydanticモデル
+│   ├── db_interface/                     # USDA DB抽象化レイヤー
+│   │   ├── base_handler.py               # 抽象DBハンドラー
+│   │   ├── usda_handler.py               # USDA実装
+│   │   └── db_models.py                  # クエリ・結果モデル
+│   ├── data_interpreter/                 # Phase 2: データ解釈
+│   │   ├── interpreter.py                # 解釈エンジン
+│   │   ├── interpretation_models.py      # 解釈結果モデル
+│   │   └── strategies/                   # 解釈戦略（プラガブル）
+│   │       ├── base_strategy.py          # 抽象戦略クラス
+│   │       └── default_usda_strategy.py  # USDA用デフォルト戦略
+│   ├── nutrition_calculator/             # Phase 4: 栄養計算
+│   │   ├── calculator.py                 # 栄養計算エンジン
+│   │   └── calculation_models.py         # 計算結果モデル
+│   ├── orchestration/                    # ワークフロー統括
+│   │   └── workflow_manager.py           # 4フェーズ統合オーケストレーター
+│   ├── common/                           # 共通コンポーネント
+│   │   ├── config_loader.py              # 設定管理
+│   │   └── exceptions.py                 # カスタム例外
+│   └── main.py                           # 🆕 新しいメインエントリポイント
+├── configs/                              # 🆕 設定ファイル集約
+│   ├── main_config.yaml                  # メイン設定（プロンプト、DB戦略）
+│   └── prompts/                          # プロンプトテンプレート
+├── test_results/                         # 結果保存ディレクトリ
+│   └── phase_outputs/                    # 🆕 フェーズ別出力保存
+├── tests/                                # 🆕 テストスイート
+│   ├── unit/                             # 単体テスト
+│   └── integration/                      # 統合テスト
 ├── test_images/                          # テスト用画像
-├── test_english_phase2.py                # 統合テストスクリプト (v2.0)
-├── test_english_phase2_v2.py             # 高度戦略テストスクリプト (v2.1)
+├── test_english_phase1_v2.py             # レガシーテストスクリプト
+├── test_english_phase2_v2.py             # レガシーテストスクリプト
 ├── analyze_logs.py                       # ログ分析ツール
 ├── logs/                                 # ログファイル（自動生成）
 ├── requirements.txt                      # Python依存関係
@@ -154,7 +205,88 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## 🧪 テストの実行
 
-### 1. **Phase 1 テスト（USDA クエリ候補生成）**
+### 🆕 新しいモジュラーアーキテクチャ（推奨）
+
+#### **統合 4 フェーズワークフロー**
+
+新しいモジュラーアーキテクチャでは、1 つのコマンドで全 4 フェーズを実行できます：
+
+```bash
+# 基本的な使用方法
+python -m src.main test_images/food2.jpg
+
+# 設定ファイルを指定
+python -m src.main test_images/food2.jpg --config configs/main_config.yaml
+
+# フェーズ出力保存を有効化
+python -m src.main test_images/food2.jpg --save-phases
+
+# デバッグモードで実行
+python -m src.main test_images/food2.jpg --debug
+
+# 結果をJSONファイルに保存
+python -m src.main test_images/food2.jpg --output results/meal_analysis.json
+```
+
+#### **フェーズ出力保存機能 🔍**
+
+`--save-phases` オプションまたは設定ファイルで `SAVE_PHASE_OUTPUTS: true` にすると、各フェーズの入出力が詳細に保存されます：
+
+```bash
+# フェーズ出力保存を有効化して実行
+python -m src.main test_images/food2.jpg --save-phases
+```
+
+**保存されるファイル**:
+
+```
+test_results/phase_outputs/
+├── phase1_food2_20250604_180324.json        # Phase 1: 画像処理結果
+├── usda_db_query_food2_20250604_180331.json # USDA DBクエリ結果
+├── phase2_food2_20250604_180331.json        # Phase 2: データ解釈結果
+├── nutrition_calculation_food2_20250604_180331.json # 栄養計算結果
+└── workflow_summary_food2_20250604_180331.json     # 全体サマリー
+```
+
+**各フェーズの詳細確認方法**:
+
+```bash
+# Phase 1で認識された食品アイテム
+cat test_results/phase_outputs/phase1_food2_*.json | jq '.output.identified_items'
+
+# USDAデータベースから取得された最初の食品データ
+cat test_results/phase_outputs/usda_db_query_food2_*.json | jq '.output.retrieved_foods[0]'
+
+# Phase 2で解釈された最初の食品
+cat test_results/phase_outputs/phase2_food2_*.json | jq '.output.interpreted_foods[0]'
+
+# 最終的な栄養素集計結果
+cat test_results/phase_outputs/nutrition_calculation_food2_*.json | jq '.output.total_nutrients'
+
+# ワークフロー全体のサマリー
+cat test_results/phase_outputs/workflow_summary_food2_*.json | jq '.output'
+```
+
+#### **利用可能なオプション**
+
+```bash
+# ヘルプ表示
+python -m src.main --help
+
+# 主要オプション:
+#   image_path: 解析する画像ファイルのパス（必須）
+#   --config: 設定ファイルのパス（デフォルト: configs/main_config.yaml）
+#   --output: 結果出力ファイルパス（JSONファイル）
+#   --text: 補助テキスト情報
+#   --debug: デバッグモードで実行
+#   --quiet: クワイエットモード（エラーのみ表示）
+#   --save-phases: 各フェーズの入出力をJSONファイルに保存
+#   --no-save-phases: フェーズ出力保存を無効化
+```
+
+### レガシーテスト（参考）
+
+#### 1. **Phase 1 テスト（USDA クエリ候補生成）**
 
 #### 基本的な使用方法
 
@@ -184,7 +316,7 @@ python test_english_phase1_v2.py --help
 - `test_results/phase1_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
 - `phase1_analysis_result_v2.json` - Phase 2 テスト用のデフォルトファイル
 
-### 2. **Phase 2 テスト（動的栄養計算システム）**
+#### 2. **Phase 2 テスト（動的栄養計算システム）**
 
 #### 基本的な使用方法
 
@@ -200,73 +332,6 @@ python test_english_phase2_v2.py test_images/food1.jpg test_results/phase1_resul
 
 # 結果を自動保存するオプション付き
 python test_english_phase2_v2.py test_images/food1.jpg --save-results
-```
-
-#### ヘルプとオプション
-
-```bash
-# ヘルプ表示
-python test_english_phase2_v2.py --help
-
-# 利用可能なオプション:
-#   image_path: 解析する画像ファイルのパス（省略可能）
-#   phase1_result_file: Phase 1結果JSONファイルのパス（省略可能）
-#   --save-results: 結果をtest_results/ディレクトリに自動保存
-```
-
-**結果の保存**:
-
-- `test_results/phase2_result_[画像名]_[タイムスタンプ].json` - タイムスタンプ付きファイル
-- `phase2_analysis_result_v2.json` - 後続処理用のデフォルトファイル
-
-#### 🆕 v2.1 の改善点
-
-**Phase 1 の機能強化**:
-
-- **料理全体重量推定**: 各料理の総重量を`estimated_total_dish_weight_g`として出力
-- **調理状態必須指定**: 全ての材料について`state`フィールド（raw, cooked, fried, baked, processed, dry）を必須指定
-- **ブランド認識強化**: レストラン・ブランドの詳細検出と USDA クエリへの反映
-
-**Phase 2 の機能強化**:
-
-- **クエリ-結果マッピング修正**: Phase 1 クエリ候補と検索結果の正確な対応付け
-- **FDC ID 選択透明性**: 詳細な選択理由とブランド代替選択の説明
-- **調理状態一致検証**: 乾燥パスタ vs 調理済みパスタなどの状態ミスマッチ防止
-- **候補不適切時の処理**: 不適切な候補に対する明確なエラーハンドリング
-
-### 3. **統合テストワークフロー例**
-
-```bash
-# 1. Phase 1: 画像分析とUSDAクエリ候補生成
-python test_english_phase1_v2.py test_images/food1.jpg
-
-# 2. Phase 2: 戦略決定と栄養計算
-python test_english_phase2_v2.py test_images/food1.jpg
-
-# または、一度に実行（推奨）:
-python test_english_phase1_v2.py test_images/food1.jpg && python test_english_phase2_v2.py test_images/food1.jpg
-```
-
-### 4. **テスト結果の確認**
-
-```bash
-# 保存された結果ファイルの確認
-ls -la test_results/
-
-# 最新のPhase 1結果を確認
-cat test_results/phase1_result_*.json | jq '.dishes[0].usda_query_candidates'
-
-# 最新のPhase 2結果を確認
-cat test_results/phase2_result_*.json | jq '.dishes[0].calculation_strategy'
-```
-
-### 5. **旧バージョンテスト（参考）**
-
-#### v2.0 統合テスト
-
-```bash
-# 別のターミナルで実行
-python test_english_phase2.py
 ```
 
 ## 📡 API 使用方法
@@ -390,6 +455,373 @@ curl -X POST "http://localhost:8000/api/v1/meal-analyses/refine" \
 
 ## 🔧 技術仕様
 
+### **新モジュラーアーキテクチャ（v2.1）**
+
+- **アーキテクチャパターン**: 4 フェーズ分離、ストラテジーパターン、依存性注入
+- **型安全性**: Pydantic V2 モデル、完全な型ヒント対応
+- **設定管理**: YAML 設定ファイル、環境変数統合
+- **データ永続化**: JSON フェーズ出力、構造化ログ
+- **テスタビリティ**: 単体テスト、統合テスト、モッキング対応
+- **拡張性**: プラガブル DB、解釈戦略、プロンプトテンプレート
+
+### **フェーズ間データフロー**
+
+```
+ImageInput → ProcessedImageData → QueryParameters → RawDBResult → StructuredNutrientInfo → FinalNutritionReport
+```
+
+### 動的計算戦略の決定ロジック
+
+**Dish Level (`dish_level`)**:
+
+- シンプルな単品食品（果物、飲み物、基本食材）
+- 標準化された既製品で適切な USDA ID が存在する場合
+- 例: 緑茶、りんご、白米
+
+**Ingredient Level (`ingredient_level`)**:
+
+- 複雑な調理済み料理（炒め物、サラダ、スープ）
+- 複数食材の組み合わせで料理全体の USDA ID が不適切な場合
+- 例: 野菜炒め、手作りサラダ、味噌汁
+
+### 栄養計算式
+
+```
+実栄養価 = (100gあたり栄養価 ÷ 100) × 推定重量(g)
+```
+
+### 集計階層
+
+1. **食材レベル**: 個別食材の重量 × 100g 栄養価
+2. **料理レベル**: 食材レベルの合計 または 料理全体計算
+3. **食事レベル**: 全料理の栄養価合計
+
+## ⚙️ モジュラーアーキテクチャの設定とカスタマイズ
+
+### **設定ファイル（configs/main_config.yaml）**
+
+新しいアーキテクチャでは、全ての設定を `configs/main_config.yaml` で管理します：
+
+```yaml
+# フェーズ出力保存設定
+SAVE_PHASE_OUTPUTS: true
+PHASE_OUTPUT_DIR: "test_results/phase_outputs"
+
+# プロンプト設定（クエリ生成戦略）
+PROMPTS:
+  default_usda_search_v1: "{food_name}"
+  usda_raw_food_search: "raw {food_name}"
+  usda_cooked_food_search: "cooked {food_name}"
+
+# データ解釈設定
+INTERPRETER_CONFIG:
+  STRATEGY_NAME: "DefaultUSDA"
+  STRATEGY_CONFIGS:
+    DefaultUSDA:
+      NUTRIENT_MAP:
+        "Protein": "PROTEIN"
+        "Total lipid (fat)": "TOTAL_FAT"
+        "Energy": "CALORIES"
+      TARGET_UNITS:
+        "PROTEIN": "g"
+        "TOTAL_FAT": "g"
+        "CALORIES": "kcal"
+```
+
+### **データベースの切り替え方法**
+
+現在は USDA をサポートしていますが、他のデータベースに切り替え可能：
+
+```yaml
+DB_CONFIG:
+  TYPE: "USDA" # 将来: "OPENFOODFACTS", "CUSTOM_SQL" など
+  DEFAULT_QUERY_STRATEGY: "default_usda_search_v1"
+  USDA:
+    USDA_API_BASE_URL: "https://api.nal.usda.gov/fdc/v1"
+```
+
+新しいデータベースを追加する場合：
+
+1. `src/db_interface/` に新しいハンドラークラスを作成
+2. `DBHandler` 抽象基底クラスを継承
+3. 設定ファイルで `TYPE` を変更
+
+### **プロンプト戦略のカスタマイズ**
+
+クエリ生成戦略をコード変更なしで修正可能：
+
+```yaml
+PROMPTS:
+  # 基本戦略
+  default_usda_search_v1: "{food_name}"
+
+  # 調理状態を含む戦略
+  usda_cooked_food_search: "cooked {food_name}"
+
+  # 詳細属性を含む戦略
+  usda_detailed_search: "{food_name} {state} {type}"
+
+  # カスタム戦略例
+  my_custom_strategy: "organic {food_name} fresh"
+```
+
+### **栄養素マッピングのカスタマイズ**
+
+USDA の栄養素名を標準名にマッピング：
+
+```yaml
+INTERPRETER_CONFIG:
+  STRATEGY_CONFIGS:
+    DefaultUSDA:
+      NUTRIENT_MAP:
+        # USDA名 -> 標準名
+        "Protein": "PROTEIN"
+        "Total lipid (fat)": "TOTAL_FAT"
+        "Calcium, Ca": "CALCIUM"
+        # 新しいマッピングを追加可能
+        "Vitamin D (D2 + D3)": "VITAMIN_D"
+```
+
+### **解釈戦略の拡張**
+
+新しい解釈戦略を追加する場合：
+
+1. `src/data_interpreter/strategies/` に新しい戦略クラスを作成
+2. `BaseInterpretationStrategy` を継承
+3. 設定ファイルで戦略を指定：
+
+```yaml
+INTERPRETER_CONFIG:
+  STRATEGY_NAME: "MyCustomStrategy" # 新しい戦略
+  STRATEGY_CONFIGS:
+    MyCustomStrategy:
+      # カスタム設定
+```
+
+### **フェーズ出力のカスタマイズ**
+
+フェーズ出力保存の詳細制御：
+
+```yaml
+# 出力制御
+SAVE_PHASE_OUTPUTS: true
+PHASE_OUTPUT_DIR: "custom_output_dir"
+
+# 個別フェーズの制御（将来実装予定）
+PHASE_OUTPUT_SETTINGS:
+  save_phase1: true
+  save_usda_query: true
+  save_phase2: true
+  save_nutrition_calc: true
+  save_workflow_summary: true
+```
+
+### **環境別設定の管理**
+
+```bash
+# 開発環境
+python -m src.main image.jpg --config configs/dev_config.yaml
+
+# 本番環境
+python -m src.main image.jpg --config configs/prod_config.yaml
+
+# テスト環境
+python -m src.main image.jpg --config configs/test_config.yaml
+```
+
+## 🔧 技術仕様
+
+### **新モジュラーアーキテクチャ（v2.1）**
+
+- **アーキテクチャパターン**: 4 フェーズ分離、ストラテジーパターン、依存性注入
+- **型安全性**: Pydantic V2 モデル、完全な型ヒント対応
+- **設定管理**: YAML 設定ファイル、環境変数統合
+- **データ永続化**: JSON フェーズ出力、構造化ログ
+- **テスタビリティ**: 単体テスト、統合テスト、モッキング対応
+- **拡張性**: プラガブル DB、解釈戦略、プロンプトテンプレート
+
+### **フェーズ間データフロー**
+
+```
+ImageInput → ProcessedImageData → QueryParameters → RawDBResult → StructuredNutrientInfo → FinalNutritionReport
+```
+
+### 動的計算戦略の決定ロジック
+
+**Dish Level (`dish_level`)**:
+
+- シンプルな単品食品（果物、飲み物、基本食材）
+- 標準化された既製品で適切な USDA ID が存在する場合
+- 例: 緑茶、りんご、白米
+
+**Ingredient Level (`ingredient_level`)**:
+
+- 複雑な調理済み料理（炒め物、サラダ、スープ）
+- 複数食材の組み合わせで料理全体の USDA ID が不適切な場合
+- 例: 野菜炒め、手作りサラダ、味噌汁
+
+### 栄養計算式
+
+```
+実栄養価 = (100gあたり栄養価 ÷ 100) × 推定重量(g)
+```
+
+### 集計階層
+
+1. **食材レベル**: 個別食材の重量 × 100g 栄養価
+2. **料理レベル**: 食材レベルの合計 または 料理全体計算
+3. **食事レベル**: 全料理の栄養価合計
+
+## ⚙️ モジュラーアーキテクチャの設定とカスタマイズ
+
+### **設定ファイル（configs/main_config.yaml）**
+
+新しいアーキテクチャでは、全ての設定を `configs/main_config.yaml` で管理します：
+
+```yaml
+# フェーズ出力保存設定
+SAVE_PHASE_OUTPUTS: true
+PHASE_OUTPUT_DIR: "test_results/phase_outputs"
+
+# プロンプト設定（クエリ生成戦略）
+PROMPTS:
+  default_usda_search_v1: "{food_name}"
+  usda_raw_food_search: "raw {food_name}"
+  usda_cooked_food_search: "cooked {food_name}"
+
+# データ解釈設定
+INTERPRETER_CONFIG:
+  STRATEGY_NAME: "DefaultUSDA"
+  STRATEGY_CONFIGS:
+    DefaultUSDA:
+      NUTRIENT_MAP:
+        "Protein": "PROTEIN"
+        "Total lipid (fat)": "TOTAL_FAT"
+        "Energy": "CALORIES"
+      TARGET_UNITS:
+        "PROTEIN": "g"
+        "TOTAL_FAT": "g"
+        "CALORIES": "kcal"
+```
+
+### **データベースの切り替え方法**
+
+現在は USDA をサポートしていますが、他のデータベースに切り替え可能：
+
+```yaml
+DB_CONFIG:
+  TYPE: "USDA" # 将来: "OPENFOODFACTS", "CUSTOM_SQL" など
+  DEFAULT_QUERY_STRATEGY: "default_usda_search_v1"
+  USDA:
+    USDA_API_BASE_URL: "https://api.nal.usda.gov/fdc/v1"
+```
+
+新しいデータベースを追加する場合：
+
+1. `src/db_interface/` に新しいハンドラークラスを作成
+2. `DBHandler` 抽象基底クラスを継承
+3. 設定ファイルで `TYPE` を変更
+
+### **プロンプト戦略のカスタマイズ**
+
+クエリ生成戦略をコード変更なしで修正可能：
+
+```yaml
+PROMPTS:
+  # 基本戦略
+  default_usda_search_v1: "{food_name}"
+
+  # 調理状態を含む戦略
+  usda_cooked_food_search: "cooked {food_name}"
+
+  # 詳細属性を含む戦略
+  usda_detailed_search: "{food_name} {state} {type}"
+
+  # カスタム戦略例
+  my_custom_strategy: "organic {food_name} fresh"
+```
+
+### **栄養素マッピングのカスタマイズ**
+
+USDA の栄養素名を標準名にマッピング：
+
+```yaml
+INTERPRETER_CONFIG:
+  STRATEGY_CONFIGS:
+    DefaultUSDA:
+      NUTRIENT_MAP:
+        # USDA名 -> 標準名
+        "Protein": "PROTEIN"
+        "Total lipid (fat)": "TOTAL_FAT"
+        "Calcium, Ca": "CALCIUM"
+        # 新しいマッピングを追加可能
+        "Vitamin D (D2 + D3)": "VITAMIN_D"
+```
+
+### **解釈戦略の拡張**
+
+新しい解釈戦略を追加する場合：
+
+1. `src/data_interpreter/strategies/` に新しい戦略クラスを作成
+2. `BaseInterpretationStrategy` を継承
+3. 設定ファイルで戦略を指定：
+
+```yaml
+INTERPRETER_CONFIG:
+  STRATEGY_NAME: "MyCustomStrategy" # 新しい戦略
+  STRATEGY_CONFIGS:
+    MyCustomStrategy:
+      # カスタム設定
+```
+
+### **フェーズ出力のカスタマイズ**
+
+フェーズ出力保存の詳細制御：
+
+```yaml
+# 出力制御
+SAVE_PHASE_OUTPUTS: true
+PHASE_OUTPUT_DIR: "custom_output_dir"
+
+# 個別フェーズの制御（将来実装予定）
+PHASE_OUTPUT_SETTINGS:
+  save_phase1: true
+  save_usda_query: true
+  save_phase2: true
+  save_nutrition_calc: true
+  save_workflow_summary: true
+```
+
+### **環境別設定の管理**
+
+```bash
+# 開発環境
+python -m src.main image.jpg --config configs/dev_config.yaml
+
+# 本番環境
+python -m src.main image.jpg --config configs/prod_config.yaml
+
+# テスト環境
+python -m src.main image.jpg --config configs/test_config.yaml
+```
+
+## 🔧 技術仕様
+
+### **新モジュラーアーキテクチャ（v2.1）**
+
+- **アーキテクチャパターン**: 4 フェーズ分離、ストラテジーパターン、依存性注入
+- **型安全性**: Pydantic V2 モデル、完全な型ヒント対応
+- **設定管理**: YAML 設定ファイル、環境変数統合
+- **データ永続化**: JSON フェーズ出力、構造化ログ
+- **テスタビリティ**: 単体テスト、統合テスト、モッキング対応
+- **拡張性**: プラガブル DB、解釈戦略、プロンプトテンプレート
+
+### **フェーズ間データフロー**
+
+```
+ImageInput → ProcessedImageData → QueryParameters → RawDBResult → StructuredNutrientInfo → FinalNutritionReport
+```
+
 ### 動的計算戦略の決定ロジック
 
 **Dish Level (`dish_level`)**:
@@ -459,6 +891,15 @@ gcloud services enable aiplatform.googleapis.com
 
 ## 💻 開発情報
 
+### **新モジュラーアーキテクチャ（v2.1）**
+
+- **フレームワーク**: モジュラー設計、ストラテジーパターン
+- **型安全性**: Pydantic V2、完全型ヒント対応
+- **設定管理**: YAML 設定ファイル、環境変数統合
+- **テスト**: 単体テスト、統合テスト、フェーズ別テスト対応
+
+### **レガシー API（v2.0）**
+
 - **フレームワーク**: FastAPI 0.104+
 - **AI サービス**: Google Vertex AI (Gemini 2.5 Flash)
 - **栄養データベース**: USDA FoodData Central API
@@ -469,6 +910,17 @@ gcloud services enable aiplatform.googleapis.com
   - `httpx` (非同期 HTTP)
   - `pydantic` (データバリデーション)
   - `pillow` (画像処理)
+
+### **共通技術要件**
+
+- **Python バージョン**: 3.9+
+- **主要ライブラリ**:
+  - `google-cloud-aiplatform` (Vertex AI)
+  - `httpx` (非同期 HTTP)
+  - `pydantic` (データバリデーション)
+  - `pillow` (画像処理)
+  - `PyYAML` (設定ファイル)
+  - `pathlib` (パス操作)
 
 ## 📄 ライセンス
 
