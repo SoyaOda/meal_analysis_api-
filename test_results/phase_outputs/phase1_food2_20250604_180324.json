@@ -1,0 +1,349 @@
+{
+  "phase_name": "phase1",
+  "timestamp": "20250604_180324",
+  "image_name": "food2",
+  "input": {
+    "image_path": "test_images/food2.jpg",
+    "image_bytes": null,
+    "mime_type": null
+  },
+  "output": {
+    "identified_items": [
+      {
+        "name": "Meatloaf",
+        "confidence": null,
+        "quantity_estimate": "2 slices",
+        "attributes": {
+          "type": "Main course",
+          "is_dish": true,
+          "usda_query_candidates": [
+            {
+              "query_term": "Meatloaf, cooked",
+              "granularity_level": "dish",
+              "preferred_data_types": [
+                "SR Legacy",
+                "Branded"
+              ],
+              "original_term": "Meatloaf",
+              "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
+            },
+            {
+              "query_term": "Beef, ground, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Ground beef",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            },
+            {
+              "query_term": "Ketchup, tomato, prepared",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Ketchup",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            }
+          ]
+        },
+        "weight_g": null,
+        "state": null
+      },
+      {
+        "name": "Ground beef",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Meatloaf",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Ketchup",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Meatloaf",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "processed"
+      },
+      {
+        "name": "Mashed Potatoes",
+        "confidence": null,
+        "quantity_estimate": "1 serving",
+        "attributes": {
+          "type": "Side dish",
+          "is_dish": true,
+          "usda_query_candidates": [
+            {
+              "query_term": "Potatoes, mashed, prepared",
+              "granularity_level": "dish",
+              "preferred_data_types": [
+                "SR Legacy",
+                "Branded"
+              ],
+              "original_term": "Mashed Potatoes",
+              "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
+            },
+            {
+              "query_term": "Potatoes, white, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Potatoes",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            }
+          ]
+        },
+        "weight_g": null,
+        "state": null
+      },
+      {
+        "name": "Potatoes",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Mashed Potatoes",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Macaroni and Cheese",
+        "confidence": null,
+        "quantity_estimate": "1 serving",
+        "attributes": {
+          "type": "Side dish",
+          "is_dish": true,
+          "usda_query_candidates": [
+            {
+              "query_term": "Macaroni and cheese, prepared",
+              "granularity_level": "dish",
+              "preferred_data_types": [
+                "SR Legacy",
+                "Branded"
+              ],
+              "original_term": "Macaroni and Cheese",
+              "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
+            },
+            {
+              "query_term": "Macaroni, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Macaroni",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            },
+            {
+              "query_term": "Cheese sauce, prepared",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Cheese sauce",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            }
+          ]
+        },
+        "weight_g": null,
+        "state": null
+      },
+      {
+        "name": "Macaroni",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Macaroni and Cheese",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Cheese sauce",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Macaroni and Cheese",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "processed"
+      },
+      {
+        "name": "Mixed Vegetables",
+        "confidence": null,
+        "quantity_estimate": "1 serving",
+        "attributes": {
+          "type": "Side dish",
+          "is_dish": true,
+          "usda_query_candidates": [
+            {
+              "query_term": "Vegetables, mixed, cooked",
+              "granularity_level": "dish",
+              "preferred_data_types": [
+                "SR Legacy",
+                "Branded"
+              ],
+              "original_term": "Mixed Vegetables",
+              "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
+            },
+            {
+              "query_term": "Corn, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Corn",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            },
+            {
+              "query_term": "Green beans, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Green beans",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            },
+            {
+              "query_term": "Peas, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Peas",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            },
+            {
+              "query_term": "Carrots, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Carrots",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            }
+          ]
+        },
+        "weight_g": null,
+        "state": null
+      },
+      {
+        "name": "Corn",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Mixed Vegetables",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Green beans",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Mixed Vegetables",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Peas",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Mixed Vegetables",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Carrots",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Mixed Vegetables",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      },
+      {
+        "name": "Seasoned Rice",
+        "confidence": null,
+        "quantity_estimate": "1 serving",
+        "attributes": {
+          "type": "Side dish",
+          "is_dish": true,
+          "usda_query_candidates": [
+            {
+              "query_term": "Rice, seasoned, cooked",
+              "granularity_level": "dish",
+              "preferred_data_types": [
+                "SR Legacy",
+                "Branded"
+              ],
+              "original_term": "Seasoned Rice",
+              "reason_for_query": "Prepared dish query targeting SR Legacy database first, with Branded as backup"
+            },
+            {
+              "query_term": "Rice, white, cooked",
+              "granularity_level": "ingredient",
+              "preferred_data_types": [
+                "Foundation",
+                "SR Legacy"
+              ],
+              "original_term": "Rice",
+              "reason_for_query": "Basic ingredient query targeting Foundation Foods for accurate composition"
+            }
+          ]
+        },
+        "weight_g": null,
+        "state": null
+      },
+      {
+        "name": "Rice",
+        "confidence": null,
+        "quantity_estimate": null,
+        "attributes": {
+          "parent_dish": "Seasoned Rice",
+          "is_ingredient": true
+        },
+        "weight_g": 0.0,
+        "state": "cooked"
+      }
+    ],
+    "original_image_ref": "test_images/food2.jpg",
+    "processing_metadata": {
+      "gemini_dishes_count": 5,
+      "total_usda_queries": 15,
+      "processing_method": "gemini_phase1"
+    }
+  },
+  "metadata": {
+    "workflow_version": "modular_v1.0",
+    "processing_time": "2025-06-04T18:03:24.202927"
+  }
+}
