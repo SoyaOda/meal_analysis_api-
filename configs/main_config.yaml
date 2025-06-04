@@ -1,0 +1,60 @@
+# Nutrition API - メイン設定ファイル
+# モジュール化されたコンポーネント用の設定
+
+LOGGING_LEVEL: "INFO"
+
+# Image Processor設定
+IMAGE_PROCESSOR_CONFIG:
+  MAX_IMAGE_SIZE_MB: 10
+  ALLOWED_EXTENSIONS: [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]
+
+# データベース設定
+DB_CONFIG:
+  TYPE: "USDA" # "USDA", "OPENFOODFACTS", "CUSTOM_SQL"
+  DEFAULT_QUERY_STRATEGY: "default_usda_search_v1"
+  USDA:
+    # USDA_API_KEY: 環境変数 "USDA_API_KEY" からロード
+    USDA_API_BASE_URL: "https://api.nal.usda.gov/fdc/v1"
+    TIMEOUT_SECONDS: 30
+
+# プロンプト設定（クエリ生成戦略）
+PROMPTS:
+  default_usda_search_v1: "{food_name}"
+  usda_raw_food_search: "raw {food_name}"
+  usda_cooked_food_search: "cooked {food_name}"
+  usda_detailed_search: "{food_name} {state} {type}"
+
+# データ解釈設定
+INTERPRETER_CONFIG:
+  STRATEGY_NAME: "DefaultUSDA"
+  STRATEGY_CONFIGS:
+    DefaultUSDA:
+      NUTRIENT_MAP:
+        "Protein": "PROTEIN"
+        "Total lipid (fat)": "TOTAL_FAT"
+        "Carbohydrate, by difference": "CARBOHYDRATE_BY_DIFFERENCE"
+        "Energy": "CALORIES"
+        "Fiber, total dietary": "FIBER"
+        "Sugars, total including NLEA": "SUGAR"
+        "Calcium, Ca": "CALCIUM"
+        "Iron, Fe": "IRON"
+        "Sodium, Na": "SODIUM"
+        "Vitamin C, total ascorbic acid": "VITAMIN_C"
+        "Vitamin A, RAE": "VITAMIN_A"
+      TARGET_UNITS:
+        "PROTEIN": "g"
+        "TOTAL_FAT": "g"
+        "CARBOHYDRATE_BY_DIFFERENCE": "g"
+        "CALORIES": "kcal"
+        "FIBER": "g"
+        "SUGAR": "g"
+        "CALCIUM": "mg"
+        "IRON": "mg"
+        "SODIUM": "mg"
+        "VITAMIN_C": "mg"
+        "VITAMIN_A": "µg"
+
+# 栄養計算設定
+CALCULATOR_CONFIG:
+  ROUNDING_PRECISION: 2
+  ENABLE_DAILY_VALUES: false
