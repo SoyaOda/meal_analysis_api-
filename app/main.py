@@ -109,3 +109,24 @@ async def global_exception_handler(request, exc):
             }
         }
     ) 
+
+# メイン実行部分
+if __name__ == "__main__":
+    import uvicorn
+    import os
+    
+    # 環境変数の設定（必要に応じて）
+    os.environ.setdefault("USDA_API_KEY", "vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg")
+    os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api /service-account-key.json")
+    os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
+    os.environ.setdefault("GEMINI_LOCATION", "us-central1")
+    os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
+    
+    # サーバー起動
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        log_level="debug"
+    ) 
