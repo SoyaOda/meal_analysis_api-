@@ -20,7 +20,6 @@ class USDAMatch(BaseModel):
     ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded Foodsの場合)")
     food_nutrients: List[USDANutrient] = Field(default_factory=list, description="主要な栄養素情報のリスト")
     score: Optional[float] = Field(None, description="検索結果の関連度スコア")
-    match_confidence: Optional[float] = Field(None, description="照合の信頼度 (0-1)")
     original_usda_data: Optional[Dict] = Field(None, description="USDA APIからのオリジナルJSONデータ")
 
 
