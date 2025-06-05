@@ -360,8 +360,7 @@ class ResultManager:
             "summary": {
                 "total_components": len(self.execution_logs),
                 "total_warnings": sum(len(log.warnings) for log in self.execution_logs),
-                "total_errors": sum(len(log.errors) for log in self.execution_logs),
-                "average_confidence": self._calculate_average_confidence()
+                "total_errors": sum(len(log.errors) for log in self.execution_logs)
             }
         }
         
@@ -408,7 +407,6 @@ class ResultManager:
                 dish_num = decision_point.split('_')[-1]
                 content += f"**料理 {dish_num}**:\n"
                 content += f"- 推論: {reasoning_data['reason']}\n"
-                content += f"- 信頼度: {reasoning_data['confidence']}\n"
                 content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
         
         # 食材選択の推論
@@ -418,17 +416,6 @@ class ResultManager:
             for decision_point, reasoning_data in ingredient_reasoning:
                 content += f"**{decision_point.replace('_', ' ').title()}**:\n"
                 content += f"- 推論: {reasoning_data['reason']}\n"
-                content += f"- 信頼度: {reasoning_data['confidence']}\n"
-                content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
-        
-        # 信頼度計算の推論
-        confidence_reasoning = [r for r in log.reasoning.items() if r[0].startswith('confidence_')]
-        if confidence_reasoning:
-            content += "### 信頼度計算の詳細\n\n"
-            for decision_point, reasoning_data in confidence_reasoning:
-                content += f"**{decision_point.replace('_', ' ').title()}**:\n"
-                content += f"- 推論: {reasoning_data['reason']}\n"
-                content += f"- 信頼度: {reasoning_data['confidence']}\n"
                 content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
         
         # 警告とエラー
@@ -472,13 +459,6 @@ class ResultManager:
                 content += f"  {i}. {term}\n"
             content += "\n"
         
-        # 信頼度スコア
-        if log.confidence_scores:
-            content += "信頼度スコア:\n"
-            for metric, score in log.confidence_scores.items():
-                content += f"  {metric}: {score:.3f}\n"
-            content += "\n"
-        
         # 処理詳細
         if log.processing_details:
             content += "処理詳細:\n"
@@ -519,8 +499,7 @@ class ResultManager:
         if quality_reasoning:
             content += "## 検索品質評価\n\n"
             for _, reasoning_data in quality_reasoning:
-                content += f"**評価**: {reasoning_data['reason']}\n"
-                content += f"**信頼度**: {reasoning_data['confidence']}\n\n"
+                content += f"**評価**: {reasoning_data['reason']}\n\n"
         
         # 個別検索結果
         content += "## 個別検索結果\n\n"
@@ -552,7 +531,6 @@ class ResultManager:
             if match_reasoning:
                 for _, reasoning_data in match_reasoning:
                     content += f"**選択理由**: {reasoning_data['reason']}\n"
-                    content += f"**マッチ信頼度**: {reasoning_data['confidence']}\n"
             
             # マッチしなかった場合の理由
             no_match_reasoning = [r for r in log.reasoning.items() if f"no_match_{i}" in r[0]]
@@ -602,23 +580,7 @@ class ResultManager:
                 content += f"     → マッチなし\n"
             content += "\n"
         
-        # 信頼度情報
-        if log.confidence_scores:
-            content += "信頼度スコア:\n"
-            for metric, score in log.confidence_scores.items():
-                content += f"  {metric}: {score:.3f}\n"
-        
         return content
-    
-    def _calculate_average_confidence(self) -> float:
-        """平均信頼度を計算"""
-        all_scores = []
-        for log in self.execution_logs:
-            all_scores.extend(log.confidence_scores.values())
-        
-        if all_scores:
-            return sum(all_scores) / len(all_scores)
-        return 0.0
     
     def get_analysis_folder_path(self) -> str:
         """解析フォルダパスを取得"""
