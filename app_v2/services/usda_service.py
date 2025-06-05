@@ -29,7 +29,8 @@ class USDASearchResultItem:
                  brand_owner: Optional[str] = None,
                  ingredients_text: Optional[str] = None,
                  food_nutrients: List[USDANutrient] = None,
-                 score: Optional[float] = None):
+                 score: Optional[float] = None,
+                 original_data: Optional[Dict[str, Any]] = None):
         self.fdc_id = fdc_id
         self.description = description
         self.data_type = data_type
@@ -37,6 +38,7 @@ class USDASearchResultItem:
         self.ingredients_text = ingredients_text
         self.food_nutrients = food_nutrients or []
         self.score = score
+        self.original_data = original_data or {}
 
 
 class USDAService:
@@ -117,7 +119,8 @@ class USDAService:
                     brand_owner=food_data.get("brandOwner"),
                     ingredients_text=food_data.get("ingredients"),
                     food_nutrients=nutrients_extracted,
-                    score=food_data.get("score")
+                    score=food_data.get("score"),
+                    original_data=food_data
                 ))
             
             logger.info(f"USDA API search returned {len(results)} results for query '{query}'")
@@ -221,7 +224,9 @@ class USDAService:
                 data_type=food_data.get("dataType"),
                 brand_owner=food_data.get("brandOwner"),
                 ingredients_text=food_data.get("ingredients"),
-                food_nutrients=nutrients_extracted
+                food_nutrients=nutrients_extracted,
+                score=food_data.get("score"),
+                original_data=food_data
             )
             
         except Exception as e:

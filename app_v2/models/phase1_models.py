@@ -3,16 +3,13 @@ from pydantic import BaseModel, Field
 
 
 class Ingredient(BaseModel):
-    """食材情報モデル"""
-    ingredient_name: str = Field(..., description="食材の名称")
-    weight_g: float = Field(..., description="推定重量（グラム単位）", gt=0)
+    """食材情報モデル（USDA検索用）"""
+    ingredient_name: str = Field(..., description="食材の名称（USDA検索で使用）")
 
 
 class Dish(BaseModel):
-    """料理情報モデル"""
-    dish_name: str = Field(..., description="特定された料理の名称")
-    type: str = Field(..., description="料理の種類（例: 主菜, 副菜, スープ）")
-    quantity_on_plate: str = Field(..., description="皿の上に載っている料理のおおよその量や個数")
+    """料理情報モデル（USDA検索用）"""
+    dish_name: str = Field(..., description="特定された料理の名称（USDA検索で使用）")
     ingredients: List[Ingredient] = Field(..., description="その料理に含まれる食材のリスト")
 
 
@@ -27,13 +24,12 @@ class Phase1Input(BaseModel):
 
 
 class Phase1Output(BaseModel):
-    """Phase1コンポーネントの出力モデル"""
+    """Phase1コンポーネントの出力モデル（USDA検索特化）"""
     dishes: List[Dish] = Field(..., description="画像から特定された料理のリスト")
-    analysis_confidence: Optional[float] = Field(None, description="分析の信頼度 (0-1)")
     warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
 
     def get_all_ingredient_names(self) -> List[str]:
-        """全ての食材名のリストを取得"""
+        """全ての食材名のリストを取得（USDA検索用）"""
         ingredient_names = []
         for dish in self.dishes:
             for ingredient in dish.ingredients:
@@ -41,5 +37,5 @@ class Phase1Output(BaseModel):
         return ingredient_names
 
     def get_all_dish_names(self) -> List[str]:
-        """全ての料理名のリストを取得"""
+        """全ての料理名のリストを取得（USDA検索用）"""
         return [dish.dish_name for dish in self.dishes] 

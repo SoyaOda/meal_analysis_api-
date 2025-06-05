@@ -97,17 +97,14 @@ class MealAnalysisPipeline:
             
             # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
             
-            # Phase1の結果を辞書形式に変換
+            # Phase1の結果を辞書形式に変換（USDA検索特化）
             phase1_dict = {
                 "dishes": [
                     {
                         "dish_name": dish.dish_name,
-                        "type": dish.type,
-                        "quantity_on_plate": dish.quantity_on_plate,
                         "ingredients": [
                             {
-                                "ingredient_name": ing.ingredient_name,
-                                "weight_g": ing.weight_g
+                                "ingredient_name": ing.ingredient_name
                             }
                             for ing in dish.ingredients
                         ]

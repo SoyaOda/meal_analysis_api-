@@ -10,33 +10,30 @@ from ..config.prompts import Phase1Prompts, Phase2Prompts
 
 logger = logging.getLogger(__name__)
 
-# Geminiの構造化出力のためのJSONスキーマを定義
+# Geminiの構造化出力のためのJSONスキーマを定義（USDA検索特化）
 MEAL_ANALYSIS_GEMINI_SCHEMA = {
     "type": "object",
     "properties": {
         "dishes": {
             "type": "array",
-            "description": "画像から特定された料理のリスト。",
+            "description": "画像から特定された料理のリスト（USDA検索用）。",
             "items": {
                 "type": "object",
                 "properties": {
-                    "dish_name": {"type": "string", "description": "特定された料理の名称。"},
-                    "type": {"type": "string", "description": "料理の種類（例: 主菜, 副菜, スープ, デザート）。"},
-                    "quantity_on_plate": {"type": "string", "description": "皿の上に載っている料理のおおよその量や個数（例: '1杯', '2切れ', '約200g'）。"},
+                    "dish_name": {"type": "string", "description": "特定された料理の名称（USDA検索で使用される）。"},
                     "ingredients": {
                         "type": "array",
-                        "description": "この料理に含まれると推定される材料のリスト。",
+                        "description": "この料理に含まれると推定される材料のリスト（USDA検索用）。",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "ingredient_name": {"type": "string", "description": "材料の名称。"},
-                                "weight_g": {"type": "number", "description": "その材料の推定重量（グラム単位）。"}
+                                "ingredient_name": {"type": "string", "description": "材料の名称（USDA検索で使用される）。"}
                             },
-                            "required": ["ingredient_name", "weight_g"]
+                            "required": ["ingredient_name"]
                         }
                     }
                 },
-                "required": ["dish_name", "type", "quantity_on_plate", "ingredients"]
+                "required": ["dish_name", "ingredients"]
             }
         }
     },
@@ -114,12 +111,13 @@ class GeminiService:
         # モデルの初期化
         self.model = GenerativeModel(model_name=model_name)
         
-        # generation_configを作成
+        # generation_configを作成 (Phase1用 - 出力安定化)
         self.generation_config = GenerationConfig(
-            temperature=0.2,
-            top_p=0.9,
-            top_k=20,
+            temperature=0.0,  # 完全にdeterministicに
+            top_p=1.0,       # nucleus samplingを無効化
+            top_k=1,         # 最も確率の高い選択肢のみ
             max_output_tokens=8192,
+            candidate_count=1,  # レスポンス候補を1つに制限
             response_mime_type="application/json",
             response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
         )
@@ -235,12 +233,13 @@ class GeminiService:
                 )
             ]
             
-            # Phase2用のGeneration Config
+            # Phase2用のGeneration Config (出力安定化)
             phase2_generation_config = GenerationConfig(
-                temperature=0.2,
-                top_p=0.9,
-                top_k=20,
+                temperature=0.0,  # 完全にdeterministicに
+                top_p=1.0,       # nucleus samplingを無効化
+                top_k=1,         # 最も確率の高い選択肢のみ
                 max_output_tokens=8192,
+                candidate_count=1,  # レスポンス候補を1つに制限
                 response_mime_type="application/json",
                 response_schema=REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
             )

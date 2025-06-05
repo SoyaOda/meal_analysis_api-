@@ -447,7 +447,7 @@ class ResultManager:
         return content
     
     def _generate_phase1_detected_items_txt(self, log: DetailedExecutionLog) -> str:
-        """Phase1で検出された料理・食材のテキストを生成"""
+        """Phase1で検出された料理・食材のテキストを生成（USDA検索特化）"""
         content = f"Phase1 検出結果 - {log.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
         content += "=" * 60 + "\n\n"
         
@@ -457,14 +457,20 @@ class ResultManager:
             
             for i, dish in enumerate(dishes, 1):
                 content += f"料理 {i}: {dish['dish_name']}\n"
-                content += f"  種類: {dish['type']}\n"
-                content += f"  量: {dish['quantity_on_plate']}\n"
                 content += f"  食材数: {len(dish['ingredients'])}\n"
                 content += "  食材詳細:\n"
                 
                 for j, ingredient in enumerate(dish['ingredients'], 1):
-                    content += f"    {j}. {ingredient['ingredient_name']} - {ingredient['weight_g']}g\n"
+                    content += f"    {j}. {ingredient['ingredient_name']}\n"
                 content += "\n"
+        
+        # USDA検索準備情報
+        if 'usda_search_terms' in log.processing_details:
+            search_terms = log.processing_details['usda_search_terms']
+            content += f"USDA検索語彙 ({len(search_terms)}個):\n"
+            for i, term in enumerate(search_terms, 1):
+                content += f"  {i}. {term}\n"
+            content += "\n"
         
         # 信頼度スコア
         if log.confidence_scores:
@@ -477,6 +483,8 @@ class ResultManager:
         if log.processing_details:
             content += "処理詳細:\n"
             for detail_key, detail_value in log.processing_details.items():
+                if detail_key == 'usda_search_terms':
+                    continue  # 既に上で表示済み
                 if isinstance(detail_value, (dict, list)):
                     content += f"  {detail_key}: {json.dumps(detail_value, ensure_ascii=False)}\n"
                 else:

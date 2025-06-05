@@ -107,7 +107,8 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
                         ingredients_text=best_match.ingredients_text,
                         food_nutrients=nutrients,
                         score=best_match.score,
-                        match_confidence=match_confidence
+                        match_confidence=match_confidence,
+                        original_usda_data=best_match.original_data
                     )
                     
                     matches[search_term] = match
