@@ -80,8 +80,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
                     # 食材識別の推論理由をログ
                     self.log_reasoning(
                         f"ingredient_identification_dish{dish_index}_ingredient{ingredient_index}",
-                        f"Identified ingredient '{ingredient_data['ingredient_name']}' for USDA search based on visual analysis",
-                        confidence=0.8
+                        f"Identified ingredient '{ingredient_data['ingredient_name']}' for USDA search based on visual analysis"
                     )
                 
                 dish = Dish(
@@ -93,8 +92,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
                 # 料理識別の推論理由をログ
                 self.log_reasoning(
                     f"dish_identification_{dish_index}",
-                    f"Identified dish as '{dish_data['dish_name']}' for USDA search based on visual characteristics",
-                    confidence=0.85
+                    f"Identified dish as '{dish_data['dish_name']}' for USDA search based on visual characteristics"
                 )
             
             # 分析統計の記録
@@ -111,8 +109,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             self.log_processing_detail("usda_search_terms", search_terms)
             self.log_reasoning(
                 "usda_search_preparation",
-                f"Generated {len(search_terms)} search terms for USDA database queries",
-                confidence=0.9
+                f"Generated {len(search_terms)} search terms for USDA database queries"
             )
             
             result = Phase1Output(

@@ -74,11 +74,9 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
                     best_match = usda_results[0]
                     
                     # マッチ選択の推論理由をログ
-                    match_confidence = self._calculate_match_confidence(search_term, best_match.description)
                     self.log_reasoning(
                         f"match_selection_{search_index}",
-                        f"Selected USDA item '{best_match.description}' (FDC: {best_match.fdc_id}) for search term '{search_term}' based on description similarity and data type '{best_match.data_type}'",
-                        confidence=match_confidence
+                        f"Selected USDA item '{best_match.description}' (FDC: {best_match.fdc_id}) for search term '{search_term}' based on description similarity and data type '{best_match.data_type}'"
                     )
                     
                     # 詳細なマッチ情報をログ
@@ -107,15 +105,11 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
                         ingredients_text=best_match.ingredients_text,
                         food_nutrients=nutrients,
                         score=best_match.score,
-                        match_confidence=match_confidence,
                         original_usda_data=best_match.original_data
                     )
                     
                     matches[search_term] = match
                     successful_matches += 1
-                    
-                    # 成功の信頼度スコアを記録
-                    self.log_confidence_score(f"match_confidence_{search_index}", match_confidence)
                     
                     self.logger.debug(f"Found match for '{search_term}': FDC ID {best_match.fdc_id}")
                     
@@ -123,8 +117,7 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
                     # マッチしなかった理由をログ
                     self.log_reasoning(
                         f"no_match_{search_index}",
-                        f"No USDA match found for '{search_term}' - may be too specific, contain typos, or be a regional/non-standard food name",
-                        confidence=0.0
+                        f"No USDA match found for '{search_term}' - may be too specific, contain typos, or be a regional/non-standard food name"
                     )
                     self.logger.warning(f"No USDA match found for: {search_term}")
                     warnings.append(f"No USDA match found for: {search_term}")
@@ -137,8 +130,7 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
                 # エラーの詳細をログ
                 self.log_reasoning(
                     f"search_error_{search_index}",
-                    f"USDA API error for '{search_term}': {str(e)}",
-                    confidence=0.0
+                    f"USDA API error for '{search_term}': {str(e)}"
                 )
         
         # 検索サマリーを作成
@@ -151,18 +143,17 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
         
         # 全体的な検索成功率をログ
         overall_success_rate = successful_matches / total_searches if total_searches > 0 else 0
-        self.log_confidence_score("overall_match_success_rate", overall_success_rate)
         self.log_processing_detail("search_summary", search_summary)
         
         # 検索品質の評価をログ
         if overall_success_rate >= 0.8:
-            self.log_reasoning("search_quality", "Excellent search results with high match rate", overall_success_rate)
+            self.log_reasoning("search_quality", "Excellent search results with high match rate")
         elif overall_success_rate >= 0.6:
-            self.log_reasoning("search_quality", "Good search results with acceptable match rate", overall_success_rate)
+            self.log_reasoning("search_quality", "Good search results with acceptable match rate")
         elif overall_success_rate >= 0.4:
-            self.log_reasoning("search_quality", "Moderate search results, some items may need manual review", overall_success_rate)
+            self.log_reasoning("search_quality", "Moderate search results, some items may need manual review")
         else:
-            self.log_reasoning("search_quality", "Poor search results, many items not found in USDA database", overall_success_rate)
+            self.log_reasoning("search_quality", "Poor search results, many items not found in USDA database")
         
         result = USDAQueryOutput(
             matches=matches,
@@ -173,37 +164,4 @@ class USDAQueryComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
         
         self.logger.info(f"USDA query completed: {successful_matches}/{total_searches} matches ({result.get_match_rate():.1%})")
         
-        return result
-    
-    def _calculate_match_confidence(self, search_term: str, description: str) -> float:
-        """
-        マッチの信頼度を計算
-        
-        Args:
-            search_term: 検索語彙
-            description: USDA食品説明
-            
-        Returns:
-            信頼度 (0.0-1.0)
-        """
-        # 簡単な文字列マッチング信頼度
-        search_lower = search_term.lower()
-        desc_lower = description.lower()
-        
-        # 完全一致
-        if search_lower == desc_lower:
-            return 1.0
-        
-        # 検索語彙が説明に含まれている
-        if search_lower in desc_lower:
-            return 0.8
-        
-        # 個別単語のマッチング
-        search_words = set(search_lower.split())
-        desc_words = set(desc_lower.split())
-        
-        if search_words:
-            match_ratio = len(search_words.intersection(desc_words)) / len(search_words)
-            return 0.5 + (match_ratio * 0.3)
-        
-        return 0.3  # デフォルト値 
+        return result 
