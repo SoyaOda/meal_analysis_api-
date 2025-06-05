@@ -1,1 +1,0 @@
-Please analyze the provided meal image and respond in English.{optional_text_section} 
