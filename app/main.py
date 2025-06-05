@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 
-from .api.v1.endpoints import meal_analyses, meal_analyses_refine
+from .api.v1.endpoints import meal_analyses, meal_analyses_refine, meal_analyses_complete
 from .core.config import get_settings
 
 # ロギングの設定
@@ -70,6 +70,13 @@ app.include_router(
     meal_analyses_refine.router,
     prefix=f"/api/{settings.API_VERSION}/meal-analyses",
     tags=["Meal Analysis"]
+)
+
+# v1 API完全分析ルーターの登録（全フェーズ統合）
+app.include_router(
+    meal_analyses_complete.router,
+    prefix=f"/api/{settings.API_VERSION}/meal-analyses",
+    tags=["Complete Meal Analysis"]
 )
 
 # スタートアップイベント
