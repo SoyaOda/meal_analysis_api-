@@ -123,6 +123,17 @@ export GEMINI_MODEL_NAME="gemini-2.5-flash-preview-05-20"
 
 ### 開発環境での起動
 
+**🎯 推奨方法 (main.py 直接実行)**
+
+main.py には環境変数の自動設定機能が組み込まれているため、最も簡単な起動方法です：
+
+```bash
+# モジュールとして実行（推奨）
+python -m app.main
+```
+
+**従来の方法 (uvicorn コマンド)**
+
 提供された完全なコマンドでサーバーを起動：
 
 ```bash
@@ -142,6 +153,8 @@ export GEMINI_MODEL_NAME="gemini-2.5-flash-preview-05-20"
 # サーバー起動
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+**⚠️ 注意**: `python app/main.py`では相対インポートエラーが発生します。必ず`python -m app.main`を使用してください。
 
 サーバーが起動すると、以下の URL でアクセス可能になります：
 
@@ -196,6 +209,34 @@ python test_direct_vertexai.py
 ```
 
 ## 📡 API 使用方法
+
+### 🔥 完全分析 (推奨): 全フェーズ統合
+
+**1 つのリクエストで全ての分析を実行**
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/meal-analyses/complete" \
+  -H "Content-Type: multipart/form-data" \
+  -F "image=@test_images/food3.jpg"
+```
+
+このエンドポイントは以下を自動実行します：
+
+- フェーズ 1: 画像分析
+- USDA 照合: 食材データベース検索
+- フェーズ 2: 計算戦略決定
+- 栄養計算: 最終栄養価算出
+- 結果保存: 自動的にファイル保存
+
+**保存された結果の取得**
+
+```bash
+# 全結果一覧
+curl "http://localhost:8000/api/v1/meal-analyses/results"
+
+# 特定の結果取得
+curl "http://localhost:8000/api/v1/meal-analyses/results/{analysis_id}"
+```
 
 ### フェーズ 1: 基本分析
 
