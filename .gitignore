@@ -86,4 +86,4 @@ service-account-key.json
 !tsconfig.json
 !openapi.json 
 
-/nutrition_data/
+/raw_nutrition_data/
