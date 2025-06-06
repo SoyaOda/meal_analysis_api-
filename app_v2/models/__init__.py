@@ -2,6 +2,7 @@ from .phase1_models import *
 from .usda_models import *
 from .phase2_models import *
 from .nutrition_models import *
+from .nutrition_search_models import *
 
 __all__ = [
     # Phase1 models
@@ -14,5 +15,9 @@ __all__ = [
     "Phase2Input", "Phase2Output", "RefinedDish", "RefinedIngredient",
     
     # Nutrition models
-    "NutritionInput", "NutritionOutput", "CalculatedNutrients", "TotalNutrients"
+    "NutritionInput", "NutritionOutput", "CalculatedNutrients", "TotalNutrients",
+    
+    # Nutrition Search models (汎用)
+    "NutritionQueryInput", "NutritionQueryOutput", "NutritionMatch", "NutritionNutrient",
+    "convert_usda_query_input_to_nutrition", "convert_nutrition_to_usda_query_output"
 ] 

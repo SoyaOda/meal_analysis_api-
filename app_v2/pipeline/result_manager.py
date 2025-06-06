@@ -14,8 +14,8 @@ class DetailedExecutionLog:
     def __init__(self, component_name: str, execution_id: str):
         self.component_name = component_name
         self.execution_id = execution_id
-        self.start_time = datetime.now()
-        self.end_time = None
+        self.execution_start_time = datetime.now()
+        self.execution_end_time = None
         self.input_data = {}
         self.output_data = {}
         self.processing_details = {}
@@ -83,12 +83,12 @@ class DetailedExecutionLog:
     
     def finalize(self):
         """実行完了時の最終処理"""
-        self.end_time = datetime.now()
+        self.execution_end_time = datetime.now()
     
     def get_execution_time(self) -> float:
         """実行時間を取得（秒）"""
-        if self.end_time:
-            return (self.end_time - self.start_time).total_seconds()
+        if self.execution_end_time:
+            return (self.execution_end_time - self.execution_start_time).total_seconds()
         return 0.0
     
     def to_dict(self) -> Dict[str, Any]:
@@ -96,8 +96,8 @@ class DetailedExecutionLog:
         return {
             "component_name": self.component_name,
             "execution_id": self.execution_id,
-            "start_time": self.start_time.isoformat(),
-            "end_time": self.end_time.isoformat() if self.end_time else None,
+            "execution_start_time": self.execution_start_time.isoformat(),
+            "execution_end_time": self.execution_end_time.isoformat() if self.execution_end_time else None,
             "execution_time_seconds": self.get_execution_time(),
             "input_data": self.input_data,
             "output_data": self.output_data,
@@ -124,11 +124,11 @@ class ResultManager:
         
         # 各フェーズのフォルダを作成
         self.phase1_dir = self.analysis_dir / "phase1"
-        self.usda_query_dir = self.analysis_dir / "usda_query"
+        self.nutrition_search_dir = self.analysis_dir / "nutrition_search_query"
         self.phase2_dir = self.analysis_dir / "phase2"
         self.nutrition_dir = self.analysis_dir / "nutrition_calculation"
         
-        for phase_dir in [self.phase1_dir, self.usda_query_dir, self.phase2_dir, self.nutrition_dir]:
+        for phase_dir in [self.phase1_dir, self.nutrition_search_dir, self.phase2_dir, self.nutrition_dir]:
             phase_dir.mkdir(exist_ok=True)
         
         self.pipeline_start_time = datetime.now()
@@ -171,10 +171,10 @@ class ResultManager:
                 files = self._save_phase1_results(log)
                 saved_files.update(files)
                 executed_components.add("Phase1Component")
-            elif log.component_name == "USDAQueryComponent":
-                files = self._save_usda_query_results(log)
+            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent"]:
+                files = self._save_nutrition_search_results(log)
                 saved_files.update(files)
-                executed_components.add("USDAQueryComponent")
+                executed_components.add(log.component_name)
             elif log.component_name == "Phase2Component":
                 files = self._save_phase2_results(log)
                 saved_files.update(files)
@@ -237,33 +237,50 @@ class ResultManager:
         
         return files
     
-    def _save_usda_query_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """USDA Queryの結果を保存"""
+    def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
+        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent両対応）"""
         files = {}
         
-        # 1. JSON形式の入出力データ
-        input_output_file = self.usda_query_dir / "input_output.json"
+        # 検索方法の判定
+        search_method = "unknown"
+        db_source = "unknown"
+        
+        if log.component_name == "USDAQueryComponent":
+            search_method = "usda_api"
+            db_source = "usda_database"
+        elif log.component_name == "LocalNutritionSearchComponent":
+            search_method = "local_search"
+            db_source = "local_nutrition_database"
+        
+        # 1. JSON形式の入出力データ（検索方法情報を含む）
+        input_output_file = self.nutrition_search_dir / "input_output.json"
         with open(input_output_file, 'w', encoding='utf-8') as f:
             json.dump({
                 "input_data": log.input_data,
                 "output_data": log.output_data,
-                "execution_time_seconds": log.get_execution_time()
+                "execution_time_seconds": log.get_execution_time(),
+                "search_metadata": {
+                    "component_name": log.component_name,
+                    "search_method": search_method,
+                    "database_source": db_source,
+                    "timestamp": log.execution_end_time.isoformat() if log.execution_end_time else None
+                }
             }, f, indent=2, ensure_ascii=False)
-        files["usda_input_output"] = str(input_output_file)
+        files["nutrition_search_input_output"] = str(input_output_file)
         
         # 2. 検索結果の詳細マークダウン
-        search_results_md_file = self.usda_query_dir / "search_results.md"
-        search_content = self._generate_usda_search_results_md(log)
+        search_results_md_file = self.nutrition_search_dir / "search_results.md"
+        search_content = self._generate_nutrition_search_results_md(log, search_method, db_source)
         with open(search_results_md_file, 'w', encoding='utf-8') as f:
             f.write(search_content)
-        files["usda_search_md"] = str(search_results_md_file)
+        files["nutrition_search_results_md"] = str(search_results_md_file)
         
         # 3. マッチ詳細のテキスト
-        match_details_file = self.usda_query_dir / "match_details.txt"
-        match_content = self._generate_usda_match_details_txt(log)
+        match_details_file = self.nutrition_search_dir / "match_details.txt"
+        match_content = self._generate_nutrition_match_details_txt(log, search_method, db_source)
         with open(match_details_file, 'w', encoding='utf-8') as f:
             f.write(match_content)
-        files["usda_match_txt"] = str(match_details_file)
+        files["nutrition_search_match_details"] = str(match_details_file)
         
         return files
     
@@ -376,8 +393,8 @@ class ResultManager:
 
 ## 実行情報
 - 実行ID: {log.execution_id}
-- 開始時刻: {log.start_time.isoformat()}
-- 終了時刻: {log.end_time.isoformat() if log.end_time else 'N/A'}
+- 開始時刻: {log.execution_start_time.isoformat()}
+- 終了時刻: {log.execution_end_time.isoformat() if log.execution_end_time else 'N/A'}
 - 実行時間: {log.get_execution_time():.2f}秒
 
 ## 使用されたプロンプト
@@ -435,7 +452,7 @@ class ResultManager:
     
     def _generate_phase1_detected_items_txt(self, log: DetailedExecutionLog) -> str:
         """Phase1で検出された料理・食材のテキストを生成（USDA検索特化）"""
-        content = f"Phase1 検出結果 - {log.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        content = f"Phase1 検出結果 - {log.execution_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
         content += "=" * 60 + "\n\n"
         
         if 'output_data' in log.output_data and 'dishes' in log.output_data['output_data']:
@@ -472,115 +489,152 @@ class ResultManager:
         
         return content
     
-    def _generate_usda_search_results_md(self, log: DetailedExecutionLog) -> str:
-        """USDA検索結果のマークダウンを生成"""
-        content = f"""# USDA Query: データベース検索結果
-
-## 実行情報
-- 実行ID: {log.execution_id}
-- 開始時刻: {log.start_time.isoformat()}
-- 終了時刻: {log.end_time.isoformat() if log.end_time else 'N/A'}
-- 実行時間: {log.get_execution_time():.2f}秒
-
-## 検索概要
-
-"""
+    def _generate_nutrition_search_results_md(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
+        """栄養データベース検索結果のマークダウンを生成（USDA/ローカル対応）"""
+        content = []
+        
+        content.append(f"# Nutrition Database Search Results")
+        content.append(f"")
+        content.append(f"**Search Method:** {search_method}")
+        content.append(f"**Database Source:** {db_source}")
+        content.append(f"**Component:** {log.component_name}")
+        content.append(f"**Execution Time:** {log.get_execution_time():.3f} seconds")
+        content.append(f"**Timestamp:** {log.execution_start_time.isoformat()}")
+        content.append(f"")
+        
+        # 入力データの表示
+        if log.input_data:
+            content.append(f"## Input Data")
+            if 'ingredient_names' in log.input_data:
+                ingredients = log.input_data['ingredient_names']
+                content.append(f"**Ingredients ({len(ingredients)}):** {', '.join(ingredients)}")
+            
+            if 'dish_names' in log.input_data:
+                dishes = log.input_data['dish_names']
+                content.append(f"**Dishes ({len(dishes)}):** {', '.join(dishes)}")
+            content.append(f"")
+        
+        # 出力データの表示
+        if log.output_data and 'matches' in log.output_data:
+            matches = log.output_data['matches']
+            content.append(f"## Search Results")
+            content.append(f"**Total Matches:** {len(matches)}")
+            content.append(f"")
+            
+            for i, (search_term, match_data) in enumerate(matches.items(), 1):
+                content.append(f"### {i}. {search_term}")
+                if isinstance(match_data, dict):
+                    content.append(f"**ID:** {match_data.get('id', 'N/A')}")
+                    content.append(f"**Description:** {match_data.get('description', 'N/A')}")
+                    content.append(f"**Data Type:** {match_data.get('data_type', 'N/A')}")
+                    content.append(f"**Source:** {match_data.get('source', 'N/A')}")
+                    
+                    if 'nutrients' in match_data and match_data['nutrients']:
+                        content.append(f"**Nutrients ({len(match_data['nutrients'])}):**")
+                        for nutrient in match_data['nutrients'][:5]:  # 最初の5つだけ表示
+                            if isinstance(nutrient, dict):
+                                name = nutrient.get('name', 'Unknown')
+                                amount = nutrient.get('amount', 0)
+                                unit = nutrient.get('unit_name', '')
+                                content.append(f"  - {name}: {amount} {unit}")
+                        if len(match_data['nutrients']) > 5:
+                            content.append(f"  - ... and {len(match_data['nutrients']) - 5} more nutrients")
+                content.append(f"")
         
         # 検索サマリー
-        if 'search_summary' in log.processing_details:
-            summary = log.processing_details['search_summary']
-            content += f"- 総検索数: {summary.get('total_searches', 0)}\n"
-            content += f"- 成功マッチ数: {summary.get('successful_matches', 0)}\n"
-            content += f"- 失敗数: {summary.get('failed_searches', 0)}\n"
-            content += f"- マッチ率: {summary.get('match_rate_percent', 0)}%\n\n"
+        if log.output_data and 'search_summary' in log.output_data:
+            summary = log.output_data['search_summary']
+            content.append(f"## Search Summary")
+            content.append(f"**Total Searches:** {summary.get('total_searches', 0)}")
+            content.append(f"**Successful Matches:** {summary.get('successful_matches', 0)}")
+            content.append(f"**Failed Searches:** {summary.get('failed_searches', 0)}")
+            content.append(f"**Match Rate:** {summary.get('match_rate_percent', 0)}%")
+            content.append(f"**Search Method:** {summary.get('search_method', 'unknown')}")
+            content.append(f"")
         
-        # 検索品質評価
-        quality_reasoning = [r for r in log.reasoning.items() if 'search_quality' in r[0]]
-        if quality_reasoning:
-            content += "## 検索品質評価\n\n"
-            for _, reasoning_data in quality_reasoning:
-                content += f"**評価**: {reasoning_data['reason']}\n\n"
+        # 推論理由があれば表示
+        if log.reasoning:
+            content.append(f"## Search Reasoning")
+            for decision_point, reason_data in log.reasoning.items():
+                reason = reason_data.get('reason', '') if isinstance(reason_data, dict) else str(reason_data)
+                content.append(f"**{decision_point}:** {reason}")
+            content.append(f"")
         
-        # 個別検索結果
-        content += "## 個別検索結果\n\n"
+        # 警告・エラーがあれば表示
+        if log.warnings:
+            content.append(f"## Warnings")
+            for warning in log.warnings:
+                content.append(f"- {warning}")
+            content.append(f"")
         
-        # 検索語彙ごとの結果
-        search_terms = log.processing_details.get('search_terms', [])
-        for i, term in enumerate(search_terms):
-            content += f"### 検索 {i+1}: {term}\n\n"
-            
-            # 検索結果数
-            results_count_key = f"search_{i}_results_count"
-            if results_count_key in log.processing_details:
-                results_count = log.processing_details[results_count_key]
-                content += f"**検索結果数**: {results_count}\n"
-            
-            # 選択されたアイテム
-            fdc_id_key = f"search_{i}_selected_fdc_id"
-            desc_key = f"search_{i}_selected_description"
-            data_type_key = f"search_{i}_data_type"
-            
-            if fdc_id_key in log.processing_details:
-                content += f"**選択されたアイテム**:\n"
-                content += f"- FDC ID: {log.processing_details[fdc_id_key]}\n"
-                content += f"- 説明: {log.processing_details[desc_key]}\n"
-                content += f"- データタイプ: {log.processing_details[data_type_key]}\n"
-            
-            # マッチ推論
-            match_reasoning = [r for r in log.reasoning.items() if f"match_selection_{i}" in r[0]]
-            if match_reasoning:
-                for _, reasoning_data in match_reasoning:
-                    content += f"**選択理由**: {reasoning_data['reason']}\n"
-            
-            # マッチしなかった場合の理由
-            no_match_reasoning = [r for r in log.reasoning.items() if f"no_match_{i}" in r[0]]
-            if no_match_reasoning:
-                for _, reasoning_data in no_match_reasoning:
-                    content += f"**マッチしなかった理由**: {reasoning_data['reason']}\n"
-            
-            content += "\n"
+        if log.errors:
+            content.append(f"## Errors")
+            for error in log.errors:
+                content.append(f"- {error}")
+            content.append(f"")
         
-        return content
+        return "\n".join(content)
     
-    def _generate_usda_match_details_txt(self, log: DetailedExecutionLog) -> str:
-        """USDAマッチ詳細のテキストを生成"""
-        content = f"USDA マッチ詳細 - {log.start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        content += "=" * 60 + "\n\n"
+    def _generate_nutrition_match_details_txt(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
+        """栄養データベース検索のマッチ詳細テキストを生成（USDA/ローカル対応）"""
+        lines = []
         
-        # 検索語彙とマッチ結果の対応表
-        search_terms = log.processing_details.get('search_terms', [])
-        ingredient_names = log.processing_details.get('ingredient_names', [])
-        dish_names = log.processing_details.get('dish_names', [])
+        lines.append(f"Nutrition Database Search Match Details")
+        lines.append(f"=" * 50)
+        lines.append(f"Search Method: {search_method}")
+        lines.append(f"Database Source: {db_source}")
+        lines.append(f"Component: {log.component_name}")
+        lines.append(f"Execution Time: {log.get_execution_time():.3f} seconds")
+        lines.append(f"Timestamp: {log.execution_start_time.isoformat()}")
+        lines.append(f"")
         
-        content += f"検索対象:\n"
-        content += f"  食材名: {len(ingredient_names)}個\n"
-        for name in ingredient_names:
-            content += f"    - {name}\n"
-        content += f"  料理名: {len(dish_names)}個\n"
-        for name in dish_names:
-            content += f"    - {name}\n"
-        content += "\n"
-        
-        content += "マッチ結果:\n"
-        for i, term in enumerate(search_terms):
-            content += f"  {i+1}. 検索語: {term}\n"
+        if log.output_data and 'matches' in log.output_data:
+            matches = log.output_data['matches']
+            lines.append(f"Total Matches: {len(matches)}")
+            lines.append(f"")
             
-            # 結果の詳細
-            fdc_id_key = f"search_{i}_selected_fdc_id"
-            desc_key = f"search_{i}_selected_description"
-            data_type_key = f"search_{i}_data_type"
-            nutrients_key = f"search_{i}_nutrients_count"
-            
-            if fdc_id_key in log.processing_details:
-                content += f"     → マッチ: {log.processing_details[desc_key]}\n"
-                content += f"     → FDC ID: {log.processing_details[fdc_id_key]}\n"
-                content += f"     → データタイプ: {log.processing_details[data_type_key]}\n"
-                content += f"     → 栄養素数: {log.processing_details.get(nutrients_key, 'N/A')}\n"
-            else:
-                content += f"     → マッチなし\n"
-            content += "\n"
+            for search_term, match_data in matches.items():
+                lines.append(f"Search Term: {search_term}")
+                lines.append(f"-" * 30)
+                
+                if isinstance(match_data, dict):
+                    lines.append(f"  ID: {match_data.get('id', 'N/A')}")
+                    lines.append(f"  Description: {match_data.get('description', 'N/A')}")
+                    lines.append(f"  Data Type: {match_data.get('data_type', 'N/A')}")
+                    lines.append(f"  Source: {match_data.get('source', 'N/A')}")
+                    lines.append(f"  Score: {match_data.get('score', 'N/A')}")
+                    
+                    if 'nutrients' in match_data and match_data['nutrients']:
+                        lines.append(f"  Nutrients ({len(match_data['nutrients'])}):")
+                        for nutrient in match_data['nutrients']:
+                            if isinstance(nutrient, dict):
+                                name = nutrient.get('name', 'Unknown')
+                                amount = nutrient.get('amount', 0)
+                                unit = nutrient.get('unit_name', '')
+                                lines.append(f"    - {name}: {amount} {unit}")
+                    
+                    if 'original_data' in match_data:
+                        original_data = match_data['original_data']
+                        if isinstance(original_data, dict):
+                            lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
+                            if search_method == "local_search":
+                                lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
+                
+                lines.append(f"")
         
-        return content
+        # 検索統計
+        if log.output_data and 'search_summary' in log.output_data:
+            summary = log.output_data['search_summary']
+            lines.append(f"Search Statistics:")
+            lines.append(f"  Total Searches: {summary.get('total_searches', 0)}")
+            lines.append(f"  Successful Matches: {summary.get('successful_matches', 0)}")
+            lines.append(f"  Failed Searches: {summary.get('failed_searches', 0)}")
+            lines.append(f"  Match Rate: {summary.get('match_rate_percent', 0)}%")
+            
+            if search_method == "local_search":
+                lines.append(f"  Total Database Items: {summary.get('total_database_items', 0)}")
+        
+        return "\n".join(lines)
     
     def get_analysis_folder_path(self) -> str:
         """解析フォルダパスを取得"""

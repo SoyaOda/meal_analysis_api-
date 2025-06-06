@@ -87,3 +87,4 @@ service-account-key.json
 !openapi.json 
 
 /raw_nutrition_data/
+analysis_results/

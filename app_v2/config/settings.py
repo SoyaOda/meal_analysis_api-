@@ -13,7 +13,11 @@ class Settings(BaseSettings):
     GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
     GEMINI_MODEL_NAME: str = "gemini-2.5-flash-preview-05-20"
     
-    # USDA API設定
+    # 栄養データベース検索設定
+    USE_LOCAL_NUTRITION_SEARCH: bool = True  # ローカル栄養データベース検索を使用するかどうか
+    NUTRITION_DB_EXPERIMENT_PATH: Optional[str] = None  # nutrition_db_experimentへのパス（自動検出する場合はNone）
+    
+    # USDA API設定（レガシー・フォールバック用）
     USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）
     USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
     USDA_API_TIMEOUT: float = 10.0  # APIタイムアウト秒数
