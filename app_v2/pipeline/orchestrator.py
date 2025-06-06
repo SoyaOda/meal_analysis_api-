@@ -4,10 +4,11 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, USDAQueryComponent
+from ..components import Phase1Component, USDAQueryComponent, LocalNutritionSearchComponent
 from ..models import (
     Phase1Input, Phase1Output,
-    USDAQueryInput, USDAQueryOutput
+    USDAQueryInput, USDAQueryOutput,
+    NutritionQueryInput
 )
 from ..config import get_settings
 from .result_manager import ResultManager
@@ -22,14 +23,38 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self):
-        """パイプラインの初期化"""
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None):
+        """
+        パイプラインの初期化
+        
+        Args:
+            use_local_nutrition_search: ローカル栄養データベース検索を使用するかどうか
+                                      None: 設定ファイルから自動取得
+                                      True: LocalNutritionSearchComponent使用
+                                      False: 従来のUSDAQueryComponent使用
+        """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
         
+        # 設定からローカル検索使用フラグを決定
+        if use_local_nutrition_search is None:
+            self.use_local_nutrition_search = self.settings.USE_LOCAL_NUTRITION_SEARCH
+        else:
+            self.use_local_nutrition_search = use_local_nutrition_search
+        
         # コンポーネントの初期化
         self.phase1_component = Phase1Component()
-        self.usda_query_component = USDAQueryComponent()
+        
+        # 栄養データベース検索コンポーネントの選択
+        if self.use_local_nutrition_search:
+            self.nutrition_search_component = LocalNutritionSearchComponent()
+            self.search_component_name = "LocalNutritionSearchComponent"
+            logger.info("Using local nutrition database search (nutrition_db_experiment)")
+        else:
+            self.nutrition_search_component = USDAQueryComponent()
+            self.search_component_name = "USDAQueryComponent"
+            logger.info("Using traditional USDA API search")
+            
         # TODO: Phase2ComponentとNutritionCalculationComponentを追加
         
         self.logger = logging.getLogger(f"{__name__}.{self.pipeline_id}")
@@ -62,6 +87,7 @@ class MealAnalysisPipeline:
         result_manager = ResultManager(analysis_id) if save_detailed_logs else None
         
         self.logger.info(f"[{analysis_id}] Starting complete meal analysis pipeline")
+        self.logger.info(f"[{analysis_id}] Nutrition search method: {'Local Database' if self.use_local_nutrition_search else 'USDA API'}")
         
         try:
             # === Phase 1: 画像分析 ===
@@ -80,24 +106,26 @@ class MealAnalysisPipeline:
             
             self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
             
-            # === USDA Query Phase: データベース照合 ===
-            self.logger.info(f"[{analysis_id}] USDA Query Phase: Database matching")
+            # === Nutrition Search Phase: データベース照合 ===
+            search_phase_name = "Local Nutrition Search" if self.use_local_nutrition_search else "USDA Query"
+            self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
-            usda_input = USDAQueryInput(
+            # 統一された栄養検索入力を作成（USDA互換性を保持）
+            nutrition_search_input = USDAQueryInput(
                 ingredient_names=phase1_result.get_all_ingredient_names(),
                 dish_names=phase1_result.get_all_dish_names()
             )
             
-            # USDA Queryの詳細ログを作成
-            usda_log = result_manager.create_execution_log("USDAQueryComponent", f"{analysis_id}_usda") if result_manager else None
+            # Nutrition Searchの詳細ログを作成
+            search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
             
-            usda_result = await self.usda_query_component.execute(usda_input, usda_log)
+            nutrition_search_result = await self.nutrition_search_component.execute(nutrition_search_input, search_log)
             
-            self.logger.info(f"[{analysis_id}] USDA Query completed - {usda_result.get_match_rate():.1%} match rate")
+            self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {nutrition_search_result.get_match_rate():.1%} match rate")
             
             # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
             
-            # Phase1の結果を辞書形式に変換（USDA検索特化）
+            # Phase1の結果を辞書形式に変換（検索特化）
             phase1_dict = {
                 "dishes": [
                     {
@@ -126,18 +154,27 @@ class MealAnalysisPipeline:
             complete_result = {
                 "analysis_id": analysis_id,
                 "phase1_result": phase1_dict,
+                "nutrition_search_result": {
+                    "matches_count": len(nutrition_search_result.matches),
+                    "match_rate": nutrition_search_result.get_match_rate(),
+                    "search_summary": nutrition_search_result.search_summary,
+                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
+                },
+                # レガシー互換性のため、usdaキーも残す
                 "usda_result": {
-                    "matches_count": len(usda_result.matches),
-                    "match_rate": usda_result.get_match_rate(),
-                    "search_summary": usda_result.search_summary
+                    "matches_count": len(nutrition_search_result.matches),
+                    "match_rate": nutrition_search_result.get_match_rate(),
+                    "search_summary": nutrition_search_result.search_summary
                 },
                 "processing_summary": {
                     "total_dishes": len(phase1_result.dishes),
                     "total_ingredients": len(phase1_result.get_all_ingredient_names()),
-                    "usda_match_rate": f"{len(usda_result.matches)}/{len(usda_input.get_all_search_terms())} ({usda_result.get_match_rate():.1%})",
+                    "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
+                    "usda_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",  # レガシー互換性
                     "total_calories": total_calories,
                     "pipeline_status": "completed",
-                    "processing_time_seconds": processing_time
+                    "processing_time_seconds": processing_time,
+                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
                 },
                 # 暫定的な最終結果
                 "final_nutrition_result": {
@@ -152,7 +189,8 @@ class MealAnalysisPipeline:
                 "metadata": {
                     "pipeline_version": "v2.0",
                     "timestamp": datetime.now().isoformat(),
-                    "components_used": ["Phase1Component", "USDAQueryComponent"]
+                    "components_used": ["Phase1Component", self.search_component_name],
+                    "nutrition_search_method": "local_database" if self.use_local_nutrition_search else "usda_api"
                 }
             }
             
@@ -198,8 +236,17 @@ class MealAnalysisPipeline:
         return {
             "pipeline_id": self.pipeline_id,
             "version": "v2.0",
+            "nutrition_search_method": "local_database" if self.use_local_nutrition_search else "usda_api",
             "components": [
-                self.phase1_component.get_component_info(),
-                self.usda_query_component.get_component_info()
+                {
+                    "component_name": "Phase1Component",
+                    "component_type": "analysis",
+                    "execution_count": 0
+                },
+                {
+                    "component_name": self.search_component_name,
+                    "component_type": "nutrition_search",
+                    "execution_count": 0
+                }
             ]
         } 
