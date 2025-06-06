@@ -1,0 +1,54 @@
+# Food Lemma Overrides - 食品特有のレンマ上書きルール
+# Format: original_term => desired_lemma
+# 標準レンマ化ツールの出力を食品ドメインに適した形に上書きします
+
+# Plural forms of food items that need specific lemmatization
+chillis => chilli
+chilis => chili
+tomatoes => tomato
+potatoes => potato
+mangoes => mango
+berries => berry
+
+# Cooking measurement conversions
+tbsp => tablespoon
+tsp => teaspoon
+oz => ounce
+lbs => pound
+lb => pound
+
+# Food preparation terms
+minced => mince
+chopped => chop
+sliced => slice
+diced => dice
+shredded => shred
+grated => grate
+
+# Common food variations
+ground beef => beef ground
+ground chicken => chicken ground
+ground turkey => turkey ground
+ground pork => pork ground
+
+# Regional food name variations
+courgette => zucchini
+aubergine => eggplant
+rocket => arugula
+coriander => cilantro
+
+# Processed food forms
+canned => can
+frozen => freeze
+dried => dry
+powdered => powder
+
+# Cooking state variations
+cooked => cook
+cooking => cook
+baked => bake
+baking => bake
+fried => fry
+frying => fry
+boiled => boil
+boiling => boil 
