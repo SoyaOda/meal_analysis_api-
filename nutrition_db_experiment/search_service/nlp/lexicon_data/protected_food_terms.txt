@@ -1,0 +1,64 @@
+# Protected Food Terms - レンマ化処理から保護する食品用語
+# これらの単語は標準レンマ化処理をバイパスし、元の形を保持します
+# Format: 1つの単語または句を1行に記載
+
+# Cookie related terms (cookとの混同を防ぐ)
+cookie
+cookies
+
+# Fruit names that might be confused with colors/adjectives
+orange
+oranges
+
+# Brand names and specific food products
+oreo
+oreos
+cheerios
+sprite
+coca-cola
+pepsi
+
+# Cooking methods that should be preserved as-is
+bake
+baked
+baking
+fry
+fried
+frying
+roast
+roasted
+roasting
+steam
+steamed
+steaming
+grill
+grilled
+grilling
+
+# Food measurement units (preserve exact form)
+cup
+cups
+tablespoon
+tablespoons
+teaspoon
+teaspoons
+ounce
+ounces
+pound
+pounds
+
+# Common food adjectives that shouldn't be lemmatized
+fresh
+frozen
+dried
+canned
+raw
+cooked
+
+# Plural forms that need special handling
+rice
+beans
+peas
+nuts
+chips
+fries 

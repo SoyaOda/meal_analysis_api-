@@ -1,0 +1,69 @@
+# Food Synonyms - 食品類義語リスト (Solr compatible format)
+# 双方向類義語（等価）: word1, word2, word3
+# 片方向類義語（展開）: source => target1, target2
+
+# Regional name variations (bidirectional)
+aubergine, eggplant, brinjal
+courgette, zucchini
+rocket, arugula, roquette
+coriander, cilantro
+spring onion, scallion, green onion
+
+# Protein sources
+ground meat => mince, minced meat
+ground beef => mince beef, minced beef
+ground chicken => mince chicken, minced chicken
+ground turkey => mince turkey, minced turkey
+ground pork => mince pork, minced pork
+
+# Cooking methods (bidirectional)
+grill, barbecue, bbq
+saute, sauté, pan fry
+stir fry, stir-fry, stirfry
+
+# Food preparation states
+raw => uncooked, fresh
+cooked => prepared, done
+
+# Dairy products
+milk => dairy milk, cow milk
+cheese => dairy cheese
+
+# Grain products
+bread => loaf bread
+rice => grain rice
+pasta => noodles
+
+# Vegetables (common alternates)
+potato, spud
+tomato, tomatoes
+bell pepper, capsicum, sweet pepper
+
+# Fruits
+apple => apples
+banana => bananas
+orange => oranges
+
+# Condiments and seasonings
+salt => table salt, sea salt
+pepper => black pepper, ground pepper
+sugar => white sugar, granulated sugar
+
+# Beverages
+soda => soft drink, carbonated drink
+juice => fruit juice
+coffee => brewed coffee
+
+# Snacks
+chips => crisps, potato chips
+crackers => biscuits
+
+# Cooking oils
+oil => cooking oil, vegetable oil
+olive oil => extra virgin olive oil
+
+# Measurement equivalents
+tablespoon => tbsp
+teaspoon => tsp
+ounce => oz
+pound => lb 
