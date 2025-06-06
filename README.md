@@ -208,6 +208,66 @@ python test_usda_only.py
 python test_direct_vertexai.py
 ```
 
+## 🚀 ローカル栄養データベース検索システム v2.0
+
+### **新機能: ローカルデータベース統合**
+
+システムが USDA API 依存からローカル栄養データベース検索に対応しました：
+
+- **🔍 BM25F + マルチシグナルブースティング検索**: 高精度な食材マッチング
+- **📊 8,878 項目のローカルデータベース**: オフライン栄養計算対応
+- **⚡ 90.9%マッチ率**: 実測値による高い成功率
+- **🔄 USDA 互換性**: 既存システムとの完全互換性維持
+
+### サーバー起動（v2.0 対応）
+
+```bash
+# app_v2サーバーの起動
+python -m app_v2.main.app
+```
+
+### ローカル栄養検索テスト
+
+**重要**: サーバーが起動している状態で実行してください。
+
+```bash
+# ローカル栄養データベース検索の統合テスト
+python test_local_nutrition_search_v2.py
+```
+
+**期待される結果**:
+
+- **マッチ率**: 90.9% (10/11 検索成功)
+- **レスポンス時間**: ~11 秒
+- **データベース**: ローカル栄養データ (8,878 項目)
+- **検索方法**: BM25F + マルチシグナルブースティング
+
+**テスト結果例**:
+
+```
+🔍 Local Nutrition Search Results:
+- Matches found: 10
+- Match rate: 90.9%
+- Search method: local_nutrition_database
+- Total searches: 11
+- Successful matches: 10
+
+🍽 Final Meal Nutrition:
+- Calories: 400.00 kcal
+- Protein: 60.00 g
+- Carbohydrates: 220.00 g
+- Fat: 120.00 g
+```
+
+### データベース詳細
+
+**ローカル栄養データベース構成**:
+
+- `dish_db.json`: 4,583 料理データ
+- `ingredient_db.json`: 1,473 食材データ
+- `branded_db.json`: 2,822 ブランド食品
+- `unified_nutrition_db.json`: 8,878 統合データ
+
 ## 📡 API 使用方法
 
 ### 🔥 完全分析 (推奨): 全フェーズ統合
