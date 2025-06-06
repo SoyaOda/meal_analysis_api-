@@ -57,17 +57,24 @@ class NutritionSearchQueryBuilder:
         # ベースクエリ（BM25Fスコア用）
         base_query = self._build_base_query(processed_query, final_weights)
         
-        # フィルタ追加
-        if db_type_filter and db_type_filter != "all":
-            base_query = self._add_filters(base_query, db_type_filter)
-        
-        # function_scoreクエリでブースティング
+        # function_scoreクエリでブースティング（フィルタ適用前）
         function_score_query = self._build_function_score_query(
             base_query, 
             original_query, 
             processed_query,
             final_weights
         )
+        
+        # フィルタ追加（function_scoreクエリ全体に適用）
+        if db_type_filter and db_type_filter != "all":
+            function_score_query = {
+                "bool": {
+                    "must": [function_score_query],
+                    "filter": [
+                        {"term": {"db_type": db_type_filter}}
+                    ]
+                }
+            }
         
         # 完全なクエリ構築
         search_query = {

@@ -120,15 +120,7 @@ class FoodQueryPreprocessor:
             Token.set_extension("is_protected", default=False)
         if not Token.has_extension("custom_lemma"):
             Token.set_extension("custom_lemma", default=None)
-        
-        # カスタムコンポーネントを追加
-        if "food_lexicon_processor" not in self.nlp.pipe_names:
-            self.nlp.add_pipe(
-                "food_lexicon_processor", 
-                before="lemmatizer"
-            )
     
-    @Language.component("food_lexicon_processor")
     def food_lexicon_processor_component(self, doc):
         """食品レキシコン処理コンポーネント"""
         for token in doc:
@@ -162,6 +154,9 @@ class FoodQueryPreprocessor:
         
         # spaCyで処理
         doc = self.nlp(query_text)
+        
+        # カスタムコンポーネントを手動で適用
+        doc = self.food_lexicon_processor_component(doc)
         
         processed_tokens = []
         
@@ -224,6 +219,9 @@ class FoodQueryPreprocessor:
             return {"error": "spaCy model not loaded"}
         
         doc = self.nlp(query_text)
+        
+        # カスタムコンポーネントを手動で適用
+        doc = self.food_lexicon_processor_component(doc)
         
         analysis = {
             "original": query_text,
