@@ -1,0 +1,4574 @@
+================================================================================
+MEAL ANALYSIS API v2.0 - ローカル栄養データベース検索システム アーキテクチャ構造とファイル分析
+================================================================================
+生成日時: 2025-06-06 13:59:43
+分析対象: test_local_nutrition_search_v2.py実行時に呼び出される全ファイル
+================================================================================
+
+📊 LOCAL NUTRITION SEARCH ARCHITECTURE OVERVIEW
+----------------------------------------
+
+🔄 LOCAL NUTRITION SEARCH EXECUTION FLOW:
+Phase 1: 画像 → Gemini AI → 料理・食材識別 (英語名)
+Local Nutrition Search: 食材名 → BM25F + マルチシグナルブースティング → ローカルDB検索
+Pipeline Result: 検索結果 → 栄養価マッピング → 完全分析結果
+
+🏗️ COMPONENT-BASED ARCHITECTURE STRUCTURE:
+├── FastAPI Application Layer v2.0
+│   └── app.py (Server, routing, CORS, environment setup)
+├── Local Nutrition Search API Layer  
+│   └── meal_analysis.py (Unified endpoint with local search integration)
+├── Pipeline Integration Layer
+│   ├── orchestrator.py (Local/USDA search switching, component coordination)
+│   └── result_manager.py (Phase-based result saving, metadata management)
+├── Component Layer
+│   ├── base.py (Abstract component interface, logging, error handling)
+│   ├── phase1_component.py (Gemini AI image analysis)
+│   └── local_nutrition_search_component.py (Local database search integration)
+├── Model Layer
+│   ├── nutrition_search_models.py (Generic nutrition search models)
+│   ├── usda_models.py (USDA compatibility models)
+│   └── phase1_models.py (Image analysis input/output models)
+├── Service Layer
+│   ├── gemini_service.py (Vertex AI Gemini integration)
+│   └── usda_service.py (USDA API compatibility service)
+├── Configuration Layer
+│   └── settings.py (Local search flags, environment variables)
+└── Local Nutrition Database Search System
+    ├── search_handler.py (Main search API, result formatting)
+    ├── query_builder.py (Query preprocessing, search optimization)
+    ├── query_preprocessor.py (NLP processing, synonym handling)
+    ├── data_loader.py (Database loading, caching)
+    ├── scoring.py (BM25F, multi-signal boosting algorithms)
+    └── search_config.py (Search parameters, algorithm settings)
+
+🔧 LOCAL NUTRITION SEARCH TECHNICAL FEATURES:
+- 🔍 BM25F + Multi-Signal Boosting: Advanced relevance scoring algorithm
+- 📊 8,878-Item Local Database: Offline nutrition calculation capability
+- ⚡ 90.9% Match Rate: Real-world tested search accuracy
+- 🔄 USDA Compatibility: Seamless integration with existing pipeline
+- 🌐 Elastic Search Fallback: Direct database search when ES unavailable
+- 📱 Generic Model Interface: Nutrition search abstraction layer
+- 💾 Phase-Based Result Saving: Organized file structure by component
+- 🛡️ Component Error Isolation: Independent component failure handling
+- 📈 Advanced Search Features: Stemming, synonym matching, word boundary handling
+- 🎯 Food-Specific Optimization: Specialized for ingredient/dish search
+
+🎯 KEY ADVANTAGES OVER USDA API APPROACH:
+- Offline capability: No external API dependency
+- Higher accuracy: 90.9% vs typical 70-80% match rates
+- Faster response: Local database vs network requests
+- Food-optimized search: Specialized algorithms for nutrition data
+- Comprehensive database: 8,878 curated nutrition items
+- Advanced NLP: Word boundary, stemming, synonym processing
+- Multi-category support: Dish, ingredient, and branded food data
+
+🗄️ DATABASE STRUCTURE:
+- 料理・レシピデータ: 4,583項目
+- 食材・基本食品データ: 1,473項目  
+- ブランド食品データ: 2,822項目
+- 統合栄養データベース: 8,878項目
+- 詳細仕様書: nutrition_database_specification.md
+
+🔬 SEARCH ALGORITHM DETAILS:
+- Search Target: search_name field (string, 5-10 words typically)
+- Word Boundary Handling: "cook" → "cooking"/"cooked" (high) vs "cookie" (low)
+- Scoring Method: BM25F + semantic relevance + exact match boosting
+- Performance Target: 90%+ accuracy, <1 second response time
+- Fallback Strategy: Direct JSON search when ElasticSearch unavailable
+
+================================================================================
+
+📁 FastAPIアプリケーション層 v2.0
+============================================================
+
+📄 FILE: app_v2/main/app.py
+--------------------------------------------------
+ファイルサイズ: 2,030 bytes
+最終更新: 2025-06-05 12:55:53
+存在: ✅
+
+CONTENT:
+```
+import os
+import logging
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from ..api.v1.endpoints import meal_analysis
+from ..config import get_settings
+
+# 環境変数の設定（既存のappと同じ）
+os.environ.setdefault("USDA_API_KEY", "vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg")
+os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api /service-account-key.json")
+os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
+os.environ.setdefault("GEMINI_LOCATION", "us-central1")
+os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
+
+# ロギング設定
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+# FastAPIアプリの作成
+app = FastAPI(
+    title="食事分析 API v2.0",
+    description="コンポーネント化された食事分析システム",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# CORS設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ルーターの登録
+app.include_router(
+    meal_analysis.router,
+    prefix="/api/v1/meal-analyses",
+    tags=["Complete Meal Analysis v2.0"]
+)
+
+# ルートエンドポイント
+@app.get("/")
+async def root():
+    """ルートエンドポイント"""
+    return {
+        "message": "食事分析 API v2.0 - コンポーネント化版",
+        "version": "2.0.0",
+        "architecture": "Component-based Pipeline",
+        "docs": "/docs"
+    }
+
+@app.get("/health")
+async def health():
+    """ヘルスチェック"""
+    return {
+        "status": "healthy",
+        "version": "v2.0",
+        "components": ["Phase1Component", "USDAQueryComponent"]
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    settings = get_settings()
+    uvicorn.run(
+        "app_v2.main.app:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=True
+    ) 
+```
+
+============================================================
+
+📁 ローカル栄養検索API エンドポイント層
+============================================================
+
+📄 FILE: app_v2/api/v1/endpoints/meal_analysis.py
+--------------------------------------------------
+ファイルサイズ: 2,696 bytes
+最終更新: 2025-06-05 13:11:02
+存在: ✅
+
+CONTENT:
+```
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
+from fastapi.responses import JSONResponse
+from typing import Optional
+import logging
+
+from ....pipeline import MealAnalysisPipeline
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter()
+
+
+@router.post("/complete")
+async def complete_meal_analysis(
+    image: UploadFile = File(...),
+    save_results: bool = Form(True),
+    save_detailed_logs: bool = Form(True)
+):
+    """
+    完全な食事分析を実行（v2.0 コンポーネント化版）
+    
+    - Phase 1: Gemini AIによる画像分析
+    - USDA Query: 食材のUSDAデータベース照合
+    - Phase 2: 計算戦略決定と栄養価精緻化 (TODO)
+    - Nutrition Calculation: 最終栄養価計算 (TODO)
+    
+    Args:
+        image: 分析対象の食事画像
+        save_results: 結果を保存するかどうか (デフォルト: True)
+        save_detailed_logs: 詳細ログを保存するかどうか (デフォルト: True)
+    
+    Returns:
+        完全な分析結果と栄養価計算、詳細ログファイルパス
+    """
+    
+    try:
+        # 画像の検証
+        if not image.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="アップロードされたファイルは画像である必要があります")
+        
+        # 画像データの読み込み
+        image_data = await image.read()
+        logger.info(f"Starting complete meal analysis pipeline v2.0 (detailed_logs: {save_detailed_logs})")
+        
+        # パイプラインの実行
+        pipeline = MealAnalysisPipeline()
+        result = await pipeline.execute_complete_analysis(
+            image_bytes=image_data,
+            image_mime_type=image.content_type,
+            save_results=save_results,
+            save_detailed_logs=save_detailed_logs
+        )
+        
+        logger.info(f"Complete analysis pipeline v2.0 finished successfully")
+        
+        return JSONResponse(
+            status_code=200,
+            content=result
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Complete analysis failed: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Complete analysis failed: {str(e)}"
+        )
+
+
+@router.get("/health")
+async def health_check():
+    """ヘルスチェック"""
+    return {"status": "healthy", "version": "v2.0", "message": "食事分析API v2.0 - コンポーネント化版"}
+
+
+@router.get("/pipeline-info")
+async def get_pipeline_info():
+    """パイプライン情報の取得"""
+    pipeline = MealAnalysisPipeline()
+    return pipeline.get_pipeline_info() 
+```
+
+============================================================
+
+📁 パイプライン統合層
+============================================================
+
+📄 FILE: app_v2/pipeline/orchestrator.py
+--------------------------------------------------
+ファイルサイズ: 11,800 bytes
+最終更新: 2025-06-06 12:43:18
+存在: ✅
+
+CONTENT:
+```
+import uuid
+import json
+from datetime import datetime
+from typing import Optional, Dict, Any
+import logging
+
+from ..components import Phase1Component, USDAQueryComponent, LocalNutritionSearchComponent
+from ..models import (
+    Phase1Input, Phase1Output,
+    USDAQueryInput, USDAQueryOutput,
+    NutritionQueryInput
+)
+from ..config import get_settings
+from .result_manager import ResultManager
+
+logger = logging.getLogger(__name__)
+
+
+class MealAnalysisPipeline:
+    """
+    食事分析パイプラインのオーケストレーター
+    
+    4つのフェーズを統合して完全な分析を実行します。
+    """
+    
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None):
+        """
+        パイプラインの初期化
+        
+        Args:
+            use_local_nutrition_search: ローカル栄養データベース検索を使用するかどうか
+                                      None: 設定ファイルから自動取得
+                                      True: LocalNutritionSearchComponent使用
+                                      False: 従来のUSDAQueryComponent使用
+        """
+        self.pipeline_id = str(uuid.uuid4())[:8]
+        self.settings = get_settings()
+        
+        # 設定からローカル検索使用フラグを決定
+        if use_local_nutrition_search is None:
+            self.use_local_nutrition_search = self.settings.USE_LOCAL_NUTRITION_SEARCH
+        else:
+            self.use_local_nutrition_search = use_local_nutrition_search
+        
+        # コンポーネントの初期化
+        self.phase1_component = Phase1Component()
+        
+        # 栄養データベース検索コンポーネントの選択
+        if self.use_local_nutrition_search:
+            self.nutrition_search_component = LocalNutritionSearchComponent()
+            self.search_component_name = "LocalNutritionSearchComponent"
+            logger.info("Using local nutrition database search (nutrition_db_experiment)")
+        else:
+            self.nutrition_search_component = USDAQueryComponent()
+            self.search_component_name = "USDAQueryComponent"
+            logger.info("Using traditional USDA API search")
+            
+        # TODO: Phase2ComponentとNutritionCalculationComponentを追加
+        
+        self.logger = logging.getLogger(f"{__name__}.{self.pipeline_id}")
+        
+    async def execute_complete_analysis(
+        self,
+        image_bytes: bytes,
+        image_mime_type: str,
+        optional_text: Optional[str] = None,
+        save_results: bool = True,
+        save_detailed_logs: bool = True
+    ) -> Dict[str, Any]:
+        """
+        完全な食事分析を実行
+        
+        Args:
+            image_bytes: 画像データ
+            image_mime_type: 画像のMIMEタイプ
+            optional_text: オプションのテキスト
+            save_results: 結果を保存するかどうか
+            save_detailed_logs: 詳細ログを保存するかどうか
+            
+        Returns:
+            完全な分析結果
+        """
+        analysis_id = str(uuid.uuid4())[:8]
+        start_time = datetime.now()
+        
+        # ResultManagerの初期化
+        result_manager = ResultManager(analysis_id) if save_detailed_logs else None
+        
+        self.logger.info(f"[{analysis_id}] Starting complete meal analysis pipeline")
+        self.logger.info(f"[{analysis_id}] Nutrition search method: {'Local Database' if self.use_local_nutrition_search else 'USDA API'}")
+        
+        try:
+            # === Phase 1: 画像分析 ===
+            self.logger.info(f"[{analysis_id}] Phase 1: Image analysis")
+            
+            phase1_input = Phase1Input(
+                image_bytes=image_bytes,
+                image_mime_type=image_mime_type,
+                optional_text=optional_text
+            )
+            
+            # Phase1の詳細ログを作成
+            phase1_log = result_manager.create_execution_log("Phase1Component", f"{analysis_id}_phase1") if result_manager else None
+            
+            phase1_result = await self.phase1_component.execute(phase1_input, phase1_log)
+            
+            self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
+            
+            # === Nutrition Search Phase: データベース照合 ===
+            search_phase_name = "Local Nutrition Search" if self.use_local_nutrition_search else "USDA Query"
+            self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
+            
+            # 統一された栄養検索入力を作成（USDA互換性を保持）
+            nutrition_search_input = USDAQueryInput(
+                ingredient_names=phase1_result.get_all_ingredient_names(),
+                dish_names=phase1_result.get_all_dish_names()
+            )
+            
+            # Nutrition Searchの詳細ログを作成
+            search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
+            
+            nutrition_search_result = await self.nutrition_search_component.execute(nutrition_search_input, search_log)
+            
+            self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {nutrition_search_result.get_match_rate():.1%} match rate")
+            
+            # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
+            
+            # Phase1の結果を辞書形式に変換（検索特化）
+            phase1_dict = {
+                "dishes": [
+                    {
+                        "dish_name": dish.dish_name,
+                        "ingredients": [
+                            {
+                                "ingredient_name": ing.ingredient_name
+                            }
+                            for ing in dish.ingredients
+                        ]
+                    }
+                    for dish in phase1_result.dishes
+                ]
+            }
+            
+            # 簡単な栄養計算（暫定）
+            total_calories = sum(
+                len(dish.ingredients) * 50  # 仮の計算
+                for dish in phase1_result.dishes
+            )
+            
+            # 完全分析結果の構築
+            end_time = datetime.now()
+            processing_time = (end_time - start_time).total_seconds()
+            
+            complete_result = {
+                "analysis_id": analysis_id,
+                "phase1_result": phase1_dict,
+                "nutrition_search_result": {
+                    "matches_count": len(nutrition_search_result.matches),
+                    "match_rate": nutrition_search_result.get_match_rate(),
+                    "search_summary": nutrition_search_result.search_summary,
+                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
+                },
+                # レガシー互換性のため、usdaキーも残す
+                "usda_result": {
+                    "matches_count": len(nutrition_search_result.matches),
+                    "match_rate": nutrition_search_result.get_match_rate(),
+                    "search_summary": nutrition_search_result.search_summary
+                },
+                "processing_summary": {
+                    "total_dishes": len(phase1_result.dishes),
+                    "total_ingredients": len(phase1_result.get_all_ingredient_names()),
+                    "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
+                    "usda_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",  # レガシー互換性
+                    "total_calories": total_calories,
+                    "pipeline_status": "completed",
+                    "processing_time_seconds": processing_time,
+                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
+                },
+                # 暫定的な最終結果
+                "final_nutrition_result": {
+                    "dishes": phase1_dict["dishes"],
+                    "total_meal_nutrients": {
+                        "calories_kcal": total_calories,
+                        "protein_g": total_calories * 0.15,  # 仮の値
+                        "carbohydrates_g": total_calories * 0.55,  # 仮の値
+                        "fat_g": total_calories * 0.30,  # 仮の値
+                    }
+                },
+                "metadata": {
+                    "pipeline_version": "v2.0",
+                    "timestamp": datetime.now().isoformat(),
+                    "components_used": ["Phase1Component", self.search_component_name],
+                    "nutrition_search_method": "local_database" if self.use_local_nutrition_search else "usda_api"
+                }
+            }
+            
+            # ResultManagerに最終結果を設定
+            if result_manager:
+                result_manager.set_final_result(complete_result)
+                result_manager.finalize_pipeline()
+            
+            # 結果の保存
+            saved_files = {}
+            if save_detailed_logs and result_manager:
+                # 新しいフェーズ別保存方式
+                saved_files = result_manager.save_phase_results()
+                complete_result["analysis_folder"] = result_manager.get_analysis_folder_path()
+                complete_result["saved_files"] = saved_files
+                
+                logger.info(f"[{analysis_id}] Detailed logs saved to folder: {result_manager.get_analysis_folder_path()}")
+                logger.info(f"[{analysis_id}] Saved {len(saved_files)} files across all phases")
+            
+            if save_results:
+                # 通常の結果保存（互換性維持）
+                saved_file = f"analysis_results/meal_analysis_{analysis_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                complete_result["legacy_saved_to"] = saved_file
+            
+            self.logger.info(f"[{analysis_id}] Complete analysis pipeline finished successfully in {processing_time:.2f}s")
+            
+            return complete_result
+            
+        except Exception as e:
+            self.logger.error(f"[{analysis_id}] Complete analysis failed: {str(e)}", exc_info=True)
+            
+            # エラー時もResultManagerを保存
+            if result_manager:
+                result_manager.set_final_result({"error": str(e), "timestamp": datetime.now().isoformat()})
+                result_manager.finalize_pipeline()
+                error_saved_files = result_manager.save_phase_results()
+                self.logger.info(f"[{analysis_id}] Error analysis logs saved to folder: {result_manager.get_analysis_folder_path()}")
+            
+            raise
+    
+    def get_pipeline_info(self) -> Dict[str, Any]:
+        """パイプライン情報を取得"""
+        return {
+            "pipeline_id": self.pipeline_id,
+            "version": "v2.0",
+            "nutrition_search_method": "local_database" if self.use_local_nutrition_search else "usda_api",
+            "components": [
+                {
+                    "component_name": "Phase1Component",
+                    "component_type": "analysis",
+                    "execution_count": 0
+                },
+                {
+                    "component_name": self.search_component_name,
+                    "component_type": "nutrition_search",
+                    "execution_count": 0
+                }
+            ]
+        } 
+```
+
+============================================================
+
+📄 FILE: app_v2/pipeline/result_manager.py
+--------------------------------------------------
+ファイルサイズ: 30,369 bytes
+最終更新: 2025-06-06 12:55:37
+存在: ✅
+
+CONTENT:
+```
+import json
+import os
+from datetime import datetime
+from typing import Dict, Any, Optional, List
+from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class DetailedExecutionLog:
+    """各コンポーネントの詳細実行ログ"""
+    
+    def __init__(self, component_name: str, execution_id: str):
+        self.component_name = component_name
+        self.execution_id = execution_id
+        self.execution_start_time = datetime.now()
+        self.execution_end_time = None
+        self.input_data = {}
+        self.output_data = {}
+        self.processing_details = {}
+        self.prompts_used = {}
+        self.reasoning = {}
+        self.confidence_scores = {}
+        self.warnings = []
+        self.errors = []
+        
+    def set_input(self, input_data: Dict[str, Any]):
+        """入力データを記録（機密情報は除外）"""
+        # 画像データは大きすぎるので、メタデータのみ保存
+        safe_input = {}
+        for key, value in input_data.items():
+            if key == 'image_bytes':
+                safe_input[key] = {
+                    "size_bytes": len(value) if value else 0,
+                    "type": "binary_image_data"
+                }
+            else:
+                safe_input[key] = value
+        self.input_data = safe_input
+    
+    def set_output(self, output_data: Dict[str, Any]):
+        """出力データを記録"""
+        self.output_data = output_data
+        
+    def add_prompt(self, prompt_name: str, prompt_content: str, variables: Dict[str, Any] = None):
+        """使用されたプロンプトを記録"""
+        self.prompts_used[prompt_name] = {
+            "content": prompt_content,
+            "variables": variables or {},
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def add_reasoning(self, decision_point: str, reason: str, confidence: float = None):
+        """推論理由を記録"""
+        self.reasoning[decision_point] = {
+            "reason": reason,
+            "confidence": confidence,
+            "timestamp": datetime.now().isoformat()
+        }
+    
+    def add_processing_detail(self, detail_key: str, detail_value: Any):
+        """処理詳細を記録"""
+        self.processing_details[detail_key] = detail_value
+    
+    def add_confidence_score(self, metric_name: str, score: float):
+        """信頼度スコアを記録"""
+        self.confidence_scores[metric_name] = score
+    
+    def add_warning(self, warning: str):
+        """警告を記録"""
+        self.warnings.append({
+            "message": warning,
+            "timestamp": datetime.now().isoformat()
+        })
+    
+    def add_error(self, error: str):
+        """エラーを記録"""
+        self.errors.append({
+            "message": error,
+            "timestamp": datetime.now().isoformat()
+        })
+    
+    def finalize(self):
+        """実行完了時の最終処理"""
+        self.execution_end_time = datetime.now()
+    
+    def get_execution_time(self) -> float:
+        """実行時間を取得（秒）"""
+        if self.execution_end_time:
+            return (self.execution_end_time - self.execution_start_time).total_seconds()
+        return 0.0
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """辞書形式で取得"""
+        return {
+            "component_name": self.component_name,
+            "execution_id": self.execution_id,
+            "execution_start_time": self.execution_start_time.isoformat(),
+            "execution_end_time": self.execution_end_time.isoformat() if self.execution_end_time else None,
+            "execution_time_seconds": self.get_execution_time(),
+            "input_data": self.input_data,
+            "output_data": self.output_data,
+            "processing_details": self.processing_details,
+            "prompts_used": self.prompts_used,
+            "reasoning": self.reasoning,
+            "confidence_scores": self.confidence_scores,
+            "warnings": self.warnings,
+            "errors": self.errors
+        }
+
+
+class ResultManager:
+    """解析結果と詳細ログの管理クラス（フェーズ別整理版）"""
+    
+    def __init__(self, analysis_id: str, save_directory: str = "analysis_results"):
+        self.analysis_id = analysis_id
+        self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # 実行ごとのフォルダを作成
+        self.analysis_folder_name = f"analysis_{self.timestamp}_{self.analysis_id}"
+        self.analysis_dir = Path(save_directory) / self.analysis_folder_name
+        self.analysis_dir.mkdir(parents=True, exist_ok=True)
+        
+        # 各フェーズのフォルダを作成
+        self.phase1_dir = self.analysis_dir / "phase1"
+        self.nutrition_search_dir = self.analysis_dir / "nutrition_search_query"
+        self.phase2_dir = self.analysis_dir / "phase2"
+        self.nutrition_dir = self.analysis_dir / "nutrition_calculation"
+        
+        for phase_dir in [self.phase1_dir, self.nutrition_search_dir, self.phase2_dir, self.nutrition_dir]:
+            phase_dir.mkdir(exist_ok=True)
+        
+        self.pipeline_start_time = datetime.now()
+        self.pipeline_end_time = None
+        self.execution_logs: List[DetailedExecutionLog] = []
+        self.final_result = {}
+        self.pipeline_metadata = {
+            "analysis_id": analysis_id,
+            "version": "v2.0",
+            "analysis_folder": self.analysis_folder_name,
+            "pipeline_start_time": self.pipeline_start_time.isoformat()
+        }
+        
+    def create_execution_log(self, component_name: str, execution_id: str) -> DetailedExecutionLog:
+        """新しい実行ログを作成"""
+        log = DetailedExecutionLog(component_name, execution_id)
+        self.execution_logs.append(log)
+        return log
+    
+    def set_final_result(self, result: Dict[str, Any]):
+        """最終結果を設定"""
+        self.final_result = result
+        
+    def finalize_pipeline(self):
+        """パイプライン完了時の最終処理"""
+        self.pipeline_end_time = datetime.now()
+        self.pipeline_metadata["pipeline_end_time"] = self.pipeline_end_time.isoformat()
+        self.pipeline_metadata["total_execution_time_seconds"] = (
+            self.pipeline_end_time - self.pipeline_start_time
+        ).total_seconds()
+    
+    def save_phase_results(self) -> Dict[str, str]:
+        """フェーズ別に結果を保存"""
+        saved_files = {}
+        
+        # 実行されたコンポーネントのログを処理
+        executed_components = set()
+        for log in self.execution_logs:
+            if log.component_name == "Phase1Component":
+                files = self._save_phase1_results(log)
+                saved_files.update(files)
+                executed_components.add("Phase1Component")
+            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent"]:
+                files = self._save_nutrition_search_results(log)
+                saved_files.update(files)
+                executed_components.add(log.component_name)
+            elif log.component_name == "Phase2Component":
+                files = self._save_phase2_results(log)
+                saved_files.update(files)
+                executed_components.add("Phase2Component")
+            elif log.component_name == "NutritionCalculationComponent":
+                files = self._save_nutrition_results(log)
+                saved_files.update(files)
+                executed_components.add("NutritionCalculationComponent")
+        
+        # 未実装/未実行のコンポーネントにプレースホルダーファイルを作成
+        if "Phase2Component" not in executed_components:
+            placeholder_log = DetailedExecutionLog("Phase2Component", f"{self.analysis_id}_phase2_placeholder")
+            placeholder_log.input_data = {"note": "Phase2Component not yet implemented"}
+            placeholder_log.output_data = {"note": "Phase2Component not yet implemented"}
+            placeholder_log.finalize()
+            files = self._save_phase2_results(placeholder_log)
+            saved_files.update(files)
+        
+        if "NutritionCalculationComponent" not in executed_components:
+            placeholder_log = DetailedExecutionLog("NutritionCalculationComponent", f"{self.analysis_id}_nutrition_placeholder")
+            placeholder_log.input_data = {"note": "NutritionCalculationComponent not yet implemented"}
+            placeholder_log.output_data = {"note": "NutritionCalculationComponent not yet implemented"}
+            placeholder_log.finalize()
+            files = self._save_nutrition_results(placeholder_log)
+            saved_files.update(files)
+        
+        # パイプライン全体のサマリーを保存
+        summary_files = self._save_pipeline_summary()
+        saved_files.update(summary_files)
+        
+        return saved_files
+    
+    def _save_phase1_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
+        """Phase1の結果を保存"""
+        files = {}
+        
+        # 1. JSON形式の入出力データ
+        input_output_file = self.phase1_dir / "input_output.json"
+        with open(input_output_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                "input_data": log.input_data,
+                "output_data": log.output_data,
+                "execution_time_seconds": log.get_execution_time()
+            }, f, indent=2, ensure_ascii=False)
+        files["phase1_input_output"] = str(input_output_file)
+        
+        # 2. プロンプトと推論理由のマークダウン
+        prompts_md_file = self.phase1_dir / "prompts_and_reasoning.md"
+        prompts_content = self._generate_phase1_prompts_md(log)
+        with open(prompts_md_file, 'w', encoding='utf-8') as f:
+            f.write(prompts_content)
+        files["phase1_prompts_md"] = str(prompts_md_file)
+        
+        # 3. 検出された料理・食材のテキスト
+        detected_items_file = self.phase1_dir / "detected_items.txt"
+        detected_content = self._generate_phase1_detected_items_txt(log)
+        with open(detected_items_file, 'w', encoding='utf-8') as f:
+            f.write(detected_content)
+        files["phase1_detected_txt"] = str(detected_items_file)
+        
+        return files
+    
+    def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
+        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent両対応）"""
+        files = {}
+        
+        # 検索方法の判定
+        search_method = "unknown"
+        db_source = "unknown"
+        
+        if log.component_name == "USDAQueryComponent":
+            search_method = "usda_api"
+            db_source = "usda_database"
+        elif log.component_name == "LocalNutritionSearchComponent":
+            search_method = "local_search"
+            db_source = "local_nutrition_database"
+        
+        # 1. JSON形式の入出力データ（検索方法情報を含む）
+        input_output_file = self.nutrition_search_dir / "input_output.json"
+        with open(input_output_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                "input_data": log.input_data,
+                "output_data": log.output_data,
+                "execution_time_seconds": log.get_execution_time(),
+                "search_metadata": {
+                    "component_name": log.component_name,
+                    "search_method": search_method,
+                    "database_source": db_source,
+                    "timestamp": log.execution_end_time.isoformat() if log.execution_end_time else None
+                }
+            }, f, indent=2, ensure_ascii=False)
+        files["nutrition_search_input_output"] = str(input_output_file)
+        
+        # 2. 検索結果の詳細マークダウン
+        search_results_md_file = self.nutrition_search_dir / "search_results.md"
+        search_content = self._generate_nutrition_search_results_md(log, search_method, db_source)
+        with open(search_results_md_file, 'w', encoding='utf-8') as f:
+            f.write(search_content)
+        files["nutrition_search_results_md"] = str(search_results_md_file)
+        
+        # 3. マッチ詳細のテキスト
+        match_details_file = self.nutrition_search_dir / "match_details.txt"
+        match_content = self._generate_nutrition_match_details_txt(log, search_method, db_source)
+        with open(match_details_file, 'w', encoding='utf-8') as f:
+            f.write(match_content)
+        files["nutrition_search_match_details"] = str(match_details_file)
+        
+        return files
+    
+    def _save_phase2_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
+        """Phase2の結果を保存（将来実装用）"""
+        files = {}
+        
+        # 1. JSON形式の入出力データ
+        input_output_file = self.phase2_dir / "input_output.json"
+        with open(input_output_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                "input_data": log.input_data,
+                "output_data": log.output_data,
+                "execution_time_seconds": log.get_execution_time(),
+                "note": "Phase2Component is not yet implemented"
+            }, f, indent=2, ensure_ascii=False)
+        files["phase2_input_output"] = str(input_output_file)
+        
+        # 2. 戦略決定のマークダウン
+        strategy_md_file = self.phase2_dir / "strategy_decisions.md"
+        with open(strategy_md_file, 'w', encoding='utf-8') as f:
+            f.write("# Phase2 Strategy Decisions\n\n*Phase2Component is not yet implemented*\n")
+        files["phase2_strategy_md"] = str(strategy_md_file)
+        
+        # 3. 選択項目のテキスト
+        selected_items_file = self.phase2_dir / "selected_items.txt"
+        with open(selected_items_file, 'w', encoding='utf-8') as f:
+            f.write("Phase2Component is not yet implemented\n")
+        files["phase2_items_txt"] = str(selected_items_file)
+        
+        return files
+    
+    def _save_nutrition_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
+        """栄養計算の結果を保存（将来実装用）"""
+        files = {}
+        
+        # 1. JSON形式の入出力データ
+        input_output_file = self.nutrition_dir / "input_output.json"
+        with open(input_output_file, 'w', encoding='utf-8') as f:
+            json.dump({
+                "input_data": log.input_data,
+                "output_data": log.output_data,
+                "execution_time_seconds": log.get_execution_time(),
+                "note": "NutritionCalculationComponent is not yet implemented"
+            }, f, indent=2, ensure_ascii=False)
+        files["nutrition_input_output"] = str(input_output_file)
+        
+        # 2. 計算式のマークダウン
+        formulas_md_file = self.nutrition_dir / "calculation_formulas.md"
+        with open(formulas_md_file, 'w', encoding='utf-8') as f:
+            f.write("# Nutrition Calculation Formulas\n\n*NutritionCalculationComponent is not yet implemented*\n")
+        files["nutrition_formulas_md"] = str(formulas_md_file)
+        
+        # 3. 栄養サマリーのテキスト
+        summary_txt_file = self.nutrition_dir / "nutrition_summary.txt"
+        with open(summary_txt_file, 'w', encoding='utf-8') as f:
+            f.write("NutritionCalculationComponent is not yet implemented\n")
+        files["nutrition_summary_txt"] = str(summary_txt_file)
+        
+        return files
+    
+    def _save_pipeline_summary(self) -> Dict[str, str]:
+        """パイプライン全体のサマリーを保存"""
+        files = {}
+        
+        # 1. パイプラインサマリーJSON
+        summary_file = self.analysis_dir / "pipeline_summary.json"
+        summary_data = {
+            "analysis_id": self.analysis_id,
+            "timestamp": self.timestamp,
+            "pipeline_metadata": self.pipeline_metadata,
+            "execution_summary": {
+                log.component_name: {
+                    "execution_time": log.get_execution_time(),
+                    "success": len(log.errors) == 0,
+                    "warnings_count": len(log.warnings),
+                    "errors_count": len(log.errors)
+                }
+                for log in self.execution_logs
+            },
+            "final_result": self.final_result
+        }
+        
+        with open(summary_file, 'w', encoding='utf-8') as f:
+            json.dump(summary_data, f, indent=2, ensure_ascii=False)
+        files["pipeline_summary"] = str(summary_file)
+        
+        # 2. 完全な詳細ログJSON
+        complete_log_file = self.analysis_dir / "complete_analysis_log.json"
+        complete_data = {
+            "pipeline_metadata": self.pipeline_metadata,
+            "execution_logs": [log.to_dict() for log in self.execution_logs],
+            "final_result": self.final_result,
+            "summary": {
+                "total_components": len(self.execution_logs),
+                "total_warnings": sum(len(log.warnings) for log in self.execution_logs),
+                "total_errors": sum(len(log.errors) for log in self.execution_logs)
+            }
+        }
+        
+        with open(complete_log_file, 'w', encoding='utf-8') as f:
+            json.dump(complete_data, f, indent=2, ensure_ascii=False)
+        files["complete_log"] = str(complete_log_file)
+        
+        return files
+    
+    def _generate_phase1_prompts_md(self, log: DetailedExecutionLog) -> str:
+        """Phase1のプロンプトと推論理由のマークダウンを生成"""
+        content = f"""# Phase1: 画像分析 - プロンプトと推論
+
+## 実行情報
+- 実行ID: {log.execution_id}
+- 開始時刻: {log.execution_start_time.isoformat()}
+- 終了時刻: {log.execution_end_time.isoformat() if log.execution_end_time else 'N/A'}
+- 実行時間: {log.get_execution_time():.2f}秒
+
+## 使用されたプロンプト
+
+"""
+        
+        # プロンプト情報
+        for prompt_name, prompt_data in log.prompts_used.items():
+            content += f"### {prompt_name.replace('_', ' ').title()}\n\n"
+            content += f"**タイムスタンプ**: {prompt_data['timestamp']}\n\n"
+            content += f"```\n{prompt_data['content']}\n```\n\n"
+            
+            if prompt_data.get('variables'):
+                content += f"**変数**:\n"
+                for var_name, var_value in prompt_data['variables'].items():
+                    content += f"- {var_name}: {var_value}\n"
+                content += "\n"
+        
+        # 推論理由
+        content += "## AI推論の詳細\n\n"
+        
+        # 料理識別の推論
+        dish_reasoning = [r for r in log.reasoning.items() if r[0].startswith('dish_identification_')]
+        if dish_reasoning:
+            content += "### 料理識別の推論\n\n"
+            for decision_point, reasoning_data in dish_reasoning:
+                dish_num = decision_point.split('_')[-1]
+                content += f"**料理 {dish_num}**:\n"
+                content += f"- 推論: {reasoning_data['reason']}\n"
+                content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
+        
+        # 食材選択の推論
+        ingredient_reasoning = [r for r in log.reasoning.items() if r[0].startswith('ingredient_selection_')]
+        if ingredient_reasoning:
+            content += "### 食材選択の推論\n\n"
+            for decision_point, reasoning_data in ingredient_reasoning:
+                content += f"**{decision_point.replace('_', ' ').title()}**:\n"
+                content += f"- 推論: {reasoning_data['reason']}\n"
+                content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
+        
+        # 警告とエラー
+        if log.warnings:
+            content += "## 警告\n\n"
+            for warning in log.warnings:
+                content += f"- {warning['message']} (at {warning['timestamp']})\n"
+            content += "\n"
+        
+        if log.errors:
+            content += "## エラー\n\n"
+            for error in log.errors:
+                content += f"- {error['message']} (at {error['timestamp']})\n"
+            content += "\n"
+        
+        return content
+    
+    def _generate_phase1_detected_items_txt(self, log: DetailedExecutionLog) -> str:
+        """Phase1で検出された料理・食材のテキストを生成（USDA検索特化）"""
+        content = f"Phase1 検出結果 - {log.execution_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
+        content += "=" * 60 + "\n\n"
+        
+        if 'output_data' in log.output_data and 'dishes' in log.output_data['output_data']:
+            dishes = log.output_data['output_data']['dishes']
+            content += f"検出された料理数: {len(dishes)}\n\n"
+            
+            for i, dish in enumerate(dishes, 1):
+                content += f"料理 {i}: {dish['dish_name']}\n"
+                content += f"  食材数: {len(dish['ingredients'])}\n"
+                content += "  食材詳細:\n"
+                
+                for j, ingredient in enumerate(dish['ingredients'], 1):
+                    content += f"    {j}. {ingredient['ingredient_name']}\n"
+                content += "\n"
+        
+        # USDA検索準備情報
+        if 'usda_search_terms' in log.processing_details:
+            search_terms = log.processing_details['usda_search_terms']
+            content += f"USDA検索語彙 ({len(search_terms)}個):\n"
+            for i, term in enumerate(search_terms, 1):
+                content += f"  {i}. {term}\n"
+            content += "\n"
+        
+        # 処理詳細
+        if log.processing_details:
+            content += "処理詳細:\n"
+            for detail_key, detail_value in log.processing_details.items():
+                if detail_key == 'usda_search_terms':
+                    continue  # 既に上で表示済み
+                if isinstance(detail_value, (dict, list)):
+                    content += f"  {detail_key}: {json.dumps(detail_value, ensure_ascii=False)}\n"
+                else:
+                    content += f"  {detail_key}: {detail_value}\n"
+        
+        return content
+    
+    def _generate_nutrition_search_results_md(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
+        """栄養データベース検索結果のマークダウンを生成（USDA/ローカル対応）"""
+        content = []
+        
+        content.append(f"# Nutrition Database Search Results")
+        content.append(f"")
+        content.append(f"**Search Method:** {search_method}")
+        content.append(f"**Database Source:** {db_source}")
+        content.append(f"**Component:** {log.component_name}")
+        content.append(f"**Execution Time:** {log.get_execution_time():.3f} seconds")
+        content.append(f"**Timestamp:** {log.execution_start_time.isoformat()}")
+        content.append(f"")
+        
+        # 入力データの表示
+        if log.input_data:
+            content.append(f"## Input Data")
+            if 'ingredient_names' in log.input_data:
+                ingredients = log.input_data['ingredient_names']
+                content.append(f"**Ingredients ({len(ingredients)}):** {', '.join(ingredients)}")
+            
+            if 'dish_names' in log.input_data:
+                dishes = log.input_data['dish_names']
+                content.append(f"**Dishes ({len(dishes)}):** {', '.join(dishes)}")
+            content.append(f"")
+        
+        # 出力データの表示
+        if log.output_data and 'matches' in log.output_data:
+            matches = log.output_data['matches']
+            content.append(f"## Search Results")
+            content.append(f"**Total Matches:** {len(matches)}")
+            content.append(f"")
+            
+            for i, (search_term, match_data) in enumerate(matches.items(), 1):
+                content.append(f"### {i}. {search_term}")
+                if isinstance(match_data, dict):
+                    content.append(f"**ID:** {match_data.get('id', 'N/A')}")
+                    content.append(f"**Description:** {match_data.get('description', 'N/A')}")
+                    content.append(f"**Data Type:** {match_data.get('data_type', 'N/A')}")
+                    content.append(f"**Source:** {match_data.get('source', 'N/A')}")
+                    
+                    if 'nutrients' in match_data and match_data['nutrients']:
+                        content.append(f"**Nutrients ({len(match_data['nutrients'])}):**")
+                        for nutrient in match_data['nutrients'][:5]:  # 最初の5つだけ表示
+                            if isinstance(nutrient, dict):
+                                name = nutrient.get('name', 'Unknown')
+                                amount = nutrient.get('amount', 0)
+                                unit = nutrient.get('unit_name', '')
+                                content.append(f"  - {name}: {amount} {unit}")
+                        if len(match_data['nutrients']) > 5:
+                            content.append(f"  - ... and {len(match_data['nutrients']) - 5} more nutrients")
+                content.append(f"")
+        
+        # 検索サマリー
+        if log.output_data and 'search_summary' in log.output_data:
+            summary = log.output_data['search_summary']
+            content.append(f"## Search Summary")
+            content.append(f"**Total Searches:** {summary.get('total_searches', 0)}")
+            content.append(f"**Successful Matches:** {summary.get('successful_matches', 0)}")
+            content.append(f"**Failed Searches:** {summary.get('failed_searches', 0)}")
+            content.append(f"**Match Rate:** {summary.get('match_rate_percent', 0)}%")
+            content.append(f"**Search Method:** {summary.get('search_method', 'unknown')}")
+            content.append(f"")
+        
+        # 推論理由があれば表示
+        if log.reasoning:
+            content.append(f"## Search Reasoning")
+            for decision_point, reason_data in log.reasoning.items():
+                reason = reason_data.get('reason', '') if isinstance(reason_data, dict) else str(reason_data)
+                content.append(f"**{decision_point}:** {reason}")
+            content.append(f"")
+        
+        # 警告・エラーがあれば表示
+        if log.warnings:
+            content.append(f"## Warnings")
+            for warning in log.warnings:
+                content.append(f"- {warning}")
+            content.append(f"")
+        
+        if log.errors:
+            content.append(f"## Errors")
+            for error in log.errors:
+                content.append(f"- {error}")
+            content.append(f"")
+        
+        return "\n".join(content)
+    
+    def _generate_nutrition_match_details_txt(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
+        """栄養データベース検索のマッチ詳細テキストを生成（USDA/ローカル対応）"""
+        lines = []
+        
+        lines.append(f"Nutrition Database Search Match Details")
+        lines.append(f"=" * 50)
+        lines.append(f"Search Method: {search_method}")
+        lines.append(f"Database Source: {db_source}")
+        lines.append(f"Component: {log.component_name}")
+        lines.append(f"Execution Time: {log.get_execution_time():.3f} seconds")
+        lines.append(f"Timestamp: {log.execution_start_time.isoformat()}")
+        lines.append(f"")
+        
+        if log.output_data and 'matches' in log.output_data:
+            matches = log.output_data['matches']
+            lines.append(f"Total Matches: {len(matches)}")
+            lines.append(f"")
+            
+            for search_term, match_data in matches.items():
+                lines.append(f"Search Term: {search_term}")
+                lines.append(f"-" * 30)
+                
+                if isinstance(match_data, dict):
+                    lines.append(f"  ID: {match_data.get('id', 'N/A')}")
+                    lines.append(f"  Description: {match_data.get('description', 'N/A')}")
+                    lines.append(f"  Data Type: {match_data.get('data_type', 'N/A')}")
+                    lines.append(f"  Source: {match_data.get('source', 'N/A')}")
+                    lines.append(f"  Score: {match_data.get('score', 'N/A')}")
+                    
+                    if 'nutrients' in match_data and match_data['nutrients']:
+                        lines.append(f"  Nutrients ({len(match_data['nutrients'])}):")
+                        for nutrient in match_data['nutrients']:
+                            if isinstance(nutrient, dict):
+                                name = nutrient.get('name', 'Unknown')
+                                amount = nutrient.get('amount', 0)
+                                unit = nutrient.get('unit_name', '')
+                                lines.append(f"    - {name}: {amount} {unit}")
+                    
+                    if 'original_data' in match_data:
+                        original_data = match_data['original_data']
+                        if isinstance(original_data, dict):
+                            lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
+                            if search_method == "local_search":
+                                lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
+                
+                lines.append(f"")
+        
+        # 検索統計
+        if log.output_data and 'search_summary' in log.output_data:
+            summary = log.output_data['search_summary']
+            lines.append(f"Search Statistics:")
+            lines.append(f"  Total Searches: {summary.get('total_searches', 0)}")
+            lines.append(f"  Successful Matches: {summary.get('successful_matches', 0)}")
+            lines.append(f"  Failed Searches: {summary.get('failed_searches', 0)}")
+            lines.append(f"  Match Rate: {summary.get('match_rate_percent', 0)}%")
+            
+            if search_method == "local_search":
+                lines.append(f"  Total Database Items: {summary.get('total_database_items', 0)}")
+        
+        return "\n".join(lines)
+    
+    def get_analysis_folder_path(self) -> str:
+        """解析フォルダパスを取得"""
+        return str(self.analysis_dir) 
+```
+
+============================================================
+
+📁 コンポーネント層
+============================================================
+
+📄 FILE: app_v2/components/base.py
+--------------------------------------------------
+ファイルサイズ: 6,824 bytes
+最終更新: 2025-06-05 13:08:38
+存在: ✅
+
+CONTENT:
+```
+from abc import ABC, abstractmethod
+from typing import TypeVar, Generic, Any, Optional
+import logging
+from datetime import datetime
+
+# 型変数の定義
+InputType = TypeVar('InputType')
+OutputType = TypeVar('OutputType')
+
+
+class BaseComponent(ABC, Generic[InputType, OutputType]):
+    """
+    食事分析パイプラインのベースコンポーネント抽象クラス
+    
+    全てのコンポーネントはこのクラスを継承し、process メソッドを実装する必要があります。
+    """
+    
+    def __init__(self, component_name: str, logger: Optional[logging.Logger] = None):
+        """
+        ベースコンポーネントの初期化
+        
+        Args:
+            component_name: コンポーネント名
+            logger: ロガーインスタンス（指定しない場合は自動生成）
+        """
+        self.component_name = component_name
+        self.logger = logger or logging.getLogger(f"{__name__}.{component_name}")
+        self.created_at = datetime.now()
+        self.execution_count = 0
+        self.current_execution_log = None  # 詳細ログ
+        
+    @abstractmethod
+    async def process(self, input_data: InputType) -> OutputType:
+        """
+        メイン処理メソッド（抽象メソッド）
+        
+        Args:
+            input_data: 入力データ
+            
+        Returns:
+            OutputType: 処理結果
+            
+        Raises:
+            ComponentError: 処理エラーが発生した場合
+        """
+        pass
+    
+    async def execute(self, input_data: InputType, execution_log: Optional['DetailedExecutionLog'] = None) -> OutputType:
+        """
+        ラップされた実行メソッド（ログ記録、エラーハンドリング付き）
+        
+        Args:
+            input_data: 入力データ
+            execution_log: 詳細実行ログ（オプション）
+            
+        Returns:
+            OutputType: 処理結果
+        """
+        self.execution_count += 1
+        execution_id = f"{self.component_name}_{self.execution_count}"
+        
+        # 詳細ログの設定
+        if execution_log:
+            self.current_execution_log = execution_log
+            # 入力データを記録
+            self.current_execution_log.set_input(self._safe_serialize_input(input_data))
+        
+        self.logger.info(f"[{execution_id}] Starting {self.component_name} processing")
+        
+        try:
+            start_time = datetime.now()
+            result = await self.process(input_data)
+            end_time = datetime.now()
+            
+            processing_time = (end_time - start_time).total_seconds()
+            self.logger.info(f"[{execution_id}] {self.component_name} completed in {processing_time:.2f}s")
+            
+            # 詳細ログに出力データを記録
+            if self.current_execution_log:
+                self.current_execution_log.set_output(self._safe_serialize_output(result))
+                self.current_execution_log.finalize()
+            
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"[{execution_id}] {self.component_name} failed: {str(e)}", exc_info=True)
+            
+            # 詳細ログにエラーを記録
+            if self.current_execution_log:
+                self.current_execution_log.add_error(str(e))
+                self.current_execution_log.finalize()
+            
+            raise ComponentError(f"{self.component_name} processing failed: {str(e)}") from e
+        finally:
+            self.current_execution_log = None
+    
+    def log_prompt(self, prompt_name: str, prompt_content: str, variables: dict = None):
+        """プロンプトをログに記録"""
+        if self.current_execution_log:
+            self.current_execution_log.add_prompt(prompt_name, prompt_content, variables)
+    
+    def log_reasoning(self, decision_point: str, reason: str, confidence: float = None):
+        """推論理由をログに記録"""
+        if self.current_execution_log:
+            self.current_execution_log.add_reasoning(decision_point, reason, confidence)
+    
+    def log_processing_detail(self, detail_key: str, detail_value: Any):
+        """処理詳細をログに記録"""
+        if self.current_execution_log:
+            self.current_execution_log.add_processing_detail(detail_key, detail_value)
+    
+    def log_confidence_score(self, metric_name: str, score: float):
+        """信頼度スコアをログに記録"""
+        if self.current_execution_log:
+            self.current_execution_log.add_confidence_score(metric_name, score)
+    
+    def log_warning(self, warning: str):
+        """警告をログに記録"""
+        if self.current_execution_log:
+            self.current_execution_log.add_warning(warning)
+    
+    def _safe_serialize_input(self, input_data: InputType) -> dict:
+        """入力データを安全にシリアライズ"""
+        try:
+            if hasattr(input_data, 'model_dump'):
+                return input_data.model_dump()
+            elif hasattr(input_data, '__dict__'):
+                return input_data.__dict__
+            else:
+                return {"data": str(input_data)}
+        except Exception as e:
+            return {"serialization_error": str(e)}
+    
+    def _safe_serialize_output(self, output_data: OutputType) -> dict:
+        """出力データを安全にシリアライズ"""
+        try:
+            if hasattr(output_data, 'model_dump'):
+                return output_data.model_dump()
+            elif hasattr(output_data, '__dict__'):
+                return output_data.__dict__
+            else:
+                return {"data": str(output_data)}
+        except Exception as e:
+            return {"serialization_error": str(e)}
+    
+    def get_component_info(self) -> dict:
+        """コンポーネント情報を取得"""
+        return {
+            "component_name": self.component_name,
+            "created_at": self.created_at.isoformat(),
+            "execution_count": self.execution_count,
+            "component_type": self.__class__.__name__
+        }
+
+
+class ComponentError(Exception):
+    """コンポーネント処理エラー"""
+    
+    def __init__(self, message: str, component_name: str = None, original_error: Exception = None):
+        super().__init__(message)
+        self.component_name = component_name
+        self.original_error = original_error
+        self.timestamp = datetime.now()
+    
+    def to_dict(self) -> dict:
+        """エラー情報を辞書形式で取得"""
+        return {
+            "error_message": str(self),
+            "component_name": self.component_name,
+            "timestamp": self.timestamp.isoformat(),
+            "original_error": str(self.original_error) if self.original_error else None
+        } 
+```
+
+============================================================
+
+📄 FILE: app_v2/components/phase1_component.py
+--------------------------------------------------
+ファイルサイズ: 5,285 bytes
+最終更新: 2025-06-05 15:28:30
+存在: ✅
+
+CONTENT:
+```
+import json
+from typing import Optional
+
+from .base import BaseComponent
+from ..models.phase1_models import Phase1Input, Phase1Output, Dish, Ingredient
+from ..services.gemini_service import GeminiService
+from ..config import get_settings
+from ..config.prompts import Phase1Prompts
+
+
+class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
+    """
+    Phase1: 画像分析コンポーネント（USDA検索特化）
+    
+    Gemini AIを使用して食事画像を分析し、USDA検索に適した料理と食材名を識別します。
+    """
+    
+    def __init__(self, gemini_service: Optional[GeminiService] = None):
+        super().__init__("Phase1Component")
+        
+        # GeminiServiceの初期化
+        if gemini_service is None:
+            settings = get_settings()
+            self.gemini_service = GeminiService(
+                project_id=settings.GEMINI_PROJECT_ID,
+                location=settings.GEMINI_LOCATION,
+                model_name=settings.GEMINI_MODEL_NAME
+            )
+        else:
+            self.gemini_service = gemini_service
+    
+    async def process(self, input_data: Phase1Input) -> Phase1Output:
+        """
+        Phase1の主処理: 画像分析（USDA検索特化）
+        
+        Args:
+            input_data: Phase1Input (image_bytes, image_mime_type, optional_text)
+            
+        Returns:
+            Phase1Output: 分析結果（料理名・食材名のみ）
+        """
+        self.logger.info(f"Starting Phase1 image analysis for USDA query generation")
+        
+        # プロンプト生成と記録
+        system_prompt = Phase1Prompts.get_system_prompt()
+        user_prompt = Phase1Prompts.get_user_prompt(input_data.optional_text)
+        
+        self.log_prompt("system_prompt", system_prompt)
+        self.log_prompt("user_prompt", user_prompt, {
+            "optional_text": input_data.optional_text,
+            "image_mime_type": input_data.image_mime_type
+        })
+        
+        # 画像情報のログ記録
+        self.log_processing_detail("image_size_bytes", len(input_data.image_bytes))
+        self.log_processing_detail("image_mime_type", input_data.image_mime_type)
+        
+        try:
+            # Gemini AIによる画像分析
+            self.log_processing_detail("gemini_api_call_start", "Calling Gemini API for image analysis")
+            
+            gemini_result = await self.gemini_service.analyze_phase1(
+                image_bytes=input_data.image_bytes,
+                image_mime_type=input_data.image_mime_type,
+                optional_text=input_data.optional_text
+            )
+            
+            self.log_processing_detail("gemini_raw_response", gemini_result)
+            
+            # 結果をPydanticモデルに変換
+            dishes = []
+            for dish_index, dish_data in enumerate(gemini_result.get("dishes", [])):
+                ingredients = []
+                for ingredient_index, ingredient_data in enumerate(dish_data.get("ingredients", [])):
+                    ingredient = Ingredient(
+                        ingredient_name=ingredient_data["ingredient_name"]
+                    )
+                    ingredients.append(ingredient)
+                    
+                    # 食材識別の推論理由をログ
+                    self.log_reasoning(
+                        f"ingredient_identification_dish{dish_index}_ingredient{ingredient_index}",
+                        f"Identified ingredient '{ingredient_data['ingredient_name']}' for USDA search based on visual analysis"
+                    )
+                
+                dish = Dish(
+                    dish_name=dish_data["dish_name"],
+                    ingredients=ingredients
+                )
+                dishes.append(dish)
+                
+                # 料理識別の推論理由をログ
+                self.log_reasoning(
+                    f"dish_identification_{dish_index}",
+                    f"Identified dish as '{dish_data['dish_name']}' for USDA search based on visual characteristics"
+                )
+            
+            # 分析統計の記録
+            self.log_processing_detail("detected_dishes_count", len(dishes))
+            self.log_processing_detail("total_ingredients_count", sum(len(dish.ingredients) for dish in dishes))
+            
+            # USDA検索適合性チェック
+            search_terms = []
+            for dish in dishes:
+                search_terms.append(dish.dish_name)
+                for ingredient in dish.ingredients:
+                    search_terms.append(ingredient.ingredient_name)
+            
+            self.log_processing_detail("usda_search_terms", search_terms)
+            self.log_reasoning(
+                "usda_search_preparation",
+                f"Generated {len(search_terms)} search terms for USDA database queries"
+            )
+            
+            result = Phase1Output(
+                dishes=dishes,
+                warnings=[]
+            )
+            
+            self.logger.info(f"Phase1 completed: identified {len(dishes)} dishes with {len(search_terms)} total search terms")
+            return result
+            
+        except Exception as e:
+            self.logger.error(f"Phase1 processing failed: {str(e)}")
+            raise 
+```
+
+============================================================
+
+📄 FILE: app_v2/components/local_nutrition_search_component.py
+--------------------------------------------------
+ファイルサイズ: 25,544 bytes
+最終更新: 2025-06-06 13:03:15
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Local Nutrition Search Component
+
+USDA database queryを nutrition_db_experiment で実装したローカル検索システムに置き換える
+"""
+
+import os
+import sys
+import json
+import asyncio
+from typing import Optional, List, Dict, Any
+from pathlib import Path
+
+from .base import BaseComponent
+from ..models.usda_models import USDAQueryInput, USDAQueryOutput
+from ..models.nutrition_search_models import (
+    NutritionQueryInput, NutritionQueryOutput, NutritionMatch, NutritionNutrient,
+    convert_usda_query_input_to_nutrition, convert_nutrition_to_usda_query_output
+)
+from ..config import get_settings
+
+# nutrition_db_experimentのパスを追加
+NUTRITION_DB_EXPERIMENT_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "nutrition_db_experiment"
+)
+sys.path.append(NUTRITION_DB_EXPERIMENT_PATH)
+
+class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
+    """
+    ローカル栄養データベース検索コンポーネント
+    
+    nutrition_db_experimentで実装したローカル検索システムを使用して食材名を検索し、
+    USDAQueryComponentと互換性のある結果を返します。
+    
+    内部的には汎用的なNutritionQueryモデルを使用し、
+    外部インターフェースではUSDAQueryモデルとの互換性を保持します。
+    """
+    
+    def __init__(self):
+        super().__init__("LocalNutritionSearchComponent")
+        
+        # ローカル検索システムの初期化
+        self._initialize_local_search_system()
+        
+        # ローカルデータベースファイルのパス（正しいパスに修正）
+        self.local_db_paths = {
+            "dish_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "dish_db.json"),
+            "ingredient_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "ingredient_db.json"),
+            "branded_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "branded_db.json"),
+            "unified_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "unified_nutrition_db.json")
+        }
+        
+        # ローカルデータベースの読み込み
+        self.local_databases = self._load_local_databases()
+    
+    def _initialize_local_search_system(self):
+        """ローカル検索システムの初期化"""
+        try:
+            # nutrition_db_experimentの検索コンポーネントをインポート
+            search_service_path = os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "search_service")
+            sys.path.append(search_service_path)
+            
+            from nlp.query_preprocessor import FoodQueryPreprocessor
+            from api.search_handler import NutritionSearchHandler, SearchRequest
+            
+            self.query_preprocessor = FoodQueryPreprocessor()
+            self.search_handler = NutritionSearchHandler()
+            
+            self.logger.info("Local nutrition search system initialized successfully")
+            
+        except ImportError as e:
+            self.logger.error(f"Failed to import local search components: {e}")
+            # フォールバック: シンプルな文字列マッチング
+            self.query_preprocessor = None
+            self.search_handler = None
+            self.logger.warning("Using fallback simple string matching for local search")
+        except Exception as e:
+            self.logger.error(f"Error initializing local search system: {e}")
+            self.query_preprocessor = None
+            self.search_handler = None
+    
+    def _load_local_databases(self) -> Dict[str, List[Dict[str, Any]]]:
+        """ローカルデータベースファイルを読み込み"""
+        databases = {}
+        
+        for db_name, db_path in self.local_db_paths.items():
+            try:
+                if os.path.exists(db_path):
+                    with open(db_path, 'r', encoding='utf-8') as f:
+                        databases[db_name] = json.load(f)
+                    self.logger.info(f"Loaded {db_name}: {len(databases[db_name])} items")
+                else:
+                    self.logger.warning(f"Local database file not found: {db_path}")
+                    databases[db_name] = []
+            except Exception as e:
+                self.logger.error(f"Error loading {db_name}: {e}")
+                databases[db_name] = []
+        
+        total_items = sum(len(db) for db in databases.values())
+        self.logger.info(f"Total local database items loaded: {total_items}")
+        
+        return databases
+    
+    async def process(self, input_data: USDAQueryInput) -> USDAQueryOutput:
+        """
+        ローカル検索の主処理（USDA互換インターフェース）
+        
+        Args:
+            input_data: USDAQueryInput
+            
+        Returns:
+            USDAQueryOutput: USDA互換のローカル検索結果
+        """
+        # USDAQueryInputを汎用NutritionQueryInputに変換
+        nutrition_input = convert_usda_query_input_to_nutrition(input_data)
+        nutrition_input.preferred_source = "local_database"
+        
+        # 内部的な汎用検索処理を実行
+        nutrition_result = await self._process_nutrition_search(nutrition_input)
+        
+        # 結果をUSDAQueryOutput形式に変換して返す
+        return convert_nutrition_to_usda_query_output(nutrition_result)
+    
+    async def _process_nutrition_search(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
+        """
+        汎用栄養検索の主処理
+        
+        Args:
+            input_data: NutritionQueryInput
+            
+        Returns:
+            NutritionQueryOutput: 汎用検索結果
+        """
+        self.logger.info(f"Starting local nutrition search for {len(input_data.get_all_search_terms())} terms")
+        
+        search_terms = input_data.get_all_search_terms()
+        
+        # 検索対象の詳細をログに記録
+        self.log_processing_detail("search_terms", search_terms)
+        self.log_processing_detail("ingredient_names", input_data.ingredient_names)
+        self.log_processing_detail("dish_names", input_data.dish_names)
+        self.log_processing_detail("total_search_terms", len(search_terms))
+        self.log_processing_detail("search_method", "local_nutrition_database")
+        self.log_processing_detail("preferred_source", input_data.preferred_source)
+        
+        matches = {}
+        warnings = []
+        errors = []
+        
+        successful_matches = 0
+        total_searches = len(search_terms)
+        
+        # 各検索語彙について照合を実行
+        for search_index, search_term in enumerate(search_terms):
+            self.logger.debug(f"Searching local database for: {search_term}")
+            
+            # 検索開始をログ
+            self.log_processing_detail(f"search_{search_index}_term", search_term)
+            self.log_processing_detail(f"search_{search_index}_start", f"Starting local search for '{search_term}'")
+            
+            try:
+                # ローカル検索の実行
+                if self.search_handler and self.query_preprocessor:
+                    # 高度な検索システムを使用
+                    match_result = await self._advanced_local_search(search_term, search_index, input_data)
+                else:
+                    # フォールバック: シンプルな文字列マッチング
+                    match_result = await self._simple_local_search(search_term, search_index, input_data)
+                
+                if match_result:
+                    matches[search_term] = match_result
+                    successful_matches += 1
+                    self.logger.debug(f"Found local match for '{search_term}': ID {match_result.id}")
+                else:
+                    self.log_reasoning(
+                        f"no_match_{search_index}",
+                        f"No local database match found for '{search_term}' - may not exist in local nutrition database"
+                    )
+                    self.logger.warning(f"No local match found for: {search_term}")
+                    warnings.append(f"No local match found for: {search_term}")
+                    
+            except Exception as e:
+                error_msg = f"Local search error for '{search_term}': {str(e)}"
+                self.logger.error(error_msg)
+                errors.append(error_msg)
+                
+                # エラーの詳細をログ
+                self.log_reasoning(
+                    f"search_error_{search_index}",
+                    f"Local database search error for '{search_term}': {str(e)}"
+                )
+        
+        # 検索サマリーを作成（汎用形式）
+        search_summary = {
+            "total_searches": total_searches,
+            "successful_matches": successful_matches,
+            "failed_searches": total_searches - successful_matches,
+            "match_rate_percent": round((successful_matches / total_searches) * 100, 1) if total_searches > 0 else 0,
+            "search_method": "local_nutrition_database",
+            "database_source": "nutrition_db_experiment",
+            "preferred_source": input_data.preferred_source,
+            "total_database_items": sum(len(db) for db in self.local_databases.values())
+        }
+        
+        # 全体的な検索成功率をログ
+        overall_success_rate = successful_matches / total_searches if total_searches > 0 else 0
+        self.log_processing_detail("search_summary", search_summary)
+        
+        # 検索品質の評価をログ
+        if overall_success_rate >= 0.8:
+            self.log_reasoning("search_quality", "Excellent local search results with high match rate")
+        elif overall_success_rate >= 0.6:
+            self.log_reasoning("search_quality", "Good local search results with acceptable match rate")
+        elif overall_success_rate >= 0.4:
+            self.log_reasoning("search_quality", "Moderate local search results, some items may need manual review")
+        else:
+            self.log_reasoning("search_quality", "Poor local search results, many items not found in local database")
+        
+        result = NutritionQueryOutput(
+            matches=matches,
+            search_summary=search_summary,
+            warnings=warnings if warnings else None,
+            errors=errors if errors else None
+        )
+        
+        self.logger.info(f"Local nutrition search completed: {successful_matches}/{total_searches} matches ({result.get_match_rate():.1%})")
+        
+        return result
+    
+    async def _advanced_local_search(self, search_term: str, search_index: int, input_data: NutritionQueryInput) -> Optional[NutritionMatch]:
+        """
+        nutrition_db_experimentの高度な検索システムを使用したローカル検索
+        
+        Args:
+            search_term: 検索語彙
+            search_index: 検索インデックス（ログ用）
+            input_data: 入力データ（検索タイプ判定用）
+            
+        Returns:
+            NutritionMatch または None
+        """
+        try:
+            from api.search_handler import SearchRequest
+            
+            # 検索タイプの決定（料理か食材かの推定）
+            db_type_filter = None  # 全データベースを検索
+            
+            # dish_namesに含まれる場合は料理として優先検索
+            if search_term in input_data.dish_names:
+                db_type_filter = "dish"
+                self.log_processing_detail(f"search_{search_index}_type", "dish")
+            elif search_term in input_data.ingredient_names:
+                db_type_filter = "ingredient"
+                self.log_processing_detail(f"search_{search_index}_type", "ingredient")
+            
+            # 検索リクエストの作成
+            request = SearchRequest(
+                query=search_term,
+                db_type_filter=db_type_filter,
+                size=5  # 上位5件を取得
+            )
+            
+            # 検索実行
+            response = self.search_handler.search(request)
+            
+            # 検索結果の詳細をログ
+            self.log_processing_detail(f"search_{search_index}_results_count", response.total_hits)
+            self.log_processing_detail(f"search_{search_index}_processing_time_ms", response.took_ms)
+            self.log_processing_detail(f"search_{search_index}_processed_query", response.query_info.get('processed_query'))
+            
+            if response.results:
+                # nutrition_db_experimentの検索システムが模擬データを返した場合は、実際のデータベース検索にフォールバック
+                best_result = response.results[0]
+                
+                # 模擬データかどうかをチェック（IDが123456の場合は模擬データ）
+                if best_result.get('id') == 123456:
+                    self.logger.warning(f"nutrition_db_experiment returned mock data for '{search_term}', falling back to direct database search")
+                    return await self._direct_database_search(search_term, search_index, input_data)
+                
+                # マッチ選択の推論理由をログ
+                self.log_reasoning(
+                    f"match_selection_{search_index}",
+                    f"Selected local item '{best_result['search_name']}' (ID: {best_result['id']}) for search term '{search_term}' based on local search algorithm (score: {best_result.get('_score', 'N/A')})"
+                )
+                
+                # 詳細なマッチ情報をログ
+                self.log_processing_detail(f"search_{search_index}_selected_id", best_result['id'])
+                self.log_processing_detail(f"search_{search_index}_selected_name", best_result['search_name'])
+                self.log_processing_detail(f"search_{search_index}_db_type", best_result['db_type'])
+                self.log_processing_detail(f"search_{search_index}_score", best_result.get('_score'))
+                
+                # NutritionMatch形式に変換
+                return self._convert_to_nutrition_match(best_result, search_term)
+            
+            # 結果がない場合は直接データベース検索にフォールバック
+            return await self._direct_database_search(search_term, search_index, input_data)
+            
+        except Exception as e:
+            self.logger.error(f"Advanced local search failed for '{search_term}': {e}")
+            # エラーの場合も直接データベース検索にフォールバック
+            return await self._direct_database_search(search_term, search_index, input_data)
+    
+    async def _direct_database_search(self, search_term: str, search_index: int, input_data: NutritionQueryInput) -> Optional[NutritionMatch]:
+        """
+        ローカルデータベースファイルを直接検索
+        
+        Args:
+            search_term: 検索語彙
+            search_index: 検索インデックス（ログ用）
+            input_data: 入力データ（検索タイプ判定用）
+            
+        Returns:
+            NutritionMatch または None
+        """
+        try:
+            self.log_processing_detail(f"search_{search_index}_method", "direct_database_search")
+            
+            search_term_lower = search_term.lower()
+            best_match = None
+            best_score = 0
+            best_db_source = None
+            
+            # 検索優先順位の決定
+            search_order = []
+            
+            # dish_namesに含まれる場合は料理データベースを優先
+            if search_term in input_data.dish_names:
+                search_order = ["dish_db", "unified_db", "ingredient_db", "branded_db"]
+            elif search_term in input_data.ingredient_names:
+                search_order = ["ingredient_db", "unified_db", "dish_db", "branded_db"]
+            else:
+                search_order = ["unified_db", "dish_db", "ingredient_db", "branded_db"]
+            
+            # 各データベースで検索（優先順位順）
+            for db_name in search_order:
+                if db_name not in self.local_databases:
+                    continue
+                    
+                database = self.local_databases[db_name]
+                
+                for item in database:
+                    # search_nameフィールドで検索
+                    if 'search_name' not in item:
+                        continue
+                        
+                    item_name = item['search_name'].lower()
+                    score = 0
+                    
+                    # スコアリングアルゴリズム
+                    if search_term_lower == item_name:
+                        score = 1.0  # 完全一致
+                    elif search_term_lower in item_name:
+                        # 部分一致（語順考慮）
+                        if item_name.startswith(search_term_lower):
+                            score = 0.9  # 前方一致
+                        elif item_name.endswith(search_term_lower):
+                            score = 0.8  # 後方一致
+                        else:
+                            score = 0.7  # 中間一致
+                    elif item_name in search_term_lower:
+                        score = 0.6  # 逆部分一致
+                    else:
+                        # 単語レベルの一致をチェック
+                        search_words = search_term_lower.split()
+                        item_words = item_name.split()
+                        
+                        common_words = set(search_words) & set(item_words)
+                        if common_words:
+                            score = len(common_words) / max(len(search_words), len(item_words)) * 0.5
+                    
+                    # データベース優先度によるボーナス
+                    db_bonus = 1.0
+                    if db_name == search_order[0]:
+                        db_bonus = 1.2  # 第一優先データベース
+                    elif db_name == search_order[1]:
+                        db_bonus = 1.1  # 第二優先データベース
+                    
+                    final_score = score * db_bonus
+                    
+                    if final_score > best_score:
+                        best_score = final_score
+                        best_match = item.copy()
+                        best_db_source = db_name
+            
+            if best_match and best_score > 0.1:  # 最低閾値
+                # データベースソース情報を追加
+                best_match['_db_source'] = best_db_source
+                best_match['_match_score'] = best_score
+                
+                self.log_reasoning(
+                    f"match_selection_{search_index}",
+                    f"Selected local item '{best_match['search_name']}' (ID: {best_match.get('id', 'N/A')}) for search term '{search_term}' from {best_db_source} using direct database search (score: {best_score:.3f})"
+                )
+                
+                # 詳細なマッチ情報をログ
+                self.log_processing_detail(f"search_{search_index}_selected_id", best_match.get('id', 'N/A'))
+                self.log_processing_detail(f"search_{search_index}_selected_name", best_match['search_name'])
+                self.log_processing_detail(f"search_{search_index}_db_source", best_db_source)
+                self.log_processing_detail(f"search_{search_index}_match_score", best_score)
+                
+                return self._convert_to_nutrition_match(best_match, search_term)
+            
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"Direct database search failed for '{search_term}': {e}")
+            return None
+    
+    async def _simple_local_search(self, search_term: str, search_index: int, input_data: NutritionQueryInput) -> Optional[NutritionMatch]:
+        """
+        シンプルな文字列マッチングによるフォールバック検索（実際のデータベース使用）
+        
+        Args:
+            search_term: 検索語彙
+            search_index: 検索インデックス（ログ用）
+            input_data: 入力データ（検索タイプ判定用）
+            
+        Returns:
+            NutritionMatch または None
+        """
+        # 高度検索システムが利用できない場合は、直接データベース検索を使用
+        return await self._direct_database_search(search_term, search_index, input_data)
+    
+    def _convert_to_nutrition_match(self, local_item: Dict[str, Any], search_term: str) -> NutritionMatch:
+        """
+        ローカルデータベースアイテムをNutritionMatch形式に変換
+        
+        Args:
+            local_item: ローカルデータベースのアイテム
+            search_term: 元の検索語彙
+            
+        Returns:
+            NutritionMatch: 変換されたマッチ結果
+        """
+        # 栄養素情報の変換
+        nutrients = []
+        if 'nutrition' in local_item and local_item['nutrition']:
+            nutrition_data = local_item['nutrition']
+            
+            # 主要栄養素のマッピング（ローカルDBの形式に合わせて調整）
+            nutrient_mapping = {
+                'calories_kcal': ('Energy', '208', 'kcal'),
+                'calories': ('Energy', '208', 'kcal'),  # 別名対応
+                'protein_g': ('Protein', '203', 'g'),
+                'protein': ('Protein', '203', 'g'),  # 別名対応
+                'fat_g': ('Total lipid (fat)', '204', 'g'),
+                'fat': ('Total lipid (fat)', '204', 'g'),  # 別名対応
+                'carbohydrates_g': ('Carbohydrate, by difference', '205', 'g'),
+                'carbs': ('Carbohydrate, by difference', '205', 'g'),  # 別名対応
+                'carbohydrates': ('Carbohydrate, by difference', '205', 'g'),  # 別名対応
+                'fiber_g': ('Fiber, total dietary', '291', 'g'),
+                'fiber': ('Fiber, total dietary', '291', 'g'),  # 別名対応
+                'sugars_g': ('Sugars, total', '269', 'g'),
+                'sugars': ('Sugars, total', '269', 'g'),  # 別名対応
+                'sodium_mg': ('Sodium, Na', '307', 'mg'),
+                'sodium': ('Sodium, Na', '307', 'mg')  # 別名対応
+            }
+            
+            for local_key, (usda_name, nutrient_number, unit) in nutrient_mapping.items():
+                if local_key in nutrition_data and nutrition_data[local_key] is not None:
+                    try:
+                        amount = float(nutrition_data[local_key])
+                        nutrients.append(NutritionNutrient(
+                            name=usda_name,
+                            amount=amount,
+                            unit_name=unit,
+                            nutrient_id=None,  # ローカルデータにはIDがない
+                            nutrient_number=nutrient_number
+                        ))
+                    except (ValueError, TypeError):
+                        # 数値に変換できない場合はスキップ
+                        continue
+        
+        # IDの取得（様々な形式に対応）
+        item_id = local_item.get('id') or local_item.get('fdc_id') or local_item.get('_id') or 0
+        
+        # データタイプの決定
+        data_type = "Local_Unknown"
+        if 'db_type' in local_item:
+            data_type = f"Local_{local_item['db_type'].title()}"
+        elif '_db_source' in local_item:
+            db_source = local_item['_db_source'].replace('_db', '')
+            data_type = f"Local_{db_source.title()}"
+        
+        # 説明の取得（様々なフィールド名に対応）
+        description = (
+            local_item.get('search_name') or 
+            local_item.get('description') or 
+            local_item.get('name') or 
+            search_term
+        )
+        
+        # ブランド情報（branded_dbの場合）
+        brand_owner = local_item.get('brand_owner') or local_item.get('brand_name')
+        
+        # 食材リスト（dish_dbの場合）
+        ingredients_text = None
+        if 'ingredients' in local_item:
+            if isinstance(local_item['ingredients'], list):
+                ingredients_text = ', '.join(local_item['ingredients'])
+            elif isinstance(local_item['ingredients'], str):
+                ingredients_text = local_item['ingredients']
+        
+        # マッチスコア
+        score = local_item.get('_match_score') or local_item.get('_score') or 1.0
+        
+        # オリジナルデータの保存
+        original_data = {
+            "source": "local_nutrition_database",
+            "original_data": local_item,
+            "search_term": search_term,
+            "db_source": local_item.get('_db_source', 'unknown'),
+            "match_score": score
+        }
+        
+        # NutritionMatchオブジェクトの作成
+        return NutritionMatch(
+            id=item_id,
+            description=description,
+            data_type=data_type,
+            source="local_database",
+            brand_owner=brand_owner,
+            ingredients_text=ingredients_text,
+            nutrients=nutrients,
+            score=score,
+            original_data=original_data
+        ) 
+```
+
+============================================================
+
+📁 モデル層
+============================================================
+
+📄 FILE: app_v2/models/phase1_models.py
+--------------------------------------------------
+ファイルサイズ: 1,764 bytes
+最終更新: 2025-06-05 13:44:12
+存在: ✅
+
+CONTENT:
+```
+from typing import List, Optional
+from pydantic import BaseModel, Field
+
+
+class Ingredient(BaseModel):
+    """食材情報モデル（USDA検索用）"""
+    ingredient_name: str = Field(..., description="食材の名称（USDA検索で使用）")
+
+
+class Dish(BaseModel):
+    """料理情報モデル（USDA検索用）"""
+    dish_name: str = Field(..., description="特定された料理の名称（USDA検索で使用）")
+    ingredients: List[Ingredient] = Field(..., description="その料理に含まれる食材のリスト")
+
+
+class Phase1Input(BaseModel):
+    """Phase1コンポーネントの入力モデル"""
+    image_bytes: bytes = Field(..., description="画像データ（バイト形式）")
+    image_mime_type: str = Field(..., description="画像のMIMEタイプ")
+    optional_text: Optional[str] = Field(None, description="オプションのテキスト情報")
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class Phase1Output(BaseModel):
+    """Phase1コンポーネントの出力モデル（USDA検索特化）"""
+    dishes: List[Dish] = Field(..., description="画像から特定された料理のリスト")
+    warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
+
+    def get_all_ingredient_names(self) -> List[str]:
+        """全ての食材名のリストを取得（USDA検索用）"""
+        ingredient_names = []
+        for dish in self.dishes:
+            for ingredient in dish.ingredients:
+                ingredient_names.append(ingredient.ingredient_name)
+        return ingredient_names
+
+    def get_all_dish_names(self) -> List[str]:
+        """全ての料理名のリストを取得（USDA検索用）"""
+        return [dish.dish_name for dish in self.dishes] 
+```
+
+============================================================
+
+📄 FILE: app_v2/models/usda_models.py
+--------------------------------------------------
+ファイルサイズ: 3,030 bytes
+最終更新: 2025-06-05 15:28:52
+存在: ✅
+
+CONTENT:
+```
+from typing import List, Dict, Optional
+from pydantic import BaseModel, Field
+
+
+class USDANutrient(BaseModel):
+    """USDA栄養素情報モデル"""
+    name: str = Field(..., description="栄養素名")
+    amount: float = Field(..., description="100gまたは100mlあたりの量")
+    unit_name: str = Field(..., description="単位名 (例: g, mg, kcal)")
+    nutrient_id: Optional[int] = Field(None, description="USDA栄養素ID")
+    nutrient_number: Optional[str] = Field(None, description="USDA栄養素番号")
+
+
+class USDAMatch(BaseModel):
+    """USDA照合結果モデル"""
+    fdc_id: int = Field(..., description="USDA FoodData Central ID")
+    description: str = Field(..., description="食品の公式名称")
+    data_type: Optional[str] = Field(None, description="USDAデータタイプ (例: SR Legacy, Branded)")
+    brand_owner: Optional[str] = Field(None, description="ブランド所有者 (Branded Foodsの場合)")
+    ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列 (Branded Foodsの場合)")
+    food_nutrients: List[USDANutrient] = Field(default_factory=list, description="主要な栄養素情報のリスト")
+    score: Optional[float] = Field(None, description="検索結果の関連度スコア")
+    original_usda_data: Optional[Dict] = Field(None, description="USDA APIからのオリジナルJSONデータ")
+
+
+class USDAQueryInput(BaseModel):
+    """USDAクエリコンポーネントの入力モデル"""
+    ingredient_names: List[str] = Field(..., description="検索する食材名のリスト")
+    dish_names: List[str] = Field(default_factory=list, description="検索する料理名のリスト")
+    search_options: Optional[Dict] = Field(None, description="検索オプション")
+
+    def get_all_search_terms(self) -> List[str]:
+        """全ての検索用語を取得"""
+        return list(set(self.ingredient_names + self.dish_names))
+
+
+class USDAQueryOutput(BaseModel):
+    """USDAクエリコンポーネントの出力モデル"""
+    matches: Dict[str, USDAMatch] = Field(default_factory=dict, description="検索語彙とマッチした結果のマップ")
+    search_summary: Dict[str, int] = Field(default_factory=dict, description="検索サマリー（成功数、失敗数など）")
+    warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
+    errors: Optional[List[str]] = Field(None, description="処理中のエラーメッセージ")
+
+    def get_match_rate(self) -> float:
+        """照合成功率を計算"""
+        total_searches = self.search_summary.get("total_searches", 0)
+        successful_matches = self.search_summary.get("successful_matches", 0)
+        if total_searches == 0:
+            return 0.0
+        return successful_matches / total_searches
+
+    def has_match(self, search_term: str) -> bool:
+        """指定された検索語彙にマッチがあるかチェック"""
+        return search_term in self.matches and self.matches[search_term] is not None 
+```
+
+============================================================
+
+📄 FILE: app_v2/models/nutrition_search_models.py
+--------------------------------------------------
+ファイルサイズ: 6,916 bytes
+最終更新: 2025-06-06 12:40:52
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Nutrition Search Models
+
+USDA database queryとローカル栄養データベース検索の両方で使用できる汎用的なモデル
+"""
+
+from typing import List, Dict, Optional, Any, Union
+from pydantic import BaseModel, Field
+
+
+class NutritionNutrient(BaseModel):
+    """栄養素情報モデル（汎用）"""
+    name: str = Field(..., description="栄養素名")
+    amount: float = Field(..., description="100gまたは100mlあたりの量")
+    unit_name: str = Field(..., description="単位名 (例: g, mg, kcal)")
+    nutrient_id: Optional[Union[int, str]] = Field(None, description="栄養素ID（USDA IDまたはローカルID）")
+    nutrient_number: Optional[str] = Field(None, description="栄養素番号")
+
+
+class NutritionMatch(BaseModel):
+    """栄養データベース照合結果モデル（汎用）"""
+    id: Union[int, str] = Field(..., description="食品ID（USDA FDC IDまたはローカルID）")
+    description: str = Field(..., description="食品の名称")
+    data_type: Optional[str] = Field(None, description="データタイプ (例: SR Legacy, Branded, Local_Dish)")
+    source: str = Field(..., description="データソース（'usda_api' または 'local_database'）")
+    brand_owner: Optional[str] = Field(None, description="ブランド所有者 (Branded Foodsの場合)")
+    ingredients_text: Optional[str] = Field(None, description="原材料リスト文字列")
+    nutrients: List[NutritionNutrient] = Field(default_factory=list, description="栄養素情報のリスト")
+    score: Optional[float] = Field(None, description="検索結果の関連度スコア")
+    original_data: Optional[Dict[str, Any]] = Field(None, description="元のデータベースからのオリジナルデータ")
+    
+    # USDA互換性のためのプロパティ
+    @property
+    def fdc_id(self) -> Union[int, str]:
+        """USDA互換性のためのfdc_idプロパティ"""
+        return self.id
+    
+    @property 
+    def food_nutrients(self) -> List[NutritionNutrient]:
+        """USDA互換性のためのfood_nutrientsプロパティ"""
+        return self.nutrients
+    
+    @property
+    def original_usda_data(self) -> Optional[Dict[str, Any]]:
+        """USDA互換性のためのoriginal_usda_dataプロパティ"""
+        return self.original_data
+
+
+class NutritionQueryInput(BaseModel):
+    """栄養検索コンポーネントの入力モデル（汎用）"""
+    ingredient_names: List[str] = Field(..., description="検索する食材名のリスト")
+    dish_names: List[str] = Field(default_factory=list, description="検索する料理名のリスト")
+    search_options: Optional[Dict[str, Any]] = Field(None, description="検索オプション")
+    preferred_source: Optional[str] = Field(None, description="優先データソース（'usda_api' または 'local_database'）")
+
+    def get_all_search_terms(self) -> List[str]:
+        """全ての検索用語を取得"""
+        return list(set(self.ingredient_names + self.dish_names))
+
+
+class NutritionQueryOutput(BaseModel):
+    """栄養検索コンポーネントの出力モデル（汎用）"""
+    matches: Dict[str, NutritionMatch] = Field(default_factory=dict, description="検索語彙とマッチした結果のマップ")
+    search_summary: Dict[str, Any] = Field(default_factory=dict, description="検索サマリー（成功数、失敗数、検索方法など）")
+    warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
+    errors: Optional[List[str]] = Field(None, description="処理中のエラーメッセージ")
+
+    def get_match_rate(self) -> float:
+        """照合成功率を計算"""
+        total_searches = self.search_summary.get("total_searches", 0)
+        successful_matches = self.search_summary.get("successful_matches", 0)
+        if total_searches == 0:
+            return 0.0
+        return successful_matches / total_searches
+
+    def has_match(self, search_term: str) -> bool:
+        """指定された検索語彙にマッチがあるかチェック"""
+        return search_term in self.matches and self.matches[search_term] is not None
+    
+    def get_source_summary(self) -> Dict[str, int]:
+        """データソース別のマッチ数サマリーを取得"""
+        source_counts = {}
+        for match in self.matches.values():
+            source = match.source
+            source_counts[source] = source_counts.get(source, 0) + 1
+        return source_counts
+
+
+# USDA互換性のためのアダプター関数
+def convert_usda_query_input_to_nutrition(usda_input) -> NutritionQueryInput:
+    """USDAQueryInputをNutritionQueryInputに変換"""
+    return NutritionQueryInput(
+        ingredient_names=usda_input.ingredient_names,
+        dish_names=usda_input.dish_names,
+        search_options=usda_input.search_options,
+        preferred_source="usda_api"
+    )
+
+def convert_nutrition_to_usda_query_output(nutrition_output: NutritionQueryOutput):
+    """NutritionQueryOutputをUSDAQueryOutput互換形式に変換"""
+    from .usda_models import USDAQueryOutput, USDAMatch, USDANutrient
+    
+    # USDAMatchに変換
+    usda_matches = {}
+    for term, nutrition_match in nutrition_output.matches.items():
+        usda_nutrients = []
+        for nutrient in nutrition_match.nutrients:
+            usda_nutrients.append(USDANutrient(
+                name=nutrient.name,
+                amount=nutrient.amount,
+                unit_name=nutrient.unit_name,
+                nutrient_id=nutrient.nutrient_id if isinstance(nutrient.nutrient_id, int) else None,
+                nutrient_number=nutrient.nutrient_number
+            ))
+        
+        usda_matches[term] = USDAMatch(
+            fdc_id=nutrition_match.id if isinstance(nutrition_match.id, int) else 0,
+            description=nutrition_match.description,
+            data_type=nutrition_match.data_type,
+            brand_owner=nutrition_match.brand_owner,
+            ingredients_text=nutrition_match.ingredients_text,
+            food_nutrients=usda_nutrients,
+            score=nutrition_match.score,
+            original_usda_data=nutrition_match.original_data
+        )
+    
+    # 数値のみのsearch_summaryを作成（USDA互換性のため）
+    numeric_summary = {}
+    for key, value in nutrition_output.search_summary.items():
+        if isinstance(value, (int, float)):
+            numeric_summary[key] = int(value)
+        elif key in ["total_searches", "successful_matches", "failed_searches", "match_rate_percent"]:
+            try:
+                numeric_summary[key] = int(value) if value is not None else 0
+            except (ValueError, TypeError):
+                numeric_summary[key] = 0
+    
+    return USDAQueryOutput(
+        matches=usda_matches,
+        search_summary=numeric_summary,
+        warnings=nutrition_output.warnings,
+        errors=nutrition_output.errors
+    ) 
+```
+
+============================================================
+
+📁 サービス層
+============================================================
+
+📄 FILE: app_v2/services/gemini_service.py
+--------------------------------------------------
+ファイルサイズ: 11,545 bytes
+最終更新: 2025-06-05 13:41:30
+存在: ✅
+
+CONTENT:
+```
+import vertexai
+from vertexai.generative_models import GenerativeModel, Part, GenerationConfig, HarmCategory, HarmBlockThreshold
+from typing import Dict, Optional
+import json
+import logging
+from PIL import Image
+import io
+
+from ..config.prompts import Phase1Prompts, Phase2Prompts
+
+logger = logging.getLogger(__name__)
+
+# Geminiの構造化出力のためのJSONスキーマを定義（USDA検索特化）
+MEAL_ANALYSIS_GEMINI_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "dishes": {
+            "type": "array",
+            "description": "画像から特定された料理のリスト（USDA検索用）。",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "dish_name": {"type": "string", "description": "特定された料理の名称（USDA検索で使用される）。"},
+                    "ingredients": {
+                        "type": "array",
+                        "description": "この料理に含まれると推定される材料のリスト（USDA検索用）。",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "ingredient_name": {"type": "string", "description": "材料の名称（USDA検索で使用される）。"}
+                            },
+                            "required": ["ingredient_name"]
+                        }
+                    }
+                },
+                "required": ["dish_name", "ingredients"]
+            }
+        }
+    },
+    "required": ["dishes"]
+}
+
+REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "dishes": {
+            "type": "array",
+            "description": "画像から特定・精緻化された料理/食品アイテムのリスト。",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "dish_name": {"type": "string", "description": "特定された料理/食品アイテムの名称。"},
+                    "type": {"type": "string", "description": "料理の種類（例: 主菜, 副菜, 単品食品）。"},
+                    "quantity_on_plate": {"type": "string", "description": "皿の上の量。"},
+                    "calculation_strategy": {
+                        "type": "string",
+                        "enum": ["dish_level", "ingredient_level"],
+                        "description": "このアイテムの栄養計算方針。"
+                    },
+                    "fdc_id": {
+                        "type": "integer",
+                        "description": "calculation_strategyが'dish_level'の場合、この料理/食品アイテム全体のFDC ID。それ以外はnull。"
+                    },
+                    "usda_source_description": {
+                        "type": "string",
+                        "description": "calculation_strategyが'dish_level'の場合、この料理/食品アイテム全体のUSDA公式名称。それ以外はnull。"
+                    },
+                    "ingredients": {
+                        "type": "array",
+                        "description": "この料理/食品アイテムに含まれると推定される材料のリスト。",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "ingredient_name": {"type": "string", "description": "材料の名称。"},
+                                "fdc_id": {
+                                    "type": "integer",
+                                    "description": "calculation_strategyが'ingredient_level'の場合、この材料のFDC ID。それ以外はnullまたは省略可。"
+                                },
+                                "usda_source_description": {
+                                    "type": "string",
+                                    "description": "calculation_strategyが'ingredient_level'の場合、この材料のUSDA公式名称。それ以外はnullまたは省略可。"
+                                }
+                            },
+                            "required": ["ingredient_name"]
+                        }
+                    }
+                },
+                "required": ["dish_name", "type", "quantity_on_plate", "calculation_strategy", "ingredients"]
+            }
+        }
+    },
+    "required": ["dishes"]
+}
+
+
+class GeminiService:
+    """Vertex AI経由でGeminiを使用して食事画像を分析するサービスクラス"""
+    
+    def __init__(self, project_id: str, location: str, model_name: str = "gemini-2.5-flash-preview-05-20"):
+        """
+        初期化
+        
+        Args:
+            project_id: GCPプロジェクトID
+            location: Vertex AIのロケーション（例: us-central1）
+            model_name: 使用するモデル名
+        """
+        # Vertex AIの初期化
+        vertexai.init(project=project_id, location=location)
+        
+        # モデルの初期化
+        self.model = GenerativeModel(model_name=model_name)
+        
+        # generation_configを作成 (Phase1用 - 出力安定化)
+        self.generation_config = GenerationConfig(
+            temperature=0.0,  # 完全にdeterministicに
+            top_p=1.0,       # nucleus samplingを無効化
+            top_k=1,         # 最も確率の高い選択肢のみ
+            max_output_tokens=8192,
+            candidate_count=1,  # レスポンス候補を1つに制限
+            response_mime_type="application/json",
+            response_schema=MEAL_ANALYSIS_GEMINI_SCHEMA
+        )
+        
+        # セーフティ設定
+        self.safety_settings = {
+            HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        }
+    
+    async def analyze_phase1(
+        self, 
+        image_bytes: bytes, 
+        image_mime_type: str, 
+        optional_text: Optional[str] = None
+    ) -> Dict:
+        """
+        Phase1: 画像とテキストを分析して食事情報を抽出
+        
+        Args:
+            image_bytes: 画像のバイトデータ
+            image_mime_type: 画像のMIMEタイプ
+            optional_text: オプションのテキスト説明
+            
+        Returns:
+            分析結果の辞書
+            
+        Raises:
+            RuntimeError: Gemini APIエラー時
+        """
+        try:
+            # プロンプトを取得
+            system_prompt = Phase1Prompts.get_system_prompt()
+            user_prompt = Phase1Prompts.get_user_prompt(optional_text)
+            
+            # 完全なプロンプトを構築
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            
+            # コンテンツリストを作成
+            contents = [
+                Part.from_text(full_prompt),
+                Part.from_data(
+                    data=image_bytes,
+                    mime_type=image_mime_type
+                )
+            ]
+            
+            # Gemini APIを呼び出し
+            response = await self.model.generate_content_async(
+                contents=contents,
+                generation_config=self.generation_config,
+                safety_settings=self.safety_settings
+            )
+            
+            # レスポンスのテキストを取得
+            if not response.text:
+                raise ValueError("No response returned from Gemini.")
+            
+            # JSONレスポンスをパース
+            result = json.loads(response.text)
+            
+            logger.info(f"Gemini Phase1 analysis completed successfully. Found {len(result.get('dishes', []))} dishes.")
+            return result
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            raise RuntimeError(f"Error processing response from Gemini: {e}") from e
+        except Exception as e:
+            logger.error(f"Vertex AI/Gemini API error: {e}")
+            raise RuntimeError(f"Vertex AI/Gemini API request failed: {e}") from e
+    
+    async def analyze_phase2(
+        self,
+        image_bytes: bytes,
+        image_mime_type: str,
+        usda_candidates_text: str,
+        initial_analysis_data: str
+    ) -> Dict:
+        """
+        Phase2: USDAコンテキストを使用して画像を再分析
+        
+        Args:
+            image_bytes: 画像のバイトデータ
+            image_mime_type: 画像のMIMEタイプ
+            usda_candidates_text: USDA候補情報のフォーマット済みテキスト
+            initial_analysis_data: Phase1のAI出力（JSON文字列）
+            
+        Returns:
+            精緻化された分析結果の辞書
+            
+        Raises:
+            RuntimeError: Gemini APIエラー時
+        """
+        try:
+            # プロンプトを取得
+            system_prompt = Phase2Prompts.get_system_prompt()
+            user_prompt = Phase2Prompts.get_user_prompt(
+                usda_candidates_text=usda_candidates_text,
+                initial_analysis_data=initial_analysis_data
+            )
+            
+            # 完全なプロンプトを構築
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            
+            # コンテンツリストを作成
+            contents = [
+                Part.from_text(full_prompt),
+                Part.from_data(
+                    data=image_bytes,
+                    mime_type=image_mime_type
+                )
+            ]
+            
+            # Phase2用のGeneration Config (出力安定化)
+            phase2_generation_config = GenerationConfig(
+                temperature=0.0,  # 完全にdeterministicに
+                top_p=1.0,       # nucleus samplingを無効化
+                top_k=1,         # 最も確率の高い選択肢のみ
+                max_output_tokens=8192,
+                candidate_count=1,  # レスポンス候補を1つに制限
+                response_mime_type="application/json",
+                response_schema=REFINED_MEAL_ANALYSIS_GEMINI_SCHEMA
+            )
+            
+            # Gemini APIを呼び出し
+            response = await self.model.generate_content_async(
+                contents=contents,
+                generation_config=phase2_generation_config,
+                safety_settings=self.safety_settings
+            )
+            
+            # レスポンスのテキストを取得
+            if not response.text:
+                raise ValueError("No response returned from Gemini.")
+            
+            # JSONレスポンスをパース
+            result = json.loads(response.text)
+            
+            logger.info(f"Gemini Phase2 analysis completed successfully. Found {len(result.get('dishes', []))} dishes.")
+            return result
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            raise RuntimeError(f"Error processing response from Gemini: {e}") from e
+        except Exception as e:
+            logger.error(f"Vertex AI/Gemini API error: {e}")
+            raise RuntimeError(f"Vertex AI/Gemini API request failed: {e}") from e 
+```
+
+============================================================
+
+📄 FILE: app_v2/services/usda_service.py
+--------------------------------------------------
+ファイルサイズ: 16,395 bytes
+最終更新: 2025-06-06 13:55:24
+存在: ✅
+
+CONTENT:
+```
+# app/services/usda_service.py
+import httpx
+import json
+import logging
+from typing import List, Optional, Dict, Any
+from functools import lru_cache
+
+from ..config import get_settings
+
+logger = logging.getLogger(__name__)
+
+
+class USDANutrient:
+    """USDA栄養素情報を表すクラス"""
+    def __init__(self, name: str, amount: float, unit_name: str, 
+                 nutrient_id: Optional[int] = None, 
+                 nutrient_number: Optional[str] = None):
+        self.name = name
+        self.amount = amount
+        self.unit_name = unit_name
+        self.nutrient_id = nutrient_id
+        self.nutrient_number = nutrient_number
+
+
+class USDASearchResultItem:
+    """USDA検索結果アイテムを表すクラス"""
+    def __init__(self, fdc_id: int, description: str, 
+                 data_type: Optional[str] = None,
+                 brand_owner: Optional[str] = None,
+                 ingredients_text: Optional[str] = None,
+                 food_nutrients: List[USDANutrient] = None,
+                 score: Optional[float] = None,
+                 original_data: Optional[Dict[str, Any]] = None):
+        self.fdc_id = fdc_id
+        self.description = description
+        self.data_type = data_type
+        self.brand_owner = brand_owner
+        self.ingredients_text = ingredients_text
+        self.food_nutrients = food_nutrients or []
+        self.score = score
+        self.original_data = original_data or {}
+
+
+class USDAService:
+    """USDA FoodData Central APIとの通信を管理するサービスクラス"""
+    
+    def __init__(self):
+        settings = get_settings()
+        self.api_key = settings.USDA_API_KEY
+        self.base_url = settings.USDA_API_BASE_URL
+        self.timeout = settings.USDA_API_TIMEOUT
+        self.key_nutrient_numbers = settings.USDA_KEY_NUTRIENT_NUMBERS
+        
+        if not self.api_key:
+            logger.error("USDA_API_KEY is not configured.")
+            raise ValueError("USDA API key not configured.")
+        
+        # httpx.AsyncClientの設定
+        self.client = httpx.AsyncClient(
+            timeout=self.timeout,
+            headers={"X-Api-Key": self.api_key}
+        )
+    
+    async def search_foods(
+        self,
+        query: str,
+        data_types: Optional[List[str]] = None,
+        page_size: int = 5,
+        page_number: int = 1,
+        sort_by: str = "score",
+        sort_order: str = "desc"
+    ) -> List[USDASearchResultItem]:
+        """
+        USDA FoodData Central APIで食品を検索
+        
+        Args:
+            query: 検索クエリ文字列
+            data_types: データタイプのリスト（例: ["Foundation", "SR Legacy", "Branded"]）
+            page_size: 1ページあたりの結果数
+            page_number: 取得するページ番号
+            sort_by: ソートキー
+            sort_order: ソート順（"asc" または "desc"）
+            
+        Returns:
+            USDASearchResultItemのリスト
+        """
+        params = {
+            "query": query,
+            "api_key": self.api_key,
+            "pageSize": page_size,
+            "pageNumber": page_number,
+            "sortBy": sort_by,
+            "sortOrder": sort_order
+        }
+        
+        if data_types:
+            # データタイプをカンマ区切り文字列として渡す
+            params["dataType"] = ",".join(data_types)
+        
+        try:
+            logger.info(f"USDA API search: query='{query}', page_size={page_size}")
+            response = await self.client.get(f"{self.base_url}/foods/search", params=params)
+            
+            # レートリミット情報のログ
+            if "X-RateLimit-Remaining" in response.headers:
+                logger.info(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
+            
+            response.raise_for_status()
+            data = response.json()
+            
+            results = []
+            for food_data in data.get("foods", [])[:page_size]:
+                nutrients_extracted = self._extract_nutrients(food_data.get("foodNutrients", []))
+                
+                results.append(USDASearchResultItem(
+                    fdc_id=food_data.get("fdcId"),
+                    description=food_data.get("description"),
+                    data_type=food_data.get("dataType"),
+                    brand_owner=food_data.get("brandOwner"),
+                    ingredients_text=food_data.get("ingredients"),
+                    food_nutrients=nutrients_extracted,
+                    score=food_data.get("score"),
+                    original_data=food_data
+                ))
+            
+            logger.info(f"USDA API search returned {len(results)} results for query '{query}'")
+            return results
+            
+        except httpx.HTTPStatusError as e:
+            logger.error(f"USDA API HTTP error: {e.response.status_code} - {e.response.text}")
+            if e.response.status_code == 429:
+                raise RuntimeError(f"USDA API rate limit exceeded. Detail: {e.response.text}") from e
+            raise RuntimeError(f"USDA API error: {e.response.status_code} - {e.response.text}") from e
+        except httpx.RequestError as e:
+            logger.error(f"USDA API request failed: {str(e)}")
+            raise RuntimeError(f"USDA API request failed: {str(e)}") from e
+        except (json.JSONDecodeError, TypeError, KeyError) as e:
+            logger.error(f"USDA API response parsing error: {str(e)}")
+            raise RuntimeError(f"USDA API response parsing error: {str(e)}") from e
+        except Exception as e:
+            logger.error(f"Unexpected error in USDAService.search_foods: {str(e)}")
+            raise RuntimeError(f"Unexpected error in USDA service: {str(e)}") from e
+    
+    def _extract_nutrients(self, food_nutrients: List[Dict[str, Any]]) -> List[USDANutrient]:
+        """
+        foodNutrientsデータから主要栄養素を抽出
+        
+        Args:
+            food_nutrients: USDA APIから返される栄養素データのリスト
+            
+        Returns:
+            USDANutrientのリスト
+        """
+        nutrients_extracted = []
+        
+        for nutrient_entry in food_nutrients:
+            # 栄養素情報の抽出（データ構造はフォーマットによって異なる）
+            nutrient_detail = nutrient_entry.get("nutrient", {})
+            amount = nutrient_entry.get("amount")
+            
+            # Branded Foodsのabridgedフォーマットへの対応
+            if not nutrient_detail and "nutrientId" in nutrient_entry:
+                nutrient_id = nutrient_entry.get("nutrientId")
+                name = nutrient_entry.get("nutrientName")
+                number = nutrient_entry.get("nutrientNumber")
+                unit_name = nutrient_entry.get("unitName")
+                amount = nutrient_entry.get("value")  # Branded abridgedでは"value"
+            else:
+                # SR Legacy, Foundation, または full Branded
+                nutrient_id = nutrient_detail.get("id")
+                name = nutrient_detail.get("name")
+                number = nutrient_detail.get("number")
+                unit_name = nutrient_detail.get("unitName")
+            
+            # 主要栄養素のみを抽出
+            if number and str(number) in self.key_nutrient_numbers:
+                if name and amount is not None and unit_name:
+                    nutrients_extracted.append(USDANutrient(
+                        name=name,
+                        amount=float(amount),
+                        unit_name=unit_name,
+                        nutrient_id=int(nutrient_id) if nutrient_id else None,
+                        nutrient_number=str(number) if number else None
+                    ))
+        
+        return nutrients_extracted
+    
+    async def get_food_details(
+        self, 
+        fdc_id: int, 
+        format: str = "full",
+        target_nutrient_numbers: Optional[List[str]] = None
+    ) -> Optional[USDASearchResultItem]:
+        """
+        特定のFDC IDの食品詳細情報を取得
+        
+        Args:
+            fdc_id: 食品のFDC ID
+            format: レスポンス形式（"abridged" または "full"）
+            target_nutrient_numbers: 取得する栄養素番号のリスト
+            
+        Returns:
+            USDASearchResultItem または None
+        """
+        params = {
+            "api_key": self.api_key,
+            "format": format
+        }
+        
+        if target_nutrient_numbers:
+            params["nutrients"] = ",".join(target_nutrient_numbers)
+        
+        try:
+            logger.info(f"USDA API get food details: fdc_id={fdc_id}")
+            response = await self.client.get(f"{self.base_url}/food/{fdc_id}", params=params)
+            response.raise_for_status()
+            
+            food_data = response.json()
+            nutrients_extracted = self._extract_nutrients(food_data.get("foodNutrients", []))
+            
+            return USDASearchResultItem(
+                fdc_id=food_data.get("fdcId"),
+                description=food_data.get("description"),
+                data_type=food_data.get("dataType"),
+                brand_owner=food_data.get("brandOwner"),
+                ingredients_text=food_data.get("ingredients"),
+                food_nutrients=nutrients_extracted,
+                score=food_data.get("score"),
+                original_data=food_data
+            )
+            
+        except Exception as e:
+            logger.error(f"Error fetching food details for FDC ID {fdc_id}: {str(e)}")
+            return None
+
+    async def get_food_details_for_nutrition(self, fdc_id: int) -> Optional[Dict[str, float]]:
+        """
+        栄養計算用の食品詳細情報を取得（仕様書準拠）
+        
+        入力: FDC ID
+        処理: キャッシュ確認後、必要ならUSDA APIから食品詳細を取得し、主要栄養素（設定ファイルで定義されたID）を100gあたりで抽出・パース。結果をキャッシュに保存。
+        出力: 100gあたりの主要栄養素辞書、または None。
+        
+        Args:
+            fdc_id: 食品のFDC ID
+            
+        Returns:
+            Optional[Dict[str, float]]: 100gあたりの主要栄養素辞書、または None
+        """
+        if not fdc_id:
+            logger.warning("Invalid FDC ID provided")
+            return None
+        
+        try:
+            # TODO: 将来的にキャッシュ戦略を実装（Redis等）
+            # 現状は直接APIから取得
+            
+            logger.info(f"USDA API get food details for nutrition: fdc_id={fdc_id}")
+            
+            params = {
+                "api_key": self.api_key,
+                "format": "full",  # 詳細な栄養情報が必要
+                "nutrients": ",".join(self.key_nutrient_numbers)  # 主要栄養素のみを取得
+            }
+            
+            response = await self.client.get(f"{self.base_url}/food/{fdc_id}", params=params)
+            
+            # レートリミット情報のログ
+            if "X-RateLimit-Remaining" in response.headers:
+                logger.info(f"USDA API Rate Limit Remaining: {response.headers.get('X-RateLimit-Remaining')}")
+            
+            response.raise_for_status()
+            food_data_raw = response.json()
+            
+            # 主要栄養素を抽出・パース
+            key_nutrients = self._parse_nutrients_for_calculation(food_data_raw)
+            
+            if key_nutrients:
+                logger.info(f"Successfully extracted {len(key_nutrients)} key nutrients for FDC ID {fdc_id}")
+                # TODO: 将来的にここでキャッシュに保存
+                return key_nutrients
+            else:
+                logger.warning(f"No key nutrients found for FDC ID {fdc_id}")
+                return None
+                
+        except httpx.HTTPStatusError as e:
+            logger.error(f"USDA API HTTP error for FDC ID {fdc_id}: {e.response.status_code} - {e.response.text}")
+            if e.response.status_code == 404:
+                logger.warning(f"Food with FDC ID {fdc_id} not found")
+                return None
+            elif e.response.status_code == 429:
+                raise RuntimeError(f"USDA API rate limit exceeded for FDC ID {fdc_id}") from e
+            raise RuntimeError(f"USDA API error for FDC ID {fdc_id}: {e.response.status_code}") from e
+        except httpx.RequestError as e:
+            logger.error(f"USDA API request failed for FDC ID {fdc_id}: {str(e)}")
+            raise RuntimeError(f"USDA API request failed for FDC ID {fdc_id}: {str(e)}") from e
+        except Exception as e:
+            logger.error(f"Unexpected error getting food details for nutrition (FDC ID {fdc_id}): {str(e)}")
+            return None
+
+    def _parse_nutrients_for_calculation(self, food_data_raw: dict) -> Dict[str, float]:
+        """
+        USDA APIレスポンスから栄養計算用の主要栄養素を抽出（内部メソッド）
+        
+        Args:
+            food_data_raw: USDA APIからの生の食品データ
+            
+        Returns:
+            Dict[str, float]: 主要栄養素辞書（キーは標準化された名前）
+        """
+        key_nutrients = {}
+        
+        try:
+            food_nutrients = food_data_raw.get("foodNutrients", [])
+            
+            for nutrient_entry in food_nutrients:
+                # 栄養素情報の抽出（データ構造はフォーマットによって異なる）
+                nutrient_detail = nutrient_entry.get("nutrient", {})
+                amount = nutrient_entry.get("amount")
+                
+                # Branded Foodsのabridgedフォーマットへの対応
+                if not nutrient_detail and "nutrientId" in nutrient_entry:
+                    number = nutrient_entry.get("nutrientNumber")
+                    amount = nutrient_entry.get("value")  # Branded abridgedでは"value"
+                else:
+                    # SR Legacy, Foundation, または full Branded
+                    number = nutrient_detail.get("number")
+                
+                # 主要栄養素のマッピング（栄養素番号から標準化されたキー名へ）
+                if number and str(number) in self.key_nutrient_numbers and amount is not None:
+                    if str(number) == "208":  # Energy (calories)
+                        key_nutrients["calories_kcal"] = float(amount)
+                    elif str(number) == "203":  # Protein
+                        key_nutrients["protein_g"] = float(amount)
+                    elif str(number) == "204":  # Total lipid (fat)
+                        key_nutrients["fat_g"] = float(amount)
+                    elif str(number) == "205":  # Carbohydrate, by difference
+                        key_nutrients["carbohydrates_g"] = float(amount)
+                    elif str(number) == "291":  # Fiber, total dietary (optional)
+                        key_nutrients["fiber_g"] = float(amount)
+                    elif str(number) == "269":  # Sugars, total (optional)
+                        key_nutrients["sugars_g"] = float(amount)
+                    elif str(number) == "307":  # Sodium (optional)
+                        key_nutrients["sodium_mg"] = float(amount)
+            
+            # 必須栄養素が見つからない場合は0.0として設定
+            essential_nutrients = ["calories_kcal", "protein_g", "fat_g", "carbohydrates_g"]
+            for nutrient in essential_nutrients:
+                if nutrient not in key_nutrients:
+                    key_nutrients[nutrient] = 0.0
+                    logger.debug(f"Missing essential nutrient {nutrient}, set to 0.0")
+            
+            logger.debug(f"Parsed key nutrients: {key_nutrients}")
+            return key_nutrients
+            
+        except Exception as e:
+            logger.error(f"Error parsing nutrients for calculation: {str(e)}")
+            return {}
+    
+    async def close_client(self):
+        """HTTPクライアントをクローズ"""
+        await self.client.aclose()
+
+
+# FastAPIの依存性注入用関数
+async def get_usda_service():
+    """
+    USDAServiceのインスタンスを提供する依存性注入関数
+    """
+    service = USDAService()
+    try:
+        yield service
+    finally:
+        await service.close_client() 
+```
+
+============================================================
+
+📁 設定管理
+============================================================
+
+📄 FILE: app_v2/config/settings.py
+--------------------------------------------------
+ファイルサイズ: 2,417 bytes
+最終更新: 2025-06-06 12:11:08
+存在: ✅
+
+CONTENT:
+```
+from typing import Optional, List
+from pydantic_settings import BaseSettings
+from functools import lru_cache
+
+
+class Settings(BaseSettings):
+    """
+    API設定クラス
+    環境変数から設定値を読み込む
+    """
+    # Vertex AI設定
+    GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
+    GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
+    GEMINI_MODEL_NAME: str = "gemini-2.5-flash-preview-05-20"
+    
+    # 栄養データベース検索設定
+    USE_LOCAL_NUTRITION_SEARCH: bool = True  # ローカル栄養データベース検索を使用するかどうか
+    NUTRITION_DB_EXPERIMENT_PATH: Optional[str] = None  # nutrition_db_experimentへのパス（自動検出する場合はNone）
+    
+    # USDA API設定（レガシー・フォールバック用）
+    USDA_API_KEY: str  # USDA FoodData Central APIキー（必須）
+    USDA_API_BASE_URL: str = "https://api.nal.usda.gov/fdc/v1"
+    USDA_API_TIMEOUT: float = 10.0  # APIタイムアウト秒数
+    USDA_SEARCH_CANDIDATES_LIMIT: int = 5  # 1回の検索で取得する最大候補数
+    # 主要栄養素番号（カンマ区切り文字列として環境変数から読み込む）
+    USDA_KEY_NUTRIENT_NUMBERS_STR: str = "208,203,204,205,291,269,307"
+    # 208: Energy (kcal), 203: Protein, 204: Total lipid (fat), 
+    # 205: Carbohydrate, 291: Fiber, 269: Total sugars, 307: Sodium
+    
+    @property
+    def USDA_KEY_NUTRIENT_NUMBERS(self) -> List[str]:
+        """主要栄養素番号のリストを返す"""
+        return self.USDA_KEY_NUTRIENT_NUMBERS_STR.split(",")
+    
+    # キャッシュ設定
+    CACHE_TYPE: str = "simple"  # "simple", "redis", "memcached"
+    CACHE_REDIS_URL: Optional[str] = None  # Redisを使用する場合のURL
+    USDA_CACHE_TTL_SECONDS: int = 3600  # USDAレスポンスのキャッシュ有効期間（1時間）
+    
+    # API設定
+    API_LOG_LEVEL: str = "INFO"
+    FASTAPI_ENV: str = "development"
+    
+    # サーバー設定
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    
+    # APIバージョン
+    API_VERSION: str = "v1"
+    
+    # 結果保存設定
+    RESULTS_DIR: str = "analysis_results"
+    
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
+
+
+@lru_cache()
+def get_settings() -> Settings:
+    """
+    設定インスタンスを取得（キャッシュされる）
+    """
+    return Settings() 
+```
+
+============================================================
+
+📁 ローカル栄養データベース検索システム
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/api/search_handler.py
+--------------------------------------------------
+ファイルサイズ: 9,344 bytes
+最終更新: 2025-06-06 11:36:26
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Search Handler - 栄養データベース検索APIエンドポイント
+
+HTTPリクエストを処理し、クエリ前処理、クエリ構築、Elasticsearch検索を統合
+"""
+
+import os
+import sys
+import json
+import logging
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass
+from datetime import datetime
+
+# プロジェクトパスを追加
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from nlp.query_preprocessor import preprocess_query, analyze_query
+from api.query_builder import build_nutrition_search_query
+
+# Elasticsearchクライアント（実際の実装では設定から読み込み）
+try:
+    from elasticsearch import Elasticsearch
+    ELASTICSEARCH_AVAILABLE = True
+except ImportError:
+    ELASTICSEARCH_AVAILABLE = False
+    print("Warning: Elasticsearch client not available. Install with: pip install elasticsearch")
+
+@dataclass
+class SearchRequest:
+    """検索リクエストのデータクラス"""
+    query: str
+    db_type_filter: Optional[str] = None
+    size: int = 20
+    enable_highlight: bool = True
+    enable_synonyms: bool = True
+    custom_weights: Optional[Dict[str, float]] = None
+
+@dataclass
+class SearchResponse:
+    """検索レスポンスのデータクラス"""
+    results: List[Dict[str, Any]]
+    total_hits: int
+    query_info: Dict[str, Any]
+    took_ms: int
+    max_score: float
+
+class NutritionSearchHandler:
+    """栄養データベース検索ハンドラー"""
+    
+    def __init__(self, elasticsearch_host: str = "localhost:9200", index_name: str = "nutrition_db"):
+        """
+        検索ハンドラーを初期化
+        
+        Args:
+            elasticsearch_host: Elasticsearchホスト
+            index_name: インデックス名
+        """
+        self.elasticsearch_host = elasticsearch_host
+        self.index_name = index_name
+        self.es_client = None
+        
+        # ロギング設定
+        logging.basicConfig(level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
+        
+        if ELASTICSEARCH_AVAILABLE:
+            try:
+                self.es_client = Elasticsearch([elasticsearch_host])
+                # 接続テスト
+                if self.es_client.ping():
+                    self.logger.info(f"Elasticsearch接続成功: {elasticsearch_host}")
+                else:
+                    self.logger.warning(f"Elasticsearch接続失敗: {elasticsearch_host}")
+            except Exception as e:
+                self.logger.error(f"Elasticsearch初期化エラー: {e}")
+        else:
+            self.logger.warning("Elasticsearchクライアントが利用できません")
+    
+    def search(self, request: SearchRequest) -> SearchResponse:
+        """
+        検索を実行
+        
+        Args:
+            request: 検索リクエスト
+            
+        Returns:
+            検索レスポンス
+        """
+        start_time = datetime.now()
+        
+        try:
+            # 1. クエリ前処理
+            processed_query = preprocess_query(
+                request.query, 
+                expand_synonyms=request.enable_synonyms
+            )
+            
+            # 2. クエリ分析（デバッグ情報）
+            query_analysis = analyze_query(request.query)
+            
+            # 3. Elasticsearchクエリ構築
+            es_query = build_nutrition_search_query(
+                processed_query=processed_query,
+                original_query=request.query,
+                db_type_filter=request.db_type_filter,
+                size=request.size,
+                custom_weights=request.custom_weights
+            )
+            
+            # 4. Elasticsearch検索実行
+            if self.es_client:
+                response = self.es_client.search(
+                    index=self.index_name,
+                    body=es_query
+                )
+                results = self._format_search_results(response)
+                total_hits = response['hits']['total']['value']
+                max_score = response['hits']['max_score'] or 0.0
+            else:
+                # モックレスポンス（Elasticsearch未接続時）
+                results = self._mock_search_results(request.query)
+                total_hits = len(results)
+                max_score = 1.0
+            
+            # 5. レスポンス構築
+            end_time = datetime.now()
+            took_ms = int((end_time - start_time).total_seconds() * 1000)
+            
+            return SearchResponse(
+                results=results,
+                total_hits=total_hits,
+                query_info={
+                    "original_query": request.query,
+                    "processed_query": processed_query,
+                    "analysis": query_analysis,
+                    "elasticsearch_query": es_query,
+                    "db_type_filter": request.db_type_filter
+                },
+                took_ms=took_ms,
+                max_score=max_score
+            )
+            
+        except Exception as e:
+            self.logger.error(f"検索エラー: {e}")
+            return SearchResponse(
+                results=[],
+                total_hits=0,
+                query_info={
+                    "original_query": request.query,
+                    "error": str(e)
+                },
+                took_ms=0,
+                max_score=0.0
+            )
+    
+    def _format_search_results(self, es_response: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Elasticsearchレスポンスを整形
+        
+        Args:
+            es_response: Elasticsearchレスポンス
+            
+        Returns:
+            整形済み結果リスト
+        """
+        results = []
+        
+        for hit in es_response['hits']['hits']:
+            result = {
+                **hit['_source'],
+                '_score': hit['_score'],
+                '_id': hit['_id']
+            }
+            
+            # ハイライト情報を追加
+            if 'highlight' in hit:
+                result['_highlight'] = hit['highlight']
+            
+            results.append(result)
+        
+        return results
+    
+    def _mock_search_results(self, query: str) -> List[Dict[str, Any]]:
+        """
+        モック検索結果を生成（テスト用）
+        
+        Args:
+            query: 検索クエリ
+            
+        Returns:
+            モック結果リスト
+        """
+        # 簡単なモックデータ
+        mock_results = [
+            {
+                "db_type": "dish",
+                "id": 123456,
+                "search_name": f"Cooked {query} with vegetables",
+                "nutrition": {
+                    "calories": 150.0,
+                    "protein": 25.0,
+                    "fat": 5.0,
+                    "carbs": 15.0
+                },
+                "weight": 100.0,
+                "_score": 2.5
+            },
+            {
+                "db_type": "ingredient", 
+                "id": 789012,
+                "search_name": f"{query.capitalize()}, raw, fresh",
+                "nutrition": {
+                    "calories": 120.0,
+                    "protein": 20.0,
+                    "fat": 3.0,
+                    "carbs": 10.0
+                },
+                "weight": 100.0,
+                "_score": 2.0
+            }
+        ]
+        
+        return mock_results
+    
+    def health_check(self) -> Dict[str, Any]:
+        """
+        ヘルスチェック
+        
+        Returns:
+            システム状態情報
+        """
+        status = {
+            "service": "nutrition_search",
+            "status": "healthy",
+            "elasticsearch": {
+                "available": ELASTICSEARCH_AVAILABLE,
+                "connected": False,
+                "host": self.elasticsearch_host,
+                "index": self.index_name
+            },
+            "components": {
+                "query_preprocessor": True,
+                "query_builder": True
+            }
+        }
+        
+        if self.es_client:
+            try:
+                status["elasticsearch"]["connected"] = self.es_client.ping()
+                if status["elasticsearch"]["connected"]:
+                    # インデックス存在確認
+                    index_exists = self.es_client.indices.exists(index=self.index_name)
+                    status["elasticsearch"]["index_exists"] = index_exists
+            except Exception as e:
+                status["elasticsearch"]["error"] = str(e)
+                status["status"] = "degraded"
+        
+        return status
+
+# 便利関数
+def create_search_handler(
+    elasticsearch_host: str = "localhost:9200",
+    index_name: str = "nutrition_db"
+) -> NutritionSearchHandler:
+    """検索ハンドラーのファクトリ関数"""
+    return NutritionSearchHandler(elasticsearch_host, index_name)
+
+def search_nutrition_db(
+    query: str,
+    db_type_filter: Optional[str] = None,
+    size: int = 20,
+    elasticsearch_host: str = "localhost:9200",
+    index_name: str = "nutrition_db"
+) -> SearchResponse:
+    """便利な検索関数"""
+    handler = create_search_handler(elasticsearch_host, index_name)
+    request = SearchRequest(
+        query=query,
+        db_type_filter=db_type_filter,
+        size=size
+    )
+    return handler.search(request) 
+```
+
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/api/query_builder.py
+--------------------------------------------------
+ファイルサイズ: 11,619 bytes
+最終更新: 2025-06-06 11:40:30
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Query Builder - Elasticsearch JSONクエリ構築モジュール
+
+BM25F + function_scoreを使用した高度な検索クエリを構築
+仕様書に従ったマルチシグナルブースティング戦略を実装
+"""
+
+from typing import Dict, List, Optional, Any
+import json
+
+class NutritionSearchQueryBuilder:
+    """栄養データベース検索用のElasticsearchクエリビルダー"""
+    
+    def __init__(self):
+        """クエリビルダーの初期化"""
+        # デフォルトのスコアリング重み
+        self.default_weights = {
+            "exact_phrase_bonus": 100.0,
+            "exact_word_bonus": 80.0,
+            "phrase_proximity_bonus": 50.0,
+            "prefix_match_bonus": 10.0,
+            "base_field_boost": 1.0,
+            "exact_field_boost": 3.0
+        }
+    
+    def build_search_query(
+        self,
+        processed_query: str,
+        original_query: str,
+        db_type_filter: Optional[str] = None,
+        size: int = 20,
+        weights: Optional[Dict[str, float]] = None,
+        enable_highlight: bool = True,
+        enable_synonyms: bool = True
+    ) -> Dict[str, Any]:
+        """
+        包括的な検索クエリを構築
+        
+        Args:
+            processed_query: 前処理済みクエリ文字列
+            original_query: 元のユーザークエリ文字列
+            db_type_filter: データベースタイプフィルタ ("dish", "ingredient", "branded")
+            size: 返却する結果数
+            weights: カスタムスコア重み
+            enable_highlight: ハイライト機能を有効にするか
+            enable_synonyms: 類義語展開を有効にするか（将来拡張用）
+            
+        Returns:
+            Elasticsearch JSONクエリ
+        """
+        # 重みのマージ
+        final_weights = self.default_weights.copy()
+        if weights:
+            final_weights.update(weights)
+        
+        # ベースクエリ（BM25Fスコア用）
+        base_query = self._build_base_query(processed_query, final_weights)
+        
+        # function_scoreクエリでブースティング（フィルタ適用前）
+        function_score_query = self._build_function_score_query(
+            base_query, 
+            original_query, 
+            processed_query,
+            final_weights
+        )
+        
+        # フィルタ追加（function_scoreクエリ全体に適用）
+        if db_type_filter and db_type_filter != "all":
+            function_score_query = {
+                "bool": {
+                    "must": [function_score_query],
+                    "filter": [
+                        {"term": {"db_type": db_type_filter}}
+                    ]
+                }
+            }
+        
+        # 完全なクエリ構築
+        search_query = {
+            "query": function_score_query,
+            "size": size,
+            "_source": ["db_type", "id", "search_name", "nutrition", "weight"]
+        }
+        
+        # ハイライト追加
+        if enable_highlight:
+            search_query["highlight"] = self._build_highlight_config()
+        
+        return search_query
+    
+    def _build_base_query(self, processed_query: str, weights: Dict[str, float]) -> Dict[str, Any]:
+        """
+        BM25Fベースクエリを構築
+        
+        Args:
+            processed_query: 前処理済みクエリ
+            weights: スコア重み
+            
+        Returns:
+            ベースクエリ辞書
+        """
+        return {
+            "multi_match": {
+                "query": processed_query,
+                "fields": [
+                    f"search_name^{weights['base_field_boost']}",
+                    f"search_name.exact^{weights['exact_field_boost']}"
+                ],
+                "type": "best_fields",
+                "operator": "OR",
+                "fuzziness": "AUTO",
+                "max_expansions": 50,
+                "prefix_length": 2
+            }
+        }
+    
+    def _add_filters(self, base_query: Dict[str, Any], db_type: str) -> Dict[str, Any]:
+        """
+        フィルタを追加してboolクエリに変換
+        
+        Args:
+            base_query: ベースクエリ
+            db_type: データベースタイプフィルタ
+            
+        Returns:
+            フィルタ付きboolクエリ
+        """
+        return {
+            "bool": {
+                "must": [base_query],
+                "filter": [
+                    {"term": {"db_type": db_type}}
+                ]
+            }
+        }
+    
+    def _build_function_score_query(
+        self, 
+        base_query: Dict[str, Any], 
+        original_query: str,
+        processed_query: str,
+        weights: Dict[str, float]
+    ) -> Dict[str, Any]:
+        """
+        function_scoreクエリでマルチシグナルブースティングを構築
+        
+        Args:
+            base_query: ベースクエリ
+            original_query: 元のクエリ
+            processed_query: 処理済みクエリ
+            weights: スコア重み
+            
+        Returns:
+            function_scoreクエリ
+        """
+        functions = []
+        
+        # 1. 完全一致フレーズボーナス（最優先）
+        functions.append({
+            "filter": {
+                "match_phrase": {
+                    "search_name.exact": {
+                        "query": original_query,
+                        "slop": 0
+                    }
+                }
+            },
+            "weight": weights["exact_phrase_bonus"]
+        })
+        
+        # 2. 近接フレーズボーナス（slop=1許容）
+        functions.append({
+            "filter": {
+                "match_phrase": {
+                    "search_name": {
+                        "query": original_query,
+                        "slop": 1
+                    }
+                }
+            },
+            "weight": weights["phrase_proximity_bonus"]
+        })
+        
+        # 3. 完全一致単語ボーナス（個別単語レベル）
+        # 処理済みクエリの各単語に対して
+        for word in processed_query.split():
+            if len(word) > 2:  # 短すぎる単語は除外
+                functions.append({
+                    "filter": {
+                        "term": {
+                            "search_name.exact": word
+                        }
+                    },
+                    "weight": weights["exact_word_bonus"] * 0.5  # 単語レベルは少し低めに
+                })
+        
+        # 4. 前方一致ボーナス（低優先度）
+        functions.append({
+            "filter": {
+                "match_phrase_prefix": {
+                    "search_name": {
+                        "query": original_query,
+                        "max_expansions": 10
+                    }
+                }
+            },
+            "weight": weights["prefix_match_bonus"]
+        })
+        
+        return {
+            "function_score": {
+                "query": base_query,
+                "functions": functions,
+                "score_mode": "sum",  # 各ボーナスを累積
+                "boost_mode": "sum",  # ベーススコアにボーナスを加算
+                "max_boost": 1000.0  # 上限設定
+            }
+        }
+    
+    def _build_highlight_config(self) -> Dict[str, Any]:
+        """
+        ハイライト設定を構築
+        
+        Returns:
+            ハイライト設定辞書
+        """
+        return {
+            "fields": {
+                "search_name": {
+                    "pre_tags": ["<mark>"],
+                    "post_tags": ["</mark>"],
+                    "fragment_size": 150,
+                    "number_of_fragments": 1
+                },
+                "search_name.exact": {
+                    "pre_tags": ["<strong>"],
+                    "post_tags": ["</strong>"],
+                    "fragment_size": 150,
+                    "number_of_fragments": 1
+                }
+            },
+            "require_field_match": False
+        }
+    
+    def build_simple_query(
+        self, 
+        query: str, 
+        db_type_filter: Optional[str] = None,
+        size: int = 20
+    ) -> Dict[str, Any]:
+        """
+        シンプルな検索クエリを構築（デバッグ用）
+        
+        Args:
+            query: 検索クエリ
+            db_type_filter: データベースタイプフィルタ
+            size: 返却する結果数
+            
+        Returns:
+            シンプルなElasticsearchクエリ
+        """
+        base_query = {
+            "multi_match": {
+                "query": query,
+                "fields": ["search_name^2", "search_name.exact^3"],
+                "type": "best_fields",
+                "fuzziness": "AUTO"
+            }
+        }
+        
+        if db_type_filter and db_type_filter != "all":
+            base_query = {
+                "bool": {
+                    "must": [base_query],
+                    "filter": [{"term": {"db_type": db_type_filter}}]
+                }
+            }
+        
+        return {
+            "query": base_query,
+            "size": size,
+            "_source": ["db_type", "id", "search_name", "nutrition", "weight"]
+        }
+    
+    def build_analysis_query(self, text: str, analyzer: str = "custom_food_analyzer") -> Dict[str, Any]:
+        """
+        アナライザのテスト用クエリを構築
+        
+        Args:
+            text: 分析するテキスト
+            analyzer: 使用するアナライザ名
+            
+        Returns:
+            分析用クエリ
+        """
+        return {
+            "analyzer": analyzer,
+            "text": text
+        }
+    
+    def get_weight_explanation(self) -> Dict[str, Any]:
+        """
+        現在の重み設定の説明を取得
+        
+        Returns:
+            重み設定の説明辞書
+        """
+        return {
+            "weights": self.default_weights,
+            "explanations": {
+                "exact_phrase_bonus": "完全フレーズ一致時の最高ボーナス",
+                "exact_word_bonus": "完全単語一致時のボーナス",
+                "phrase_proximity_bonus": "近接フレーズ一致時のボーナス",
+                "prefix_match_bonus": "前方一致時の低ボーナス",
+                "base_field_boost": "search_nameフィールドの基本ブースト",
+                "exact_field_boost": "search_name.exactフィールドのブースト"
+            },
+            "strategy": {
+                "score_mode": "sum",
+                "boost_mode": "sum",
+                "description": "BM25Fベーススコア + 累積ボーナススコア"
+            }
+        }
+
+# 便利関数
+def build_nutrition_search_query(
+    processed_query: str,
+    original_query: str,
+    db_type_filter: Optional[str] = None,
+    size: int = 20,
+    custom_weights: Optional[Dict[str, float]] = None
+) -> Dict[str, Any]:
+    """
+    栄養データベース検索クエリの構築（便利関数）
+    
+    Args:
+        processed_query: 前処理済みクエリ
+        original_query: 元のクエリ
+        db_type_filter: データベースタイプフィルタ
+        size: 結果数
+        custom_weights: カスタム重み
+        
+    Returns:
+        Elasticsearchクエリ辞書
+    """
+    builder = NutritionSearchQueryBuilder()
+    return builder.build_search_query(
+        processed_query=processed_query,
+        original_query=original_query,
+        db_type_filter=db_type_filter,
+        size=size,
+        weights=custom_weights
+    ) 
+```
+
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/nlp/query_preprocessor.py
+--------------------------------------------------
+ファイルサイズ: 11,049 bytes
+最終更新: 2025-06-06 11:41:37
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Query Preprocessor - spaCyベースのクエリ前処理パイプライン
+
+食品検索のためのクエリ前処理を行い、以下の機能を提供：
+- トークン化
+- 小文字化
+- カスタムストップワード除去
+- 保護ターム処理
+- レンマ化（上書きルール適用）
+- 類義語展開（オプション）
+"""
+
+import os
+import spacy
+from spacy.tokens import Token
+from spacy.language import Language
+from typing import List, Dict, Set, Optional
+import re
+
+class FoodQueryPreprocessor:
+    def __init__(self):
+        """クエリ前処理パイプラインを初期化"""
+        self.nlp = None
+        self.protected_terms: Set[str] = set()
+        self.lemma_overrides: Dict[str, str] = {}
+        self.custom_stopwords: Set[str] = set()
+        self.food_synonyms: Dict[str, List[str]] = {}
+        
+        # レキシコンデータのパス
+        self.lexicon_base_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), 
+            "lexicon_data"
+        )
+        
+        self._load_lexicon_data()
+        self._setup_spacy_pipeline()
+    
+    def _load_lexicon_data(self):
+        """レキシコンファイルからデータを読み込み"""
+        # 保護タームの読み込み
+        protected_file = os.path.join(self.lexicon_base_path, "protected_food_terms.txt")
+        try:
+            with open(protected_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    term = line.strip().lower()
+                    if term and not term.startswith("#"):
+                        self.protected_terms.add(term)
+        except FileNotFoundError:
+            print(f"Warning: protected_food_terms.txt not found at {protected_file}")
+        
+        # レンマ上書きルールの読み込み
+        override_file = os.path.join(self.lexicon_base_path, "food_lemma_overrides.txt")
+        try:
+            with open(override_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        parts = line.split("=>")
+                        if len(parts) == 2:
+                            original = parts[0].strip().lower()
+                            override = parts[1].strip().lower()
+                            self.lemma_overrides[original] = override
+        except FileNotFoundError:
+            print(f"Warning: food_lemma_overrides.txt not found at {override_file}")
+        
+        # カスタムストップワードの読み込み
+        stopwords_file = os.path.join(self.lexicon_base_path, "custom_food_stopwords.txt")
+        try:
+            with open(stopwords_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    word = line.strip().lower()
+                    if word and not word.startswith("#"):
+                        self.custom_stopwords.add(word)
+        except FileNotFoundError:
+            print(f"Warning: custom_food_stopwords.txt not found at {stopwords_file}")
+        
+        # 類義語の読み込み（オプション）
+        synonyms_file = os.path.join(self.lexicon_base_path, "food_synonyms.txt")
+        try:
+            with open(synonyms_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#"):
+                        # 双方向類義語: word1, word2, word3
+                        if "=>" not in line and "," in line:
+                            words = [w.strip().lower() for w in line.split(",")]
+                            for word in words:
+                                if word not in self.food_synonyms:
+                                    self.food_synonyms[word] = []
+                                self.food_synonyms[word].extend([w for w in words if w != word])
+                        
+                        # 片方向類義語: source => target1, target2
+                        elif "=>" in line:
+                            parts = line.split("=>")
+                            if len(parts) == 2:
+                                source = parts[0].strip().lower()
+                                targets = [t.strip().lower() for t in parts[1].split(",")]
+                                self.food_synonyms[source] = targets
+        except FileNotFoundError:
+            print(f"Warning: food_synonyms.txt not found at {synonyms_file}")
+    
+    def _setup_spacy_pipeline(self):
+        """spaCyパイプラインをセットアップ"""
+        try:
+            # 英語の小さいモデルを読み込み（効率性重視）
+            self.nlp = spacy.load("en_core_web_sm")
+        except OSError:
+            print("Warning: en_core_web_sm model not found. Installing...")
+            try:
+                import subprocess
+                subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"], check=True)
+                self.nlp = spacy.load("en_core_web_sm")
+            except Exception as e:
+                print(f"Error: Could not load spaCy model: {e}")
+                return
+        
+        # カスタム拡張属性を追加
+        if not Token.has_extension("is_protected"):
+            Token.set_extension("is_protected", default=False)
+        if not Token.has_extension("custom_lemma"):
+            Token.set_extension("custom_lemma", default=None)
+    
+    def food_lexicon_processor_component(self, doc):
+        """食品レキシコン処理コンポーネント"""
+        for token in doc:
+            token_lower = token.lower_
+            
+            # 保護タームのチェック
+            if token_lower in self.protected_terms:
+                token._.is_protected = True
+                token._.custom_lemma = token_lower
+            
+            # レンマ上書きのチェック
+            elif token_lower in self.lemma_overrides:
+                token._.is_protected = True  # 上書きターもレンマ化から保護
+                token._.custom_lemma = self.lemma_overrides[token_lower]
+        
+        return doc
+    
+    def preprocess_query(self, query_text: str, expand_synonyms: bool = False) -> str:
+        """
+        クエリテキストを前処理
+        
+        Args:
+            query_text: 生のクエリテキスト
+            expand_synonyms: 類義語展開を行うかどうか
+            
+        Returns:
+            処理済みクエリ文字列
+        """
+        if not self.nlp:
+            return query_text.lower()
+        
+        # spaCyで処理
+        doc = self.nlp(query_text)
+        
+        # カスタムコンポーネントを手動で適用
+        doc = self.food_lexicon_processor_component(doc)
+        
+        processed_tokens = []
+        
+        for token in doc:
+            # 句読点、空白、数字のみのトークンをスキップ
+            if token.is_punct or token.is_space or (token.is_digit and len(token.text) > 2):
+                continue
+            
+            # カスタムストップワードのチェック
+            if token.lower_ in self.custom_stopwords:
+                continue
+            
+            # 保護された単語のレンマ処理
+            if token._.is_protected and token._.custom_lemma:
+                processed_tokens.append(token._.custom_lemma)
+            
+            # 標準レンマ化
+            else:
+                lemma = token.lemma_.lower()
+                processed_tokens.append(lemma)
+        
+        # 類義語展開（オプション）
+        if expand_synonyms:
+            expanded_tokens = []
+            for token in processed_tokens:
+                expanded_tokens.append(token)
+                if token in self.food_synonyms:
+                    expanded_tokens.extend(self.food_synonyms[token])
+            processed_tokens = expanded_tokens
+        
+        # 重複除去と結合
+        processed_tokens = list(dict.fromkeys(processed_tokens))  # 順序を保持して重複除去
+        
+        return " ".join(processed_tokens)
+    
+    def get_processed_tokens(self, query_text: str) -> List[str]:
+        """
+        処理済みトークンのリストを取得
+        
+        Args:
+            query_text: 生のクエリテキスト
+            
+        Returns:
+            処理済みトークンのリスト
+        """
+        processed_query = self.preprocess_query(query_text)
+        return processed_query.split()
+    
+    def analyze_query(self, query_text: str) -> Dict:
+        """
+        クエリの詳細分析情報を取得（デバッグ用）
+        
+        Args:
+            query_text: 生のクエリテキスト
+            
+        Returns:
+            分析結果の辞書
+        """
+        if not self.nlp:
+            return {"error": "spaCy model not loaded"}
+        
+        doc = self.nlp(query_text)
+        
+        # カスタムコンポーネントを手動で適用
+        doc = self.food_lexicon_processor_component(doc)
+        
+        analysis = {
+            "original": query_text,
+            "tokens": [],
+            "processed": self.preprocess_query(query_text),
+            "statistics": {
+                "original_tokens": len(doc),
+                "processed_tokens": len(self.get_processed_tokens(query_text)),
+                "protected_terms": 0,
+                "overridden_terms": 0,
+                "removed_stopwords": 0
+            }
+        }
+        
+        for token in doc:
+            token_info = {
+                "text": token.text,
+                "lemma": token.lemma_,
+                "is_protected": getattr(token._, 'is_protected', False),
+                "custom_lemma": getattr(token._, 'custom_lemma', None),
+                "is_stopword": token.lower_ in self.custom_stopwords,
+                "is_punct": token.is_punct,
+                "pos": token.pos_
+            }
+            
+            if token_info["is_protected"]:
+                analysis["statistics"]["protected_terms"] += 1
+            if token_info["custom_lemma"]:
+                analysis["statistics"]["overridden_terms"] += 1
+            if token_info["is_stopword"]:
+                analysis["statistics"]["removed_stopwords"] += 1
+            
+            analysis["tokens"].append(token_info)
+        
+        return analysis
+
+# グローバルインスタンス
+_preprocessor = None
+
+def get_preprocessor() -> FoodQueryPreprocessor:
+    """グローバルプリプロセッサインスタンスを取得"""
+    global _preprocessor
+    if _preprocessor is None:
+        _preprocessor = FoodQueryPreprocessor()
+    return _preprocessor
+
+def preprocess_query(query_text: str, expand_synonyms: bool = False) -> str:
+    """便利関数：クエリを前処理"""
+    return get_preprocessor().preprocess_query(query_text, expand_synonyms)
+
+def analyze_query(query_text: str) -> Dict:
+    """便利関数：クエリを分析"""
+    return get_preprocessor().analyze_query(query_text) 
+```
+
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/utils/data_loader.py
+--------------------------------------------------
+存在: ❌ ファイルが見つかりません
+
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/utils/scoring.py
+--------------------------------------------------
+存在: ❌ ファイルが見つかりません
+
+============================================================
+
+📄 FILE: nutrition_db_experiment/search_service/config/search_config.py
+--------------------------------------------------
+存在: ❌ ファイルが見つかりません
+
+============================================================
+
+📁 栄養データベース仕様
+============================================================
+
+📄 FILE: nutrition_db_experiment/nutrition_database_specification.md
+--------------------------------------------------
+ファイルサイズ: 5,856 bytes
+最終更新: 2025-06-06 13:42:19
+存在: ✅
+
+CONTENT:
+```
+# 栄養データベース仕様書 (Nutrition Database Specification)
+
+## 概要 (Overview)
+
+このドキュメントは、USDA Food Data Central API から収集した生データを基に構築した統一栄養データベースの仕様を説明します。
+
+## データベース構造 (Database Structure)
+
+### 統一フォーマット (Unified Format)
+
+全てのアイテムは以下の統一フォーマットに従います：
+
+```json
+{
+  "db_type": "string",        // "dish", "ingredient", "branded"のいずれか
+  "id": number,               // USDA Food Data CentralのID
+  "search_name": "string",    // 検索用の名前
+  "nutrition": {
+    "calories": number,       // カロリー (kcal/100g)
+    "protein": number,        // タンパク質 (g/100g)
+    "fat": number,           // 脂質 (g/100g)
+    "carbs": number          // 炭水化物 (g/100g)
+  },
+  "weight": number            // 基準重量 (g)
+}
+```
+
+## カテゴリ別詳細 (Category Details)
+
+### 1. Dish (料理・レシピ)
+
+**説明**: 完成された料理やレシピのデータ
+**データソース**: USDA Recipe データ
+**特徴**: 複数の食材を組み合わせた完成品
+
+#### JSON サンプル:
+
+```json
+{
+  "db_type": "dish",
+  "id": 123456,
+  "search_name": "Chicken stir-fry with vegetables",
+  "nutrition": {
+    "calories": 145.5,
+    "protein": 18.2,
+    "fat": 6.8,
+    "carbs": 4.3
+  },
+  "weight": 150.0
+}
+```
+
+#### 元データからの変換プロセス:
+
+- `title` → `search_name`
+- `nutrients.servingSize` → `weight` (gram 抽出)
+- 栄養素は 100g あたりに正規化
+
+### 2. Ingredient (食材・基本食品)
+
+**説明**: 個別の食材や基本的な食品のデータ
+**データソース**: USDA Food データ
+**特徴**: 単一食材、調理前の状態
+
+#### JSON サンプル:
+
+```json
+{
+  "db_type": "ingredient",
+  "id": 789012,
+  "search_name": "Chicken, breast, boneless, skinless, raw",
+  "nutrition": {
+    "calories": 165.0,
+    "protein": 31.0,
+    "fat": 3.6,
+    "carbs": 0.0
+  },
+  "weight": 100.0
+}
+```
+
+#### 元データからの変換プロセス:
+
+- `name` + `description` → `search_name`
+- `units`から`description="grams"`の amount を`weight`として使用
+- 栄養素は 100g あたりに正規化
+
+### 3. Branded (ブランド食品)
+
+**説明**: 特定ブランドの商品データ
+**データソース**: USDA Branded Food データ
+**特徴**: 商用製品、パッケージ食品
+
+#### JSON サンプル:
+
+```json
+{
+  "db_type": "branded",
+  "id": 345678,
+  "search_name": "KRAFT, Macaroni & Cheese Dinner Original",
+  "nutrition": {
+    "calories": 370.0,
+    "protein": 11.0,
+    "fat": 3.0,
+    "carbs": 71.0
+  },
+  "weight": 70.0
+}
+```
+
+#### 元データからの変換プロセス:
+
+- `food_name` + `description` → `search_name`
+- `unit_weights`から`description="grams"`の amount を`weight`として使用
+- 栄養素フィールドは`calories`/`serving_calories`, `proteins`/`serving_proteins`等から取得
+- 栄養素は 100g あたりに正規化
+
+## データベースファイル構成 (Database File Structure)
+
+```
+nutrition_db/
+├── dish_db.json              # 料理データのみ
+├── ingredient_db.json        # 食材データのみ
+├── branded_db.json           # ブランド食品データのみ
+├── unified_nutrition_db.json # 全カテゴリ統合
+└── build_stats.json          # 構築統計情報
+```
+
+## 検索・利用方法 (Search & Usage)
+
+### 1. カテゴリ別検索
+
+特定のカテゴリのデータのみを検索したい場合は、対応するファイルを使用。
+
+### 2. 統合検索
+
+全カテゴリを横断して検索したい場合は、`unified_nutrition_db.json`を使用。
+
+### 3. 検索キー
+
+- `search_name`フィールドを使用してテキスト検索
+- `db_type`でカテゴリフィルタリング
+- `id`で特定アイテムの直接アクセス
+
+## 栄養値の正規化 (Nutrition Value Normalization)
+
+- **基準**: 全ての栄養値は 100g あたりで正規化
+- **計算方法**: `(元の栄養値 / 元の重量) × 100`
+- **利点**: 異なる食品間での栄養価比較が容易
+
+## 検索仕様 (Search Specification)
+
+### 検索対象フィールド詳細
+
+#### search_name フィールド
+
+- **データ型**: string
+- **構成**: 元データベースの `name` と `description` を結合
+- **フォーマット**: メイン名称 + 修飾語（スペース区切り）
+  - 例: `"Onions, Cooked, boiled, drained, with salt"`
+  - 例: `"Roasted Cherry Tomatoes with Mint"`
+- **長さ**:
+  - **通常**: 5 単語以内
+  - **最大**: 10 単語程度
+- **特徴**: 英語ベース、食材・料理の詳細な説明を含む
+
+### 検索アルゴリズム要件
+
+#### 単語境界問題への対処
+
+検索システムは以下の単語境界問題に対処する必要があります：
+
+**問題例**: `"cook"` でクエリした場合の期待される結果
+
+```
+✅ 高スコア（意味的に関連）:
+- "cook" (完全一致)
+- "cooking" (同じ語幹)
+- "cooked" (同じ語幹)
+
+❌ 低スコア（意味的に無関係）:
+- "cookie" (文字列的には似ているが意味が異なる)
+- "cookies" (文字列的には似ているが意味が異なる)
+```
+
+#### 実装推奨事項
+
+1. **語幹処理 (Stemming)**: 語尾変化を正規化
+2. **BM25F 検索**: フィールド別重み付き検索
+3. **マルチシグナルブースティング**: 複数の関連度指標を組み合わせ
+4. **同義語辞書**: 食材・料理固有の同義語対応
+5. **部分一致スコアリング**: 文字列類似度 vs 意味的類似度のバランス
+
+### 検索性能指標
+
+- **目標精度**: 90%以上のマッチ率
+- **応答時間**: 1 秒以内（8,878 項目対象）
+- **フォールバック**: ElasticSearch 利用不可時の直接検索対応
+
+```
+
+============================================================
+
+📁 テスト・実行ファイル
+============================================================
+
+📄 FILE: test_local_nutrition_search_v2.py
+--------------------------------------------------
+ファイルサイズ: 13,113 bytes
+最終更新: 2025-06-06 12:49:32
+存在: ✅
+
+CONTENT:
+```
+#!/usr/bin/env python3
+"""
+Local Nutrition Search System Test v2.0
+
+nutrition_db_experimentで実装したローカル検索システムと統合したシステムをテスト
+"""
+
+import requests
+import json
+import time
+import os
+from datetime import datetime
+
+# API設定（新しいアーキテクチャ版）
+BASE_URL = "http://localhost:8000/api/v1"
+
+# テスト画像のパス
+image_path = "test_images/food3.jpg"
+
+def test_local_nutrition_search_complete_analysis():
+    """ローカル栄養データベース検索を使用した完全分析をテスト"""
+    
+    print("=== Local Nutrition Search Complete Analysis Test v2.0 ===")
+    print(f"Using image: {image_path}")
+    print("🔍 Testing nutrition_db_experiment integration")
+    
+    try:
+        # 完全分析エンドポイントを呼び出し
+        with open(image_path, "rb") as f:
+            files = {"image": ("food3.jpg", f, "image/jpeg")}
+            data = {"save_results": True}  # 結果を保存
+            
+            print("Starting complete analysis with local nutrition search...")
+            start_time = time.time()
+            response = requests.post(f"{BASE_URL}/meal-analyses/complete", files=files, data=data)
+            end_time = time.time()
+        
+        print(f"Status Code: {response.status_code}")
+        print(f"Response Time: {end_time - start_time:.2f}s")
+        
+        if response.status_code == 200:
+            result = response.json()
+            print("✅ Local nutrition search analysis successful!")
+            
+            # 分析ID
+            analysis_id = result.get("analysis_id")
+            print(f"Analysis ID: {analysis_id}")
+            
+            # メタデータ（検索方法の確認）
+            metadata = result.get("metadata", {})
+            print(f"\n📊 Pipeline Info:")
+            print(f"- Version: {metadata.get('pipeline_version')}")
+            print(f"- Components: {', '.join(metadata.get('components_used', []))}")
+            print(f"- Nutrition Search Method: {metadata.get('nutrition_search_method')}")
+            print(f"- Timestamp: {metadata.get('timestamp')}")
+            
+            # 処理サマリー
+            summary = result.get("processing_summary", {})
+            print(f"\n📈 Processing Summary:")
+            print(f"- Total dishes: {summary.get('total_dishes')}")
+            print(f"- Total ingredients: {summary.get('total_ingredients')}")
+            print(f"- Search method: {summary.get('search_method')}")
+            
+            # ローカル検索結果
+            nutrition_search_result = result.get("nutrition_search_result", {})
+            print(f"\n🔍 Local Nutrition Search Results:")
+            print(f"- Matches found: {nutrition_search_result.get('matches_count', 0)}")
+            print(f"- Match rate: {nutrition_search_result.get('match_rate', 0):.1%}")
+            print(f"- Search method: {nutrition_search_result.get('search_method', 'unknown')}")
+            
+            search_summary = nutrition_search_result.get('search_summary', {})
+            if search_summary:
+                print(f"- Database source: {search_summary.get('database_source', 'unknown')}")
+                print(f"- Total searches: {search_summary.get('total_searches', 0)}")
+                print(f"- Successful matches: {search_summary.get('successful_matches', 0)}")
+                print(f"- Failed searches: {search_summary.get('failed_searches', 0)}")
+            
+            # Phase1 結果
+            phase1_result = result.get("phase1_result", {})
+            phase1_dishes = len(phase1_result.get("dishes", []))
+            print(f"\n🔍 Phase1 Results:")
+            print(f"- Detected dishes: {phase1_dishes}")
+            
+            if phase1_dishes > 0:
+                print("- Dish details:")
+                for i, dish in enumerate(phase1_result.get("dishes", [])[:3], 1):  # 最初の3料理のみ表示
+                    print(f"  {i}. {dish.get('dish_name', 'Unknown')}")
+                    ingredients = dish.get('ingredients', [])
+                    print(f"     Ingredients ({len(ingredients)}): {', '.join([ing.get('ingredient_name', 'Unknown') for ing in ingredients[:5]])}")
+                    if len(ingredients) > 5:
+                        print(f"     ... and {len(ingredients) - 5} more")
+            
+            # 最終栄養価結果（暫定）
+            final_nutrition = result.get("final_nutrition_result", {})
+            total_nutrients = final_nutrition.get("total_meal_nutrients", {})
+            
+            print(f"\n🍽 Final Meal Nutrition (Preliminary):")
+            print(f"- Calories: {total_nutrients.get('calories_kcal', 0):.2f} kcal")
+            print(f"- Protein: {total_nutrients.get('protein_g', 0):.2f} g")
+            print(f"- Carbohydrates: {total_nutrients.get('carbohydrates_g', 0):.2f} g")
+            print(f"- Fat: {total_nutrients.get('fat_g', 0):.2f} g")
+            
+            # 保存された詳細ログファイル
+            analysis_folder = result.get("analysis_folder")
+            saved_files = result.get("saved_files", {})
+            
+            if analysis_folder:
+                print(f"\n📁 Analysis Folder:")
+                print(f"- Path: {analysis_folder}")
+                print(f"- Contains organized phase-by-phase results")
+            
+            if saved_files:
+                print(f"\n💾 Saved Files by Phase ({len(saved_files)} total):")
+                
+                # Phase1 files
+                phase1_files = [k for k in saved_files.keys() if k.startswith('phase1_')]
+                if phase1_files:
+                    print("  📊 Phase1 (Image Analysis):")
+                    for file_key in phase1_files:
+                        print(f"    - {file_key}: {saved_files[file_key]}")
+                
+                # Local search files  
+                search_files = [k for k in saved_files.keys() if 'nutrition_search' in k or 'local' in k.lower()]
+                if search_files:
+                    print("  🔍 Local Nutrition Search:")
+                    for file_key in search_files:
+                        print(f"    - {file_key}: {saved_files[file_key]}")
+                
+                # Pipeline files
+                pipeline_files = [k for k in saved_files.keys() if k in ['pipeline_summary', 'complete_log']]
+                if pipeline_files:
+                    print("  📋 Pipeline Summary:")
+                    for file_key in pipeline_files:
+                        print(f"    - {file_key}: {saved_files[file_key]}")
+            
+            return True, analysis_id
+            
+        else:
+            print("❌ Local nutrition search analysis failed!")
+            print(f"Error: {response.text}")
+            return False, None
+            
+    except Exception as e:
+        print(f"❌ Error during local nutrition search analysis: {e}")
+        return False, None
+
+def test_pipeline_info_local():
+    """ローカル検索パイプライン情報をテスト"""
+    print("\n=== Local Nutrition Search Pipeline Info ===")
+    
+    try:
+        response = requests.get(f"{BASE_URL}/meal-analyses/pipeline-info")
+        
+        if response.status_code == 200:
+            result = response.json()
+            print("✅ Pipeline info retrieved!")
+            print(f"Pipeline ID: {result.get('pipeline_id')}")
+            print(f"Version: {result.get('version')}")
+            print(f"Nutrition Search Method: {result.get('nutrition_search_method')}")
+            
+            components = result.get('components', [])
+            print(f"\n🔧 Components ({len(components)}):")
+            for i, comp in enumerate(components, 1):
+                print(f"  {i}. {comp.get('component_name')} ({comp.get('component_type')})")
+                print(f"     Executions: {comp.get('execution_count')}")
+        else:
+            print(f"❌ Pipeline info failed: {response.status_code}")
+            
+    except Exception as e:
+        print(f"❌ Error getting pipeline info: {e}")
+
+def test_nutrition_db_experiment_availability():
+    """nutrition_db_experimentの利用可能性をテスト"""
+    print("\n=== Nutrition DB Experiment Availability Test ===")
+    
+    try:
+        # nutrition_db_experimentディレクトリの存在確認
+        nutrition_db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nutrition_db_experiment")
+        
+        print(f"🔍 Checking nutrition_db_experiment path: {nutrition_db_path}")
+        
+        if os.path.exists(nutrition_db_path):
+            print("✅ nutrition_db_experiment directory found")
+            
+            # データベースファイルの存在確認（正しいパスに修正）
+            db_files = [
+                "nutrition_db/dish_db.json",
+                "nutrition_db/ingredient_db.json", 
+                "nutrition_db/branded_db.json",
+                "nutrition_db/unified_nutrition_db.json"
+            ]
+            
+            print("📊 Database Files:")
+            for db_file in db_files:
+                full_path = os.path.join(nutrition_db_path, db_file)
+                if os.path.exists(full_path):
+                    try:
+                        with open(full_path, 'r', encoding='utf-8') as f:
+                            # 大きなファイルの場合は一部だけ読み込み
+                            if os.path.getsize(full_path) > 10 * 1024 * 1024:  # 10MB以上
+                                f.seek(0)
+                                first_chunk = f.read(1024)
+                                if first_chunk.strip().startswith('['):
+                                    # JSONファイルサイズから推定アイテム数を計算
+                                    file_size_mb = os.path.getsize(full_path) / (1024 * 1024)
+                                    estimated_items = int(file_size_mb * 1000)  # 大まかな推定
+                                    print(f"  ✅ {db_file}: ~{estimated_items} items (file size: {file_size_mb:.1f}MB)")
+                                else:
+                                    print(f"  ✅ {db_file}: Large file ({file_size_mb:.1f}MB)")
+                            else:
+                                data = json.load(f)
+                                print(f"  ✅ {db_file}: {len(data)} items")
+                    except Exception as e:
+                        print(f"  ❌ {db_file}: Error reading - {e}")
+                else:
+                    print(f"  ❌ {db_file}: Not found")
+            
+            # 検索コンポーネントのインポート確認
+            print("🔧 Search Components:")
+            
+            search_service_path = os.path.join(nutrition_db_path, "search_service")
+            if os.path.exists(search_service_path):
+                print(f"  ✅ search_service directory found: {search_service_path}")
+                
+                # 主要ファイルの存在確認
+                component_files = [
+                    "nlp/query_preprocessor.py",
+                    "api/search_handler.py", 
+                    "api/query_builder.py"
+                ]
+                
+                for comp_file in component_files:
+                    full_path = os.path.join(search_service_path, comp_file)
+                    if os.path.exists(full_path):
+                        print(f"    ✅ {comp_file}")
+                    else:
+                        print(f"    ❌ {comp_file}: Not found")
+            else:
+                print(f"  ❌ search_service directory not found")
+                
+        else:
+            print("❌ nutrition_db_experiment directory not found")
+            print("💡 Please ensure nutrition_db_experiment is in the same directory as this script")
+            
+    except Exception as e:
+        print(f"❌ Error checking nutrition_db_experiment: {e}")
+
+def compare_search_methods():
+    """ローカル検索とUSDA検索の比較テスト"""
+    print("\n=== Search Methods Comparison ===")
+    print("🔬 This would compare local search vs USDA API search")
+    print("📝 TODO: Implement when both methods are available")
+
+if __name__ == "__main__":
+    print("Testing Local Nutrition Search Integration v2.0")
+    print("=" * 70)
+    
+    # nutrition_db_experimentの利用可能性チェック
+    test_nutrition_db_experiment_availability()
+    
+    # パイプライン情報
+    test_pipeline_info_local()
+    
+    # ローカル栄養検索を使った完全分析のテスト
+    success, analysis_id = test_local_nutrition_search_complete_analysis()
+    
+    if success:
+        print("\n🎉 Local nutrition search integration test completed successfully!")
+        print("🚀 nutrition_db_experiment search system is working with the meal analysis pipeline!")
+        print(f"📋 Analysis ID: {analysis_id}")
+    else:
+        print("\n💥 Local nutrition search integration test failed!")
+        print("🔧 Check the local search system setup and logs.")
+        
+    # 比較テスト（将来実装予定）
+    compare_search_methods() 
+```
+
+============================================================
+
+🎯 LOCAL NUTRITION SEARCH SYSTEM SUMMARY
+----------------------------------------
+総ファイル数: 21
+存在ファイル数: 18
+分析完了時刻: 2025-06-06 13:59:43
+
+このファイルには、test_local_nutrition_search_v2.py実行時に関わる
+ローカル栄養データベース検索システムの全アプリケーションファイルの
+完全な内容が含まれています。
+
+🔥 LOCAL NUTRITION SEARCH FEATURES:
+- Phase 1: Gemini AI image analysis
+- Local Nutrition Search: BM25F + multi-signal boosting algorithm
+- Database Integration: 8,878-item offline nutrition database
+- Advanced NLP: Word boundary handling, stemming, synonym matching
+- Result Management: Phase-based organized file saving
+- USDA Compatibility: Seamless migration from USDA API
+- Performance: 90.9% match rate, <1 second response time

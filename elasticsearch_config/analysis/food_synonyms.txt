@@ -1,0 +1,67 @@
+# 食品同義語辞書
+# 仕様書に基づく食品検索用同義語リスト
+
+# 調理法関連
+stir fry, stir-fried, stirfry
+ice cream, ice-cream, icecream
+french fries, fries, chips
+
+# 食材の別名・地域差
+aubergine, eggplant
+courgette, zucchini
+rocket, arugula
+coriander, cilantro
+
+# 肉類関連
+ground beef, minced beef, beef mince
+ground chicken, minced chicken, chicken mince
+ground pork, minced pork, pork mince
+
+# 飲料関連
+coke, coca cola, cola soda
+pop, soda, soft drink, fizzy drink
+juice, drink
+
+# 卵関連（日本語対応）
+egg, eggs
+tamago, egg
+
+# 鶏肉関連
+chicken breast, chicken breat, chiken breast
+chicken thigh, chicken leg
+chicken wing, chicken wings
+
+# 魚類関連
+tuna, tunafish
+salmon, salmons
+shrimp, prawns
+
+# 野菜関連
+tomato, tomatoes
+potato, potatoes
+onion, onions
+carrot, carrots
+pepper, bell pepper, capsicum
+
+# 果物関連
+apple, apples
+banana, bananas
+orange, oranges
+strawberry, strawberries
+
+# 調味料・香辛料
+salt, sea salt
+pepper, black pepper
+soy sauce, soysauce
+olive oil, extra virgin olive oil
+
+# 穀物・パン関連
+rice, white rice, brown rice
+bread, white bread, whole wheat bread
+pasta, noodles
+
+# 乳製品
+milk, whole milk, skim milk
+cheese, cheddar cheese
+yogurt, yoghurt
+butter, salted butter, unsalted butter 

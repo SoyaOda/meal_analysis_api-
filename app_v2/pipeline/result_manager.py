@@ -171,7 +171,7 @@ class ResultManager:
                 files = self._save_phase1_results(log)
                 saved_files.update(files)
                 executed_components.add("Phase1Component")
-            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent"]:
+            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent", "ElasticsearchNutritionSearchComponent"]:
                 files = self._save_nutrition_search_results(log)
                 saved_files.update(files)
                 executed_components.add(log.component_name)
@@ -238,7 +238,7 @@ class ResultManager:
         return files
     
     def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent両対応）"""
+        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent、ElasticsearchNutritionSearchComponent対応）"""
         files = {}
         
         # 検索方法の判定
@@ -251,6 +251,9 @@ class ResultManager:
         elif log.component_name == "LocalNutritionSearchComponent":
             search_method = "local_search"
             db_source = "local_nutrition_database"
+        elif log.component_name == "ElasticsearchNutritionSearchComponent":
+            search_method = "elasticsearch_advanced"
+            db_source = "elasticsearch_food_nutrition_v2"
         
         # 1. JSON形式の入出力データ（検索方法情報を含む）
         input_output_file = self.nutrition_search_dir / "input_output.json"
@@ -508,7 +511,6 @@ class ResultManager:
             if 'ingredient_names' in log.input_data:
                 ingredients = log.input_data['ingredient_names']
                 content.append(f"**Ingredients ({len(ingredients)}):** {', '.join(ingredients)}")
-            
             if 'dish_names' in log.input_data:
                 dishes = log.input_data['dish_names']
                 content.append(f"**Dishes ({len(dishes)}):** {', '.join(dishes)}")
@@ -522,23 +524,66 @@ class ResultManager:
             content.append(f"")
             
             for i, (search_term, match_data) in enumerate(matches.items(), 1):
-                content.append(f"### {i}. {search_term}")
+                # 🎯 修正: より分かりやすい表示名称
+                content.append(f"### {i}. Query: \"{search_term}\"")
                 if isinstance(match_data, dict):
-                    content.append(f"**ID:** {match_data.get('id', 'N/A')}")
-                    content.append(f"**Description:** {match_data.get('description', 'N/A')}")
-                    content.append(f"**Data Type:** {match_data.get('data_type', 'N/A')}")
-                    content.append(f"**Source:** {match_data.get('source', 'N/A')}")
+                    # 🎯 修正: dict形式の場合、キーに応じてアクセス
+                    fdc_id = match_data.get('fdc_id', 0)
+                    original_data = match_data.get('original_usda_data', {})
+                    elasticsearch_id = original_data.get('fdc_id') if isinstance(original_data, dict) else None
                     
-                    if 'nutrients' in match_data and match_data['nutrients']:
-                        content.append(f"**Nutrients ({len(match_data['nutrients'])}):**")
-                        for nutrient in match_data['nutrients'][:5]:  # 最初の5つだけ表示
+                    display_id = elasticsearch_id if elasticsearch_id else fdc_id
+                    content.append(f"**ID:** {display_id if display_id != 0 else 'N/A'}")
+                    content.append(f"**Matched Food Name:** {match_data.get('description', 'N/A')}")  # 🎯 修正
+                    
+                    # 🎯 修正: DB Typeを適切に表示
+                    data_type = match_data.get('data_type', 'N/A')
+                    if search_method == "elasticsearch_advanced":
+                        if data_type.startswith('Local '):
+                            db_category = data_type.replace('Local ', '')  # Local Dish → Dish
+                            content.append(f"**DB Type:** {db_category}")
+                        else:
+                            content.append(f"**DB Type:** {data_type}")
+                    else:
+                        content.append(f"**Data Type:** {data_type}")
+                    
+                    if 'food_nutrients' in match_data and match_data['food_nutrients']:
+                        content.append(f"**Nutrients ({len(match_data['food_nutrients'])}):**")
+                        for nutrient in match_data['food_nutrients'][:5]:  # 最初の5つだけ表示
                             if isinstance(nutrient, dict):
                                 name = nutrient.get('name', 'Unknown')
                                 amount = nutrient.get('amount', 0)
                                 unit = nutrient.get('unit_name', '')
                                 content.append(f"  - {name}: {amount} {unit}")
-                        if len(match_data['nutrients']) > 5:
-                            content.append(f"  - ... and {len(match_data['nutrients']) - 5} more nutrients")
+                        if len(match_data['food_nutrients']) > 5:
+                            content.append(f"  - ... and {len(match_data['food_nutrients']) - 5} more nutrients")
+                else:
+                    # 🎯 NutritionMatchオブジェクトの場合
+                    content.append(f"**ID:** {getattr(match_data, 'id', 'N/A')}")
+                    content.append(f"**Matched Food Name:** {getattr(match_data, 'description', 'N/A')}")  # 🎯 修正
+                    
+                    # 🎯 修正: DB Typeを適切に表示
+                    data_type = getattr(match_data, 'data_type', 'N/A')
+                    if search_method == "elasticsearch_advanced":
+                        if data_type.startswith('Local '):
+                            db_category = data_type.replace('Local ', '')  # Local Dish → Dish
+                            content.append(f"**DB Type:** {db_category}")
+                        else:
+                            content.append(f"**DB Type:** {data_type}")
+                    else:
+                        content.append(f"**Data Type:** {data_type}")
+                    
+                    nutrients = getattr(match_data, 'nutrients', [])
+                    if nutrients:
+                        content.append(f"**Nutrients ({len(nutrients)}):**")
+                        for nutrient in nutrients[:5]:  # 最初の5つだけ表示
+                            if hasattr(nutrient, 'name'):
+                                name = getattr(nutrient, 'name', 'Unknown')
+                                amount = getattr(nutrient, 'amount', 0)
+                                unit = getattr(nutrient, 'unit_name', '')
+                                content.append(f"  - {name}: {amount} {unit}")
+                        if len(nutrients) > 5:
+                            content.append(f"  - ... and {len(nutrients) - 5} more nutrients")
                 content.append(f"")
         
         # 検索サマリー
@@ -550,28 +595,16 @@ class ResultManager:
             content.append(f"**Failed Searches:** {summary.get('failed_searches', 0)}")
             content.append(f"**Match Rate:** {summary.get('match_rate_percent', 0)}%")
             content.append(f"**Search Method:** {summary.get('search_method', 'unknown')}")
-            content.append(f"")
+            
+            if search_method == "local_search":
+                content.append(f"**Database Items:** {summary.get('total_database_items', 0)}")
         
-        # 推論理由があれば表示
-        if log.reasoning:
+        # 検索理由の表示
+        if hasattr(log, 'reasoning') and log.reasoning:
+            content.append(f"")
             content.append(f"## Search Reasoning")
-            for decision_point, reason_data in log.reasoning.items():
-                reason = reason_data.get('reason', '') if isinstance(reason_data, dict) else str(reason_data)
-                content.append(f"**{decision_point}:** {reason}")
-            content.append(f"")
-        
-        # 警告・エラーがあれば表示
-        if log.warnings:
-            content.append(f"## Warnings")
-            for warning in log.warnings:
-                content.append(f"- {warning}")
-            content.append(f"")
-        
-        if log.errors:
-            content.append(f"## Errors")
-            for error in log.errors:
-                content.append(f"- {error}")
-            content.append(f"")
+            for key, reasoning in log.reasoning.items():
+                content.append(f"**{key}:** {reasoning}")
         
         return "\n".join(content)
     
@@ -594,31 +627,81 @@ class ResultManager:
             lines.append(f"")
             
             for search_term, match_data in matches.items():
-                lines.append(f"Search Term: {search_term}")
+                # 🎯 修正: より分かりやすい表示名称
+                lines.append(f"Query: \"{search_term}\"")
                 lines.append(f"-" * 30)
                 
                 if isinstance(match_data, dict):
-                    lines.append(f"  ID: {match_data.get('id', 'N/A')}")
-                    lines.append(f"  Description: {match_data.get('description', 'N/A')}")
-                    lines.append(f"  Data Type: {match_data.get('data_type', 'N/A')}")
-                    lines.append(f"  Source: {match_data.get('source', 'N/A')}")
+                    # 🎯 修正: dict形式の場合の処理
+                    fdc_id = match_data.get('fdc_id', 0)
+                    original_data = match_data.get('original_usda_data', {})
+                    elasticsearch_id = original_data.get('fdc_id') if isinstance(original_data, dict) else None
+                    
+                    display_id = elasticsearch_id if elasticsearch_id else fdc_id
+                    lines.append(f"  ID: {display_id if display_id != 0 else 'N/A'}")
+                    lines.append(f"  Matched Food Name: {match_data.get('description', 'N/A')}")  # 🎯 修正
+                    
+                    # 🎯 修正: DB Typeを適切に表示
+                    data_type = match_data.get('data_type', 'N/A')
+                    if search_method == "elasticsearch_advanced":
+                        if data_type.startswith('Local '):
+                            db_category = data_type.replace('Local ', '')  # Local Dish → Dish
+                            lines.append(f"  DB Type: {db_category}")
+                        else:
+                            lines.append(f"  DB Type: {data_type}")
+                    else:
+                        lines.append(f"  Data Type: {data_type}")
+                        
                     lines.append(f"  Score: {match_data.get('score', 'N/A')}")
                     
-                    if 'nutrients' in match_data and match_data['nutrients']:
-                        lines.append(f"  Nutrients ({len(match_data['nutrients'])}):")
-                        for nutrient in match_data['nutrients']:
+                    if 'food_nutrients' in match_data and match_data['food_nutrients']:
+                        lines.append(f"  Nutrients ({len(match_data['food_nutrients'])}):")
+                        for nutrient in match_data['food_nutrients']:
                             if isinstance(nutrient, dict):
                                 name = nutrient.get('name', 'Unknown')
                                 amount = nutrient.get('amount', 0)
                                 unit = nutrient.get('unit_name', '')
                                 lines.append(f"    - {name}: {amount} {unit}")
                     
-                    if 'original_data' in match_data:
-                        original_data = match_data['original_data']
+                    if 'original_usda_data' in match_data:
+                        original_data = match_data['original_usda_data']
                         if isinstance(original_data, dict):
                             lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
                             if search_method == "local_search":
                                 lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
+                else:
+                    # 🎯 NutritionMatchオブジェクトの場合
+                    lines.append(f"  ID: {getattr(match_data, 'id', 'N/A')}")
+                    lines.append(f"  Matched Food Name: {getattr(match_data, 'description', 'N/A')}")  # 🎯 修正
+                    
+                    # 🎯 修正: DB Typeを適切に表示
+                    data_type = getattr(match_data, 'data_type', 'N/A')
+                    if search_method == "elasticsearch_advanced":
+                        if data_type.startswith('Local '):
+                            db_category = data_type.replace('Local ', '')  # Local Dish → Dish
+                            lines.append(f"  DB Type: {db_category}")
+                        else:
+                            lines.append(f"  DB Type: {data_type}")
+                    else:
+                        lines.append(f"  Data Type: {data_type}")
+                        
+                    lines.append(f"  Score: {getattr(match_data, 'score', 'N/A')}")
+                    
+                    nutrients = getattr(match_data, 'nutrients', [])
+                    if nutrients:
+                        lines.append(f"  Nutrients ({len(nutrients)}):")
+                        for nutrient in nutrients:
+                            if hasattr(nutrient, 'name'):
+                                name = getattr(nutrient, 'name', 'Unknown')
+                                amount = getattr(nutrient, 'amount', 0)
+                                unit = getattr(nutrient, 'unit_name', '')
+                                lines.append(f"    - {name}: {amount} {unit}")
+                    
+                    original_data = getattr(match_data, 'original_data', {})
+                    if original_data:
+                        lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
+                        if search_method == "local_search":
+                            lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
                 
                 lines.append(f"")
         

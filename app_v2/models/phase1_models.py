@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -24,9 +24,14 @@ class Phase1Input(BaseModel):
 
 
 class Phase1Output(BaseModel):
-    """Phase1コンポーネントの出力モデル（USDA検索特化）"""
+    """Phase1コンポーネントの出力モデル（USDA検索特化 + Elasticsearch拡張対応）"""
     dishes: List[Dish] = Field(..., description="画像から特定された料理のリスト")
     warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
+    
+    # 🎯 Elasticsearch用拡張フィールド（オプショナル）
+    target_nutrition_vector: Optional[Dict[str, float]] = Field(None, description="画像全体の栄養プロファイル（100gあたり）")
+    elasticsearch_query_terms: Optional[str] = Field(None, description="Elasticsearch検索用の最適化されたクエリ語句")
+    enhanced_search_enabled: Optional[bool] = Field(None, description="拡張検索機能が有効かどうか")
 
     def get_all_ingredient_names(self) -> List[str]:
         """全ての食材名のリストを取得（USDA検索用）"""
