@@ -271,7 +271,7 @@ def compare_search_methods():
     print("🔬 This would compare local search vs USDA API search")
     print("📝 TODO: Implement when both methods are available")
 
-if __name__ == "__main__":
+def main():
     print("Testing Local Nutrition Search Integration v2.0")
     print("=" * 70)
     
@@ -288,10 +288,27 @@ if __name__ == "__main__":
         print("\n🎉 Local nutrition search integration test completed successfully!")
         print("🚀 nutrition_db_experiment search system is working with the meal analysis pipeline!")
         print(f"📋 Analysis ID: {analysis_id}")
-        print(f"🎯 Elasticsearch db query phase: {'✅' if elasticsearch_used else '❌'}")
+        print(f"🎯 Elasticsearch db query phase: {'✅' if analysis_id else '❌'}")
     else:
         print("\n💥 Local nutrition search integration test failed!")
         print("🔧 Check the local search system setup and logs.")
         
     # 比較テスト（将来実装予定）
-    compare_search_methods() 
+    compare_search_methods()
+    
+    # 🎯 自動フォーマット機能を統合
+    print("\n=== Auto-formatting Results ===")
+    try:
+        import subprocess
+        result = subprocess.run(["python", "auto_format_latest_results.py"], 
+                              capture_output=True, text=True, timeout=30)
+        if result.returncode == 0:
+            print("✅ 検索結果の自動フォーマットが完了しました")
+            print("📂 formatted_search_results.md と .html が生成されました")
+        else:
+            print(f"⚠️ 自動フォーマットでエラー: {result.stderr}")
+    except Exception as e:
+        print(f"⚠️ 自動フォーマット実行に失敗: {e}")
+
+if __name__ == "__main__":
+    main() 
