@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Local Nutrition Search System Test v2.0
+Local Nutrition Search System Test v2.0 - Elasticsearch Enhanced
 
-nutrition_db_experimentで実装したローカル検索システムと統合したシステムをテスト
+nutrition_db_experimentで実装したローカル検索システムとElasticsearchを統合したシステムをテスト
+仕様書対応: test_local_nutrition_search_v2.pyでElasticsearch db query phaseを実行
 """
 
 import requests
@@ -17,20 +18,23 @@ BASE_URL = "http://localhost:8000/api/v1"
 # テスト画像のパス
 image_path = "test_images/food3.jpg"
 
-def test_local_nutrition_search_complete_analysis():
-    """ローカル栄養データベース検索を使用した完全分析をテスト"""
+def test_elasticsearch_nutrition_search_complete_analysis():
+    """Elasticsearchベースの栄養データベース検索を使用した完全分析をテスト（仕様書要件）"""
     
-    print("=== Local Nutrition Search Complete Analysis Test v2.0 ===")
+    print("=== Elasticsearch-Enhanced Local Nutrition Search Test v2.0 ===")
     print(f"Using image: {image_path}")
-    print("🔍 Testing nutrition_db_experiment integration")
+    print("🔍 Testing Elasticsearch db query phase integration (仕様書対応)")
     
     try:
-        # 完全分析エンドポイントを呼び出し
+        # 完全分析エンドポイントを呼び出し（Elasticsearchフラグ付き）
         with open(image_path, "rb") as f:
             files = {"image": ("food3.jpg", f, "image/jpeg")}
-            data = {"save_results": True}  # 結果を保存
+            data = {
+                "save_results": True,  # 結果を保存
+                "use_elasticsearch": True  # 🎯 仕様書要件: Elasticsearch使用フラグ
+            }
             
-            print("Starting complete analysis with local nutrition search...")
+            print("Starting complete analysis with Elasticsearch nutrition search...")
             start_time = time.time()
             response = requests.post(f"{BASE_URL}/meal-analyses/complete", files=files, data=data)
             end_time = time.time()
@@ -40,7 +44,7 @@ def test_local_nutrition_search_complete_analysis():
         
         if response.status_code == 200:
             result = response.json()
-            print("✅ Local nutrition search analysis successful!")
+            print("✅ Elasticsearch nutrition search analysis successful!")
             
             # 分析ID
             analysis_id = result.get("analysis_id")
@@ -50,9 +54,14 @@ def test_local_nutrition_search_complete_analysis():
             metadata = result.get("metadata", {})
             print(f"\n📊 Pipeline Info:")
             print(f"- Version: {metadata.get('pipeline_version')}")
-            print(f"- Components: {', '.join(metadata.get('components_used', []))}")
+            components_used = metadata.get('components_used', [])
+            print(f"- Components: {', '.join(components_used)}")
             print(f"- Nutrition Search Method: {metadata.get('nutrition_search_method')}")
             print(f"- Timestamp: {metadata.get('timestamp')}")
+            
+            # 🎯 仕様書要件確認: ElasticsearchNutritionSearchComponentが使用されているか
+            elasticsearch_used = "ElasticsearchNutritionSearchComponent" in components_used
+            print(f"- 🎯 Elasticsearch db query phase: {'✅ ACTIVE' if elasticsearch_used else '❌ NOT USED'}")
             
             # 処理サマリー
             summary = result.get("processing_summary", {})
@@ -61,19 +70,21 @@ def test_local_nutrition_search_complete_analysis():
             print(f"- Total ingredients: {summary.get('total_ingredients')}")
             print(f"- Search method: {summary.get('search_method')}")
             
-            # ローカル検索結果
+            # Elasticsearch検索結果
             nutrition_search_result = result.get("nutrition_search_result", {})
-            print(f"\n🔍 Local Nutrition Search Results:")
+            print(f"\n🔍 Elasticsearch Nutrition Search Results:")
             print(f"- Matches found: {nutrition_search_result.get('matches_count', 0)}")
             print(f"- Match rate: {nutrition_search_result.get('match_rate', 0):.1%}")
             print(f"- Search method: {nutrition_search_result.get('search_method', 'unknown')}")
             
             search_summary = nutrition_search_result.get('search_summary', {})
-            if search_summary:
-                print(f"- Database source: {search_summary.get('database_source', 'unknown')}")
+            if search_summary and isinstance(search_summary, dict):
+                print(f"- Database source: {search_summary.get('database_source', 'elasticsearch')}")
                 print(f"- Total searches: {search_summary.get('total_searches', 0)}")
                 print(f"- Successful matches: {search_summary.get('successful_matches', 0)}")
                 print(f"- Failed searches: {search_summary.get('failed_searches', 0)}")
+            else:
+                print(f"- Search summary: {search_summary}")  # 文字列または他の形式の場合はそのまま表示
             
             # Phase1 結果
             phase1_result = result.get("phase1_result", {})
@@ -119,10 +130,10 @@ def test_local_nutrition_search_complete_analysis():
                     for file_key in phase1_files:
                         print(f"    - {file_key}: {saved_files[file_key]}")
                 
-                # Local search files  
-                search_files = [k for k in saved_files.keys() if 'nutrition_search' in k or 'local' in k.lower()]
+                # Elasticsearch search files  
+                search_files = [k for k in saved_files.keys() if 'nutrition_search' in k or 'elasticsearch' in k.lower()]
                 if search_files:
-                    print("  🔍 Local Nutrition Search:")
+                    print("  🔍 Elasticsearch Nutrition Search:")
                     for file_key in search_files:
                         print(f"    - {file_key}: {saved_files[file_key]}")
                 
@@ -133,16 +144,25 @@ def test_local_nutrition_search_complete_analysis():
                     for file_key in pipeline_files:
                         print(f"    - {file_key}: {saved_files[file_key]}")
             
-            return True, analysis_id
+            # 🎯 仕様書要件の最終確認
+            print(f"\n🎯 仕様書要件達成状況:")
+            print(f"   Phase1 execution: {'✅' if phase1_dishes > 0 else '❌'}")
+            print(f"   Elasticsearch db query phase: {'✅' if elasticsearch_used else '❌'}")
+            print(f"   Results saved: {'✅' if saved_files else '❌'}")
+            
+            return True, analysis_id, elasticsearch_used
             
         else:
-            print("❌ Local nutrition search analysis failed!")
+            print("❌ Elasticsearch nutrition search analysis failed!")
             print(f"Error: {response.text}")
-            return False, None
+            return False, None, False
             
     except Exception as e:
-        print(f"❌ Error during local nutrition search analysis: {e}")
-        return False, None
+        import traceback
+        print(f"❌ Error during Elasticsearch nutrition search analysis: {e}")
+        print(f"📍 Full traceback:")
+        print(traceback.format_exc())
+        return False, None, False
 
 def test_pipeline_info_local():
     """ローカル検索パイプライン情報をテスト"""
@@ -262,12 +282,13 @@ if __name__ == "__main__":
     test_pipeline_info_local()
     
     # ローカル栄養検索を使った完全分析のテスト
-    success, analysis_id = test_local_nutrition_search_complete_analysis()
+    success, analysis_id, elasticsearch_used = test_elasticsearch_nutrition_search_complete_analysis()
     
     if success:
         print("\n🎉 Local nutrition search integration test completed successfully!")
         print("🚀 nutrition_db_experiment search system is working with the meal analysis pipeline!")
         print(f"📋 Analysis ID: {analysis_id}")
+        print(f"🎯 Elasticsearch db query phase: {'✅' if elasticsearch_used else '❌'}")
     else:
         print("\n💥 Local nutrition search integration test failed!")
         print("🔧 Check the local search system setup and logs.")

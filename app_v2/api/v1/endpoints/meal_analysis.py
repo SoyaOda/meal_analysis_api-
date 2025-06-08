@@ -14,13 +14,14 @@ router = APIRouter()
 async def complete_meal_analysis(
     image: UploadFile = File(...),
     save_results: bool = Form(True),
-    save_detailed_logs: bool = Form(True)
+    save_detailed_logs: bool = Form(True),
+    use_elasticsearch: bool = Form(False)
 ):
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
     
     - Phase 1: Gemini AIによる画像分析
-    - USDA Query: 食材のUSDAデータベース照合
+    - DB Query Phase: Elasticsearch or Local検索によるデータベース照合（仕様書対応）
     - Phase 2: 計算戦略決定と栄養価精緻化 (TODO)
     - Nutrition Calculation: 最終栄養価計算 (TODO)
     
@@ -28,6 +29,7 @@ async def complete_meal_analysis(
         image: 分析対象の食事画像
         save_results: 結果を保存するかどうか (デフォルト: True)
         save_detailed_logs: 詳細ログを保存するかどうか (デフォルト: True)
+        use_elasticsearch: Elasticsearch db query phaseを使用するかどうか (デフォルト: False)
     
     Returns:
         完全な分析結果と栄養価計算、詳細ログファイルパス
@@ -40,10 +42,11 @@ async def complete_meal_analysis(
         
         # 画像データの読み込み
         image_data = await image.read()
-        logger.info(f"Starting complete meal analysis pipeline v2.0 (detailed_logs: {save_detailed_logs})")
+        search_method = "Elasticsearch" if use_elasticsearch else "Local Database"
+        logger.info(f"Starting complete meal analysis pipeline v2.0 with {search_method} (detailed_logs: {save_detailed_logs})")
         
-        # パイプラインの実行
-        pipeline = MealAnalysisPipeline()
+        # パイプラインの実行（Elasticsearchフラグ付き）
+        pipeline = MealAnalysisPipeline(use_elasticsearch=use_elasticsearch)
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type,
@@ -51,7 +54,7 @@ async def complete_meal_analysis(
             save_detailed_logs=save_detailed_logs
         )
         
-        logger.info(f"Complete analysis pipeline v2.0 finished successfully")
+        logger.info(f"Complete analysis pipeline v2.0 finished successfully using {search_method}")
         
         return JSONResponse(
             status_code=200,

@@ -5,6 +5,7 @@ from typing import Optional, Dict, Any
 import logging
 
 from ..components import Phase1Component, USDAQueryComponent, LocalNutritionSearchComponent
+from ..components.elasticsearch_nutrition_search_component import ElasticsearchNutritionSearchComponent
 from ..models import (
     Phase1Input, Phase1Output,
     USDAQueryInput, USDAQueryOutput,
@@ -23,7 +24,7 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self, use_local_nutrition_search: Optional[bool] = None):
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch: Optional[bool] = None):
         """
         パイプラインの初期化
         
@@ -32,6 +33,9 @@ class MealAnalysisPipeline:
                                       None: 設定ファイルから自動取得
                                       True: LocalNutritionSearchComponent使用
                                       False: 従来のUSDAQueryComponent使用
+            use_elasticsearch: Elasticsearch検索を使用するかどうか（最優先）
+                              True: ElasticsearchNutritionSearchComponent使用
+                              False/None: 従来ロジックを使用
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
@@ -46,7 +50,12 @@ class MealAnalysisPipeline:
         self.phase1_component = Phase1Component()
         
         # 栄養データベース検索コンポーネントの選択
-        if self.use_local_nutrition_search:
+        # 優先順位: Elasticsearch > Local > USDA
+        if use_elasticsearch:
+            self.nutrition_search_component = ElasticsearchNutritionSearchComponent()
+            self.search_component_name = "ElasticsearchNutritionSearchComponent"
+            logger.info("Using Elasticsearch nutrition database search (仕様書対応)")
+        elif self.use_local_nutrition_search:
             self.nutrition_search_component = LocalNutritionSearchComponent()
             self.search_component_name = "LocalNutritionSearchComponent"
             logger.info("Using local nutrition database search (nutrition_db_experiment)")
@@ -107,21 +116,73 @@ class MealAnalysisPipeline:
             self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
             
             # === Nutrition Search Phase: データベース照合 ===
-            search_phase_name = "Local Nutrition Search" if self.use_local_nutrition_search else "USDA Query"
+            search_phase_name = "Elasticsearch Enhanced Search" if self.search_component_name == "ElasticsearchNutritionSearchComponent" else ("Local Nutrition Search" if self.use_local_nutrition_search else "USDA Query")
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
-            # 統一された栄養検索入力を作成（USDA互換性を保持）
-            nutrition_search_input = USDAQueryInput(
-                ingredient_names=phase1_result.get_all_ingredient_names(),
-                dish_names=phase1_result.get_all_dish_names()
-            )
+            # 🎯 Elasticsearchコンポーネント向けの拡張入力データを作成
+            if self.search_component_name == "ElasticsearchNutritionSearchComponent":
+                # Phase1から栄養プロファイル情報を抽出（エラーハンドリング強化）
+                target_nutrition_profile = {}
+                try:
+                    # Extended Attributesから栄養プロファイルを取得
+                    if hasattr(phase1_result, 'target_nutrition_vector'):
+                        nutrition_vector = phase1_result.target_nutrition_vector
+                        if isinstance(nutrition_vector, dict):
+                            target_nutrition_profile = nutrition_vector
+                        else:
+                            self.logger.warning(f"[{analysis_id}] target_nutrition_vector is not a dict: {type(nutrition_vector)}")
+                    elif hasattr(phase1_result, '__dict__') and 'target_nutrition_vector' in phase1_result.__dict__:
+                        nutrition_vector = phase1_result.__dict__['target_nutrition_vector']
+                        if isinstance(nutrition_vector, dict):
+                            target_nutrition_profile = nutrition_vector
+                        else:
+                            self.logger.warning(f"[{analysis_id}] target_nutrition_vector from __dict__ is not a dict: {type(nutrition_vector)}")
+                    else:
+                        self.logger.info(f"[{analysis_id}] No target_nutrition_vector found in Phase1 result")
+                except Exception as e:
+                    self.logger.error(f"[{analysis_id}] Error extracting nutrition profile from Phase1: {e}")
+                    target_nutrition_profile = {}
+                    
+                # Elasticsearch用の入力データを作成
+                nutrition_search_input = {
+                    'ingredient_names': phase1_result.get_all_ingredient_names(),
+                    'dish_names': phase1_result.get_all_dish_names(),
+                    'target_nutrition_profile': target_nutrition_profile  # 🎯 栄養プロファイルを追加
+                }
+                
+                self.logger.info(f"[{analysis_id}] Enhanced Elasticsearch search with nutrition profile: {target_nutrition_profile}")
+            else:
+                # 従来のUSDA互換入力を作成
+                nutrition_search_input = USDAQueryInput(
+                    ingredient_names=phase1_result.get_all_ingredient_names(),
+                    dish_names=phase1_result.get_all_dish_names()
+                )
             
             # Nutrition Searchの詳細ログを作成
             search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
             
             nutrition_search_result = await self.nutrition_search_component.execute(nutrition_search_input, search_log)
             
-            self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {nutrition_search_result.get_match_rate():.1%} match rate")
+            # 🎯 エラーハンドリングを強化した結果処理
+            try:
+                if self.search_component_name == "ElasticsearchNutritionSearchComponent":
+                    if isinstance(nutrition_search_result, dict):
+                        statistics = nutrition_search_result.get('statistics', {})
+                        match_rate = statistics.get('match_rate', 0)
+                        self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {match_rate:.1f}% match rate")
+                    else:
+                        self.logger.error(f"[{analysis_id}] Unexpected nutrition search result type: {type(nutrition_search_result)}")
+                        self.logger.info(f"[{analysis_id}] {search_phase_name} completed - result format error")
+                else:
+                    if hasattr(nutrition_search_result, 'get_match_rate'):
+                        match_rate = nutrition_search_result.get_match_rate()
+                        self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {match_rate:.1%} match rate")
+                    else:
+                        self.logger.error(f"[{analysis_id}] Nutrition search result missing get_match_rate method")
+                        self.logger.info(f"[{analysis_id}] {search_phase_name} completed - method error")
+            except Exception as e:
+                self.logger.error(f"[{analysis_id}] Error processing nutrition search result: {e}")
+                self.logger.info(f"[{analysis_id}] {search_phase_name} completed - processing error")
             
             # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
             
@@ -151,30 +212,81 @@ class MealAnalysisPipeline:
             end_time = datetime.now()
             processing_time = (end_time - start_time).total_seconds()
             
+            # 結果形式に応じた処理の分岐
+            if self.search_component_name == "ElasticsearchNutritionSearchComponent":
+                # Elasticsearch結果の処理（辞書形式）
+                try:
+                    if isinstance(nutrition_search_result, dict):
+                        matches_dict = nutrition_search_result.get('matches', {})
+                        statistics = nutrition_search_result.get('statistics', {})
+                        matches_count = len(matches_dict)
+                        match_rate = statistics.get('match_rate', 0.0) / 100.0  # パーセントから小数に変換
+                        search_summary = f"Elasticsearch Enhanced Search: {matches_count} matches found"
+                        
+                        # 入力項目数の計算
+                        if isinstance(nutrition_search_input, dict):
+                            total_search_terms = len(nutrition_search_input.get('ingredient_names', [])) + len(nutrition_search_input.get('dish_names', []))
+                        else:
+                            total_search_terms = 0
+                            self.logger.warning(f"[{analysis_id}] Unexpected nutrition_search_input type: {type(nutrition_search_input)}")
+                    else:
+                        # フォールバック：結果が辞書でない場合
+                        self.logger.error(f"[{analysis_id}] Elasticsearch result is not a dict: {type(nutrition_search_result)}")
+                        matches_count = 0
+                        match_rate = 0.0
+                        search_summary = "Elasticsearch Enhanced Search: Error in result format"
+                        total_search_terms = 0
+                except Exception as e:
+                    self.logger.error(f"[{analysis_id}] Error processing Elasticsearch results: {e}")
+                    matches_count = 0
+                    match_rate = 0.0
+                    search_summary = f"Elasticsearch Enhanced Search: Processing error - {str(e)}"
+                    total_search_terms = 0
+            else:
+                # 従来のUSDA結果の処理（オブジェクト形式）
+                try:
+                    if hasattr(nutrition_search_result, 'matches') and hasattr(nutrition_search_result, 'get_match_rate'):
+                        matches_count = len(nutrition_search_result.matches)
+                        match_rate = nutrition_search_result.get_match_rate()
+                        search_summary = nutrition_search_result.search_summary
+                        total_search_terms = len(nutrition_search_input.get_all_search_terms())
+                    else:
+                        self.logger.error(f"[{analysis_id}] USDA result missing expected attributes: {type(nutrition_search_result)}")
+                        matches_count = 0
+                        match_rate = 0.0
+                        search_summary = "USDA Search: Error in result format"
+                        total_search_terms = 0
+                except Exception as e:
+                    self.logger.error(f"[{analysis_id}] Error processing USDA results: {e}")
+                    matches_count = 0
+                    match_rate = 0.0
+                    search_summary = f"USDA Search: Processing error - {str(e)}"
+                    total_search_terms = 0
+            
             complete_result = {
                 "analysis_id": analysis_id,
                 "phase1_result": phase1_dict,
                 "nutrition_search_result": {
-                    "matches_count": len(nutrition_search_result.matches),
-                    "match_rate": nutrition_search_result.get_match_rate(),
-                    "search_summary": nutrition_search_result.search_summary,
-                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
+                    "matches_count": matches_count,
+                    "match_rate": match_rate,
+                    "search_summary": search_summary,
+                    "search_method": "elasticsearch_enhanced" if self.search_component_name == "ElasticsearchNutritionSearchComponent" else ("local_nutrition_database" if self.use_local_nutrition_search else "usda_api")
                 },
                 # レガシー互換性のため、usdaキーも残す
                 "usda_result": {
-                    "matches_count": len(nutrition_search_result.matches),
-                    "match_rate": nutrition_search_result.get_match_rate(),
-                    "search_summary": nutrition_search_result.search_summary
+                    "matches_count": matches_count,
+                    "match_rate": match_rate,
+                    "search_summary": search_summary
                 },
                 "processing_summary": {
                     "total_dishes": len(phase1_result.dishes),
                     "total_ingredients": len(phase1_result.get_all_ingredient_names()),
-                    "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
-                    "usda_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",  # レガシー互換性
+                    "nutrition_search_match_rate": f"{matches_count}/{total_search_terms} ({match_rate:.1%})",
+                    "usda_match_rate": f"{matches_count}/{total_search_terms} ({match_rate:.1%})",  # レガシー互換性
                     "total_calories": total_calories,
                     "pipeline_status": "completed",
                     "processing_time_seconds": processing_time,
-                    "search_method": "local_nutrition_database" if self.use_local_nutrition_search else "usda_api"
+                    "search_method": "elasticsearch_enhanced" if self.search_component_name == "ElasticsearchNutritionSearchComponent" else ("local_nutrition_database" if self.use_local_nutrition_search else "usda_api")
                 },
                 # 暫定的な最終結果
                 "final_nutrition_result": {
@@ -190,7 +302,7 @@ class MealAnalysisPipeline:
                     "pipeline_version": "v2.0",
                     "timestamp": datetime.now().isoformat(),
                     "components_used": ["Phase1Component", self.search_component_name],
-                    "nutrition_search_method": "local_database" if self.use_local_nutrition_search else "usda_api"
+                    "nutrition_search_method": "elasticsearch_enhanced" if self.search_component_name == "ElasticsearchNutritionSearchComponent" else ("local_database" if self.use_local_nutrition_search else "usda_api")
                 }
             }
             

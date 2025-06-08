@@ -1,0 +1,101 @@
+# 食品検索用カスタムストップワード
+# 仕様書に基づく食品ドメイン特化不要語リスト
+
+# 一般的なブランド・企業関連
+brand
+inc
+company
+corporation
+corp
+llc
+ltd
+limited
+
+# 分量・サービング関連
+serving
+size
+portion
+serving size
+net wt
+net weight
+weight
+
+# 包装・容器関連
+package
+pack
+container
+can
+bottle
+jar
+box
+
+# 一般的な説明語
+product
+item
+food
+ingredient
+prepared
+ready
+made
+
+# 品質・状態関連
+fresh
+frozen
+canned
+dried
+organic
+natural
+premium
+gourmet
+artisan
+
+# 地域・原産地（検索ノイズになりやすい）
+usa
+america
+american
+imported
+domestic
+
+# 時間・季節関連
+daily
+seasonal
+summer
+winter
+spring
+fall
+
+# 一般的な食品カテゴリ（具体性に欠ける）
+snack
+meal
+dish
+cuisine
+
+# よく使われる修飾語
+best
+good
+great
+delicious
+tasty
+healthy
+
+# 数量単位（Geminiや他で処理される）
+g
+gram
+grams
+ml
+milliliter
+oz
+ounce
+lb
+pound
+kg
+kilogram
+
+# その他のノイズワード
+new
+old
+style
+type
+kind
+variety
+selection 

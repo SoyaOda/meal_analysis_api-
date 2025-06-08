@@ -88,3 +88,13 @@ service-account-key.json
 
 /raw_nutrition_data/
 analysis_results/
+
+# Elasticsearch installation and large files
+elasticsearch-*.tar.gz
+elasticsearch-*/
+!elasticsearch_config/
+
+# Large data files
+*.tar.gz
+*.zip
+*.gz
