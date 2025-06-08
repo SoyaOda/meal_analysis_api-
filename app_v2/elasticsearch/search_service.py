@@ -143,9 +143,13 @@ class FoodSearchService:
         data_type_filter: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
-        仕様書に基づくElasticsearchクエリを構築
+        段階的検索戦略: food_nameを主要検索対象とし、descriptionは同列時の判定に使用
         """
-        # ベース語彙的検索クエリ
+        # 🎯 段階的検索戦略 v2.0:
+        # 1. food_name（主要名称）での検索を最重視
+        # 2. description（詳細情報）は同列スコア時のタイブレーカーとして使用
+        # 3. ingredientタイプ重視は廃止 - 純粋に名前の一致度で判定
+        
         base_query = {
             "bool": {
                 "must": [
@@ -164,7 +168,67 @@ class FoodSearchService:
                         }
                     }
                 ],
-                "should": [],  # 加点要素
+                "should": [
+                    # 🎯 戦略1: food_nameの完全一致を最重視
+                    {
+                        "match": {
+                            "food_name": {
+                                "query": query.elasticsearch_query_terms,
+                                "boost": 1000.0  # 最高ブースト
+                            }
+                        }
+                    },
+                    
+                    # 🎯 戦略2: food_nameのフレーズ一致
+                    {
+                        "match_phrase": {
+                            "food_name": {
+                                "query": query.elasticsearch_query_terms,
+                                "boost": 500.0  # 高ブースト
+                            }
+                        }
+                    },
+                    
+                    # 🎯 戦略3: food_nameのプレフィックス一致
+                    {
+                        "prefix": {
+                            "food_name": {
+                                "value": query.elasticsearch_query_terms.lower(),
+                                "boost": 300.0  # 中ブースト
+                            }
+                        }
+                    },
+                    
+                    # 🎯 戦略4: descriptionでの補助的マッチング（同列時のタイブレーカー）
+                    {
+                        "match": {
+                            "description": {
+                                "query": query.elasticsearch_query_terms,
+                                "boost": 10.0  # 低ブースト（タイブレーカー用）
+                            }
+                        }
+                    },
+                    
+                    # 🎯 戦略5: 特定キーワード（raw, flesh, etc.）のdescription内検索
+                    {
+                        "bool": {
+                            "must": [
+                                {"match": {"food_name": query.elasticsearch_query_terms}},
+                                {
+                                    "bool": {
+                                        "should": [
+                                            {"match": {"description": "raw"}},
+                                            {"match": {"description": "flesh"}},
+                                            {"match": {"description": "skin"}},
+                                            {"match": {"description": "unprepared"}}
+                                        ]
+                                    }
+                                }
+                            ],
+                            "boost": 200.0  # 生食材を優先
+                        }
+                    }
+                ],
                 "filter": []   # フィルタ条件
             }
         }
@@ -218,7 +282,7 @@ class FoodSearchService:
             return {"query": function_score_query}
         else:
             # function_scoreが無効の場合はベースクエリのみ
-            logger.info("🎯 Using pure lexical search (no function_score)")
+            logger.info("🎯 Using two-stage lexical search strategy (food_name primary, description secondary)")
             return {"query": base_query}
     
     def _build_nutrition_similarity_function(self, target: NutritionTarget) -> Dict[str, Any]:
