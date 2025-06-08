@@ -71,37 +71,10 @@ class FoodSearchService:
     
     def __init__(self):
         """初期化"""
-        # 栄養素正規化係数（動的計算ベース - データセット統計の代替）
-        self.nutrition_normalization = self._calculate_normalization_factors()
-        
-        # 栄養素重み（バランス重視の動的計算）
-        self.nutrition_weights = self._calculate_nutrition_weights()
-    
-    def _calculate_normalization_factors(self) -> Dict[str, float]:
-        """栄養素正規化係数を動的計算"""
-        # 各栄養素の典型的な変動範囲を計算ベースで決定
-        # これはデータセット統計の代替として使用
-        return {
-            "calories": 100.0 * 2.0,  # 100gあたり100-300kcalの範囲を想定
-            "protein_g": 10.0 * 2.0,  # 100gあたり10-30gの範囲を想定
-            "fat_total_g": 10.0 * 2.0,  # 100gあたり10-30gの範囲を想定
-            "carbohydrate_by_difference_g": 25.0 * 2.0,  # 100gあたり25-75gの範囲を想定
-            "fiber_total_dietary_g": 5.0 * 2.0,
-            "sodium_mg": 250.0 * 2.0
-        }
-    
-    def _calculate_nutrition_weights(self) -> Dict[str, float]:
-        """栄養素重みを動的計算（バランス重視）"""
-        # 各栄養素の重要度を均等に配分
-        total_nutrients = 4  # カロリー、タンパク質、脂質、炭水化物
-        base_weight = 1.0 / total_nutrients
-        
-        return {
-            "calories": base_weight,
-            "protein_g": base_weight,
-            "fat_total_g": base_weight,
-            "carbohydrate_by_difference_g": base_weight
-        }
+        # 🎯 configから設定を読み込み（ハードコード値を排除）
+        self.nutrition_normalization = es_config.get_nutrition_normalization_factors()
+        self.nutrition_weights = es_config.get_nutrition_weights()
+        self.field_boosts = es_config.get_field_boosts()
     
     async def search_foods(
         self, 
@@ -180,11 +153,11 @@ class FoodSearchService:
                         "multi_match": {
                             "query": query.elasticsearch_query_terms,
                             "fields": [
-                                "food_name^3",           # 最重要
-                                "description^1.5",      # 中重要
-                                "brand_name^1.2",       # やや重要
-                                "ingredients_text^1.0", # 標準
-                                "food_name.phonetic^0.5" # 音声類似は低ブースト
+                                f"food_name^{self.field_boosts['food_name']}",
+                                f"description^{self.field_boosts['description']}",
+                                f"brand_name^{self.field_boosts['brand_name']}",
+                                f"ingredients_text^{self.field_boosts['ingredients_text']}",
+                                f"food_name.phonetic^{self.field_boosts['food_name.phonetic']}"
                             ],
                             "type": "most_fields",
                             "fuzziness": "AUTO"  # typo許容
@@ -210,44 +183,42 @@ class FoodSearchService:
                 "match_phrase": {
                     "food_name": {
                         "query": query.exact_phrase,
-                        "boost": 2.0
+                        "boost": es_config.phrase_match_boost
                     }
                 }
             })
         
-        # function_scoreを使用しない場合はベースクエリのみ
-        if not enable_nutritional_similarity and not enable_semantic_similarity:
-            # データタイプフィルタがある場合、フィルタを保持
-            return {"query": base_query}
+        # 🎯 configベースでfunction_scoreを制御
+        functions = []
         
-        # 🎯 デバッグ: 一時的にfunction_scoreを無効にして基本検索のみテスト
-        logger.info("🎯 DEBUG: Using basic query only (function_score temporarily disabled)")
-        return {"query": base_query}
+        # 人気度ブースト（configで制御）
+        if es_config.enable_popularity_boost:
+            popularity_function = self._build_popularity_boost_function()
+            functions.append(popularity_function)
+            logger.info("🎯 Popularity boost enabled via config")
         
-        # function_scoreクエリ構築（一時的に無効）
-        function_score_query = {
-            "function_score": {
-                "query": base_query,
-                "functions": [],
-                "score_mode": "sum",     # 各スコアを合計
-                "boost_mode": "multiply" # 元のクエリスコアに関数スコアを乗算
-            }
-        }
-        
-        # 🎯 人気度ブースト関数を追加（常に有効だが軽量）
-        popularity_function = self._build_popularity_boost_function()
-        function_score_query["function_score"]["functions"].append(popularity_function)
-        
-        # 栄養プロファイル類似性を追加
-        if enable_nutritional_similarity and query.target_nutrition_vector:
+        # 栄養プロファイル類似性（configで制御）
+        if (es_config.enable_nutritional_similarity and 
+            enable_nutritional_similarity and 
+            query.target_nutrition_vector):
             nutrition_function = self._build_nutrition_similarity_function(query.target_nutrition_vector)
-            function_score_query["function_score"]["functions"].append(nutrition_function)
+            functions.append(nutrition_function)
+            logger.info("🎯 Nutritional similarity scoring enabled via config")
         
-        # 🎯 フォールバック: function_scoreでエラーが起きる場合はベースクエリを返す
-        # 少なくとも1つの関数がある場合のみfunction_scoreを使用
-        if function_score_query["function_score"]["functions"]:
+        # function_scoreを適用するかベースクエリのみにするか決定
+        if functions:
+            function_score_query = {
+                "function_score": {
+                    "query": base_query,
+                    "functions": functions,
+                    "score_mode": "sum",     # 各スコアを合計
+                    "boost_mode": "multiply" # 元のクエリスコアに関数スコアを乗算
+                }
+            }
             return {"query": function_score_query}
         else:
+            # function_scoreが無効の場合はベースクエリのみ
+            logger.info("🎯 Using pure lexical search (no function_score)")
             return {"query": base_query}
     
     def _build_nutrition_similarity_function(self, target: NutritionTarget) -> Dict[str, Any]:
@@ -316,7 +287,7 @@ class FoodSearchService:
                     }
                 }
             },
-            "weight": 2.5  # 栄養的類似性は最重要視
+            "weight": es_config.nutritional_similarity_weight
         }
     
     def _build_popularity_boost_function(self) -> Dict[str, Any]:
@@ -354,7 +325,7 @@ class FoodSearchService:
                     "source": popularity_script
                 }
             },
-            "weight": 0.5  # 🎯 人気度ブーストの重みを下げて安全性を重視
+            "weight": es_config.popularity_boost_weight
         }
     
     def _parse_search_results(self, response: Dict[str, Any]) -> List[SearchResult]:

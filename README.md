@@ -46,8 +46,14 @@ meal_analysis_api/
 │   │   ├── phase2_system_prompt.txt      # フェーズ2システムプロンプト（戦略決定用）
 │   │   └── phase2_user_prompt_template.txt
 │   └── main.py                           # FastAPIアプリケーション
+├── app_v2/                              # v2.0 高度化システム
+│   └── elasticsearch/                   # Elasticsearch検索機能
+│       ├── config.py                    # 設定管理（パラメータ外部化対応）
+│       └── search_service.py            # 検索サービス
 ├── test_images/                          # テスト用画像
-├── test_english_phase2.py                # 統合テストスクリプト
+├── test_local_nutrition_search_v2.py     # ローカル検索テスト
+├── elasticsearch_config_manager.py       # 設定管理ツール
+├── elasticsearch.env.example             # 設定ファイル例
 ├── requirements.txt                      # Python依存関係
 └── service-account-key.json             # GCP認証キー
 ```
@@ -166,6 +172,42 @@ curl -X GET "localhost:9200/_cluster/health?pretty"
 - Elasticsearch が起動していない場合、ローカル栄養検索は失敗します
 - サーバー起動には数分かかる場合があります
 - 初回起動時はインデックスの初期化が行われます
+
+### **⚙️ Elasticsearch 検索設定管理**
+
+**現在の最適設定**: 純粋な語彙的検索（Function Score 無効）により 100%の検索一致率を達成
+
+#### 設定管理ツール
+
+```bash
+# 現在の設定確認
+python elasticsearch_config_manager.py show
+
+# 利用可能なプリセット表示
+python elasticsearch_config_manager.py presets
+
+# 実験用プリセット適用
+python elasticsearch_config_manager.py apply lexical_only
+
+# クイックテスト実行
+python elasticsearch_config_manager.py test
+```
+
+#### 設定ファイル
+
+```bash
+# 設定例をコピー
+cp elasticsearch.env.example .env
+
+# 設定をカスタマイズ
+vim .env
+```
+
+**主要設定項目**:
+
+- `ELASTICSEARCH_ENABLE_POPULARITY_BOOST=false` (最適設定)
+- `ELASTICSEARCH_ENABLE_NUTRITIONAL_SIMILARITY=false` (最適設定)
+- `ELASTICSEARCH_NUTRITION_WEIGHT_CALORIES=0.1` (実験用)
 
 ### 開発環境での起動
 
