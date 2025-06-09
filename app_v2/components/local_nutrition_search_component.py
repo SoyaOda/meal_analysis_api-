@@ -13,10 +13,8 @@ from typing import Optional, List, Dict, Any
 from pathlib import Path
 
 from .base import BaseComponent
-from ..models.usda_models import USDAQueryInput, USDAQueryOutput
 from ..models.nutrition_search_models import (
-    NutritionQueryInput, NutritionQueryOutput, NutritionMatch, NutritionNutrient,
-    convert_usda_query_input_to_nutrition, convert_nutrition_to_usda_query_output
+    NutritionQueryInput, NutritionQueryOutput, NutritionMatch
 )
 from ..config import get_settings
 
@@ -27,15 +25,12 @@ NUTRITION_DB_EXPERIMENT_PATH = os.path.join(
 )
 sys.path.append(NUTRITION_DB_EXPERIMENT_PATH)
 
-class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutput]):
+class LocalNutritionSearchComponent(BaseComponent[NutritionQueryInput, NutritionQueryOutput]):
     """
     ローカル栄養データベース検索コンポーネント
     
     nutrition_db_experimentで実装したローカル検索システムを使用して食材名を検索し、
-    USDAQueryComponentと互換性のある結果を返します。
-    
-    内部的には汎用的なNutritionQueryモデルを使用し、
-    外部インターフェースではUSDAQueryモデルとの互換性を保持します。
+    純粋なローカル形式で結果を返します。
     """
     
     def __init__(self):
@@ -44,96 +39,63 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
         # ローカル検索システムの初期化
         self._initialize_local_search_system()
         
-        # ローカルデータベースファイルのパス（正しいパスに修正）
-        self.local_db_paths = {
-            "dish_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "dish_db.json"),
-            "ingredient_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "ingredient_db.json"),
-            "branded_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "branded_db.json"),
-            "unified_db": os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "unified_nutrition_db.json")
-        }
+        # unified_dbのみを使用
+        self.unified_db_path = os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "nutrition_db", "unified_nutrition_db.json")
         
         # ローカルデータベースの読み込み
-        self.local_databases = self._load_local_databases()
-    
+        self.unified_database = self._load_unified_database()
+        
+        # nutrition_db_experimentのコンポーネント
+        self.search_handler = None
+        self.query_preprocessor = None
+        
+        self.logger.info(f"LocalNutritionSearchComponent initialized with {len(self.unified_database)} total items")
+
     def _initialize_local_search_system(self):
-        """ローカル検索システムの初期化"""
+        """nutrition_db_experimentの検索システムを初期化"""
         try:
-            # nutrition_db_experimentの検索コンポーネントをインポート
-            search_service_path = os.path.join(NUTRITION_DB_EXPERIMENT_PATH, "search_service")
-            sys.path.append(search_service_path)
+            # 検索システムのインポート（オプション）
+            from api.search_handler import SearchHandler
+            from api.query_preprocessor import QueryPreprocessor
             
-            from nlp.query_preprocessor import FoodQueryPreprocessor
-            from api.search_handler import NutritionSearchHandler, SearchRequest
+            self.search_handler = SearchHandler()
+            self.query_preprocessor = QueryPreprocessor()
             
-            self.query_preprocessor = FoodQueryPreprocessor()
-            self.search_handler = NutritionSearchHandler()
-            
-            self.logger.info("Local nutrition search system initialized successfully")
-            
+            self.logger.info("Advanced local search system initialized")
         except ImportError as e:
-            self.logger.error(f"Failed to import local search components: {e}")
-            # フォールバック: シンプルな文字列マッチング
-            self.query_preprocessor = None
-            self.search_handler = None
-            self.logger.warning("Using fallback simple string matching for local search")
+            self.logger.warning(f"Advanced search system not available, will use direct database search: {e}")
         except Exception as e:
-            self.logger.error(f"Error initializing local search system: {e}")
-            self.query_preprocessor = None
-            self.search_handler = None
+            self.logger.error(f"Failed to initialize advanced search system: {e}")
     
-    def _load_local_databases(self) -> Dict[str, List[Dict[str, Any]]]:
-        """ローカルデータベースファイルを読み込み"""
-        databases = {}
-        
-        for db_name, db_path in self.local_db_paths.items():
-            try:
-                if os.path.exists(db_path):
-                    with open(db_path, 'r', encoding='utf-8') as f:
-                        databases[db_name] = json.load(f)
-                    self.logger.info(f"Loaded {db_name}: {len(databases[db_name])} items")
-                else:
-                    self.logger.warning(f"Local database file not found: {db_path}")
-                    databases[db_name] = []
-            except Exception as e:
-                self.logger.error(f"Error loading {db_name}: {e}")
-                databases[db_name] = []
-        
-        total_items = sum(len(db) for db in databases.values())
-        self.logger.info(f"Total local database items loaded: {total_items}")
-        
-        return databases
+    def _load_unified_database(self) -> List[Dict[str, Any]]:
+        """unified_nutrition_db.jsonを読み込み"""
+        try:
+            if os.path.exists(self.unified_db_path):
+                with open(self.unified_db_path, 'r', encoding='utf-8') as f:
+                    database = json.load(f)
+                self.logger.info(f"Loaded unified_db: {len(database)} items")
+                return database
+            else:
+                self.logger.warning(f"Unified database file not found: {self.unified_db_path}")
+                return []
+        except Exception as e:
+            self.logger.error(f"Error loading unified_db: {e}")
+            return []
     
-    async def process(self, input_data: USDAQueryInput) -> USDAQueryOutput:
+    async def process(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
-        ローカル検索の主処理（USDA互換インターフェース）
-        
-        Args:
-            input_data: USDAQueryInput
-            
-        Returns:
-            USDAQueryOutput: USDA互換のローカル検索結果
-        """
-        # USDAQueryInputを汎用NutritionQueryInputに変換
-        nutrition_input = convert_usda_query_input_to_nutrition(input_data)
-        nutrition_input.preferred_source = "local_database"
-        
-        # 内部的な汎用検索処理を実行
-        nutrition_result = await self._process_nutrition_search(nutrition_input)
-        
-        # 結果をUSDAQueryOutput形式に変換して返す
-        return convert_nutrition_to_usda_query_output(nutrition_result)
-    
-    async def _process_nutrition_search(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
-        """
-        汎用栄養検索の主処理
+        ローカル検索の主処理（純粋なローカル形式）
         
         Args:
             input_data: NutritionQueryInput
             
         Returns:
-            NutritionQueryOutput: 汎用検索結果
+            NutritionQueryOutput: 純粋なローカル検索結果
         """
         self.logger.info(f"Starting local nutrition search for {len(input_data.get_all_search_terms())} terms")
+        
+        # input_dataを保存してスコア計算で使用
+        self._current_input_data = input_data
         
         search_terms = input_data.get_all_search_terms()
         
@@ -192,7 +154,7 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
                     f"Local database search error for '{search_term}': {str(e)}"
                 )
         
-        # 検索サマリーを作成（汎用形式）
+        # 検索サマリーを作成（純粋なローカル形式）
         search_summary = {
             "total_searches": total_searches,
             "successful_matches": successful_matches,
@@ -201,7 +163,7 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
             "search_method": "local_nutrition_database",
             "database_source": "nutrition_db_experiment",
             "preferred_source": input_data.preferred_source,
-            "total_database_items": sum(len(db) for db in self.local_databases.values())
+            "total_database_items": len(self.unified_database)
         }
         
         # 全体的な検索成功率をログ
@@ -288,7 +250,7 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
                 # 詳細なマッチ情報をログ
                 self.log_processing_detail(f"search_{search_index}_selected_id", best_result['id'])
                 self.log_processing_detail(f"search_{search_index}_selected_name", best_result['search_name'])
-                self.log_processing_detail(f"search_{search_index}_db_type", best_result['db_type'])
+                self.log_processing_detail(f"search_{search_index}_data_type", best_result.get('data_type', 'unknown'))
                 self.log_processing_detail(f"search_{search_index}_score", best_result.get('_score'))
                 
                 # NutritionMatch形式に変換
@@ -320,84 +282,68 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
             search_term_lower = search_term.lower()
             best_match = None
             best_score = 0
-            best_db_source = None
             
-            # 検索優先順位の決定
-            search_order = []
-            
-            # dish_namesに含まれる場合は料理データベースを優先
-            if search_term in input_data.dish_names:
-                search_order = ["dish_db", "unified_db", "ingredient_db", "branded_db"]
-            elif search_term in input_data.ingredient_names:
-                search_order = ["ingredient_db", "unified_db", "dish_db", "branded_db"]
-            else:
-                search_order = ["unified_db", "dish_db", "ingredient_db", "branded_db"]
-            
-            # 各データベースで検索（優先順位順）
-            for db_name in search_order:
-                if db_name not in self.local_databases:
+            # unified_databaseから直接検索
+            for item in self.unified_database:
+                # search_nameフィールドで検索
+                if 'search_name' not in item:
                     continue
                     
-                database = self.local_databases[db_name]
+                item_name = item['search_name'].lower()
+                score = 0
                 
-                for item in database:
-                    # search_nameフィールドで検索
-                    if 'search_name' not in item:
-                        continue
-                        
-                    item_name = item['search_name'].lower()
-                    score = 0
-                    
-                    # スコアリングアルゴリズム
-                    if search_term_lower == item_name:
-                        score = 1.0  # 完全一致
-                    elif search_term_lower in item_name:
-                        # 部分一致（語順考慮）
-                        if item_name.startswith(search_term_lower):
-                            score = 0.9  # 前方一致
-                        elif item_name.endswith(search_term_lower):
-                            score = 0.8  # 後方一致
-                        else:
-                            score = 0.7  # 中間一致
-                    elif item_name in search_term_lower:
-                        score = 0.6  # 逆部分一致
+                # スコアリングアルゴリズム
+                if search_term_lower == item_name:
+                    score = 1.0  # 完全一致
+                elif search_term_lower in item_name:
+                    # 部分一致（語順考慮）
+                    if item_name.startswith(search_term_lower):
+                        score = 0.9  # 前方一致
+                    elif item_name.endswith(search_term_lower):
+                        score = 0.8  # 後方一致
                     else:
-                        # 単語レベルの一致をチェック
-                        search_words = search_term_lower.split()
-                        item_words = item_name.split()
-                        
-                        common_words = set(search_words) & set(item_words)
-                        if common_words:
-                            score = len(common_words) / max(len(search_words), len(item_words)) * 0.5
+                        score = 0.7  # 中間一致
+                elif item_name in search_term_lower:
+                    score = 0.6  # 逆部分一致
+                else:
+                    # 単語レベルの一致をチェック
+                    search_words = search_term_lower.split()
+                    item_words = item_name.split()
                     
-                    # データベース優先度によるボーナス
-                    db_bonus = 1.0
-                    if db_name == search_order[0]:
-                        db_bonus = 1.2  # 第一優先データベース
-                    elif db_name == search_order[1]:
-                        db_bonus = 1.1  # 第二優先データベース
-                    
-                    final_score = score * db_bonus
-                    
-                    if final_score > best_score:
-                        best_score = final_score
-                        best_match = item.copy()
-                        best_db_source = db_name
+                    common_words = set(search_words) & set(item_words)
+                    if common_words:
+                        score = len(common_words) / max(len(search_words), len(item_words)) * 0.5
+                
+                # data_type優先度によるボーナス
+                data_type = item.get('data_type', 'unknown')
+                db_bonus = 1.0
+                
+                # dish_namesに含まれる場合は料理データを優先
+                if search_term in input_data.dish_names and data_type == 'dish':
+                    db_bonus = 1.2
+                # ingredient_namesに含まれる場合は食材データを優先
+                elif search_term in input_data.ingredient_names and data_type == 'ingredient':
+                    db_bonus = 1.2
+                
+                final_score = score * db_bonus
+                
+                if final_score > best_score:
+                    best_score = final_score
+                    best_match = item.copy()
             
             if best_match and best_score > 0.1:  # 最低閾値
-                # データベースソース情報を追加
-                best_match['_db_source'] = best_db_source
+                # マッチスコア情報を追加
                 best_match['_match_score'] = best_score
                 
                 self.log_reasoning(
                     f"match_selection_{search_index}",
-                    f"Selected local item '{best_match['search_name']}' (ID: {best_match.get('id', 'N/A')}) for search term '{search_term}' from {best_db_source} using direct database search (score: {best_score:.3f})"
+                    f"Selected local item '{best_match['search_name']}' (ID: {best_match.get('id', 'N/A')}) for search term '{search_term}' using direct database search (score: {best_score:.3f})"
                 )
                 
                 # 詳細なマッチ情報をログ
                 self.log_processing_detail(f"search_{search_index}_selected_id", best_match.get('id', 'N/A'))
                 self.log_processing_detail(f"search_{search_index}_selected_name", best_match['search_name'])
-                self.log_processing_detail(f"search_{search_index}_db_source", best_db_source)
+                self.log_processing_detail(f"search_{search_index}_data_type", best_match.get('data_type', 'unknown'))
                 self.log_processing_detail(f"search_{search_index}_match_score", best_score)
                 
                 return self._convert_to_nutrition_match(best_match, search_term)
@@ -425,105 +371,92 @@ class LocalNutritionSearchComponent(BaseComponent[USDAQueryInput, USDAQueryOutpu
     
     def _convert_to_nutrition_match(self, local_item: Dict[str, Any], search_term: str) -> NutritionMatch:
         """
-        ローカルデータベースアイテムをNutritionMatch形式に変換
+        ローカルデータベースアイテムをNutritionMatch形式に変換（簡素化版）
         
         Args:
             local_item: ローカルデータベースのアイテム
             search_term: 元の検索語彙
             
         Returns:
-            NutritionMatch: 変換されたマッチ結果
+            NutritionMatch: 変換されたマッチ結果（簡素化されたローカル形式）
         """
-        # 栄養素情報の変換
-        nutrients = []
-        if 'nutrition' in local_item and local_item['nutrition']:
-            nutrition_data = local_item['nutrition']
-            
-            # 主要栄養素のマッピング（ローカルDBの形式に合わせて調整）
-            nutrient_mapping = {
-                'calories_kcal': ('Energy', '208', 'kcal'),
-                'calories': ('Energy', '208', 'kcal'),  # 別名対応
-                'protein_g': ('Protein', '203', 'g'),
-                'protein': ('Protein', '203', 'g'),  # 別名対応
-                'fat_g': ('Total lipid (fat)', '204', 'g'),
-                'fat': ('Total lipid (fat)', '204', 'g'),  # 別名対応
-                'carbohydrates_g': ('Carbohydrate, by difference', '205', 'g'),
-                'carbs': ('Carbohydrate, by difference', '205', 'g'),  # 別名対応
-                'carbohydrates': ('Carbohydrate, by difference', '205', 'g'),  # 別名対応
-                'fiber_g': ('Fiber, total dietary', '291', 'g'),
-                'fiber': ('Fiber, total dietary', '291', 'g'),  # 別名対応
-                'sugars_g': ('Sugars, total', '269', 'g'),
-                'sugars': ('Sugars, total', '269', 'g'),  # 別名対応
-                'sodium_mg': ('Sodium, Na', '307', 'mg'),
-                'sodium': ('Sodium, Na', '307', 'mg')  # 別名対応
-            }
-            
-            for local_key, (usda_name, nutrient_number, unit) in nutrient_mapping.items():
-                if local_key in nutrition_data and nutrition_data[local_key] is not None:
-                    try:
-                        amount = float(nutrition_data[local_key])
-                        nutrients.append(NutritionNutrient(
-                            name=usda_name,
-                            amount=amount,
-                            unit_name=unit,
-                            nutrient_id=None,  # ローカルデータにはIDがない
-                            nutrient_number=nutrient_number
-                        ))
-                    except (ValueError, TypeError):
-                        # 数値に変換できない場合はスキップ
-                        continue
+        # IDの取得
+        item_id = local_item.get('id', 0)
         
-        # IDの取得（様々な形式に対応）
-        item_id = local_item.get('id') or local_item.get('fdc_id') or local_item.get('_id') or 0
+        # 基本情報の取得
+        search_name = local_item.get('search_name', search_term)
+        description = local_item.get('description')  # brandedの場合のみ存在
+        data_type = local_item.get('data_type', 'unknown')  # db_type → data_typeに変更
         
-        # データタイプの決定
-        data_type = "Local_Unknown"
-        if 'db_type' in local_item:
-            data_type = f"Local_{local_item['db_type'].title()}"
-        elif '_db_source' in local_item:
-            db_source = local_item['_db_source'].replace('_db', '')
-            data_type = f"Local_{db_source.title()}"
-        
-        # 説明の取得（様々なフィールド名に対応）
-        description = (
-            local_item.get('search_name') or 
-            local_item.get('description') or 
-            local_item.get('name') or 
-            search_term
-        )
-        
-        # ブランド情報（branded_dbの場合）
-        brand_owner = local_item.get('brand_owner') or local_item.get('brand_name')
-        
-        # 食材リスト（dish_dbの場合）
-        ingredients_text = None
-        if 'ingredients' in local_item:
-            if isinstance(local_item['ingredients'], list):
-                ingredients_text = ', '.join(local_item['ingredients'])
-            elif isinstance(local_item['ingredients'], str):
-                ingredients_text = local_item['ingredients']
+        # 栄養データ（100gあたり正規化済み）
+        nutrition = local_item.get('nutrition', {})
+        weight = local_item.get('weight')
         
         # マッチスコア
         score = local_item.get('_match_score') or local_item.get('_score') or 1.0
         
-        # オリジナルデータの保存
-        original_data = {
-            "source": "local_nutrition_database",
-            "original_data": local_item,
+        # スコア計算の詳細分析
+        search_term_lower = search_term.lower()
+        item_name_lower = search_name.lower()
+        
+        # 基本マッチタイプの判定
+        match_type = "unknown"
+        base_score = 0.0
+        if search_term_lower == item_name_lower:
+            match_type = "exact_match"
+            base_score = 1.0
+        elif search_term_lower in item_name_lower:
+            if item_name_lower.startswith(search_term_lower):
+                match_type = "prefix_match"
+                base_score = 0.9
+            elif item_name_lower.endswith(search_term_lower):
+                match_type = "suffix_match"
+                base_score = 0.8
+            else:
+                match_type = "contains_match"
+                base_score = 0.7
+        elif item_name_lower in search_term_lower:
+            match_type = "reverse_contains"
+            base_score = 0.6
+        else:
+            # 単語レベルの一致
+            search_words = set(search_term_lower.split())
+            item_words = set(item_name_lower.split())
+            common_words = search_words & item_words
+            if common_words:
+                match_type = "word_match"
+                base_score = len(common_words) / max(len(search_words), len(item_words)) * 0.5
+        
+        # データタイプボーナスの計算
+        type_bonus = 1.0
+        if hasattr(self, '_current_input_data'):
+            input_data = self._current_input_data
+            if search_term in input_data.dish_names and data_type == 'dish':
+                type_bonus = 1.2
+            elif search_term in input_data.ingredient_names and data_type == 'ingredient':
+                type_bonus = 1.2
+        
+        # 検索メタデータ（詳細な計算情報を含む）
+        search_metadata = {
             "search_term": search_term,
-            "db_source": local_item.get('_db_source', 'unknown'),
-            "match_score": score
+            "match_score": score,
+            "score_breakdown": {
+                "match_type": match_type,
+                "base_score": round(base_score, 3),
+                "type_bonus": round(type_bonus, 3),
+                "final_score": round(base_score * type_bonus, 3)
+            },
+            "calculation": f"{base_score:.3f} × {type_bonus:.3f} = {score:.3f}"
         }
         
-        # NutritionMatchオブジェクトの作成
+        # NutritionMatchオブジェクトの作成（簡素化版）
         return NutritionMatch(
             id=item_id,
+            search_name=search_name,
             description=description,
-            data_type=data_type,
-            source="local_database",
-            brand_owner=brand_owner,
-            ingredients_text=ingredients_text,
-            nutrients=nutrients,
+            data_type=data_type,  # db_type → data_typeに変更
+            nutrition=nutrition,
+            weight=weight,
             score=score,
-            original_data=original_data
+            search_metadata=search_metadata
         ) 
