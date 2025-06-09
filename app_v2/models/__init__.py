@@ -17,7 +17,6 @@ __all__ = [
     # Nutrition models
     "NutritionInput", "NutritionOutput", "CalculatedNutrients", "TotalNutrients",
     
-    # Nutrition Search models (汎用)
-    "NutritionQueryInput", "NutritionQueryOutput", "NutritionMatch", "NutritionNutrient",
-    "convert_usda_query_input_to_nutrition", "convert_nutrition_to_usda_query_output"
+    # Nutrition Search models (純粋なローカル形式)
+    "NutritionQueryInput", "NutritionQueryOutput", "NutritionMatch"
 ] 

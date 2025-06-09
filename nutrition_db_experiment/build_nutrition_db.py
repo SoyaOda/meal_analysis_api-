@@ -4,6 +4,13 @@
 
 raw_nutrition_dataの各カテゴリ（recipe, food, branded）から
 統一されたJSON形式のデータベースを構築する。
+
+v3.0 変更点:
+- original_nutritionフィールドを削除
+- db_typeをdata_typeに変更
+- unified_nutrition_db.jsonのみを出力
+- search_nameは元データの名称そのまま、descriptionは別フィールド
+- 100gあたりに正規化
 """
 
 import json
@@ -51,6 +58,16 @@ class NutritionDBBuilder:
                 return unit.get("amount")
         return None
     
+    def normalize_nutrition_per_100g(self, nutrition: Dict[str, float], weight: float) -> Dict[str, float]:
+        """栄養素を100gあたりに正規化"""
+        if weight <= 0:
+            return {key: 0.0 for key in nutrition.keys()}
+        
+        factor = 100.0 / weight
+        return {
+            key: value * factor for key, value in nutrition.items()
+        }
+    
     def process_recipe_item(self, data: Dict) -> Optional[Dict]:
         """レシピデータを統一フォーマットに変換"""
         try:
@@ -65,20 +82,27 @@ class NutritionDBBuilder:
             
             # servingSizeの処理
             weight = self.extract_serving_size_grams(nutrients["servingSize"])
-            if weight is None:
+            if weight is None or weight <= 0:
                 return None
+            
+            # 元の栄養素（weight(g)あたり）
+            original_nutrition = {
+                "calories": float(nutrients["calories"]),
+                "protein": float(nutrients["proteinContent"]),
+                "fat": float(nutrients["fatContent"]),
+                "carbs": float(nutrients["carbohydrateContent"])
+            }
+            
+            # 100gあたりに正規化
+            normalized_nutrition = self.normalize_nutrition_per_100g(original_nutrition, weight)
             
             # 統一フォーマットで出力
             return {
-                "db_type": "dish",
+                "data_type": "dish",  # db_typeからdata_typeに変更
                 "id": int(data["id"]),
-                "search_name": data["title"],
-                "nutrition": {
-                    "calories": float(nutrients["calories"]),
-                    "protein": float(nutrients["proteinContent"]),
-                    "fat": float(nutrients["fatContent"]),
-                    "carbs": float(nutrients["carbohydrateContent"])
-                },
+                "search_name": data["title"],  # titleそのまま
+                "description": data.get("description"),  # レシピにはdescriptionがないのでNone
+                "nutrition": normalized_nutrition,
                 "weight": weight
             }
             
@@ -99,23 +123,27 @@ class NutritionDBBuilder:
             
             # gramsのunit検索
             weight = self.find_grams_amount(data["units"])
-            if weight is None:
+            if weight is None or weight <= 0:
                 return None
             
-            # search_nameの作成
-            search_name = f"{data['name']}, {data['description']}"
+            # 元の栄養素（weight(g)あたり）
+            original_nutrition = {
+                "calories": float(nutrition["calories"]),
+                "protein": float(nutrition["proteinContent"]),
+                "fat": float(nutrition["fatContent"]),
+                "carbs": float(nutrition["carbohydrateContent"])
+            }
+            
+            # 100gあたりに正規化
+            normalized_nutrition = self.normalize_nutrition_per_100g(original_nutrition, weight)
             
             # 統一フォーマットで出力
             return {
-                "db_type": "ingredient",
+                "data_type": "ingredient",  # db_typeからdata_typeに変更
                 "id": int(data["id"]),
-                "search_name": search_name,
-                "nutrition": {
-                    "calories": float(nutrition["calories"]),
-                    "protein": float(nutrition["proteinContent"]),
-                    "fat": float(nutrition["fatContent"]),
-                    "carbs": float(nutrition["carbohydrateContent"])
-                },
+                "search_name": data["name"],  # nameのみ
+                "description": data["description"],  # descriptionを分離
+                "nutrition": normalized_nutrition,
                 "weight": weight
             }
             
@@ -132,7 +160,7 @@ class NutritionDBBuilder:
             item_data = data["data"]
             
             # 必須フィールドの確認
-            if not all(key in item_data for key in ["id", "food_name", "description", "unit_weights"]):
+            if not all(key in item_data for key in ["id", "food_name", "unit_weights"]):
                 return None
             
             # カロリーの取得
@@ -177,23 +205,27 @@ class NutritionDBBuilder:
             
             # gramsのunit_weight検索
             weight = self.find_grams_amount(item_data["unit_weights"])
-            if weight is None:
+            if weight is None or weight <= 0:
                 return None
             
-            # search_nameの作成
-            search_name = f"{item_data['food_name']}, {item_data['description']}"
+            # 元の栄養素（weight(g)あたり）
+            original_nutrition = {
+                "calories": float(calories),
+                "protein": float(protein),
+                "fat": float(fat),
+                "carbs": float(carbs)
+            }
+            
+            # 100gあたりに正規化
+            normalized_nutrition = self.normalize_nutrition_per_100g(original_nutrition, weight)
             
             # 統一フォーマットで出力
             return {
-                "db_type": "branded",
+                "data_type": "branded",  # db_typeからdata_typeに変更
                 "id": int(item_data["id"]),
-                "search_name": search_name,
-                "nutrition": {
-                    "calories": float(calories),
-                    "protein": float(protein),
-                    "fat": float(fat),
-                    "carbs": float(carbs)
-                },
+                "search_name": item_data["food_name"],  # food_nameのみ
+                "description": item_data.get("description"),  # descriptionを分離
+                "nutrition": normalized_nutrition,
                 "weight": weight
             }
             
@@ -262,28 +294,10 @@ class NutritionDBBuilder:
         print(f"   📊 {category}: {processed_count} processed, {error_count} errors")
     
     def save_database(self):
-        """データベースをファイルに保存"""
-        print(f"\n💾 Saving database to {self.output_path}...")
+        """unified_nutrition_db.jsonのみを保存"""
+        print(f"\n💾 Saving unified database to {self.output_path}...")
         
-        # 各カテゴリ別のファイル保存
-        db_by_type = {
-            "dish": [],
-            "ingredient": [],
-            "branded": []
-        }
-        
-        for item in self.db_items:
-            db_by_type[item["db_type"]].append(item)
-        
-        # カテゴリ別ファイル保存
-        for db_type, items in db_by_type.items():
-            if items:
-                file_path = self.output_path / f"{db_type}_db.json"
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    json.dump(items, f, indent=2, ensure_ascii=False)
-                print(f"   ✅ Saved {len(items)} {db_type} items to {file_path}")
-        
-        # 統合データベースファイル保存
+        # 統合データベースファイル保存のみ
         unified_db_path = self.output_path / "unified_nutrition_db.json"
         with open(unified_db_path, 'w', encoding='utf-8') as f:
             json.dump(self.db_items, f, indent=2, ensure_ascii=False)
@@ -291,6 +305,12 @@ class NutritionDBBuilder:
         
         # 統計情報保存
         stats_path = self.output_path / "build_stats.json"
+        
+        # カテゴリ別アイテム数
+        db_by_type = {"dish": 0, "ingredient": 0, "branded": 0}
+        for item in self.db_items:
+            db_by_type[item["data_type"]] += 1
+        
         total_stats = {
             "build_timestamp": None,
             "categories": self.stats,
@@ -300,9 +320,9 @@ class NutritionDBBuilder:
                 "success_rate": 0.0
             },
             "database_counts": {
-                "dish": len(db_by_type["dish"]),
-                "ingredient": len(db_by_type["ingredient"]),
-                "branded": len(db_by_type["branded"]),
+                "dish": db_by_type["dish"],
+                "ingredient": db_by_type["ingredient"],
+                "branded": db_by_type["branded"],
                 "total": len(self.db_items)
             }
         }
@@ -337,7 +357,7 @@ class NutritionDBBuilder:
         # カテゴリ別アイテム数
         db_by_type = {"dish": 0, "ingredient": 0, "branded": 0}
         for item in self.db_items:
-            db_by_type[item["db_type"]] += 1
+            db_by_type[item["data_type"]] += 1
         
         print(f"\nDatabase Items:")
         for db_type, count in db_by_type.items():
@@ -364,11 +384,11 @@ class NutritionDBBuilder:
 
 def main():
     """メイン実行関数"""
-    raw_data_path = "../raw_nutrition_data"
+    raw_data_path = "../raw_nutrition_data"  # ひとつ上のディレクトリ
     output_path = "nutrition_db"
     
     builder = NutritionDBBuilder(raw_data_path, output_path)
     builder.build()
 
 if __name__ == "__main__":
-    main() 
+    main()

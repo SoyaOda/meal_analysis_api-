@@ -525,9 +525,33 @@ class ResultManager:
                 content.append(f"### {i}. {search_term}")
                 if isinstance(match_data, dict):
                     content.append(f"**ID:** {match_data.get('id', 'N/A')}")
-                    content.append(f"**Description:** {match_data.get('description', 'N/A')}")
+                    
+                    # search_name と description を適切に表示
+                    search_name = match_data.get('search_name', 'N/A')
+                    description = match_data.get('description', None)
+                    content.append(f"**Search Name:** {search_name}")
+                    if description:
+                        content.append(f"**Description:** {description}")
+                    else:
+                        content.append(f"**Description:** None")
+                    
                     content.append(f"**Data Type:** {match_data.get('data_type', 'N/A')}")
                     content.append(f"**Source:** {match_data.get('source', 'N/A')}")
+                    
+                    # スコア情報を改善
+                    score = match_data.get('score', 'N/A')
+                    if score != 'N/A' and 'search_metadata' in match_data:
+                        metadata = match_data['search_metadata']
+                        score_breakdown = metadata.get('score_breakdown', {})
+                        calculation = metadata.get('calculation', '')
+                        match_type = score_breakdown.get('match_type', 'unknown')
+                        
+                        if calculation:
+                            content.append(f"**Score:** {score} *({match_type}: {calculation})*")
+                        else:
+                            content.append(f"**Score:** {score} *(text similarity + data type priority)*")
+                    else:
+                        content.append(f"**Score:** {score}")
                     
                     if 'nutrients' in match_data and match_data['nutrients']:
                         content.append(f"**Nutrients ({len(match_data['nutrients'])}):**")
@@ -594,15 +618,37 @@ class ResultManager:
             lines.append(f"")
             
             for search_term, match_data in matches.items():
-                lines.append(f"Search Term: {search_term}")
+                lines.append(f"Query: {search_term}")
                 lines.append(f"-" * 30)
                 
                 if isinstance(match_data, dict):
                     lines.append(f"  ID: {match_data.get('id', 'N/A')}")
-                    lines.append(f"  Description: {match_data.get('description', 'N/A')}")
+                    
+                    search_name = match_data.get('search_name', 'N/A')
+                    description = match_data.get('description', None)
+                    lines.append(f"  Search Name: {search_name}")
+                    if description:
+                        lines.append(f"  Description: {description}")
+                    else:
+                        lines.append(f"  Description: None")
+                    
                     lines.append(f"  Data Type: {match_data.get('data_type', 'N/A')}")
                     lines.append(f"  Source: {match_data.get('source', 'N/A')}")
-                    lines.append(f"  Score: {match_data.get('score', 'N/A')}")
+                    
+                    # スコア情報を改善
+                    score = match_data.get('score', 'N/A')
+                    if score != 'N/A' and 'search_metadata' in match_data:
+                        metadata = match_data['search_metadata']
+                        score_breakdown = metadata.get('score_breakdown', {})
+                        calculation = metadata.get('calculation', '')
+                        match_type = score_breakdown.get('match_type', 'unknown')
+                        
+                        if calculation:
+                            lines.append(f"  Score: {score} ({match_type}: {calculation})")
+                        else:
+                            lines.append(f"  Score: {score} (text similarity + data type priority)")
+                    else:
+                        lines.append(f"  Score: {score}")
                     
                     if 'nutrients' in match_data and match_data['nutrients']:
                         lines.append(f"  Nutrients ({len(match_data['nutrients'])}):")

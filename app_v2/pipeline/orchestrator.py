@@ -110,11 +110,20 @@ class MealAnalysisPipeline:
             search_phase_name = "Local Nutrition Search" if self.use_local_nutrition_search else "USDA Query"
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
-            # 統一された栄養検索入力を作成（USDA互換性を保持）
-            nutrition_search_input = USDAQueryInput(
-                ingredient_names=phase1_result.get_all_ingredient_names(),
-                dish_names=phase1_result.get_all_dish_names()
-            )
+            # === 統一された栄養検索入力を作成 ===
+            if self.use_local_nutrition_search:
+                # ローカル検索の場合はNutritionQueryInputを使用
+                nutrition_search_input = NutritionQueryInput(
+                    ingredient_names=phase1_result.get_all_ingredient_names(),
+                    dish_names=phase1_result.get_all_dish_names(),
+                    preferred_source="local_database"
+                )
+            else:
+                # USDA検索の場合はUSDAQueryInputを使用（レガシー互換性）
+                nutrition_search_input = USDAQueryInput(
+                    ingredient_names=phase1_result.get_all_ingredient_names(),
+                    dish_names=phase1_result.get_all_dish_names()
+                )
             
             # Nutrition Searchの詳細ログを作成
             search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
