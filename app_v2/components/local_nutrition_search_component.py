@@ -50,7 +50,7 @@ class LocalNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrition
         self.query_preprocessor = None
         
         self.logger.info(f"LocalNutritionSearchComponent initialized with {len(self.unified_database)} total items")
-
+    
     def _initialize_local_search_system(self):
         """nutrition_db_experimentの検索システムを初期化"""
         try:

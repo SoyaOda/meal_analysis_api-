@@ -103,7 +103,7 @@ class NutritionDBBuilder:
                 "search_name": data["title"],  # titleそのまま
                 "description": data.get("description"),  # レシピにはdescriptionがないのでNone
                 "nutrition": normalized_nutrition,
-                "weight": weight
+                "source": "EatThisMuch"
             }
             
         except (KeyError, ValueError, TypeError) as e:
@@ -144,7 +144,7 @@ class NutritionDBBuilder:
                 "search_name": data["name"],  # nameのみ
                 "description": data["description"],  # descriptionを分離
                 "nutrition": normalized_nutrition,
-                "weight": weight
+                "source": "EatThisMuch"
             }
             
         except (KeyError, ValueError, TypeError) as e:
@@ -226,7 +226,7 @@ class NutritionDBBuilder:
                 "search_name": item_data["food_name"],  # food_nameのみ
                 "description": item_data.get("description"),  # descriptionを分離
                 "nutrition": normalized_nutrition,
-                "weight": weight
+                "source": "EatThisMuch"
             }
             
         except (KeyError, ValueError, TypeError) as e:
@@ -294,14 +294,14 @@ class NutritionDBBuilder:
         print(f"   📊 {category}: {processed_count} processed, {error_count} errors")
     
     def save_database(self):
-        """unified_nutrition_db.jsonのみを保存"""
-        print(f"\n💾 Saving unified database to {self.output_path}...")
+        """eatthismuch_db.jsonを保存"""
+        print(f"\n💾 Saving EatThisMuch database to {self.output_path}...")
         
-        # 統合データベースファイル保存のみ
-        unified_db_path = self.output_path / "unified_nutrition_db.json"
-        with open(unified_db_path, 'w', encoding='utf-8') as f:
+        # eatthismuch_db.jsonファイル保存
+        eatthismuch_db_path = self.output_path / "eatthismuch_db.json"
+        with open(eatthismuch_db_path, 'w', encoding='utf-8') as f:
             json.dump(self.db_items, f, indent=2, ensure_ascii=False)
-        print(f"   ✅ Saved {len(self.db_items)} total items to {unified_db_path}")
+        print(f"   ✅ Saved {len(self.db_items)} total items to {eatthismuch_db_path}")
         
         # 統計情報保存
         stats_path = self.output_path / "build_stats.json"

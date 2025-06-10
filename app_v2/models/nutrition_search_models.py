@@ -34,7 +34,7 @@ class NutritionQueryInput(BaseModel):
     dish_names: List[str] = Field(default_factory=list, description="料理名のリスト")
     search_options: Optional[Dict[str, Any]] = Field(None, description="検索オプション")
     preferred_source: str = Field(default="local_database", description="優先データソース")
-    
+
     def get_all_search_terms(self) -> List[str]:
         """全ての検索語彙を取得"""
         return list(set(self.ingredient_names + self.dish_names))
@@ -46,7 +46,7 @@ class NutritionQueryOutput(BaseModel):
     search_summary: Dict[str, Union[int, float, str]] = Field(default_factory=dict, description="検索結果のサマリー情報")
     warnings: Optional[List[str]] = Field(None, description="警告メッセージのリスト")
     errors: Optional[List[str]] = Field(None, description="エラーメッセージのリスト")
-    
+
     def get_match_rate(self) -> float:
         """照合成功率を計算"""
         total_searches = self.search_summary.get("total_searches", 0)
@@ -54,7 +54,7 @@ class NutritionQueryOutput(BaseModel):
         if total_searches == 0:
             return 0.0
         return successful_matches / total_searches
-    
+
     def get_total_matches(self) -> int:
         """総照合件数を取得"""
         return len(self.matches)
