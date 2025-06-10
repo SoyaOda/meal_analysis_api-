@@ -171,7 +171,7 @@ class ResultManager:
                 files = self._save_phase1_results(log)
                 saved_files.update(files)
                 executed_components.add("Phase1Component")
-            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent"]:
+            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent", "ElasticsearchNutritionSearchComponent"]:
                 files = self._save_nutrition_search_results(log)
                 saved_files.update(files)
                 executed_components.add(log.component_name)
@@ -238,7 +238,7 @@ class ResultManager:
         return files
     
     def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent両対応）"""
+        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent、ElasticsearchNutritionSearchComponent対応）"""
         files = {}
         
         # 検索方法の判定
@@ -251,6 +251,9 @@ class ResultManager:
         elif log.component_name == "LocalNutritionSearchComponent":
             search_method = "local_search"
             db_source = "local_nutrition_database"
+        elif log.component_name == "ElasticsearchNutritionSearchComponent":
+            search_method = "elasticsearch"
+            db_source = "elasticsearch_nutrition_db"
         
         # 1. JSON形式の入出力データ（検索方法情報を含む）
         input_output_file = self.nutrition_search_dir / "input_output.json"
@@ -600,7 +603,7 @@ class ResultManager:
         return "\n".join(content)
     
     def _generate_nutrition_match_details_txt(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
-        """栄養データベース検索のマッチ詳細テキストを生成（USDA/ローカル対応）"""
+        """栄養データベース検索のマッチ詳細テキストを生成（USDA/ローカル/マルチDB対応）"""
         lines = []
         
         lines.append(f"Nutrition Database Search Match Details")
@@ -614,14 +617,64 @@ class ResultManager:
         
         if log.output_data and 'matches' in log.output_data:
             matches = log.output_data['matches']
-            lines.append(f"Total Matches: {len(matches)}")
+            
+            # 総マッチ数を計算（単一結果とリスト結果両方に対応）
+            total_matches = 0
+            for match_data in matches.values():
+                if isinstance(match_data, list):
+                    total_matches += len(match_data)
+                elif isinstance(match_data, dict):
+                    total_matches += 1
+            
+            lines.append(f"Total Matches: {total_matches}")
             lines.append(f"")
             
             for search_term, match_data in matches.items():
                 lines.append(f"Query: {search_term}")
                 lines.append(f"-" * 30)
                 
-                if isinstance(match_data, dict):
+                # マルチDB検索結果（リスト形式）への対応
+                if isinstance(match_data, list):
+                    lines.append(f"  Found {len(match_data)} results from multiple databases:")
+                    lines.append(f"")
+                    
+                    for i, match_item in enumerate(match_data, 1):
+                        lines.append(f"  Result {i}:")
+                        lines.append(f"    ID: {match_item.get('id', 'N/A')}")
+                        
+                        search_name = match_item.get('search_name', 'N/A')
+                        description = match_item.get('description', None)
+                        lines.append(f"    Search Name: {search_name}")
+                        if description:
+                            lines.append(f"    Description: {description}")
+                        else:
+                            lines.append(f"    Description: None")
+                        
+                        lines.append(f"    Data Type: {match_item.get('data_type', 'N/A')}")
+                        lines.append(f"    Source: {match_item.get('source', 'N/A')}")
+                        
+                        # スコア情報
+                        score = match_item.get('score', 'N/A')
+                        if score != 'N/A' and 'search_metadata' in match_item:
+                            metadata = match_item['search_metadata']
+                            source_db = metadata.get('source_database', 'unknown')
+                            lines.append(f"    Score: {score:.3f} (from {source_db})")
+                        else:
+                            lines.append(f"    Score: {score}")
+                        
+                        # 栄養情報（簡略版）
+                        if 'nutrition' in match_item and match_item['nutrition']:
+                            nutrition = match_item['nutrition']
+                            calories = nutrition.get('calories', 0)
+                            protein = nutrition.get('protein', 0)
+                            fat = nutrition.get('fat', 0)
+                            carbs = nutrition.get('carbs', 0)
+                            lines.append(f"    Nutrition (100g): {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g")
+                        
+                        lines.append(f"")
+                
+                # 単一結果（辞書形式）への対応（従来の方式）
+                elif isinstance(match_data, dict):
                     lines.append(f"  ID: {match_data.get('id', 'N/A')}")
                     
                     search_name = match_data.get('search_name', 'N/A')
@@ -665,8 +718,8 @@ class ResultManager:
                             lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
                             if search_method == "local_search":
                                 lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
-                
-                lines.append(f"")
+                    
+                    lines.append(f"")
         
         # 検索統計
         if log.output_data and 'search_summary' in log.output_data:
@@ -676,6 +729,12 @@ class ResultManager:
             lines.append(f"  Successful Matches: {summary.get('successful_matches', 0)}")
             lines.append(f"  Failed Searches: {summary.get('failed_searches', 0)}")
             lines.append(f"  Match Rate: {summary.get('match_rate_percent', 0)}%")
+            
+            # マルチDB検索の場合の追加情報
+            if 'target_databases' in summary:
+                lines.append(f"  Target Databases: {', '.join(summary['target_databases'])}")
+                lines.append(f"  Results per Database: {summary.get('results_per_db', 'N/A')}")
+                lines.append(f"  Total Results: {summary.get('total_results', 'N/A')}")
             
             if search_method == "local_search":
                 lines.append(f"  Total Database Items: {summary.get('total_database_items', 0)}")

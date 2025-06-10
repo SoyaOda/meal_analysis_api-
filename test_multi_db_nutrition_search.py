@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 """
-Multi-Database Nutrition Search Test v1.0
+Multi-Database Nutrition Search Test v3.0 - Multi-DB Elasticsearch Edition
 
-dbフォルダ内の3種類のデータベース（yazio、mynetdiary、eatthismuch）を対象に、
-1つのqueryにつき各dbから上位3つの結果を取得するテストスクリプト
+ElasticsearchNutritionSearchComponentのマルチデータベース検索機能を使用して
+3つのデータベース（yazio, mynetdiary, eatthismuch）から各3つずつ
+栄養データベース検索結果を取得してテストするスクリプト
 """
 
 import requests
 import json
 import time
 import os
+import asyncio
 from datetime import datetime
 from typing import List, Dict, Any, Optional
-import math
+
+# Elasticsearch Nutrition Search Component
+from app_v2.components.elasticsearch_nutrition_search_component import ElasticsearchNutritionSearchComponent
+from app_v2.models.nutrition_search_models import NutritionQueryInput
 
 # API設定（新しいアーキテクチャ版）
 BASE_URL = "http://localhost:8000/api/v1"
@@ -20,130 +25,13 @@ BASE_URL = "http://localhost:8000/api/v1"
 # テスト画像のパス
 image_path = "test_images/food3.jpg"
 
-# dbフォルダ内のデータベース
-DB_CONFIGS = {
-    "yazio": {
-        "file_path": "db/yazio_db.json",
-        "source": "YAZIO"
-    },
-    "mynetdiary": {
-        "file_path": "db/mynetdiary_db.json", 
-        "source": "MyNetDiary"
-    },
-    "eatthismuch": {
-        "file_path": "db/eatthismuch_db.json",
-        "source": "EatThisMuch"
-    }
-}
-
-class MultiDbNutritionSearcher:
-    """複数データベースから栄養情報を検索するクラス"""
+async def test_multi_db_elasticsearch_nutrition_search():
+    """マルチデータベースElasticsearch栄養検索をテスト"""
     
-    def __init__(self):
-        self.databases = {}
-        self.load_databases()
-    
-    def load_databases(self):
-        """3つのデータベースを読み込み"""
-        print("🔄 Loading databases...")
-        
-        for db_name, config in DB_CONFIGS.items():
-            try:
-                print(f"   Loading {db_name}...")
-                with open(config["file_path"], 'r', encoding='utf-8') as f:
-                    database = json.load(f)
-                    self.databases[db_name] = {
-                        "data": database,
-                        "source": config["source"],
-                        "count": len(database)
-                    }
-                    print(f"   ✅ {db_name}: {len(database)} items loaded")
-            except Exception as e:
-                print(f"   ❌ Failed to load {db_name}: {e}")
-                self.databases[db_name] = {
-                    "data": [],
-                    "source": config["source"],
-                    "count": 0
-                }
-        
-        total_items = sum(db["count"] for db in self.databases.values())
-        print(f"✅ Total items loaded: {total_items}")
-    
-    def search_single_database(self, query: str, db_name: str, top_k: int = 3) -> List[Dict[str, Any]]:
-        """単一データベースから検索"""
-        if db_name not in self.databases:
-            return []
-        
-        database = self.databases[db_name]["data"]
-        query_lower = query.lower()
-        scored_results = []
-        
-        for item in database:
-            if 'search_name' not in item:
-                continue
-            
-            item_name = item['search_name'].lower()
-            score = self.calculate_match_score(query_lower, item_name)
-            
-            if score > 0.1:  # 最低閾値
-                result = item.copy()
-                result['_match_score'] = score
-                result['_query'] = query
-                result['_db_name'] = db_name
-                scored_results.append(result)
-        
-        # スコアでソートして上位k件を返す
-        scored_results.sort(key=lambda x: x['_match_score'], reverse=True)
-        return scored_results[:top_k]
-    
-    def calculate_match_score(self, query: str, item_name: str) -> float:
-        """マッチスコアを計算"""
-        if query == item_name:
-            return 1.0  # 完全一致
-        elif query in item_name:
-            if item_name.startswith(query):
-                return 0.9  # 前方一致
-            elif item_name.endswith(query):
-                return 0.8  # 後方一致
-            else:
-                return 0.7  # 中間一致
-        elif item_name in query:
-            return 0.6  # 逆部分一致
-        else:
-            # 単語レベルの一致
-            query_words = set(query.split())
-            item_words = set(item_name.split())
-            common_words = query_words & item_words
-            if common_words:
-                return len(common_words) / max(len(query_words), len(item_words)) * 0.5
-        
-        return 0.0
-    
-    def search_all_databases(self, query: str, top_k_per_db: int = 3) -> Dict[str, List[Dict[str, Any]]]:
-        """全データベースから検索"""
-        results = {}
-        
-        for db_name in self.databases.keys():
-            db_results = self.search_single_database(query, db_name, top_k_per_db)
-            results[db_name] = db_results
-        
-        return results
-    
-    def search_multiple_queries(self, queries: List[str], top_k_per_db: int = 3) -> Dict[str, Dict[str, List[Dict[str, Any]]]]:
-        """複数のクエリについて全データベースから検索"""
-        all_results = {}
-        
-        for query in queries:
-            all_results[query] = self.search_all_databases(query, top_k_per_db)
-        
-        return all_results
-
-def test_multi_db_nutrition_search():
-    """マルチデータベース栄養検索をテスト"""
-    
-    print("=== Multi-Database Nutrition Search Test v1.0 ===")
+    print("=== Multi-Database Nutrition Search Test v3.0 - Multi-DB Elasticsearch Edition ===")
     print(f"Using image: {image_path}")
-    print("🔍 Testing search across 3 databases: YAZIO, MyNetDiary, EatThisMuch")
+    print("🔍 Testing Multi-Database Elasticsearch-powered nutrition search")
+    print("📊 Each query will return up to 3 results from each of 3 databases (yazio, mynetdiary, eatthismuch)")
     
     try:
         # 完全分析エンドポイントを呼び出してPhase1結果を取得
@@ -203,173 +91,326 @@ def test_multi_db_nutrition_search():
             print("❌ No search queries extracted from Phase1 results!")
             return False
         
-        # マルチデータベース検索システムを初期化
-        searcher = MultiDbNutritionSearcher()
+        # ElasticsearchNutritionSearchComponentをマルチデータベースモードで初期化
+        print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Multi-DB Mode)...")
+        es_component = ElasticsearchNutritionSearchComponent(
+            multi_db_search_mode=True,  # マルチDBモードを有効化
+            results_per_db=3  # 各データベースから3つずつ結果を取得
+        )
         
-        # 全クエリについてマルチデータベース検索を実行
-        print(f"\n🔍 Starting multi-database search for {len(all_queries)} queries...")
+        # 検索入力データを作成
+        nutrition_query_input = NutritionQueryInput(
+            ingredient_names=ingredient_names,
+            dish_names=dish_names,
+            preferred_source="elasticsearch"
+        )
+        
+        print(f"📝 Query Input:")
+        print(f"- Ingredient names: {len(ingredient_names)} items")
+        print(f"- Dish names: {len(dish_names)} items")
+        print(f"- Total search terms: {len(nutrition_query_input.get_all_search_terms())}")
+        print(f"- Multi-DB search mode: Enabled")
+        print(f"- Results per database: 3")
+        print(f"- Target databases: yazio, mynetdiary, eatthismuch")
+        
+        # Elasticsearch マルチDB検索を実行
+        print(f"\n🔍 Starting Multi-Database Elasticsearch nutrition search...")
         search_start_time = time.time()
         
-        search_results = searcher.search_multiple_queries(all_queries, top_k_per_db=3)
+        search_results = await es_component.execute(nutrition_query_input)
         
         search_end_time = time.time()
         search_time = search_end_time - search_start_time
         
-        print(f"✅ Multi-database search completed in {search_time:.2f}s")
+        print(f"✅ Multi-DB Elasticsearch search completed in {search_time:.3f}s")
         
         # 結果の分析
-        total_matches = 0
-        db_stats = {db_name: {"matches": 0, "queries_with_results": 0} for db_name in DB_CONFIGS.keys()}
+        matches = search_results.matches
+        search_summary = search_results.search_summary
         
-        query_results_summary = []
+        print(f"\n📈 Multi-DB Elasticsearch Search Results Summary:")
+        print(f"- Total queries: {search_summary.get('total_searches', 0)}")
+        print(f"- Successful matches: {search_summary.get('successful_matches', 0)}")
+        print(f"- Failed searches: {search_summary.get('failed_searches', 0)}")
+        print(f"- Match rate: {search_summary.get('match_rate_percent', 0):.1f}%")
+        print(f"- Search time: {search_summary.get('search_time_ms', 0)}ms")
+        print(f"- Search method: {search_summary.get('search_method', 'unknown')}")
+        print(f"- Database source: {search_summary.get('database_source', 'unknown')}")
+        print(f"- Total indexed documents: {search_summary.get('total_indexed_documents', 0)}")
+        print(f"- Results per database: {search_summary.get('results_per_db', 0)}")
+        print(f"- Target databases: {search_summary.get('target_databases', [])}")
+        print(f"- Total results: {search_summary.get('total_results', 0)}")
         
-        for query, db_results in search_results.items():
-            query_summary = {
-                "query": query,
-                "type": "dish" if query in dish_names else "ingredient",
-                "results_per_db": {}
-            }
-            
-            for db_name, results in db_results.items():
-                num_results = len(results)
-                query_summary["results_per_db"][db_name] = num_results
+        # データベース別統計の詳細計算
+        db_detailed_stats = {"yazio": 0, "mynetdiary": 0, "eatthismuch": 0, "unknown": 0}
+        source_distribution = {}
+        query_results_breakdown = {}
+        
+        total_individual_results = 0
+        for query, match_results in matches.items():
+            if isinstance(match_results, list):
+                # マルチDB検索の場合、リスト形式で結果が返される
+                query_results_breakdown[query] = len(match_results)
+                total_individual_results += len(match_results)
                 
-                if num_results > 0:
-                    db_stats[db_name]["queries_with_results"] += 1
-                    db_stats[db_name]["matches"] += num_results
-                    total_matches += num_results
-            
-            query_results_summary.append(query_summary)
+                for match in match_results:
+                    source = match.source
+                    if "elasticsearch_" in source:
+                        db_name = source.replace("elasticsearch_", "")
+                        if db_name in db_detailed_stats:
+                            db_detailed_stats[db_name] += 1
+                        else:
+                            db_detailed_stats["unknown"] += 1
+                    
+                    if source not in source_distribution:
+                        source_distribution[source] = 0
+                    source_distribution[source] += 1
+            else:
+                # 単一結果の場合（従来形式）
+                query_results_breakdown[query] = 1
+                total_individual_results += 1
+                source = match_results.source
+                if source not in source_distribution:
+                    source_distribution[source] = 0
+                source_distribution[source] += 1
         
-        # 結果の表示
-        print(f"\n📈 Multi-Database Search Results Summary:")
-        print(f"- Total queries: {len(all_queries)}")
-        print(f"- Total matches found: {total_matches}")
-        print(f"- Average matches per query: {total_matches / len(all_queries):.1f}")
-        print(f"- Search time: {search_time:.2f}s")
-        print(f"- Average time per query: {search_time / len(all_queries):.3f}s")
+        print(f"\n📊 Detailed Database Source Distribution:")
+        for source, count in source_distribution.items():
+            percentage = (count / total_individual_results) * 100 if total_individual_results > 0 else 0
+            print(f"- {source}: {count} results ({percentage:.1f}%)")
         
-        print(f"\n📊 Database Statistics:")
-        for db_name, stats in db_stats.items():
-            db_info = searcher.databases[db_name]
-            coverage = (stats["queries_with_results"] / len(all_queries)) * 100
-            print(f"- {db_name} ({db_info['source']}):")
-            print(f"  Database size: {db_info['count']} items")
-            print(f"  Queries with results: {stats['queries_with_results']}/{len(all_queries)} ({coverage:.1f}%)")
-            print(f"  Total matches: {stats['matches']}")
-            print(f"  Avg matches per successful query: {stats['matches'] / max(stats['queries_with_results'], 1):.1f}")
+        print(f"\n📋 Per-Query Results Breakdown:")
+        for query, result_count in query_results_breakdown.items():
+            query_type = "dish" if query in dish_names else "ingredient"
+            print(f"- '{query}' ({query_type}): {result_count} results")
         
-        print(f"\n🔍 Detailed Query Results:")
-        for i, query_summary in enumerate(query_results_summary[:10], 1):  # 最初の10件のみ表示
-            query = query_summary["query"]
-            query_type = query_summary["type"]
-            results_per_db = query_summary["results_per_db"]
+        print(f"\n🔍 Top Multi-DB Match Results (showing first 5 queries):")
+        for i, (query, match_results) in enumerate(list(matches.items())[:5], 1):
+            query_type = "dish" if query in dish_names else "ingredient"
+            print(f"\n{i:2d}. Query: '{query}' ({query_type})")
             
-            print(f"{i:2d}. '{query}' ({query_type})")
-            
-            for db_name, count in results_per_db.items():
-                if count > 0:
-                    # 上位結果の詳細を表示
-                    top_result = search_results[query][db_name][0]
-                    print(f"    {db_name}: {count} matches")
-                    print(f"      Best: '{top_result['search_name']}' (score: {top_result['_match_score']:.3f})")
-                    nutrition = top_result.get('nutrition', {})
+            if isinstance(match_results, list):
+                print(f"    Found {len(match_results)} results from multiple databases:")
+                for j, match in enumerate(match_results, 1):
+                    print(f"    {j}. {match.search_name} (score: {match.score:.3f})")
+                    print(f"       Source: {match.source}")
+                    print(f"       Data type: {match.data_type}")
+                    
+                    nutrition = match.nutrition
                     if nutrition:
                         calories = nutrition.get('calories', 0)
                         protein = nutrition.get('protein', 0)
-                        print(f"      Nutrition: {calories:.1f} kcal, {protein:.1f}g protein")
-                else:
-                    print(f"    {db_name}: No matches")
+                        fat = nutrition.get('fat', 0)
+                        carbs = nutrition.get('carbs', nutrition.get('carbohydrates', 0))
+                        print(f"       Nutrition (100g): {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g")
+            else:
+                # 単一結果の場合
+                print(f"    Single result: {match_results.search_name} (score: {match_results.score:.3f})")
+                print(f"    Source: {match_results.source}")
         
-        if len(query_results_summary) > 10:
-            print(f"    ... and {len(query_results_summary) - 10} more queries")
+        if len(matches) > 5:
+            print(f"\n    ... and {len(matches) - 5} more queries with results")
+        
+        # 警告とエラーの表示
+        if search_results.warnings:
+            print(f"\n⚠️  Warnings:")
+            for warning in search_results.warnings:
+                print(f"   - {warning}")
+        
+        if search_results.errors:
+            print(f"\n❌ Errors:")
+            for error in search_results.errors:
+                print(f"   - {error}")
         
         # 詳細結果をファイルに保存
-        save_detailed_results(analysis_id, search_results, query_results_summary, db_stats, searcher.databases)
+        await save_multi_db_elasticsearch_results(analysis_id, search_results, all_queries, dish_names, ingredient_names)
         
         return True
         
     except Exception as e:
-        print(f"❌ Error during multi-database nutrition search: {e}")
+        print(f"❌ Error during Multi-DB Elasticsearch nutrition search: {e}")
         import traceback
         traceback.print_exc()
         return False
 
-def save_detailed_results(analysis_id: str, search_results: Dict, query_summary: List, db_stats: Dict, db_info: Dict):
-    """詳細な検索結果をファイルに保存"""
+async def save_multi_db_elasticsearch_results(analysis_id: str, search_results, all_queries: List[str], dish_names: List[str], ingredient_names: List[str]):
+    """マルチデータベースElasticsearch検索結果をファイルに保存"""
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_dir = f"analysis_results/multi_db_search_{analysis_id}_{timestamp}"
+    results_dir = f"analysis_results/multi_db_elasticsearch_search_{analysis_id}_{timestamp}"
     os.makedirs(results_dir, exist_ok=True)
     
+    # 検索結果を辞書形式に変換
+    matches_dict = {}
+    for query, match_results in search_results.matches.items():
+        if isinstance(match_results, list):
+            # マルチDB結果の場合
+            matches_dict[query] = []
+            for match in match_results:
+                matches_dict[query].append({
+                    "id": match.id,
+                    "search_name": match.search_name,
+                    "description": match.description,
+                    "data_type": match.data_type,
+                    "source": match.source,
+                    "nutrition": match.nutrition,
+                    "weight": match.weight,
+                    "score": match.score,
+                    "search_metadata": match.search_metadata
+                })
+        else:
+            # 単一結果の場合
+            matches_dict[query] = {
+                "id": match_results.id,
+                "search_name": match_results.search_name,
+                "description": match_results.description,
+                "data_type": match_results.data_type,
+                "source": match_results.source,
+                "nutrition": match_results.nutrition,
+                "weight": match_results.weight,
+                "score": match_results.score,
+                "search_metadata": match_results.search_metadata
+            }
+    
     # 1. 全検索結果をJSONで保存
-    results_file = os.path.join(results_dir, "complete_search_results.json")
+    results_file = os.path.join(results_dir, "multi_db_elasticsearch_search_results.json")
     with open(results_file, 'w', encoding='utf-8') as f:
         json.dump({
             "analysis_id": analysis_id,
             "timestamp": timestamp,
-            "search_results": search_results,
-            "summary": {
-                "total_queries": len(search_results),
-                "database_stats": db_stats,
-                "database_info": {db_name: {"count": info["count"], "source": info["source"]} 
-                                for db_name, info in db_info.items()}
-            }
+            "search_method": "elasticsearch_multi_db",
+            "input_queries": {
+                "all_queries": all_queries,
+                "dish_names": dish_names,
+                "ingredient_names": ingredient_names
+            },
+            "search_summary": search_results.search_summary,
+            "matches": matches_dict,
+            "warnings": search_results.warnings,
+            "errors": search_results.errors
         }, f, indent=2, ensure_ascii=False)
     
     # 2. 検索サマリーをマークダウンで保存
-    summary_file = os.path.join(results_dir, "search_summary.md")
+    summary_file = os.path.join(results_dir, "multi_db_elasticsearch_summary.md")
     with open(summary_file, 'w', encoding='utf-8') as f:
-        f.write(f"# Multi-Database Nutrition Search Results\n\n")
+        f.write(f"# Multi-Database Elasticsearch Nutrition Search Results\n\n")
         f.write(f"**Analysis ID:** {analysis_id}\n")
         f.write(f"**Timestamp:** {timestamp}\n")
-        f.write(f"**Total Queries:** {len(search_results)}\n\n")
+        f.write(f"**Search Method:** Multi-Database Elasticsearch\n")
+        f.write(f"**Total Queries:** {len(all_queries)}\n")
+        f.write(f"**Results per Database:** 3\n")
+        f.write(f"**Target Databases:** yazio, mynetdiary, eatthismuch\n\n")
         
-        f.write(f"## Database Statistics\n\n")
-        for db_name, stats in db_stats.items():
-            db_inf = db_info[db_name]
-            coverage = (stats["queries_with_results"] / len(search_results)) * 100
-            f.write(f"### {db_name} ({db_inf['source']})\n")
-            f.write(f"- Database size: {db_inf['count']} items\n")
-            f.write(f"- Query coverage: {stats['queries_with_results']}/{len(search_results)} ({coverage:.1f}%)\n")
-            f.write(f"- Total matches: {stats['matches']}\n")
-            f.write(f"- Avg matches per successful query: {stats['matches'] / max(stats['queries_with_results'], 1):.1f}\n\n")
+        # 検索サマリー
+        summary = search_results.search_summary
+        f.write(f"## Search Summary\n\n")
+        f.write(f"- **Total searches:** {summary.get('total_searches', 0)}\n")
+        f.write(f"- **Successful matches:** {summary.get('successful_matches', 0)}\n")
+        f.write(f"- **Failed searches:** {summary.get('failed_searches', 0)}\n")
+        f.write(f"- **Match rate:** {summary.get('match_rate_percent', 0):.1f}%\n")
+        f.write(f"- **Search time:** {summary.get('search_time_ms', 0)}ms\n")
+        f.write(f"- **Database source:** {summary.get('database_source', 'unknown')}\n")
+        f.write(f"- **Total indexed documents:** {summary.get('total_indexed_documents', 0)}\n")
+        f.write(f"- **Results per database:** {summary.get('results_per_db', 0)}\n")
+        f.write(f"- **Target databases:** {', '.join(summary.get('target_databases', []))}\n")
+        f.write(f"- **Total results:** {summary.get('total_results', 0)}\n\n")
         
-        f.write(f"## Query Results Detail\n\n")
-        for i, query_summary in enumerate(query_summary, 1):
-            query = query_summary["query"]
-            query_type = query_summary["type"]
-            results_per_db = query_summary["results_per_db"]
+        # ソース分布
+        source_distribution = {}
+        total_individual_results = 0
+        for match_results in search_results.matches.values():
+            if isinstance(match_results, list):
+                total_individual_results += len(match_results)
+                for match in match_results:
+                    source = match.source
+                    if source not in source_distribution:
+                        source_distribution[source] = 0
+                    source_distribution[source] += 1
+            else:
+                total_individual_results += 1
+                source = match_results.source
+                if source not in source_distribution:
+                    source_distribution[source] = 0
+                source_distribution[source] += 1
+        
+        f.write(f"## Source Database Distribution\n\n")
+        for source, count in source_distribution.items():
+            percentage = (count / total_individual_results) * 100 if total_individual_results > 0 else 0
+            f.write(f"- **{source}:** {count} results ({percentage:.1f}%)\n")
+        f.write(f"\n")
+        
+        # 詳細結果
+        f.write(f"## Multi-DB Match Results Detail\n\n")
+        for i, (query, match_results) in enumerate(search_results.matches.items(), 1):
+            query_type = "dish" if query in dish_names else "ingredient"
+            f.write(f"### {i}. {query} ({query_type})\n\n")
             
-            f.write(f"### {i}. {query} ({query_type})\n")
-            
-            for db_name, count in results_per_db.items():
-                if count > 0:
-                    f.write(f"- **{db_name}**: {count} matches\n")
-                    # 上位3件の詳細
-                    for j, result in enumerate(search_results[query][db_name][:3], 1):
-                        f.write(f"  {j}. {result['search_name']} (score: {result['_match_score']:.3f})\n")
-                        nutrition = result.get('nutrition', {})
-                        if nutrition:
-                            calories = nutrition.get('calories', 0)
-                            protein = nutrition.get('protein', 0)
-                            fat = nutrition.get('fat', 0)
-                            carbs = nutrition.get('carbs', 0)
-                            f.write(f"     Nutrition (100g): {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g\n")
-                else:
-                    f.write(f"- **{db_name}**: No matches\n")
+            if isinstance(match_results, list):
+                f.write(f"**Found {len(match_results)} results from multiple databases:**\n\n")
+                for j, match in enumerate(match_results, 1):
+                    f.write(f"#### Result {j}\n")
+                    f.write(f"- **Match:** {match.search_name}\n")
+                    f.write(f"- **Score:** {match.score:.3f}\n")
+                    f.write(f"- **Source:** {match.source}\n")
+                    f.write(f"- **Data Type:** {match.data_type}\n")
+                    
+                    if match.nutrition:
+                        nutrition = match.nutrition
+                        calories = nutrition.get('calories', 0)
+                        protein = nutrition.get('protein', 0)
+                        fat = nutrition.get('fat', 0)
+                        carbs = nutrition.get('carbs', nutrition.get('carbohydrates', 0))
+                        f.write(f"- **Nutrition (100g):** {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g\n")
+                    
+                    if match.description:
+                        f.write(f"- **Description:** {match.description}\n")
+                    
+                    f.write(f"\n")
+            else:
+                # 単一結果の場合
+                f.write(f"**Single result:**\n")
+                f.write(f"- **Match:** {match_results.search_name}\n")
+                f.write(f"- **Score:** {match_results.score:.3f}\n")
+                f.write(f"- **Source:** {match_results.source}\n")
+                f.write(f"- **Data Type:** {match_results.data_type}\n")
+                
+                if match_results.nutrition:
+                    nutrition = match_results.nutrition
+                    calories = nutrition.get('calories', 0)
+                    protein = nutrition.get('protein', 0)
+                    fat = nutrition.get('fat', 0)
+                    carbs = nutrition.get('carbs', nutrition.get('carbohydrates', 0))
+                    f.write(f"- **Nutrition (100g):** {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g\n")
+                
+                if match_results.description:
+                    f.write(f"- **Description:** {match_results.description}\n")
+                
+                f.write(f"\n")
+        
+        # 警告とエラー
+        if search_results.warnings:
+            f.write(f"## Warnings\n\n")
+            for warning in search_results.warnings:
+                f.write(f"- {warning}\n")
+            f.write(f"\n")
+        
+        if search_results.errors:
+            f.write(f"## Errors\n\n")
+            for error in search_results.errors:
+                f.write(f"- {error}\n")
             f.write(f"\n")
     
-    print(f"\n💾 Detailed results saved to:")
+    print(f"\n💾 Multi-DB Elasticsearch results saved to:")
     print(f"   📁 {results_dir}/")
-    print(f"   📄 complete_search_results.json")
-    print(f"   📄 search_summary.md")
+    print(f"   📄 multi_db_elasticsearch_search_results.json")
+    print(f"   📄 multi_db_elasticsearch_summary.md")
 
 if __name__ == "__main__":
-    print("🚀 Starting Multi-Database Nutrition Search Test")
-    success = test_multi_db_nutrition_search()
+    print("🚀 Starting Multi-Database Elasticsearch Nutrition Search Test")
+    success = asyncio.run(test_multi_db_elasticsearch_nutrition_search())
     
     if success:
-        print("\n✅ Multi-database nutrition search test completed successfully!")
+        print("\n✅ Multi-Database Elasticsearch nutrition search test completed successfully!")
+        print("🎯 Each query returned up to 3 results from each of 3 databases (yazio, mynetdiary, eatthismuch)")
     else:
-        print("\n❌ Multi-database nutrition search test failed!") 
+        print("\n❌ Multi-Database Elasticsearch nutrition search test failed!") 

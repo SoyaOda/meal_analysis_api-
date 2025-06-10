@@ -42,8 +42,15 @@ class NutritionQueryInput(BaseModel):
 
 class NutritionQueryOutput(BaseModel):
     """栄養データベース検索結果モデル（純粋なローカル形式）"""
-    matches: Dict[str, NutritionMatch] = Field(default_factory=dict, description="検索語彙と対応する照合結果のマッピング")
-    search_summary: Dict[str, Union[int, float, str]] = Field(default_factory=dict, description="検索結果のサマリー情報")
+    # マルチデータベース検索対応：単一結果またはリスト結果を受け入れる
+    matches: Dict[str, Union[NutritionMatch, List[NutritionMatch]]] = Field(
+        default_factory=dict, 
+        description="検索語彙と対応する照合結果のマッピング（単一結果またはマルチDB結果リスト）"
+    )
+    search_summary: Dict[str, Any] = Field(
+        default_factory=dict, 
+        description="検索結果のサマリー情報（柔軟な型対応）"
+    )
     warnings: Optional[List[str]] = Field(None, description="警告メッセージのリスト")
     errors: Optional[List[str]] = Field(None, description="エラーメッセージのリスト")
 
@@ -56,8 +63,18 @@ class NutritionQueryOutput(BaseModel):
         return successful_matches / total_searches
 
     def get_total_matches(self) -> int:
-        """総照合件数を取得"""
-        return len(self.matches)
+        """総照合件数を取得（マルチDB検索対応）"""
+        total = 0
+        for match_result in self.matches.values():
+            if isinstance(match_result, list):
+                total += len(match_result)
+            else:
+                total += 1
+        return total
+    
+    def get_total_individual_results(self) -> int:
+        """個別結果の総数を取得（マルチDB検索用）"""
+        return self.get_total_matches()
     
     def has_errors(self) -> bool:
         """エラーが存在するかチェック"""
