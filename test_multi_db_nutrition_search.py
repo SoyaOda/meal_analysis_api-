@@ -95,7 +95,7 @@ async def test_multi_db_elasticsearch_nutrition_search():
         print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Multi-DB Mode)...")
         es_component = ElasticsearchNutritionSearchComponent(
             multi_db_search_mode=True,  # マルチDBモードを有効化
-            results_per_db=3  # 各データベースから3つずつ結果を取得
+            results_per_db=5  # 各データベースから5つずつ結果を取得
         )
         
         # 検索入力データを作成
@@ -110,7 +110,7 @@ async def test_multi_db_elasticsearch_nutrition_search():
         print(f"- Dish names: {len(dish_names)} items")
         print(f"- Total search terms: {len(nutrition_query_input.get_all_search_terms())}")
         print(f"- Multi-DB search mode: Enabled")
-        print(f"- Results per database: 3")
+        print(f"- Results per database: 5")
         print(f"- Target databases: yazio, mynetdiary, eatthismuch")
         
         # Elasticsearch マルチDB検索を実行
@@ -298,7 +298,7 @@ async def save_multi_db_elasticsearch_results(analysis_id: str, search_results, 
         f.write(f"**Timestamp:** {timestamp}\n")
         f.write(f"**Search Method:** Multi-Database Elasticsearch\n")
         f.write(f"**Total Queries:** {len(all_queries)}\n")
-        f.write(f"**Results per Database:** 3\n")
+        f.write(f"**Results per Database:** 5\n")
         f.write(f"**Target Databases:** yazio, mynetdiary, eatthismuch\n\n")
         
         # 検索サマリー

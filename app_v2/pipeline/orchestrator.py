@@ -67,7 +67,7 @@ class MealAnalysisPipeline:
         if self.use_elasticsearch_search:
             self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
                 multi_db_search_mode=True,
-                results_per_db=3
+                results_per_db=5
             )
             self.search_component_name = "ElasticsearchNutritionSearchComponent"
             logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
