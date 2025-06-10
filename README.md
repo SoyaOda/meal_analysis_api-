@@ -2,23 +2,30 @@
 
 ## 概要
 
-この API は、**Google Gemini AI** と **USDA データベース**を使用した高度な食事画像分析システムです。**動的栄養計算機能**により、料理の特性に応じて最適な栄養計算戦略を自動選択し、正確な栄養価情報を提供します。
+この API は、**Google Gemini AI** と **マルチデータベース栄養検索システム**を使用した高度な食事画像分析システムです。**動的栄養計算機能**により、料理の特性に応じて最適な栄養計算戦略を自動選択し、正確な栄養価情報を提供します。
 
 ## 🌟 主な機能
 
-### **新機能: 動的栄養計算システム v2.0**
+### **🔥 新機能: マルチデータベース栄養検索 v2.0**
+
+- **📊 3 つのデータベース統合検索**: 1 つのクエリで複数のデータベースから包括的な栄養情報を取得
+  - **YAZIO**: 1,825 項目 - バランスの取れた食品カテゴリ
+  - **MyNetDiary**: 1,142 項目 - 科学的/栄養学的アプローチ
+  - **EatThisMuch**: 8,878 項目 - 最大かつ最も包括的なデータベース
+- **⚡ 高速検索パフォーマンス**: 平均 0.010 秒/クエリで複数 DB 検索
+- **🎯 高精度マッチング**: 各 DB から上位 3 件、完全一致で 90.9%の成功率
+- **💾 詳細結果保存**: JSON・マークダウン形式での検索結果自動保存
+
+### **従来機能: 動的栄養計算システム**
 
 - **🧠 AI 駆動の計算戦略決定**: Gemini AI が各料理に対して最適な栄養計算方法を自動選択
-  - `dish_level`: シンプルな食品（緑茶、果物など）は料理全体の USDA ID で計算
-  - `ingredient_level`: 複雑な料理（サラダ、炒め物など）は食材ごとに詳細計算して集計
 - **🎯 高精度栄養計算**: 食材重量 × 100g あたり栄養価で正確な実栄養価を算出
 - **📊 3 層集計システム**: 食材 → 料理 → 食事全体の自動栄養集計
-- **⚡ リアルタイム USDA 統合**: 20,000+ 食品データベースとの即座な照合
 
 ### **コア機能**
 
 - **フェーズ 1**: Gemini AI による食事画像の分析（料理識別、食材抽出、重量推定）
-- **フェーズ 2**: USDA データベースによる栄養成分の精緻化と動的計算
+- **マルチ DB 検索**: 3 つのデータベースからの包括的栄養情報取得
 - **複数料理対応**: 1 枚の画像で複数の料理を同時分析
 - **英語・日本語対応**: 多言語での食材・料理認識
 - **OpenAPI 3.0 準拠**: 完全な API 文書化とタイプ安全性
@@ -26,30 +33,29 @@
 ## 🏗 プロジェクト構造
 
 ```
-meal_analysis_api/
-├── app/
-│   ├── api/v1/
-│   │   ├── endpoints/
-│   │   │   ├── meal_analyses.py          # フェーズ1: 基本分析エンドポイント
-│   │   │   └── meal_analyses_refine.py   # フェーズ2: 動的栄養計算エンドポイント
-│   │   └── schemas/
-│   │       └── meal.py                   # Pydanticモデル（栄養計算対応）
-│   ├── core/
-│   │   └── config.py                     # 設定管理
-│   ├── services/
-│   │   ├── gemini_service.py             # Gemini AI統合（2フェーズ対応）
-│   │   ├── usda_service.py               # USDA API クライアント
-│   │   └── nutrition_calculation_service.py # 栄養計算エンジン
-│   ├── prompts/                          # AI プロンプトテンプレート
-│   │   ├── phase1_system_prompt.txt      # フェーズ1システムプロンプト
-│   │   ├── phase1_user_prompt_template.txt
-│   │   ├── phase2_system_prompt.txt      # フェーズ2システムプロンプト（戦略決定用）
-│   │   └── phase2_user_prompt_template.txt
-│   └── main.py                           # FastAPIアプリケーション
+meal_analysis_api_2/
+├── db/                                   # マルチデータベース（新機能）
+│   ├── yazio_db.json                     # YAZIO栄養データベース（1,825項目）
+│   ├── mynetdiary_db.json                # MyNetDiary栄養データベース（1,142項目）
+│   └── eatthismuch_db.json               # EatThisMuch栄養データベース（8,878項目）
+├── app_v2/                               # 新アーキテクチャ版
+│   ├── components/                       # コンポーネントベース設計
+│   │   ├── local_nutrition_search_component.py  # マルチDB検索コンポーネント
+│   │   ├── phase1_component.py           # 画像分析コンポーネント
+│   │   └── base.py                       # ベースコンポーネント
+│   ├── pipeline/                         # パイプライン管理
+│   │   ├── orchestrator.py               # メイン処理オーケストレーター
+│   │   └── result_manager.py             # 結果管理システム
+│   ├── models/                           # データモデル
+│   │   ├── nutrition_search_models.py    # 栄養検索モデル
+│   │   └── phase1_models.py              # Phase1モデル
+│   ├── main/
+│   │   └── app.py                        # FastAPIアプリケーション
+│   └── config/                           # 設定管理
+├── test_multi_db_nutrition_search.py     # マルチDB検索テストスクリプト（新機能）
+├── test_local_nutrition_search_v2.py     # ローカル検索テストスクリプト
 ├── test_images/                          # テスト用画像
-├── test_english_phase2.py                # 統合テストスクリプト
-├── requirements.txt                      # Python依存関係
-└── service-account-key.json             # GCP認証キー
+└── requirements.txt                      # Python依存関係
 ```
 
 ## 🚀 セットアップ
@@ -121,40 +127,14 @@ export GEMINI_MODEL_NAME="gemini-2.5-flash-preview-05-20"
 
 ## 🖥 サーバー起動
 
-### 開発環境での起動
-
-**🎯 推奨方法 (main.py 直接実行)**
-
-main.py には環境変数の自動設定機能が組み込まれているため、最も簡単な起動方法です：
+### app_v2 サーバーの起動（マルチ DB 対応）
 
 ```bash
-# モジュールとして実行（推奨）
-python -m app.main
+# app_v2サーバーの起動
+python -m app_v2.main.app
 ```
 
-**従来の方法 (uvicorn コマンド)**
-
-提供された完全なコマンドでサーバーを起動：
-
-```bash
-export USDA_API_KEY="vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg" && export GOOGLE_APPLICATION_CREDENTIALS="/Users/odasoya/meal_analysis_api /service-account-key.json" && export GEMINI_PROJECT_ID=recording-diet-ai-3e7cf && export GEMINI_LOCATION=us-central1 && export GEMINI_MODEL_NAME=gemini-2.5-flash-preview-05-20 && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-または、環境変数を個別に設定してから起動：
-
-```bash
-# 環境変数設定
-export USDA_API_KEY="vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg"
-export GOOGLE_APPLICATION_CREDENTIALS="/Users/odasoya/meal_analysis_api /service-account-key.json"
-export GEMINI_PROJECT_ID="recording-diet-ai-3e7cf"
-export GEMINI_LOCATION="us-central1"
-export GEMINI_MODEL_NAME="gemini-2.5-flash-preview-05-20"
-
-# サーバー起動
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-**⚠️ 注意**: `python app/main.py`では相対インポートエラーが発生します。必ず`python -m app.main`を使用してください。
+**⚠️ 注意**: 相対インポートエラーを回避するため、必ずモジュール形式で実行してください。
 
 サーバーが起動すると、以下の URL でアクセス可能になります：
 
@@ -164,48 +144,52 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## 🧪 テストの実行
 
-### 1. 基本テスト（フェーズ 1 のみ）
-
-```bash
-python test_phase1_only.py
-```
-
-### 2. **🔥 統合テスト（動的栄養計算システム）**
+### 🔥 マルチデータベース栄養検索テスト（最新機能）
 
 **重要**: サーバーが起動している状態で実行してください。
 
 ```bash
 # 別のターミナルで実行
-python test_english_phase2.py
+python test_multi_db_nutrition_search.py
 ```
 
-このテストは以下を実行します：
+**期待される結果**:
 
-1. **フェーズ 1**: 食事画像の分析（英語の食材名で出力）
-2. **フェーズ 2**:
-   - Gemini AI による最適計算戦略の決定
-   - USDA データベースとの自動照合
-   - 動的栄養計算（dish_level/ingredient_level）
-   - 食事全体の栄養集計
+- **検索速度**: 11 クエリを 0.10 秒で処理
+- **マッチ率**: 各 DB90.9%のクエリで結果発見
+- **総マッチ数**: 87 件（平均 7.9 件/クエリ）
+- **データベース統計**:
+  - YAZIO: 1,825 項目
+  - MyNetDiary: 1,142 項目
+  - EatThisMuch: 8,878 項目
 
-**期待される結果例**:
+**テスト結果例**:
 
 ```
-食事全体の栄養価:
-- カロリー: 337.95 kcal
-- たんぱく質: 13.32g
-- 炭水化物: 56.19g
-- 脂質: 6.67g
+📈 Multi-Database Search Results Summary:
+- Total queries: 11
+- Total matches found: 87
+- Average matches per query: 7.9
+- Search time: 0.10s
+
+🔍 Detailed Query Results:
+1. 'Roasted Potatoes' (dish)
+   EatThisMuch: 3 matches
+     Best: 'Roasted Potatoes' (score: 1.000)
+     Nutrition: 91.0 kcal, 1.9g protein
 ```
 
-### 3. その他のテスト
+### ローカル栄養検索テスト
 
 ```bash
-# USDA APIのみのテスト
-python test_usda_only.py
+# ローカル栄養データベース検索の統合テスト
+python test_local_nutrition_search_v2.py
+```
 
-# Vertex AI直接テスト
-python test_direct_vertexai.py
+### 基本テスト（フェーズ 1 のみ）
+
+```bash
+python test_phase1_only.py
 ```
 
 ## 🚀 ローカル栄養データベース検索システム v2.0
