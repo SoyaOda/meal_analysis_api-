@@ -88,3 +88,5 @@ service-account-key.json
 
 /raw_nutrition_data/
 analysis_results/
+elasticsearch-*/data/
+elasticsearch-*/logs/

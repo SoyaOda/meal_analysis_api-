@@ -138,8 +138,8 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         self.log_processing_detail("results_per_db", self.results_per_db)
         
         if self.multi_db_search_mode:
-            self.log_processing_detail("search_method", "elasticsearch_multi_db")
-            return await self._elasticsearch_multi_db_search(input_data, search_terms)
+            self.log_processing_detail("search_method", "elasticsearch_strategic")
+            return await self._elasticsearch_strategic_search(input_data, search_terms)
         else:
             self.log_processing_detail("search_method", "elasticsearch_single")
             return await self._elasticsearch_search(input_data, search_terms)
@@ -245,16 +245,24 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         
         return result
     
-    async def _elasticsearch_multi_db_search(self, input_data: NutritionQueryInput, search_terms: List[str]) -> NutritionQueryOutput:
+    async def _elasticsearch_strategic_search(self, input_data: NutritionQueryInput, search_terms: List[str]) -> NutritionQueryOutput:
         """
-        Elasticsearchを使用したマルチデータベース検索（各DBから複数結果を取得）
+        戦略的Elasticsearch検索（dish/ingredient別の最適化された検索）
+        
+        Dish戦略:
+        - メイン: EatThisMuch data_type=dish
+        - 補助: EatThisMuch data_type=branded (スコアが低い場合)
+        
+        Ingredient戦略:
+        - メイン: EatThisMuch data_type=ingredient  
+        - 補助: MyNetDiary, YAZIO, EatThisMuch branded
         
         Args:
             input_data: 入力データ
             search_terms: 検索語彙リスト
             
         Returns:
-            NutritionQueryOutput: Elasticsearch検索結果（各DBから複数結果）
+            NutritionQueryOutput: 戦略的検索結果
         """
         matches = {}
         warnings = []
@@ -264,55 +272,52 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         
         start_time = datetime.now()
         
-        # 各検索語彙についてマルチDB検索を実行
+        # 各検索語彙について戦略的検索を実行
         for search_index, search_term in enumerate(search_terms):
-            self.logger.debug(f"Multi-DB Elasticsearch search for: {search_term}")
+            self.logger.debug(f"Strategic Elasticsearch search for: {search_term}")
             
-            self.log_processing_detail(f"multi_db_search_{search_index}_term", search_term)
+            self.log_processing_detail(f"strategic_search_{search_index}_term", search_term)
             
             try:
-                # 各データベースから結果を取得
-                db_results = await self._search_all_databases(search_term, input_data)
+                # クエリタイプを判定
+                query_type = "dish" if search_term in input_data.dish_names else "ingredient"
+                self.log_processing_detail(f"search_{search_index}_type", query_type)
                 
-                if db_results:
-                    # 各データベースからの結果を統合
-                    consolidated_results = self._consolidate_multi_db_results(db_results, search_term)
+                # 戦略的検索を実行
+                if query_type == "dish":
+                    strategic_results = await self._strategic_dish_search(search_term, input_data)
+                else:
+                    strategic_results = await self._strategic_ingredient_search(search_term, input_data)
+                
+                if strategic_results:
+                    matches[search_term] = strategic_results
+                    successful_matches += 1
                     
-                    if consolidated_results:
-                        matches[search_term] = consolidated_results
-                        successful_matches += 1
-                        
-                        self.log_reasoning(
-                            f"multi_db_match_{search_index}",
-                            f"Found multi-DB matches for '{search_term}': {len(consolidated_results)} total results from {len(db_results)} databases"
-                        )
-                    else:
-                        self.log_reasoning(
-                            f"multi_db_no_results_{search_index}",
-                            f"No consolidated results for '{search_term}'"
-                        )
-                        warnings.append(f"No multi-DB results found for: {search_term}")
+                    self.log_reasoning(
+                        f"strategic_match_{search_index}",
+                        f"Found strategic matches for '{search_term}' ({query_type}): {len(strategic_results)} results"
+                    )
                 else:
                     self.log_reasoning(
-                        f"multi_db_no_match_{search_index}",
-                        f"No multi-DB match found for '{search_term}'"
+                        f"strategic_no_results_{search_index}",
+                        f"No strategic results for '{search_term}' ({query_type})"
                     )
-                    warnings.append(f"No multi-DB match found for: {search_term}")
+                    warnings.append(f"No strategic results found for: {search_term}")
                     
             except Exception as e:
-                error_msg = f"Multi-DB Elasticsearch search error for '{search_term}': {str(e)}"
+                error_msg = f"Strategic Elasticsearch search error for '{search_term}': {str(e)}"
                 self.logger.error(error_msg)
                 errors.append(error_msg)
                 
                 self.log_reasoning(
-                    f"multi_db_search_error_{search_index}",
-                    f"Multi-DB Elasticsearch search error for '{search_term}': {str(e)}"
+                    f"strategic_search_error_{search_index}",
+                    f"Strategic Elasticsearch search error for '{search_term}': {str(e)}"
                 )
         
         end_time = datetime.now()
         search_time_ms = int((end_time - start_time).total_seconds() * 1000)
         
-        # マルチDB検索サマリーを作成
+        # 戦略的検索サマリーを作成
         total_results = sum(len(result_list) if isinstance(result_list, list) else 1 for result_list in matches.values())
         
         search_summary = {
@@ -320,18 +325,20 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             "successful_matches": successful_matches,
             "failed_searches": total_searches - successful_matches,
             "match_rate_percent": round((successful_matches / total_searches) * 100, 1) if total_searches > 0 else 0,
-            "search_method": "elasticsearch_multi_db",
+            "search_method": "elasticsearch_strategic",
             "database_source": "elasticsearch_nutrition_db",
             "preferred_source": input_data.preferred_source,
             "search_time_ms": search_time_ms,
             "index_name": self.index_name,
             "total_indexed_documents": await self._get_total_document_count(),
-            "results_per_db": self.results_per_db,
-            "target_databases": self.target_databases,
+            "strategic_approach": {
+                "dish_strategy": "eatthismuch_dish_primary + eatthismuch_branded_fallback",
+                "ingredient_strategy": "eatthismuch_ingredient_primary + multi_db_fallback"
+            },
             "total_results": total_results
         }
         
-        self.log_processing_detail("elasticsearch_multi_db_search_summary", search_summary)
+        self.log_processing_detail("elasticsearch_strategic_search_summary", search_summary)
         
         result = NutritionQueryOutput(
             matches=matches,
@@ -340,78 +347,209 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             errors=errors if errors else None
         )
         
-        self.logger.info(f"Multi-DB Elasticsearch nutrition search completed: {successful_matches}/{total_searches} matches ({result.get_match_rate():.1%}) with {total_results} total results in {search_time_ms}ms")
+        self.logger.info(f"Strategic Elasticsearch nutrition search completed: {successful_matches}/{total_searches} matches ({result.get_match_rate():.1%}) with {total_results} total results in {search_time_ms}ms")
         
         return result
-    
-    async def _search_all_databases(self, search_term: str, input_data: NutritionQueryInput) -> Dict[str, List[Dict]]:
+
+    async def _strategic_dish_search(self, search_term: str, input_data: NutritionQueryInput) -> List[NutritionMatch]:
         """
-        各データベースから検索結果を取得
+        Dish検索戦略を実行
+        
+        戦略:
+        1. EatThisMuch data_type=dish をメイン検索
+        2. スコアが低い場合は EatThisMuch data_type=branded を補助検索
         
         Args:
             search_term: 検索語彙
             input_data: 入力データ
             
         Returns:
-            Dict[str, List[Dict]]: データベース名をキーとした検索結果辞書
+            List[NutritionMatch]: 戦略的検索結果
         """
-        db_results = {}
+        results = []
+        MIN_SCORE_THRESHOLD = 20.0  # スコア閾値
         
-        self.logger.info(f"Starting multi-database search for '{search_term}' across {len(self.target_databases)} databases")
+        self.logger.info(f"Strategic dish search for '{search_term}': EatThisMuch dish -> branded fallback")
         
-        for db_name in self.target_databases:
-            self.logger.info(f"Searching in database: {db_name}")
-            try:
-                # データベース固有のクエリを構築
-                es_query = self._build_multi_db_elasticsearch_query(search_term, input_data, db_name)
-                self.logger.debug(f"Query for {db_name}: {es_query}")
-                
-                # 検索実行
-                response = self.es_client.search(
-                    index=self.index_name,
-                    body=es_query
-                )
-                
-                hits = response.get('hits', {}).get('hits', [])
-                if hits:
-                    db_results[db_name] = hits[:self.results_per_db]  # 指定された件数まで取得
-                    self.logger.info(f"Found {len(hits)} results in {db_name} for '{search_term}', storing {len(db_results[db_name])}")
-                else:
-                    self.logger.info(f"No results in {db_name} for '{search_term}'")
-                    
-            except Exception as e:
-                self.logger.error(f"Error searching {db_name} for '{search_term}': {e}")
-                import traceback
-                self.logger.error(f"Traceback: {traceback.format_exc()}")
+        # Step 1: EatThisMuch dish をメイン検索
+        main_query = self._build_strategic_query(search_term, "eatthismuch", "dish")
         
-        self.logger.info(f"Multi-database search completed. Found results in {len(db_results)} databases: {list(db_results.keys())}")
-        return db_results
-    
-    def _consolidate_multi_db_results(self, db_results: Dict[str, List[Dict]], search_term: str) -> List[NutritionMatch]:
-        """
-        各データベースからの検索結果を統合
-        
-        Args:
-            db_results: データベース別検索結果
-            search_term: 検索語彙
+        try:
+            response = self.es_client.search(index=self.index_name, body=main_query)
+            hits = response.get('hits', {}).get('hits', [])
             
-        Returns:
-            List[NutritionMatch]: 統合された結果リスト
-        """
-        consolidated = []
+            if hits:
+                best_score = hits[0].get('_score', 0)
+                self.logger.info(f"Dish main search: found {len(hits)} results, best score: {best_score}")
+                
+                if best_score >= MIN_SCORE_THRESHOLD:
+                    # 高スコア: メイン結果のみ使用
+                    for hit in hits[:self.results_per_db]:
+                        match = self._convert_es_hit_to_nutrition_match(hit, search_term)
+                        match.search_metadata["strategic_phase"] = "main_dish"
+                        match.search_metadata["strategy_type"] = "dish_primary"
+                        results.append(match)
+                    
+                    self.logger.info(f"High score dish results: using {len(results)} main results")
+                    return results
+                else:
+                    # 低スコア: メイン結果を保持して補助検索も実行
+                    for hit in hits[:max(1, self.results_per_db // 2)]:
+                        match = self._convert_es_hit_to_nutrition_match(hit, search_term)
+                        match.search_metadata["strategic_phase"] = "main_dish_low_score"
+                        match.search_metadata["strategy_type"] = "dish_primary"
+                        results.append(match)
         
-        for db_name, hits in db_results.items():
-            for hit in hits:
-                match = self._convert_es_hit_to_nutrition_match(hit, search_term)
-                # データベース名を明示的にメタデータに追加
-                match.search_metadata["source_database"] = db_name
-                match.search_metadata["multi_db_search"] = True
-                consolidated.append(match)
+        except Exception as e:
+            self.logger.error(f"Error in dish main search: {e}")
+        
+        # Step 2: EatThisMuch branded を補助検索
+        fallback_query = self._build_strategic_query(search_term, "eatthismuch", "branded")
+        
+        try:
+            response = self.es_client.search(index=self.index_name, body=fallback_query)
+            hits = response.get('hits', {}).get('hits', [])
+            
+            if hits:
+                remaining_slots = self.results_per_db - len(results)
+                for hit in hits[:remaining_slots]:
+                    match = self._convert_es_hit_to_nutrition_match(hit, search_term)
+                    match.search_metadata["strategic_phase"] = "fallback_branded"
+                    match.search_metadata["strategy_type"] = "dish_fallback"
+                    results.append(match)
+                
+                self.logger.info(f"Dish fallback search: added {min(len(hits), remaining_slots)} branded results")
+        
+        except Exception as e:
+            self.logger.error(f"Error in dish fallback search: {e}")
         
         # スコア順でソート
-        consolidated.sort(key=lambda x: x.score, reverse=True)
+        results.sort(key=lambda x: x.score, reverse=True)
         
-        return consolidated
+        self.logger.info(f"Strategic dish search completed: {len(results)} total results")
+        return results
+
+    async def _strategic_ingredient_search(self, search_term: str, input_data: NutritionQueryInput) -> List[NutritionMatch]:
+        """
+        Ingredient検索戦略を実行
+        
+        戦略:
+        1. EatThisMuch data_type=ingredient をメイン検索
+        2. MyNetDiary, YAZIO, EatThisMuch branded を補助検索
+        
+        Args:
+            search_term: 検索語彙
+            input_data: 入力データ
+            
+        Returns:
+            List[NutritionMatch]: 戦略的検索結果
+        """
+        results = []
+        
+        self.logger.info(f"Strategic ingredient search for '{search_term}': EatThisMuch ingredient -> multi-DB fallback")
+        
+        # Step 1: EatThisMuch ingredient をメイン検索
+        main_query = self._build_strategic_query(search_term, "eatthismuch", "ingredient")
+        
+        try:
+            response = self.es_client.search(index=self.index_name, body=main_query)
+            hits = response.get('hits', {}).get('hits', [])
+            
+            if hits:
+                # メイン結果を追加（最大半分のスロット使用）
+                main_slots = max(1, self.results_per_db // 2)
+                for hit in hits[:main_slots]:
+                    match = self._convert_es_hit_to_nutrition_match(hit, search_term)
+                    match.search_metadata["strategic_phase"] = "main_ingredient"
+                    match.search_metadata["strategy_type"] = "ingredient_primary"
+                    results.append(match)
+                
+                self.logger.info(f"Ingredient main search: added {len(results)} primary results")
+        
+        except Exception as e:
+            self.logger.error(f"Error in ingredient main search: {e}")
+        
+        # Step 2: 補助データベース検索
+        fallback_sources = [
+            ("mynetdiary", "unified"),
+            ("yazio", "unified"), 
+            ("eatthismuch", "branded")
+        ]
+        
+        remaining_slots = self.results_per_db - len(results)
+        slots_per_source = max(1, remaining_slots // len(fallback_sources))
+        
+        for db_name, data_type in fallback_sources:
+            if remaining_slots <= 0:
+                break
+                
+            try:
+                fallback_query = self._build_strategic_query(search_term, db_name, data_type)
+                response = self.es_client.search(index=self.index_name, body=fallback_query)
+                hits = response.get('hits', {}).get('hits', [])
+                
+                if hits:
+                    current_slots = min(slots_per_source, remaining_slots)
+                    for hit in hits[:current_slots]:
+                        match = self._convert_es_hit_to_nutrition_match(hit, search_term)
+                        match.search_metadata["strategic_phase"] = "fallback_multi_db"
+                        match.search_metadata["strategy_type"] = "ingredient_fallback"
+                        match.search_metadata["fallback_source"] = f"{db_name}_{data_type}"
+                        results.append(match)
+                    
+                    remaining_slots -= len(hits[:current_slots])
+                    self.logger.info(f"Ingredient fallback ({db_name}_{data_type}): added {len(hits[:current_slots])} results")
+            
+            except Exception as e:
+                self.logger.error(f"Error in ingredient fallback search ({db_name}_{data_type}): {e}")
+        
+        # スコア順でソート
+        results.sort(key=lambda x: x.score, reverse=True)
+        
+        self.logger.info(f"Strategic ingredient search completed: {len(results)} total results")
+        return results
+
+    def _build_strategic_query(self, search_term: str, target_db: str, data_type: str) -> Dict[str, Any]:
+        """
+        戦略的検索用のElasticsearchクエリを構築
+        
+        Args:
+            search_term: 検索語彙
+            target_db: ターゲットデータベース
+            data_type: データタイプ
+            
+        Returns:
+            Elasticsearchクエリ辞書
+        """
+        query = {
+            "size": self.results_per_db,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "multi_match": {
+                                "query": search_term,
+                                "fields": [
+                                    "search_name^3",
+                                    "description^1"
+                                ],
+                                "type": "best_fields",
+                                "fuzziness": "AUTO"
+                            }
+                        }
+                    ],
+                    "filter": [
+                        {"term": {"source_db": target_db}},
+                        {"term": {"data_type": data_type}}
+                    ]
+                }
+            },
+            "sort": [
+                {"_score": {"order": "desc"}}
+            ]
+        }
+        
+        return query
     
     async def _get_total_document_count(self) -> int:
         """インデックス内の総ドキュメント数を取得"""
@@ -482,48 +620,6 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         return {
             "query": query,
             "size": 5,  # 上位5件を取得
-            "_source": ["data_type", "id", "search_name", "nutrition", "weight", "source_db", "description"]
-        }
-    
-    def _build_multi_db_elasticsearch_query(self, search_term: str, input_data: NutritionQueryInput, target_db: str) -> Dict[str, Any]:
-        """
-        特定データベース向けElasticsearch検索クエリを構築
-        
-        Args:
-            search_term: 検索語彙
-            input_data: 入力データ
-            target_db: 対象データベース名
-            
-        Returns:
-            Elasticsearchクエリ辞書
-        """
-        # 基本的なmulti_matchクエリ
-        base_query = {
-            "multi_match": {
-                "query": search_term,
-                "fields": [
-                    "search_name^3",
-                    "search_name.exact^5"
-                ],
-                "type": "best_fields",
-                "fuzziness": "AUTO",
-                "operator": "OR"
-            }
-        }
-        
-        # 必須フィルタ：指定されたデータベースのみ
-        # data_typeフィルタは削除して、全てのタイプから検索
-        filters = [{"term": {"source_db": target_db}}]
-        
-        query = {
-            "bool": {
-                "must": [base_query] + filters
-            }
-        }
-        
-        return {
-            "query": query,
-            "size": self.results_per_db,  # データベースあたりの取得件数
             "_source": ["data_type", "id", "search_name", "nutrition", "weight", "source_db", "description"]
         }
     
