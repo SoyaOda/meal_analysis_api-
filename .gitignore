@@ -90,3 +90,4 @@ service-account-key.json
 analysis_results/
 elasticsearch-*/data/
 elasticsearch-*/logs/
+elasticsearch-8.10.4/data/
