@@ -117,9 +117,12 @@ class ResultManager:
         self.analysis_id = analysis_id
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-        # 実行ごとのフォルダを作成
-        self.analysis_folder_name = f"analysis_{self.timestamp}_{self.analysis_id}"
-        self.analysis_dir = Path(save_directory) / self.analysis_folder_name
+        # 実行ごとのフォルダを作成（分かりやすい階層構造）
+        timestamp_dir = Path(save_directory) / f"api_analysis_{self.timestamp}"
+        timestamp_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.analysis_folder_name = f"meal_analysis_{self.analysis_id}"
+        self.analysis_dir = timestamp_dir / self.analysis_folder_name
         self.analysis_dir.mkdir(parents=True, exist_ok=True)
         
         # 各フェーズのフォルダを作成

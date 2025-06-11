@@ -38,7 +38,11 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         # 完全分析エンドポイントを呼び出してPhase1結果を取得
         with open(image_path, "rb") as f:
             files = {"image": (os.path.basename(image_path), f, "image/jpeg")}
-            data = {"save_results": True}
+            data = {
+                "save_results": True,
+                "test_execution": True,  # テスト実行中であることを通知
+                "test_results_dir": main_results_dir  # テスト結果ディレクトリを指定
+            }
             
             print("Starting complete analysis to get Phase1 results...")
             start_time = time.time()
@@ -222,7 +226,7 @@ async def test_advanced_elasticsearch_search():
     
     # 実行用のメインディレクトリを作成
     main_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    main_results_dir = f"analysis_results/multi_image_test_{main_timestamp}"
+    main_results_dir = f"analysis_results/elasticsearch_test_{main_timestamp}"
     os.makedirs(main_results_dir, exist_ok=True)
     print(f"📁 Created main results directory: {main_results_dir}")
     
@@ -284,7 +288,7 @@ async def save_advanced_elasticsearch_results(analysis_id: str, search_results, 
     
     # メインディレクトリ内にサブディレクトリを作成
     image_base = os.path.splitext(image_filename)[0]  # food1, food2, etc.
-    results_dir = f"{main_results_dir}/{image_base}_{analysis_id}"
+    results_dir = f"{main_results_dir}/{image_base}"
     os.makedirs(results_dir, exist_ok=True)
     
     # 検索結果を辞書形式に変換

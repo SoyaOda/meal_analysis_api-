@@ -1,5 +1,6 @@
 import uuid
 import json
+import os
 from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
@@ -90,7 +91,9 @@ class MealAnalysisPipeline:
         image_mime_type: str,
         optional_text: Optional[str] = None,
         save_results: bool = True,
-        save_detailed_logs: bool = True
+        save_detailed_logs: bool = True,
+        test_execution: bool = False,
+        test_results_dir: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         完全な食事分析を実行
@@ -109,7 +112,16 @@ class MealAnalysisPipeline:
         start_time = datetime.now()
         
         # ResultManagerの初期化
-        result_manager = ResultManager(analysis_id) if save_detailed_logs else None
+        if save_detailed_logs:
+            if test_execution and test_results_dir:
+                # テスト実行時はテスト結果ディレクトリ内のapi_calls/フォルダに保存
+                api_calls_dir = f"{test_results_dir}/api_calls"
+                result_manager = ResultManager(analysis_id, save_directory=api_calls_dir)
+            else:
+                # 通常の実行時は既存の保存先
+                result_manager = ResultManager(analysis_id)
+        else:
+            result_manager = None
         
         self.logger.info(f"[{analysis_id}] Starting complete meal analysis pipeline")
         if self.use_elasticsearch_search:
@@ -298,8 +310,18 @@ class MealAnalysisPipeline:
                 logger.info(f"[{analysis_id}] Saved {len(saved_files)} files across all phases")
             
             if save_results:
-                # 通常の結果保存（互換性維持）
-                saved_file = f"analysis_results/meal_analysis_{analysis_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                # 通常の結果保存（新しい階層構造）
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                if test_execution and test_results_dir:
+                    # テスト実行時はテスト結果ディレクトリ内のapi_calls/フォルダに保存
+                    timestamp_dir = f"{test_results_dir}/api_calls/api_quick_results_{timestamp}"
+                else:
+                    # 通常の実行時は既存の保存先
+                    timestamp_dir = f"analysis_results/api_quick_results_{timestamp}"
+                os.makedirs(timestamp_dir, exist_ok=True)
+                saved_file = f"{timestamp_dir}/meal_analysis_{analysis_id}.json"
+                with open(saved_file, 'w', encoding='utf-8') as f:
+                    json.dump(complete_result, f, indent=2, ensure_ascii=False)
                 complete_result["legacy_saved_to"] = saved_file
             
             self.logger.info(f"[{analysis_id}] Complete analysis pipeline finished successfully in {processing_time:.2f}s")

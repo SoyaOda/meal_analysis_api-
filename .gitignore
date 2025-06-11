@@ -91,3 +91,5 @@ analysis_results/
 elasticsearch-*/data/
 elasticsearch-*/logs/
 elasticsearch-8.10.4/data/
+elasticsearch-8.10.4/data/
+elasticsearch-8.10.4/logs/
