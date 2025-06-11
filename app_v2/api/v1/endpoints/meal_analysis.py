@@ -14,7 +14,9 @@ router = APIRouter()
 async def complete_meal_analysis(
     image: UploadFile = File(...),
     save_results: bool = Form(True),
-    save_detailed_logs: bool = Form(True)
+    save_detailed_logs: bool = Form(True),
+    test_execution: bool = Form(False),
+    test_results_dir: Optional[str] = Form(None)
 ):
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
@@ -48,7 +50,9 @@ async def complete_meal_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type,
             save_results=save_results,
-            save_detailed_logs=save_detailed_logs
+            save_detailed_logs=save_detailed_logs,
+            test_execution=test_execution,
+            test_results_dir=test_results_dir
         )
         
         logger.info(f"Complete analysis pipeline v2.0 finished successfully")
