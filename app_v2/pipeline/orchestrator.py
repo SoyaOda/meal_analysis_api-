@@ -171,20 +171,50 @@ class MealAnalysisPipeline:
             
             # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
             
-            # Phase1の結果を辞書形式に変換（検索特化）
+            # Phase1の結果を辞書形式に変換（構造化データを含む）
             phase1_dict = {
+                "detected_food_items": [
+                    {
+                        "item_name": item.item_name,
+                        "confidence": item.confidence,
+                        "attributes": [
+                            {
+                                "type": attr.type.value if hasattr(attr.type, 'value') else str(attr.type),
+                                "value": attr.value,
+                                "confidence": attr.confidence
+                            }
+                            for attr in item.attributes
+                        ],
+                        "brand": item.brand or "",
+                        "category_hints": item.category_hints,
+                        "negative_cues": item.negative_cues
+                    }
+                    for item in phase1_result.detected_food_items
+                ],
                 "dishes": [
                     {
                         "dish_name": dish.dish_name,
+                        "confidence": dish.confidence,
                         "ingredients": [
                             {
-                                "ingredient_name": ing.ingredient_name
+                                "ingredient_name": ing.ingredient_name,
+                                "confidence": ing.confidence
                             }
                             for ing in dish.ingredients
+                        ],
+                        "attributes": [
+                            {
+                                "type": attr.type.value if hasattr(attr.type, 'value') else str(attr.type),
+                                "value": attr.value,
+                                "confidence": attr.confidence
+                            }
+                            for attr in dish.detected_attributes
                         ]
                     }
                     for dish in phase1_result.dishes
-                ]
+                ],
+                "analysis_confidence": phase1_result.analysis_confidence,
+                "processing_notes": phase1_result.processing_notes
             }
             
             # 簡単な栄養計算（暫定）
