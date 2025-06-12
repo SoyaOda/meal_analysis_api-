@@ -89,6 +89,5 @@ service-account-key.json
 /raw_nutrition_data/
 elasticsearch-*/data/
 elasticsearch-*/logs/
-elasticsearch-8.10.4/data/
-elasticsearch-8.10.4/data/
-elasticsearch-8.10.4/logs/
+elasticsearch-8.10.4/
+
