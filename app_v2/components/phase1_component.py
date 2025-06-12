@@ -238,48 +238,40 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         """構造化出力用の詳細なシステムプロンプトを生成"""
         return """You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
 
-Your task is to analyze the provided food image and return a comprehensive JSON response with the following structure:
+IMPORTANT: The JSON you return will be used to create search queries for three nutrition databases with different characteristics:
+• EatThisMuch – best for generic dish / ingredient names (dish, branded, ingredient types)
+• YAZIO – best for consumer-friendly, simple names that map to one of 25 top-level categories (e.g. Sauces & Dressings, Cheese)
+• MyNetDiary – very scientific names that often include cooking / preservation methods (e.g. "boiled without salt").
 
-{
-  "detected_food_items": [
-    {
-      "item_name": "Primary food item name (e.g., 'Spaghetti Carbonara')",
-      "confidence": 0.85,
-      "attributes": [
-        {"type": "ingredient", "value": "pasta", "confidence": 0.9},
-        {"type": "ingredient", "value": "egg", "confidence": 0.7},
-        {"type": "preparation", "value": "creamy", "confidence": 0.8},
-        {"type": "cooking_method", "value": "boiled", "confidence": 0.6}
-      ],
-      "brand": "Brand name if visible (or null)",
-      "category_hints": ["Italian cuisine", "pasta dish"],
-      "negative_cues": ["not spicy", "no vegetables visible"]
-    }
-  ],
-  "dishes": [
-    {
-      "dish_name": "Spaghetti Carbonara",
-      "confidence": 0.85,
-      "ingredients": [
-        {
-          "ingredient_name": "pasta",
-          "confidence": 0.9,
-          "attributes": [
-            {"type": "ingredient", "value": "spaghetti", "confidence": 0.95}
-          ]
-        }
-      ],
-      "attributes": [
-        {"type": "preparation", "value": "creamy", "confidence": 0.8}
-      ]
-    }
-  ],
-  "analysis_confidence": 0.85
-}
+QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
+1. Avoid overly generic or misleading single-word queries that can map to nutritionally diverging items. Use the precise term instead:
+   • Use "Ice cubes" instead of "Ice" (0 kcal vs. ice-cream).
+   • Use explicit dressing names such as "Caesar dressing", "Ranch dressing", "Italian dressing". Never output "Pasta salad dressing".
+   • When mentioning cheese, specify the variety, e.g. "Cheddar cheese", "Mozzarella cheese" – do NOT output just "Cheese".
+   • For tacos always include the primary protein, e.g. "Beef taco", "Chicken taco", not only "Taco".
+   • For sauces use concrete names such as "Alfredo sauce", "Cream sauce", "Chipotle cream sauce" – avoid the vague "Creamy sauce".
+   • For glazes name the base, e.g. "Honey glaze sauce", "Balsamic glaze", rather than the lone word "Glaze".
 
-Attribute types include: "ingredient", "preparation", "color", "texture", "cooking_method", "serving_style", "allergen"
+2. Prefer simple, searchable names that exist as separate database entries. Break complex phrases into individual components following the DISH DECOMPOSITION RULE below.
 
-Focus on accuracy and provide confidence scores based on visual clarity and certainty."""
+3. When a cooking or preservation method materially changes nutrition (e.g. boiled vs fried), include it – this helps MyNetDiary matching. Otherwise omit noisy descriptors.
+
+4. NEVER include quantities, units, brand marketing slogans, or flavour adjectives that do not alter nutrition (e.g. "super snack", "skinny").
+
+5. Output MUST be in English.
+
+6. If the detected food is an ultra-niche or specialty variant that is unlikely to exist as a standalone entry (e.g. "microgreens", "broccolini", "baby kale", "purple carrots"), automatically map it to the nearest broader and widely available term that preserves similar nutrition per 100 g:
+   • "Microgreens" → "Mixed greens" or "Leafy greens"
+   • "Broccolini" → "Broccoli"
+   • "Baby kale" → "Kale"
+   • "Sprouted alfalfa" → "Alfalfa sprouts"
+   • "Purple carrots" → "Carrots"
+   This fallback ensures high hit-rate across EatThisMuch (ingredient), YAZIO (Vegetables), and MyNetDiary (raw / boiled variants).
+
+-------------------------------------------------------------
+JSON RESPONSE STRUCTURE
+-------------------------------------------------------------
+"""
     
     def _convert_structured_to_legacy(self, detected_items: list) -> list:
         """構造化データを従来形式に変換（フォールバック用）"""

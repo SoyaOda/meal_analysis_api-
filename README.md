@@ -206,10 +206,28 @@ python test_phase1_only.py
 
 ### サーバー起動（v2.0 対応）
 
+#### 1. Elasticsearch の起動
+
+```bash
+# Elasticsearch 8.10.4 の起動
+elasticsearch-8.10.4/bin/elasticsearch
+```
+
+**注意**: Elasticsearch が起動するまで約 20-30 秒かかります。以下のコマンドでヘルスチェックを行ってください：
+
+```bash
+# Elasticsearch ヘルスチェック
+curl -X GET "localhost:9200/_cluster/health?pretty"
+```
+
+#### 2. API サーバーの起動
+
 ```bash
 # app_v2サーバーの起動
 python -m app_v2.main.app
 ```
+
+**注意**: Elasticsearch が正常に起動してから API サーバーを起動してください。
 
 ### ローカル栄養検索テスト
 
