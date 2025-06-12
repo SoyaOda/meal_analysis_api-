@@ -16,10 +16,45 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 def get_file_content(file_path: str) -> str:
-    """ファイル内容を安全に読み取る"""
+    """ファイル内容を安全に読み取る（センシティブ情報をフィルタリング）"""
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            return f.read()
+            content = f.read()
+            
+        # センシティブ情報をフィルタリング
+        if file_path.endswith('.json') and ('service-account' in file_path or 'key' in file_path):
+            return "CONTENT FILTERED: センシティブな認証情報が含まれているため、内容は表示されません。"
+        
+        # JSONファイルの場合、センシティブなキーをマスク
+        if file_path.endswith('.json'):
+            try:
+                data = json.loads(content)
+                # センシティブなキーをマスク
+                sensitive_keys = [
+                    'private_key', 'private_key_id', 'client_email', 
+                    'client_id', 'auth_uri', 'token_uri', 'client_x509_cert_url',
+                    'universe_domain'
+                ]
+                
+                def mask_sensitive_data(obj):
+                    if isinstance(obj, dict):
+                        for key in obj:
+                            if key in sensitive_keys:
+                                obj[key] = "***MASKED***"
+                            elif isinstance(obj[key], (dict, list)):
+                                mask_sensitive_data(obj[key])
+                    elif isinstance(obj, list):
+                        for item in obj:
+                            if isinstance(item, (dict, list)):
+                                mask_sensitive_data(item)
+                
+                mask_sensitive_data(data)
+                return json.dumps(data, indent=2, ensure_ascii=False)
+            except json.JSONDecodeError:
+                # JSONでない場合はそのまま返す
+                pass
+        
+        return content
     except Exception as e:
         return f"ERROR: ファイルを読み取れませんでした: {str(e)}"
 
@@ -107,8 +142,7 @@ def analyze_advanced_elasticsearch_architecture():
         ],
         "依存関係・設定ファイル": [
             "requirements.txt",
-            "README.md",
-            "service-account-key.json"
+            "README.md"
         ]
     }
     
@@ -305,7 +339,7 @@ def analyze_advanced_elasticsearch_architecture():
                             out_f.write(f"ERROR: JSONファイルを読み取れませんでした: {str(e)}\n")
                         out_f.write("```\n\n")
                     elif file_path.endswith('.json'):
-                        # 設定JSONファイルは全内容表示
+                        # 設定JSONファイルは全内容表示（センシティブ情報はマスク済み）
                         out_f.write("CONTENT (設定ファイル):\n")
                         out_f.write("```json\n")
                         content = get_file_content(file_path)
