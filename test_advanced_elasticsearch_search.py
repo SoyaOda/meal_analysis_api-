@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Advanced Elasticsearch Search Test v1.0 - Strategic Search Edition (Multi-Image)
+Advanced Elasticsearch Search Test v2.0 - Lemmatized Enhanced Search Edition (Multi-Image)
 
-ElasticsearchNutritionSearchComponentの戦略的検索機能をテストするスクリプト
+ElasticsearchNutritionSearchComponentの見出し語化対応検索機能をテストするスクリプト
 test_images内の全JPG画像を対象とし、Phase1解析結果から抽出したクエリで
-高度なElasticsearch検索戦略（dish/ingredient戦略的検索）をテスト
+見出し語化機能を活用した高精度Elasticsearch検索をテスト
 """
 
 import requests
@@ -96,13 +96,18 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
             print("❌ No search queries extracted from Phase1 results!")
             return None
         
-        # ElasticsearchNutritionSearchComponentを戦略的検索モードで初期化
-        print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Strategic Search Mode)...")
+        # ElasticsearchNutritionSearchComponentを見出し語化対応モードで初期化
+        print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Lemmatized Enhanced Search Mode)...")
         es_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=True,    # 戦略的検索モードを有効化
+            multi_db_search_mode=False,   # 見出し語化検索を優先（戦略的検索は無効）
             results_per_db=5,             # 各データベースから5つずつ結果を取得
-            enable_advanced_features=False # 仕様書通りの戦略的検索を実行するため無効化
+            enable_advanced_features=False # 構造化検索は無効化、見出し語化検索に集中
         )
+        
+        print(f"✅ Lemmatization features enabled:")
+        print(f"   - Lemmatized exact match boost: {es_component.lemmatized_exact_match_boost}")
+        print(f"   - Compound word penalty: {es_component.compound_word_penalty}")
+        print(f"   - Enable lemmatization: {es_component.enable_lemmatization}")
         
         # 検索入力データを作成
         nutrition_query_input = NutritionQueryInput(
@@ -116,8 +121,8 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         print(f"- Dish names: {len(dish_names)} items")
         print(f"- Total search terms: {len(nutrition_query_input.get_all_search_terms())}")
         
-        # Advanced Elasticsearch戦略検索を実行
-        print(f"\n🔍 Starting Advanced Elasticsearch strategic search...")
+        # Advanced Elasticsearch見出し語化対応検索を実行
+        print(f"\n🔍 Starting Advanced Elasticsearch lemmatized enhanced search...")
         search_start_time = time.time()
         
         search_results = await es_component.execute(nutrition_query_input)
@@ -125,19 +130,30 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         search_end_time = time.time()
         search_time = search_end_time - search_start_time
         
-        print(f"✅ Advanced Elasticsearch strategic search completed in {search_time:.3f}s")
+        print(f"✅ Advanced Elasticsearch lemmatized enhanced search completed in {search_time:.3f}s")
         
         # 結果の分析
         matches = search_results.matches
         search_summary = search_results.search_summary
         
-        print(f"\n📈 Advanced Elasticsearch Strategic Search Results Summary:")
+        print(f"\n📈 Advanced Elasticsearch Lemmatized Enhanced Search Results Summary:")
         print(f"- Total queries: {search_summary.get('total_searches', 0)}")
         print(f"- Successful matches: {search_summary.get('successful_matches', 0)}")
         print(f"- Failed searches: {search_summary.get('failed_searches', 0)}")
         print(f"- Match rate: {search_summary.get('match_rate_percent', 0):.1f}%")
+        print(f"- Search method: {search_summary.get('search_method', 'N/A')}")
         print(f"- Search time: {search_summary.get('search_time_ms', 0)}ms")
         print(f"- Total results: {search_summary.get('total_results', 0)}")
+        
+        # 見出し語化の効果を表示
+        if hasattr(search_results, 'advanced_search_metadata') and search_results.advanced_search_metadata:
+            metadata = search_results.advanced_search_metadata
+            if 'lemmatization_enabled' in metadata:
+                print(f"- Lemmatization enabled: {metadata['lemmatization_enabled']}")
+            if 'scoring_parameters' in metadata:
+                params = metadata['scoring_parameters']
+                print(f"- Exact match boost: {params.get('exact_match_boost', 'N/A')}")
+                print(f"- Compound word penalty: {params.get('compound_word_penalty', 'N/A')}")
         
         # 結果を保存
         await save_advanced_elasticsearch_results(

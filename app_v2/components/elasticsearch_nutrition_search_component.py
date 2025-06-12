@@ -17,6 +17,7 @@ from ..models.nutrition_search_models import (
 )
 from ..models.phase1_models import Phase1Output, DetectedFoodItem, FoodAttribute, AttributeType
 from ..config import get_settings
+from ..utils.lemmatization import lemmatize_term, create_lemmatized_query_variations
 
 # 文字列類似度アルゴリズム
 try:
@@ -73,6 +74,11 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         self.preparation_boost = 1.2
         self.jaro_winkler_threshold = 0.8
         self.levenshtein_threshold = 0.7
+        
+        # 見出し語化対応のスコアリングパラメータ
+        self.lemmatized_exact_match_boost = 2.0  # 見出し語化後の完全一致ブースト
+        self.compound_word_penalty = 0.8  # 複合語の場合のペナルティ
+        self.enable_lemmatization = True  # 見出し語化機能の有効化
         
         # Elasticsearchクライアントの初期化
         self._initialize_elasticsearch()
@@ -140,6 +146,9 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         if self.enable_advanced_features and structured_data:
             # 構造化データを使用した高度な検索
             return await self._advanced_structured_search(input_data, structured_data, search_terms, start_time)
+        elif self.enable_lemmatization:
+            # 見出し語化機能を活用した検索精度向上版
+            return await self._lemmatized_enhanced_search(input_data, search_terms)
         elif self.multi_db_search_mode:
             # 従来の戦略的検索
             return await self._elasticsearch_strategic_search(input_data, search_terms)
@@ -1032,6 +1041,320 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             "_source": ["data_type", "id", "search_name", "nutrition", "weight", "source_db", "description"]
         }
     
+    async def _lemmatized_enhanced_search(self, input_data: NutritionQueryInput, search_terms: List[str]) -> NutritionQueryOutput:
+        """
+        見出し語化機能を活用した検索精度向上版の戦略的検索
+        
+        Args:
+            input_data: 検索入力データ
+            search_terms: 検索語彙リスト
+            
+        Returns:
+            NutritionQueryOutput: 見出し語化機能強化済みの検索結果
+        """
+        start_time = datetime.now()
+        
+        matches = {}
+        successful_matches = 0
+        total_searches = len(search_terms)
+        search_reasoning = []
+        
+        self.logger.info(f"Starting lemmatized enhanced search for {total_searches} terms")
+        
+        for search_index, search_term in enumerate(search_terms):
+            try:
+                # 見出し語化されたクエリバリエーションを生成
+                query_variations = create_lemmatized_query_variations(search_term)
+                lemmatized_query = lemmatize_term(search_term)
+                
+                self.logger.debug(f"Search term '{search_term}' -> variations: {query_variations}")
+                
+                # 見出し語化対応の検索クエリを構築
+                enhanced_query = self._build_lemmatized_enhanced_query(search_term, lemmatized_query)
+                
+                # 検索実行
+                response = await self._execute_search(enhanced_query)
+                
+                if response and response.get('hits', {}).get('hits'):
+                    # 見出し語化対応のスコアリング調整
+                    enhanced_results = self._apply_lemmatized_scoring(
+                        response['hits']['hits'], 
+                        search_term, 
+                        lemmatized_query
+                    )
+                    
+                    if enhanced_results:
+                        matches[search_term] = enhanced_results
+                        successful_matches += 1
+                        
+                        search_reasoning.append(
+                            f"lemmatized_match_{search_index}: Found {len(enhanced_results)} enhanced results for '{search_term}' "
+                            f"(lemmatized: '{lemmatized_query}') with improved scoring"
+                        )
+                    else:
+                        search_reasoning.append(
+                            f"lemmatized_no_match_{search_index}: No results after enhanced scoring for '{search_term}'"
+                        )
+                else:
+                    search_reasoning.append(
+                        f"lemmatized_no_hit_{search_index}: No Elasticsearch hits for '{search_term}' variations"
+                    )
+                    
+            except Exception as e:
+                self.logger.error(f"Error in lemmatized search for '{search_term}': {e}")
+                search_reasoning.append(f"lemmatized_error_{search_index}: Error searching '{search_term}': {str(e)}")
+        
+        # 結果の構築
+        end_time = datetime.now()
+        search_time_ms = int((end_time - start_time).total_seconds() * 1000)
+        
+        total_results = sum(len(result_list) for result_list in matches.values())
+        match_rate = (successful_matches / total_searches * 100) if total_searches > 0 else 0
+        
+        search_summary = {
+            "total_searches": total_searches,
+            "successful_matches": successful_matches,
+            "failed_searches": total_searches - successful_matches,
+            "match_rate_percent": match_rate,
+            "search_method": "elasticsearch_lemmatized_enhanced",
+            "search_time_ms": search_time_ms,
+            "total_results": total_results
+        }
+        
+        self.logger.info(f"Lemmatized enhanced search completed: {successful_matches}/{total_searches} matches, {search_time_ms}ms")
+        
+        return NutritionQueryOutput(
+            matches=matches,
+            search_summary=search_summary,
+            warnings=None,
+            errors=None,
+            advanced_search_metadata={
+                "search_reasoning": search_reasoning,
+                "lemmatization_enabled": self.enable_lemmatization,
+                "scoring_parameters": {
+                    "exact_match_boost": self.lemmatized_exact_match_boost,
+                    "compound_word_penalty": self.compound_word_penalty
+                }
+            }
+        )
+    
+    def _build_lemmatized_enhanced_query(self, original_term: str, lemmatized_term: str) -> Dict[str, Any]:
+        """
+        見出し語化対応の強化されたElasticsearchクエリを構築
+        
+        Args:
+            original_term: 元の検索語
+            lemmatized_term: 見出し語化された検索語
+            
+        Returns:
+            強化されたElasticsearchクエリ
+        """
+        # 複数の検索戦略を組み合わせたbool query
+        bool_query = {
+            "bool": {
+                "should": [
+                    # 1. 見出し語化フィールドでの完全一致（最高ブースト）
+                    {
+                        "match": {
+                            "search_name_lemmatized.exact": {
+                                "query": lemmatized_term,
+                                "boost": self.lemmatized_exact_match_boost * 3.0
+                            }
+                        }
+                    },
+                    # 2. 見出し語化フィールドでの一致（高ブースト）
+                    {
+                        "match": {
+                            "search_name_lemmatized": {
+                                "query": lemmatized_term,
+                                "boost": self.lemmatized_exact_match_boost * 2.0
+                            }
+                        }
+                    },
+                    # 3. 元の語での完全一致
+                    {
+                        "match": {
+                            "search_name.exact": {
+                                "query": original_term,
+                                "boost": 1.8
+                            }
+                        }
+                    },
+                    # 4. 元の語での一致
+                    {
+                        "match": {
+                            "search_name": {
+                                "query": original_term,
+                                "boost": 1.5
+                            }
+                        }
+                    },
+                    # 5. 見出し語化フィールドでの部分一致
+                    {
+                        "match_phrase": {
+                            "search_name_lemmatized": {
+                                "query": lemmatized_term,
+                                "boost": self.lemmatized_exact_match_boost
+                            }
+                        }
+                    },
+                    # 6. 元の語での部分一致
+                    {
+                        "match_phrase": {
+                            "search_name": {
+                                "query": original_term,
+                                "boost": 1.0
+                            }
+                        }
+                    },
+                    # 7. あいまい検索（typo対応）
+                    {
+                        "fuzzy": {
+                            "search_name_lemmatized": {
+                                "value": lemmatized_term,
+                                "fuzziness": "AUTO",
+                                "boost": 0.5
+                            }
+                        }
+                    }
+                ],
+                "minimum_should_match": 1
+            }
+        }
+        
+        return {
+            "query": bool_query,
+            "size": 20,  # 後処理でスコア調整するため多めに取得
+            "_source": ["id", "search_name", "description", "data_type", "nutrition", "source_db"]
+        }
+    
+    def _apply_lemmatized_scoring(
+        self, 
+        es_hits: List[Dict[str, Any]], 
+        original_term: str, 
+        lemmatized_term: str
+    ) -> List[NutritionMatch]:
+        """
+        見出し語化を考慮したスコアリング調整を適用
+        
+        Args:
+            es_hits: Elasticsearchからの生の検索結果
+            original_term: 元の検索語
+            lemmatized_term: 見出し語化された検索語
+            
+        Returns:
+            スコア調整済みのNutritionMatchリスト
+        """
+        enhanced_results = []
+        
+        for hit in es_hits:
+            try:
+                # 基本のNutritionMatchを作成
+                nutrition_match = self._convert_es_hit_to_nutrition_match(hit, original_term)
+                
+                # データベース項目名の見出し語化（インデックスされたフィールドを優先使用）
+                db_item_name = nutrition_match.search_name.lower()
+                
+                # Elasticsearchにインデックスされた見出し語化フィールドがあるかチェック
+                if '_source' in hit and 'search_name_lemmatized' in hit['_source']:
+                    lemmatized_db_name = hit['_source']['search_name_lemmatized']
+                else:
+                    # フォールバック：リアルタイムで見出し語化
+                    lemmatized_db_name = lemmatize_term(db_item_name)
+                
+                # 見出し語化対応のスコア調整を計算
+                score_adjustment = self._calculate_lemmatized_score_adjustment(
+                    original_term, lemmatized_term, db_item_name, lemmatized_db_name
+                )
+                
+                # Elasticsearchスコアに調整係数を適用
+                original_score = hit['_score']
+                adjusted_score = original_score * score_adjustment
+                nutrition_match.score = adjusted_score
+                
+                # メタデータの追加
+                if not hasattr(nutrition_match, 'search_metadata'):
+                    nutrition_match.search_metadata = {}
+                
+                nutrition_match.search_metadata.update({
+                    "lemmatized_query": lemmatized_term,
+                    "lemmatized_db_name": lemmatized_db_name,
+                    "score_adjustment_factor": score_adjustment,
+                    "original_elasticsearch_score": original_score,
+                    "enhanced_scoring_applied": True
+                })
+                
+                enhanced_results.append(nutrition_match)
+                
+            except Exception as e:
+                self.logger.warning(f"Failed to apply lemmatized scoring to hit: {e}")
+                continue
+        
+        # スコア順でソート
+        enhanced_results.sort(key=lambda x: x.score, reverse=True)
+        
+        # 上位結果のみ返す
+        return enhanced_results[:5]
+    
+    def _calculate_lemmatized_score_adjustment(
+        self, 
+        original_term: str, 
+        lemmatized_term: str, 
+        db_item_name: str, 
+        lemmatized_db_name: str
+    ) -> float:
+        """
+        見出し語化を考慮したスコア調整係数を計算
+        
+        Args:
+            original_term: 元の検索語
+            lemmatized_term: 見出し語化された検索語  
+            db_item_name: データベース項目名
+            lemmatized_db_name: 見出し語化されたデータベース項目名
+            
+        Returns:
+            スコア調整係数（1.0が基準、>1.0がブースト、<1.0がペナルティ）
+        """
+        # デフォルトの調整係数
+        adjustment = 1.0
+        
+        # 1. 見出し語化後の完全一致チェック
+        lemmatized_query_tokens = lemmatized_term.split()
+        lemmatized_db_tokens = lemmatized_db_name.split()
+        
+        # 単一語クエリ vs 単一語DB項目での見出し語化完全一致
+        if (len(lemmatized_query_tokens) == 1 and 
+            len(lemmatized_db_tokens) == 1 and 
+            lemmatized_term == lemmatized_db_name):
+            adjustment *= self.lemmatized_exact_match_boost
+            self.logger.debug(f"Lemmatized exact match boost applied: {lemmatized_term} == {lemmatized_db_name}")
+        
+        # 2. 単一語クエリが複合語DB項目に含まれる場合のペナルティ  
+        elif (len(lemmatized_query_tokens) == 1 and 
+              len(lemmatized_db_tokens) > 1 and 
+              lemmatized_term in lemmatized_db_tokens):
+            adjustment *= self.compound_word_penalty
+            self.logger.debug(f"Compound word penalty applied: '{lemmatized_term}' in '{lemmatized_db_name}'")
+        
+        # 3. 元の語での完全一致も評価
+        elif original_term.lower() == db_item_name:
+            adjustment *= 1.5  # 元の語での完全一致もブーストする
+        
+        return adjustment
+    
+    async def _execute_search(self, query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Elasticsearch検索を実行"""
+        try:
+            if not self.es_client:
+                return None
+                
+            response = self.es_client.search(index=self.index_name, body=query)
+            return response
+            
+        except Exception as e:
+            self.logger.error(f"Elasticsearch search execution failed: {e}")
+            return None
+
     def _convert_es_hit_to_nutrition_match(self, hit: Dict[str, Any], search_term: str) -> NutritionMatch:
         """
         ElasticsearchヒットをNutritionMatchに変換
