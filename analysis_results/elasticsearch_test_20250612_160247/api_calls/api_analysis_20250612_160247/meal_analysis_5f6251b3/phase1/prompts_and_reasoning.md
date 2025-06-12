@@ -1,7 +1,19 @@
-class Phase1Prompts:
-    """Phase1（画像分析）のプロンプトテンプレート（構造化出力・データベース特化）"""
-    
-    SYSTEM_PROMPT = """You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
+# Phase1: 画像分析 - プロンプトと推論
+
+## 実行情報
+- 実行ID: 5f6251b3_phase1
+- 開始時刻: 2025-06-12T16:02:47.347418
+- 終了時刻: 2025-06-12T16:03:07.406156
+- 実行時間: 20.06秒
+
+## 使用されたプロンプト
+
+### Structured System Prompt
+
+**タイムスタンプ**: 2025-06-12T16:02:47.347540
+
+```
+You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
 
 IMPORTANT: The JSON you return will be used to create search queries for three nutrition databases with different characteristics:
 • EatThisMuch – best for generic dish / ingredient names (dish, branded, ingredient types)
@@ -86,19 +98,20 @@ Return a JSON object with the following structure:
       ]
     }
   ]
-}"""
+}
+```
 
-    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. Focus on providing clear, searchable names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. Ensure all nutritionally significant ingredients are included for accurate nutrition calculations."
+### User Prompt
 
-    @classmethod
-    def get_system_prompt(cls) -> str:
-        """システムプロンプトを取得"""
-        return cls.SYSTEM_PROMPT
-    
-    @classmethod
-    def get_user_prompt(cls, optional_text: str = None) -> str:
-        """ユーザープロンプトを取得"""
-        base_prompt = cls.USER_PROMPT_TEMPLATE
-        if optional_text:
-            base_prompt += f"\n\nAdditional context: {optional_text}"
-        return base_prompt 
+**タイムスタンプ**: 2025-06-12T16:02:47.347543
+
+```
+Please analyze this meal image and identify the dishes and their ingredients. Focus on providing clear, searchable names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. Ensure all nutritionally significant ingredients are included for accurate nutrition calculations.
+```
+
+**変数**:
+- optional_text: None
+- image_mime_type: image/jpeg
+
+## AI推論の詳細
+
