@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Elasticsearch Index Creation Script
+Elasticsearch Index Creation Script with Lemmatization Support
 
-現状のJSONデータベースからElasticsearchインデックスを作成する
+現状のJSONデータベースからElasticsearchインデックスを作成する（見出し語化対応版）
 """
 
 import json
@@ -10,6 +10,20 @@ import os
 from elasticsearch import Elasticsearch
 from typing import Dict, List, Any
 import time
+
+# 見出し語化機能をインポート
+try:
+    from app_v2.utils.lemmatization import lemmatize_term
+    LEMMATIZATION_AVAILABLE = True
+    print("✅ 見出し語化機能が利用可能です")
+except ImportError as e:
+    print(f"⚠️ 見出し語化機能をインポートできません: {e}")
+    print("   基本機能のみで実行します")
+    LEMMATIZATION_AVAILABLE = False
+    
+    # フォールバック関数
+    def lemmatize_term(term: str) -> str:
+        return term.lower() if term else ""
 
 
 def create_index_mapping() -> Dict[str, Any]:
@@ -29,6 +43,15 @@ def create_index_mapping() -> Dict[str, Any]:
                         },
                         "suggest": {
                             "type": "completion"
+                        }
+                    }
+                },
+                "search_name_lemmatized": {
+                    "type": "text",
+                    "analyzer": "standard",
+                    "fields": {
+                        "exact": {
+                            "type": "keyword"
                         }
                     }
                 },
@@ -104,10 +127,24 @@ def load_json_databases() -> Dict[str, List[Dict[str, Any]]]:
 
 
 def prepare_document(item: Dict[str, Any], source_db: str) -> Dict[str, Any]:
-    """ドキュメントをElasticsearch用に準備"""
+    """ドキュメントをElasticsearch用に準備（見出し語化対応）"""
+    search_name = item.get("search_name", "")
+    
+    # 見出し語化されたsearch_nameを生成
+    search_name_lemmatized = ""
+    if search_name and LEMMATIZATION_AVAILABLE:
+        try:
+            search_name_lemmatized = lemmatize_term(search_name)
+        except Exception as e:
+            print(f"⚠️ 見出し語化エラー for '{search_name}': {e}")
+            search_name_lemmatized = search_name.lower()
+    else:
+        search_name_lemmatized = search_name.lower()
+    
     doc = {
         "id": item.get("id", 0),
-        "search_name": item.get("search_name", ""),
+        "search_name": search_name,
+        "search_name_lemmatized": search_name_lemmatized,
         "description": item.get("description"),
         "data_type": item.get("data_type", "unknown"),
         "nutrition": item.get("nutrition", {}),
@@ -221,9 +258,11 @@ def main():
     print(f"   Total documents: {doc_count}")
     print(f"   Index size: {index_size / 1024 / 1024:.2f} MB")
     
-    # サンプル検索テスト
+    # サンプル検索テスト（見出し語化対応）
     print("\n8. Testing sample search...")
-    test_query = {
+    
+    # 従来の検索
+    test_query_standard = {
         "query": {
             "multi_match": {
                 "query": "chicken",
@@ -233,13 +272,34 @@ def main():
         "size": 3
     }
     
-    response = es_client.search(index=index_name, body=test_query)
+    response = es_client.search(index=index_name, body=test_query_standard)
     hits = response["hits"]["hits"]
     
-    print(f"   Sample search for 'chicken': {len(hits)} results")
+    print(f"   Standard search for 'chicken': {len(hits)} results")
     for hit in hits:
         source = hit["_source"]
         print(f"   - {source['search_name']} ({source['source_db']}) score: {hit['_score']:.2f}")
+    
+    # 見出し語化検索テスト
+    print("\n   Testing lemmatized search...")
+    test_query_lemmatized = {
+        "query": {
+            "multi_match": {
+                "query": "tomatoes",
+                "fields": ["search_name", "search_name_lemmatized"]
+            }
+        },
+        "size": 5
+    }
+    
+    response_lem = es_client.search(index=index_name, body=test_query_lemmatized)
+    hits_lem = response_lem["hits"]["hits"]
+    
+    print(f"   Lemmatized search for 'tomatoes': {len(hits_lem)} results")
+    for hit in hits_lem:
+        source = hit["_source"]
+        lemmatized = source.get('search_name_lemmatized', 'N/A')
+        print(f"   - {source['search_name']} -> {lemmatized} ({source['source_db']}) score: {hit['_score']:.2f}")
     
     print(f"\n🎉 Elasticsearch index '{index_name}' successfully created!")
     print(f"   Ready for high-speed nutrition search")
