@@ -1,7 +1,19 @@
-class Phase1Prompts:
-    """Phase1（画像分析）のプロンプトテンプレート（構造化出力・データベース特化）"""
-    
-    SYSTEM_PROMPT = """You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
+# Phase1: 画像分析 - プロンプトと推論
+
+## 実行情報
+- 実行ID: e3148d2b_phase1
+- 開始時刻: 2025-06-12T15:55:38.667175
+- 終了時刻: 2025-06-12T15:55:55.951472
+- 実行時間: 17.28秒
+
+## 使用されたプロンプト
+
+### Structured System Prompt
+
+**タイムスタンプ**: 2025-06-12T15:55:38.667276
+
+```
+You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
 
 IMPORTANT: The JSON you return will be used to create search queries for three nutrition databases with different characteristics:
 • EatThisMuch – best for generic dish / ingredient names (dish, branded, ingredient types)
@@ -12,7 +24,7 @@ QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
 1. Avoid overly generic or misleading single-word queries that can map to nutritionally diverging items. Use the precise term instead:
    • Use "Ice cubes" instead of "Ice" (0 kcal vs. ice-cream).
    • Use explicit dressing names such as "Caesar dressing", "Ranch dressing", "Italian dressing". Never output "Pasta salad dressing".
-   • For visually uncertain parts, use common alternatives: "Creamy Tomato Dressing" → try "Thousand Island Dressing", "Russian Dressing", or "Cocktail Sauce" if appearance is reddish-creamy.
+   • For visually uncertain dressings, use common alternatives: "Creamy Tomato Dressing" → try "Thousand Island Dressing", "Russian Dressing", or "Cocktail Sauce" if appearance is reddish-creamy.
    • When mentioning cheese, specify the variety, e.g. "Cheddar cheese", "Mozzarella cheese" – do NOT output just "Cheese".
    • For tacos always include the primary protein, e.g. "Beef taco", "Chicken taco", not only "Taco".
    • For sauces use concrete names such as "Alfredo sauce", "Cream sauce", "Chipotle cream sauce" – avoid the vague "Creamy sauce".
@@ -86,19 +98,20 @@ Return a JSON object with the following structure:
       ]
     }
   ]
-}"""
+}
+```
 
-    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. Focus on providing clear, searchable names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. Ensure all nutritionally significant ingredients are included for accurate nutrition calculations."
+### User Prompt
 
-    @classmethod
-    def get_system_prompt(cls) -> str:
-        """システムプロンプトを取得"""
-        return cls.SYSTEM_PROMPT
-    
-    @classmethod
-    def get_user_prompt(cls, optional_text: str = None) -> str:
-        """ユーザープロンプトを取得"""
-        base_prompt = cls.USER_PROMPT_TEMPLATE
-        if optional_text:
-            base_prompt += f"\n\nAdditional context: {optional_text}"
-        return base_prompt 
+**タイムスタンプ**: 2025-06-12T15:55:38.667280
+
+```
+Please analyze this meal image and identify the dishes and their ingredients. Focus on providing clear, searchable names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. Ensure all nutritionally significant ingredients are included for accurate nutrition calculations.
+```
+
+**変数**:
+- optional_text: None
+- image_mime_type: image/jpeg
+
+## AI推論の詳細
+
