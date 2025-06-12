@@ -86,6 +86,9 @@ service-account-key.json
 !tsconfig.json
 !openapi.json 
 
+# Sensitive analysis files that may contain credentials
+test_advanced_elasticsearch_architecture_*.txt
+
 /raw_nutrition_data/
 elasticsearch-*/data/
 elasticsearch-*/logs/
