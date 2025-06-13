@@ -19,6 +19,7 @@ from ..models.nutrition_search_models import (
 from ..models.phase1_models import Phase1Output, DetectedFoodItem, FoodAttribute, AttributeType
 from ..config import get_settings
 from ..utils.lemmatization import lemmatize_term, create_lemmatized_query_variations
+from app_v2.utils.auto_niche_food_updater import AutoNicheFoodUpdater
 
 # 完全一致判定ユーティリティをインポート
 try:
@@ -55,7 +56,9 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         elasticsearch_url: str = "http://localhost:9200", 
         multi_db_search_mode: bool = False, 
         results_per_db: int = 3,
-        enable_advanced_features: bool = True
+        enable_advanced_features: bool = True,
+        enable_auto_niche_update: bool = True,  # 自動ニッチ食材更新を有効にするかどうか
+        debug: bool = False
     ):
         super().__init__("ElasticsearchNutritionSearchComponent")
         
@@ -95,6 +98,31 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         self.logger.info(f"Advanced features enabled: {self.enable_advanced_features}")
         self.logger.info(f"Fuzzy matching available: {self.enable_fuzzy_matching}")
         self.logger.info(f"Two-stage search enabled: {self.enable_two_stage_search}")
+        
+        # テキストマッチング機能の初期化
+        try:
+            from app_v2.utils.text_matching import get_text_matcher
+            self.text_matcher = get_text_matcher()
+            self.flexible_matching_available = True
+            if debug:
+                self.logger.info("✅ Flexible text matching enabled")
+        except ImportError as e:
+            self.text_matcher = None
+            self.flexible_matching_available = False
+            if debug:
+                self.logger.warning(f"⚠️ Flexible text matching not available: {e}")
+        
+        # 自動ニッチ食材更新機能の初期化
+        self.enable_auto_niche_update = enable_auto_niche_update
+        if self.enable_auto_niche_update:
+            try:
+                self.auto_updater = AutoNicheFoodUpdater(enable_auto_update=True)
+                self.logger.info("✅ Auto niche food updater enabled")
+            except Exception as e:
+                self.auto_updater = None
+                self.logger.warning(f"⚠️ Auto niche food updater not available: {e}")
+        else:
+            self.auto_updater = None
         
     def _initialize_elasticsearch(self):
         """Elasticsearchクライアントを初期化"""
@@ -775,6 +803,15 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         
         self.logger.info(f"Strategic Elasticsearch nutrition search completed: {successful_matches}/{total_searches} matches ({result.get_match_rate():.1%}) with {total_results} total results in {search_time_ms}ms")
         
+        # 自動ニッチ食材更新処理
+        if self.auto_updater and matches:
+            try:
+                auto_update_results = self.auto_updater.process_search_session(matches)
+                if auto_update_results["updates"]["updates_made"]:
+                    self.logger.info(f"Auto-updated {len(auto_update_results['updates']['updates_made'])} niche food mappings")
+            except Exception as e:
+                self.logger.warning(f"Auto niche food update failed: {e}")
+        
         return result
 
     async def _strategic_dish_search(self, search_term: str, input_data: NutritionQueryInput) -> List[NutritionMatch]:
@@ -1131,6 +1168,15 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         
         self.logger.info(f"Lemmatized enhanced search completed: {successful_matches}/{total_searches} matches, {search_time_ms}ms")
         
+        # 自動ニッチ食材更新処理
+        if self.auto_updater and matches:
+            try:
+                auto_update_results = self.auto_updater.process_search_session(matches)
+                if auto_update_results["updates"]["updates_made"]:
+                    self.logger.info(f"Auto-updated {len(auto_update_results['updates']['updates_made'])} niche food mappings")
+            except Exception as e:
+                self.logger.warning(f"Auto niche food update failed: {e}")
+        
         return NutritionQueryOutput(
             matches=matches,
             search_summary=search_summary,
@@ -1402,12 +1448,12 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         is_exact_match = False
         match_details = {}
         
-        if TEXT_MATCHING_AVAILABLE:
+        if self.flexible_matching_available:
             try:
                 is_exact_match, match_details = is_flexible_exact_match(
                     search_term, 
                     search_name,
-                    similarity_threshold=0.85
+                    similarity_threshold=self.jaro_winkler_threshold
                 )
                 
                 # 完全一致の場合はスコアをブースト
@@ -1459,6 +1505,6 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
                 "search_method": "elasticsearch_multi_db" if self.multi_db_search_mode else "elasticsearch",
                 "source_database": source_db,
                 "index_name": self.index_name,
-                "flexible_exact_match_applied": TEXT_MATCHING_AVAILABLE
+                "flexible_exact_match_applied": self.flexible_matching_available
             }
         ) 
