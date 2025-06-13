@@ -9,6 +9,7 @@ from ..models.phase1_models import (
 from ..services.gemini_service import GeminiService
 from ..config import get_settings
 from ..config.prompts import Phase1Prompts
+from ..config.prompts.phase1_test_phase1_5_prompts import Phase1TestPhase1_5Prompts
 
 
 class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
@@ -19,7 +20,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     （信頼度スコア、属性、ブランド情報等）を含むUSDA検索に適した出力を生成します。
     """
     
-    def __init__(self, gemini_service: Optional[GeminiService] = None):
+    def __init__(self, gemini_service: Optional[GeminiService] = None, use_test_prompts: bool = False):
         super().__init__("Phase1Component")
         
         # GeminiServiceの初期化
@@ -32,6 +33,9 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             )
         else:
             self.gemini_service = gemini_service
+            
+        # テスト用プロンプトの使用フラグ
+        self.use_test_prompts = use_test_prompts
     
     async def process(self, input_data: Phase1Input) -> Phase1Output:
         """
@@ -45,19 +49,26 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         """
         self.logger.info(f"Starting Phase1 structured image analysis for enhanced USDA query generation")
         
-        # プロンプト生成と記録（統一されたプロンプトシステム使用）
-        system_prompt = Phase1Prompts.get_system_prompt()
-        user_prompt = Phase1Prompts.get_user_prompt(input_data.optional_text)
+        # プロンプト生成と記録（テスト用プロンプトまたは通常プロンプト）
+        if self.use_test_prompts:
+            system_prompt = Phase1TestPhase1_5Prompts.get_system_prompt()
+            user_prompt = Phase1TestPhase1_5Prompts.get_user_prompt(input_data.optional_text)
+            self.logger.info("Using Phase1.5 test prompts (creative naming for database testing)")
+        else:
+            system_prompt = Phase1Prompts.get_system_prompt()
+            user_prompt = Phase1Prompts.get_user_prompt(input_data.optional_text)
         
         self.log_prompt("structured_system_prompt", system_prompt)
         self.log_prompt("user_prompt", user_prompt, {
             "optional_text": input_data.optional_text,
-            "image_mime_type": input_data.image_mime_type
+            "image_mime_type": input_data.image_mime_type,
+            "use_test_prompts": self.use_test_prompts
         })
         
         # 画像情報のログ記録
         self.log_processing_detail("image_size_bytes", len(input_data.image_bytes))
         self.log_processing_detail("image_mime_type", input_data.image_mime_type)
+        self.log_processing_detail("use_test_prompts", self.use_test_prompts)
         
         try:
             # Gemini AIによる構造化画像分析

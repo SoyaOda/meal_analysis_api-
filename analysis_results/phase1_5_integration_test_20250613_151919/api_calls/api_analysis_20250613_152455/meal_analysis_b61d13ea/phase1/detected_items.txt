@@ -1,0 +1,13 @@
+Phase1 検出結果 - 2025-06-13 15:24:55
+============================================================
+
+処理詳細:
+  image_size_bytes: 104424
+  image_mime_type: image/jpeg
+  use_test_prompts: False
+  gemini_structured_api_call_start: Calling Gemini API for structured image analysis
+  gemini_structured_response: {"detected_food_items": [{"item_name": "Beef Taco", "confidence": 0.95, "attributes": [{"type": "ingredient", "value": "Ground Beef", "confidence": 0.98}, {"type": "ingredient", "value": "Flour Tortilla", "confidence": 0.97}, {"type": "ingredient", "value": "Shredded Lettuce", "confidence": 0.95}, {"type": "ingredient", "value": "Diced Tomato", "confidence": 0.95}, {"type": "ingredient", "value": "Cheddar Cheese", "confidence": 0.9}, {"type": "ingredient", "value": "Taco Sauce", "confidence": 0.85}, {"type": "ingredient", "value": "Sour Cream", "confidence": 0.8}], "brand": "", "category_hints": ["Mexican Food", "Taco"], "negative_cues": []}], "dishes": [{"dish_name": "Beef Taco", "confidence": 0.95, "ingredients": [{"ingredient_name": "Ground Beef", "confidence": 0.98}, {"ingredient_name": "Flour Tortilla", "confidence": 0.97}, {"ingredient_name": "Shredded Lettuce", "confidence": 0.95}, {"ingredient_name": "Diced Tomato", "confidence": 0.95}, {"ingredient_name": "Cheddar Cheese", "confidence": 0.9}, {"ingredient_name": "Taco Sauce", "confidence": 0.85}, {"ingredient_name": "Sour Cream", "confidence": 0.8}], "attributes": []}], "analysis_confidence": 0.95}
+  detected_structured_items_count: 1
+  detected_dishes_count: 1
+  total_ingredients_count: 7
+  structured_search_terms: {"high_confidence_items": [{"item_name": "Beef Taco", "confidence": 0.95, "brand": ""}], "medium_confidence_items": [], "brands": [], "ingredients": ["Ground Beef", "Flour Tortilla", "Shredded Lettuce", "Diced Tomato", "Cheddar Cheese", "Taco Sauce", "Sour Cream"], "cooking_methods": [], "negative_cues": []}

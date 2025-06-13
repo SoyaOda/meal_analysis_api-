@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Advanced Elasticsearch Search Test v2.0 - Lemmatized Enhanced Search Edition (Multi-Image)
+Advanced Elasticsearch Search Test v2.0 - Phase1.5 Integration Edition (Multi-Image)
 
-ElasticsearchNutritionSearchComponentの見出し語化対応検索機能をテストするスクリプト
+EnhancedNutritionSearchComponentのPhase1.5統合機能をテストするスクリプト
 test_images内の全JPG画像を対象とし、Phase1解析結果から抽出したクエリで
-見出し語化機能を活用した高精度Elasticsearch検索をテスト
+Phase1.5統合による再帰的クエリ改善機能をテスト
 """
 
 import requests
@@ -16,16 +16,24 @@ import asyncio
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-# Elasticsearch Nutrition Search Component
-from app_v2.components.elasticsearch_nutrition_search_component import ElasticsearchNutritionSearchComponent
+# Vertex AI認証設定
+os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api_2/service-account-key.json")
+
+# Enhanced Nutrition Search Component with Phase1.5 integration
+from app_v2.components.enhanced_nutrition_search_component import EnhancedNutritionSearchComponent
 from app_v2.models.nutrition_search_models import NutritionQueryInput
 
 # API設定
 BASE_URL = "http://localhost:8000/api/v1"
 
-# テスト画像のパス（全てのfood*.jpgファイル）
+# テスト画像のパス（food1.jpgとfood2.jpgのみ）
 test_images_dir = "test_images"
-image_files = sorted(glob.glob(os.path.join(test_images_dir, "food*.jpg")))
+image_files = [
+    os.path.join(test_images_dir, "food1.jpg"),
+    os.path.join(test_images_dir, "food2.jpg")
+]
+# 存在するファイルのみをフィルタリング
+image_files = [f for f in image_files if os.path.exists(f)]
 
 async def test_single_image_advanced_elasticsearch_search(image_path: str, main_results_dir: str) -> Optional[Dict[str, Any]]:
     """単一画像でAdvanced Elasticsearch戦略的検索をテスト"""
@@ -96,18 +104,24 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
             print("❌ No search queries extracted from Phase1 results!")
             return None
         
-        # ElasticsearchNutritionSearchComponentを見出し語化対応モードで初期化
-        print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Lemmatized Enhanced Search Mode)...")
-        es_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=False,   # 見出し語化検索を優先（戦略的検索は無効）
-            results_per_db=5,             # 各データベースから5つずつ結果を取得
-            enable_advanced_features=False # 構造化検索は無効化、見出し語化検索に集中
+        # EnhancedNutritionSearchComponentをPhase1.5統合モードで初期化
+        print(f"\n🔧 Initializing EnhancedNutritionSearchComponent (Phase1.5 Integration Mode)...")
+        enhanced_component = EnhancedNutritionSearchComponent(
+            enable_phase15=True,          # Phase1.5を有効化
+            max_phase15_iterations=3,     # 最大3回のイテレーション
+            debug=True                    # デバッグログを有効化
         )
         
-        print(f"✅ Lemmatization features enabled:")
-        print(f"   - Lemmatized exact match boost: {es_component.lemmatized_exact_match_boost}")
-        print(f"   - Compound word penalty: {es_component.compound_word_penalty}")
-        print(f"   - Enable lemmatization: {es_component.enable_lemmatization}")
+        # 画像データを設定（Phase1.5で使用）
+        with open(image_path, "rb") as f:
+            image_bytes = f.read()
+        enhanced_component.set_image_data(image_bytes, "image/jpeg")
+        
+        print(f"✅ Phase1.5 integration features enabled:")
+        print(f"   - Phase1.5 enabled: {enhanced_component.enable_phase15}")
+        print(f"   - Max iterations: {enhanced_component.max_phase15_iterations}")
+        print(f"   - Debug mode: {enhanced_component.debug}")
+        print(f"   - Image data set: {len(image_bytes)} bytes")
         
         # 検索入力データを作成
         nutrition_query_input = NutritionQueryInput(
@@ -116,27 +130,44 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
             preferred_source="elasticsearch"
         )
         
-        print(f"📝 Strategic Query Input:")
+        print(f"📝 Enhanced Search Query Input:")
         print(f"- Ingredient names: {len(ingredient_names)} items")
         print(f"- Dish names: {len(dish_names)} items")
         print(f"- Total search terms: {len(nutrition_query_input.get_all_search_terms())}")
         
-        # Advanced Elasticsearch見出し語化対応検索を実行
-        print(f"\n🔍 Starting Advanced Elasticsearch lemmatized enhanced search...")
+        # Enhanced Search with Phase1.5を実行
+        print(f"\n🔍 Starting Enhanced Search with Phase1.5 integration...")
         search_start_time = time.time()
         
-        search_results = await es_component.execute(nutrition_query_input)
+        search_results = await enhanced_component.process(nutrition_query_input)
         
         search_end_time = time.time()
         search_time = search_end_time - search_start_time
         
-        print(f"✅ Advanced Elasticsearch lemmatized enhanced search completed in {search_time:.3f}s")
+        print(f"✅ Enhanced Search with Phase1.5 integration completed in {search_time:.3f}s")
         
         # 結果の分析
-        matches = search_results.matches
-        search_summary = search_results.search_summary
+        # EnhancedSearchResultの構造に合わせて属性にアクセス
+        if hasattr(search_results, 'final_consolidated_results'):
+            # Phase1.5統合結果の場合
+            matches = search_results.original_matches
+            # processing_summaryから検索統計を作成
+            processing_summary = search_results.processing_summary
+            search_summary = {
+                'total_searches': processing_summary.get('original_queries_count', 0),
+                'successful_matches': processing_summary.get('final_exact_matches_count', 0),
+                'failed_searches': processing_summary.get('original_queries_count', 0) - processing_summary.get('final_exact_matches_count', 0),
+                'match_rate_percent': processing_summary.get('exact_match_rate', 0) * 100,
+                'search_method': 'enhanced_search_with_phase15',
+                'search_time_ms': processing_summary.get('processing_time_seconds', 0) * 1000,
+                'total_results': sum(len(matches) if isinstance(matches, list) else 1 for matches in search_results.original_matches.values())
+            }
+        else:
+            # 通常のNutritionQueryOutputの場合
+            matches = getattr(search_results, 'matches', {})
+            search_summary = getattr(search_results, 'search_summary', {})
         
-        print(f"\n📈 Advanced Elasticsearch Lemmatized Enhanced Search Results Summary:")
+        print(f"\n📈 Enhanced Search with Phase1.5 Integration Results Summary:")
         print(f"- Total queries: {search_summary.get('total_searches', 0)}")
         print(f"- Successful matches: {search_summary.get('successful_matches', 0)}")
         print(f"- Failed searches: {search_summary.get('failed_searches', 0)}")
@@ -145,15 +176,20 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         print(f"- Search time: {search_summary.get('search_time_ms', 0)}ms")
         print(f"- Total results: {search_summary.get('total_results', 0)}")
         
-        # 見出し語化の効果を表示
-        if hasattr(search_results, 'advanced_search_metadata') and search_results.advanced_search_metadata:
-            metadata = search_results.advanced_search_metadata
-            if 'lemmatization_enabled' in metadata:
-                print(f"- Lemmatization enabled: {metadata['lemmatization_enabled']}")
-            if 'scoring_parameters' in metadata:
-                params = metadata['scoring_parameters']
-                print(f"- Exact match boost: {params.get('exact_match_boost', 'N/A')}")
-                print(f"- Compound word penalty: {params.get('compound_word_penalty', 'N/A')}")
+        # Phase1.5統合の効果を表示
+        if hasattr(search_results, 'processing_summary'):
+            summary = search_results.processing_summary
+            print(f"- Phase1.5 iterations: {summary.get('total_phase15_iterations', 0)}")
+            print(f"- Max iterations reached: {summary.get('max_iterations_reached', False)}")
+            print(f"- Convergence achieved: {summary.get('convergence_achieved', False)}")
+            print(f"- Total processing time: {summary.get('processing_time_seconds', 0):.2f}s")
+        if hasattr(search_results, 'alternative_matches'):
+            alt_count = sum(len(matches) for matches in search_results.alternative_matches.values())
+            print(f"- Alternative matches found: {alt_count}")
+        if hasattr(search_results, 'all_exact_matches'):
+            print(f"- All exact matches achieved: {search_results.all_exact_matches}")
+        if hasattr(search_results, 'final_consolidated_results'):
+            print(f"- Final consolidated results: {len(search_results.final_consolidated_results)} items")
         
         # 結果を保存
         await save_advanced_elasticsearch_results(
@@ -186,15 +222,25 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
                 "dish_names": dish_names,
                 "ingredient_names": ingredient_names
             },
-            "search_summary": search_results.search_summary,
+            "search_summary": search_summary,
             "matches": {},
-            "warnings": search_results.warnings,
-            "errors": search_results.errors
+            "phase15_integration": {
+                "total_iterations": search_results.processing_summary.get('total_phase15_iterations', 0) if hasattr(search_results, 'processing_summary') else 0,
+                "max_iterations_reached": search_results.processing_summary.get('max_iterations_reached', False) if hasattr(search_results, 'processing_summary') else False,
+                "convergence_achieved": search_results.processing_summary.get('convergence_achieved', False) if hasattr(search_results, 'processing_summary') else False,
+                "processing_time": search_results.processing_summary.get('processing_time_seconds', 0) if hasattr(search_results, 'processing_summary') else 0,
+                "alternative_matches": getattr(search_results, 'alternative_matches', {}),
+                "all_exact_matches": getattr(search_results, 'all_exact_matches', False),
+                "final_consolidated_results": getattr(search_results, 'final_consolidated_results', {}),
+                "phase15_metadata": getattr(search_results, 'phase15_metadata', {})
+            },
+            "warnings": getattr(search_results, 'warnings', []),
+            "errors": getattr(search_results, 'errors', [])
         }
         
         # 検索結果を辞書形式に変換
         matches_dict = {}
-        for query, match_results in search_results.matches.items():
+        for query, match_results in matches.items():
             if isinstance(match_results, list):
                 matches_dict[query] = [
                     {
@@ -235,19 +281,19 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
 async def test_advanced_elasticsearch_search():
     """全画像でAdvanced Elasticsearch戦略的検索をテスト"""
     
-    print("🚀 Starting Advanced Elasticsearch Strategic Search Test (Multi-Image)")
-    print("=== Advanced Elasticsearch Search Test v1.0 - Strategic Search Edition ===")
+    print("🚀 Starting Enhanced Search with Phase1.5 Integration Test (food1 & food2)")
+    print("=== Enhanced Search Test v2.0 - Phase1.5 Integration Edition ===")
     print(f"📁 Testing {len(image_files)} images: {[os.path.basename(f) for f in image_files]}")
-    print("🔍 Testing Advanced Elasticsearch strategic search (dish/ingredient optimization)")
-    print("📊 Strategic database targeting: EatThisMuch dishes/ingredients + fallback optimization")
+    print("🔍 Testing Enhanced Search with Phase1.5 integration (recursive query improvement)")
+    print("📊 Phase1.5 features: Alternative query generation, multi-iteration search, 100% exact match targeting")
     
     if not image_files:
-        print("❌ No food*.jpg images found in test_images directory!")
+        print("❌ No food1.jpg or food2.jpg images found in test_images directory!")
         return False
     
     # 実行用のメインディレクトリを作成
     main_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    main_results_dir = f"analysis_results/elasticsearch_test_{main_timestamp}"
+    main_results_dir = f"analysis_results/phase1_5_integration_test_{main_timestamp}"
     os.makedirs(main_results_dir, exist_ok=True)
     print(f"📁 Created main results directory: {main_results_dir}")
     
@@ -276,7 +322,7 @@ async def test_advanced_elasticsearch_search():
     
     # 全体のサマリーを表示
     print(f"\n{'='*80}")
-    print(f"🎯 OVERALL MULTI-IMAGE TEST SUMMARY")
+    print(f"🎯 OVERALL PHASE1.5 INTEGRATION TEST SUMMARY")
     print(f"{'='*80}")
     print(f"📊 Images tested: {len(all_results)}/{len(image_files)}")
     print(f"📈 Overall Statistics:")

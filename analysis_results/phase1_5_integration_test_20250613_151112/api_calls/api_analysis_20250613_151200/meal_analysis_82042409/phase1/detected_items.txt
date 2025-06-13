@@ -1,0 +1,13 @@
+Phase1 検出結果 - 2025-06-13 15:12:00
+============================================================
+
+処理詳細:
+  image_size_bytes: 133358
+  image_mime_type: image/jpeg
+  use_test_prompts: False
+  gemini_structured_api_call_start: Calling Gemini API for structured image analysis
+  gemini_structured_response: {"detected_food_items": [{"item_name": "Glazed Chicken Thighs", "confidence": 0.95, "attributes": [{"type": "cooking_method", "value": "glazed", "confidence": 0.9}, {"type": "ingredient", "value": "chicken", "confidence": 0.98}, {"type": "ingredient", "value": "pecan", "confidence": 0.8}], "brand": "", "category_hints": ["poultry", "main course"], "negative_cues": []}, {"item_name": "Mixed Green Salad", "confidence": 0.98, "attributes": [{"type": "ingredient", "value": "mixed greens", "confidence": 0.98}, {"type": "ingredient", "value": "corn", "confidence": 0.95}, {"type": "ingredient", "value": "tomato", "confidence": 0.95}], "brand": "", "category_hints": ["salad", "vegetable"], "negative_cues": []}, {"item_name": "Boiled Potatoes", "confidence": 0.9, "attributes": [{"type": "cooking_method", "value": "boiled", "confidence": 0.85}, {"type": "ingredient", "value": "potato", "confidence": 0.98}], "brand": "", "category_hints": ["vegetable", "side dish"], "negative_cues": []}], "dishes": [{"dish_name": "Glazed Chicken Thighs", "confidence": 0.95, "ingredients": [{"ingredient_name": "Chicken Thigh", "confidence": 0.98}, {"ingredient_name": "Soy Glaze", "confidence": 0.85}, {"ingredient_name": "Pecan", "confidence": 0.8}, {"ingredient_name": "Vegetable Oil", "confidence": 0.7}], "attributes": []}, {"dish_name": "Mixed Green Salad", "confidence": 0.98, "ingredients": [{"ingredient_name": "Mixed Greens", "confidence": 0.98}, {"ingredient_name": "Corn", "confidence": 0.95}, {"ingredient_name": "Tomato", "confidence": 0.95}, {"ingredient_name": "Olive Oil", "confidence": 0.75}, {"ingredient_name": "Vinegar", "confidence": 0.7}], "attributes": []}, {"dish_name": "Boiled Potatoes", "confidence": 0.9, "ingredients": [{"ingredient_name": "Potato", "confidence": 0.98}, {"ingredient_name": "Butter", "confidence": 0.75}], "attributes": []}], "analysis_confidence": 0.95}
+  detected_structured_items_count: 3
+  detected_dishes_count: 3
+  total_ingredients_count: 11
+  structured_search_terms: {"high_confidence_items": [{"item_name": "Glazed Chicken Thighs", "confidence": 0.95, "brand": ""}, {"item_name": "Mixed Green Salad", "confidence": 0.98, "brand": ""}, {"item_name": "Boiled Potatoes", "confidence": 0.9, "brand": ""}], "medium_confidence_items": [], "brands": [], "ingredients": ["chicken", "pecan", "mixed greens", "corn", "tomato", "potato"], "cooking_methods": [], "negative_cues": []}

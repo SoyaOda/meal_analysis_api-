@@ -62,6 +62,9 @@ class NutritionQueryInput(BaseModel):
     search_options: Optional[Dict[str, Any]] = Field(None, description="検索オプション")
     preferred_source: str = Field(default="local_database", description="優先データソース")
     
+    # Phase1.5用の画像パス
+    image_path: Optional[str] = Field(None, description="Phase1.5で使用する画像ファイルのパス")
+    
     # 構造化データのサポート
     structured_analysis: Optional[Dict[str, Any]] = Field(None, description="Phase1からの構造化分析データ")
     phase1_output: Optional[Any] = Field(None, description="Phase1Outputオブジェクト（構造化データ含む）")

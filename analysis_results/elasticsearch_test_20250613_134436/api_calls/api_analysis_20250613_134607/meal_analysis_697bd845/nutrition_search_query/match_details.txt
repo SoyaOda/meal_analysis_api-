@@ -1,0 +1,407 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.136 seconds
+Timestamp: 2025-06-13T13:46:30.155104
+
+Total Matches: 40
+
+Query: Beef Taco
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 211394
+    Search Name: Beef Tacos
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 193.108 (from eatthismuch)
+    Nutrition (100g): 236.4 kcal, P:16.3g, F:14.3g, C:10.2g
+
+  Result 2:
+    ID: 3249710
+    Search Name: Beef Taco Noodle casserole
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 108.179 (from eatthismuch)
+    Nutrition (100g): 147.5 kcal, P:7.7g, F:6.8g, C:14.0g
+
+  Result 3:
+    ID: 927295
+    Search Name: Mexican Beef Taco Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 108.179 (from eatthismuch)
+    Nutrition (100g): 194.5 kcal, P:7.9g, F:11.1g, C:15.6g
+
+  Result 4:
+    ID: 1000000500
+    Search Name: Original Taco with Beef, Cheese & Lettuce, Taco Bell
+    Description: Fast Food
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 44.481 (from yazio)
+    Nutrition (100g): 229.0 kcal, P:8.9g, F:12.7g, C:19.9g
+
+  Result 5:
+    ID: 1000000303
+    Search Name: Taco Salad, Taco Bell
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.567 (from yazio)
+    Nutrition (100g): 170.0 kcal, P:6.7g, F:9.2g, C:15.1g
+
+Query: Taco Sauce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1883641
+    Search Name: Taco Sauce, Original Thick & Smooth
+    Description: Original, Mild, Ortega
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 65.615 (from eatthismuch)
+    Nutrition (100g): 62.5 kcal, P:0.0g, F:0.0g, C:12.5g
+
+  Result 2:
+    ID: 1883619
+    Search Name: Taco Sauce, Original Thick & Smooth, Medium
+    Description: Original, Medium, Thick & Smooth, Ortega
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.628 (from eatthismuch)
+    Nutrition (100g): 62.5 kcal, P:0.0g, F:0.0g, C:12.5g
+
+  Result 3:
+    ID: 988438
+    Search Name: Blackened Fish Tacos with Avocado-Cilantro Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 38.583 (from eatthismuch)
+    Nutrition (100g): 130.1 kcal, P:10.1g, F:5.6g, C:11.2g
+
+  Result 4:
+    ID: 1000000303
+    Search Name: Taco Salad, Taco Bell
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.567 (from yazio)
+    Nutrition (100g): 170.0 kcal, P:6.7g, F:9.2g, C:15.1g
+
+  Result 5:
+    ID: 4368719
+    Search Name: Avocado Tacos
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 34.478 (from eatthismuch)
+    Nutrition (100g): 216.0 kcal, P:4.7g, F:10.0g, C:28.1g
+
+Query: Tomato
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2226
+    Search Name: Tomatoes
+    Description: Red, ripe, raw, year round average
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:0.9g, F:0.2g, C:3.9g
+
+  Result 2:
+    ID: 2228
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, packed in tomato juice
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:0.8g, F:0.2g, C:3.5g
+
+  Result 3:
+    ID: 2229
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 26.0 kcal, P:0.9g, F:0.2g, C:6.2g
+
+  Result 4:
+    ID: 2227
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+  Result 5:
+    ID: 2498
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+Query: Sour Cream
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001105
+    Search Name: Sour Cream
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 218.400 (from yazio)
+    Nutrition (100g): 208.0 kcal, P:2.4g, F:19.5g, C:6.6g
+
+  Result 2:
+    ID: 2304453
+    Search Name: Sour Cream
+    Description: Daisy
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 218.400 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:3.3g, F:16.7g, C:3.3g
+
+  Result 3:
+    ID: 2304454
+    Search Name: Sour Cream
+    Description: Daisy
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 218.400 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:3.3g, F:16.7g, C:3.3g
+
+  Result 4:
+    ID: 1864940
+    Search Name: Sour Cream
+    Description: Daisy
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 218.400 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:3.3g, F:16.7g, C:3.3g
+
+  Result 5:
+    ID: 2304451
+    Search Name: Sour Cream
+    Description: Daisy
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 218.400 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:3.3g, F:16.7g, C:3.3g
+
+Query: Lettuce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2013
+    Search Name: Lettuce
+    Description: Romaine or cos, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 17.0 kcal, P:1.3g, F:0.2g, C:3.2g
+
+  Result 2:
+    ID: 2014
+    Search Name: Lettuce
+    Description: Iceberg (includes crisphead types), raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 14.0 kcal, P:0.9g, F:0.2g, C:3.0g
+
+  Result 3:
+    ID: 2015
+    Search Name: Lettuce
+    Description: Green leaf, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 15.0 kcal, P:1.4g, F:0.3g, C:2.8g
+
+  Result 4:
+    ID: 2012
+    Search Name: Lettuce
+    Description: Butterhead (includes boston and bibb types), raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 13.0 kcal, P:1.3g, F:0.2g, C:2.2g
+
+  Result 5:
+    ID: 2018
+    Search Name: Lettuce
+    Description: Red leaf, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:1.4g, F:0.4g, C:2.1g
+
+Query: Ground Beef
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 5421
+    Search Name: Ground beef
+    Description: 80% lean meat / 20% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.414 (from eatthismuch)
+    Nutrition (100g): 254.0 kcal, P:17.3g, F:20.1g, C:0.0g
+
+  Result 2:
+    ID: 5426
+    Search Name: Ground beef
+    Description: 75% lean meat / 25% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.414 (from eatthismuch)
+    Nutrition (100g): 293.0 kcal, P:15.9g, F:25.0g, C:0.0g
+
+  Result 3:
+    ID: 5416
+    Search Name: Ground beef
+    Description: 85% lean meat / 15% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.414 (from eatthismuch)
+    Nutrition (100g): 215.0 kcal, P:18.7g, F:15.2g, C:0.0g
+
+  Result 4:
+    ID: 2892
+    Search Name: Ground beef
+    Description: 70% lean meat / 30% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.414 (from eatthismuch)
+    Nutrition (100g): 332.0 kcal, P:14.5g, F:30.0g, C:0.0g
+
+  Result 5:
+    ID: 5411
+    Search Name: Ground beef
+    Description: 90% lean meat / 10% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.414 (from eatthismuch)
+    Nutrition (100g): 176.0 kcal, P:20.1g, F:9.9g, C:0.0g
+
+Query: Flour Tortilla
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001210
+    Search Name: Flour Tortilla
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 235.078 (from yazio)
+    Nutrition (100g): 297.0 kcal, P:8.0g, F:7.6g, C:49.3g
+
+  Result 2:
+    ID: 1751508
+    Search Name: Flour Tortillas
+    Description: Flour, Mission
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 140.565 (from eatthismuch)
+    Nutrition (100g): 280.0 kcal, P:8.0g, F:6.0g, C:50.0g
+
+  Result 3:
+    ID: 1974007
+    Search Name: Flour Tortillas
+    Description: Flour, Fajita, Guerrero
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 140.565 (from eatthismuch)
+    Nutrition (100g): 312.5 kcal, P:6.2g, F:9.4g, C:46.9g
+
+  Result 4:
+    ID: 1973973
+    Search Name: Flour Tortillas
+    Description: Flour, Large, Burrito, Mission
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 140.565 (from eatthismuch)
+    Nutrition (100g): 295.8 kcal, P:8.5g, F:6.3g, C:49.3g
+
+  Result 5:
+    ID: 1637918
+    Search Name: Flour Tortillas, Fajita
+    Description: Flour, Small, Fajita, Mission
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 81.589 (from eatthismuch)
+    Nutrition (100g): 303.0 kcal, P:9.1g, F:6.1g, C:48.5g
+
+Query: Cheddar Cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000962
+    Search Name: Cheddar Cheese
+    Description: Cheese
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 241.679 (from yazio)
+    Nutrition (100g): 403.0 kcal, P:22.9g, F:33.3g, C:3.4g
+
+  Result 2:
+    ID: 10000000158
+    Search Name: Cheddar cheese
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 217.449 (from mynetdiary)
+    Nutrition (100g): 403.0 kcal, P:22.7g, F:33.3g, C:3.0g
+
+  Result 3:
+    ID: 9
+    Search Name: Cheddar cheese
+    Description: None
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.449 (from eatthismuch)
+    Nutrition (100g): 406.0 kcal, P:24.0g, F:33.9g, C:1.4g
+
+  Result 4:
+    ID: 207466
+    Search Name: Broccoli with Cheddar Cheese
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 84.119 (from eatthismuch)
+    Nutrition (100g): 89.1 kcal, P:5.2g, F:6.0g, C:5.2g
+
+  Result 5:
+    ID: 2007804
+    Search Name: Sharp Cheddar Cheese
+    Description: Finely Shredded, Sharp, Cheddar, Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 84.119 (from eatthismuch)
+    Nutrition (100g): 392.9 kcal, P:25.0g, F:32.1g, C:7.1g
+
+Search Statistics:
+  Total Searches: 8
+  Successful Matches: 8
+  Failed Searches: 0
+  Match Rate: 100.0%

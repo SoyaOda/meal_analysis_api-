@@ -1,0 +1,13 @@
+Phase1 検出結果 - 2025-06-13 15:19:19
+============================================================
+
+処理詳細:
+  image_size_bytes: 96595
+  image_mime_type: image/jpeg
+  use_test_prompts: False
+  gemini_structured_api_call_start: Calling Gemini API for structured image analysis
+  gemini_structured_response: {"detected_food_items": [{"item_name": "Caesar Salad", "confidence": 0.95, "attributes": [{"type": "ingredient", "value": "Romaine Lettuce", "confidence": 0.95}, {"type": "ingredient", "value": "Caesar Dressing", "confidence": 0.9}, {"type": "ingredient", "value": "Croutons", "confidence": 0.85}, {"type": "ingredient", "value": "Parmesan Cheese", "confidence": 0.8}, {"type": "preparation", "value": "dressed", "confidence": 0.9}], "brand": "", "category_hints": ["Salad", "Vegetable Dish"], "negative_cues": []}, {"item_name": "Penne Pasta Salad", "confidence": 0.9, "attributes": [{"type": "ingredient", "value": "Penne Pasta", "confidence": 0.95}, {"type": "ingredient", "value": "Tomato", "confidence": 0.85}, {"type": "ingredient", "value": "Cucumber", "confidence": 0.75}, {"type": "ingredient", "value": "Pasta Salad Dressing", "confidence": 0.8}, {"type": "preparation", "value": "chilled", "confidence": 0.7}], "brand": "", "category_hints": ["Pasta", "Salad", "Side Dish"], "negative_cues": []}], "dishes": [{"dish_name": "Caesar Salad", "confidence": 0.95, "ingredients": [{"ingredient_name": "Romaine Lettuce", "confidence": 0.95}, {"ingredient_name": "Caesar Dressing", "confidence": 0.9}, {"ingredient_name": "Croutons", "confidence": 0.85}, {"ingredient_name": "Parmesan Cheese", "confidence": 0.8}], "attributes": [{"type": "serving_style", "value": "side dish", "confidence": 0.8}]}, {"dish_name": "Penne Pasta Salad", "confidence": 0.9, "ingredients": [{"ingredient_name": "Penne Pasta", "confidence": 0.95}, {"ingredient_name": "Tomato", "confidence": 0.85}, {"ingredient_name": "Cucumber", "confidence": 0.75}, {"ingredient_name": "Pasta Salad Dressing", "confidence": 0.8}], "attributes": [{"type": "serving_style", "value": "side dish", "confidence": 0.8}, {"type": "preparation", "value": "chilled", "confidence": 0.7}]}], "analysis_confidence": 0.9}
+  detected_structured_items_count: 2
+  detected_dishes_count: 2
+  total_ingredients_count: 8
+  structured_search_terms: {"high_confidence_items": [{"item_name": "Caesar Salad", "confidence": 0.95, "brand": ""}, {"item_name": "Penne Pasta Salad", "confidence": 0.9, "brand": ""}], "medium_confidence_items": [], "brands": [], "ingredients": ["Romaine Lettuce", "Caesar Dressing", "Croutons", "Parmesan Cheese", "Penne Pasta", "Tomato", "Cucumber", "Pasta Salad Dressing"], "cooking_methods": ["dressed", "chilled"], "negative_cues": []}
