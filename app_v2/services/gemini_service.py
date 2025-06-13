@@ -418,6 +418,109 @@ class GeminiService:
         
         return result
     
+    async def analyze_phase1_5(
+        self,
+        image_bytes: bytes,
+        image_mime_type: str,
+        system_prompt: str,
+        user_prompt: str
+    ) -> Dict:
+        """
+        Phase1.5: 代替クエリ生成のためのGemini分析
+        
+        Args:
+            image_bytes: 画像データ
+            image_mime_type: 画像のMIMEタイプ
+            system_prompt: システムプロンプト
+            user_prompt: ユーザープロンプト
+            
+        Returns:
+            Dict: 代替クエリ生成結果
+        """
+        # Phase1.5用のJSONスキーマ
+        phase1_5_schema = {
+            "type": "object",
+            "properties": {
+                "alternative_queries": {
+                    "type": "array",
+                    "description": "生成された代替クエリのリスト",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "original_query": {
+                                "type": "string",
+                                "description": "元の失敗したクエリ"
+                            },
+                            "alternative_query": {
+                                "type": "string", 
+                                "description": "生成された代替クエリ"
+                            },
+                            "strategy": {
+                                "type": "string",
+                                "description": "使用した戦略（broader_terms, standard_cooking, generic_categories, database_friendly, visual_reanalysis）"
+                            },
+                            "reasoning": {
+                                "type": "string",
+                                "description": "この代替クエリを選択した理由"
+                            },
+                            "confidence": {
+                                "type": "number",
+                                "minimum": 0.0,
+                                "maximum": 1.0,
+                                "description": "この代替クエリの成功確信度"
+                            }
+                        },
+                        "required": ["original_query", "alternative_query", "strategy", "reasoning", "confidence"]
+                    }
+                }
+            },
+            "required": ["alternative_queries"]
+        }
+        
+        try:
+            # 画像パートを作成
+            image_part = Part.from_data(
+                mime_type=image_mime_type,
+                data=image_bytes
+            )
+            
+            # プロンプトを結合
+            full_prompt = f"{system_prompt}\n\n{user_prompt}"
+            
+            # 生成設定（Phase1.5用に大きなトークン制限を設定）
+            generation_config = GenerationConfig(
+                temperature=0.1,
+                top_p=0.8,
+                top_k=40,
+                max_output_tokens=16384,  # Phase1.5用に増加
+                response_mime_type="application/json",
+                response_schema=phase1_5_schema
+            )
+            
+            # Geminiモデルで分析
+            response = await self.model.generate_content_async(
+                [image_part, full_prompt],
+                generation_config=generation_config,
+                safety_settings=self.safety_settings
+            )
+            
+            # レスポンスをJSONとして解析
+            result_text = response.text
+            logger.info(f"Phase1.5 Gemini raw response: {result_text}")
+            
+            try:
+                result = json.loads(result_text)
+                logger.info(f"Phase1.5 analysis successful: {len(result.get('alternative_queries', []))} alternatives generated")
+                return result
+            except json.JSONDecodeError as e:
+                logger.error(f"Phase1.5 JSON parsing failed: {e}")
+                logger.error(f"Raw response: {result_text}")
+                return {"alternative_queries": []}
+                
+        except Exception as e:
+            logger.error(f"Phase1.5 Gemini API call failed: {e}")
+            return {"alternative_queries": []}
+
     async def analyze_phase2(
         self,
         image_bytes: bytes,

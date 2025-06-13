@@ -1,0 +1,554 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 1.816 seconds
+Timestamp: 2025-06-13T14:57:08.899557
+
+Total Matches: 55
+
+Query: Cloud-Kissed Feta Crumbles
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1891236
+    Search Name: Cheese, Feta, Crumbles
+    Description: President
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 67.303 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:17.9g, C:3.6g
+
+  Result 2:
+    ID: 2102051
+    Search Name: Crumbled Cheese, Feta
+    Description: Frigo
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 67.303 (from eatthismuch)
+    Nutrition (100g): 285.7 kcal, P:14.3g, F:21.4g, C:7.1g
+
+  Result 3:
+    ID: 2322375
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+  Result 4:
+    ID: 1787600
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+  Result 5:
+    ID: 1787595
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+Query: Aged Alpine Snowflakes (Parmesan)
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000935
+    Search Name: Parmesan Cheese
+    Description: Cheese
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 31.908 (from yazio)
+    Nutrition (100g): 392.0 kcal, P:35.8g, F:25.0g, C:3.2g
+
+  Result 2:
+    ID: 386738
+    Search Name: Chicken Parmesan
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.908 (from eatthismuch)
+    Nutrition (100g): 155.7 kcal, P:15.0g, F:4.4g, C:13.0g
+
+  Result 3:
+    ID: 905593
+    Search Name: Parmesan Pasta
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.908 (from eatthismuch)
+    Nutrition (100g): 47.1 kcal, P:1.4g, F:2.7g, C:4.4g
+
+  Result 4:
+    ID: 45210
+    Search Name: Parmesan Wafers
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.908 (from eatthismuch)
+    Nutrition (100g): 417.3 kcal, P:27.5g, F:26.5g, C:17.0g
+
+  Result 5:
+    ID: 998128
+    Search Name: Tilapia Parmesan
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.908 (from eatthismuch)
+    Nutrition (100g): 145.0 kcal, P:17.8g, F:7.7g, C:1.3g
+
+Query: Silken Garlic Ambrosia Dressing
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000048
+    Search Name: Tofu soft silken
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 52.051 (from mynetdiary)
+    Nutrition (100g): 49.4 kcal, P:4.7g, F:2.4g, C:2.4g
+
+  Result 2:
+    ID: 2966609
+    Search Name: Dressing
+    Description: Miracle Whip
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 36.141 (from eatthismuch)
+    Nutrition (100g): 266.7 kcal, P:0.0g, F:23.3g, C:13.3g
+
+  Result 3:
+    ID: 1000000383
+    Search Name: Garlic
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 34.027 (from yazio)
+    Nutrition (100g): 149.0 kcal, P:6.4g, F:0.5g, C:33.1g
+
+  Result 4:
+    ID: 1980
+    Search Name: Garlic
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 34.027 (from eatthismuch)
+    Nutrition (100g): 149.0 kcal, P:6.7g, F:0.0g, C:33.3g
+
+  Result 5:
+    ID: 116796
+    Search Name: Seasoning
+    Description: Popcorn, Kettle Corn - Kernel Season's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 34.027 (from eatthismuch)
+    Nutrition (100g): 500.0 kcal, P:0.0g, F:0.0g, C:100.0g
+
+Query: Emerald Herb Whispers
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001579
+    Search Name: Herb Tea
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 35.820 (from yazio)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.2g
+
+  Result 2:
+    ID: 56925
+    Search Name: Herbed Quinoa
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 35.820 (from eatthismuch)
+    Nutrition (100g): 359.6 kcal, P:10.6g, F:14.1g, C:48.1g
+
+  Result 3:
+    ID: 905588
+    Search Name: Asparagus Herb Delight
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 20.3 kcal, P:2.1g, F:0.2g, C:4.5g
+
+  Result 4:
+    ID: 386803
+    Search Name: Herbed Gnocchi and Mushrooms
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 166.6 kcal, P:3.1g, F:9.0g, C:15.6g
+
+  Result 5:
+    ID: 45220
+    Search Name: Grilled Herb Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 137.0 kcal, P:1.9g, F:7.6g, C:16.0g
+
+Query: Golden Hearth Crouton Jewels
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001137
+    Search Name: Croutons
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 57.049 (from yazio)
+    Nutrition (100g): 407.0 kcal, P:11.9g, F:6.6g, C:73.5g
+
+  Result 2:
+    ID: 4162
+    Search Name: Croutons
+    Description: Seasoned
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 57.049 (from eatthismuch)
+    Nutrition (100g): 465.0 kcal, P:10.8g, F:18.2g, C:63.5g
+
+  Result 3:
+    ID: 4161
+    Search Name: Croutons
+    Description: Plain
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 57.049 (from eatthismuch)
+    Nutrition (100g): 407.0 kcal, P:12.0g, F:6.7g, C:73.7g
+
+  Result 4:
+    ID: 1000001251
+    Search Name: Croutons, seasoned
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 48.853 (from yazio)
+    Nutrition (100g): 465.0 kcal, P:10.8g, F:18.3g, C:63.5g
+
+  Result 5:
+    ID: 10000000125
+    Search Name: Croutons seasoned
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 48.853 (from mynetdiary)
+    Nutrition (100g): 465.0 kcal, P:10.0g, F:18.2g, C:62.5g
+
+Query: Emperor's Verdant Garden Symphony
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 905638
+    Search Name: Emperor's Mixed Mushroom Vermicelli
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 46.242 (from eatthismuch)
+    Nutrition (100g): 152.4 kcal, P:6.6g, F:3.2g, C:24.6g
+
+  Result 2:
+    ID: 1000000380
+    Search Name: Garden Cress, raw
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.802 (from yazio)
+    Nutrition (100g): 32.0 kcal, P:2.6g, F:0.7g, C:5.5g
+
+  Result 3:
+    ID: 1000000381
+    Search Name: Garden Cress, cooked
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.802 (from yazio)
+    Nutrition (100g): 23.0 kcal, P:1.9g, F:0.6g, C:3.8g
+
+  Result 4:
+    ID: 10000001039
+    Search Name: Garden cress raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 37.802 (from mynetdiary)
+    Nutrition (100g): 32.0 kcal, P:2.0g, F:0.8g, C:6.0g
+
+  Result 5:
+    ID: 3186677
+    Search Name: Hearty Garden Wraps
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 37.802 (from eatthismuch)
+    Nutrition (100g): 255.7 kcal, P:9.6g, F:11.6g, C:28.1g
+
+Query: Crimson Harvest Vinaigrette
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001666
+    Search Name: Late Harvest, White Wine
+    Description: Alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 38.687 (from yazio)
+    Nutrition (100g): 112.0 kcal, P:0.1g, F:0.0g, C:13.4g
+
+  Result 2:
+    ID: 2141458
+    Search Name: Harvest Cheddar Multigrain Snack
+    Description: Sun Chips
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 38.687 (from eatthismuch)
+    Nutrition (100g): 500.0 kcal, P:7.1g, F:21.4g, C:67.9g
+
+  Result 3:
+    ID: 10000000211
+    Search Name: Balsamic Vinaigrette Dressing
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 37.174 (from mynetdiary)
+    Nutrition (100g): 200.0 kcal, P:0.0g, F:15.7g, C:7.1g
+
+  Result 4:
+    ID: 1641224
+    Search Name: Raspberry Vinaigrette, Lite
+    Description: Kraft
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 37.174 (from eatthismuch)
+    Nutrition (100g): 93.8 kcal, P:0.0g, F:3.1g, C:15.6g
+
+  Result 5:
+    ID: 1751033
+    Search Name: Snacks, Harvest Cheddar, Whole Grain
+    Description: Sunchips
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 34.803 (from eatthismuch)
+    Nutrition (100g): 210.0 kcal, P:3.0g, F:9.0g, C:28.0g
+
+Query: Crisp Emerald Romaine Leaves
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1623542
+    Search Name: Premium Romaine
+    Description: Marketside
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.6 kcal, P:1.2g, F:0.0g, C:3.5g
+
+  Result 2:
+    ID: 90019
+    Search Name: Romaine Lettuce
+    Description: Freshdirect
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 21.3 kcal, P:2.1g, F:0.0g, C:4.3g
+
+  Result 3:
+    ID: 1928120
+    Search Name: Romaine Hearts
+    Description: Tanimura & Antle
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.5 kcal, P:1.3g, F:0.2g, C:3.5g
+
+  Result 4:
+    ID: 1000000313
+    Search Name: Amaranth Leaves
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 43.320 (from yazio)
+    Nutrition (100g): 23.0 kcal, P:2.5g, F:0.3g, C:4.0g
+
+  Result 5:
+    ID: 1000000375
+    Search Name: Fireweed Leaves
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 43.320 (from yazio)
+    Nutrition (100g): 103.0 kcal, P:4.7g, F:2.8g, C:19.2g
+
+Query: Mediterranean Sunset Penne Medley
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1865439
+    Search Name: Berry Medley
+    Description: No Sugar Added, Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 50.911 (from eatthismuch)
+    Nutrition (100g): 50.0 kcal, P:0.4g, F:0.4g, C:12.1g
+
+  Result 2:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+  Result 3:
+    ID: 1837832
+    Search Name: Penne
+    Description: Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 339.3 kcal, P:17.9g, F:1.8g, C:67.9g
+
+  Result 4:
+    ID: 1497273
+    Search Name: Marinated Vegetable Medley
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 44.515 (from eatthismuch)
+    Nutrition (100g): 46.5 kcal, P:2.7g, F:2.7g, C:4.3g
+
+  Result 5:
+    ID: 4356488
+    Search Name: Mediterranean Pasta
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.864 (from eatthismuch)
+    Nutrition (100g): 243.6 kcal, P:7.5g, F:6.6g, C:39.7g
+
+Query: Ruby Red Tomato Cubes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000001132
+    Search Name: Tomatoes red raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 55.818 (from mynetdiary)
+    Nutrition (100g): 18.1 kcal, P:0.7g, F:0.2g, C:4.0g
+
+  Result 2:
+    ID: 4371156
+    Search Name: Chicken with Roasted Tomato and Red Onions
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 46.232 (from eatthismuch)
+    Nutrition (100g): 110.5 kcal, P:12.1g, F:5.5g, C:2.9g
+
+  Result 3:
+    ID: 45425
+    Search Name: Linguine with Red, Yellow, and Orange Tomatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 46.232 (from eatthismuch)
+    Nutrition (100g): 160.3 kcal, P:6.8g, F:7.2g, C:17.4g
+
+  Result 4:
+    ID: 1522300
+    Search Name: Red Pepper &amp; Tomato Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 46.232 (from eatthismuch)
+    Nutrition (100g): 55.8 kcal, P:0.9g, F:3.5g, C:5.5g
+
+  Result 5:
+    ID: 10000000076
+    Search Name: Ice cubes
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 46.018 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+Query: Sun-Kissed Penne Spirals
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+  Result 2:
+    ID: 1837832
+    Search Name: Penne
+    Description: Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 339.3 kcal, P:17.9g, F:1.8g, C:67.9g
+
+  Result 3:
+    ID: 57108
+    Search Name: Penne with Mushrooms
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 357.8 kcal, P:11.1g, F:18.2g, C:41.6g
+
+  Result 4:
+    ID: 4357368
+    Search Name: Penne Primavera
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 116.1 kcal, P:5.7g, F:2.7g, C:18.9g
+
+  Result 5:
+    ID: 1023366
+    Search Name: Salmon Penne
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 100.9 kcal, P:7.4g, F:1.3g, C:16.4g
+
+Search Statistics:
+  Total Searches: 11
+  Successful Matches: 11
+  Failed Searches: 0
+  Match Rate: 100.0%

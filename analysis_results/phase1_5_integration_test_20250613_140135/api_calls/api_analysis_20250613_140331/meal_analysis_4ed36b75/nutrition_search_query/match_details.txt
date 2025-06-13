@@ -1,0 +1,309 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.220 seconds
+Timestamp: 2025-06-13T14:03:50.042933
+
+Total Matches: 30
+
+Query: Cloud-Kissed Flatbread
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1748281
+    Search Name: Flatbreads, Original
+    Description: Stonefire
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.853 (from eatthismuch)
+    Nutrition (100g): 300.0 kcal, P:8.0g, F:6.0g, C:54.0g
+
+  Result 2:
+    ID: 930930
+    Search Name: Cream Cheese Clouds
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.137 (from eatthismuch)
+    Nutrition (100g): 360.3 kcal, P:3.3g, F:38.3g, C:2.2g
+
+  Result 3:
+    ID: 717887
+    Search Name: Mini Flatbread Pizza
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.716 (from eatthismuch)
+    Nutrition (100g): 101.9 kcal, P:5.9g, F:2.9g, C:14.1g
+
+  Result 4:
+    ID: 57023
+    Search Name: Eggplant Marinara Flatbread
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.716 (from eatthismuch)
+    Nutrition (100g): 146.4 kcal, P:5.4g, F:8.4g, C:12.8g
+
+  Result 5:
+    ID: 3186762
+    Search Name: Chicken Alfredo Flatbread
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.716 (from eatthismuch)
+    Nutrition (100g): 203.9 kcal, P:12.6g, F:13.3g, C:7.2g
+
+Query: Ruby Orchard Cubes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000076
+    Search Name: Ice cubes
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 46.018 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 3808
+    Search Name: Lamb cubes
+    Description: Domestic, for stew or kabob (leg and shoulder), separable lean only, trimmed to 1/4" fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.018 (from eatthismuch)
+    Nutrition (100g): 134.0 kcal, P:20.1g, F:5.3g, C:0.0g
+
+  Result 3:
+    ID: 5826
+    Search Name: Ice cubes
+    Description: Frozen water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.018 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 4:
+    ID: 140008
+    Search Name: Vegetable Stock Cubes
+    Description: Tesco
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.237 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:8.0g, F:8.0g, C:24.0g
+
+  Result 5:
+    ID: 146980
+    Search Name: Chicken Stock Cubes
+    Description: Sainsbury's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.237 (from eatthismuch)
+    Nutrition (100g): 8.0 kcal, P:0.0g, F:0.0g, C:1.0g
+
+Query: Lunar Cream Swirl
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1760862
+    Search Name: Swirl Bites, Cinnamon
+    Description: Drizzilicious
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 43.546 (from eatthismuch)
+    Nutrition (100g): 428.6 kcal, P:4.8g, F:11.9g, C:76.2g
+
+  Result 2:
+    ID: 976331
+    Search Name: Peanut Butter Swirl Brownies
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 38.687 (from eatthismuch)
+    Nutrition (100g): 456.8 kcal, P:9.2g, F:36.0g, C:26.4g
+
+  Result 3:
+    ID: 1700572
+    Search Name: Bread, Cinnamon Raisin, Swirl
+    Description: Thomas'
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 38.687 (from eatthismuch)
+    Nutrition (100g): 281.2 kcal, P:6.2g, F:4.7g, C:56.2g
+
+  Result 4:
+    ID: 966126
+    Search Name: Banana and Peanut Butter Swirl Muffins
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 34.803 (from eatthismuch)
+    Nutrition (100g): 182.3 kcal, P:7.6g, F:8.3g, C:22.6g
+
+  Result 5:
+    ID: 203721
+    Search Name: Cinnamon Swirl Pumpkin Pie Protein Pancakes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.627 (from eatthismuch)
+    Nutrition (100g): 123.0 kcal, P:17.0g, F:0.9g, C:12.3g
+
+Query: Spiced Earth Crumble
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2086877
+    Search Name: Popcorners, Salt of The Earth
+    Description: Our Little Rebellion
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 52.051 (from eatthismuch)
+    Nutrition (100g): 428.6 kcal, P:7.1g, F:8.9g, C:82.1g
+
+  Result 2:
+    ID: 10000000042
+    Search Name: Tofu crumbles
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 42.183 (from mynetdiary)
+    Nutrition (100g): 189.3 kcal, P:14.3g, F:4.6g, C:3.6g
+
+  Result 3:
+    ID: 907198
+    Search Name: Apple Crumble
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.183 (from eatthismuch)
+    Nutrition (100g): 63.0 kcal, P:1.0g, F:0.3g, C:15.8g
+
+  Result 4:
+    ID: 1755247
+    Search Name: Crumbled Bacon
+    Description: Kirkland Signature
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 42.183 (from eatthismuch)
+    Nutrition (100g): 500.0 kcal, P:28.6g, F:42.9g, C:0.0g
+
+  Result 5:
+    ID: 906196
+    Search Name: Protein Berry Crumble
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 36.884 (from eatthismuch)
+    Nutrition (100g): 180.1 kcal, P:12.5g, F:5.8g, C:22.2g
+
+Query: Emerald Ribbon Greens
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 45090
+    Search Name: Zucchini Ribbons with Tarragon
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.137 (from eatthismuch)
+    Nutrition (100g): 44.0 kcal, P:1.2g, F:3.4g, C:3.1g
+
+  Result 2:
+    ID: 45350
+    Search Name: Sauteed Zucchini Ribbons
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.137 (from eatthismuch)
+    Nutrition (100g): 46.5 kcal, P:1.2g, F:3.6g, C:3.3g
+
+  Result 3:
+    ID: 1473213
+    Search Name: Broccoli with Sesame Egg Ribbons
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.876 (from eatthismuch)
+    Nutrition (100g): 130.1 kcal, P:8.0g, F:9.3g, C:4.4g
+
+  Result 4:
+    ID: 3255187
+    Search Name: Green salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 27.057 (from eatthismuch)
+    Nutrition (100g): 131.4 kcal, P:1.4g, F:13.1g, C:2.6g
+
+  Result 5:
+    ID: 906012
+    Search Name: Green Eggs
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 25.379 (from eatthismuch)
+    Nutrition (100g): 121.5 kcal, P:8.9g, F:8.5g, C:2.7g
+
+Query: Golden Mountain Shreds
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001786
+    Search Name: Golden Raisins
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 45.465 (from yazio)
+    Nutrition (100g): 302.0 kcal, P:3.4g, F:0.5g, C:79.5g
+
+  Result 2:
+    ID: 1884054
+    Search Name: Golden Crinkles
+    Description: Ore-Ida
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.465 (from eatthismuch)
+    Nutrition (100g): 119.0 kcal, P:2.4g, F:5.4g, C:16.7g
+
+  Result 3:
+    ID: 1000001753
+    Search Name: Golden Delicious Apple
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 39.754 (from yazio)
+    Nutrition (100g): 57.0 kcal, P:0.3g, F:0.1g, C:13.6g
+
+  Result 4:
+    ID: 10000000476
+    Search Name: Raisins golden seedless
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 39.754 (from mynetdiary)
+    Nutrition (100g): 301.2 kcal, P:3.0g, F:0.2g, C:80.0g
+
+  Result 5:
+    ID: 1505920
+    Search Name: Golden Cauliflower Soup
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.754 (from eatthismuch)
+    Nutrition (100g): 47.1 kcal, P:1.4g, F:3.6g, C:3.2g
+
+Search Statistics:
+  Total Searches: 7
+  Successful Matches: 6
+  Failed Searches: 1
+  Match Rate: 85.71428571428571%

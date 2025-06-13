@@ -24,7 +24,7 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None):
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_test_prompts: bool = False):
         """
         パイプラインの初期化
         
@@ -34,9 +34,11 @@ class MealAnalysisPipeline:
                                     None: 設定ファイルから自動取得
                                     True: ElasticsearchNutritionSearchComponent使用（推奨）
                                     False: 従来のUSDAQueryComponent使用
+            use_test_prompts: Phase1.5テスト用プロンプトを使用するかどうか
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
+        self.use_test_prompts = use_test_prompts
         
         # Elasticsearch検索優先度の決定
         if use_elasticsearch_search is not None:
@@ -62,7 +64,7 @@ class MealAnalysisPipeline:
             )
         
         # コンポーネントの初期化
-        self.phase1_component = Phase1Component()
+        self.phase1_component = Phase1Component(use_test_prompts=use_test_prompts)
         
         # 栄養データベース検索コンポーネントの選択
         if self.use_elasticsearch_search:

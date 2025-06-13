@@ -1,0 +1,799 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.227 seconds
+Timestamp: 2025-06-13T14:26:12.124176
+
+Total Matches: 80
+
+Query: Crimson-Glazed Earthbound Roast
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 36637
+    Search Name: Apricot Glazed Pork Roast
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 48.313 (from eatthismuch)
+    Nutrition (100g): 140.1 kcal, P:14.5g, F:2.7g, C:14.6g
+
+  Result 2:
+    ID: 1000001249
+    Search Name: Glazed Donut
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.505 (from yazio)
+    Nutrition (100g): 421.0 kcal, P:6.1g, F:22.7g, C:47.9g
+
+  Result 3:
+    ID: 10000000767
+    Search Name: Walnuts glazed
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 37.505 (from mynetdiary)
+    Nutrition (100g): 507.1 kcal, P:7.1g, F:36.1g, C:46.4g
+
+  Result 4:
+    ID: 4356395
+    Search Name: Balsamic-Glazed Steak
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 32.794 (from eatthismuch)
+    Nutrition (100g): 137.1 kcal, P:8.3g, F:7.2g, C:10.1g
+
+  Result 5:
+    ID: 213320
+    Search Name: Maple Glazed Salmon
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 32.794 (from eatthismuch)
+    Nutrition (100g): 159.9 kcal, P:17.7g, F:7.0g, C:5.5g
+
+Query: Harvest Moon Vegetable Assemblage
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001666
+    Search Name: Late Harvest, White Wine
+    Description: Alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 38.687 (from yazio)
+    Nutrition (100g): 112.0 kcal, P:0.1g, F:0.0g, C:13.4g
+
+  Result 2:
+    ID: 2141458
+    Search Name: Harvest Cheddar Multigrain Snack
+    Description: Sun Chips
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 38.687 (from eatthismuch)
+    Nutrition (100g): 500.0 kcal, P:7.1g, F:21.4g, C:67.9g
+
+  Result 3:
+    ID: 1751033
+    Search Name: Snacks, Harvest Cheddar, Whole Grain
+    Description: Sunchips
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 34.803 (from eatthismuch)
+    Nutrition (100g): 210.0 kcal, P:3.0g, F:9.0g, C:28.0g
+
+  Result 4:
+    ID: 4510388
+    Search Name: Yogurt, Pumpkin Harvest Crisp, Greek
+    Description: Chobani
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 34.803 (from eatthismuch)
+    Nutrition (100g): 117.2 kcal, P:7.0g, F:3.1g, C:15.6g
+
+  Result 5:
+    ID: 1751000
+    Search Name: Snacks, Whole Grain, Harvest Cheddar
+    Description: Sunchips
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 34.803 (from eatthismuch)
+    Nutrition (100g): 140.0 kcal, P:2.0g, F:6.0g, C:19.0g
+
+Query: Ruby Tomato Elixir
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2226
+    Search Name: Tomatoes
+    Description: Red, ripe, raw, year round average
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 35.123 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:0.9g, F:0.2g, C:3.9g
+
+  Result 2:
+    ID: 2228
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, packed in tomato juice
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 35.123 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:0.8g, F:0.2g, C:3.5g
+
+  Result 3:
+    ID: 2229
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 35.123 (from eatthismuch)
+    Nutrition (100g): 26.0 kcal, P:0.9g, F:0.2g, C:6.2g
+
+  Result 4:
+    ID: 2227
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 35.123 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+  Result 5:
+    ID: 2498
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 35.123 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+Query: Curved Wheat Conchas
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001250
+    Search Name: Wheat Bread
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 31.507 (from yazio)
+    Nutrition (100g): 274.0 kcal, P:10.7g, F:4.5g, C:47.5g
+
+  Result 2:
+    ID: 1000001332
+    Search Name: Wheat Flour
+    Description: Baking Ingredients
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 31.507 (from yazio)
+    Nutrition (100g): 364.0 kcal, P:10.3g, F:1.0g, C:76.3g
+
+  Result 3:
+    ID: 939567
+    Search Name: Cream of Wheat
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.507 (from eatthismuch)
+    Nutrition (100g): 135.2 kcal, P:4.4g, F:2.7g, C:23.1g
+
+  Result 4:
+    ID: 4926
+    Search Name: Wheat flour
+    Description: White, all-purpose, unenriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 31.507 (from eatthismuch)
+    Nutrition (100g): 364.0 kcal, P:10.3g, F:1.0g, C:76.3g
+
+  Result 5:
+    ID: 4910
+    Search Name: Wheat flour
+    Description: White, all-purpose, enriched, calcium-fortified
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 31.507 (from eatthismuch)
+    Nutrition (100g): 364.0 kcal, P:10.3g, F:1.0g, C:76.3g
+
+Query: Creamy Dairy Whisper
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 56996
+    Search Name: Creamy Cheese Tortellini with Asparagus
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 37.589 (from eatthismuch)
+    Nutrition (100g): 92.8 kcal, P:3.7g, F:5.0g, C:8.8g
+
+  Result 2:
+    ID: 920467
+    Search Name: Creamy Greek Yogurt Mac and Cheese
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.816 (from eatthismuch)
+    Nutrition (100g): 298.9 kcal, P:15.8g, F:14.9g, C:27.5g
+
+  Result 3:
+    ID: 4228222
+    Search Name: Spreadable Cheese Wedges, Light, Creamy
+    Description: The Laughing Cow
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 33.816 (from eatthismuch)
+    Nutrition (100g): 131.6 kcal, P:10.5g, F:7.9g, C:5.3g
+
+  Result 4:
+    ID: 4194263
+    Search Name: Cheese Wedges, Spreadable, Creamy, Original
+    Description: The Laughing Cow
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 33.816 (from eatthismuch)
+    Nutrition (100g): 236.8 kcal, P:10.5g, F:18.4g, C:5.3g
+
+  Result 5:
+    ID: 1694888
+    Search Name: Almond Creamer, Dairy-Free, Sweet & Creamy
+    Description: Silk
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 30.730 (from eatthismuch)
+    Nutrition (100g): 25.0 kcal, P:0.0g, F:1.0g, C:4.0g
+
+Query: Emerald Bean Spears
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 906095
+    Search Name: Zucchini Spears with Parmesan
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 45.679 (from eatthismuch)
+    Nutrition (100g): 26.7 kcal, P:2.1g, F:1.0g, C:3.1g
+
+  Result 2:
+    ID: 907053
+    Search Name: Grilled Zucchini Spears
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 45.679 (from eatthismuch)
+    Nutrition (100g): 35.5 kcal, P:1.2g, F:2.4g, C:3.2g
+
+  Result 3:
+    ID: 78254
+    Search Name: Pickled Asparagus Spears
+    Description: Foster's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.679 (from eatthismuch)
+    Nutrition (100g): 33.3 kcal, P:3.3g, F:0.0g, C:3.3g
+
+  Result 4:
+    ID: 1787783
+    Search Name: Kosher Dill Spears
+    Description: Spears, Claussen
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.679 (from eatthismuch)
+    Nutrition (100g): 17.9 kcal, P:0.0g, F:0.0g, C:1.8g
+
+  Result 5:
+    ID: 1852
+    Search Name: Beans
+    Description: Kidney, mature seeds, sprouted, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 28.060 (from eatthismuch)
+    Nutrition (100g): 33.0 kcal, P:4.9g, F:0.7g, C:4.6g
+
+Query: Spiced Broth Essence
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 966119
+    Search Name: Slow-Cooker Spiced Chicken Soup
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 40.974 (from eatthismuch)
+    Nutrition (100g): 56.0 kcal, P:6.8g, F:1.0g, C:4.7g
+
+  Result 2:
+    ID: 10000000865
+    Search Name: Sumac spice
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 33.804 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 10000000815
+    Search Name: Cinnamon stick spice
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 29.558 (from mynetdiary)
+    Nutrition (100g): 250.0 kcal, P:0.0g, F:0.0g, C:100.0g
+
+  Result 4:
+    ID: 10000000851
+    Search Name: Pumpkin pie spice
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 29.558 (from mynetdiary)
+    Nutrition (100g): 316.7 kcal, P:0.0g, F:11.7g, C:66.7g
+
+  Result 5:
+    ID: 10000000859
+    Search Name: Spices anise seed
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 29.558 (from mynetdiary)
+    Nutrition (100g): 328.6 kcal, P:14.3g, F:15.7g, C:42.9g
+
+Query: Amber Root Cubes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001656
+    Search Name: Root Beer
+    Description: Alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 46.621 (from yazio)
+    Nutrition (100g): 41.0 kcal, P:0.0g, F:0.0g, C:10.6g
+
+  Result 2:
+    ID: 1981
+    Search Name: Ginger root
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.621 (from eatthismuch)
+    Nutrition (100g): 80.0 kcal, P:1.7g, F:0.0g, C:18.3g
+
+  Result 3:
+    ID: 10000000076
+    Search Name: Ice cubes
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 46.018 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 4:
+    ID: 3808
+    Search Name: Lamb cubes
+    Description: Domestic, for stew or kabob (leg and shoulder), separable lean only, trimmed to 1/4" fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.018 (from eatthismuch)
+    Nutrition (100g): 134.0 kcal, P:20.1g, F:5.3g, C:0.0g
+
+  Result 5:
+    ID: 5826
+    Search Name: Ice cubes
+    Description: Frozen water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.018 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+Query: Cloud-Whipped Yukon Gold Puree
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 930930
+    Search Name: Cream Cheese Clouds
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.137 (from eatthismuch)
+    Nutrition (100g): 360.3 kcal, P:3.3g, F:38.3g, C:2.2g
+
+  Result 2:
+    ID: 1000000297
+    Search Name: Cloud Ear Fungus, dried
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.876 (from yazio)
+    Nutrition (100g): 284.0 kcal, P:9.2g, F:0.7g, C:73.0g
+
+  Result 3:
+    ID: 10000000970
+    Search Name: Tomato puree
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 41.566 (from mynetdiary)
+    Nutrition (100g): 38.0 kcal, P:1.6g, F:0.2g, C:8.8g
+
+  Result 4:
+    ID: 45157
+    Search Name: Cauliflower Puree
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.566 (from eatthismuch)
+    Nutrition (100g): 51.4 kcal, P:1.7g, F:3.6g, C:4.1g
+
+  Result 5:
+    ID: 45166
+    Search Name: Carrot Puree
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.566 (from eatthismuch)
+    Nutrition (100g): 76.0 kcal, P:1.4g, F:5.3g, C:6.7g
+
+Query: Golden Shells of Ambrosial Nectar
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001509
+    Search Name: Apricot Nectar
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.285 (from yazio)
+    Nutrition (100g): 56.0 kcal, P:0.4g, F:0.1g, C:14.4g
+
+  Result 2:
+    ID: 1000001514
+    Search Name: Papaya Nectar
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.285 (from yazio)
+    Nutrition (100g): 57.0 kcal, P:0.2g, F:0.1g, C:14.5g
+
+  Result 3:
+    ID: 1000001524
+    Search Name: Peach Nectar
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.285 (from yazio)
+    Nutrition (100g): 50.0 kcal, P:0.2g, F:0.5g, C:11.9g
+
+  Result 4:
+    ID: 1000001528
+    Search Name: Guava Nectar
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.285 (from yazio)
+    Nutrition (100g): 63.0 kcal, P:0.1g, F:0.1g, C:16.2g
+
+  Result 5:
+    ID: 1000001529
+    Search Name: Guanabana Nectar
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.285 (from yazio)
+    Nutrition (100g): 59.0 kcal, P:0.1g, F:0.2g, C:14.9g
+
+Query: Golden Grain Pearls
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001786
+    Search Name: Golden Raisins
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 45.465 (from yazio)
+    Nutrition (100g): 302.0 kcal, P:3.4g, F:0.5g, C:79.5g
+
+  Result 2:
+    ID: 1884054
+    Search Name: Golden Crinkles
+    Description: Ore-Ida
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.465 (from eatthismuch)
+    Nutrition (100g): 119.0 kcal, P:2.4g, F:5.4g, C:16.7g
+
+  Result 3:
+    ID: 10000000554
+    Search Name: Barley pearled dry uncooked
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 43.610 (from mynetdiary)
+    Nutrition (100g): 352.0 kcal, P:10.0g, F:1.1g, C:77.5g
+
+  Result 4:
+    ID: 1000001753
+    Search Name: Golden Delicious Apple
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 39.754 (from yazio)
+    Nutrition (100g): 57.0 kcal, P:0.3g, F:0.1g, C:13.6g
+
+  Result 5:
+    ID: 10000000476
+    Search Name: Raisins golden seedless
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 39.754 (from mynetdiary)
+    Nutrition (100g): 301.2 kcal, P:3.0g, F:0.2g, C:80.0g
+
+Query: Earth's White Tuber
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2086877
+    Search Name: Popcorners, Salt of The Earth
+    Description: Our Little Rebellion
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 52.051 (from eatthismuch)
+    Nutrition (100g): 428.6 kcal, P:7.1g, F:8.9g, C:82.1g
+
+  Result 2:
+    ID: 144654
+    Search Name: All Whites Egg Whites
+    Description: Kroger
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 27.184 (from eatthismuch)
+    Nutrition (100g): 54.3 kcal, P:10.9g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 1000001234
+    Search Name: White Bread
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 24.949 (from yazio)
+    Nutrition (100g): 266.0 kcal, P:8.8g, F:3.3g, C:49.4g
+
+  Result 4:
+    ID: 1000001305
+    Search Name: White Sugar
+    Description: Baking Ingredients
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 24.949 (from yazio)
+    Nutrition (100g): 389.0 kcal, P:0.0g, F:0.0g, C:99.8g
+
+  Result 5:
+    ID: 1000001315
+    Search Name: Cornmeal, white
+    Description: Baking Ingredients
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 24.949 (from yazio)
+    Nutrition (100g): 370.0 kcal, P:7.1g, F:1.8g, C:79.5g
+
+Query: Sun-Drenched Arborio Infusion
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3225132
+    Search Name: Island in the Sun Smoothie
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 36.608 (from eatthismuch)
+    Nutrition (100g): 62.5 kcal, P:0.9g, F:0.3g, C:15.7g
+
+  Result 2:
+    ID: 2565
+    Search Name: Sun-dried tomatoes
+    Description: Packed in oil, drained
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 36.608 (from eatthismuch)
+    Nutrition (100g): 213.0 kcal, P:5.1g, F:14.1g, C:23.4g
+
+  Result 3:
+    ID: 2564
+    Search Name: Sun-dried tomatoes
+    Description: None
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 36.608 (from eatthismuch)
+    Nutrition (100g): 258.0 kcal, P:14.1g, F:3.0g, C:55.7g
+
+  Result 4:
+    ID: 1858469
+    Search Name: Wild Cherry Protein Infused Water
+    Description: Protein 2O
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 36.507 (from eatthismuch)
+    Nutrition (100g): 60.0 kcal, P:15.0g, F:0.0g, C:6.0g
+
+  Result 5:
+    ID: 2166210
+    Search Name: Protein Powder, Tropical Punch, Infusions
+    Description: Isopure
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 36.507 (from eatthismuch)
+    Nutrition (100g): 360.0 kcal, P:80.0g, F:0.0g, C:8.0g
+
+Query: Radiant Cheese Emulsion
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2150348
+    Search Name: Cheese, 3 Cheese Blend, Shredded
+    Description: Trader Joe's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 18.730 (from eatthismuch)
+    Nutrition (100g): 285.7 kcal, P:28.6g, F:14.3g, C:1.8g
+
+  Result 2:
+    ID: 1000000000
+    Search Name: Cheese Coffeecake
+    Description: Cakes & Pies
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 18.535 (from yazio)
+    Nutrition (100g): 339.0 kcal, P:7.0g, F:15.2g, C:44.3g
+
+  Result 3:
+    ID: 1000000090
+    Search Name: Macaroni & Cheese
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 18.535 (from yazio)
+    Nutrition (100g): 164.0 kcal, P:6.7g, F:5.0g, C:23.1g
+
+  Result 4:
+    ID: 1000000120
+    Search Name: Cheese Lasagna
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 18.535 (from yazio)
+    Nutrition (100g): 130.0 kcal, P:6.5g, F:5.3g, C:13.8g
+
+  Result 5:
+    ID: 1000000146
+    Search Name: Cheese Tortellini
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 18.535 (from yazio)
+    Nutrition (100g): 307.0 kcal, P:13.5g, F:7.2g, C:47.0g
+
+Query: Savory Ground Essence
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 214
+    Search Name: Savory
+    Description: Spices, ground
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 52.496 (from eatthismuch)
+    Nutrition (100g): 272.0 kcal, P:6.8g, F:6.8g, C:68.2g
+
+  Result 2:
+    ID: 3837734
+    Search Name: Savory Crêpes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 44.954 (from eatthismuch)
+    Nutrition (100g): 110.1 kcal, P:6.6g, F:5.5g, C:8.1g
+
+  Result 3:
+    ID: 256458
+    Search Name: Savory Broccoli Pancakes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.307 (from eatthismuch)
+    Nutrition (100g): 125.6 kcal, P:7.0g, F:7.2g, C:9.0g
+
+  Result 4:
+    ID: 1494966
+    Search Name: Vegan Savory Oatmeal
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.307 (from eatthismuch)
+    Nutrition (100g): 83.6 kcal, P:3.4g, F:3.3g, C:11.9g
+
+  Result 5:
+    ID: 3257823
+    Search Name: Savory Mushroom Soup
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.307 (from eatthismuch)
+    Nutrition (100g): 90.1 kcal, P:2.5g, F:6.2g, C:6.5g
+
+Query: Golden Sunburst Kernels
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1647763
+    Search Name: Golden Sweet Whole Kernel Corn
+    Description: Golden Sweet Whole Kernel, Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.722 (from eatthismuch)
+    Nutrition (100g): 48.0 kcal, P:1.6g, F:0.8g, C:9.6g
+
+  Result 2:
+    ID: 2321575
+    Search Name: Kernel Corn, Whole, Golden Sweet, Fresh Cut
+    Description: Del Monte
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.736 (from eatthismuch)
+    Nutrition (100g): 48.0 kcal, P:0.8g, F:0.8g, C:10.4g
+
+  Result 3:
+    ID: 1000001786
+    Search Name: Golden Raisins
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 45.465 (from yazio)
+    Nutrition (100g): 302.0 kcal, P:3.4g, F:0.5g, C:79.5g
+
+  Result 4:
+    ID: 1884054
+    Search Name: Golden Crinkles
+    Description: Ore-Ida
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.465 (from eatthismuch)
+    Nutrition (100g): 119.0 kcal, P:2.4g, F:5.4g, C:16.7g
+
+  Result 5:
+    ID: 1000001753
+    Search Name: Golden Delicious Apple
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 39.754 (from yazio)
+    Nutrition (100g): 57.0 kcal, P:0.3g, F:0.1g, C:13.6g
+
+Search Statistics:
+  Total Searches: 17
+  Successful Matches: 16
+  Failed Searches: 1
+  Match Rate: 94.11764705882352%

@@ -1,0 +1,652 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 1.874 seconds
+Timestamp: 2025-06-13T14:09:29.608525
+
+Total Matches: 65
+
+Query: Emerald Crisp Romaine Leaves
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1623542
+    Search Name: Premium Romaine
+    Description: Marketside
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.6 kcal, P:1.2g, F:0.0g, C:3.5g
+
+  Result 2:
+    ID: 90019
+    Search Name: Romaine Lettuce
+    Description: Freshdirect
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 21.3 kcal, P:2.1g, F:0.0g, C:4.3g
+
+  Result 3:
+    ID: 1928120
+    Search Name: Romaine Hearts
+    Description: Tanimura & Antle
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.5 kcal, P:1.3g, F:0.2g, C:3.5g
+
+  Result 4:
+    ID: 1000000313
+    Search Name: Amaranth Leaves
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 43.320 (from yazio)
+    Nutrition (100g): 23.0 kcal, P:2.5g, F:0.3g, C:4.0g
+
+  Result 5:
+    ID: 1000000375
+    Search Name: Fireweed Leaves
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 43.320 (from yazio)
+    Nutrition (100g): 103.0 kcal, P:4.7g, F:2.8g, C:19.2g
+
+Query: Snow-Capped Alpine Dust
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000388
+    Search Name: Crab queen or snow raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 41.876 (from mynetdiary)
+    Nutrition (100g): 85.7 kcal, P:17.9g, F:0.7g, C:0.0g
+
+  Result 2:
+    ID: 56998
+    Search Name: Zucchini and Snow-Pea Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.876 (from eatthismuch)
+    Nutrition (100g): 46.9 kcal, P:2.3g, F:2.0g, C:5.4g
+
+  Result 3:
+    ID: 3690427
+    Search Name: Curry-Dusted Scallops with Pea Puree
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.600 (from eatthismuch)
+    Nutrition (100g): 92.6 kcal, P:8.7g, F:3.8g, C:5.9g
+
+  Result 4:
+    ID: 3257820
+    Search Name: Portobello Mushroom Caps and Veggies
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 40.581 (from eatthismuch)
+    Nutrition (100g): 46.5 kcal, P:1.7g, F:2.5g, C:5.4g
+
+  Result 5:
+    ID: 1000000579
+    Search Name: Pork Leg Cap Steak, raw
+    Description: Meat & Meat Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 36.507 (from yazio)
+    Nutrition (100g): 123.0 kcal, P:21.6g, F:3.4g, C:0.0g
+
+Query: Lunar Feta Crumbles
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1891236
+    Search Name: Cheese, Feta, Crumbles
+    Description: President
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 67.303 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:17.9g, C:3.6g
+
+  Result 2:
+    ID: 2102051
+    Search Name: Crumbled Cheese, Feta
+    Description: Frigo
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 67.303 (from eatthismuch)
+    Nutrition (100g): 285.7 kcal, P:14.3g, F:21.4g, C:7.1g
+
+  Result 3:
+    ID: 2322375
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+  Result 4:
+    ID: 1787600
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+  Result 5:
+    ID: 1787595
+    Search Name: Cheese, Feta, Traditional, Crumbled
+    Description: Athenos
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 59.792 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:14.3g, F:21.4g, C:3.6g
+
+Query: Imperial Garden Caesar's Embrace
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1772037
+    Search Name: Caesar
+    Description: Fresh Express
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 47.272 (from eatthismuch)
+    Nutrition (100g): 160.0 kcal, P:3.0g, F:13.0g, C:6.0g
+
+  Result 2:
+    ID: 5711
+    Search Name: Caesar dressing
+    Description: Salad dressing, regular
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 40.480 (from eatthismuch)
+    Nutrition (100g): 542.0 kcal, P:2.2g, F:57.8g, C:3.3g
+
+  Result 3:
+    ID: 1950261
+    Search Name: Caesar Salad
+    Description: Marketside
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.480 (from eatthismuch)
+    Nutrition (100g): 180.0 kcal, P:5.0g, F:14.0g, C:10.0g
+
+  Result 4:
+    ID: 2249017
+    Search Name: Salad, with Creamy Caesar Dressing, Chicken Caesar
+    Description: Ready Pac Foods
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 38.137 (from eatthismuch)
+    Nutrition (100g): 129.9 kcal, P:9.6g, F:9.0g, C:3.4g
+
+  Result 5:
+    ID: 1000000380
+    Search Name: Garden Cress, raw
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.802 (from yazio)
+    Nutrition (100g): 32.0 kcal, P:2.6g, F:0.7g, C:5.5g
+
+Query: Cloud-Kissed Garlic Emulsion
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 930930
+    Search Name: Cream Cheese Clouds
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.137 (from eatthismuch)
+    Nutrition (100g): 360.3 kcal, P:3.3g, F:38.3g, C:2.2g
+
+  Result 2:
+    ID: 1000000297
+    Search Name: Cloud Ear Fungus, dried
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.876 (from yazio)
+    Nutrition (100g): 284.0 kcal, P:9.2g, F:0.7g, C:73.0g
+
+  Result 3:
+    ID: 390274
+    Search Name: Low Carb Cloud Bread Loaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 37.672 (from eatthismuch)
+    Nutrition (100g): 168.3 kcal, P:16.6g, F:9.5g, C:3.2g
+
+  Result 4:
+    ID: 1000000383
+    Search Name: Garlic
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 34.027 (from yazio)
+    Nutrition (100g): 149.0 kcal, P:6.4g, F:0.5g, C:33.1g
+
+  Result 5:
+    ID: 1980
+    Search Name: Garlic
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 34.027 (from eatthismuch)
+    Nutrition (100g): 149.0 kcal, P:6.7g, F:0.0g, C:33.3g
+
+Query: Chilled Obsidian Brew
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3222247
+    Search Name: Chilled Lobster Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 45.679 (from eatthismuch)
+    Nutrition (100g): 88.1 kcal, P:9.1g, F:3.0g, C:7.0g
+
+  Result 2:
+    ID: 2055951
+    Search Name: Chilled Coffee Drink, Mocha
+    Description: Starbucks
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.581 (from eatthismuch)
+    Nutrition (100g): 270.0 kcal, P:10.0g, F:4.5g, C:48.0g
+
+  Result 3:
+    ID: 3115671
+    Search Name: Energy Drink, Witch's Brew
+    Description: Alani Nu
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.581 (from eatthismuch)
+    Nutrition (100g): 15.0 kcal, P:0.0g, F:0.0g, C:5.0g
+
+  Result 4:
+    ID: 4081500
+    Search Name: Fresh Brewed Sweet Tea
+    Description: Red Diamond
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.581 (from eatthismuch)
+    Nutrition (100g): 170.0 kcal, P:1.0g, F:0.0g, C:41.0g
+
+  Result 5:
+    ID: 391814
+    Search Name: Chilled Strawberry Almond Butter Soup
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 36.507 (from eatthismuch)
+    Nutrition (100g): 88.8 kcal, P:2.1g, F:4.3g, C:12.2g
+
+Query: Infused Tea Leaves
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1632898
+    Search Name: Water Beverage, Protein Infused + Energy, Blueberry Raspberry
+    Description: Protein20
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 52.942 (from eatthismuch)
+    Nutrition (100g): 70.0 kcal, P:15.0g, F:0.0g, C:2.0g
+
+  Result 2:
+    ID: 3192
+    Search Name: Tea
+    Description: Herb, other than chamomile, brewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 3:
+    ID: 3180
+    Search Name: Tea
+    Description: Brewed, prepared with tap water, decaffeinated
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 4:
+    ID: 3223
+    Search Name: Tea
+    Description: Brewed, prepared with distilled water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 5:
+    ID: 3224
+    Search Name: Tea
+    Description: Herb, chamomile, brewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.2g
+
+Query: Sun-Kissed Penne Quills
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+  Result 2:
+    ID: 1837832
+    Search Name: Penne
+    Description: Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 339.3 kcal, P:17.9g, F:1.8g, C:67.9g
+
+  Result 3:
+    ID: 57108
+    Search Name: Penne with Mushrooms
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 357.8 kcal, P:11.1g, F:18.2g, C:41.6g
+
+  Result 4:
+    ID: 4357368
+    Search Name: Penne Primavera
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 116.1 kcal, P:5.7g, F:2.7g, C:18.9g
+
+  Result 5:
+    ID: 1023366
+    Search Name: Salmon Penne
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.515 (from eatthismuch)
+    Nutrition (100g): 100.9 kcal, P:7.4g, F:1.3g, C:16.4g
+
+Query: Purified Glacial Crystals
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1710081
+    Search Name: Purified Water
+    Description: Member's Mark
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 50.911 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 2028452
+    Search Name: Purified Water
+    Description: Kirkland
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 50.911 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 1825233
+    Search Name: Purified Drinking Water
+    Description: Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 44.515 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 4:
+    ID: 1825405
+    Search Name: Pure Life Purified Water
+    Description: Nestle
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 39.547 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 5:
+    ID: 3126043
+    Search Name: Purified Drinking Water Bottle
+    Description: Niagara
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 39.547 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+Query: Mediterranean Penne Rhapsody
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+  Result 2:
+    ID: 1837832
+    Search Name: Penne
+    Description: Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 339.3 kcal, P:17.9g, F:1.8g, C:67.9g
+
+  Result 3:
+    ID: 4356488
+    Search Name: Mediterranean Pasta
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.864 (from eatthismuch)
+    Nutrition (100g): 243.6 kcal, P:7.5g, F:6.6g, C:39.7g
+
+  Result 4:
+    ID: 4368357
+    Search Name: Mediterranean Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.864 (from eatthismuch)
+    Nutrition (100g): 49.6 kcal, P:2.6g, F:1.0g, C:8.1g
+
+  Result 5:
+    ID: 3203596
+    Search Name: Mediterranean Wrap
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 42.864 (from eatthismuch)
+    Nutrition (100g): 228.0 kcal, P:11.1g, F:11.8g, C:19.2g
+
+Query: Crimson Sunset Vinaigrette
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000211
+    Search Name: Balsamic Vinaigrette Dressing
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 37.174 (from mynetdiary)
+    Nutrition (100g): 200.0 kcal, P:0.0g, F:15.7g, C:7.1g
+
+  Result 2:
+    ID: 1641224
+    Search Name: Raspberry Vinaigrette, Lite
+    Description: Kraft
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 37.174 (from eatthismuch)
+    Nutrition (100g): 93.8 kcal, P:0.0g, F:3.1g, C:15.6g
+
+  Result 3:
+    ID: 45091
+    Search Name: Red Snapper with Basil Vinaigrette
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.026 (from eatthismuch)
+    Nutrition (100g): 158.2 kcal, P:17.7g, F:9.2g, C:0.4g
+
+  Result 4:
+    ID: 4368530
+    Search Name: Maple Vinaigrette Couscous Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.026 (from eatthismuch)
+    Nutrition (100g): 126.1 kcal, P:4.5g, F:5.1g, C:16.1g
+
+  Result 5:
+    ID: 3266426
+    Search Name: Steamed Greens with Flax Vinaigrette
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.026 (from eatthismuch)
+    Nutrition (100g): 111.8 kcal, P:2.0g, F:10.1g, C:6.1g
+
+Query: Golden Hearthstone Crisps
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001786
+    Search Name: Golden Raisins
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 45.465 (from yazio)
+    Nutrition (100g): 302.0 kcal, P:3.4g, F:0.5g, C:79.5g
+
+  Result 2:
+    ID: 1884054
+    Search Name: Golden Crinkles
+    Description: Ore-Ida
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 45.465 (from eatthismuch)
+    Nutrition (100g): 119.0 kcal, P:2.4g, F:5.4g, C:16.7g
+
+  Result 3:
+    ID: 1000001753
+    Search Name: Golden Delicious Apple
+    Description: Fruits & Fruit Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 39.754 (from yazio)
+    Nutrition (100g): 57.0 kcal, P:0.3g, F:0.1g, C:13.6g
+
+  Result 4:
+    ID: 10000000476
+    Search Name: Raisins golden seedless
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 39.754 (from mynetdiary)
+    Nutrition (100g): 301.2 kcal, P:3.0g, F:0.2g, C:80.0g
+
+  Result 5:
+    ID: 1505920
+    Search Name: Golden Cauliflower Soup
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.754 (from eatthismuch)
+    Nutrition (100g): 47.1 kcal, P:1.4g, F:3.6g, C:3.2g
+
+Query: Verdant Whisper Herbs
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001579
+    Search Name: Herb Tea
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 35.820 (from yazio)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.2g
+
+  Result 2:
+    ID: 56925
+    Search Name: Herbed Quinoa
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 35.820 (from eatthismuch)
+    Nutrition (100g): 359.6 kcal, P:10.6g, F:14.1g, C:48.1g
+
+  Result 3:
+    ID: 905588
+    Search Name: Asparagus Herb Delight
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 20.3 kcal, P:2.1g, F:0.2g, C:4.5g
+
+  Result 4:
+    ID: 386803
+    Search Name: Herbed Gnocchi and Mushrooms
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 166.6 kcal, P:3.1g, F:9.0g, C:15.6g
+
+  Result 5:
+    ID: 45220
+    Search Name: Grilled Herb Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.321 (from eatthismuch)
+    Nutrition (100g): 137.0 kcal, P:1.9g, F:7.6g, C:16.0g
+
+Search Statistics:
+  Total Searches: 14
+  Successful Matches: 13
+  Failed Searches: 1
+  Match Rate: 92.85714285714286%
