@@ -1,0 +1,15 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.096 seconds
+Timestamp: 2025-06-12T17:27:27.393682
+
+Total Matches: 0
+
+Search Statistics:
+  Total Searches: 13
+  Successful Matches: 0
+  Failed Searches: 13
+  Match Rate: 0.0%

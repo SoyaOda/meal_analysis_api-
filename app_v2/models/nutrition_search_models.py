@@ -26,8 +26,19 @@ class NutritionMatch(BaseModel):
     # 検索スコア
     score: Optional[float] = Field(None, description="検索結果の関連度スコア")
     
+    # 完全一致判定（新機能）
+    is_exact_match: bool = Field(default=False, description="柔軟な完全一致かどうか（大文字小文字、語形変化、単複、所有格、語順の違いを許容）")
+    match_details: Dict[str, Any] = Field(default_factory=dict, description="マッチング詳細情報")
+    
     # 検索に関するメタデータ
     search_metadata: Optional[Dict[str, Any]] = Field(None, description="検索に関するメタデータ")
+    
+    class Config:
+        # デフォルト値でもJSONシリアライゼーションに含める
+        fields = {
+            "is_exact_match": {"alias": "is_exact_match"},
+            "match_details": {"alias": "match_details"}
+        }
 
 
 class AdvancedSearchOptions(BaseModel):
