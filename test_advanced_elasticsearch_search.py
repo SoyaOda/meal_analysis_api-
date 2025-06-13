@@ -193,9 +193,10 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         }
         
         # 検索結果を辞書形式に変換
+        matches_dict = {}
         for query, match_results in search_results.matches.items():
             if isinstance(match_results, list):
-                detailed_result["matches"][query] = [
+                matches_dict[query] = [
                     {
                         "id": match.id,
                         "search_name": match.search_name,
@@ -205,11 +206,13 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
                         "nutrition": match.nutrition,
                         "weight": match.weight,
                         "score": match.score,
+                        "is_exact_match": match.is_exact_match,
+                        "match_details": match.match_details,
                         "search_metadata": match.search_metadata
                     } for match in match_results
                 ]
             else:
-                detailed_result["matches"][query] = {
+                matches_dict[query] = {
                     "id": match_results.id,
                     "search_name": match_results.search_name,
                     "description": match_results.description,
@@ -218,6 +221,8 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
                     "nutrition": match_results.nutrition,
                     "weight": match_results.weight,
                     "score": match_results.score,
+                    "is_exact_match": match_results.is_exact_match,
+                    "match_details": match_results.match_details,
                     "search_metadata": match_results.search_metadata
                 }
         
@@ -321,6 +326,8 @@ async def save_advanced_elasticsearch_results(analysis_id: str, search_results, 
                     "nutrition": match.nutrition,
                     "weight": match.weight,
                     "score": match.score,
+                    "is_exact_match": match.is_exact_match,
+                    "match_details": match.match_details,
                     "search_metadata": match.search_metadata
                 } for match in match_results
             ]
@@ -334,6 +341,8 @@ async def save_advanced_elasticsearch_results(analysis_id: str, search_results, 
                 "nutrition": match_results.nutrition,
                 "weight": match_results.weight,
                 "score": match_results.score,
+                "is_exact_match": match_results.is_exact_match,
+                "match_details": match_results.match_details,
                 "search_metadata": match_results.search_metadata
             }
     

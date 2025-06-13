@@ -3,6 +3,7 @@
 Elasticsearch Nutrition Search Component
 
 高度なクエリ戦略対応版：構造化入力、bool query、function_score、文字列類似度、二段階検索
+完全一致判定機能追加版
 """
 
 import os
@@ -18,6 +19,13 @@ from ..models.nutrition_search_models import (
 from ..models.phase1_models import Phase1Output, DetectedFoodItem, FoodAttribute, AttributeType
 from ..config import get_settings
 from ..utils.lemmatization import lemmatize_term, create_lemmatized_query_variations
+
+# 完全一致判定ユーティリティをインポート
+try:
+    from ..utils.text_matching import is_flexible_exact_match, get_text_matcher
+    TEXT_MATCHING_AVAILABLE = True
+except ImportError:
+    TEXT_MATCHING_AVAILABLE = False
 
 # 文字列類似度アルゴリズム
 try:
@@ -1235,7 +1243,7 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         lemmatized_term: str
     ) -> List[NutritionMatch]:
         """
-        見出し語化を考慮したスコアリング調整を適用
+        見出し語化を考慮したスコアリング調整を適用（完全一致判定機能付き）
         
         Args:
             es_hits: Elasticsearchからの生の検索結果
@@ -1243,13 +1251,13 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             lemmatized_term: 見出し語化された検索語
             
         Returns:
-            スコア調整済みのNutritionMatchリスト
+            スコア調整済みのNutritionMatch（完全一致判定含む）リスト
         """
         enhanced_results = []
         
         for hit in es_hits:
             try:
-                # 基本のNutritionMatchを作成
+                # 基本のNutritionMatchを作成（完全一致判定込み）
                 nutrition_match = self._convert_es_hit_to_nutrition_match(hit, original_term)
                 
                 # データベース項目名の見出し語化（インデックスされたフィールドを優先使用）
@@ -1270,9 +1278,16 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
                 # Elasticsearchスコアに調整係数を適用
                 original_score = hit['_score']
                 adjusted_score = original_score * score_adjustment
+                
+                # 完全一致の場合のさらなるブーストを確認
+                if nutrition_match.is_exact_match:
+                    # 既に_convert_es_hit_to_nutrition_matchでブーストされているが、
+                    # 見出し語化調整も適用
+                    adjusted_score = adjusted_score  # 重複ブーストを避けるため調整済みスコアをそのまま使用
+                
                 nutrition_match.score = adjusted_score
                 
-                # メタデータの追加
+                # メタデータの更新
                 if not hasattr(nutrition_match, 'search_metadata'):
                     nutrition_match.search_metadata = {}
                 
@@ -1283,6 +1298,15 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
                     "original_elasticsearch_score": original_score,
                     "enhanced_scoring_applied": True
                 })
+                
+                # 完全一致判定の詳細をmatch_detailsに追加
+                if hasattr(nutrition_match, 'match_details') and nutrition_match.match_details:
+                    nutrition_match.match_details.update({
+                        "lemmatized_enhanced_search": True,
+                        "lemmatized_query": lemmatized_term,
+                        "lemmatized_target": lemmatized_db_name,
+                        "score_adjustment_applied": score_adjustment
+                    })
                 
                 enhanced_results.append(nutrition_match)
                 
@@ -1357,14 +1381,14 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
 
     def _convert_es_hit_to_nutrition_match(self, hit: Dict[str, Any], search_term: str) -> NutritionMatch:
         """
-        ElasticsearchヒットをNutritionMatchに変換
+        ElasticsearchヒットをNutritionMatchに変換（完全一致判定機能付き）
         
         Args:
             hit: Elasticsearchヒット
             search_term: 検索語彙
             
         Returns:
-            NutritionMatch
+            NutritionMatch（完全一致判定含む）
         """
         source = hit['_source']
         score = hit['_score']
@@ -1373,6 +1397,48 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         source_db = source.get('source_db', 'unknown')
         search_name = source.get('search_name', search_term)
         final_source = f"elasticsearch_{source_db}"
+        
+        # 完全一致判定を実行
+        is_exact_match = False
+        match_details = {}
+        
+        if TEXT_MATCHING_AVAILABLE:
+            try:
+                is_exact_match, match_details = is_flexible_exact_match(
+                    search_term, 
+                    search_name,
+                    similarity_threshold=0.85
+                )
+                
+                # 完全一致の場合はスコアをブースト
+                if is_exact_match:
+                    score = score * 1.5
+                    
+                # マッチング詳細にメタデータを追加
+                match_details.update({
+                    "search_term": search_term,
+                    "target_name": search_name,
+                    "flexible_matching_enabled": True,
+                    "original_score": hit['_score'],
+                    "boosted_score": score if is_exact_match else hit['_score']
+                })
+                
+            except Exception as e:
+                self.logger.warning(f"完全一致判定でエラー: {e}")
+                match_details = {
+                    "error": str(e),
+                    "flexible_matching_enabled": False,
+                    "search_term": search_term,
+                    "target_name": search_name
+                }
+        else:
+            # テキストマッチング機能が利用できない場合のフォールバック
+            match_details = {
+                "flexible_matching_enabled": False,
+                "reason": "text_matching_utility_not_available",
+                "search_term": search_term,
+                "target_name": search_name
+            }
         
         return NutritionMatch(
             id=source.get('id', 0),
@@ -1385,11 +1451,14 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             nutrition=source.get('nutrition', {}),
             weight=source.get('weight'),
             score=score,
+            is_exact_match=is_exact_match,  # 完全一致フラグを設定
+            match_details=match_details if match_details else {},    # マッチング詳細を設定（空辞書でも設定）
             search_metadata={
                 "search_term": search_term,
-                "elasticsearch_score": score,
+                "elasticsearch_score": hit['_score'],
                 "search_method": "elasticsearch_multi_db" if self.multi_db_search_mode else "elasticsearch",
                 "source_database": source_db,
-                "index_name": self.index_name
+                "index_name": self.index_name,
+                "flexible_exact_match_applied": TEXT_MATCHING_AVAILABLE
             }
         ) 

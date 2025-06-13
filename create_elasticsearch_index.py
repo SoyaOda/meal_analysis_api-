@@ -27,7 +27,7 @@ except ImportError as e:
 
 
 def create_index_mapping() -> Dict[str, Any]:
-    """Elasticsearchインデックスのマッピングを定義"""
+    """Elasticsearchインデックスのマッピングを定義（高度なテキストマッチング対応）"""
     return {
         "mappings": {
             "properties": {
@@ -36,19 +36,25 @@ def create_index_mapping() -> Dict[str, Any]:
                 },
                 "search_name": {
                     "type": "text",
-                    "analyzer": "standard",
+                    "analyzer": "meal_text_analyzer",  # カスタムアナライザーを使用
+                    "search_analyzer": "meal_search_analyzer",  # 検索時は同義語フィルター付き
                     "fields": {
                         "exact": {
                             "type": "keyword"
                         },
                         "suggest": {
                             "type": "completion"
+                        },
+                        "standard": {
+                            "type": "text",
+                            "analyzer": "standard"
                         }
                     }
                 },
                 "search_name_lemmatized": {
                     "type": "text",
-                    "analyzer": "standard",
+                    "analyzer": "meal_text_analyzer",
+                    "search_analyzer": "meal_search_analyzer",
                     "fields": {
                         "exact": {
                             "type": "keyword"
@@ -57,7 +63,8 @@ def create_index_mapping() -> Dict[str, Any]:
                 },
                 "description": {
                     "type": "text",
-                    "analyzer": "standard"
+                    "analyzer": "meal_text_analyzer",
+                    "search_analyzer": "meal_search_analyzer"
                 },
                 "data_type": {
                     "type": "keyword"
@@ -87,7 +94,109 @@ def create_index_mapping() -> Dict[str, Any]:
             "number_of_shards": 1,
             "number_of_replicas": 0,
             "analysis": {
+                "char_filter": {
+                    "punctuation_normalizer": {
+                        "type": "mapping",
+                        "mappings": [
+                            "&=> and ",
+                            ",=> ",
+                            ".=> ",
+                            "!=> ",
+                            "?=> ",
+                            ";=> ",
+                            ":=> "
+                        ]
+                    }
+                },
+                "filter": {
+                    "english_possessive_stemmer": {
+                        "type": "stemmer",
+                        "language": "possessive_english"
+                    },
+                    "english_stemmer": {
+                        "type": "stemmer",
+                        "language": "english"
+                    },
+                    "english_stopwords": {
+                        "type": "stop",
+                        "stopwords": [
+                            "a", "an", "and", "are", "as", "at", "be", "but", "by",
+                            "for", "if", "in", "into", "is", "it", "no", "not", "of",
+                            "on", "or", "such", "that", "the", "their", "then", "there",
+                            "these", "they", "this", "to", "was", "will", "with"
+                        ]
+                    },
+                    "meal_synonym_filter": {
+                        "type": "synonym_graph",
+                        "synonyms": [
+                            "chicken,poultry",
+                            "beef,cow meat",
+                            "pork,pig meat",
+                            "fish,seafood",
+                            "potato,potatoes",
+                            "tomato,tomatoes",
+                            "apple,apples",
+                            "banana,bananas",
+                            "orange,oranges",
+                            "bread,toast",
+                            "rice,grain",
+                            "pasta,noodles,spaghetti,macaroni",
+                            "salad,greens",
+                            "soup,broth",
+                            "milk,dairy",
+                            "cheese,dairy",
+                            "egg,eggs",
+                            "oil,fat",
+                            "butter,margarine",
+                            "salt,sodium",
+                            "pepper,spice",
+                            "sugar,sweetener",
+                            "onion,onions",
+                            "garlic,seasoning",
+                            "carrot,carrots",
+                            "broccoli,vegetable",
+                            "spinach,leafy green",
+                            "lettuce,leafy green",
+                            "ground beef,minced meat",
+                            "french fries,fries,chips",
+                            "ice cream,dessert",
+                            "chocolate,cocoa",
+                            "coffee,beverage",
+                            "tea,beverage",
+                            "water,beverage",
+                            "juice,beverage"
+                        ],
+                        "updateable": True
+                    },
+                    "shingle_filter": {
+                        "type": "shingle",
+                        "min_shingle_size": 2,
+                        "max_shingle_size": 3,
+                        "output_unigrams": True
+                    }
+                },
                 "analyzer": {
+                    "meal_text_analyzer": {
+                        "tokenizer": "standard",
+                        "char_filter": ["punctuation_normalizer"],
+                        "filter": [
+                            "lowercase",
+                            "english_possessive_stemmer",
+                            "english_stopwords",
+                            "english_stemmer"
+                        ]
+                    },
+                    "meal_search_analyzer": {
+                        "tokenizer": "standard",
+                        "char_filter": ["punctuation_normalizer"],
+                        "filter": [
+                            "lowercase",
+                            "english_possessive_stemmer",
+                            "english_stopwords",
+                            "meal_synonym_filter",
+                            "english_stemmer"
+                        ]
+                    },
                     "food_analyzer": {
                         "type": "standard",
                         "stopwords": "_none_"

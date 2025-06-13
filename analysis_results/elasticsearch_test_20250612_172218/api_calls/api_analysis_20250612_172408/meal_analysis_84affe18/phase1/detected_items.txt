@@ -1,0 +1,12 @@
+Phase1 検出結果 - 2025-06-12 17:24:08
+============================================================
+
+処理詳細:
+  image_size_bytes: 104424
+  image_mime_type: image/jpeg
+  gemini_structured_api_call_start: Calling Gemini API for structured image analysis
+  gemini_structured_response: {"detected_food_items": [{"item_name": "Beef Taco", "confidence": 0.95, "attributes": [{"type": "ingredient", "value": "Flour Tortilla", "confidence": 0.95}, {"type": "ingredient", "value": "Ground Beef", "confidence": 0.9}, {"type": "ingredient", "value": "Shredded Lettuce", "confidence": 0.95}, {"type": "ingredient", "value": "Diced Tomatoes", "confidence": 0.95}, {"type": "ingredient", "value": "Shredded Cheddar Cheese", "confidence": 0.9}, {"type": "ingredient", "value": "Sour Cream", "confidence": 0.85}, {"type": "ingredient", "value": "Taco Sauce", "confidence": 0.8}, {"type": "preparation", "value": "Soft Taco", "confidence": 0.95}, {"type": "serving_style", "value": "Mexican Cuisine", "confidence": 0.9}], "brand": "", "category_hints": ["Mexican Food", "Main Dish", "Sandwich/Wrap"], "negative_cues": []}], "dishes": [{"dish_name": ["Beef Taco", "Taco"], "confidence": 0.95, "ingredients": [{"ingredient_name": ["Flour Tortilla", "Tortilla"], "confidence": 0.95, "attributes": []}, {"ingredient_name": ["Ground Beef", "Beef"], "confidence": 0.9, "attributes": []}, {"ingredient_name": ["Shredded Lettuce", "Lettuce"], "confidence": 0.95, "attributes": []}, {"ingredient_name": ["Diced Tomatoes", "Tomatoes"], "confidence": 0.95, "attributes": []}, {"ingredient_name": ["Shredded Cheddar Cheese", "Cheddar Cheese", "Cheese"], "confidence": 0.9, "attributes": []}, {"ingredient_name": ["Sour Cream", "Cream"], "confidence": 0.85, "attributes": []}, {"ingredient_name": ["Taco Sauce", "Hot Sauce", "Sauce"], "confidence": 0.8, "attributes": []}], "attributes": []}], "analysis_confidence": 0.95}
+  detected_structured_items_count: 1
+  detected_dishes_count: 1
+  total_ingredients_count: 7
+  structured_search_terms: {"high_confidence_items": [{"item_name": "Beef Taco", "confidence": 0.95, "brand": ""}], "medium_confidence_items": [], "brands": [], "ingredients": ["Flour Tortilla", "Ground Beef", "Shredded Lettuce", "Diced Tomatoes", "Shredded Cheddar Cheese", "Sour Cream", "Taco Sauce"], "cooking_methods": ["Soft Taco"], "negative_cues": []}

@@ -1,0 +1,701 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.114 seconds
+Timestamp: 2025-06-12T16:47:44.068402
+
+Total Matches: 70
+
+Query: Salt
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000855
+    Search Name: Salt
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 238.028 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 221
+    Search Name: Salt
+    Description: Table
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 238.028 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 10000000830
+    Search Name: Kosher salt
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 36.563 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 4:
+    ID: 127062
+    Search Name: Garlic Salt
+    Description: Cain's - Walmart
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 36.563 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 5:
+    ID: 1000000794
+    Search Name: Salt Pork, raw
+    Description: Meat & Meat Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 32.139 (from yazio)
+    Nutrition (100g): 748.0 kcal, P:5.0g, F:80.5g, C:0.0g
+
+Query: Vegetable Oil
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001478
+    Search Name: Vegetable Oil
+    Description: Oils & Fats
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 235.880 (from yazio)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 2:
+    ID: 3119389
+    Search Name: Vegetable Oil
+    Description: Mazola
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 235.880 (from eatthismuch)
+    Nutrition (100g): 857.1 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 3:
+    ID: 10000000369
+    Search Name: Vegetable oil
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 213.028 (from mynetdiary)
+    Nutrition (100g): 857.1 kcal, P:0.0g, F:97.1g, C:0.0g
+
+  Result 4:
+    ID: 373
+    Search Name: Vegetable oil
+    Description: Natreon canola, high stability, non trans, high oleic (70%)
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 213.028 (from eatthismuch)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 5:
+    ID: 1000001453
+    Search Name: Vegetable Oil Spread
+    Description: Oils & Fats
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 83.299 (from yazio)
+    Nutrition (100g): 533.0 kcal, P:0.2g, F:59.8g, C:0.9g
+
+Query: Cream Sauce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3088200
+    Search Name: Chicken Breasts in Caper Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 53.245 (from eatthismuch)
+    Nutrition (100g): 195.2 kcal, P:16.5g, F:13.6g, C:1.3g
+
+  Result 2:
+    ID: 3224045
+    Search Name: Chicken Breasts with Mushroom Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 53.245 (from eatthismuch)
+    Nutrition (100g): 166.3 kcal, P:9.5g, F:13.5g, C:1.9g
+
+  Result 3:
+    ID: 953990
+    Search Name: Chicken with Sun-Dried Tomato Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 48.904 (from eatthismuch)
+    Nutrition (100g): 211.9 kcal, P:11.8g, F:17.5g, C:1.8g
+
+  Result 4:
+    ID: 1016926
+    Search Name: Zucchini Pasta in a Lemon Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 48.904 (from eatthismuch)
+    Nutrition (100g): 57.6 kcal, P:1.6g, F:4.6g, C:3.5g
+
+  Result 5:
+    ID: 4181367
+    Search Name: Sauce
+    Description: Chick-fil-A
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 31.056 (from eatthismuch)
+    Nutrition (100g): 516.1 kcal, P:0.0g, F:45.2g, C:22.6g
+
+Query: Potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2091
+    Search Name: Potato
+    Description: Flesh and skin, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 175.198 (from eatthismuch)
+    Nutrition (100g): 77.0 kcal, P:2.0g, F:0.1g, C:17.5g
+
+  Result 2:
+    ID: 1000001609
+    Search Name: Mashed Potatoes
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 34.843 (from yazio)
+    Nutrition (100g): 89.0 kcal, P:1.6g, F:2.8g, C:14.7g
+
+  Result 3:
+    ID: 10000001038
+    Search Name: Fingerling potatoes
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 34.843 (from mynetdiary)
+    Nutrition (100g): 70.0 kcal, P:1.5g, F:0.0g, C:15.5g
+
+  Result 4:
+    ID: 36705
+    Search Name: Foil Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 34.843 (from eatthismuch)
+    Nutrition (100g): 118.3 kcal, P:2.1g, F:5.0g, C:16.9g
+
+  Result 5:
+    ID: 906988
+    Search Name: Balsamic Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 34.843 (from eatthismuch)
+    Nutrition (100g): 84.3 kcal, P:2.0g, F:1.1g, C:16.9g
+
+Query: Roasted Brussels Sprouts
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 39207
+    Search Name: Roasted Brussels Sprouts
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 316.549 (from eatthismuch)
+    Nutrition (100g): 90.0 kcal, P:3.2g, F:5.9g, C:8.5g
+
+  Result 2:
+    ID: 412930
+    Search Name: Garlic Roasted Brussels Sprouts
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 125.811 (from eatthismuch)
+    Nutrition (100g): 154.7 kcal, P:3.1g, F:13.2g, C:8.5g
+
+  Result 3:
+    ID: 3701058
+    Search Name: Roasted Brussels Sprouts and Tofu
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 113.555 (from eatthismuch)
+    Nutrition (100g): 65.7 kcal, P:4.5g, F:3.1g, C:6.6g
+
+  Result 4:
+    ID: 3262962
+    Search Name: Roasted Brussels Sprouts with Caraway Seeds
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 103.474 (from eatthismuch)
+    Nutrition (100g): 123.8 kcal, P:3.1g, F:9.8g, C:8.2g
+
+  Result 5:
+    ID: 1498434
+    Search Name: Roasted Brussels Sprouts with Lemon Juice
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 103.474 (from eatthismuch)
+    Nutrition (100g): 66.5 kcal, P:3.2g, F:3.1g, C:8.7g
+
+Query: Chicken Thigh
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 485
+    Search Name: Chicken thigh
+    Description: Broilers or fryers, meat only, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 204.168 (from eatthismuch)
+    Nutrition (100g): 121.0 kcal, P:19.7g, F:4.1g, C:0.0g
+
+  Result 2:
+    ID: 483
+    Search Name: Chicken thigh
+    Description: Broilers or fryers, meat and skin, cooked, roasted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 204.168 (from eatthismuch)
+    Nutrition (100g): 232.0 kcal, P:23.2g, F:14.7g, C:0.0g
+
+  Result 3:
+    ID: 484
+    Search Name: Chicken thigh
+    Description: Broilers or fryers, meat and skin, cooked, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 204.168 (from eatthismuch)
+    Nutrition (100g): 232.0 kcal, P:23.2g, F:14.7g, C:0.0g
+
+  Result 4:
+    ID: 488
+    Search Name: Chicken thigh
+    Description: Broilers or fryers, meat only, cooked, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 204.168 (from eatthismuch)
+    Nutrition (100g): 195.0 kcal, P:25.1g, F:9.8g, C:0.0g
+
+  Result 5:
+    ID: 486
+    Search Name: Chicken thigh
+    Description: Broilers or fryers, meat only, cooked, fried
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 204.168 (from eatthismuch)
+    Nutrition (100g): 218.0 kcal, P:28.3g, F:10.4g, C:1.2g
+
+Query: Herbs
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3262874
+    Search Name: Grilled Corn with Herbs
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 43.187 (from eatthismuch)
+    Nutrition (100g): 160.3 kcal, P:3.0g, F:10.9g, C:16.2g
+
+  Result 2:
+    ID: 961002
+    Search Name: Chicken Breast with Fresh Herbs
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 38.980 (from eatthismuch)
+    Nutrition (100g): 184.7 kcal, P:15.5g, F:12.8g, C:1.6g
+
+  Result 3:
+    ID: 1000001579
+    Search Name: Herb Tea
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 35.758 (from yazio)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.2g
+
+  Result 4:
+    ID: 4368675
+    Search Name: Herb-Parmesan Chicken Breast
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 35.049 (from eatthismuch)
+    Nutrition (100g): 138.8 kcal, P:16.6g, F:7.2g, C:2.1g
+
+  Result 5:
+    ID: 905588
+    Search Name: Asparagus Herb Delight
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 31.432 (from eatthismuch)
+    Nutrition (100g): 20.3 kcal, P:2.1g, F:0.2g, C:4.5g
+
+Query: Butter
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001133
+    Search Name: Butter
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 212.260 (from yazio)
+    Nutrition (100g): 717.0 kcal, P:0.8g, F:81.1g, C:0.1g
+
+  Result 2:
+    ID: 1
+    Search Name: Butter
+    Description: Salted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.260 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:0.7g, F:81.0g, C:0.0g
+
+  Result 3:
+    ID: 121
+    Search Name: Butter
+    Description: Unsalted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.260 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:0.7g, F:81.0g, C:0.0g
+
+  Result 4:
+    ID: 2
+    Search Name: Butter
+    Description: Whipped, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.260 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:1.1g, F:80.9g, C:0.0g
+
+  Result 5:
+    ID: 1000001088
+    Search Name: Butter, light
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 38.547 (from yazio)
+    Nutrition (100g): 499.0 kcal, P:3.3g, F:55.1g, C:0.0g
+
+Query: Black Pepper
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 127788
+    Search Name: Spices Ground Black Pepper
+    Description: Compliments
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 73.870 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 10000000846
+    Search Name: Pepper black
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 60.896 (from mynetdiary)
+    Nutrition (100g): 266.7 kcal, P:16.7g, F:3.3g, C:66.7g
+
+  Result 3:
+    ID: 4591061
+    Search Name: Parmesan & Cracked Black Pepper Chicken Sausage
+    Description: Kirkland Signature
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 60.755 (from eatthismuch)
+    Nutrition (100g): 197.4 kcal, P:18.4g, F:13.2g, C:1.3g
+
+  Result 4:
+    ID: 45201
+    Search Name: Spaghetti with Pecorino Romano and Black Pepper
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 55.802 (from eatthismuch)
+    Nutrition (100g): 380.9 kcal, P:16.6g, F:7.7g, C:60.3g
+
+  Result 5:
+    ID: 45154
+    Search Name: Black-Pepper Salmon with Dill Smashed Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 55.802 (from eatthismuch)
+    Nutrition (100g): 133.3 kcal, P:14.6g, F:6.0g, C:4.4g
+
+Query: Milk
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001132
+    Search Name: Milk
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 247.681 (from yazio)
+    Nutrition (100g): 61.0 kcal, P:3.1g, F:3.5g, C:4.5g
+
+  Result 2:
+    ID: 1000001065
+    Search Name: Condensed Milk
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.144 (from yazio)
+    Nutrition (100g): 321.0 kcal, P:7.9g, F:8.7g, C:54.4g
+
+  Result 3:
+    ID: 1000001068
+    Search Name: Powdered Milk
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.144 (from yazio)
+    Nutrition (100g): 496.0 kcal, P:26.3g, F:26.7g, C:38.4g
+
+  Result 4:
+    ID: 1000001074
+    Search Name: Sheep Milk
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.144 (from yazio)
+    Nutrition (100g): 108.0 kcal, P:6.0g, F:7.0g, C:5.4g
+
+  Result 5:
+    ID: 1000001079
+    Search Name: Filled Milk
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 37.144 (from yazio)
+    Nutrition (100g): 63.0 kcal, P:3.3g, F:3.5g, C:4.7g
+
+Query: Chicken with Cream Sauce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3224045
+    Search Name: Chicken Breasts with Mushroom Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 57.142 (from eatthismuch)
+    Nutrition (100g): 166.3 kcal, P:9.5g, F:13.5g, C:1.9g
+
+  Result 2:
+    ID: 953990
+    Search Name: Chicken with Sun-Dried Tomato Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 52.483 (from eatthismuch)
+    Nutrition (100g): 211.9 kcal, P:11.8g, F:17.5g, C:1.8g
+
+  Result 3:
+    ID: 3088200
+    Search Name: Chicken Breasts in Caper Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 45.957 (from eatthismuch)
+    Nutrition (100g): 195.2 kcal, P:16.5g, F:13.6g, C:1.3g
+
+  Result 4:
+    ID: 34980
+    Search Name: Chicken Breasts with Lime Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 43.855 (from eatthismuch)
+    Nutrition (100g): 197.1 kcal, P:19.3g, F:10.9g, C:4.4g
+
+  Result 5:
+    ID: 35423
+    Search Name: Chicken Thighs with Spicy Peanut Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 39.962 (from eatthismuch)
+    Nutrition (100g): 221.7 kcal, P:9.8g, F:18.8g, C:4.7g
+
+Query: Mashed Potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001609
+    Search Name: Mashed Potatoes
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 246.668 (from yazio)
+    Nutrition (100g): 89.0 kcal, P:1.6g, F:2.8g, C:14.7g
+
+  Result 2:
+    ID: 2302
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 83.0 kcal, P:1.9g, F:0.6g, C:17.6g
+
+  Result 3:
+    ID: 2109
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and margarine added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:2.0g, F:4.2g, C:17.0g
+
+  Result 4:
+    ID: 2546
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and butter added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:1.9g, F:4.2g, C:16.8g
+
+  Result 5:
+    ID: 45642
+    Search Name: Perfect Mashed Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 88.813 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:2.2g, F:2.9g, C:15.4g
+
+Query: Brussels Sprouts
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1675784
+    Search Name: Brussels Sprouts
+    Description: Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 274.514 (from eatthismuch)
+    Nutrition (100g): 41.2 kcal, P:3.5g, F:0.0g, C:8.2g
+
+  Result 2:
+    ID: 2365
+    Search Name: Brussels sprouts
+    Description: Cooked, boiled, drained, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 250.284 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:2.6g, F:0.5g, C:7.1g
+
+  Result 3:
+    ID: 1894
+    Search Name: Brussels sprouts
+    Description: Cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 250.284 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:2.6g, F:0.5g, C:7.1g
+
+  Result 4:
+    ID: 1893
+    Search Name: Brussels sprouts
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 250.284 (from eatthismuch)
+    Nutrition (100g): 43.0 kcal, P:3.4g, F:0.3g, C:9.0g
+
+  Result 5:
+    ID: 10000001007
+    Search Name: Brussels sprouts raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 105.131 (from mynetdiary)
+    Nutrition (100g): 43.2 kcal, P:3.4g, F:0.3g, C:9.1g
+
+Query: Olive Oil
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001471
+    Search Name: Olive Oil
+    Description: Oils & Fats
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 252.895 (from yazio)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 2:
+    ID: 150367
+    Search Name: Olive Oil
+    Description: Wawa
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 252.895 (from eatthismuch)
+    Nutrition (100g): 800.0 kcal, P:0.0g, F:93.3g, C:0.0g
+
+  Result 3:
+    ID: 266
+    Search Name: Olive oil
+    Description: Salad or cooking
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 230.044 (from eatthismuch)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 4:
+    ID: 1883467
+    Search Name: Olive Oil Mayo
+    Description: with Olive Oil, Kraft
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 91.945 (from eatthismuch)
+    Nutrition (100g): 333.3 kcal, P:0.0g, F:33.3g, C:6.7g
+
+  Result 5:
+    ID: 45169
+    Search Name: Lemon Olive-Oil Cake
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 82.021 (from eatthismuch)
+    Nutrition (100g): 350.6 kcal, P:5.6g, F:22.5g, C:33.1g
+
+Search Statistics:
+  Total Searches: 14
+  Successful Matches: 14
+  Failed Searches: 0
+  Match Rate: 100.0%
