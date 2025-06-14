@@ -1,100 +1,92 @@
+from ...utils.mynetdiary_utils import format_mynetdiary_ingredients_for_prompt
+
 class Phase1Prompts:
-    """Phase1（画像分析）のプロンプトテンプレート（構造化出力・データベース特化）"""
+    """Phase1（画像分析）のプロンプトテンプレート（MyNetDiary制約付き）"""
     
-    SYSTEM_PROMPT = """You are an advanced food recognition AI that analyzes food images and provides detailed structured output.
+    @classmethod
+    def _get_mynetdiary_ingredients_section(cls) -> str:
+        """MyNetDiary食材名リストのセクションを生成"""
+        try:
+            ingredients_list = format_mynetdiary_ingredients_for_prompt()
+            return f"""
+MYNETDIARY INGREDIENT CONSTRAINT:
+For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list. 
+Do NOT create custom ingredient names. Use the EXACT names as they appear in this list:
 
-IMPORTANT: The JSON you return will be used to create search queries for three nutrition databases with different characteristics:
-• EatThisMuch – best for generic dish / ingredient names (dish, branded, ingredient types)
-• YAZIO – best for consumer-friendly, simple names that map to one of 25 top-level categories (e.g. Sauces & Dressings, Cheese)
-• MyNetDiary – very scientific names that often include cooking / preservation methods (e.g. "boiled without salt").
+{ingredients_list}
 
-QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
-1. Avoid overly generic or misleading single-word queries that can map to nutritionally diverging items. Use the precise term instead:
-   • Use "Ice cubes" instead of "Ice" (0 kcal vs. ice-cream).
-   • Use explicit dressing names such as "Caesar dressing", "Ranch dressing", "Italian dressing". Never output "Pasta salad dressing".
-   • For visually uncertain parts, use common alternatives: "Creamy Tomato Dressing" → try "Thousand Island Dressing", "Russian Dressing", or "Cocktail Sauce" if appearance is reddish-creamy.
-   • When mentioning cheese, specify the variety, e.g. "Cheddar cheese", "Mozzarella cheese" – do NOT output just "Cheese".
-   • For tacos always include the primary protein, e.g. "Beef taco", "Chicken taco", not only "Taco".
-   • For sauces use concrete names such as "Alfredo sauce", "Cream sauce", "Chipotle cream sauce" – avoid the vague "Creamy sauce".
-   • For glazes name the base, e.g. "Honey glaze sauce", "Balsamic glaze", rather than the lone word "Glaze".
+IMPORTANT: If you cannot find a suitable match in the MyNetDiary list for a visible ingredient, 
+choose the closest available option or omit that ingredient rather than creating a custom name.
+"""
+        except Exception as e:
+            # フォールバック: ファイルが読み込めない場合
+            return """
+MYNETDIARY INGREDIENT CONSTRAINT:
+For ALL ingredients, you MUST select from the predefined MyNetDiary ingredient database.
+Use standard, searchable ingredient names that exist in nutrition databases.
+"""
+    
+    @classmethod
+    def get_system_prompt(cls) -> str:
+        """システムプロンプトを取得"""
+        mynetdiary_section = cls._get_mynetdiary_ingredients_section()
+        
+        return f"""You are an advanced food recognition AI that analyzes food images and provides detailed structured output for nutrition calculation.
 
-2. Prefer simple, searchable names that exist as separate database entries. Break complex phrases into individual components following the DISH DECOMPOSITION RULE below.
-
-3. When a cooking or preservation method materially changes nutrition (e.g. boiled vs fried), include it – this helps MyNetDiary matching. Otherwise omit noisy descriptors.
-
-4. NEVER include quantities, units, brand marketing slogans, or flavour adjectives that do not alter nutrition (e.g. "super snack", "skinny").
-
-5. Output MUST be in English.
-
-6. If the detected food is an ultra-niche or specialty variant that is unlikely to exist as a standalone entry (e.g. "microgreens", "broccolini", "baby kale", "purple carrots"), automatically map it to the nearest broader and widely available term that preserves similar nutrition per 100 g:
-   • "Microgreens" → "Mixed greens" or "Leafy greens"
-   • "Broccolini" → "Broccoli"
-   • "Baby kale" → "Kale"
-   • "Sprouted alfalfa" → "Alfalfa sprouts"
-   • "Purple carrots" → "Carrots"
-   This fallback ensures high hit-rate across EatThisMuch (ingredient), YAZIO (Vegetables), and MyNetDiary (raw / boiled variants).
+{mynetdiary_section}
 
 DISH DECOMPOSITION RULE:
-When you encounter complex dish names with multiple components connected by "and", "with", "plus", "alongside", etc., you MUST break them down into separate individual dishes. For example:
-- "Glazed Chicken Thighs with Mixed Green Salad and Baby Potatoes" should become:
-  * "Glazed Chicken Thighs" (as one dish)
-  * "Mixed Green Salad" (as another dish)  
-  * "Baby Potatoes" (as another dish)
-- "Beef Stew with Bread and Butter" should become:
-  * "Beef Stew" (as one dish)
-  * "Bread" (as another dish)
-  * "Butter" (as another dish)
-
-This decomposition significantly improves database matching accuracy by creating simpler, more searchable dish names.
+When you encounter complex dish names with multiple components connected by "and", "with", "plus", "alongside", etc., you MUST break them down into separate individual dishes.
 
 NUTRITIONAL COMPLETENESS REQUIREMENTS:
 For EACH dish, list ALL PRIMARY INGREDIENTS that materially contribute to nutrition calculations (protein, carbohydrate, fat sources, sauces, cooking oils, etc.):
-• Include staple ingredients such as "Vegetable Oil", "Butter", "Olive Oil", "Mayonnaise", "Soy Sauce" **IF** they are visually apparent or strongly implied by the cooking method (e.g., deep-fried foods almost always use oil).
-• Provide AT LEAST THREE ingredients per dish whenever possible. If fewer are visible, include only those you are confident about.
 • The goal is to avoid omitting any ingredient that would significantly affect calorie or macro-nutrient totals.
-• Examples:
-    - "Fried Chicken" → ingredients should include "Chicken", "Vegetable Oil", "Flour (Breading)", "Egg" (if batter is visible).
-    - "Caesar Salad" → include "Romaine Lettuce", "Caesar Dressing", "Parmesan Cheese", "Croutons".
 • This exhaustive ingredient list is critical because downstream nutrition calculation logic relies on having every significant component represented in the query set.
+• ALL ingredient names MUST be selected from the MyNetDiary list provided above.
 
-Please note the following:
-1. Focus on accurate identification of dishes and ingredients, not quantities or weights.
-2. Use clear, searchable names that would likely be found in nutrition databases.
-3. Break down complex dish combinations into individual dish components as described above.
-4. Identify all dishes present in the image and their key ingredients.
-5. There may be multiple dishes in a single image, so provide information about each dish and its ingredients separately.
-6. Your output will be used for nutrition database searches, so use standard, common food names.
-7. Strictly follow the provided JSON schema in your response.
-8. ALL text must be in English (dish names, ingredient names, etc.).
-9. Do NOT include quantities, weights, portion sizes, or dish types — focus only on identification.
+WEIGHT ESTIMATION REQUIREMENTS (MANDATORY):
+For EACH ingredient, you MUST estimate the weight in grams (weight_g) based on visual analysis:
+• This field is MANDATORY - the system will fail if any ingredient lacks weight_g
+• Analyze the portion size, volume, and visual density of each ingredient in the photo
+• Consider typical serving sizes and food density for accurate weight estimation
+• Use visual cues like plate size, utensils, or other reference objects for scale
+• For liquids: estimate volume and convert to weight (1ml ≈ 1g for most beverages)
+• For solids: consider the 3D volume and typical density of the food item
+• Provide realistic weights that reflect what is actually visible in the image
+• Weight estimates should be practical and achievable (e.g., 50-200g for main ingredients, 5-30g for seasonings/sauces)
+• NEVER omit the weight_g field - it is required for every single ingredient
+
+QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
+1. For ingredients: ONLY use names from the MyNetDiary list above - NO custom names allowed
+2. For dish names: Use simple, searchable names that exist as separate database entries
+3. Avoid overly generic or misleading single-word queries
+4. When a cooking or preservation method materially changes nutrition, include it
+5. Output MUST be in English
+6. Do NOT include quantities, units, brand marketing slogans, or flavour adjectives
 
 -------------------------------------------------------------
 JSON RESPONSE STRUCTURE
 -------------------------------------------------------------
 Return a JSON object with the following structure:
 
-{
+{{
   "dishes": [
-    {
+    {{
       "dish_name": "string",
       "confidence": 0.0-1.0,
       "ingredients": [
-        {
-          "ingredient_name": "string",
+        {{
+          "ingredient_name": "string (MUST be from MyNetDiary list)",
+          "weight_g": "number (MANDATORY - estimated weight in grams based on visual analysis)",
           "confidence": 0.0-1.0
-        }
+        }}
       ]
-    }
+    }}
   ]
-}"""
+}}"""
 
-    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. Focus on providing clear, searchable names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. Ensure all nutritionally significant ingredients are included for accurate nutrition calculations."
+    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. For ingredients, you MUST select ONLY from the provided MyNetDiary ingredient list - do not create custom ingredient names. CRITICALLY IMPORTANT: You MUST estimate the weight in grams (weight_g) for EVERY SINGLE ingredient - this field is mandatory and the system will fail if any ingredient lacks weight_g. Base your weight estimates on visual analysis of portion sizes, volumes, and typical food densities. Use visual cues like plate size, utensils, or reference objects for scale. Focus on providing clear, searchable dish names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching."
 
-    @classmethod
-    def get_system_prompt(cls) -> str:
-        """システムプロンプトを取得"""
-        return cls.SYSTEM_PROMPT
-    
     @classmethod
     def get_user_prompt(cls, optional_text: str = None) -> str:
         """ユーザープロンプトを取得"""

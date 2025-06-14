@@ -151,8 +151,15 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
                                 )
                                 ingredient_attributes.append(attr)
                         
+                        # weight_gが必須フィールドなので、存在しない場合はエラー
+                        if "weight_g" not in ingredient_data:
+                            error_msg = f"Missing required field 'weight_g' for ingredient '{ingredient_data.get('ingredient_name', 'unknown')}'. Gemini must provide weight estimation for all ingredients."
+                            self.logger.error(error_msg)
+                            raise ValueError(error_msg)
+                        
                         ingredient = Ingredient(
                             ingredient_name=ingredient_data["ingredient_name"],
+                            weight_g=ingredient_data["weight_g"],
                             confidence=ingredient_data.get("confidence"),
                             detected_attributes=ingredient_attributes
                         )
@@ -238,39 +245,10 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     
     def _convert_structured_to_legacy(self, detected_items: list) -> list:
         """構造化データを従来形式に変換（フォールバック用）"""
-        dishes = []
-        
-        for item in detected_items:
-            # 食材属性を抽出
-            ingredients = []
-            ingredient_attrs = [attr for attr in item.attributes if attr.type == AttributeType.INGREDIENT]
-            
-            if ingredient_attrs:
-                for attr in ingredient_attrs:
-                    ingredient = Ingredient(
-                        ingredient_name=attr.value,
-                        confidence=attr.confidence,
-                        detected_attributes=[attr]
-                    )
-                    ingredients.append(ingredient)
-            else:
-                # フォールバック: アイテム名を食材として使用
-                ingredient = Ingredient(
-                    ingredient_name=item.item_name,
-                    confidence=item.confidence,
-                    detected_attributes=item.attributes
-                )
-                ingredients.append(ingredient)
-            
-            dish = Dish(
-                dish_name=item.item_name,
-                confidence=item.confidence,
-                ingredients=ingredients,
-                detected_attributes=item.attributes
-            )
-            dishes.append(dish)
-        
-        return dishes
+        # このメソッドは重量情報が不完全な場合に使用されるため、エラーを発生させる
+        error_msg = "Cannot convert structured data to legacy format without weight information. Gemini must provide weight_g for all ingredients in the standard dishes format."
+        self.logger.error(error_msg)
+        raise ValueError(error_msg)
     
     def _calculate_overall_confidence(self, structured_items: list, dishes: list) -> float:
         """全体的な分析信頼度を計算"""
