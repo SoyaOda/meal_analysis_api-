@@ -3,9 +3,9 @@ from .phase1_component import Phase1Component
 
 from .elasticsearch_nutrition_search_component import ElasticsearchNutritionSearchComponent
 from .mynetdiary_nutrition_search_component import MyNetDiaryNutritionSearchComponent
-# TODO: Phase2ComponentとNutritionCalculationComponentを実装
+from .nutrition_calculation_component import NutritionCalculationComponent
+# TODO: Phase2Componentを実装
 # from .phase2_component import Phase2Component
-# from .nutrition_calc_component import NutritionCalculationComponent
 
 __all__ = [
     "BaseComponent",
@@ -13,6 +13,6 @@ __all__ = [
 
     "ElasticsearchNutritionSearchComponent",
     "MyNetDiaryNutritionSearchComponent",
+    "NutritionCalculationComponent",
     # "Phase2Component",
-    # "NutritionCalculationComponent"
 ] 

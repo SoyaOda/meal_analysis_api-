@@ -90,10 +90,10 @@ async def analyze_food1_image_with_detailed_search():
     print(f"📁 メイン結果保存ディレクトリ: {main_results_dir}")
     print(f"📁 完全分析結果保存ディレクトリ: {api_calls_dir}")
     
-    # パイプラインの初期化（Elasticsearch検索を使用）
+    # パイプラインの初期化（MyNetDiary専用検索を使用）
     pipeline = MealAnalysisPipeline(
         use_elasticsearch_search=True,
-        use_local_nutrition_search=False
+        use_mynetdiary_specialized=True  # MyNetDiary専用検索を有効化
     )
     
     try:
@@ -104,7 +104,9 @@ async def analyze_food1_image_with_detailed_search():
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_bytes,
             image_mime_type=image_mime_type,
-            save_detailed_logs=False
+            save_detailed_logs=True,  # 詳細ログを有効化
+            test_execution=True,
+            test_results_dir=main_results_dir
         )
         
         analysis_end_time = time.time()
