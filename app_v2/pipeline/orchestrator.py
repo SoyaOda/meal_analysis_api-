@@ -5,11 +5,12 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent
+from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent, NutritionCalculationComponent
 from ..models import (
     Phase1Input, Phase1Output,
     NutritionQueryInput
 )
+from ..models.nutrition_calculation_models import NutritionCalculationInput
 from ..config import get_settings
 from .result_manager import ResultManager
 
@@ -72,7 +73,10 @@ class MealAnalysisPipeline:
             self.search_component_name = "ElasticsearchNutritionSearchComponent"
             logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
             
-        # TODO: Phase2ComponentとNutritionCalculationComponentを追加
+        # 栄養計算コンポーネントの初期化
+        self.nutrition_calculation_component = NutritionCalculationComponent()
+        
+        # TODO: Phase2Componentを追加
         
         self.logger = logging.getLogger(f"{__name__}.{self.pipeline_id}")
         
@@ -152,7 +156,22 @@ class MealAnalysisPipeline:
             
             self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {nutrition_search_result.get_match_rate():.1%} match rate")
             
-            # === 暫定的な結果の構築 (Phase2とNutritionは後で追加) ===
+            # === Nutrition Calculation Phase: 栄養計算 ===
+            self.logger.info(f"[{analysis_id}] Nutrition Calculation Phase: Computing nutrition values")
+            
+            nutrition_calculation_input = NutritionCalculationInput(
+                phase1_result=phase1_result,
+                nutrition_search_result=nutrition_search_result
+            )
+            
+            # Nutrition Calculationの詳細ログを作成
+            calculation_log = result_manager.create_execution_log("NutritionCalculationComponent", f"{analysis_id}_nutrition_calculation") if result_manager else None
+            
+            nutrition_calculation_result = await self.nutrition_calculation_component.execute(nutrition_calculation_input, calculation_log)
+            
+            self.logger.info(f"[{analysis_id}] Nutrition Calculation completed - {nutrition_calculation_result.meal_nutrition.calculation_summary['total_ingredients']} ingredients, {nutrition_calculation_result.meal_nutrition.total_nutrition.calories:.1f} kcal total")
+            
+            # === 結果の構築 ===
             
             # Phase1の結果を辞書形式に変換（構造化データを含む）
             phase1_dict = {
@@ -181,7 +200,8 @@ class MealAnalysisPipeline:
                         "ingredients": [
                             {
                                 "ingredient_name": ing.ingredient_name,
-                                "confidence": ing.confidence
+                                "confidence": ing.confidence,
+                                "weight_g": ing.weight_g
                             }
                             for ing in dish.ingredients
                         ],
@@ -200,7 +220,56 @@ class MealAnalysisPipeline:
                 "processing_notes": phase1_result.processing_notes
             }
             
-            # 栄養計算は未実装（Phase2とNutritionCalculationComponentで実装予定）
+            # 栄養計算結果を辞書形式に変換
+            nutrition_calculation_dict = {
+                "dishes": [
+                    {
+                        "dish_name": dish.dish_name,
+                        "confidence": dish.confidence,
+                        "ingredients": [
+                            {
+                                "ingredient_name": ing.ingredient_name,
+                                "weight_g": ing.weight_g,
+                                "nutrition_per_100g": ing.nutrition_per_100g,
+                                "calculated_nutrition": {
+                                    "calories": ing.calculated_nutrition.calories,
+                                    "protein": ing.calculated_nutrition.protein,
+                                    "fat": ing.calculated_nutrition.fat,
+                                    "carbs": ing.calculated_nutrition.carbs,
+                                    "fiber": ing.calculated_nutrition.fiber,
+                                    "sugar": ing.calculated_nutrition.sugar,
+                                    "sodium": ing.calculated_nutrition.sodium
+                                },
+                                "source_db": ing.source_db,
+                                "calculation_notes": ing.calculation_notes
+                            }
+                            for ing in dish.ingredients
+                        ],
+                        "total_nutrition": {
+                            "calories": dish.total_nutrition.calories,
+                            "protein": dish.total_nutrition.protein,
+                            "fat": dish.total_nutrition.fat,
+                            "carbs": dish.total_nutrition.carbs,
+                            "fiber": dish.total_nutrition.fiber,
+                            "sugar": dish.total_nutrition.sugar,
+                            "sodium": dish.total_nutrition.sodium
+                        },
+                        "calculation_metadata": dish.calculation_metadata
+                    }
+                    for dish in nutrition_calculation_result.meal_nutrition.dishes
+                ],
+                "total_nutrition": {
+                    "calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
+                    "protein": nutrition_calculation_result.meal_nutrition.total_nutrition.protein,
+                    "fat": nutrition_calculation_result.meal_nutrition.total_nutrition.fat,
+                    "carbs": nutrition_calculation_result.meal_nutrition.total_nutrition.carbs,
+                    "fiber": nutrition_calculation_result.meal_nutrition.total_nutrition.fiber,
+                    "sugar": nutrition_calculation_result.meal_nutrition.total_nutrition.sugar,
+                    "sodium": nutrition_calculation_result.meal_nutrition.total_nutrition.sodium
+                },
+                "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
+                "warnings": nutrition_calculation_result.meal_nutrition.warnings
+            }
             
             # 検索方法の特定（常にElasticsearch）
             search_method = "elasticsearch"
@@ -224,20 +293,18 @@ class MealAnalysisPipeline:
                     "total_dishes": len(phase1_result.dishes),
                     "total_ingredients": len(phase1_result.get_all_ingredient_names()),
                     "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
-
+                    "nutrition_calculation_status": "completed",
+                    "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
                     "pipeline_status": "completed",
                     "processing_time_seconds": processing_time,
                     "search_method": search_method
                 },
-                # 最終栄養結果（未実装 - Phase2とNutritionCalculationComponentで実装予定）
-                "final_nutrition_result": {
-                    "dishes": phase1_dict["dishes"],
-                    "note": "Nutrition calculation not yet implemented - will be added in Phase2 and NutritionCalculationComponent"
-                },
+                # 最終栄養結果
+                "final_nutrition_result": nutrition_calculation_dict,
                 "metadata": {
                     "pipeline_version": "v2.0",
                     "timestamp": datetime.now().isoformat(),
-                    "components_used": ["Phase1Component", self.search_component_name],
+                    "components_used": ["Phase1Component", self.search_component_name, "NutritionCalculationComponent"],
                     "nutrition_search_method": search_api_method
                 }
             }
@@ -293,6 +360,11 @@ class MealAnalysisPipeline:
                 {
                     "component_name": self.search_component_name,
                     "component_type": "nutrition_search",
+                    "execution_count": 0
+                },
+                {
+                    "component_name": "NutritionCalculationComponent",
+                    "component_type": "nutrition_calculation",
                     "execution_count": 0
                 }
             ]
