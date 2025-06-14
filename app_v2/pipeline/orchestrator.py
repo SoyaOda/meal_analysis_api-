@@ -5,10 +5,9 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, USDAQueryComponent, LocalNutritionSearchComponent, ElasticsearchNutritionSearchComponent
+from ..components import Phase1Component, LocalNutritionSearchComponent, ElasticsearchNutritionSearchComponent
 from ..models import (
     Phase1Input, Phase1Output,
-    USDAQueryInput, USDAQueryOutput,
     NutritionQueryInput
 )
 from ..config import get_settings
@@ -33,7 +32,7 @@ class MealAnalysisPipeline:
             use_elasticsearch_search: Elasticsearch栄養データベース検索を使用するかどうか
                                     None: 設定ファイルから自動取得
                                     True: ElasticsearchNutritionSearchComponent使用（推奨）
-                                    False: 従来のUSDAQueryComponent使用
+                                    False: デフォルトのElasticsearchNutritionSearchComponent使用
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
@@ -77,9 +76,13 @@ class MealAnalysisPipeline:
             self.search_component_name = "LocalNutritionSearchComponent"
             logger.info("Using local nutrition database search (nutrition_db_experiment)")
         else:
-            self.nutrition_search_component = USDAQueryComponent()
-            self.search_component_name = "USDAQueryComponent"
-            logger.info("Using traditional USDA API search")
+            # フォールバック: デフォルトでElasticsearchを使用
+            self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
+                multi_db_search_mode=True,
+                results_per_db=5
+            )
+            self.search_component_name = "ElasticsearchNutritionSearchComponent"
+            logger.info("Using default Elasticsearch nutrition database search")
             
         # TODO: Phase2ComponentとNutritionCalculationComponentを追加
         
@@ -129,7 +132,7 @@ class MealAnalysisPipeline:
         elif self.use_local_nutrition_search:
             self.logger.info(f"[{analysis_id}] Nutrition search method: Local Database")
         else:
-            self.logger.info(f"[{analysis_id}] Nutrition search method: USDA API")
+            self.logger.info(f"[{analysis_id}] Nutrition search method: Default Elasticsearch")
         
         try:
             # === Phase 1: 画像分析 ===
@@ -154,25 +157,18 @@ class MealAnalysisPipeline:
             elif self.use_local_nutrition_search:
                 search_phase_name = "Local Nutrition Search"
             else:
-                search_phase_name = "USDA Query"
+                search_phase_name = "Default Elasticsearch Search"
                 
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
             # === 統一された栄養検索入力を作成 ===
-            if self.use_elasticsearch_search or self.use_local_nutrition_search:
-                # Elasticsearch検索またはローカル検索の場合はNutritionQueryInputを使用
-                preferred_source = "elasticsearch" if self.use_elasticsearch_search else "local_database"
-                nutrition_search_input = NutritionQueryInput(
-                    ingredient_names=phase1_result.get_all_ingredient_names(),
-                    dish_names=phase1_result.get_all_dish_names(),
-                    preferred_source=preferred_source
-                )
-            else:
-                # USDA検索の場合はUSDAQueryInputを使用（レガシー互換性）
-                nutrition_search_input = USDAQueryInput(
-                    ingredient_names=phase1_result.get_all_ingredient_names(),
-                    dish_names=phase1_result.get_all_dish_names()
-                )
+            # Elasticsearch検索またはローカル検索の場合はNutritionQueryInputを使用
+            preferred_source = "elasticsearch" if self.use_elasticsearch_search else "local_database"
+            nutrition_search_input = NutritionQueryInput(
+                ingredient_names=phase1_result.get_all_ingredient_names(),
+                dish_names=phase1_result.get_all_dish_names(),
+                preferred_source=preferred_source
+            )
             
             # Nutrition Searchの詳細ログを作成
             search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
@@ -243,8 +239,8 @@ class MealAnalysisPipeline:
                 search_method = "local_nutrition_database"
                 search_api_method = "local_database"
             else:
-                search_method = "usda_api"
-                search_api_method = "usda_api"
+                search_method = "elasticsearch"
+                search_api_method = "elasticsearch"
             
             # 完全分析結果の構築
             end_time = datetime.now()
@@ -347,7 +343,7 @@ class MealAnalysisPipeline:
         elif self.use_local_nutrition_search:
             search_method = "local_database"
         else:
-            search_method = "usda_api"
+            search_method = "elasticsearch"
             
         return {
             "pipeline_id": self.pipeline_id,

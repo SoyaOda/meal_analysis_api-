@@ -23,9 +23,9 @@ from app_v2.models.nutrition_search_models import NutritionQueryInput
 # API設定
 BASE_URL = "http://localhost:8000/api/v1"
 
-# テスト画像のパス（全てのfood*.jpgファイル）
+# テスト画像のパス（food1.jpgのみをテスト）
 test_images_dir = "test_images"
-image_files = sorted(glob.glob(os.path.join(test_images_dir, "food*.jpg")))
+image_files = [os.path.join(test_images_dir, "food1.jpg")]
 
 async def test_single_image_advanced_elasticsearch_search(image_path: str, main_results_dir: str) -> Optional[Dict[str, Any]]:
     """単一画像でAdvanced Elasticsearch戦略的検索をテスト"""

@@ -13,10 +13,10 @@ from ..config.prompts import Phase1Prompts
 
 class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     """
-    Phase1: 画像分析コンポーネント（構造化出力対応・USDA検索特化）
+    Phase1: 画像分析コンポーネント（構造化出力対応・栄養データベース検索特化）
     
     Gemini AIを使用して食事画像を分析し、構造化された詳細情報
-    （信頼度スコア、属性、ブランド情報等）を含むUSDA検索に適した出力を生成します。
+    （信頼度スコア、属性、ブランド情報等）を含む栄養データベース検索に適した出力を生成します。
     """
     
     def __init__(self, gemini_service: Optional[GeminiService] = None):
@@ -35,7 +35,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     
     async def process(self, input_data: Phase1Input) -> Phase1Output:
         """
-        Phase1の主処理: 構造化画像分析（USDA検索特化）
+        Phase1の主処理: 構造化画像分析（栄養データベース検索特化）
         
         Args:
             input_data: Phase1Input (image_bytes, image_mime_type, optional_text)
@@ -43,7 +43,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         Returns:
             Phase1Output: 構造化された分析結果（信頼度スコア、属性、ブランド情報等を含む）
         """
-        self.logger.info(f"Starting Phase1 structured image analysis for enhanced USDA query generation")
+        self.logger.info(f"Starting Phase1 structured image analysis for enhanced nutrition database query generation")
         
         # プロンプト生成と記録（統一されたプロンプトシステム使用）
         system_prompt = Phase1Prompts.get_system_prompt()

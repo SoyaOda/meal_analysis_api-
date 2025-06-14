@@ -1,0 +1,701 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.258 seconds
+Timestamp: 2025-06-14T14:06:28.720672
+
+Total Matches: 70
+
+Query: Corn
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1956
+    Search Name: Corn
+    Description: Yellow, whole kernel, frozen, microwaved
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.008 (from eatthismuch)
+    Nutrition (100g): 131.0 kcal, P:3.6g, F:1.4g, C:25.9g
+
+  Result 2:
+    ID: 1950
+    Search Name: Corn
+    Description: Sweet, yellow, canned, cream style, regular pack
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.008 (from eatthismuch)
+    Nutrition (100g): 72.0 kcal, P:1.8g, F:0.4g, C:18.1g
+
+  Result 3:
+    ID: 4782
+    Search Name: Corn
+    Description: Yellow
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.008 (from eatthismuch)
+    Nutrition (100g): 365.0 kcal, P:9.4g, F:4.8g, C:74.3g
+
+  Result 4:
+    ID: 1947
+    Search Name: Corn
+    Description: Sweet, yellow, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.008 (from eatthismuch)
+    Nutrition (100g): 96.0 kcal, P:3.4g, F:1.5g, C:21.0g
+
+  Result 5:
+    ID: 1949
+    Search Name: Corn
+    Description: Sweet, yellow, canned, whole kernel, drained solids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 217.008 (from eatthismuch)
+    Nutrition (100g): 71.0 kcal, P:2.3g, F:1.3g, C:15.1g
+
+Query: Honey
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001290
+    Search Name: Honey
+    Description: Dips & Spreads
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 241.595 (from yazio)
+    Nutrition (100g): 304.0 kcal, P:0.3g, F:0.0g, C:82.4g
+
+  Result 2:
+    ID: 10000000918
+    Search Name: Honey
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 241.595 (from mynetdiary)
+    Nutrition (100g): 304.1 kcal, P:0.3g, F:0.0g, C:82.3g
+
+  Result 3:
+    ID: 4620
+    Search Name: Honey
+    Description: None
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 241.595 (from eatthismuch)
+    Nutrition (100g): 304.0 kcal, P:0.5g, F:0.0g, C:82.4g
+
+  Result 4:
+    ID: 1000000864
+    Search Name: Honey Loaf
+    Description: Meat & Meat Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 39.328 (from yazio)
+    Nutrition (100g): 149.0 kcal, P:17.3g, F:6.4g, C:4.5g
+
+  Result 5:
+    ID: 1033
+    Search Name: Honey granola
+    Description: Cereals ready-to-eat, quaker
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 39.328 (from eatthismuch)
+    Nutrition (100g): 421.0 kcal, P:10.5g, F:11.7g, C:73.6g
+
+Query: Lettuce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2013
+    Search Name: Lettuce
+    Description: Romaine or cos, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 17.0 kcal, P:1.3g, F:0.2g, C:3.2g
+
+  Result 2:
+    ID: 2014
+    Search Name: Lettuce
+    Description: Iceberg (includes crisphead types), raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 14.0 kcal, P:0.9g, F:0.2g, C:3.0g
+
+  Result 3:
+    ID: 2015
+    Search Name: Lettuce
+    Description: Green leaf, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 15.0 kcal, P:1.4g, F:0.3g, C:2.8g
+
+  Result 4:
+    ID: 2012
+    Search Name: Lettuce
+    Description: Butterhead (includes boston and bibb types), raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 13.0 kcal, P:1.3g, F:0.2g, C:2.2g
+
+  Result 5:
+    ID: 2018
+    Search Name: Lettuce
+    Description: Red leaf, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 291.696 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:1.4g, F:0.4g, C:2.1g
+
+Query: Boiled Baby Potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2105
+    Search Name: Boiled potatoes
+    Description: Cooked without skin, flesh, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 67.458 (from eatthismuch)
+    Nutrition (100g): 86.0 kcal, P:1.7g, F:0.1g, C:20.0g
+
+  Result 2:
+    ID: 2103
+    Search Name: Boiled potatoes
+    Description: Cooked in skin, flesh, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 67.458 (from eatthismuch)
+    Nutrition (100g): 87.0 kcal, P:1.8g, F:0.1g, C:20.1g
+
+  Result 3:
+    ID: 2452
+    Search Name: Boiled potatoes
+    Description: Cooked without skin, flesh, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 67.458 (from eatthismuch)
+    Nutrition (100g): 86.0 kcal, P:1.7g, F:0.1g, C:20.0g
+
+  Result 4:
+    ID: 993058
+    Search Name: Spiced Baby Potatoes with Bacon and Dill
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 52.527 (from eatthismuch)
+    Nutrition (100g): 188.6 kcal, P:4.7g, F:11.4g, C:17.1g
+
+  Result 5:
+    ID: 10000001092
+    Search Name: Potatoes boiled with skin without salt
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 49.725 (from mynetdiary)
+    Nutrition (100g): 87.2 kcal, P:1.9g, F:0.1g, C:19.9g
+
+Query: Salt
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000855
+    Search Name: Salt
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 230.614 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 221
+    Search Name: Salt
+    Description: Table
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 230.614 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 10000000287
+    Search Name: Butter salted
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 42.210 (from mynetdiary)
+    Nutrition (100g): 717.2 kcal, P:0.9g, F:81.1g, C:0.0g
+
+  Result 4:
+    ID: 2306108
+    Search Name: Salted Peanuts
+    Description: Salted, Planters
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 42.210 (from eatthismuch)
+    Nutrition (100g): 607.1 kcal, P:25.0g, F:50.0g, C:17.9g
+
+  Result 5:
+    ID: 1623611
+    Search Name: Salted Cashews
+    Description: Planters
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 42.210 (from eatthismuch)
+    Nutrition (100g): 571.4 kcal, P:19.0g, F:45.2g, C:31.0g
+
+Query: Baby Potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 993058
+    Search Name: Spiced Baby Potatoes with Bacon and Dill
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 86.243 (from eatthismuch)
+    Nutrition (100g): 188.6 kcal, P:4.7g, F:11.4g, C:17.1g
+
+  Result 2:
+    ID: 1000000314
+    Search Name: Baby Carrots
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 40.480 (from yazio)
+    Nutrition (100g): 35.0 kcal, P:0.6g, F:0.1g, C:8.2g
+
+  Result 3:
+    ID: 10000000992
+    Search Name: Baby spinach
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 40.480 (from mynetdiary)
+    Nutrition (100g): 23.3 kcal, P:3.3g, F:0.3g, C:3.3g
+
+  Result 4:
+    ID: 2569
+    Search Name: Baby carrots
+    Description: Baby, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 40.480 (from eatthismuch)
+    Nutrition (100g): 35.0 kcal, P:0.7g, F:0.1g, C:8.3g
+
+  Result 5:
+    ID: 2562
+    Search Name: Baby zucchini
+    Description: Squash, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 40.480 (from eatthismuch)
+    Nutrition (100g): 21.0 kcal, P:2.7g, F:0.0g, C:2.7g
+
+Query: Garlic
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000383
+    Search Name: Garlic
+    Description: Herbs & Spices
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 238.141 (from yazio)
+    Nutrition (100g): 149.0 kcal, P:6.4g, F:0.5g, C:33.1g
+
+  Result 2:
+    ID: 1980
+    Search Name: Garlic
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 238.141 (from eatthismuch)
+    Nutrition (100g): 149.0 kcal, P:6.7g, F:0.0g, C:33.3g
+
+  Result 3:
+    ID: 129125
+    Search Name: Garlic
+    Description: 2 cloves raw - Whole Foods Market
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 238.141 (from eatthismuch)
+    Nutrition (100g): 166.7 kcal, P:16.7g, F:0.0g, C:33.3g
+
+  Result 4:
+    ID: 116796
+    Search Name: Seasoning
+    Description: Popcorn, Kettle Corn - Kernel Season's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 52.587 (from eatthismuch)
+    Nutrition (100g): 500.0 kcal, P:0.0g, F:0.0g, C:100.0g
+
+  Result 5:
+    ID: 1623564
+    Search Name: Broccoli, Tuscan Seasoned, Seasoned
+    Description: Green Giant
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.067 (from eatthismuch)
+    Nutrition (100g): 70.6 kcal, P:3.5g, F:4.7g, C:7.1g
+
+Query: Chicken
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 139172
+    Search Name: Chicken
+    Description: Meijer
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 207.041 (from eatthismuch)
+    Nutrition (100g): 160.7 kcal, P:17.9g, F:8.9g, C:3.6g
+
+  Result 2:
+    ID: 1000000858
+    Search Name: Chicken, fried
+    Description: Meat & Meat Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 28.705 (from yazio)
+    Nutrition (100g): 307.0 kcal, P:15.9g, F:20.4g, C:14.9g
+
+  Result 3:
+    ID: 2343460
+    Search Name: Sausage, Smoked Chicken, Chicken & Apple
+    Description: Smoked Chicken, Chicken & Apple, Aidells
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 23.206 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:15.3g, F:12.9g, C:4.7g
+
+  Result 4:
+    ID: 1000000110
+    Search Name: Chicken Soup
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 22.964 (from yazio)
+    Nutrition (100g): 71.0 kcal, P:5.1g, F:2.6g, C:6.9g
+
+  Result 5:
+    ID: 1000000145
+    Search Name: Chicken Sandwich
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 22.964 (from yazio)
+    Nutrition (100g): 250.0 kcal, P:16.3g, F:11.2g, C:20.9g
+
+Query: Butter
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001133
+    Search Name: Butter
+    Description: Milk & Dairy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 211.113 (from yazio)
+    Nutrition (100g): 717.0 kcal, P:0.8g, F:81.1g, C:0.1g
+
+  Result 2:
+    ID: 1
+    Search Name: Butter
+    Description: Salted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.113 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:0.7g, F:81.0g, C:0.0g
+
+  Result 3:
+    ID: 121
+    Search Name: Butter
+    Description: Unsalted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.113 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:0.7g, F:81.0g, C:0.0g
+
+  Result 4:
+    ID: 2
+    Search Name: Butter
+    Description: Whipped, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.113 (from eatthismuch)
+    Nutrition (100g): 717.0 kcal, P:1.1g, F:80.9g, C:0.0g
+
+  Result 5:
+    ID: 332
+    Search Name: Margarine-butter blend
+    Description: Margarine-like, soybean oil and butter
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 44.023 (from eatthismuch)
+    Nutrition (100g): 727.0 kcal, P:0.0g, F:80.1g, C:0.7g
+
+Query: Soy Sauce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000200
+    Search Name: Soy Sauce
+    Description: Soy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 233.886 (from yazio)
+    Nutrition (100g): 53.0 kcal, P:8.1g, F:0.6g, C:4.9g
+
+  Result 2:
+    ID: 142231
+    Search Name: Soy Sauce
+    Description: Lite - Kroger
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 233.886 (from eatthismuch)
+    Nutrition (100g): 100.0 kcal, P:6.7g, F:0.0g, C:20.0g
+
+  Result 3:
+    ID: 146435
+    Search Name: Soy Sauce
+    Description: Reduced Sodium - Safeway
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 233.886 (from eatthismuch)
+    Nutrition (100g): 66.7 kcal, P:6.7g, F:0.0g, C:6.7g
+
+  Result 4:
+    ID: 10000000266
+    Search Name: Soy sauce
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 211.943 (from mynetdiary)
+    Nutrition (100g): 52.9 kcal, P:8.2g, F:0.6g, C:5.1g
+
+  Result 5:
+    ID: 3619
+    Search Name: Soy sauce
+    Description: Made from soy (tamari)
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.943 (from eatthismuch)
+    Nutrition (100g): 60.0 kcal, P:10.6g, F:0.0g, C:5.6g
+
+Query: Mixed Green Salad
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 948591
+    Search Name: Simple Mixed Greens Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 111.830 (from eatthismuch)
+    Nutrition (100g): 84.3 kcal, P:1.7g, F:6.3g, C:6.9g
+
+  Result 2:
+    ID: 135584
+    Search Name: Mixed Greens
+    Description: Trader Joe's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 78.133 (from eatthismuch)
+    Nutrition (100g): 66.7 kcal, P:5.6g, F:1.7g, C:7.8g
+
+  Result 3:
+    ID: 137044
+    Search Name: Mixed Baby Greens
+    Description: Kale, Chard, Spinach - Trader Joe's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 68.318 (from eatthismuch)
+    Nutrition (100g): 30.0 kcal, P:2.0g, F:0.0g, C:6.0g
+
+  Result 4:
+    ID: 88092
+    Search Name: Field Greens Salad Mix
+    Description: Dole
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 67.288 (from eatthismuch)
+    Nutrition (100g): 20.0 kcal, P:1.0g, F:0.0g, C:4.0g
+
+  Result 5:
+    ID: 137051
+    Search Name: Matcha Green Tea Mix
+    Description: Tropical Sweetened Powder - Trader Joe's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 60.694 (from eatthismuch)
+    Nutrition (100g): 464.3 kcal, P:3.6g, F:21.4g, C:64.3g
+
+Query: Salad Dressing
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000243
+    Search Name: Salad dressing Greek
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 83.184 (from mynetdiary)
+    Nutrition (100g): 433.3 kcal, P:0.0g, F:46.7g, C:0.0g
+
+  Result 2:
+    ID: 10000000248
+    Search Name: Salad dressing coleslaw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 83.184 (from mynetdiary)
+    Nutrition (100g): 404.0 kcal, P:0.8g, F:34.5g, C:22.4g
+
+  Result 3:
+    ID: 10000000253
+    Search Name: Salad dressing italian
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 83.184 (from mynetdiary)
+    Nutrition (100g): 273.3 kcal, P:0.0g, F:23.3g, C:20.0g
+
+  Result 4:
+    ID: 10000000257
+    Search Name: Salad dressing russian
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 83.184 (from mynetdiary)
+    Nutrition (100g): 343.3 kcal, P:0.4g, F:19.6g, C:45.7g
+
+  Result 5:
+    ID: 5716
+    Search Name: Caesar salad dressing
+    Description: Low calorie
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 83.184 (from eatthismuch)
+    Nutrition (100g): 110.0 kcal, P:0.3g, F:4.4g, C:18.6g
+
+Query: Honey Garlic Glazed Chicken
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 920459
+    Search Name: Honey Glazed Carrots
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 59.357 (from eatthismuch)
+    Nutrition (100g): 85.3 kcal, P:0.9g, F:3.8g, C:13.2g
+
+  Result 2:
+    ID: 45155
+    Search Name: Salmon Glazed with Honey and Mustard
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 52.733 (from eatthismuch)
+    Nutrition (100g): 145.4 kcal, P:17.7g, F:5.8g, C:5.0g
+
+  Result 3:
+    ID: 934822
+    Search Name: Honey Glazed Salted Salmon
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 52.733 (from eatthismuch)
+    Nutrition (100g): 179.5 kcal, P:17.6g, F:9.1g, C:6.6g
+
+  Result 4:
+    ID: 2017365
+    Search Name: Honey Glazed Turkey & Potatoes
+    Description: Healthy Choice
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 52.733 (from eatthismuch)
+    Nutrition (100g): 89.2 kcal, P:5.2g, F:0.6g, C:15.6g
+
+  Result 5:
+    ID: 3152484
+    Search Name: Honey Garlic Shrimp
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 52.041 (from eatthismuch)
+    Nutrition (100g): 110.6 kcal, P:10.7g, F:4.2g, C:7.3g
+
+Query: Tomato
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2226
+    Search Name: Tomatoes
+    Description: Red, ripe, raw, year round average
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:0.9g, F:0.2g, C:3.9g
+
+  Result 2:
+    ID: 2228
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, packed in tomato juice
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:0.8g, F:0.2g, C:3.5g
+
+  Result 3:
+    ID: 2229
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 26.0 kcal, P:0.9g, F:0.2g, C:6.2g
+
+  Result 4:
+    ID: 2227
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+  Result 5:
+    ID: 2498
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+Search Statistics:
+  Total Searches: 14
+  Successful Matches: 14
+  Failed Searches: 0
+  Match Rate: 100.0%

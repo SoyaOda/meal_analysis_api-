@@ -32,15 +32,15 @@ class DetectedFoodItem(BaseModel):
 
 
 class Ingredient(BaseModel):
-    """食材情報モデル（USDA検索用・従来互換性）"""
-    ingredient_name: str = Field(..., description="食材の名称（USDA検索で使用）")
+    """食材情報モデル（栄養データベース検索用・従来互換性）"""
+    ingredient_name: str = Field(..., description="食材の名称（栄養データベース検索で使用）")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="食材特定の信頼度")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この食材に関連する属性")
 
 
 class Dish(BaseModel):
-    """料理情報モデル（USDA検索用・従来互換性）"""
-    dish_name: str = Field(..., description="特定された料理の名称（USDA検索で使用）")
+    """料理情報モデル（栄養データベース検索用・従来互換性）"""
+    dish_name: str = Field(..., description="特定された料理の名称（栄養データベース検索で使用）")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="料理特定の信頼度")
     ingredients: List[Ingredient] = Field(..., description="その料理に含まれる食材のリスト")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この料理に関連する属性")
@@ -70,7 +70,7 @@ class Phase1Output(BaseModel):
     warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
 
     def get_all_ingredient_names(self) -> List[str]:
-        """全ての食材名のリストを取得（USDA検索用・従来互換性）"""
+        """全ての食材名のリストを取得（栄養データベース検索用・従来互換性）"""
         ingredient_names = []
         for dish in self.dishes:
             for ingredient in dish.ingredients:
@@ -78,7 +78,7 @@ class Phase1Output(BaseModel):
         return ingredient_names
 
     def get_all_dish_names(self) -> List[str]:
-        """全ての料理名のリストを取得（USDA検索用・従来互換性）"""
+        """全ての料理名のリストを取得（栄養データベース検索用・従来互換性）"""
         return [dish.dish_name for dish in self.dishes]
     
     def get_structured_search_terms(self) -> Dict[str, Any]:
