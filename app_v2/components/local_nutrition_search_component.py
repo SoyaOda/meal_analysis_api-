@@ -2,7 +2,7 @@
 """
 Local Nutrition Search Component
 
-USDA database queryを nutrition_db_experiment で実装したローカル検索システムに置き換える
+栄養データベースクエリを nutrition_db_experiment で実装したローカル検索システムで実行する
 """
 
 import os

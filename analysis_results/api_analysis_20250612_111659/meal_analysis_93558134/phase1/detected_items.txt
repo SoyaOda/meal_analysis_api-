@@ -1,7 +1,0 @@
-Phase1 検出結果 - 2025-06-12 11:16:59
-============================================================
-
-処理詳細:
-  image_size_bytes: 133358
-  image_mime_type: image/jpeg
-  gemini_structured_api_call_start: Calling Gemini API for structured image analysis

@@ -1,0 +1,652 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 2.241 seconds
+Timestamp: 2025-06-14T14:05:25.353663
+
+Total Matches: 65
+
+Query: Black Tea
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001567
+    Search Name: Black Tea
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 301.624 (from yazio)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 2:
+    ID: 10000000077
+    Search Name: Iced tea black unsweetened
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 53.813 (from mynetdiary)
+    Nutrition (100g): 0.8 kcal, P:0.0g, F:0.0g, C:0.4g
+
+  Result 3:
+    ID: 3192
+    Search Name: Tea
+    Description: Herb, other than chamomile, brewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 4:
+    ID: 3180
+    Search Name: Tea
+    Description: Brewed, prepared with tap water, decaffeinated
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 5:
+    ID: 3223
+    Search Name: Tea
+    Description: Brewed, prepared with distilled water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+Query: Caesar Dressing
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 5711
+    Search Name: Caesar dressing
+    Description: Salad dressing, regular
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 246.355 (from eatthismuch)
+    Nutrition (100g): 542.0 kcal, P:2.2g, F:57.8g, C:3.3g
+
+  Result 2:
+    ID: 2249017
+    Search Name: Salad, with Creamy Caesar Dressing, Chicken Caesar
+    Description: Ready Pac Foods
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 82.535 (from eatthismuch)
+    Nutrition (100g): 129.9 kcal, P:9.6g, F:9.0g, C:3.4g
+
+  Result 3:
+    ID: 5716
+    Search Name: Caesar salad dressing
+    Description: Low calorie
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 62.457 (from eatthismuch)
+    Nutrition (100g): 110.0 kcal, P:0.3g, F:4.4g, C:18.6g
+
+  Result 4:
+    ID: 2380649
+    Search Name: Dressing, Creamy Caesar
+    Description: Ken's Steak House
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 62.457 (from eatthismuch)
+    Nutrition (100g): 586.2 kcal, P:3.4g, F:62.1g, C:3.4g
+
+  Result 5:
+    ID: 10000000246
+    Search Name: Salad dressing caesar regular
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 55.487 (from mynetdiary)
+    Nutrition (100g): 410.2 kcal, P:3.0g, F:41.4g, C:6.8g
+
+Query: Ice Cubes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000076
+    Search Name: Ice cubes
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 268.377 (from mynetdiary)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 2:
+    ID: 5826
+    Search Name: Ice cubes
+    Description: Frozen water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 268.377 (from eatthismuch)
+    Nutrition (100g): 0.0 kcal, P:0.0g, F:0.0g, C:0.0g
+
+  Result 3:
+    ID: 3808
+    Search Name: Lamb cubes
+    Description: Domestic, for stew or kabob (leg and shoulder), separable lean only, trimmed to 1/4" fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 46.018 (from eatthismuch)
+    Nutrition (100g): 134.0 kcal, P:20.1g, F:5.3g, C:0.0g
+
+  Result 4:
+    ID: 140008
+    Search Name: Vegetable Stock Cubes
+    Description: Tesco
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.237 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:8.0g, F:8.0g, C:24.0g
+
+  Result 5:
+    ID: 146980
+    Search Name: Chicken Stock Cubes
+    Description: Sainsbury's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.237 (from eatthismuch)
+    Nutrition (100g): 8.0 kcal, P:0.0g, F:0.0g, C:1.0g
+
+Query: Penne Pasta
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 78184
+    Search Name: Penne Pasta
+    Description: Ragu
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 353.212 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:73.2g
+
+  Result 2:
+    ID: 141328
+    Search Name: Penne Pasta
+    Description: Tesco
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 353.212 (from eatthismuch)
+    Nutrition (100g): 360.0 kcal, P:12.5g, F:1.5g, C:73.1g
+
+  Result 3:
+    ID: 125369
+    Search Name: Penne Multigrain Pasta
+    Description: Barilla Plus - Walmart
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 62.196 (from eatthismuch)
+    Nutrition (100g): 375.0 kcal, P:17.9g, F:3.6g, C:67.9g
+
+  Result 4:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+  Result 5:
+    ID: 1837832
+    Search Name: Penne
+    Description: Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 339.3 kcal, P:17.9g, F:1.8g, C:67.9g
+
+Query: Romaine Lettuce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 90019
+    Search Name: Romaine Lettuce
+    Description: Freshdirect
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 322.642 (from eatthismuch)
+    Nutrition (100g): 21.3 kcal, P:2.1g, F:0.0g, C:4.3g
+
+  Result 2:
+    ID: 10000001058
+    Search Name: Lettuce romaine raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 73.762 (from mynetdiary)
+    Nutrition (100g): 17.0 kcal, P:2.1g, F:0.2g, C:4.3g
+
+  Result 3:
+    ID: 1623542
+    Search Name: Premium Romaine
+    Description: Marketside
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.6 kcal, P:1.2g, F:0.0g, C:3.5g
+
+  Result 4:
+    ID: 1928120
+    Search Name: Romaine Hearts
+    Description: Tanimura & Antle
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 48.023 (from eatthismuch)
+    Nutrition (100g): 17.5 kcal, P:1.3g, F:0.2g, C:3.5g
+
+  Result 5:
+    ID: 2013
+    Search Name: Lettuce
+    Description: Romaine or cos, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 42.432 (from eatthismuch)
+    Nutrition (100g): 17.0 kcal, P:1.3g, F:0.2g, C:3.2g
+
+Query: Penne Pasta Salad
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 78184
+    Search Name: Penne Pasta
+    Description: Ragu
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 71.131 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:73.2g
+
+  Result 2:
+    ID: 141328
+    Search Name: Penne Pasta
+    Description: Tesco
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 71.131 (from eatthismuch)
+    Nutrition (100g): 360.0 kcal, P:12.5g, F:1.5g, C:73.1g
+
+  Result 3:
+    ID: 125369
+    Search Name: Penne Multigrain Pasta
+    Description: Barilla Plus - Walmart
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 62.196 (from eatthismuch)
+    Nutrition (100g): 375.0 kcal, P:17.9g, F:3.6g, C:67.9g
+
+  Result 4:
+    ID: 942547
+    Search Name: Pasta Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 49.698 (from eatthismuch)
+    Nutrition (100g): 237.0 kcal, P:8.3g, F:6.9g, C:35.2g
+
+  Result 5:
+    ID: 1817615
+    Search Name: Penne
+    Description: No. 72, Barilla
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 49.648 (from eatthismuch)
+    Nutrition (100g): 357.1 kcal, P:12.5g, F:1.8g, C:75.0g
+
+Query: Caesar Salad
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1950261
+    Search Name: Caesar Salad
+    Description: Marketside
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 269.796 (from eatthismuch)
+    Nutrition (100g): 180.0 kcal, P:5.0g, F:14.0g, C:10.0g
+
+  Result 2:
+    ID: 1000000255
+    Search Name: Caesar Salad , McDonald's
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 96.063 (from yazio)
+    Nutrition (100g): 44.0 kcal, P:3.2g, F:2.0g, C:4.3g
+
+  Result 3:
+    ID: 33488
+    Search Name: Chicken caesar salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 96.063 (from eatthismuch)
+    Nutrition (100g): 120.0 kcal, P:12.8g, F:6.4g, C:2.5g
+
+  Result 4:
+    ID: 371507
+    Search Name: Vegan Caesar Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 96.063 (from eatthismuch)
+    Nutrition (100g): 81.1 kcal, P:3.3g, F:4.9g, C:7.5g
+
+  Result 5:
+    ID: 34571
+    Search Name: Healthy Caesar Salad
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 96.063 (from eatthismuch)
+    Nutrition (100g): 128.1 kcal, P:16.0g, F:6.1g, C:1.8g
+
+Query: Iced Tea
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000077
+    Search Name: Iced tea black unsweetened
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 109.448 (from mynetdiary)
+    Nutrition (100g): 0.8 kcal, P:0.0g, F:0.0g, C:0.4g
+
+  Result 2:
+    ID: 1000001580
+    Search Name: Ice Tea Lemon Flavor, Nestlé
+    Description: Non-alcoholic Drinks & Beverages
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 98.460 (from yazio)
+    Nutrition (100g): 36.0 kcal, P:0.0g, F:0.0g, C:9.1g
+
+  Result 3:
+    ID: 3192
+    Search Name: Tea
+    Description: Herb, other than chamomile, brewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 4:
+    ID: 3180
+    Search Name: Tea
+    Description: Brewed, prepared with tap water, decaffeinated
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+  Result 5:
+    ID: 3223
+    Search Name: Tea
+    Description: Brewed, prepared with distilled water
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 45.228 (from eatthismuch)
+    Nutrition (100g): 1.0 kcal, P:0.0g, F:0.0g, C:0.3g
+
+Query: Parmesan Cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000935
+    Search Name: Parmesan Cheese
+    Description: Cheese
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 235.800 (from yazio)
+    Nutrition (100g): 392.0 kcal, P:35.8g, F:25.0g, C:3.2g
+
+  Result 2:
+    ID: 159600
+    Search Name: Parmesan Cheese
+    Description: 100% Grated - H-E-B
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 235.800 (from eatthismuch)
+    Nutrition (100g): 400.0 kcal, P:40.0g, F:30.0g, C:0.0g
+
+  Result 3:
+    ID: 32
+    Search Name: Parmesan cheese
+    Description: Grated
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.948 (from eatthismuch)
+    Nutrition (100g): 420.0 kcal, P:28.6g, F:27.9g, C:13.8g
+
+  Result 4:
+    ID: 33
+    Search Name: Parmesan cheese
+    Description: Hard
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.948 (from eatthismuch)
+    Nutrition (100g): 392.0 kcal, P:35.6g, F:25.7g, C:3.2g
+
+  Result 5:
+    ID: 156
+    Search Name: Parmesan cheese
+    Description: Dry grated, reduced fat
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.948 (from eatthismuch)
+    Nutrition (100g): 265.0 kcal, P:20.0g, F:20.0g, C:2.0g
+
+Query: Tomato
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2226
+    Search Name: Tomatoes
+    Description: Red, ripe, raw, year round average
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:0.9g, F:0.2g, C:3.9g
+
+  Result 2:
+    ID: 2228
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, packed in tomato juice
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 16.0 kcal, P:0.8g, F:0.2g, C:3.5g
+
+  Result 3:
+    ID: 2229
+    Search Name: Tomatoes
+    Description: Red, ripe, canned, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 26.0 kcal, P:0.9g, F:0.2g, C:6.2g
+
+  Result 4:
+    ID: 2227
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+  Result 5:
+    ID: 2498
+    Search Name: Tomatoes
+    Description: Red, ripe, cooked, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.981 (from eatthismuch)
+    Nutrition (100g): 18.0 kcal, P:1.0g, F:0.1g, C:4.0g
+
+Query: Olive Oil
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001471
+    Search Name: Olive Oil
+    Description: Oils & Fats
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 264.739 (from yazio)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 2:
+    ID: 150367
+    Search Name: Olive Oil
+    Description: Wawa
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 264.739 (from eatthismuch)
+    Nutrition (100g): 800.0 kcal, P:0.0g, F:93.3g, C:0.0g
+
+  Result 3:
+    ID: 266
+    Search Name: Olive oil
+    Description: Salad or cooking
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 241.888 (from eatthismuch)
+    Nutrition (100g): 884.0 kcal, P:0.0g, F:100.0g, C:0.0g
+
+  Result 4:
+    ID: 96102
+    Search Name: Mayonnaise with Olive Oil
+    Description: Hellmann's
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 98.365 (from eatthismuch)
+    Nutrition (100g): 423.1 kcal, P:0.0g, F:43.1g, C:0.0g
+
+  Result 5:
+    ID: 1883467
+    Search Name: Olive Oil Mayo
+    Description: with Olive Oil, Kraft
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 98.365 (from eatthismuch)
+    Nutrition (100g): 333.3 kcal, P:0.0g, F:33.3g, C:6.7g
+
+Query: Croutons
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001137
+    Search Name: Croutons
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 313.488 (from yazio)
+    Nutrition (100g): 407.0 kcal, P:11.9g, F:6.6g, C:73.5g
+
+  Result 2:
+    ID: 4162
+    Search Name: Croutons
+    Description: Seasoned
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 313.488 (from eatthismuch)
+    Nutrition (100g): 465.0 kcal, P:10.8g, F:18.2g, C:63.5g
+
+  Result 3:
+    ID: 4161
+    Search Name: Croutons
+    Description: Plain
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 313.488 (from eatthismuch)
+    Nutrition (100g): 407.0 kcal, P:12.0g, F:6.7g, C:73.7g
+
+  Result 4:
+    ID: 1000001251
+    Search Name: Croutons, seasoned
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 79.942 (from yazio)
+    Nutrition (100g): 465.0 kcal, P:10.8g, F:18.3g, C:63.5g
+
+  Result 5:
+    ID: 10000000125
+    Search Name: Croutons seasoned
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 63.953 (from mynetdiary)
+    Nutrition (100g): 465.0 kcal, P:10.0g, F:18.2g, C:62.5g
+
+Query: Feta Cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000945
+    Search Name: Feta Cheese
+    Description: Cheese
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 250.718 (from yazio)
+    Nutrition (100g): 265.0 kcal, P:14.2g, F:21.5g, C:3.9g
+
+  Result 2:
+    ID: 10000000169
+    Search Name: Feta cheese
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 226.487 (from mynetdiary)
+    Nutrition (100g): 265.3 kcal, P:14.0g, F:21.5g, C:4.0g
+
+  Result 3:
+    ID: 19
+    Search Name: Feta cheese
+    Description: None
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 226.487 (from eatthismuch)
+    Nutrition (100g): 264.0 kcal, P:14.1g, F:21.2g, C:4.2g
+
+  Result 4:
+    ID: 1740408
+    Search Name: Crumbled Feta Cheese, Original
+    Description: Emporium Selection
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 79.412 (from eatthismuch)
+    Nutrition (100g): 250.0 kcal, P:21.4g, F:14.3g, C:7.1g
+
+  Result 5:
+    ID: 36685
+    Search Name: Egyptian Feta Cheese Omelet Roll
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 71.439 (from eatthismuch)
+    Nutrition (100g): 197.1 kcal, P:11.8g, F:15.8g, C:1.4g
+
+Search Statistics:
+  Total Searches: 13
+  Successful Matches: 13
+  Failed Searches: 0
+  Match Rate: 100.0%

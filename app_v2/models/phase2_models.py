@@ -2,18 +2,18 @@ from typing import List, Optional, Literal, Dict
 from pydantic import BaseModel, Field, field_validator
 
 from .phase1_models import Ingredient
-from .usda_models import USDAQueryOutput
+from .nutrition_search_models import NutritionQueryOutput
 
 
 class RefinedIngredient(BaseModel):
-    """USDA情報で精緻化された食材モデル"""
+    """栄養データベース情報で精緻化された食材モデル"""
     ingredient_name: str = Field(..., description="食材の名称（精緻化後）")
     weight_g: float = Field(..., description="食材の推定重量（グラム単位、Phase1由来）", gt=0)
-    fdc_id: Optional[int] = Field(None, description="対応するUSDA食品のFDC ID (食材レベルの場合)")
-    usda_source_description: Optional[str] = Field(None, description="選択されたUSDA食品の公式名称 (食材レベルの場合)")
+    nutrition_id: Optional[str] = Field(None, description="対応する栄養データベース食品ID (食材レベルの場合)")
+    nutrition_source_description: Optional[str] = Field(None, description="選択された栄養データベース食品の名称 (食材レベルの場合)")
     key_nutrients_per_100g: Optional[Dict[str, float]] = Field(
         None,
-        description="選択されたUSDA食品の主要栄養素（100gあたり）。キーは'calories_kcal', 'protein_g', 'carbohydrates_g', 'fat_g'。",
+        description="選択された食品の主要栄養素（100gあたり）。キーは'calories_kcal', 'protein_g', 'carbohydrates_g', 'fat_g'。",
     )
 
     @field_validator('key_nutrients_per_100g')
@@ -26,7 +26,7 @@ class RefinedIngredient(BaseModel):
 
 
 class RefinedDish(BaseModel):
-    """USDA情報で精緻化された料理モデル"""
+    """栄養データベース情報で精緻化された料理モデル"""
     dish_name: str = Field(..., description="特定された料理の名称（精緻化後）")
     type: str = Field(..., description="料理の種類（例: 主菜, 副菜, スープ）")
     quantity_on_plate: str = Field(..., description="皿の上に載っている料理のおおよその量や個数")
@@ -37,8 +37,8 @@ class RefinedDish(BaseModel):
     )
     
     # dish_level計算時に使用されるフィールド
-    fdc_id: Optional[int] = Field(None, description="料理全体のFDC ID (dish_level計算時)")
-    usda_source_description: Optional[str] = Field(None, description="料理全体のUSDA公式名称 (dish_level計算時)")
+    nutrition_id: Optional[str] = Field(None, description="料理全体の栄養データベースID (dish_level計算時)")
+    nutrition_source_description: Optional[str] = Field(None, description="料理全体の栄養データベース名称 (dish_level計算時)")
     key_nutrients_per_100g: Optional[Dict[str, float]] = Field(
         None,
         description="料理全体の100gあたり主要栄養素 (dish_level計算時)。キーは'calories_kcal', 'protein_g', 'carbohydrates_g', 'fat_g'。",
@@ -60,7 +60,7 @@ class Phase2Input(BaseModel):
     image_bytes: bytes = Field(..., description="画像データ（バイト形式）")
     image_mime_type: str = Field(..., description="画像のMIMEタイプ")
     phase1_result: 'Phase1Output' = Field(..., description="Phase1の出力結果")
-    usda_matches: USDAQueryOutput = Field(..., description="USDA照合結果")
+    nutrition_matches: NutritionQueryOutput = Field(..., description="栄養データベース照合結果")
 
     class Config:
         arbitrary_types_allowed = True

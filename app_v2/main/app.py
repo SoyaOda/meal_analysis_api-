@@ -6,8 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..api.v1.endpoints import meal_analysis
 from ..config import get_settings
 
-# 環境変数の設定（既存のappと同じ）
-os.environ.setdefault("USDA_API_KEY", "vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg")
+# 環境変数の設定
 os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api /service-account-key.json")
 os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
 os.environ.setdefault("GEMINI_LOCATION", "us-central1")
@@ -61,7 +60,7 @@ async def health():
     return {
         "status": "healthy",
         "version": "v2.0",
-        "components": ["Phase1Component", "USDAQueryComponent"]
+        "components": ["Phase1Component", "ElasticsearchNutritionSearchComponent"]
     }
 
 if __name__ == "__main__":

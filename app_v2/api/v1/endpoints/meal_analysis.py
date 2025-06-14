@@ -22,7 +22,7 @@ async def complete_meal_analysis(
     完全な食事分析を実行（v2.0 コンポーネント化版）
     
     - Phase 1: Gemini AIによる画像分析
-    - USDA Query: 食材のUSDAデータベース照合
+    - Nutrition Search: 食材の栄養データベース照合
     - Phase 2: 計算戦略決定と栄養価精緻化 (TODO)
     - Nutrition Calculation: 最終栄養価計算 (TODO)
     
