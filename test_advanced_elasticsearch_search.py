@@ -98,7 +98,7 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         # ElasticsearchNutritionSearchComponentを見出し語化対応モードで初期化
         print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Lemmatized Enhanced Search Mode)...")
         es_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=False,   # 見出し語化検索を優先（戦略的検索は無効）
+            strategic_search_mode=False,   # 統合検索モード（見出し語化検索を優先、戦略的検索は無効）
             results_per_db=5,             # 各データベースから5つずつ結果を取得
             enable_advanced_features=False # 構造化検索は無効化、見出し語化検索に集中
         )

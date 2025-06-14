@@ -157,7 +157,7 @@ async def analyze_food1_image_with_detailed_search():
         
         # ElasticsearchNutritionSearchComponentを見出し語化対応モードで初期化
         es_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=False,   # 見出し語化検索を優先
+            strategic_search_mode=False,   # 統合検索モード（全データベース統合での見出し語化検索）
             results_per_db=5,             # 各データベースから5つずつ結果を取得
             enable_advanced_features=False # 構造化検索は無効化、見出し語化検索に集中
         )

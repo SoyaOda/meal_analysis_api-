@@ -94,7 +94,7 @@ async def test_multi_db_elasticsearch_nutrition_search():
         # ElasticsearchNutritionSearchComponentをマルチデータベースモードで初期化
         print(f"\n🔧 Initializing ElasticsearchNutritionSearchComponent (Multi-DB Mode)...")
         es_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=True,  # マルチDBモードを有効化
+            strategic_search_mode=True,  # 戦略的検索モードを有効化
             results_per_db=5  # 各データベースから5つずつ結果を取得
         )
         
