@@ -37,7 +37,7 @@ async def test_multi_db_elasticsearch_nutrition_search():
         # 完全分析エンドポイントを呼び出してPhase1結果を取得
         with open(image_path, "rb") as f:
             files = {"image": ("food3.jpg", f, "image/jpeg")}
-            data = {"save_results": True}
+            data = {}
             
             print("Starting complete analysis to get Phase1 results...")
             start_time = time.time()

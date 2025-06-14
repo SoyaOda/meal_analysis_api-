@@ -13,7 +13,6 @@ router = APIRouter()
 @router.post("/complete")
 async def complete_meal_analysis(
     image: UploadFile = File(...),
-    save_results: bool = Form(True),
     save_detailed_logs: bool = Form(True),
     test_execution: bool = Form(False),
     test_results_dir: Optional[str] = Form(None)
@@ -28,11 +27,10 @@ async def complete_meal_analysis(
     
     Args:
         image: 分析対象の食事画像
-        save_results: 結果を保存するかどうか (デフォルト: True)
-        save_detailed_logs: 詳細ログを保存するかどうか (デフォルト: True)
+        save_detailed_logs: 分析ログを保存するかどうか (デフォルト: True)
     
     Returns:
-        完全な分析結果と栄養価計算、詳細ログファイルパス
+        完全な分析結果と栄養価計算、分析ログファイルパス
     """
     
     try:
@@ -49,7 +47,6 @@ async def complete_meal_analysis(
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type,
-            save_results=save_results,
             save_detailed_logs=save_detailed_logs,
             test_execution=test_execution,
             test_results_dir=test_results_dir

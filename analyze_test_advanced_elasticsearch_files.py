@@ -118,14 +118,14 @@ def analyze_advanced_elasticsearch_architecture():
         ],
         "コンポーネント層 - 高度戦略的Elasticsearch検索": [
             "app_v2/components/elasticsearch_nutrition_search_component.py",
-            "app_v2/components/local_nutrition_search_component.py",
-            "app_v2/components/usda_query_component.py"
+
+            ""
         ],
         "データモデル層": [
             "app_v2/models/__init__.py",
             "app_v2/models/nutrition_search_models.py",
             "app_v2/models/phase1_models.py",
-            "app_v2/models/phase2_models.py"
+            ""
         ],
         "AI サービス層": [
             "app_v2/services/__init__.py",
@@ -138,7 +138,7 @@ def analyze_advanced_elasticsearch_architecture():
         "プロンプト管理（Phase1統一プロンプトシステム）": [
             "app_v2/config/prompts/__init__.py",
             "app_v2/config/prompts/phase1_prompts.py",
-            "app_v2/config/prompts/phase2_prompts.py"
+            ""
         ],
         "Elasticsearch インデックス管理・検索強化": [
             "create_elasticsearch_index.py",
