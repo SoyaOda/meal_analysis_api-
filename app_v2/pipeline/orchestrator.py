@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, ElasticsearchNutritionSearchComponent
+from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent
 from ..models import (
     Phase1Input, Phase1Output,
     NutritionQueryInput
@@ -23,7 +23,7 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None):
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_mynetdiary_specialized: Optional[bool] = False):
         """
         パイプラインの初期化
         
@@ -33,6 +33,9 @@ class MealAnalysisPipeline:
                                     None: 設定ファイルから自動取得（デフォルト: True）
                                     True: ElasticsearchNutritionSearchComponent使用（推奨）
                                     False: ElasticsearchNutritionSearchComponent使用（デフォルト設定）
+            use_mynetdiary_specialized: MyNetDiary専用検索を使用するかどうか
+                                      True: MyNetDiaryNutritionSearchComponent使用（ingredient厳密検索）
+                                      False: 従来のElasticsearch検索使用（デフォルト）
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
@@ -52,13 +55,22 @@ class MealAnalysisPipeline:
         # コンポーネントの初期化
         self.phase1_component = Phase1Component()
         
-        # 栄養データベース検索コンポーネント（常にElasticsearch使用）
-        self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
-            strategic_search_mode=True,
-            results_per_db=5
-        )
-        self.search_component_name = "ElasticsearchNutritionSearchComponent"
-        logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
+        # 栄養データベース検索コンポーネントの選択
+        if use_mynetdiary_specialized:
+            # MyNetDiary専用検索コンポーネント
+            self.nutrition_search_component = MyNetDiaryNutritionSearchComponent(
+                results_per_db=5
+            )
+            self.search_component_name = "MyNetDiaryNutritionSearchComponent"
+            logger.info("Using MyNetDiary specialized nutrition search (ingredient strict matching)")
+        else:
+            # 従来のElasticsearch検索コンポーネント
+            self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
+                strategic_search_mode=True,
+                results_per_db=5
+            )
+            self.search_component_name = "ElasticsearchNutritionSearchComponent"
+            logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
             
         # TODO: Phase2ComponentとNutritionCalculationComponentを追加
         

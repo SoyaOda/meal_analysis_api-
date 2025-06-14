@@ -98,6 +98,7 @@ STRUCTURED_MEAL_ANALYSIS_SCHEMA = {
                             "type": "object",
                             "properties": {
                                 "ingredient_name": {"type": "string", "description": "食材名"},
+                                "weight_g": {"type": "number", "minimum": 0.1, "description": "写真から推定される食材の重量（グラム）"},
                                 "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0, "description": "食材特定の信頼度"},
                                 "attributes": {
                                     "type": "array",
@@ -112,7 +113,7 @@ STRUCTURED_MEAL_ANALYSIS_SCHEMA = {
                                     }
                                 }
                             },
-                            "required": ["ingredient_name"]
+                            "required": ["ingredient_name", "weight_g"]
                         }
                     },
                     "attributes": {

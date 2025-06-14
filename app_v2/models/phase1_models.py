@@ -34,6 +34,7 @@ class DetectedFoodItem(BaseModel):
 class Ingredient(BaseModel):
     """食材情報モデル（栄養データベース検索用・従来互換性）"""
     ingredient_name: str = Field(..., description="食材の名称（栄養データベース検索で使用）")
+    weight_g: float = Field(..., gt=0, description="写真から推定される食材の重量（グラム）")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="食材特定の信頼度")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この食材に関連する属性")
 
