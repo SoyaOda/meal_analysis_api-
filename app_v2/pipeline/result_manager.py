@@ -118,10 +118,10 @@ class ResultManager:
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
         # 実行ごとのフォルダを作成（分かりやすい階層構造）
-        timestamp_dir = Path(save_directory) / f"api_analysis_{self.timestamp}"
+        timestamp_dir = Path(save_directory) / f"meal_analysis_{self.timestamp}"
         timestamp_dir.mkdir(parents=True, exist_ok=True)
         
-        self.analysis_folder_name = f"meal_analysis_{self.analysis_id}"
+        self.analysis_folder_name = f"analysis_{self.analysis_id}"
         self.analysis_dir = timestamp_dir / self.analysis_folder_name
         self.analysis_dir.mkdir(parents=True, exist_ok=True)
         
@@ -174,7 +174,7 @@ class ResultManager:
                 files = self._save_phase1_results(log)
                 saved_files.update(files)
                 executed_components.add("Phase1Component")
-            elif log.component_name in ["USDAQueryComponent", "LocalNutritionSearchComponent", "ElasticsearchNutritionSearchComponent"]:
+            elif log.component_name in ["ElasticsearchNutritionSearchComponent"]:
                 files = self._save_nutrition_search_results(log)
                 saved_files.update(files)
                 executed_components.add(log.component_name)
@@ -241,20 +241,14 @@ class ResultManager:
         return files
     
     def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """栄養データベース検索の結果を保存（USDAQueryComponent、LocalNutritionSearchComponent、ElasticsearchNutritionSearchComponent対応）"""
+        """栄養データベース検索の結果を保存（ElasticsearchNutritionSearchComponent対応）"""
         files = {}
         
         # 検索方法の判定
         search_method = "unknown"
         db_source = "unknown"
         
-        if log.component_name == "USDAQueryComponent":
-            search_method = "usda_api"
-            db_source = "usda_database"
-        elif log.component_name == "LocalNutritionSearchComponent":
-            search_method = "local_search"
-            db_source = "local_nutrition_database"
-        elif log.component_name == "ElasticsearchNutritionSearchComponent":
+        if log.component_name == "ElasticsearchNutritionSearchComponent":
             search_method = "elasticsearch"
             db_source = "elasticsearch_nutrition_db"
         
@@ -457,7 +451,7 @@ class ResultManager:
         return content
     
     def _generate_phase1_detected_items_txt(self, log: DetailedExecutionLog) -> str:
-        """Phase1で検出された料理・食材のテキストを生成（USDA検索特化）"""
+        """Phase1で検出された料理・食材のテキストを生成"""
         content = f"Phase1 検出結果 - {log.execution_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
         content += "=" * 60 + "\n\n"
         
@@ -474,20 +468,12 @@ class ResultManager:
                     content += f"    {j}. {ingredient['ingredient_name']}\n"
                 content += "\n"
         
-        # USDA検索準備情報
-        if 'usda_search_terms' in log.processing_details:
-            search_terms = log.processing_details['usda_search_terms']
-            content += f"USDA検索語彙 ({len(search_terms)}個):\n"
-            for i, term in enumerate(search_terms, 1):
-                content += f"  {i}. {term}\n"
-            content += "\n"
+
         
         # 処理詳細
         if log.processing_details:
             content += "処理詳細:\n"
             for detail_key, detail_value in log.processing_details.items():
-                if detail_key == 'usda_search_terms':
-                    continue  # 既に上で表示済み
                 if isinstance(detail_value, (dict, list)):
                     content += f"  {detail_key}: {json.dumps(detail_value, ensure_ascii=False)}\n"
                 else:
@@ -496,7 +482,7 @@ class ResultManager:
         return content
     
     def _generate_nutrition_search_results_md(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
-        """栄養データベース検索結果のマークダウンを生成（USDA/ローカル対応）"""
+        """栄養データベース検索結果のマークダウンを生成（ローカル/Elasticsearch対応）"""
         content = []
         
         content.append(f"# Nutrition Database Search Results")
@@ -606,7 +592,7 @@ class ResultManager:
         return "\n".join(content)
     
     def _generate_nutrition_match_details_txt(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
-        """栄養データベース検索のマッチ詳細テキストを生成（USDA/ローカル/マルチDB対応）"""
+        """栄養データベース検索のマッチ詳細テキストを生成（ローカル/Elasticsearch/マルチDB対応）"""
         lines = []
         
         lines.append(f"Nutrition Database Search Match Details")

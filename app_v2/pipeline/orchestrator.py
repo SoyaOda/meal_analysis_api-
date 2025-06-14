@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, LocalNutritionSearchComponent, ElasticsearchNutritionSearchComponent
+from ..components import Phase1Component, ElasticsearchNutritionSearchComponent
 from ..models import (
     Phase1Input, Phase1Output,
     NutritionQueryInput
@@ -28,11 +28,11 @@ class MealAnalysisPipeline:
         パイプラインの初期化
         
         Args:
-            use_local_nutrition_search: ローカル栄養データベース検索を使用するかどうか（レガシー）
+            use_local_nutrition_search: 廃止予定（互換性のため残存）
             use_elasticsearch_search: Elasticsearch栄養データベース検索を使用するかどうか
-                                    None: 設定ファイルから自動取得
+                                    None: 設定ファイルから自動取得（デフォルト: True）
                                     True: ElasticsearchNutritionSearchComponent使用（推奨）
-                                    False: デフォルトのElasticsearchNutritionSearchComponent使用
+                                    False: ElasticsearchNutritionSearchComponent使用（デフォルト設定）
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
@@ -46,43 +46,19 @@ class MealAnalysisPipeline:
             # デフォルトはElasticsearch使用
             self.use_elasticsearch_search = True
         
-        # レガシー互換性の処理
-        if use_local_nutrition_search is not None and use_elasticsearch_search is None:
-            # 旧パラメータが指定された場合はそちらを優先
-            if use_local_nutrition_search:
-                self.use_elasticsearch_search = False
-                self.use_local_nutrition_search = True
-            else:
-                self.use_elasticsearch_search = False
-                self.use_local_nutrition_search = False
-        else:
-            self.use_local_nutrition_search = not self.use_elasticsearch_search and (
-                use_local_nutrition_search or getattr(self.settings, 'USE_LOCAL_NUTRITION_SEARCH', False)
-            )
+        # レガシーパラメータは無視（常にElasticsearch使用）
+        self.use_local_nutrition_search = False
         
         # コンポーネントの初期化
         self.phase1_component = Phase1Component()
         
-        # 栄養データベース検索コンポーネントの選択
-        if self.use_elasticsearch_search:
-            self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
-                multi_db_search_mode=True,
-                results_per_db=5
-            )
-            self.search_component_name = "ElasticsearchNutritionSearchComponent"
-            logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
-        elif self.use_local_nutrition_search:
-            self.nutrition_search_component = LocalNutritionSearchComponent()
-            self.search_component_name = "LocalNutritionSearchComponent"
-            logger.info("Using local nutrition database search (nutrition_db_experiment)")
-        else:
-            # フォールバック: デフォルトでElasticsearchを使用
-            self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
-                multi_db_search_mode=True,
-                results_per_db=5
-            )
-            self.search_component_name = "ElasticsearchNutritionSearchComponent"
-            logger.info("Using default Elasticsearch nutrition database search")
+        # 栄養データベース検索コンポーネント（常にElasticsearch使用）
+        self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
+            multi_db_search_mode=True,
+            results_per_db=5
+        )
+        self.search_component_name = "ElasticsearchNutritionSearchComponent"
+        logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
             
         # TODO: Phase2ComponentとNutritionCalculationComponentを追加
         
@@ -93,7 +69,6 @@ class MealAnalysisPipeline:
         image_bytes: bytes,
         image_mime_type: str,
         optional_text: Optional[str] = None,
-        save_results: bool = True,
         save_detailed_logs: bool = True,
         test_execution: bool = False,
         test_results_dir: Optional[str] = None
@@ -105,8 +80,7 @@ class MealAnalysisPipeline:
             image_bytes: 画像データ
             image_mime_type: 画像のMIMEタイプ
             optional_text: オプションのテキスト
-            save_results: 結果を保存するかどうか
-            save_detailed_logs: 詳細ログを保存するかどうか
+            save_detailed_logs: 分析ログを保存するかどうか
             
         Returns:
             完全な分析結果
@@ -127,12 +101,7 @@ class MealAnalysisPipeline:
             result_manager = None
         
         self.logger.info(f"[{analysis_id}] Starting complete meal analysis pipeline")
-        if self.use_elasticsearch_search:
-            self.logger.info(f"[{analysis_id}] Nutrition search method: Elasticsearch (high-performance)")
-        elif self.use_local_nutrition_search:
-            self.logger.info(f"[{analysis_id}] Nutrition search method: Local Database")
-        else:
-            self.logger.info(f"[{analysis_id}] Nutrition search method: Default Elasticsearch")
+        self.logger.info(f"[{analysis_id}] Nutrition search method: Elasticsearch (high-performance)")
         
         try:
             # === Phase 1: 画像分析 ===
@@ -152,18 +121,12 @@ class MealAnalysisPipeline:
             self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
             
             # === Nutrition Search Phase: データベース照合 ===
-            if self.use_elasticsearch_search:
-                search_phase_name = "Elasticsearch Search"
-            elif self.use_local_nutrition_search:
-                search_phase_name = "Local Nutrition Search"
-            else:
-                search_phase_name = "Default Elasticsearch Search"
-                
+            search_phase_name = "Elasticsearch Search"
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
             # === 統一された栄養検索入力を作成 ===
-            # Elasticsearch検索またはローカル検索の場合はNutritionQueryInputを使用
-            preferred_source = "elasticsearch" if self.use_elasticsearch_search else "local_database"
+            # Elasticsearch検索を使用
+            preferred_source = "elasticsearch"
             nutrition_search_input = NutritionQueryInput(
                 ingredient_names=phase1_result.get_all_ingredient_names(),
                 dish_names=phase1_result.get_all_dish_names(),
@@ -225,22 +188,11 @@ class MealAnalysisPipeline:
                 "processing_notes": phase1_result.processing_notes
             }
             
-            # 簡単な栄養計算（暫定）
-            total_calories = sum(
-                len(dish.ingredients) * 50  # 仮の計算
-                for dish in phase1_result.dishes
-            )
+            # 栄養計算は未実装（Phase2とNutritionCalculationComponentで実装予定）
             
-            # 検索方法の特定
-            if self.use_elasticsearch_search:
-                search_method = "elasticsearch"
-                search_api_method = "elasticsearch"
-            elif self.use_local_nutrition_search:
-                search_method = "local_nutrition_database"
-                search_api_method = "local_database"
-            else:
-                search_method = "elasticsearch"
-                search_api_method = "elasticsearch"
+            # 検索方法の特定（常にElasticsearch）
+            search_method = "elasticsearch"
+            search_api_method = "elasticsearch"
             
             # 完全分析結果の構築
             end_time = datetime.now()
@@ -255,31 +207,20 @@ class MealAnalysisPipeline:
                     "search_summary": nutrition_search_result.search_summary,
                     "search_method": search_method
                 },
-                # レガシー互換性のため、usdaキーも残す
-                "usda_result": {
-                    "matches_count": len(nutrition_search_result.matches),
-                    "match_rate": nutrition_search_result.get_match_rate(),
-                    "search_summary": nutrition_search_result.search_summary
-                },
+
                 "processing_summary": {
                     "total_dishes": len(phase1_result.dishes),
                     "total_ingredients": len(phase1_result.get_all_ingredient_names()),
                     "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
-                    "usda_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",  # レガシー互換性
-                    "total_calories": total_calories,
+
                     "pipeline_status": "completed",
                     "processing_time_seconds": processing_time,
                     "search_method": search_method
                 },
-                # 暫定的な最終結果
+                # 最終栄養結果（未実装 - Phase2とNutritionCalculationComponentで実装予定）
                 "final_nutrition_result": {
                     "dishes": phase1_dict["dishes"],
-                    "total_meal_nutrients": {
-                        "calories_kcal": total_calories,
-                        "protein_g": total_calories * 0.15,  # 仮の値
-                        "carbohydrates_g": total_calories * 0.55,  # 仮の値
-                        "fat_g": total_calories * 0.30,  # 仮の値
-                    }
+                    "note": "Nutrition calculation not yet implemented - will be added in Phase2 and NutritionCalculationComponent"
                 },
                 "metadata": {
                     "pipeline_version": "v2.0",
@@ -302,23 +243,10 @@ class MealAnalysisPipeline:
                 complete_result["analysis_folder"] = result_manager.get_analysis_folder_path()
                 complete_result["saved_files"] = saved_files
                 
-                logger.info(f"[{analysis_id}] Detailed logs saved to folder: {result_manager.get_analysis_folder_path()}")
+                logger.info(f"[{analysis_id}] Analysis logs saved to folder: {result_manager.get_analysis_folder_path()}")
                 logger.info(f"[{analysis_id}] Saved {len(saved_files)} files across all phases")
             
-            if save_results:
-                # 通常の結果保存（新しい階層構造）
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                if test_execution and test_results_dir:
-                    # テスト実行時はテスト結果ディレクトリ内のapi_calls/フォルダに保存
-                    timestamp_dir = f"{test_results_dir}/api_calls/api_quick_results_{timestamp}"
-                else:
-                    # 通常の実行時は既存の保存先
-                    timestamp_dir = f"analysis_results/api_quick_results_{timestamp}"
-                os.makedirs(timestamp_dir, exist_ok=True)
-                saved_file = f"{timestamp_dir}/meal_analysis_{analysis_id}.json"
-                with open(saved_file, 'w', encoding='utf-8') as f:
-                    json.dump(complete_result, f, indent=2, ensure_ascii=False)
-                complete_result["legacy_saved_to"] = saved_file
+
             
             self.logger.info(f"[{analysis_id}] Complete analysis pipeline finished successfully in {processing_time:.2f}s")
             
@@ -338,12 +266,7 @@ class MealAnalysisPipeline:
     
     def get_pipeline_info(self) -> Dict[str, Any]:
         """パイプライン情報を取得"""
-        if self.use_elasticsearch_search:
-            search_method = "elasticsearch"
-        elif self.use_local_nutrition_search:
-            search_method = "local_database"
-        else:
-            search_method = "elasticsearch"
+        search_method = "elasticsearch"
             
         return {
             "pipeline_id": self.pipeline_id,

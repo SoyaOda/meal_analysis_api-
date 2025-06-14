@@ -39,7 +39,6 @@ async def test_single_image_advanced_elasticsearch_search(image_path: str, main_
         with open(image_path, "rb") as f:
             files = {"image": (os.path.basename(image_path), f, "image/jpeg")}
             data = {
-                "save_results": True,
                 "test_execution": True,  # テスト実行中であることを通知
                 "test_results_dir": main_results_dir  # テスト結果ディレクトリを指定
             }

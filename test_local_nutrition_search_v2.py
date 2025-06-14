@@ -28,7 +28,7 @@ def test_local_nutrition_search_complete_analysis():
         # 完全分析エンドポイントを呼び出し
         with open(image_path, "rb") as f:
             files = {"image": ("food3.jpg", f, "image/jpeg")}
-            data = {"save_results": True}  # 結果を保存
+            data = {}  # 結果を保存
             
             print("Starting complete analysis with local nutrition search...")
             start_time = time.time()
@@ -246,10 +246,10 @@ def test_nutrition_db_experiment_availability():
         print(f"❌ Error checking nutrition_db_experiment: {e}")
 
 def compare_search_methods():
-    """ローカル検索とUSDA検索の比較テスト"""
+    """ローカル検索と他の検索方法の比較テスト"""
     print("\n=== Search Methods Comparison ===")
-    print("🔬 This would compare local search vs USDA API search")
-    print("📝 TODO: Implement when both methods are available")
+    print("🔬 This would compare local search vs other search methods")
+    print("📝 TODO: Implement when multiple methods are available")
 
 if __name__ == "__main__":
     print("Testing Local Nutrition Search Integration v2.0")
