@@ -107,7 +107,7 @@ async def test_lemmatized_component_search():
     
     # ElasticsearchNutritionSearchComponentを見出し語化対応で初期化
     es_component = ElasticsearchNutritionSearchComponent(
-        multi_db_search_mode=False,  # 見出し語化機能を優先
+        strategic_search_mode=False,  # 統合検索モード（見出し語化機能を優先）
         enable_advanced_features=False,  # 構造化検索は無効
         results_per_db=5
     )
@@ -188,7 +188,7 @@ async def compare_search_methods():
     
     # 1. 従来の戦略的検索
     strategic_component = ElasticsearchNutritionSearchComponent(
-        multi_db_search_mode=True,
+        strategic_search_mode=True,
         enable_advanced_features=False,
         results_per_db=5
     )
@@ -196,7 +196,7 @@ async def compare_search_methods():
     
     # 2. 見出し語化対応検索
     lemmatized_component = ElasticsearchNutritionSearchComponent(
-        multi_db_search_mode=False,
+        strategic_search_mode=False,
         enable_advanced_features=False,
         results_per_db=5
     )

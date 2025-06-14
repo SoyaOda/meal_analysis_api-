@@ -45,16 +45,27 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
     def __init__(
         self, 
         elasticsearch_url: str = "http://localhost:9200", 
-        multi_db_search_mode: bool = False, 
+        strategic_search_mode: bool = True,  # 戦略的検索モード（True=戦略的、False=統合検索）
         results_per_db: int = 3,
         enable_advanced_features: bool = True
     ):
+        """
+        ElasticsearchNutritionSearchComponentの初期化
+        
+        Args:
+            elasticsearch_url: ElasticsearchのURL
+            strategic_search_mode: 戦略的検索モード
+                - True: データベース別・データタイプ別の戦略的検索
+                - False: 全データベース統合での見出し語化検索
+            results_per_db: データベースあたりの結果数
+            enable_advanced_features: 高度な機能（構造化検索）を有効にするか
+        """
         super().__init__("ElasticsearchNutritionSearchComponent")
         
         self.elasticsearch_url = elasticsearch_url
         self.es_client = None
         self.index_name = "nutrition_db"
-        self.multi_db_search_mode = multi_db_search_mode
+        self.strategic_search_mode = strategic_search_mode  # 旧multi_db_search_mode
         self.results_per_db = results_per_db
         self.target_databases = ["yazio", "mynetdiary", "eatthismuch"]
         
@@ -149,11 +160,11 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
         elif self.enable_lemmatization:
             # 見出し語化機能を活用した検索精度向上版
             return await self._lemmatized_enhanced_search(input_data, search_terms)
-        elif self.multi_db_search_mode:
-            # 従来の戦略的検索
+        elif self.strategic_search_mode:
+            # 戦略的検索（データベース別・データタイプ別最適化）
             return await self._elasticsearch_strategic_search(input_data, search_terms)
         else:
-            # 基本検索
+            # 基本検索（全データベース統合）
             return await self._elasticsearch_search(input_data, search_terms)
     
     def _extract_structured_data(self, input_data: NutritionQueryInput) -> Optional[Dict[str, Any]]:
@@ -1388,7 +1399,7 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
             search_metadata={
                 "search_term": search_term,
                 "elasticsearch_score": score,
-                "search_method": "elasticsearch_multi_db" if self.multi_db_search_mode else "elasticsearch",
+                "search_method": "elasticsearch_multi_db" if self.strategic_search_mode else "elasticsearch",
                 "source_database": source_db,
                 "index_name": self.index_name
             }

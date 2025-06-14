@@ -54,7 +54,7 @@ class MealAnalysisPipeline:
         
         # 栄養データベース検索コンポーネント（常にElasticsearch使用）
         self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
-            multi_db_search_mode=True,
+            strategic_search_mode=True,
             results_per_db=5
         )
         self.search_component_name = "ElasticsearchNutritionSearchComponent"
