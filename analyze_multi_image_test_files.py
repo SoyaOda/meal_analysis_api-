@@ -94,9 +94,6 @@ def analyze_multi_image_test_architecture():
         "ユーティリティ層 (MyNetDiaryデータハンドリング)": [
             "app_v2/utils/mynetdiary_utils.py"
         ],
-        "データファイル (MyNetDiary制約リスト)": [
-            "data/mynetdiary_search_names.txt"
-        ],
         "テスト画像": [
             "test_images/food1.jpg",
             "test_images/food2.jpg",
