@@ -78,10 +78,10 @@ async def analyze_single_image(image_path: str, results_dir: str, image_index: i
     image_results_dir = f"{results_dir}/{image_name}"
     os.makedirs(image_results_dir, exist_ok=True)
     
-    # パイプラインの初期化（MyNetDiary専用検索を使用）
+    # パイプラインの初期化（ファジーマッチング検索を使用）
     pipeline = MealAnalysisPipeline(
         use_elasticsearch_search=True,
-        use_mynetdiary_specialized=True
+        use_fuzzy_matching=True  # 新しいファジーマッチングシステムを使用
     )
     
     try:

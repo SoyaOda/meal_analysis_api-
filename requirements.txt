@@ -10,4 +10,5 @@ pytest==7.4.3
 pytest-asyncio==0.21.1
 python-dotenv==1.0.0
 Pillow==11.2.1
-elasticsearch==8.15.1 
+elasticsearch==8.15.1
+rapidfuzz==3.6.1 

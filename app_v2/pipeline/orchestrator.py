@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent, NutritionCalculationComponent
+from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent, FuzzyIngredientSearchComponent, NutritionCalculationComponent
 from ..models import (
     Phase1Input, Phase1Output,
     NutritionQueryInput
@@ -24,7 +24,7 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_mynetdiary_specialized: Optional[bool] = False):
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_mynetdiary_specialized: Optional[bool] = False, use_fuzzy_matching: Optional[bool] = None):
         """
         パイプラインの初期化
         
@@ -37,6 +37,10 @@ class MealAnalysisPipeline:
             use_mynetdiary_specialized: MyNetDiary専用検索を使用するかどうか
                                       True: MyNetDiaryNutritionSearchComponent使用（ingredient厳密検索）
                                       False: 従来のElasticsearch検索使用（デフォルト）
+            use_fuzzy_matching: ファジーマッチング検索を使用するかどうか
+                              True: FuzzyIngredientSearchComponent使用（高精度ファジーマッチング）
+                              False: 従来の検索使用
+                              None: 設定ファイルから自動取得（デフォルト: True）
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
@@ -53,11 +57,25 @@ class MealAnalysisPipeline:
         # レガシーパラメータは無視（常にElasticsearch使用）
         self.use_local_nutrition_search = False
         
+        # ファジーマッチング使用の決定
+        if use_fuzzy_matching is not None:
+            self.use_fuzzy_matching = use_fuzzy_matching
+        elif hasattr(self.settings, 'fuzzy_search_enabled'):
+            self.use_fuzzy_matching = self.settings.fuzzy_search_enabled
+        else:
+            # デフォルトはファジーマッチング使用
+            self.use_fuzzy_matching = True
+        
         # コンポーネントの初期化
         self.phase1_component = Phase1Component()
         
         # 栄養データベース検索コンポーネントの選択
-        if use_mynetdiary_specialized:
+        if self.use_fuzzy_matching:
+            # 新しいファジーマッチング検索コンポーネント（推奨）
+            self.nutrition_search_component = FuzzyIngredientSearchComponent()
+            self.search_component_name = "FuzzyIngredientSearchComponent"
+            logger.info("Using Fuzzy Ingredient Search (5-tier cascade, high-precision matching)")
+        elif use_mynetdiary_specialized:
             # MyNetDiary専用検索コンポーネント
             self.nutrition_search_component = MyNetDiaryNutritionSearchComponent(
                 results_per_db=5
@@ -137,22 +155,35 @@ class MealAnalysisPipeline:
             self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
             
             # === Nutrition Search Phase: データベース照合 ===
-            search_phase_name = "Elasticsearch Search"
+            if self.use_fuzzy_matching:
+                search_phase_name = "Fuzzy Ingredient Search"
+            else:
+                search_phase_name = "Elasticsearch Search"
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
             # === 統一された栄養検索入力を作成 ===
-            # Elasticsearch検索を使用
-            preferred_source = "elasticsearch"
-            nutrition_search_input = NutritionQueryInput(
-                ingredient_names=phase1_result.get_all_ingredient_names(),
-                dish_names=phase1_result.get_all_dish_names(),
-                preferred_source=preferred_source
-            )
+            if self.use_fuzzy_matching:
+                # ファジーマッチング検索の場合は、食材名のリストを直接渡す
+                ingredient_names = phase1_result.get_all_ingredient_names()
+                nutrition_search_input = [{"name": name} for name in ingredient_names]
+            else:
+                # 従来のElasticsearch検索を使用
+                preferred_source = "elasticsearch"
+                nutrition_search_input = NutritionQueryInput(
+                    ingredient_names=phase1_result.get_all_ingredient_names(),
+                    dish_names=phase1_result.get_all_dish_names(),
+                    preferred_source=preferred_source
+                )
             
             # Nutrition Searchの詳細ログを作成
             search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
             
-            nutrition_search_result = await self.nutrition_search_component.execute(nutrition_search_input, search_log)
+            if self.use_fuzzy_matching:
+                # ファジーマッチングコンポーネントの場合はprocessメソッドを使用
+                nutrition_search_result = await self.nutrition_search_component.process(nutrition_search_input)
+            else:
+                # 従来のコンポーネントの場合はexecuteメソッドを使用
+                nutrition_search_result = await self.nutrition_search_component.execute(nutrition_search_input, search_log)
             
             self.logger.info(f"[{analysis_id}] {search_phase_name} completed - {nutrition_search_result.get_match_rate():.1%} match rate")
             
@@ -292,7 +323,7 @@ class MealAnalysisPipeline:
                 "processing_summary": {
                     "total_dishes": len(phase1_result.dishes),
                     "total_ingredients": len(phase1_result.get_all_ingredient_names()),
-                    "nutrition_search_match_rate": f"{len(nutrition_search_result.matches)}/{len(nutrition_search_input.get_all_search_terms())} ({nutrition_search_result.get_match_rate():.1%})",
+                    "nutrition_search_match_rate": self._calculate_match_rate_display(nutrition_search_input, nutrition_search_result),
                     "nutrition_calculation_status": "completed",
                     "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
                     "pipeline_status": "completed",
@@ -369,3 +400,18 @@ class MealAnalysisPipeline:
                 }
             ]
         } 
+
+    def _calculate_match_rate_display(self, nutrition_search_input, nutrition_search_result):
+        """マッチ率の表示文字列を計算"""
+        if self.use_fuzzy_matching:
+            # ファジーマッチングの場合はリスト形式
+            total_searches = len(nutrition_search_input)
+            successful_matches = len(nutrition_search_result.matches)
+            match_rate = successful_matches / total_searches if total_searches > 0 else 0
+            return f"{successful_matches}/{total_searches} ({match_rate:.1%})"
+        else:
+            # 従来の検索の場合はNutritionQueryInputオブジェクト
+            total_searches = len(nutrition_search_input.get_all_search_terms())
+            successful_matches = len(nutrition_search_result.matches)
+            match_rate = nutrition_search_result.get_match_rate()
+            return f"{successful_matches}/{total_searches} ({match_rate:.1%})" 
