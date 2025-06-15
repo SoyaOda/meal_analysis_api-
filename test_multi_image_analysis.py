@@ -36,6 +36,11 @@ def setup_environment():
     os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
     os.environ.setdefault("GEMINI_LOCATION", "us-central1")
     os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
+    
+    # Deep Infra設定
+    os.environ.setdefault("DEEPINFRA_API_KEY", "l34kH6UDh9s2KfcRZn9ovJedHmb3CQlx")
+    os.environ.setdefault("DEEPINFRA_MODEL_ID", "google/gemma-3-27b-it")
+    os.environ.setdefault("DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai")
 
 
 def get_image_mime_type(file_path: str) -> str:
