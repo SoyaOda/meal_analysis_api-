@@ -6,32 +6,37 @@ from ..models.phase1_models import (
     Phase1Input, Phase1Output, Dish, Ingredient, 
     DetectedFoodItem, FoodAttribute, AttributeType
 )
-from ..services.gemini_service import GeminiService
+# from ..services.gemini_service import GeminiService  # コメントアウト
 from ..config import get_settings
 from ..config.prompts import Phase1Prompts
+from ..utils.json_parser import parse_json_from_string
 
 
 class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     """
     Phase1: 画像分析コンポーネント（構造化出力対応・栄養データベース検索特化）
     
-    Gemini AIを使用して食事画像を分析し、構造化された詳細情報
+    Vision AIサービスを使用して食事画像を分析し、構造化された詳細情報
     （信頼度スコア、属性、ブランド情報等）を含む栄養データベース検索に適した出力を生成します。
     """
     
-    def __init__(self, gemini_service: Optional[GeminiService] = None):
+    def __init__(self, vision_service=None):
         super().__init__("Phase1Component")
         
-        # GeminiServiceの初期化
-        if gemini_service is None:
+        # Vision Serviceの初期化（依存性注入）
+        if vision_service is None:
+            # フォールバック: 従来のGeminiServiceを使用
+            from ..services.gemini_service import GeminiService
             settings = get_settings()
-            self.gemini_service = GeminiService(
+            self.vision_service = GeminiService(
                 project_id=settings.GEMINI_PROJECT_ID,
                 location=settings.GEMINI_LOCATION,
                 model_name=settings.GEMINI_MODEL_NAME
             )
+            self.use_legacy_service = True
         else:
-            self.gemini_service = gemini_service
+            self.vision_service = vision_service
+            self.use_legacy_service = False
     
     async def process(self, input_data: Phase1Input) -> Phase1Output:
         """
@@ -60,17 +65,32 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         self.log_processing_detail("image_mime_type", input_data.image_mime_type)
         
         try:
-            # Gemini AIによる構造化画像分析
-            self.log_processing_detail("gemini_structured_api_call_start", "Calling Gemini API for structured image analysis")
+            # Vision AIによる構造化画像分析
+            self.log_processing_detail("vision_api_call_start", "Calling Vision API for structured image analysis")
             
-            gemini_result = await self.gemini_service.analyze_phase1_structured(
-                image_bytes=input_data.image_bytes,
-                image_mime_type=input_data.image_mime_type,
-                optional_text=input_data.optional_text,
-                system_prompt=system_prompt
-            )
+            if self.use_legacy_service:
+                # 従来のGeminiServiceを使用
+                vision_result = await self.vision_service.analyze_phase1_structured(
+                    image_bytes=input_data.image_bytes,
+                    image_mime_type=input_data.image_mime_type,
+                    optional_text=input_data.optional_text,
+                    system_prompt=system_prompt
+                )
+            else:
+                # 新しいDeepInfraServiceを使用
+                prompt = Phase1Prompts.get_gemma3_prompt()
+                raw_response = await self.vision_service.analyze_image(
+                    image_bytes=input_data.image_bytes,
+                    image_mime_type=input_data.image_mime_type,
+                    prompt=prompt
+                )
+                # JSON文字列をパース
+                vision_result = parse_json_from_string(raw_response)
             
-            self.log_processing_detail("gemini_structured_response", gemini_result)
+            self.log_processing_detail("vision_api_response", vision_result)
+            
+            # 結果を統一変数名に設定
+            gemini_result = vision_result
             
             # 構造化データを処理
             detected_food_items = []

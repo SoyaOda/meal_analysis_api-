@@ -6,6 +6,7 @@ from typing import Optional, Dict, Any
 import logging
 
 from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent, FuzzyIngredientSearchComponent, NutritionCalculationComponent
+from ..services.deepinfra_service import DeepInfraService
 from ..models import (
     Phase1Input, Phase1Output,
     NutritionQueryInput
@@ -66,8 +67,19 @@ class MealAnalysisPipeline:
             # デフォルトはファジーマッチング使用
             self.use_fuzzy_matching = True
         
+        # Vision Serviceの初期化
+        try:
+            # DeepInfraServiceを試行
+            self.vision_service = DeepInfraService()
+            logger.info("Using DeepInfra Gemma 3 for image analysis")
+        except ValueError as e:
+            # 環境変数が設定されていない場合はフォールバック
+            logger.warning(f"DeepInfra service initialization failed: {e}")
+            logger.info("Falling back to legacy Gemini service")
+            self.vision_service = None
+        
         # コンポーネントの初期化
-        self.phase1_component = Phase1Component()
+        self.phase1_component = Phase1Component(vision_service=self.vision_service)
         
         # 栄養データベース検索コンポーネントの選択
         if self.use_fuzzy_matching:

@@ -104,4 +104,47 @@ REMINDER: After completing your JSON response, perform a final verification that
         base_prompt = cls.USER_PROMPT_TEMPLATE
         if optional_text:
             base_prompt += f"\n\nAdditional context: {optional_text}"
-        return base_prompt 
+        return base_prompt
+
+    @classmethod
+    def get_gemma3_prompt(cls) -> str:
+        """Gemma 3用の最適化されたプロンプトを取得"""
+        mynetdiary_section = cls._get_mynetdiary_ingredients_section()
+        
+        return f"""You are an expert food analyst and nutritionist for a US-based diet management application. Your task is to analyze the provided image of a meal and return a structured JSON object containing your analysis. Adhere strictly to the JSON schema and instructions provided below.
+
+Primary Goal:
+Identify all distinct dishes in the image, list their ingredients, and estimate the weight of each ingredient in grams.
+
+Instructions:
+1. Analyze the Image: Carefully examine the image to identify all separate food items or dishes.
+2. Identify Dishes: For each dish, provide a common, recognizable name (e.g., "Spaghetti Bolognese", "Caesar Salad", "Grilled Chicken Breast").
+3. List Ingredients: For each dish, list all visible and reasonably inferable ingredients.
+   Constraint: When naming ingredients, you MUST try to match them to an item from the provided MyNetDiary ingredient list. If an exact match is not possible, use the most common and simple name for the ingredient (e.g., "tomato", "chicken breast", "lettuce").
+4. Estimate Weight: For each ingredient, estimate its weight in grams (weight_g). This is a critical step. Be realistic. For example, a slice of bread is about 30g, a medium egg is about 50g, a standard chicken breast is 150-200g.
+5. Confidence Score: Provide a confidence score (from 0.0 to 1.0) for your identification of each dish. 1.0 means absolute certainty.
+6. JSON Output: Format your entire output as a single JSON object. DO NOT include any text, explanation, or markdown formatting outside of the JSON object itself.
+
+{mynetdiary_section}
+
+Required JSON Schema:
+Your output MUST conform to this exact JSON structure. If a value is unknown, use null.
+
+{{
+  "dishes": [
+    {{
+      "dish_name": "Example: Grilled Chicken Breast",
+      "confidence": 0.98,
+      "ingredients": [
+        {{
+          "ingredient_name": "chicken breast, boneless, skinless",
+          "weight_g": 180
+        }},
+        {{
+          "ingredient_name": "olive oil",
+          "weight_g": 5
+        }}
+      ]
+    }}
+  ]
+}}""" 
