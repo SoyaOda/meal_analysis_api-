@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
     GEMINI_MODEL_NAME: str = "gemini-2.5-flash-preview-05-20"
     
+    # Deep Infra設定
+    DEEPINFRA_API_KEY: Optional[str] = None  # Deep Infra APIキー
+    DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子
+    DEEPINFRA_BASE_URL: str = "https://api.deepinfra.com/v1/openai"  # OpenAI互換エンドポイント
+    
     # 栄養データベース検索設定
     USE_ELASTICSEARCH_SEARCH: bool = True  # Elasticsearch栄養データベース検索を使用するかどうか
     USE_LOCAL_NUTRITION_SEARCH: bool = False  # ローカル栄養データベース検索を使用するかどうか（レガシー）

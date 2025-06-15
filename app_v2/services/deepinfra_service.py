@@ -7,6 +7,7 @@ import json
 from typing import Dict, Any, List
 
 from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
+from ..config import get_settings
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -19,14 +20,17 @@ class DeepInfraService:
 
     def __init__(self):
         """
-        環境変数から設定を読み込み、非同期OpenAIクライアントを初期化する。
+        設定ファイルから設定を読み込み、非同期OpenAIクライアントを初期化する。
         """
-        api_key = os.getenv("DEEPINFRA_API_KEY")
+        settings = get_settings()
+        
+        # API keyの取得（設定ファイル優先、環境変数フォールバック）
+        api_key = settings.DEEPINFRA_API_KEY or os.getenv("DEEPINFRA_API_KEY")
         if not api_key:
-            raise ValueError("環境変数 'DEEPINFRA_API_KEY' が設定されていません。")
+            raise ValueError("Deep Infra API keyが設定されていません。設定ファイルまたは環境変数 'DEEPINFRA_API_KEY' を設定してください。")
 
-        self.model_id = os.getenv("DEEPINFRA_MODEL_ID", "google/gemma-3-27b-it")
-        base_url = os.getenv("DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai")
+        self.model_id = settings.DEEPINFRA_MODEL_ID
+        base_url = settings.DEEPINFRA_BASE_URL
 
         # 非同期クライアントの初期化
         self.client = AsyncOpenAI(
