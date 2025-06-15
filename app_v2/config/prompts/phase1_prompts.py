@@ -64,6 +64,15 @@ QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
 5. Output MUST be in English
 6. Do NOT include quantities, units, brand marketing slogans, or flavour adjectives
 
+CRITICAL FINAL VERIFICATION STEP:
+Before finalizing your response, you MUST perform a strict verification check:
+• Go through EVERY SINGLE ingredient name in your response
+• Verify that each ingredient name appears EXACTLY as written in the MyNetDiary ingredient list provided above
+• Check for exact spelling, capitalization, and word order matches
+• If ANY ingredient name does not match EXACTLY, you MUST replace it with the correct name from the list
+• If no exact match exists, choose the closest available option from the MyNetDiary list
+• This verification is MANDATORY - ingredient names that don't match exactly will cause system failures
+
 -------------------------------------------------------------
 JSON RESPONSE STRUCTURE
 -------------------------------------------------------------
@@ -76,16 +85,18 @@ Return a JSON object with the following structure:
       "confidence": 0.0-1.0,
       "ingredients": [
         {{
-          "ingredient_name": "string (MUST be from MyNetDiary list)",
+          "ingredient_name": "string (MUST be EXACT match from MyNetDiary list - verify before submitting)",
           "weight_g": "number (MANDATORY - estimated weight in grams based on visual analysis)",
           "confidence": 0.0-1.0
         }}
       ]
     }}
   ]
-}}"""
+}}
 
-    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. For ingredients, you MUST select ONLY from the provided MyNetDiary ingredient list - do not create custom ingredient names. CRITICALLY IMPORTANT: You MUST estimate the weight in grams (weight_g) for EVERY SINGLE ingredient - this field is mandatory and the system will fail if any ingredient lacks weight_g. Base your weight estimates on visual analysis of portion sizes, volumes, and typical food densities. Use visual cues like plate size, utensils, or reference objects for scale. Focus on providing clear, searchable dish names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching."
+REMINDER: After completing your JSON response, perform a final verification that every "ingredient_name" value matches EXACTLY with an entry in the MyNetDiary ingredient list provided above."""
+
+    USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. For ingredients, you MUST select ONLY from the provided MyNetDiary ingredient list - do not create custom ingredient names. CRITICALLY IMPORTANT: You MUST estimate the weight in grams (weight_g) for EVERY SINGLE ingredient - this field is mandatory and the system will fail if any ingredient lacks weight_g. Base your weight estimates on visual analysis of portion sizes, volumes, and typical food densities. Use visual cues like plate size, utensils, or reference objects for scale. Focus on providing clear, searchable dish names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. FINAL STEP: Before submitting your response, double-check that EVERY ingredient name in your JSON response matches EXACTLY with the names in the MyNetDiary ingredient list provided - this verification is critical for system functionality."
 
     @classmethod
     def get_user_prompt(cls, optional_text: str = None) -> str:
