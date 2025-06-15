@@ -52,7 +52,7 @@ class DeepInfraService:
         image_mime_type: str,
         prompt: str,
         max_tokens: int = 4096,
-        temperature: float = 0.1
+        temperature: float = 0.0
     ) -> str:
         """
         画像とプロンプトをDeep Infraに送信し、分析結果をJSONとして受け取る。
@@ -124,10 +124,10 @@ class DeepInfraService:
         except (RateLimitError, APIConnectionError) as e:
             logger.error(f"API communication error (retriable): {e}", exc_info=True)
             # TODO: ここに指数バックオフ付きのリトライロジックを実装することを推奨
-            raise APIError(f"APIとの通信に一時的な問題が発生しました: {e}") from e
+            raise ValueError(f"APIとの通信に一時的な問題が発生しました: {e}") from e
         except APIError as e:
             logger.error(f"A non-retriable API error occurred: {e}", exc_info=True)
-            raise APIError(f"APIエラーが発生しました: {e}") from e
+            raise ValueError(f"APIエラーが発生しました: {e}") from e
         except Exception as e:
             logger.error(f"An unexpected error occurred during API call: {e}", exc_info=True)
             raise ValueError(f"予期せぬエラーが発生しました: {e}") from e 

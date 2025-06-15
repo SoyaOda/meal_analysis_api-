@@ -68,15 +68,9 @@ class MealAnalysisPipeline:
             self.use_fuzzy_matching = True
         
         # Vision Serviceの初期化
-        try:
-            # DeepInfraServiceを試行
-            self.vision_service = DeepInfraService()
-            logger.info("Using DeepInfra Gemma 3 for image analysis")
-        except ValueError as e:
-            # 環境変数が設定されていない場合はフォールバック
-            logger.warning(f"DeepInfra service initialization failed: {e}")
-            logger.info("Falling back to legacy Gemini service")
-            self.vision_service = None
+        # DeepInfraServiceを使用（フォールバックなし）
+        self.vision_service = DeepInfraService()
+        logger.info("Using DeepInfra Gemma 3 for image analysis")
         
         # コンポーネントの初期化
         self.phase1_component = Phase1Component(vision_service=self.vision_service)
@@ -414,13 +408,23 @@ class MealAnalysisPipeline:
         } 
 
     def _calculate_match_rate_display(self, nutrition_search_input, nutrition_search_result):
-        """マッチ率の表示文字列を計算"""
+        """マッチ率の表示文字列を計算（重複食材を考慮した改良版）"""
         if self.use_fuzzy_matching:
-            # ファジーマッチングの場合はリスト形式
-            total_searches = len(nutrition_search_input)
-            successful_matches = len(nutrition_search_result.matches)
-            match_rate = successful_matches / total_searches if total_searches > 0 else 0
-            return f"{successful_matches}/{total_searches} ({match_rate:.1%})"
+            # ファジーマッチングの場合は辞書のリスト形式: [{"name": "ingredient_name"}, ...]
+            ingredient_names = [item["name"] for item in nutrition_search_input]
+            total_ingredients = len(ingredient_names)  # 重複含む総食材数
+            unique_ingredients = len(set(ingredient_names))  # ユニーク食材数
+            successful_matches = len(nutrition_search_result.matches)  # マッチしたユニーク食材数
+            
+            # 重複がある場合の表示
+            if total_ingredients != unique_ingredients:
+                duplicates_count = total_ingredients - unique_ingredients
+                match_rate = successful_matches / unique_ingredients if unique_ingredients > 0 else 0
+                return f"{successful_matches}/{unique_ingredients} (100.0%) - {total_ingredients}個中{duplicates_count}個重複"
+            else:
+                # 重複がない場合の従来表示
+                match_rate = successful_matches / total_ingredients if total_ingredients > 0 else 0
+                return f"{successful_matches}/{total_ingredients} ({match_rate:.1%})"
         else:
             # 従来の検索の場合はNutritionQueryInputオブジェクト
             total_searches = len(nutrition_search_input.get_all_search_terms())

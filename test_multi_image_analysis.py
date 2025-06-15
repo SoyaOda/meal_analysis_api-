@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional
+from dotenv import load_dotenv
 
 # プロジェクトルートをPythonパスに追加
 project_root = Path(__file__).parent
@@ -32,12 +33,16 @@ logger = logging.getLogger(__name__)
 
 def setup_environment():
     """環境変数の設定"""
+    # .envファイルから環境変数を読み込み
+    load_dotenv()
+    
+    # 既存の設定（.envファイルで設定されていない場合のフォールバック）
     os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api_2/service-account-key.json")
     os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
     os.environ.setdefault("GEMINI_LOCATION", "us-central1")
     os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
     
-    # Deep Infra設定
+    # Deep Infra設定（.envファイルから読み込まれるが、フォールバックも設定）
     os.environ.setdefault("DEEPINFRA_API_KEY", "l34kH6UDh9s2KfcRZn9ovJedHmb3CQlx")
     os.environ.setdefault("DEEPINFRA_MODEL_ID", "google/gemma-3-27b-it")
     os.environ.setdefault("DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai")

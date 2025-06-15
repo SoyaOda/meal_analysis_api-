@@ -9,6 +9,7 @@ import time
 import logging
 from pathlib import Path
 from datetime import datetime
+from dotenv import load_dotenv
 
 # プロジェクトルートをPythonパスに追加
 project_root = Path(__file__).parent
@@ -26,6 +27,10 @@ from app_v2.pipeline.orchestrator import MealAnalysisPipeline
 
 def setup_environment():
     """環境変数の設定"""
+    # .envファイルから環境変数を読み込み
+    load_dotenv()
+    
+    # 既存の設定（.envファイルで設定されていない場合のフォールバック）
     os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api_2/service-account-key.json")
     os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
     os.environ.setdefault("GEMINI_LOCATION", "us-central1")
