@@ -8,11 +8,6 @@ class Settings(BaseSettings):
     API設定クラス
     環境変数から設定値を読み込む
     """
-    # Vertex AI設定
-    GEMINI_PROJECT_ID: str  # GCPプロジェクトID（必須）
-    GEMINI_LOCATION: str = "us-central1"  # デフォルトのロケーション
-    GEMINI_MODEL_NAME: str = "gemini-2.5-flash-preview-05-20"
-    
     # Deep Infra設定
     DEEPINFRA_API_KEY: Optional[str] = None  # Deep Infra APIキー
     DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子

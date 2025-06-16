@@ -20,10 +20,9 @@ async def complete_meal_analysis(
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
     
-    - Phase 1: Gemini AIによる画像分析
-    - Nutrition Search: 食材の栄養データベース照合
-    - Phase 2: 計算戦略決定と栄養価精緻化 (TODO)
-    - Nutrition Calculation: 最終栄養価計算 (TODO)
+    - Phase 1: Deep Infra Gemma 3による画像分析
+    - Nutrition Search: 食材の栄養データベース照合（5階層ファジーマッチング）
+    - Nutrition Calculation: 最終栄養価計算
     
     Args:
         image: 分析対象の食事画像

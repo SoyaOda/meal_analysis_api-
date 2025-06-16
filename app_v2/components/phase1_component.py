@@ -6,7 +6,7 @@ from ..models.phase1_models import (
     Phase1Input, Phase1Output, Dish, Ingredient, 
     DetectedFoodItem, FoodAttribute, AttributeType
 )
-# from ..services.gemini_service import GeminiService  # コメントアウト
+from ..services.deepinfra_service import DeepInfraService
 from ..config import get_settings
 from ..config.prompts import Phase1Prompts
 from ..utils.json_parser import parse_json_from_string
@@ -25,18 +25,15 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         
         # Vision Serviceの初期化（依存性注入）
         if vision_service is None:
-            # フォールバック: 従来のGeminiServiceを使用
-            from ..services.gemini_service import GeminiService
+            # DeepInfraServiceを使用
             settings = get_settings()
-            self.vision_service = GeminiService(
-                project_id=settings.GEMINI_PROJECT_ID,
-                location=settings.GEMINI_LOCATION,
-                model_name=settings.GEMINI_MODEL_NAME
+            self.vision_service = DeepInfraService(
+                api_key=settings.DEEPINFRA_API_KEY,
+                model_id=settings.DEEPINFRA_MODEL_ID,
+                base_url=settings.DEEPINFRA_BASE_URL
             )
-            self.use_legacy_service = True
         else:
             self.vision_service = vision_service
-            self.use_legacy_service = False
     
     async def process(self, input_data: Phase1Input) -> Phase1Output:
         """
@@ -68,34 +65,24 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             # Vision AIによる構造化画像分析
             self.log_processing_detail("vision_api_call_start", "Calling Vision API for structured image analysis")
             
-            if self.use_legacy_service:
-                # 従来のGeminiServiceを使用
-                vision_result = await self.vision_service.analyze_phase1_structured(
-                    image_bytes=input_data.image_bytes,
-                    image_mime_type=input_data.image_mime_type,
-                    optional_text=input_data.optional_text,
-                    system_prompt=system_prompt
-                )
-            else:
-                # 新しいDeepInfraServiceを使用
-                prompt = Phase1Prompts.get_gemma3_prompt()
-                raw_response = await self.vision_service.analyze_image(
-                    image_bytes=input_data.image_bytes,
-                    image_mime_type=input_data.image_mime_type,
-                    prompt=prompt
-                )
-                # JSON文字列をパース
-                vision_result = parse_json_from_string(raw_response)
+            prompt = Phase1Prompts.get_gemma3_prompt()
+            raw_response = await self.vision_service.analyze_image(
+                image_bytes=input_data.image_bytes,
+                image_mime_type=input_data.image_mime_type,
+                prompt=prompt
+            )
+            # JSON文字列をパース
+            vision_result = parse_json_from_string(raw_response)
             
             self.log_processing_detail("vision_api_response", vision_result)
             
             # 結果を統一変数名に設定
-            gemini_result = vision_result
+            analysis_result = vision_result
             
             # 構造化データを処理
             detected_food_items = []
-            if "detected_food_items" in gemini_result:
-                for item_index, item_data in enumerate(gemini_result["detected_food_items"]):
+            if "detected_food_items" in analysis_result:
+                for item_index, item_data in enumerate(analysis_result["detected_food_items"]):
                     # 属性を処理
                     attributes = []
                     for attr_data in item_data.get("attributes", []):
@@ -141,8 +128,8 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             
             # 従来互換性のためのdishesも生成
             dishes = []
-            if "dishes" in gemini_result:
-                for dish_index, dish_data in enumerate(gemini_result.get("dishes", [])):
+            if "dishes" in analysis_result:
+                for dish_index, dish_data in enumerate(analysis_result.get("dishes", [])):
                     ingredients = []
                     for ingredient_index, ingredient_data in enumerate(dish_data.get("ingredients", [])):
                         # 構造化属性を従来形式に変換
@@ -173,7 +160,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
                         
                         # weight_gが必須フィールドなので、存在しない場合はエラー
                         if "weight_g" not in ingredient_data:
-                            error_msg = f"Missing required field 'weight_g' for ingredient '{ingredient_data.get('ingredient_name', 'unknown')}'. Gemini must provide weight estimation for all ingredients."
+                            error_msg = f"Missing required field 'weight_g' for ingredient '{ingredient_data.get('ingredient_name', 'unknown')}'. AI model must provide weight estimation for all ingredients."
                             self.logger.error(error_msg)
                             raise ValueError(error_msg)
                         
@@ -266,7 +253,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
     def _convert_structured_to_legacy(self, detected_items: list) -> list:
         """構造化データを従来形式に変換（フォールバック用）"""
         # このメソッドは重量情報が不完全な場合に使用されるため、エラーを発生させる
-        error_msg = "Cannot convert structured data to legacy format without weight information. Gemini must provide weight_g for all ingredients in the standard dishes format."
+        error_msg = "Cannot convert structured data to legacy format without weight information. AI model must provide weight_g for all ingredients in the standard dishes format."
         self.logger.error(error_msg)
         raise ValueError(error_msg)
     

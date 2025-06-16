@@ -56,6 +56,35 @@ For EACH ingredient, you MUST estimate the weight in grams (weight_g) based on v
 • Weight estimates should be practical and achievable (e.g., 50-200g for main ingredients, 5-30g for seasonings/sauces)
 • NEVER omit the weight_g field - it is required for every single ingredient
 
+PLATE-BASED VISUAL WEIGHT ESTIMATION:
+• Carefully observe the plate/bowl size, shape, and depth in the image
+• Use the plate as your primary reference for scale - standard dinner plates are typically 25-28cm (10-11 inches) diameter
+• Estimate how much of the plate/bowl is covered by each ingredient and at what depth/height
+• Consider the 3D volume: height/thickness of food items relative to the plate rim
+• For pasta/rice: estimate the volume they occupy in the bowl/plate and convert to weight (cooked pasta ~1.1g/ml, cooked rice ~1.5g/ml)
+• For salads: consider the leaf density and compression - loose greens are ~0.2-0.3g/ml, compressed ~0.5g/ml
+• For sauces/dressings: observe the coverage area and estimated thickness on the plate
+• Cross-reference your estimates: does the total weight seem reasonable for what's visible on the plate?
+• If multiple dishes are present, compare their relative sizes to ensure proportional weight estimates
+
+AMERICAN PORTION SIZE CONTEXT:
+• Assume this is a typical American meal serving - American portions are generally 25-50% larger than international standards
+• Restaurant portions in America are typically generous and designed to provide satisfaction and value
+• Main dishes (pasta, rice, meat) should reflect American restaurant/dining portion sizes
+• For pasta dishes: American restaurant servings are typically 200-300g cooked weight (equivalent to 80-120g dry)
+• For proteins: American servings are typically 150-250g (6-8 oz)
+• For side salads: American portions are typically 100-200g of greens
+• Consider that American dining culture emphasizes generous portions and hearty meals
+
+CRITICAL COOKING STATE CONSIDERATION:
+For ingredients like pasta, rice, grains, and legumes that absorb significant water during cooking:
+• ALWAYS specify the cooking state in the ingredient_name (e.g., "pasta white dry uncooked" vs "pasta white cooked")
+• Be extremely careful about weight estimation - cooked vs uncooked has dramatically different nutrition per gram
+• Cooked pasta/rice typically weighs 2-3x more than dry due to water absorption, but nutrition per gram is 2-3x LESS
+• When you see cooked pasta/rice in the image, estimate the COOKED weight, but ensure ingredient_name reflects "cooked" state
+• For dry ingredients that appear cooked: estimate what the dry weight would have been before cooking
+• This distinction is CRITICAL for accurate nutrition calculation - getting this wrong can cause 200-300% calorie errors
+
 QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
 1. For ingredients: ONLY use names from the MyNetDiary list above - NO custom names allowed
 2. For dish names: Use simple, searchable names that exist as separate database entries
@@ -122,6 +151,13 @@ Instructions:
 3. List Ingredients: For each dish, list all visible and reasonably inferable ingredients.
    Constraint: When naming ingredients, you MUST try to match them to an item from the provided MyNetDiary ingredient list. If an exact match is not possible, use the most common and simple name for the ingredient (e.g., "tomato", "chicken breast", "lettuce").
 4. Estimate Weight: For each ingredient, estimate its weight in grams (weight_g). This is a critical step. Be realistic. For example, a slice of bread is about 30g, a medium egg is about 50g, a standard chicken breast is 150-200g.
+   AMERICAN PORTION CONTEXT: Assume this is a typical American meal - portions are 25-50% larger than international standards. American restaurant pasta servings are typically 200-300g cooked weight, proteins are 150-250g (6-8 oz), and salads are 100-200g of greens.
+   PLATE-BASED ESTIMATION: Use the plate/bowl as your primary scale reference. Standard dinner plates are 25-28cm diameter. Observe how much of the plate each ingredient covers and at what depth. For pasta in bowls, estimate the 3D volume (cooked pasta ~1.1g/ml). For salads, consider leaf compression (loose greens ~0.2-0.3g/ml). Compare relative sizes between dishes to ensure proportional estimates.
+   CRITICAL: For pasta, rice, grains, and legumes - pay special attention to cooking state:
+   - If you see COOKED pasta/rice, estimate the COOKED weight but specify "cooked" in ingredient_name
+   - If estimating dry weight equivalent, use "dry uncooked" in ingredient_name
+   - Cooked pasta/rice weighs 2-3x more than dry, but has 2-3x LESS nutrition per gram
+   - Getting this wrong causes massive calorie calculation errors (200-300% off)
 5. Confidence Score: Provide a confidence score (from 0.0 to 1.0) for your identification of each dish. 1.0 means absolute certainty.
 6. JSON Output: Format your entire output as a single JSON object. DO NOT include any text, explanation, or markdown formatting outside of the JSON object itself.
 
