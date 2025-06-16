@@ -6,12 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..api.v1.endpoints import meal_analysis
 from ..config import get_settings
 
-# 環境変数の設定
-os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api /service-account-key.json")
-os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
-os.environ.setdefault("GEMINI_LOCATION", "us-central1")
-os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
-
 # ロギング設定
 logging.basicConfig(
     level=logging.INFO,

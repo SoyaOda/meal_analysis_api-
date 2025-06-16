@@ -1,4 +1,4 @@
-from .gemini_service import GeminiService
+from .deepinfra_service import DeepInfraService
 
 
-__all__ = ["GeminiService"]
+__all__ = ["DeepInfraService"]
