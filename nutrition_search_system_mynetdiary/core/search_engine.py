@@ -56,7 +56,7 @@ class NutritionSearchEngine:
         # 結果変換
         results = []
         if response and response.get('hits', {}).get('hits'):
-            results = self._convert_es_results(response['hits']['hits'], query.query, lemmatized_query)
+            results = await self._convert_es_results(response['hits']['hits'], query.query, lemmatized_query)
             
             # スコアフィルタリング
             results = [r for r in results if r.score >= query.min_score]
@@ -194,10 +194,10 @@ class NutritionSearchEngine:
         return {
             "query": bool_query,
             "size": max_results * 2,  # スコア調整後に絞り込むため多めに取得
-            "_source": ["id", "search_name", "description", "data_type", "nutrition", "source_db"]
+            "_source": ["id", "search_name", "description", "original_name", "data_type", "nutrition", "source_db"]
         }
     
-    def _convert_es_results(self, es_hits: List[Dict[str, Any]], original_term: str, lemmatized_term: str) -> List[SearchResult]:
+    async def _convert_es_results(self, es_hits: List[Dict[str, Any]], original_term: str, lemmatized_term: str) -> List[SearchResult]:
         """Elasticsearch結果をSearchResultに変換"""
         results = []
         
@@ -230,6 +230,7 @@ class NutritionSearchEngine:
                 id=str(source.get('id', '')),
                 name=source.get('search_name', ''),
                 description=source.get('description', ''),
+                original_name=source.get('original_name', ''),
                 nutrition=nutrition,
                 source_db=source.get('source_db', ''),
                 score=adjusted_score,
@@ -240,6 +241,9 @@ class NutritionSearchEngine:
         
         # スコア順でソート
         results.sort(key=lambda x: x.score, reverse=True)
+        
+        # 同スコア結果の再ランキング（search_name + description での再検索）
+        results = await self._rerank_tied_scores(results, original_term, lemmatized_term)
         
         return results
     
@@ -285,6 +289,191 @@ class NutritionSearchEngine:
             adjustment *= self.compound_word_penalty
         
         return base_score * adjustment
+    
+    async def _rerank_tied_scores(self, results: List[SearchResult], original_term: str, lemmatized_term: str) -> List[SearchResult]:
+        """同じスコアの結果をsearch_name + descriptionで再ランキング"""
+        if len(results) <= 1:
+            return results
+        
+        # スコアグループを作成
+        score_groups = {}
+        for result in results:
+            rounded_score = round(result.score, 2)  # 小数点2桁で丸める
+            if rounded_score not in score_groups:
+                score_groups[rounded_score] = []
+            score_groups[rounded_score].append(result)
+        
+        # 各スコアグループで再ランキング
+        reranked_results = []
+        for score in sorted(score_groups.keys(), reverse=True):
+            group = score_groups[score]
+            
+            if len(group) == 1:
+                # 単一結果はそのまま
+                reranked_results.extend(group)
+            else:
+                # 複数結果を再ランキング
+                reranked_group = await self._rerank_group_with_description(group, original_term, lemmatized_term)
+                reranked_results.extend(reranked_group)
+        
+        return reranked_results
+    
+    async def _rerank_group_with_description(self, group: List[SearchResult], original_term: str, lemmatized_term: str) -> List[SearchResult]:
+        """同スコアグループをsearch_name + descriptionで再ランキング"""
+        try:
+            # グループのIDを取得
+            group_ids = [result.id for result in group]
+            
+            # search_name + description での再検索クエリを構築
+            rerank_query = self._build_description_search_query(original_term, lemmatized_term, group_ids)
+            
+            # 再検索実行
+            response = await self.es_client.search(rerank_query)
+            
+            if not response or not response.get('hits', {}).get('hits'):
+                return group  # 再検索失敗時は元の順序を維持
+            
+            # 再検索結果でスコアマップを作成
+            rerank_scores = {}
+            for hit in response['hits']['hits']:
+                item_id = str(hit['_source'].get('id', ''))
+                rerank_scores[item_id] = hit['_score']
+            
+            # 再ランキング実行とスコア更新
+            original_base_score = group[0].score  # 同スコアグループなので最初のスコアを基準に
+            reranked_group = []
+            
+            # descriptionの関連性を評価して差別化
+            for i, result in enumerate(sorted(group, key=lambda r: rerank_scores.get(r.id, 0), reverse=True)):
+                # descriptionによる追加ボーナス計算
+                desc_bonus = self._calculate_description_relevance_bonus(result.description, original_term, lemmatized_term)
+                rerank_bonus = rerank_scores.get(result.id, 0) * 0.1
+                position_penalty = i * 0.001  # 同じrerankスコアでも順序を保つための微調整
+                
+                new_score = original_base_score + rerank_bonus + desc_bonus - position_penalty
+                
+                # 結果のスコアを更新
+                updated_result = SearchResult(
+                    id=result.id,
+                    name=result.name,
+                    description=result.description,
+                    original_name=result.original_name,
+                    nutrition=result.nutrition,
+                    source_db=result.source_db,
+                    score=new_score,
+                    match_type=result.match_type
+                )
+                reranked_group.append(updated_result)
+            
+            return reranked_group
+            
+        except Exception as e:
+            logger.warning(f"Reranking failed: {e}")
+            return group  # エラー時は元の順序を維持
+    
+    def _calculate_description_relevance_bonus(self, description: str, original_term: str, lemmatized_term: str) -> float:
+        """descriptionの関連性に基づくスコアボーナス計算"""
+        if not description or description == "None":
+            return 0.0
+        
+        desc_lower = description.lower()
+        original_lower = original_term.lower()
+        lemmatized_lower = lemmatized_term.lower()
+        
+        bonus = 0.0
+        
+        # 関連性の高い調理法・形態キーワードにボーナス
+        cooking_methods = ["raw", "cooked", "boiled", "baked", "grilled", "fried", "steamed", "roasted"]
+        forms = ["boneless", "skinless", "whole", "ground", "tenderloins", "meat only"]
+        containers = ["canned", "fresh", "frozen", "dried"]
+        
+        # 調理法の関連性
+        for method in cooking_methods:
+            if method in desc_lower:
+                if "raw" in desc_lower and ("fresh" in original_lower or "raw" in original_lower):
+                    bonus += 0.02  # 生に関連する検索には生食品を優先
+                elif method in original_lower or method in lemmatized_lower:
+                    bonus += 0.05  # 検索語に含まれる調理法
+                else:
+                    bonus += 0.01  # 一般的な調理法
+        
+        # 形態の関連性
+        for form in forms:
+            if form in desc_lower:
+                if form in original_lower or form in lemmatized_lower:
+                    bonus += 0.03
+                else:
+                    bonus += 0.005
+        
+        # 容器・保存形態
+        for container in containers:
+            if container in desc_lower:
+                bonus += 0.002
+        
+        # 単語数による複雑さペナルティ（簡潔な記述を優先）
+        word_count = len(description.split(", "))
+        if word_count > 3:
+            bonus -= (word_count - 3) * 0.001
+        
+        return bonus
+    
+    def _build_description_search_query(self, original_term: str, lemmatized_term: str, target_ids: List[str]) -> Dict[str, Any]:
+        """search_name + description での再検索クエリ構築"""
+        
+        bool_query = {
+            "bool": {
+                "must": [
+                    # 対象IDでフィルタリング
+                    {
+                        "terms": {
+                            "id": target_ids
+                        }
+                    }
+                ],
+                "should": [
+                    # search_name + description の組み合わせフィールドでの検索
+                    {
+                        "multi_match": {
+                            "query": lemmatized_term,
+                            "fields": ["search_name_lemmatized^2.0", "description^1.0"],
+                            "type": "best_fields"
+                        }
+                    },
+                    {
+                        "multi_match": {
+                            "query": original_term,
+                            "fields": ["search_name^2.0", "description^1.0"],
+                            "type": "best_fields"
+                        }
+                    },
+                    # フレーズマッチ
+                    {
+                        "multi_match": {
+                            "query": lemmatized_term,
+                            "fields": ["search_name_lemmatized", "description"],
+                            "type": "phrase",
+                            "boost": 1.5
+                        }
+                    },
+                    # ファジー検索
+                    {
+                        "multi_match": {
+                            "query": lemmatized_term,
+                            "fields": ["search_name_lemmatized", "description"],
+                            "fuzziness": "AUTO",
+                            "boost": 0.5
+                        }
+                    }
+                ],
+                "minimum_should_match": 1
+            }
+        }
+        
+        return {
+            "query": bool_query,
+            "size": len(target_ids),
+            "_source": ["id", "search_name", "description", "original_name"]
+        }
     
     def get_stats(self) -> Dict[str, Any]:
         """検索統計取得"""
