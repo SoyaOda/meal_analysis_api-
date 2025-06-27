@@ -296,9 +296,13 @@ DEMO_TEMPLATE = """
             
             data.results.forEach(result => {
                 const nutrition = result.nutrition;
+                const displayName = result.name + (result.description ? ` (${result.description})` : '');
+                const originalName = result.original_name || '';
+                
                 html += `
                     <div class="result-item">
-                        <div class="result-name">${result.name}</div>
+                        <div class="result-name">${displayName}</div>
+                        ${originalName ? `<div style="color: #7f8c8d; font-size: 0.9em; margin-bottom: 10px;">Original: ${originalName}</div>` : ''}
                         <div class="result-meta">
                             <span class="match-type ${result.match_type}">${result.match_type}</span>
                             <span style="color: #7f8c8d;">Source: ${result.source_db}</span>

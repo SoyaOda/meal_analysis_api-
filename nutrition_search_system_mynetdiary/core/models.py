@@ -24,6 +24,7 @@ class SearchResult(BaseModel):
     id: str
     name: str
     description: Optional[str] = None
+    original_name: Optional[str] = None
     nutrition: NutritionInfo
     source_db: str
     score: float
