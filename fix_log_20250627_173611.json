@@ -1,0 +1,128 @@
+[
+  {
+    "type": "Chickpeas別名修正",
+    "original": "Chickpeas | or garbanzo beans, boiled, with salt",
+    "fixed": "Chickpeas or garbanzo beans | boiled, with salt",
+    "original_name": "Chickpeas or garbanzo beans boiled with salt"
+  },
+  {
+    "type": "Chickpeas別名修正",
+    "original": "Chickpeas | or garbanzo beans, boiled, without salt",
+    "fixed": "Chickpeas or garbanzo beans | boiled, without salt",
+    "original_name": "Chickpeas or garbanzo beans boiled without salt"
+  },
+  {
+    "type": "Chickpeas別名修正",
+    "original": "Chickpeas | or garbanzo beans, canned",
+    "fixed": "Chickpeas or garbanzo beans | canned",
+    "original_name": "Chickpeas or garbanzo beans canned"
+  },
+  {
+    "type": "Chickpeas別名修正",
+    "original": "Chickpeas | or garbanzo beans, raw",
+    "fixed": "Chickpeas or garbanzo beans | raw",
+    "original_name": "Chickpeas or garbanzo beans raw"
+  },
+  {
+    "type": "Margarita統一",
+    "original": "Margarita cocktail | frozen",
+    "fixed": "Margarita | frozen",
+    "original_name": "Margarita cocktail frozen"
+  },
+  {
+    "type": "茶類統一",
+    "original": "Tea black | regular, prepared, without milk or sugar",
+    "fixed": "Black tea | regular, prepared, without milk or sugar",
+    "original_name": "Tea black regular prepared without milk or sugar"
+  },
+  {
+    "type": "茶類統一",
+    "original": "Tea chamomile | prepared, without milk or sugar",
+    "fixed": "Chamomile tea | prepared, without milk or sugar",
+    "original_name": "Tea chamomile prepared without milk or sugar"
+  },
+  {
+    "type": "茶類統一",
+    "original": "Tea green | decaf, prepared, without milk or sugar",
+    "fixed": "Green tea | decaf, prepared, without milk or sugar",
+    "original_name": "Tea green decaf prepared without milk or sugar"
+  },
+  {
+    "type": "茶類統一",
+    "original": "Tea green | regular, prepared, without milk or sugar",
+    "fixed": "Green tea | regular, prepared, without milk or sugar",
+    "original_name": "Tea green regular prepared without milk or sugar"
+  },
+  {
+    "type": "Bread crumbs統一",
+    "original": "Bread | crumbs, dry, grated, plain",
+    "fixed": "Bread crumbs | dry, grated, plain",
+    "original_name": "Bread crumbs dry grated plain"
+  },
+  {
+    "type": "Challah別名修正",
+    "original": "Challah | or egg bread",
+    "fixed": "Challah or egg bread | None",
+    "original_name": "Challah or egg bread"
+  },
+  {
+    "type": "Chapati別名修正",
+    "original": "Chapati | or roti bread",
+    "fixed": "Chapati or roti bread | None",
+    "original_name": "Chapati or roti bread"
+  },
+  {
+    "type": "Chapati別名修正",
+    "original": "Chapati | or roti, whole wheat bread",
+    "fixed": "Chapati or roti bread | whole wheat",
+    "original_name": "Chapati or roti whole wheat bread"
+  },
+  {
+    "type": "Naan修正",
+    "original": "Naan | bread",
+    "fixed": "Naan bread | None",
+    "original_name": "Naan bread"
+  },
+  {
+    "type": "Naan修正",
+    "original": "Naan | whole wheat, bread",
+    "fixed": "Naan bread | whole wheat",
+    "original_name": "Naan whole wheat bread"
+  },
+  {
+    "type": "Rolls別名修正",
+    "original": "Rolls | hard, or Kaiser",
+    "fixed": "Hard rolls or Kaiser rolls | None",
+    "original_name": "Rolls hard or Kaiser"
+  },
+  {
+    "type": "Tortillas統一",
+    "original": "Tortilla | white flour, low carb",
+    "fixed": "Tortillas | white flour, low carb",
+    "original_name": "Tortilla white flour low carb"
+  },
+  {
+    "type": "Queso cotija修正",
+    "original": "Queso cotija | cheese",
+    "fixed": "Queso cotija cheese | None",
+    "original_name": "Queso cotija cheese"
+  },
+  {
+    "type": "Ketchup別名修正",
+    "original": "Ketchup | or catsup",
+    "fixed": "Ketchup or catsup | None",
+    "original_name": "Ketchup or catsup"
+  },
+  {
+    "type": "Mustard統一",
+    "original": "Mustard yellow | prepared",
+    "fixed": "Mustard | yellow, prepared",
+    "original_name": "Mustard yellow prepared"
+  },
+  {
+    "type": "Salad dressing統一",
+    "original": "Salad dressing ranch | fat-free",
+    "fixed": "Salad dressing | ranch, fat-free",
+    "original_name": "Salad dressing ranch fat-free"
+  }
+]
