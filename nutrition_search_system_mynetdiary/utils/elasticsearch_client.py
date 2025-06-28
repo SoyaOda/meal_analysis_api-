@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class ElasticsearchClient:
     """Elasticsearch接続管理クラス"""
     
-    def __init__(self, url: str = "http://localhost:9200", index_name: str = "mynetdiary_fixed_db"):
+    def __init__(self, url: str = "http://localhost:9200", index_name: str = "mynetdiary_list_support_db"):
         self.url = url
         self.index_name = index_name
         self.client = None
