@@ -1,0 +1,358 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.185 seconds
+Timestamp: 2025-06-12T13:29:35.933351
+
+Total Matches: 35
+
+Query: Roasted Brussels sprouts
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 39207
+    Search Name: Roasted Brussels Sprouts
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 292.318 (from eatthismuch)
+    Nutrition (100g): 90.0 kcal, P:3.2g, F:5.9g, C:8.5g
+
+  Result 2:
+    ID: 412930
+    Search Name: Garlic Roasted Brussels Sprouts
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 125.811 (from eatthismuch)
+    Nutrition (100g): 154.7 kcal, P:3.1g, F:13.2g, C:8.5g
+
+  Result 3:
+    ID: 3701058
+    Search Name: Roasted Brussels Sprouts and Tofu
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 113.555 (from eatthismuch)
+    Nutrition (100g): 65.7 kcal, P:4.5g, F:3.1g, C:6.6g
+
+  Result 4:
+    ID: 3262962
+    Search Name: Roasted Brussels Sprouts with Caraway Seeds
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 103.474 (from eatthismuch)
+    Nutrition (100g): 123.8 kcal, P:3.1g, F:9.8g, C:8.2g
+
+  Result 5:
+    ID: 1498434
+    Search Name: Roasted Brussels Sprouts with Lemon Juice
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 103.474 (from eatthismuch)
+    Nutrition (100g): 66.5 kcal, P:3.2g, F:3.1g, C:8.7g
+
+Query: Chicken breast
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 449
+    Search Name: Chicken breast
+    Description: Broilers or fryers, meat and skin, cooked, roasted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.540 (from eatthismuch)
+    Nutrition (100g): 197.0 kcal, P:29.8g, F:7.8g, C:0.0g
+
+  Result 2:
+    ID: 446
+    Search Name: Chicken breast
+    Description: Broilers or fryers, meat and skin, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.540 (from eatthismuch)
+    Nutrition (100g): 172.0 kcal, P:20.8g, F:9.2g, C:0.0g
+
+  Result 3:
+    ID: 452
+    Search Name: Chicken breast
+    Description: Broilers or fryers, meat only, cooked, fried
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.540 (from eatthismuch)
+    Nutrition (100g): 187.0 kcal, P:33.5g, F:4.8g, C:0.5g
+
+  Result 4:
+    ID: 454
+    Search Name: Chicken breast
+    Description: Broilers or fryers, meat only, cooked, stewed
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.540 (from eatthismuch)
+    Nutrition (100g): 151.0 kcal, P:29.0g, F:3.0g, C:0.0g
+
+  Result 5:
+    ID: 453
+    Search Name: Chicken breast
+    Description: Broilers or fryers, meat only, cooked, roasted
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 194.540 (from eatthismuch)
+    Nutrition (100g): 165.0 kcal, P:31.0g, F:3.6g, C:0.0g
+
+Query: Mashed potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2302
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 83.0 kcal, P:1.9g, F:0.6g, C:17.6g
+
+  Result 2:
+    ID: 2109
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and margarine added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:2.0g, F:4.2g, C:17.0g
+
+  Result 3:
+    ID: 2546
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and butter added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:1.9g, F:4.2g, C:16.8g
+
+  Result 4:
+    ID: 1000001609
+    Search Name: Mashed Potatoes
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 222.438 (from yazio)
+    Nutrition (100g): 89.0 kcal, P:1.6g, F:2.8g, C:14.7g
+
+  Result 5:
+    ID: 45642
+    Search Name: Perfect Mashed Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 88.813 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:2.2g, F:2.9g, C:15.4g
+
+Query: Chicken
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 139172
+    Search Name: Chicken
+    Description: Meijer
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 207.698 (from eatthismuch)
+    Nutrition (100g): 160.7 kcal, P:17.9g, F:8.9g, C:3.6g
+
+  Result 2:
+    ID: 1000000858
+    Search Name: Chicken, fried
+    Description: Meat & Meat Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 29.190 (from yazio)
+    Nutrition (100g): 307.0 kcal, P:15.9g, F:20.4g, C:14.9g
+
+  Result 3:
+    ID: 2343460
+    Search Name: Sausage, Smoked Chicken, Chicken & Apple
+    Description: Smoked Chicken, Chicken & Apple, Aidells
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 23.703 (from eatthismuch)
+    Nutrition (100g): 200.0 kcal, P:15.3g, F:12.9g, C:4.7g
+
+  Result 4:
+    ID: 1000000110
+    Search Name: Chicken Soup
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 23.352 (from yazio)
+    Nutrition (100g): 71.0 kcal, P:5.1g, F:2.6g, C:6.9g
+
+  Result 5:
+    ID: 1000000145
+    Search Name: Chicken Sandwich
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 23.352 (from yazio)
+    Nutrition (100g): 250.0 kcal, P:16.3g, F:11.2g, C:20.9g
+
+Query: Cream sauce
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3088200
+    Search Name: Chicken Breasts in Caper Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 53.245 (from eatthismuch)
+    Nutrition (100g): 195.2 kcal, P:16.5g, F:13.6g, C:1.3g
+
+  Result 2:
+    ID: 3224045
+    Search Name: Chicken Breasts with Mushroom Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 53.245 (from eatthismuch)
+    Nutrition (100g): 166.3 kcal, P:9.5g, F:13.5g, C:1.9g
+
+  Result 3:
+    ID: 953990
+    Search Name: Chicken with Sun-Dried Tomato Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 48.904 (from eatthismuch)
+    Nutrition (100g): 211.9 kcal, P:11.8g, F:17.5g, C:1.8g
+
+  Result 4:
+    ID: 1016926
+    Search Name: Zucchini Pasta in a Lemon Cream Sauce
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 48.904 (from eatthismuch)
+    Nutrition (100g): 57.6 kcal, P:1.6g, F:4.6g, C:3.5g
+
+  Result 5:
+    ID: 4181367
+    Search Name: Sauce
+    Description: Chick-fil-A
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 31.056 (from eatthismuch)
+    Nutrition (100g): 516.1 kcal, P:0.0g, F:45.2g, C:22.6g
+
+Query: Potato
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2091
+    Search Name: Potato
+    Description: Flesh and skin, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 236.130 (from eatthismuch)
+    Nutrition (100g): 77.0 kcal, P:2.0g, F:0.1g, C:17.5g
+
+  Result 2:
+    ID: 1000001610
+    Search Name: Potato, raw
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 77.0 kcal, P:2.0g, F:0.1g, C:17.5g
+
+  Result 3:
+    ID: 1000001635
+    Search Name: Potato, scalloped
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 88.0 kcal, P:2.9g, F:3.7g, C:10.8g
+
+  Result 4:
+    ID: 1000001653
+    Search Name: Potato, cooked
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 87.0 kcal, P:1.9g, F:0.1g, C:20.1g
+
+  Result 5:
+    ID: 1000000268
+    Search Name: Potato Salad
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 33.160 (from yazio)
+    Nutrition (100g): 143.0 kcal, P:2.7g, F:8.2g, C:11.2g
+
+Query: Brussels sprouts
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2365
+    Search Name: Brussels sprouts
+    Description: Cooked, boiled, drained, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 272.226 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:2.6g, F:0.5g, C:7.1g
+
+  Result 2:
+    ID: 1894
+    Search Name: Brussels sprouts
+    Description: Cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 272.226 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:2.6g, F:0.5g, C:7.1g
+
+  Result 3:
+    ID: 1893
+    Search Name: Brussels sprouts
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 272.226 (from eatthismuch)
+    Nutrition (100g): 43.0 kcal, P:3.4g, F:0.3g, C:9.0g
+
+  Result 4:
+    ID: 1675784
+    Search Name: Brussels Sprouts
+    Description: Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 250.284 (from eatthismuch)
+    Nutrition (100g): 41.2 kcal, P:3.5g, F:0.0g, C:8.2g
+
+  Result 5:
+    ID: 10000001007
+    Search Name: Brussels sprouts raw
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 105.131 (from mynetdiary)
+    Nutrition (100g): 43.2 kcal, P:3.4g, F:0.3g, C:9.1g
+
+Search Statistics:
+  Total Searches: 7
+  Successful Matches: 7
+  Failed Searches: 0
+  Match Rate: 100.0%

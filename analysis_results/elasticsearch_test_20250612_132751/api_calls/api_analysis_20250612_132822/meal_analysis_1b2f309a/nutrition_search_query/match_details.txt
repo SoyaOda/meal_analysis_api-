@@ -1,0 +1,652 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.143 seconds
+Timestamp: 2025-06-12T13:28:40.850307
+
+Total Matches: 65
+
+Query: Mashed potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2302
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 83.0 kcal, P:1.9g, F:0.6g, C:17.6g
+
+  Result 2:
+    ID: 2109
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and margarine added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:2.0g, F:4.2g, C:17.0g
+
+  Result 3:
+    ID: 2546
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and butter added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 244.381 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:1.9g, F:4.2g, C:16.8g
+
+  Result 4:
+    ID: 1000001609
+    Search Name: Mashed Potatoes
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 222.438 (from yazio)
+    Nutrition (100g): 89.0 kcal, P:1.6g, F:2.8g, C:14.7g
+
+  Result 5:
+    ID: 45642
+    Search Name: Perfect Mashed Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 88.813 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:2.2g, F:2.9g, C:15.4g
+
+Query: White rice
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 4917
+    Search Name: White rice
+    Description: Long-grain, regular, raw, unenriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 197.995 (from eatthismuch)
+    Nutrition (100g): 365.0 kcal, P:7.1g, F:0.6g, C:79.9g
+
+  Result 2:
+    ID: 4808
+    Search Name: White rice
+    Description: Long-grain, parboiled, enriched, dry
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 197.995 (from eatthismuch)
+    Nutrition (100g): 374.0 kcal, P:7.5g, F:1.0g, C:80.9g
+
+  Result 3:
+    ID: 4806
+    Search Name: White rice
+    Description: Long-grain, regular, raw, enriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 197.995 (from eatthismuch)
+    Nutrition (100g): 365.0 kcal, P:7.1g, F:0.6g, C:79.9g
+
+  Result 4:
+    ID: 4807
+    Search Name: White rice
+    Description: Long-grain, regular, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 197.995 (from eatthismuch)
+    Nutrition (100g): 130.0 kcal, P:2.7g, F:0.3g, C:28.2g
+
+  Result 5:
+    ID: 4813
+    Search Name: White rice
+    Description: Medium-grain, cooked
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 197.995 (from eatthismuch)
+    Nutrition (100g): 130.0 kcal, P:2.4g, F:0.2g, C:28.6g
+
+Query: Meatloaf
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000211
+    Search Name: Meatless Meatloaf
+    Description: Soy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 62.308 (from yazio)
+    Nutrition (100g): 197.0 kcal, P:21.0g, F:9.0g, C:8.0g
+
+  Result 2:
+    ID: 964901
+    Search Name: Skinny Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 177.7 kcal, P:10.8g, F:10.7g, C:9.3g
+
+  Result 3:
+    ID: 1003977
+    Search Name: Turkey Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 158.7 kcal, P:12.2g, F:8.0g, C:10.1g
+
+  Result 4:
+    ID: 35020
+    Search Name: Keto Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 177.4 kcal, P:11.8g, F:13.2g, C:2.5g
+
+  Result 5:
+    ID: 2321932
+    Search Name: Meatloaf, with Mashed Potatoes
+    Description: Lean Cuisine
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 61.072 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:7.9g, F:2.6g, C:9.4g
+
+Query: Ground beef
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 5421
+    Search Name: Ground beef
+    Description: 80% lean meat / 20% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.068 (from eatthismuch)
+    Nutrition (100g): 254.0 kcal, P:17.3g, F:20.1g, C:0.0g
+
+  Result 2:
+    ID: 5426
+    Search Name: Ground beef
+    Description: 75% lean meat / 25% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.068 (from eatthismuch)
+    Nutrition (100g): 293.0 kcal, P:15.9g, F:25.0g, C:0.0g
+
+  Result 3:
+    ID: 5416
+    Search Name: Ground beef
+    Description: 85% lean meat / 15% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.068 (from eatthismuch)
+    Nutrition (100g): 215.0 kcal, P:18.7g, F:15.2g, C:0.0g
+
+  Result 4:
+    ID: 2892
+    Search Name: Ground beef
+    Description: 70% lean meat / 30% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.068 (from eatthismuch)
+    Nutrition (100g): 332.0 kcal, P:14.5g, F:30.0g, C:0.0g
+
+  Result 5:
+    ID: 5411
+    Search Name: Ground beef
+    Description: 90% lean meat / 10% fat, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 211.068 (from eatthismuch)
+    Nutrition (100g): 176.0 kcal, P:20.1g, F:9.9g, C:0.0g
+
+Query: Macaroni pasta
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 4927
+    Search Name: Macaroni
+    Description: Dry, unenriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+  Result 2:
+    ID: 4862
+    Search Name: Macaroni
+    Description: Whole-wheat, dry
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 348.0 kcal, P:14.7g, F:1.4g, C:75.0g
+
+  Result 3:
+    ID: 4856
+    Search Name: Macaroni
+    Description: Dry, enriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+  Result 4:
+    ID: 4857
+    Search Name: Macaroni
+    Description: Cooked, enriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 158.0 kcal, P:5.8g, F:0.9g, C:30.9g
+
+  Result 5:
+    ID: 1000000090
+    Search Name: Macaroni & Cheese
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 42.896 (from yazio)
+    Nutrition (100g): 164.0 kcal, P:6.7g, F:5.0g, C:23.1g
+
+Query: Corn
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1956
+    Search Name: Corn
+    Description: Yellow, whole kernel, frozen, microwaved
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 220.078 (from eatthismuch)
+    Nutrition (100g): 131.0 kcal, P:3.6g, F:1.4g, C:25.9g
+
+  Result 2:
+    ID: 1950
+    Search Name: Corn
+    Description: Sweet, yellow, canned, cream style, regular pack
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 220.078 (from eatthismuch)
+    Nutrition (100g): 72.0 kcal, P:1.8g, F:0.4g, C:18.1g
+
+  Result 3:
+    ID: 4782
+    Search Name: Corn
+    Description: Yellow
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 220.078 (from eatthismuch)
+    Nutrition (100g): 365.0 kcal, P:9.4g, F:4.8g, C:74.3g
+
+  Result 4:
+    ID: 1947
+    Search Name: Corn
+    Description: Sweet, yellow, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 220.078 (from eatthismuch)
+    Nutrition (100g): 96.0 kcal, P:3.4g, F:1.5g, C:21.0g
+
+  Result 5:
+    ID: 1949
+    Search Name: Corn
+    Description: Sweet, yellow, canned, whole kernel, drained solids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 220.078 (from eatthismuch)
+    Nutrition (100g): 71.0 kcal, P:2.3g, F:1.3g, C:15.1g
+
+Query: Mixed vegetables
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2256
+    Search Name: Mixed vegetables
+    Description: Frozen, unprepared
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 249.707 (from eatthismuch)
+    Nutrition (100g): 72.0 kcal, P:3.3g, F:0.5g, C:13.5g
+
+  Result 2:
+    ID: 2257
+    Search Name: Mixed vegetables
+    Description: Frozen, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 249.707 (from eatthismuch)
+    Nutrition (100g): 65.0 kcal, P:2.9g, F:0.1g, C:13.1g
+
+  Result 3:
+    ID: 2508
+    Search Name: Mixed vegetables
+    Description: Frozen, cooked, boiled, drained, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 249.707 (from eatthismuch)
+    Nutrition (100g): 60.0 kcal, P:2.9g, F:0.2g, C:13.1g
+
+  Result 4:
+    ID: 2255
+    Search Name: Mixed vegetables
+    Description: Canned, drained solids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 249.707 (from eatthismuch)
+    Nutrition (100g): 49.0 kcal, P:2.6g, F:0.2g, C:9.3g
+
+  Result 5:
+    ID: 2254
+    Search Name: Mixed vegetables
+    Description: Canned, solids and liquids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 249.707 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:1.4g, F:0.2g, C:7.1g
+
+Query: Spanish rice
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3111161
+    Search Name: Ready Rice, Spanish Style
+    Description: Ben's Original
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 57.678 (from eatthismuch)
+    Nutrition (100g): 84.0 kcal, P:1.6g, F:1.2g, C:16.0g
+
+  Result 2:
+    ID: 3186764
+    Search Name: Broiled Spanish Mackerel
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.673 (from eatthismuch)
+    Nutrition (100g): 193.5 kcal, P:13.3g, F:15.1g, C:2.4g
+
+  Result 3:
+    ID: 1827159
+    Search Name: Rice, with Quinoa, Peppers & Corn, Organic, Spanish Style
+    Description: Seeds of Change
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.286 (from eatthismuch)
+    Nutrition (100g): 120.8 kcal, P:2.5g, F:1.9g, C:23.3g
+
+  Result 4:
+    ID: 3249207
+    Search Name: One Pot Spanish Chicken
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 37.175 (from eatthismuch)
+    Nutrition (100g): 73.4 kcal, P:8.6g, F:1.7g, C:5.9g
+
+  Result 5:
+    ID: 4371064
+    Search Name: Spanish-style Toast with Tomato
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.553 (from eatthismuch)
+    Nutrition (100g): 185.1 kcal, P:6.1g, F:5.0g, C:29.5g
+
+Query: Macaroni and cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 987077
+    Search Name: Macaroni and Cheese
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 239.060 (from eatthismuch)
+    Nutrition (100g): 281.0 kcal, P:14.6g, F:18.2g, C:14.8g
+
+  Result 2:
+    ID: 1000000090
+    Search Name: Macaroni & Cheese
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 61.744 (from yazio)
+    Nutrition (100g): 164.0 kcal, P:6.7g, F:5.0g, C:23.1g
+
+  Result 3:
+    ID: 4927
+    Search Name: Macaroni
+    Description: Dry, unenriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+  Result 4:
+    ID: 4862
+    Search Name: Macaroni
+    Description: Whole-wheat, dry
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 348.0 kcal, P:14.7g, F:1.4g, C:75.0g
+
+  Result 5:
+    ID: 4856
+    Search Name: Macaroni
+    Description: Dry, enriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+Query: Carrots
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1917
+    Search Name: Carrots
+    Description: Canned, regular pack, drained solids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.000 (from eatthismuch)
+    Nutrition (100g): 25.0 kcal, P:0.6g, F:0.2g, C:5.5g
+
+  Result 2:
+    ID: 1918
+    Search Name: Carrots
+    Description: Frozen, unprepared
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.000 (from eatthismuch)
+    Nutrition (100g): 36.0 kcal, P:0.8g, F:0.5g, C:7.9g
+
+  Result 3:
+    ID: 2377
+    Search Name: Carrots
+    Description: Cooked, boiled, drained, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.000 (from eatthismuch)
+    Nutrition (100g): 35.0 kcal, P:0.8g, F:0.2g, C:8.2g
+
+  Result 4:
+    ID: 1914
+    Search Name: Carrots
+    Description: Raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.000 (from eatthismuch)
+    Nutrition (100g): 41.0 kcal, P:1.0g, F:0.3g, C:9.6g
+
+  Result 5:
+    ID: 1915
+    Search Name: Carrots
+    Description: Cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 254.000 (from eatthismuch)
+    Nutrition (100g): 35.0 kcal, P:0.8g, F:0.2g, C:8.2g
+
+Query: Potato
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2091
+    Search Name: Potato
+    Description: Flesh and skin, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 236.130 (from eatthismuch)
+    Nutrition (100g): 77.0 kcal, P:2.0g, F:0.1g, C:17.5g
+
+  Result 2:
+    ID: 1000001610
+    Search Name: Potato, raw
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 77.0 kcal, P:2.0g, F:0.1g, C:17.5g
+
+  Result 3:
+    ID: 1000001635
+    Search Name: Potato, scalloped
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 88.0 kcal, P:2.9g, F:3.7g, C:10.8g
+
+  Result 4:
+    ID: 1000001653
+    Search Name: Potato, cooked
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 41.450 (from yazio)
+    Nutrition (100g): 87.0 kcal, P:1.9g, F:0.1g, C:20.1g
+
+  Result 5:
+    ID: 1000000268
+    Search Name: Potato Salad
+    Description: Vegetables
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 33.160 (from yazio)
+    Nutrition (100g): 143.0 kcal, P:2.7g, F:8.2g, C:11.2g
+
+Query: Green beans
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1871
+    Search Name: Green beans
+    Description: Snap, Green, canned, regular pack, drained solids
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 214.858 (from eatthismuch)
+    Nutrition (100g): 22.0 kcal, P:1.1g, F:0.5g, C:4.3g
+
+  Result 2:
+    ID: 1869
+    Search Name: Green beans
+    Description: Snap, Green, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 214.858 (from eatthismuch)
+    Nutrition (100g): 35.0 kcal, P:1.9g, F:0.3g, C:7.9g
+
+  Result 3:
+    ID: 1868
+    Search Name: Green beans
+    Description: Snap beans, raw
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 214.858 (from eatthismuch)
+    Nutrition (100g): 31.0 kcal, P:1.8g, F:0.4g, C:7.1g
+
+  Result 4:
+    ID: 1874
+    Search Name: Green beans
+    Description: Snap, Green, frozen, cooked, boiled, drained without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 214.858 (from eatthismuch)
+    Nutrition (100g): 28.0 kcal, P:1.5g, F:0.1g, C:6.4g
+
+  Result 5:
+    ID: 1873
+    Search Name: Green beans
+    Description: Frozen, all styles, unprepared snap beans
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 214.858 (from eatthismuch)
+    Nutrition (100g): 39.0 kcal, P:1.8g, F:0.2g, C:7.5g
+
+Query: Cheddar cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 10000000158
+    Search Name: Cheddar cheese
+    Description: None
+    Data Type: unified
+    Source: elasticsearch_mynetdiary
+    Score: 212.506 (from mynetdiary)
+    Nutrition (100g): 403.0 kcal, P:22.7g, F:33.3g, C:3.0g
+
+  Result 2:
+    ID: 9
+    Search Name: Cheddar cheese
+    Description: None
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 212.506 (from eatthismuch)
+    Nutrition (100g): 406.0 kcal, P:24.0g, F:33.9g, C:1.4g
+
+  Result 3:
+    ID: 1000000962
+    Search Name: Cheddar Cheese
+    Description: Cheese
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 189.655 (from yazio)
+    Nutrition (100g): 403.0 kcal, P:22.9g, F:33.3g, C:3.4g
+
+  Result 4:
+    ID: 2007804
+    Search Name: Sharp Cheddar Cheese
+    Description: Finely Shredded, Sharp, Cheddar, Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 68.277 (from eatthismuch)
+    Nutrition (100g): 392.9 kcal, P:25.0g, F:32.1g, C:7.1g
+
+  Result 5:
+    ID: 2000432
+    Search Name: Medium Cheddar Cheese
+    Description: Tillamook
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 68.277 (from eatthismuch)
+    Nutrition (100g): 428.6 kcal, P:23.8g, F:33.3g, C:4.8g
+
+Search Statistics:
+  Total Searches: 13
+  Successful Matches: 13
+  Failed Searches: 0
+  Match Rate: 100.0%

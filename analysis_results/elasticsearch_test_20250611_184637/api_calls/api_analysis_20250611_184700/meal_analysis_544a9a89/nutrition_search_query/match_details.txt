@@ -1,0 +1,309 @@
+Nutrition Database Search Match Details
+==================================================
+Search Method: elasticsearch
+Database Source: elasticsearch_nutrition_db
+Component: ElasticsearchNutritionSearchComponent
+Execution Time: 0.091 seconds
+Timestamp: 2025-06-11T18:47:21.487303
+
+Total Matches: 30
+
+Query: Mashed Potatoes
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000001609
+    Search Name: Mashed Potatoes
+    Description: Potato Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 246.668 (from yazio)
+    Nutrition (100g): 89.0 kcal, P:1.6g, F:2.8g, C:14.7g
+
+  Result 2:
+    ID: 2302
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 83.0 kcal, P:1.9g, F:0.6g, C:17.6g
+
+  Result 3:
+    ID: 2109
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and margarine added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:2.0g, F:4.2g, C:17.0g
+
+  Result 4:
+    ID: 2546
+    Search Name: Mashed potatoes
+    Description: Home-prepared, whole milk and butter added
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 222.438 (from eatthismuch)
+    Nutrition (100g): 113.0 kcal, P:1.9g, F:4.2g, C:16.8g
+
+  Result 5:
+    ID: 45642
+    Search Name: Perfect Mashed Potatoes
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 88.813 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:2.2g, F:2.9g, C:15.4g
+
+Query: Meatloaf Dinner
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000211
+    Search Name: Meatless Meatloaf
+    Description: Soy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 47.593 (from yazio)
+    Nutrition (100g): 197.0 kcal, P:21.0g, F:9.0g, C:8.0g
+
+  Result 2:
+    ID: 964901
+    Search Name: Skinny Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.593 (from eatthismuch)
+    Nutrition (100g): 177.7 kcal, P:10.8g, F:10.7g, C:9.3g
+
+  Result 3:
+    ID: 1003977
+    Search Name: Turkey Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.593 (from eatthismuch)
+    Nutrition (100g): 158.7 kcal, P:12.2g, F:8.0g, C:10.1g
+
+  Result 4:
+    ID: 35020
+    Search Name: Keto Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 47.593 (from eatthismuch)
+    Nutrition (100g): 177.4 kcal, P:11.8g, F:13.2g, C:2.5g
+
+  Result 5:
+    ID: 1000001229
+    Search Name: Dinner Roll
+    Description: Pastries & Baked Goods
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 46.795 (from yazio)
+    Nutrition (100g): 273.0 kcal, P:8.6g, F:6.3g, C:46.0g
+
+Query: Spanish Rice
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 3111161
+    Search Name: Ready Rice, Spanish Style
+    Description: Ben's Original
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 57.678 (from eatthismuch)
+    Nutrition (100g): 84.0 kcal, P:1.6g, F:1.2g, C:16.0g
+
+  Result 2:
+    ID: 3186764
+    Search Name: Broiled Spanish Mackerel
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 41.673 (from eatthismuch)
+    Nutrition (100g): 193.5 kcal, P:13.3g, F:15.1g, C:2.4g
+
+  Result 3:
+    ID: 1827159
+    Search Name: Rice, with Quinoa, Peppers & Corn, Organic, Spanish Style
+    Description: Seeds of Change
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 40.286 (from eatthismuch)
+    Nutrition (100g): 120.8 kcal, P:2.5g, F:1.9g, C:23.3g
+
+  Result 4:
+    ID: 3249207
+    Search Name: One Pot Spanish Chicken
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 37.175 (from eatthismuch)
+    Nutrition (100g): 73.4 kcal, P:8.6g, F:1.7g, C:5.9g
+
+  Result 5:
+    ID: 4371064
+    Search Name: Spanish-style Toast with Tomato
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 33.553 (from eatthismuch)
+    Nutrition (100g): 185.1 kcal, P:6.1g, F:5.0g, C:29.5g
+
+Query: Meatloaf
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 1000000211
+    Search Name: Meatless Meatloaf
+    Description: Soy Products
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 62.308 (from yazio)
+    Nutrition (100g): 197.0 kcal, P:21.0g, F:9.0g, C:8.0g
+
+  Result 2:
+    ID: 964901
+    Search Name: Skinny Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 177.7 kcal, P:10.8g, F:10.7g, C:9.3g
+
+  Result 3:
+    ID: 1003977
+    Search Name: Turkey Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 158.7 kcal, P:12.2g, F:8.0g, C:10.1g
+
+  Result 4:
+    ID: 35020
+    Search Name: Keto Meatloaf
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 62.308 (from eatthismuch)
+    Nutrition (100g): 177.4 kcal, P:11.8g, F:13.2g, C:2.5g
+
+  Result 5:
+    ID: 2321932
+    Search Name: Meatloaf, with Mashed Potatoes
+    Description: Lean Cuisine
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 61.072 (from eatthismuch)
+    Nutrition (100g): 94.3 kcal, P:7.9g, F:2.6g, C:9.4g
+
+Query: Macaroni and Cheese
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 987077
+    Search Name: Macaroni and Cheese
+    Description: None
+    Data Type: dish
+    Source: elasticsearch_eatthismuch
+    Score: 263.290 (from eatthismuch)
+    Nutrition (100g): 281.0 kcal, P:14.6g, F:18.2g, C:14.8g
+
+  Result 2:
+    ID: 1000000090
+    Search Name: Macaroni & Cheese
+    Description: Dishes & Meals
+    Data Type: unified
+    Source: elasticsearch_yazio
+    Score: 61.744 (from yazio)
+    Nutrition (100g): 164.0 kcal, P:6.7g, F:5.0g, C:23.1g
+
+  Result 3:
+    ID: 4927
+    Search Name: Macaroni
+    Description: Dry, unenriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+  Result 4:
+    ID: 4862
+    Search Name: Macaroni
+    Description: Whole-wheat, dry
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 348.0 kcal, P:14.7g, F:1.4g, C:75.0g
+
+  Result 5:
+    ID: 4856
+    Search Name: Macaroni
+    Description: Dry, enriched
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 49.743 (from eatthismuch)
+    Nutrition (100g): 371.0 kcal, P:13.1g, F:1.4g, C:74.8g
+
+Query: Mixed Vegetables
+------------------------------
+  Found 5 results from multiple databases:
+
+  Result 1:
+    ID: 2390350
+    Search Name: Mixed Vegetables
+    Description: Birds Eye
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 251.836 (from eatthismuch)
+    Nutrition (100g): 68.2 kcal, P:2.3g, F:1.1g, C:12.5g
+
+  Result 2:
+    ID: 1675510
+    Search Name: Mixed Vegetables
+    Description: Great Value
+    Data Type: branded
+    Source: elasticsearch_eatthismuch
+    Score: 251.836 (from eatthismuch)
+    Nutrition (100g): 55.6 kcal, P:2.2g, F:0.0g, C:12.2g
+
+  Result 3:
+    ID: 2256
+    Search Name: Mixed vegetables
+    Description: Frozen, unprepared
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 228.984 (from eatthismuch)
+    Nutrition (100g): 72.0 kcal, P:3.3g, F:0.5g, C:13.5g
+
+  Result 4:
+    ID: 2257
+    Search Name: Mixed vegetables
+    Description: Frozen, cooked, boiled, drained, without salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 228.984 (from eatthismuch)
+    Nutrition (100g): 65.0 kcal, P:2.9g, F:0.1g, C:13.1g
+
+  Result 5:
+    ID: 2508
+    Search Name: Mixed vegetables
+    Description: Frozen, cooked, boiled, drained, with salt
+    Data Type: ingredient
+    Source: elasticsearch_eatthismuch
+    Score: 228.984 (from eatthismuch)
+    Nutrition (100g): 60.0 kcal, P:2.9g, F:0.2g, C:13.1g
+
+Search Statistics:
+  Total Searches: 6
+  Successful Matches: 6
+  Failed Searches: 0
+  Match Rate: 100.0%
