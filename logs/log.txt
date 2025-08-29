@@ -1,0 +1,32 @@
+
+Default STARTUP TCP probe failed 1 time consecutively for container "meal-analysis-api-1" on port 8000. The instance was not started.
+Connection failed with status CANCELLED.
+Container called exit(1).
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/local/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/app/app_v2/main/app.py", line 6, in <module>
+    from ..api.v1.endpoints import meal_analysis
+  File "/app/app_v2/api/v1/endpoints/__init__.py", line 1, in <module>
+    from . import meal_analysis
+  File "/app/app_v2/api/v1/endpoints/meal_analysis.py", line 6, in <module>
+    from ....pipeline import MealAnalysisPipeline
+  File "/app/app_v2/pipeline/__init__.py", line 1, in <module>
+    from .orchestrator import MealAnalysisPipeline
+  File "/app/app_v2/pipeline/orchestrator.py", line 8, in <module>
+    from ..components import Phase1Component, USDAQueryComponent, LocalNutritionSearchComponent, ElasticsearchNutritionSearchComponent
+  File "/app/app_v2/components/__init__.py", line 5, in <module>
+    from .elasticsearch_nutrition_search_component import ElasticsearchNutritionSearchComponent
+  File "/app/app_v2/components/elasticsearch_nutrition_search_component.py", line 21, in <module>
+    from ..utils.lemmatization import lemmatize_term, create_lemmatized_query_variations
+  File "/app/app_v2/utils/__init__.py", line 10, in <module>
+    from .lemmatization import *
+  File "/app/app_v2/utils/lemmatization.py", line 10, in <module>
+    from nltk.stem import WordNetLemmatizer
+ModuleNotFoundError: No module named 'nltk'
+  warnings.warn(message, UserWarning)
+* 'fields' has been removed
+/usr/local/lib/python3.9/site-packages/pydantic/_internal/_config.py:318: UserWarning: Valid config keys have changed in V2:
+Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.
