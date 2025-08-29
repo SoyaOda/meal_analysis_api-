@@ -1,4 +1,5 @@
 from typing import Optional, List
+from pydantic import Field
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -43,7 +44,7 @@ class Settings(BaseSettings):
     
     # サーバー設定
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = Field(default=8000, env="PORT")  # Cloud RunのPORT環境変数に対応: int = 8000
     
     # APIバージョン
     API_VERSION: str = "v1"

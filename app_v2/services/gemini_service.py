@@ -1,5 +1,6 @@
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part, GenerationConfig, HarmCategory, HarmBlockThreshold
+from vertexai.generative_models import GenerativeModel, Part, GenerationConfig
+from vertexai.generative_models import HarmCategory, HarmBlockThreshold
 from typing import Dict, Optional
 import json
 import logging
