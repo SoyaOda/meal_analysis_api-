@@ -6,12 +6,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..api.v1.endpoints import meal_analysis
 from ..config import get_settings
 
-# 環境変数の設定（既存のappと同じ）
+# 環境変数の設定（Cloud Run対応）
 os.environ.setdefault("USDA_API_KEY", "vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg")
-os.environ.setdefault("GOOGLE_APPLICATION_CREDENTIALS", "/Users/odasoya/meal_analysis_api /service-account-key.json")
-os.environ.setdefault("GEMINI_PROJECT_ID", "recording-diet-ai-3e7cf")
-os.environ.setdefault("GEMINI_LOCATION", "us-central1")
-os.environ.setdefault("GEMINI_MODEL_NAME", "gemini-2.5-flash-preview-05-20")
+
+# Cloud Run環境ではApplication Default Credentialsを使用
+# GOOGLE_APPLICATION_CREDENTIALSは設定しない（Cloud Runのマネージドアイデンティティを利用）
+
+os.environ.setdefault("GEMINI_PROJECT_ID", os.getenv("GEMINI_PROJECT_ID", "new-snap-calorie"))
+os.environ.setdefault("GEMINI_LOCATION", os.getenv("GEMINI_LOCATION", "us-central1"))
+os.environ.setdefault("GEMINI_MODEL_NAME", os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash-exp-0827"))
+
+# Elasticsearch設定（Cloud Run対応）
+if os.getenv("ELASTIC_HOST"):
+    os.environ["ELASTIC_HOST"] = os.getenv("ELASTIC_HOST")
+if os.getenv("ELASTIC_INDEX"):
+    os.environ["ELASTIC_INDEX"] = os.getenv("ELASTIC_INDEX")
 
 # ロギング設定
 logging.basicConfig(
