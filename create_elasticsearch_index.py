@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Elasticsearch Index Creation Script with Lemmatization Support
+MyNetDiary Elasticsearch Index Creation Script for VM Deployment
 
-現状のJSONデータベースからElasticsearchインデックスを作成する（見出し語化対応版）
+変換済みMyNetDiaryデータベースからElasticsearch VMインデックスを作成する
+（見出し語化機能対応）
 """
 
 import json
@@ -207,30 +208,27 @@ def create_index_mapping() -> Dict[str, Any]:
     }
 
 
-def load_json_databases() -> Dict[str, List[Dict[str, Any]]]:
-    """JSONデータベースファイルを読み込み"""
+def load_mynetdiary_database() -> Dict[str, List[Dict[str, Any]]]:
+    """変換済みMyNetDiaryデータベースファイルを読み込み"""
     databases = {}
     
-    db_configs = {
-        "yazio": "db/yazio_db.json",
-        "mynetdiary": "db/mynetdiary_db.json", 
-        "eatthismuch": "db/eatthismuch_db.json"
-    }
+    # 変換済みMyNetDiaryファイルのみを対象とする
+    mynetdiary_file = "db/mynetdiary_final_complete.json"
     
-    for db_name, file_path in db_configs.items():
-        try:
-            if os.path.exists(file_path):
-                print(f"Loading {db_name} from {file_path}...")
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    database = json.load(f)
-                    databases[db_name] = database
-                    print(f"✅ Loaded {db_name}: {len(database)} items")
-            else:
-                print(f"⚠️  File not found: {file_path}")
-                databases[db_name] = []
-        except Exception as e:
-            print(f"❌ Error loading {db_name}: {e}")
-            databases[db_name] = []
+    try:
+        if os.path.exists(mynetdiary_file):
+            print(f"Loading MyNetDiary from {mynetdiary_file}...")
+            with open(mynetdiary_file, 'r', encoding='utf-8') as f:
+                database = json.load(f)
+                databases["mynetdiary"] = database
+                print(f"✅ Loaded MyNetDiary: {len(database)} items")
+        else:
+            print(f"❌ MyNetDiary file not found: {mynetdiary_file}")
+            print("   Please ensure the converted MyNetDiary file exists.")
+            databases["mynetdiary"] = []
+    except Exception as e:
+        print(f"❌ Error loading MyNetDiary: {e}")
+        databases["mynetdiary"] = []
     
     return databases
 
@@ -309,16 +307,22 @@ def main():
     
     # Elasticsearchクライアントの初期化
     print("\n1. Connecting to Elasticsearch...")
-    es_client = Elasticsearch(["http://localhost:9200"])
+    
+    # 環境変数からElasticsearch URLを取得（デフォルトはローカル）
+    elasticsearch_url = os.environ.get("ELASTIC_HOST", "http://localhost:9200")
+    print(f"   Using Elasticsearch URL: {elasticsearch_url}")
+    
+    es_client = Elasticsearch([elasticsearch_url])
     
     if not es_client.ping():
-        print("❌ Cannot connect to Elasticsearch. Make sure it's running on localhost:9200")
+        print(f"❌ Cannot connect to Elasticsearch at {elasticsearch_url}")
+        print("   Make sure Elasticsearch is running and accessible.")
         return False
     
     print("✅ Connected to Elasticsearch")
     
-    # インデックス名
-    index_name = "nutrition_db"
+    # インデックス名（MyNetDiary専用）
+    index_name = "mynetdiary_nutrition_db"
     
     # 既存インデックスの削除（必要に応じて）
     print(f"\n2. Checking existing index '{index_name}'...")
@@ -333,9 +337,9 @@ def main():
     es_client.indices.create(index=index_name, body=mapping)
     print("✅ Index created with mapping")
     
-    # JSONデータベースの読み込み
-    print("\n4. Loading JSON databases...")
-    databases = load_json_databases()
+    # MyNetDiaryデータベースの読み込み
+    print("\n4. Loading MyNetDiary database...")
+    databases = load_mynetdiary_database()
     
     # ドキュメントの準備
     print("\n5. Preparing documents for indexing...")
@@ -410,8 +414,8 @@ def main():
         lemmatized = source.get('search_name_lemmatized', 'N/A')
         print(f"   - {source['search_name']} -> {lemmatized} ({source['source_db']}) score: {hit['_score']:.2f}")
     
-    print(f"\n🎉 Elasticsearch index '{index_name}' successfully created!")
-    print(f"   Ready for high-speed nutrition search")
+    print(f"\n🎉 MyNetDiary Elasticsearch index '{index_name}' successfully created!")
+    print(f"   Ready for high-speed MyNetDiary nutrition search on VM")
     
     return True
 
