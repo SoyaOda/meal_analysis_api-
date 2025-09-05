@@ -1,14 +1,15 @@
-# 食事分析 API v2.0 - Deep Infra Gemma 3 専用
+# 食事分析 API v2.0 - Deep Infra マルチモデル対応
 
 ## 概要
 
-この API は、**Deep Infra Gemma 3** と **Elasticsearch ベース栄養検索システム**を使用した高度な食事画像分析システムです。単一の画像から複数の料理を識別し、各料理の食材と重量を推定して、正確な栄養価情報を提供します。
+この API は、**Deep Infra マルチモデルシステム** と **Elasticsearch ベース栄養検索システム**を使用した高度な食事画像分析システムです。単一の画像から複数の料理を識別し、各料理の食材と重量を推定して、正確な栄養価情報を提供します。
 
 ## 🌟 主な機能
 
-### **🔥 Deep Infra Gemma 3 統合**
+### **🔥 Deep Infra マルチモデル統合**
 
-- **⚡ 高性能 AI 分析**: Deep Infra の Gemma 3-27B-IT モデルによる高精度な食事画像分析
+- **⚡ 高性能 AI 分析**: 複数の最先端 AI モデルによる高精度な食事画像分析
+- **🔄 簡単モデル切り替え**: 環境変数でモデルをワンライン変更
 - **🍽️ 複数料理同時認識**: 1 枚の画像で複数の料理を同時に分析・識別
 - **📊 詳細食材分析**: 各料理の食材を個別に識別し、重量を推定
 - **🎯 高信頼度分析**: 各料理・食材に対する信頼度スコアを提供
@@ -80,7 +81,48 @@ elasticsearch_url=http://localhost:9200
 elasticsearch_index_name=nutrition_fuzzy_search
 ```
 
-### 3. Elasticsearch の起動
+### 3. AIモデルの選択と切り替え
+
+システムは複数の最先端 AI モデルに対応しており、`.env` ファイルで簡単に切り替えができます。
+
+#### 📊 対応モデル一覧
+
+| モデル名 | モデルID | 特徴 | 処理時間目安 |
+|---------|----------|------|------------|
+| **Qwen2.5-VL-32B-Instruct** ✨ | `Qwen/Qwen2.5-VL-32B-Instruct` | 詳細な食材識別、統合的料理認識 | 17.3秒 |
+| **Gemma 3-27B-IT** | `google/gemma-3-27b-it` | 高速処理、バランス型分析 | 9.8秒 |
+| **Llama 3.2-90B-Vision** | `meta-llama/Llama-3.2-90B-Vision-Instruct` | 最高精度、大規模モデル | ~20秒 |
+| **Phi-3.5-Vision** | `microsoft/Phi-3.5-vision-instruct` | 軽量高速、効率重視 | ~8秒 |
+
+#### 🔄 モデルの切り替え方法
+
+**Step 1**: `.env` ファイルの `DEEPINFRA_MODEL_ID` を変更
+
+```bash
+# Qwen2.5 を使用する場合
+DEEPINFRA_MODEL_ID=Qwen/Qwen2.5-VL-32B-Instruct
+
+# Gemma 3 を使用する場合  
+DEEPINFRA_MODEL_ID=google/gemma-3-27b-it
+
+# Llama 3.2 を使用する場合
+DEEPINFRA_MODEL_ID=meta-llama/Llama-3.2-90B-Vision-Instruct
+```
+
+**Step 2**: そのまま実行
+
+```bash
+python test_single_image_analysis.py
+```
+
+#### 🎯 モデル選択の指針
+
+- **精度重視**: `Qwen/Qwen2.5-VL-32B-Instruct` (推奨)
+- **速度重視**: `microsoft/Phi-3.5-vision-instruct`  
+- **バランス型**: `google/gemma-3-27b-it`
+- **最高性能**: `meta-llama/Llama-3.2-90B-Vision-Instruct`
+
+### 4. Elasticsearch の起動
 
 ```bash
 # Elasticsearch 8.10.4 の起動
