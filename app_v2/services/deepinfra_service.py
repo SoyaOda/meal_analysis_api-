@@ -4,7 +4,7 @@ import os
 import base64
 import logging
 import json
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 from ..config import get_settings
@@ -51,6 +51,7 @@ class DeepInfraService:
         image_bytes: bytes,
         image_mime_type: str,
         prompt: str,
+        model_id: Optional[str] = None,
         max_tokens: int = 4096,
         temperature: float = 0.1
     ) -> str:
@@ -61,6 +62,7 @@ class DeepInfraService:
             image_bytes: 分析対象の画像のバイトデータ。
             image_mime_type: 画像のMIMEタイプ (例: 'image/jpeg')。
             prompt: モデルに与える指示プロンプト。
+            model_id: DeepInfra Model ID（指定されない場合はインスタンスのデフォルト使用）
             max_tokens: 生成される最大トークン数。
             temperature: 生成のランダム性を制御する値 (0に近いほど決定的)。
 
@@ -71,7 +73,9 @@ class DeepInfraService:
             ValueError: レスポンスが不正な場合に発生。
             APIError: Deep Infra APIとの通信でエラーが発生した場合に発生。
         """
-        logger.info(f"Starting image analysis with model {self.model_id}.")
+        # model_idが指定されていない場合はインスタンスのデフォルトを使用
+        effective_model_id = model_id or self.model_id
+        logger.info(f"Starting image analysis with model {effective_model_id}.")
 
         base64_image_url = self._encode_image_to_base64(image_bytes, image_mime_type)
 
@@ -96,7 +100,7 @@ class DeepInfraService:
 
         try:
             response = await self.client.chat.completions.create(
-                model=self.model_id,
+                model=effective_model_id,
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,

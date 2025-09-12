@@ -1,0 +1,12 @@
+Phase1 検出結果 - 2025-09-12 13:42:02
+============================================================
+
+処理詳細:
+  image_size_bytes: 96595
+  image_mime_type: image/jpeg
+  vision_api_call_start: Calling Vision API for structured image analysis
+  vision_api_response: {"dishes": [{"dish_name": "Caesar Salad", "confidence": 0.95, "ingredients": [{"ingredient_name": "Lettuce, green leaf raw", "weight_g": 100}, {"ingredient_name": "Croutons seasoned", "weight_g": 30}, {"ingredient_name": "Parmesan cheese grated", "weight_g": 10}, {"ingredient_name": "Caesar Vinaigrette Dressing", "weight_g": 20}]}, {"dish_name": "Pasta with Tomato and Cheese", "confidence": 0.9, "ingredients": [{"ingredient_name": "Pasta white cooked without salt", "weight_g": 250}, {"ingredient_name": "Tomatoes, diced canned", "weight_g": 50}, {"ingredient_name": "Cheese, shredded (likely mozzarella)", "weight_g": 20}, {"ingredient_name": "Olive oil", "weight_g": 10}]}]}
+  detected_structured_items_count: 0
+  detected_dishes_count: 2
+  total_ingredients_count: 8
+  structured_search_terms: {"high_confidence_items": [], "medium_confidence_items": [], "brands": [], "ingredients": [], "cooking_methods": [], "negative_cues": []}

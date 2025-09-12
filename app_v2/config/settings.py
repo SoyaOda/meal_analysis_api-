@@ -3,6 +3,8 @@ from pydantic_settings import BaseSettings
 from functools import lru_cache
 
 
+from pydantic import Field
+
 class Settings(BaseSettings):
     """
     API設定クラス
@@ -38,9 +40,9 @@ class Settings(BaseSettings):
     API_LOG_LEVEL: str = "INFO"
     FASTAPI_ENV: str = "development"
     
-    # サーバー設定
+    # サーバー設定（Cloud Run対応）
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = Field(default=8000, env="PORT")  # Cloud RunのPORT環境変数に対応
     
     # APIバージョン
     API_VERSION: str = "v1"
@@ -51,7 +53,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
-        extra = "ignore"  # 追加の環境変数を無視
+        extra = "ignore"  # 追加の環境変数を無視  # 追加の環境変数を無視
 
 
 @lru_cache()

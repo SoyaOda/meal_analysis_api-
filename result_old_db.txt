@@ -1,0 +1,108 @@
+A non-retriable API error occurred: Error code: 405 - {'detail': 'Multimodal is not supported for model: {inp.model}'}
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 98, in analyze_image
+    response = await self.client.chat.completions.create(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/resources/chat/completions/completions.py", line 2028, in create
+    return await self._post(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1748, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1555, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.APIStatusError: Error code: 405 - {'detail': 'Multimodal is not supported for model: {inp.model}'}
+Phase1 structured processing failed: __init__() missing 1 required positional argument: 'request'
+[Phase1Component_1] Phase1Component failed: __init__() missing 1 required positional argument: 'request'
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 98, in analyze_image
+    response = await self.client.chat.completions.create(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/resources/chat/completions/completions.py", line 2028, in create
+    return await self._post(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1748, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1555, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.APIStatusError: Error code: 405 - {'detail': 'Multimodal is not supported for model: {inp.model}'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/base.py", line 72, in execute
+    result = await self.process(input_data)
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/phase1_component.py", line 69, in process
+    raw_response = await self.vision_service.analyze_image(
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 130, in analyze_image
+    raise APIError(f"APIエラーが発生しました: {e}") from e
+TypeError: __init__() missing 1 required positional argument: 'request'
+[0ee42a43] Complete analysis failed: Phase1Component processing failed: __init__() missing 1 required positional argument: 'request'
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 98, in analyze_image
+    response = await self.client.chat.completions.create(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/resources/chat/completions/completions.py", line 2028, in create
+    return await self._post(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1748, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1555, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.APIStatusError: Error code: 405 - {'detail': 'Multimodal is not supported for model: {inp.model}'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/base.py", line 72, in execute
+    result = await self.process(input_data)
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/phase1_component.py", line 69, in process
+    raw_response = await self.vision_service.analyze_image(
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 130, in analyze_image
+    raise APIError(f"APIエラーが発生しました: {e}") from e
+TypeError: __init__() missing 1 required positional argument: 'request'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/pipeline/orchestrator.py", line 165, in execute_complete_analysis
+    phase1_result = await self.phase1_component.execute(phase1_input, phase1_log)
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/base.py", line 93, in execute
+    raise ComponentError(f"{self.component_name} processing failed: {str(e)}") from e
+app_v2.components.base.ComponentError: Phase1Component processing failed: __init__() missing 1 required positional argument: 'request'
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 98, in analyze_image
+    response = await self.client.chat.completions.create(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/resources/chat/completions/completions.py", line 2028, in create
+    return await self._post(
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1748, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+  File "/Users/odasoya/meal_analysis_api /venv/lib/python3.9/site-packages/openai/_base_client.py", line 1555, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.APIStatusError: Error code: 405 - {'detail': 'Multimodal is not supported for model: {inp.model}'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/base.py", line 72, in execute
+    result = await self.process(input_data)
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/phase1_component.py", line 69, in process
+    raw_response = await self.vision_service.analyze_image(
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/services/deepinfra_service.py", line 130, in analyze_image
+    raise APIError(f"APIエラーが発生しました: {e}") from e
+TypeError: __init__() missing 1 required positional argument: 'request'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/odasoya/meal_analysis_api_2/test_single_image_analysis.py", line 61, in test_single_image_analysis
+    result = await pipeline.execute_complete_analysis(
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/pipeline/orchestrator.py", line 165, in execute_complete_analysis
+    phase1_result = await self.phase1_component.execute(phase1_input, phase1_log)
+  File "/Users/odasoya/meal_analysis_api_2/app_v2/components/base.py", line 93, in execute
+    raise ComponentError(f"{self.component_name} processing failed: {str(e)}") from e
+app_v2.components.base.ComponentError: Phase1Component processing failed: __init__() missing 1 required positional argument: 'request'
+🚀 単一画像分析テスト - Deep Infra Gemma 3専用
+============================================================
+✅ 環境変数設定完了
+   DEEPINFRA_API_KEY: 設定済み
+   DEEPINFRA_MODEL_ID: google/gemma-3-27b-it
+
+🔍 単一画像分析テスト開始
+   画像: test_images/food1.jpg
+❌ 分析エラー: Phase1Component processing failed: __init__() missing 1 required positional argument: 'request'
+
+❌ テスト失敗

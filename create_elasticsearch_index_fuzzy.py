@@ -162,7 +162,7 @@ def load_json_databases() -> Dict[str, List[Dict[str, Any]]]:
     
     db_configs = {
         "yazio": "db/yazio_db.json",
-        "mynetdiary": "db/mynetdiary_db.json", 
+        "mynetdiary": "db/mynetdiary_converted_tool_calls_list.json",  # 新しいフォーマットに変更
         "eatthismuch": "db/eatthismuch_db.json"
     }
     
@@ -329,16 +329,20 @@ def main():
     
     index_name = "nutrition_fuzzy_search"
     
-    # 既存のインデックスを削除
-    if es_client.indices.exists(index=index_name):
-        print(f"🗑️  既存のインデックス '{index_name}' を削除中...")
-        es_client.indices.delete(index=index_name)
-    
-    # 新しいインデックスを作成
+    # 新しいインデックスを作成（既存のものは自動で上書きされる）
     print(f"🏗️  新しいインデックス '{index_name}' を作成中...")
     mapping = create_fuzzy_index_mapping()
-    es_client.indices.create(index=index_name, body=mapping)
-    print("✅ インデックス作成完了")
+    try:
+        es_client.indices.create(index=index_name, body=mapping)
+        print("✅ インデックス作成完了")
+    except Exception as e:
+        if "resource_already_exists_exception" in str(e):
+            print(f"🗑️  既存のインデックス '{index_name}' を削除して再作成中...")
+            es_client.indices.delete(index=index_name, ignore=[400, 404])
+            es_client.indices.create(index=index_name, body=mapping)
+            print("✅ インデックス作成完了")
+        else:
+            raise
     
     # データベースを読み込み
     print("\n📚 データベース読み込み中...")
