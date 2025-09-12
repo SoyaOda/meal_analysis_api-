@@ -115,6 +115,7 @@ class MealAnalysisPipeline:
         image_bytes: bytes,
         image_mime_type: str,
         optional_text: Optional[str] = None,
+        model_id: Optional[str] = None,
         save_detailed_logs: bool = True,
         test_execution: bool = False,
         test_results_dir: Optional[str] = None
@@ -126,6 +127,7 @@ class MealAnalysisPipeline:
             image_bytes: 画像データ
             image_mime_type: 画像のMIMEタイプ
             optional_text: オプションのテキスト
+            model_id: DeepInfra Model ID（指定されない場合はデフォルト使用）
             save_detailed_logs: 分析ログを保存するかどうか
             
         Returns:
@@ -156,7 +158,8 @@ class MealAnalysisPipeline:
             phase1_input = Phase1Input(
                 image_bytes=image_bytes,
                 image_mime_type=image_mime_type,
-                optional_text=optional_text
+                optional_text=optional_text,
+                model_id=model_id
             )
             
             # Phase1の詳細ログを作成

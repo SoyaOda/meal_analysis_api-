@@ -52,9 +52,11 @@ class Phase1Input(BaseModel):
     image_bytes: bytes = Field(..., description="画像データ（バイト形式）")
     image_mime_type: str = Field(..., description="画像のMIMEタイプ")
     optional_text: Optional[str] = Field(None, description="オプションのテキスト情報")
+    model_id: Optional[str] = Field(None, description="DeepInfra Model ID（指定されない場合はデフォルト使用）")
 
     class Config:
         arbitrary_types_allowed = True
+        protected_namespaces = ()
 
 
 class Phase1Output(BaseModel):

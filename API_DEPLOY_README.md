@@ -10,7 +10,8 @@
 - ✅ **テスト状況**: 100%成功 (10/10 食材マッチング)
 - ✅ **AI分析**: Deep Infra Qwen2.5-VL-32B-Instruct モデル正常動作
 - ✅ **栄養計算**: 完全動作 (総カロリー: 413.9 kcal)
-- ✅ **処理時間**: 約10秒
+- ✅ **処理時間**: 約11秒
+- ✅ **Model ID対応**: APIでmodel_id外部指定可能
 
 ### Elasticsearch設定
 - **使用中インデックス**: `mynetdiary_list_support_db`
@@ -88,11 +89,19 @@ python -m app_v2.main.app
 ### 4. APIテスト
 
 ```bash
-# cURLでのテスト例
-curl -X POST "http://localhost:8000/analyze_meal" \
+# 基本的なテスト例（デフォルトモデル使用）
+curl -X POST "http://localhost:8000/api/v1/meal-analysis/complete" \
   -H "accept: application/json" \
   -H "Content-Type: multipart/form-data" \
   -F "image=@test_images/food1.jpg"
+
+# モデル指定テスト例
+curl -X POST "http://localhost:8000/api/v1/meal-analysis/complete" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "image=@test_images/food1.jpg" \
+  -F "model_id=google/gemma-3-27b-it" \
+  -F "optional_text=この料理の栄養成分を詳しく分析してください"
 ```
 
 ## Google Cloud Run デプロイメント
@@ -176,11 +185,18 @@ gcloud logs read --limit=50 --format="value(timestamp, severity, textPayload)"
 # デプロイされたAPIのURLを取得
 export API_URL=$(gcloud run services describe meal-analysis-api --region=us-central1 --format="value(status.url)")
 
-# API テスト
-curl -X POST "$API_URL/analyze_meal" \
+# 基本APIテスト
+curl -X POST "$API_URL/api/v1/meal-analysis/complete" \
   -H "accept: application/json" \
   -H "Content-Type: multipart/form-data" \
   -F "image=@test_images/food1.jpg"
+
+# モデル指定APIテスト
+curl -X POST "$API_URL/api/v1/meal-analysis/complete" \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "image=@test_images/food1.jpg" \
+  -F "model_id=google/gemma-3-27b-it"
 ```
 
 ## トラブルシューティング
@@ -223,7 +239,7 @@ gcloud logs read "resource.type=cloud_run_revision AND resource.labels.service_n
 ## パフォーマンス指標
 
 ### ローカル環境での性能
-- **分析時間**: 約10秒
+- **分析時間**: 約11秒
 - **食材認識率**: 100% (10/10)
 - **メモリ使用量**: 約500MB
 
@@ -238,9 +254,24 @@ gcloud logs read "resource.type=cloud_run_revision AND resource.labels.service_n
 
 ### エンドポイント
 
-- **POST** `/analyze_meal`: 食事画像の分析
+- **POST** `/api/v1/meal-analysis/complete`: 完全な食事画像分析
 - **GET** `/health`: ヘルスチェック
 - **GET** `/docs`: API ドキュメント
+
+### APIパラメーター
+
+#### POST /api/v1/meal-analysis/complete
+
+**パラメーター:**
+- `image` (必須): 分析対象の画像ファイル
+- `optional_text` (オプション): AIへのテキストプロンプト (デフォルト: "食事の画像です")
+- `model_id` (オプション): 使用するDeep Infra Model ID (デフォルト: Qwen/Qwen2.5-VL-32B-Instruct)
+- `save_detailed_logs` (オプション): 詳細ログ保存 (デフォルト: true)
+
+**利用可能モデル例:**
+- `Qwen/Qwen2.5-VL-32B-Instruct` (デフォルト・推奨)
+- `google/gemma-3-27b-it`
+- その他Deep Infra対応Vision Language Models
 
 ### レスポンス例
 
@@ -252,7 +283,7 @@ gcloud logs read "resource.type=cloud_run_revision AND resource.labels.service_n
     "total_ingredients": 10,
     "nutrition_search_match_rate": "10/10 (100.0%)",
     "total_calories": 413.93,
-    "processing_time_seconds": 10.3
+    "processing_time_seconds": 11.0
   },
   "final_nutrition_result": {
     "total_nutrition": {
@@ -267,6 +298,8 @@ gcloud logs read "resource.type=cloud_run_revision AND resource.labels.service_n
 
 ## 更新履歴
 
+- **2025-09-12**: Model ID外部指定機能追加完了
+- **2025-09-12**: API入力パラメーター拡張 (model_id, optional_text)
 - **2025-09-12**: Deep Infra Qwen2.5-VL-32B-Instruct統合完了
 - **2025-09-12**: MyNetDiary データベース形式に対応
 - **2025-09-12**: Elasticsearch ファジーマッチング最適化

@@ -40,7 +40,7 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         Phase1の主処理: 構造化画像分析（栄養データベース検索特化）
         
         Args:
-            input_data: Phase1Input (image_bytes, image_mime_type, optional_text)
+            input_data: Phase1Input (image_bytes, image_mime_type, optional_text, model_id)
             
         Returns:
             Phase1Output: 構造化された分析結果（信頼度スコア、属性、ブランド情報等を含む）
@@ -69,7 +69,8 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             raw_response = await self.vision_service.analyze_image(
                 image_bytes=input_data.image_bytes,
                 image_mime_type=input_data.image_mime_type,
-                prompt=prompt
+                prompt=prompt,
+                model_id=input_data.model_id  # model_idを渡す
             )
             # JSON文字列をパース
             vision_result = parse_json_from_string(raw_response)
