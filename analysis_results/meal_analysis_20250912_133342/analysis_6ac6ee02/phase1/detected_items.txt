@@ -1,0 +1,10 @@
+Phase1 検出結果 - 2025-09-12 13:33:42
+============================================================
+
+処理詳細:
+  image_size_bytes: 96595
+  image_mime_type: image/jpeg
+  model_id: default
+  vision_api_call_start: Calling Vision API for structured image analysis
+  vision_api_response: {"dishes": [{"dish_name": "Pasta with Tomato and Cheese", "confidence": 0.95, "ingredients": [{"ingredient_name": "pasta penne cooked", "weight_g": 250}, {"ingredient_name": "tomatoes, chopped", "weight_g": 50}, {"ingredient_name": "parmesan cheese, grated", "weight_g": 20}, {"ingredient_name": "olive oil", "weight_g": 10}, {"ingredient_name": "garlic powder", "weight_g": 2}]}, {"dish_name": "Caesar Salad", "confidence": 0.95, "ingredients": [{"ingredient_name": "lettuce, romaine", "weight_g": 100}, {"ingredient_name": "croutons", "weight_g": 30}, {"ingredient_name": "parmesan cheese, grated", "weight_g": 10}, {"ingredient_name": "caesar dressing", "weight_g": 20}]}]}
+  phase1_output_summary: {"detected_food_items_count": 0, "dishes_count": 2, "total_ingredients_count": 9, "analysis_confidence": 0.5}

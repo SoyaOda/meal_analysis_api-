@@ -13,6 +13,8 @@ router = APIRouter()
 @router.post("/complete")
 async def complete_meal_analysis(
     image: UploadFile = File(...),
+    optional_text: Optional[str] = Form("食事の画像です"),
+    model_id: Optional[str] = Form(None),
     save_detailed_logs: bool = Form(True),
     test_execution: bool = Form(False),
     test_results_dir: Optional[str] = Form(None)
@@ -20,12 +22,14 @@ async def complete_meal_analysis(
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
     
-    - Phase 1: Deep Infra Gemma 3による画像分析
+    - Phase 1: Deep Infra AIによる画像分析
     - Nutrition Search: 食材の栄養データベース照合（5階層ファジーマッチング）
     - Nutrition Calculation: 最終栄養価計算
     
     Args:
         image: 分析対象の食事画像
+        optional_text: DeepInfra AIモデルへのテキストプロンプト (デフォルト: "食事の画像です")
+        model_id: DeepInfra Model ID (指定されない場合は環境変数のデフォルト使用)
         save_detailed_logs: 分析ログを保存するかどうか (デフォルト: True)
     
     Returns:
@@ -46,6 +50,8 @@ async def complete_meal_analysis(
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type,
+            optional_text=optional_text,
+            model_id=model_id,
             save_detailed_logs=save_detailed_logs,
             test_execution=test_execution,
             test_results_dir=test_results_dir

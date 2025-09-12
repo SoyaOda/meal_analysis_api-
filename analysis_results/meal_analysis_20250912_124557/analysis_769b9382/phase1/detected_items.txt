@@ -1,0 +1,7 @@
+Phase1 検出結果 - 2025-09-12 12:45:57
+============================================================
+
+処理詳細:
+  image_size_bytes: 96595
+  image_mime_type: image/jpeg
+  vision_api_call_start: Calling Vision API for structured image analysis
