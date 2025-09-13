@@ -1,0 +1,264 @@
+openapi: 3.0.3
+info:
+  title: 食事分析API (Meal Analysis API)
+  version: "2.0"
+  description: |
+    Deep Infra AI とElasticsearchを活用した食事画像分析システム。
+    
+    ## 主な機能
+    - Deep Infra AI による高精度な食事画像分析
+    - 複数料理の同時識別と食材重量推定
+    - Elasticsearch統合栄養データベース検索 (1,142件)
+    - 構造化された栄養価情報の提供
+    - model_id外部指定対応
+    
+    ## 技術スタック
+    - FastAPI + Pydantic
+    - Deep Infra AI (Qwen2.5-VL-32B-Instruct / Gemma 3)
+    - Elasticsearch + MyNetDiary統合データベース
+    - Google Cloud Run + GCP Compute Engine VM
+  contact:
+    name: 食事分析API サポート
+  license:
+    name: MIT License
+servers:
+  - url: https://meal-analysis-api-1077966746907.us-central1.run.app
+    description: 本番環境 (Google Cloud Run)
+  - url: http://localhost:8000
+    description: ローカル開発サーバー
+paths:
+  /:
+    get:
+      summary: APIルート情報
+      operationId: getApiRoot
+      description: APIの基本情報を取得します。
+      tags:
+        - System
+      responses:
+        '200':
+          description: API基本情報
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "食事分析API (Meal Analysis API)"
+                  version:
+                    type: string
+                    example: "2.0.0"
+                  docs:
+                    type: string
+                    example: "/docs"
+                  health:
+                    type: string
+                    example: "/health"
+                    
+  /health:
+    get:
+      summary: ヘルスチェック
+      operationId: healthCheck
+      description: APIの稼働状況とコンポーネント状態を確認します。
+      tags:
+        - System
+      responses:
+        '200':
+          description: APIヘルス状態
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  version:
+                    type: string
+                    example: "v2.0"
+                  components:
+                    type: array
+                    items:
+                      type: string
+                    example: ["Phase1Component", "ElasticsearchNutritionSearchComponent"]
+                    
+  /api/v1/meal-analyses/complete:
+    post:
+      summary: 完全な食事分析
+      operationId: completeMealAnalysis
+      description: |
+        食事画像を分析して完全な栄養情報を取得します。
+        
+        ## 処理フロー
+        1. Deep Infra AI による高精度画像分析 (Phase 1)
+        2. Elasticsearch 栄養データベース検索 (Phase 2)
+        3. 栄養価計算と結果組み立て (Phase 3)
+        
+        ## 性能指標
+        - **処理時間**: 約9.8秒 (本番環境)
+        - **栄養マッチング率**: 88.9%
+        - **AI分析精度**: 95%信頼度
+        
+        ## サポート画像形式
+        - JPEG (.jpg, .jpeg)
+        - PNG (.png)
+        - WebP (.webp)
+        - BMP (.bmp)
+        - TIFF (.tiff)
+        
+        最大ファイルサイズ: 10MB
+      tags:
+        - Meal Analysis
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: |
+                    食事の画像ファイル。
+                    サポート形式: JPEG, PNG, WebP, BMP, TIFF
+                    最大サイズ: 10MB
+                model_id:
+                  type: string
+                  nullable: true
+                  description: |
+                    Deep Infra Model ID (オプション)
+                    - デフォルト: Qwen/Qwen2.5-VL-32B-Instruct
+                    - 選択可能: google/gemma-3-27b-it
+                  example: "Qwen/Qwen2.5-VL-32B-Instruct"
+                optional_text:
+                  type: string
+                  nullable: true
+                  description: |
+                    AIモデルへのテキストプロンプト (オプション)
+                  default: "食事の画像です"
+                  example: "この料理の栄養成分を詳しく分析してください"
+                save_detailed_logs:
+                  type: boolean
+                  default: true
+                  description: |
+                    詳細な分析ログを保存するかどうか。
+                test_execution:
+                  type: boolean
+                  default: false
+                  description: |
+                    テスト実行モード。
+                test_results_dir:
+                  type: string
+                  nullable: true
+                  description: |
+                    テスト結果保存ディレクトリ。
+              required:
+                - image
+      responses:
+        '200':
+          description: 食事分析成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealAnalysisResponse'
+        '400':
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 内部サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    MealAnalysisResponse:
+      type: object
+      title: 食事分析結果
+      description: 食事画像分析の完全な結果データ
+      properties:
+        analysis_id:
+          type: string
+          description: 分析セッションID
+          example: "f1f92d07"
+        processing_summary:
+          type: object
+          properties:
+            total_dishes:
+              type: integer
+              description: 総料理数
+              example: 2
+            total_ingredients:
+              type: integer
+              description: 総食材数
+              example: 9
+            nutrition_search_match_rate:
+              type: string
+              description: 栄養検索マッチ率
+              example: "8/9 (88.9%)"
+            total_calories:
+              type: number
+              format: float
+              description: 総カロリー（kcal）
+              example: 820.78
+            processing_time_seconds:
+              type: number
+              format: float
+              description: 処理時間（秒）
+              example: 9.85
+        final_nutrition_result:
+          type: object
+          properties:
+            total_nutrition:
+              type: object
+              properties:
+                calories:
+                  type: number
+                  format: float
+                  example: 820.78
+                protein:
+                  type: number
+                  format: float
+                  example: 26.26
+                fat:
+                  type: number
+                  format: float
+                  example: 32.13
+                carbs:
+                  type: number
+                  format: float
+                  example: 106.52
+      required:
+        - analysis_id
+        - processing_summary
+        - final_nutrition_result
+
+    ErrorResponse:
+      type: object
+      title: エラーレスポンス
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+                - "INVALID_IMAGE_FORMAT"
+                - "FILE_TOO_LARGE"
+                - "ANALYSIS_ERROR"
+                - "INTERNAL_SERVER_ERROR"
+            message:
+              type: string
+      required:
+        - error
+
+tags:
+  - name: System
+    description: システム管理・監視系エンドポイント
+  - name: Meal Analysis
+    description: 食事分析メイン機能
