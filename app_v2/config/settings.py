@@ -1,6 +1,7 @@
 from typing import Optional, List
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+import os
 
 
 class Settings(BaseSettings):
@@ -43,7 +44,7 @@ class Settings(BaseSettings):
     
     # サーバー設定
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = int(os.environ.get("PORT", "8000"))  # Cloud Run compatible
     
     # APIバージョン
     API_VERSION: str = "v1"

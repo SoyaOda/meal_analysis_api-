@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from ..api.v1.endpoints import meal_analysis
+from ..api.v1.endpoints import meal_analysis, nutrition_search
 from ..config import get_settings
 
 # 環境変数の設定（既存のappと同じ）
@@ -42,6 +42,12 @@ app.include_router(
     meal_analysis.router,
     prefix="/api/v1/meal-analyses",
     tags=["Complete Meal Analysis v2.0"]
+)
+
+app.include_router(
+    nutrition_search.router,
+    prefix="/api/v1/nutrition",
+    tags=["Nutrition Search & Suggestions"]
 )
 
 # ルートエンドポイント

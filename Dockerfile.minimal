@@ -1,0 +1,27 @@
+# 軽量なマルチステージビルド
+FROM python:3.10-slim as builder
+
+# 作業ディレクトリ設定
+WORKDIR /app
+
+# 最小限の依存関係のみインストール
+COPY requirements_minimal.txt .
+RUN pip install --no-cache-dir -r requirements_minimal.txt
+
+# 実行ステージ
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# builderステージからパッケージをコピー
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# アプリケーションコードをコピー
+COPY app_v2/ ./app_v2/
+
+# ポート設定
+EXPOSE 8080
+
+# アプリケーション起動
+CMD ["python", "-m", "uvicorn", "app_v2.main.app:app", "--host", "0.0.0.0", "--port", "8080"]
