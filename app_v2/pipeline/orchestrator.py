@@ -83,19 +83,23 @@ class MealAnalysisPipeline:
         image_bytes: bytes,
         image_mime_type: str,
         optional_text: Optional[str] = None,
+        temperature: Optional[float] = 0.0,
+        seed: Optional[int] = 123456,
         save_detailed_logs: bool = True,
         test_execution: bool = False,
         test_results_dir: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         完全な食事分析を実行
-        
+
         Args:
             image_bytes: 画像データ
             image_mime_type: 画像のMIMEタイプ
             optional_text: オプションのテキスト
+            temperature: AI推論のランダム性制御 (0.0-1.0)
+            seed: 再現性のためのシード値
             save_detailed_logs: 分析ログを保存するかどうか
-            
+
         Returns:
             完全な分析結果
         """
@@ -130,7 +134,7 @@ class MealAnalysisPipeline:
             # Phase1の詳細ログを作成
             phase1_log = result_manager.create_execution_log("Phase1Component", f"{analysis_id}_phase1") if result_manager else None
             
-            phase1_result = await self.phase1_component.execute(phase1_input, phase1_log)
+            phase1_result = await self.phase1_component.execute(phase1_input, phase1_log, temperature=temperature, seed=seed)
             
             self.logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
             

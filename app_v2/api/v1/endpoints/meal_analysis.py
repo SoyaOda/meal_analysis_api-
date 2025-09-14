@@ -17,7 +17,9 @@ async def complete_meal_analysis(
     test_execution: bool = Form(False),
     test_results_dir: Optional[str] = Form(None),
     model_id: Optional[str] = Form(None),
-    optional_text: Optional[str] = Form(None)
+    optional_text: Optional[str] = Form(None),
+    temperature: Optional[float] = Form(0.0),
+    seed: Optional[int] = Form(123456)
 ):
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
@@ -37,6 +39,8 @@ async def complete_meal_analysis(
                  未指定: 設定ファイルのデフォルトモデルを使用
         optional_text: 追加のテキスト情報 (英語想定) - 画像と併せて分析に使用
                       例: "This is homemade low-sodium pasta", "Restaurant meal with extra vegetables"
+        temperature: AI推論のランダム性制御 (0.0-1.0, デフォルト: 0.0 - 決定的)
+        seed: 再現性のためのシード値 (デフォルト: 123456)
     
     Returns:
         完全な分析結果と栄養価計算、分析ログファイルパス
@@ -46,12 +50,19 @@ async def complete_meal_analysis(
         # モデル検証
         from app_v2.config.settings import get_settings
         settings = get_settings()
-        
+
         if model_id and not settings.validate_model_id(model_id):
             available_models = ", ".join(settings.SUPPORTED_VISION_MODELS)
             raise HTTPException(
-                status_code=400, 
+                status_code=400,
                 detail=f"Unsupported model_id: {model_id}. Available models: {available_models}"
+            )
+
+        # temperatureパラメータの範囲検証
+        if temperature is not None and (temperature < 0.0 or temperature > 1.0):
+            raise HTTPException(
+                status_code=400,
+                detail="temperature must be between 0.0 and 1.0"
             )
         
         # 画像の検証
@@ -65,8 +76,8 @@ async def complete_meal_analysis(
         effective_model = model_id or settings.DEEPINFRA_MODEL_ID
         model_config = settings.get_model_config(effective_model)
         
-        # ログ出力（optional_text情報を含む）
-        log_info = f"Starting complete meal analysis pipeline v2.0 (model: {effective_model}, detailed_logs: {save_detailed_logs}"
+        # ログ出力（パラメータ情報を含む）
+        log_info = f"Starting complete meal analysis pipeline v2.0 (model: {effective_model}, detailed_logs: {save_detailed_logs}, temperature: {temperature}, seed: {seed}"
         if optional_text:
             log_info += f", optional_text: '{optional_text[:50]}{'...' if len(optional_text) > 50 else ''}'"
         log_info += ")"
@@ -75,12 +86,14 @@ async def complete_meal_analysis(
         if model_config:
             logger.info(f"Model characteristics: {model_config}")
         
-        # パイプラインの実行（model_id + optional_text付き）
+        # パイプラインの実行（全パラメータ付き）
         pipeline = MealAnalysisPipeline(model_id=model_id)
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type or 'image/jpeg',  # Default to image/jpeg if None
-            optional_text=optional_text,  # NEW: Optional text parameter
+            optional_text=optional_text,
+            temperature=temperature,  # NEW: Temperature parameter
+            seed=seed,  # NEW: Seed parameter
             save_detailed_logs=save_detailed_logs,
             test_execution=test_execution,
             test_results_dir=test_results_dir
