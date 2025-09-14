@@ -79,7 +79,7 @@ async def complete_meal_analysis(
         pipeline = MealAnalysisPipeline(model_id=model_id)
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
-            image_mime_type=image.content_type,
+            image_mime_type=image.content_type or 'image/jpeg',  # Default to image/jpeg if None
             optional_text=optional_text,  # NEW: Optional text parameter
             save_detailed_logs=save_detailed_logs,
             test_execution=test_execution,
