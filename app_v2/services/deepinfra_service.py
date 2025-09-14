@@ -16,11 +16,15 @@ class DeepInfraService:
     """
     Deep InfraのOpenAI互換APIと通信するためのサービス。
     gemma-3-27b-itのようなマルチモーダルモデルを使用した画像分析を処理する。
+    モデルIDを動的に設定可能。
     """
 
-    def __init__(self):
+    def __init__(self, model_id: str = None):
         """
         設定ファイルから設定を読み込み、非同期OpenAIクライアントを初期化する。
+        
+        Args:
+            model_id: 使用するモデルID。Noneの場合は設定ファイルのデフォルトを使用。
         """
         settings = get_settings()
         
@@ -29,7 +33,16 @@ class DeepInfraService:
         if not api_key:
             raise ValueError("Deep Infra API keyが設定されていません。設定ファイルまたは環境変数 'DEEPINFRA_API_KEY' を設定してください。")
 
-        self.model_id = settings.DEEPINFRA_MODEL_ID
+        # モデルIDの決定（パラメータ優先、設定ファイルフォールバック）
+        self.model_id = model_id or settings.DEEPINFRA_MODEL_ID
+        
+        # モデル検証
+        if not settings.validate_model_id(self.model_id):
+            logger.warning(f"指定されたモデル '{self.model_id}' はサポートリストにありません。利用可能モデル: {settings.SUPPORTED_VISION_MODELS}")
+        
+        # モデル設定を取得
+        self.model_config = settings.get_model_config(self.model_id)
+        
         base_url = settings.DEEPINFRA_BASE_URL
 
         # 非同期クライアントの初期化
@@ -38,6 +51,8 @@ class DeepInfraService:
             base_url=base_url,
         )
         logger.info(f"DeepInfraService initialized for model: {self.model_id}")
+        if self.model_config:
+            logger.info(f"Model config: {self.model_config}")
 
     def _encode_image_to_base64(self, image_bytes: bytes, mime_type: str = "image/jpeg") -> str:
         """
@@ -72,6 +87,11 @@ class DeepInfraService:
             APIError: Deep Infra APIとの通信でエラーが発生した場合に発生。
         """
         logger.info(f"Starting image analysis with model {self.model_id}.")
+        
+        # 期待される処理時間をログに出力
+        if self.model_config and "expected_response_time_ms" in self.model_config:
+            expected_time = self.model_config["expected_response_time_ms"]
+            logger.info(f"Expected response time for {self.model_id}: {expected_time}ms")
 
         base64_image_url = self._encode_image_to_base64(image_bytes, image_mime_type)
 
