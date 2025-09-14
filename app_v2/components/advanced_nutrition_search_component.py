@@ -56,11 +56,11 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             if self.es_client.ping():
                 self.logger.info(f"✅ Elasticsearch connected: {elasticsearch_url}")
             else:
-                self.logger.warning(f"⚠️ Elasticsearch ping failed: {elasticsearch_url}")
-                self.es_client = None
+                self.logger.error(f"❌ Elasticsearch ping failed: {elasticsearch_url}")
+                raise ConnectionError(f"Cannot connect to Elasticsearch at {elasticsearch_url}")
         except Exception as e:
             self.logger.error(f"❌ Elasticsearch initialization failed: {e}")
-            self.es_client = None
+            raise RuntimeError(f"Elasticsearch initialization failed: {e}") from e
 
     async def process(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
@@ -207,8 +207,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         Direct Elasticsearch batch search for 16+ queries using msearch
         """
         if not self.es_client:
-            # Fallback to batched API if ES unavailable
-            return await self._batched_api_search(search_terms, input_data, batch_size=8)
+            raise RuntimeError("Elasticsearch client is not available for batch search")
 
         self.log_processing_detail("search_method", "elasticsearch_batch")
 
@@ -282,8 +281,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
         except Exception as e:
             self.logger.error(f"Elasticsearch batch search failed: {e}")
-            # Fallback to API search
-            return await self._batched_api_search(search_terms, input_data, batch_size=8)
+            raise RuntimeError(f"Elasticsearch batch search failed and fallback is disabled: {e}") from e
 
         es_time = int((time.time() - start_time) * 1000)
 
