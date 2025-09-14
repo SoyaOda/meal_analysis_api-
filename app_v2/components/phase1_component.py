@@ -27,10 +27,9 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         if vision_service is None:
             # DeepInfraServiceを使用
             settings = get_settings()
-            # モデルバージョンを固定してレプリカ差を回避
+            # DeepInfraではバージョンピンサポートなし、基本モデルのみ使用
             self.vision_service = DeepInfraService(
-                model_id=settings.DEEPINFRA_MODEL_ID,
-                model_version="jaDBG8Db"  # 2025-03-12版で固定
+                model_id=settings.DEEPINFRA_MODEL_ID
             )
         else:
             self.vision_service = vision_service
