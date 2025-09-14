@@ -55,7 +55,7 @@ async def complete_meal_analysis(
             )
         
         # 画像の検証
-        if not image.content_type.startswith('image/'):
+        if image.content_type and not image.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="アップロードされたファイルは画像である必要があります")
         
         # 画像データの読み込み
