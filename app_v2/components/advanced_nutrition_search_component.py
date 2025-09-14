@@ -21,7 +21,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Word Query API configuration
-API_BASE_URL = "https://meal-analysis-api-v2-1077966746907.us-central1.run.app"
+API_BASE_URL = "https://word-query-api-1077966746907.us-central1.run.app"
 
 class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, NutritionQueryOutput]):
     """
