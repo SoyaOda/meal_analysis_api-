@@ -25,27 +25,31 @@ class MealAnalysisPipeline:
     4つのフェーズを統合して完全な分析を実行します。
     """
     
-    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_mynetdiary_specialized: Optional[bool] = False, use_fuzzy_matching: Optional[bool] = None):
+    def __init__(self, use_local_nutrition_search: Optional[bool] = None, use_elasticsearch_search: Optional[bool] = None, use_mynetdiary_specialized: Optional[bool] = False, use_fuzzy_matching: Optional[bool] = None, model_id: Optional[str] = None):
         """
         パイプラインの初期化
-        
-        Args:
-            use_local_nutrition_search: 廃止予定（互換性のため残存）
-            use_elasticsearch_search: Elasticsearch栄養データベース検索を使用するかどうか
-                                    None: 設定ファイルから自動取得（デフォルト: True）
-                                    True: ElasticsearchNutritionSearchComponent使用（推奨）
-                                    False: ElasticsearchNutritionSearchComponent使用（デフォルト設定）
-            use_mynetdiary_specialized: MyNetDiary専用検索を使用するかどうか
-                                      True: MyNetDiaryNutritionSearchComponent使用（ingredient厳密検索）
-                                      False: 従来のElasticsearch検索使用（デフォルト）
-            use_fuzzy_matching: ファジーマッチング検索を使用するかどうか
-                              True: FuzzyIngredientSearchComponent使用（高精度ファジーマッチング）
-                              False: 従来の検索使用
-                              None: 設定ファイルから自動取得（デフォルト: True）
+    
+    Args:
+        use_local_nutrition_search: 廃止予定（互換性のため残存）
+        use_elasticsearch_search: Elasticsearch栄養データベース検索を使用するかどうか
+                                None: 設定ファイルから自動取得（デフォルト: True）
+                                True: ElasticsearchNutritionSearchComponent使用（推奨）
+                                False: ElasticsearchNutritionSearchComponent使用（デフォルト設定）
+        use_mynetdiary_specialized: MyNetDiary専用検索を使用するかどうか
+                                  True: MyNetDiaryNutritionSearchComponent使用（ingredient厳密検索）
+                                  False: 従来のElasticsearch検索使用（デフォルト）
+        use_fuzzy_matching: ファジーマッチング検索を使用するかどうか
+                          True: FuzzyIngredientSearchComponent使用（高精度ファジーマッチング）
+                          False: 従来の検索使用
+                          None: 設定ファイルから自動取得（デフォルト: True）
+        model_id: 使用する画像分析モデルID（None: 設定ファイルのデフォルト使用）
         """
         self.pipeline_id = str(uuid.uuid4())[:8]
         self.settings = get_settings()
-        
+
+        # 指定されたモデルIDの保存
+        self.model_id = model_id
+
         # Elasticsearch検索優先度の決定
         if use_elasticsearch_search is not None:
             self.use_elasticsearch_search = use_elasticsearch_search
@@ -54,10 +58,10 @@ class MealAnalysisPipeline:
         else:
             # デフォルトはElasticsearch使用
             self.use_elasticsearch_search = True
-        
+
         # レガシーパラメータは無視（常にElasticsearch使用）
         self.use_local_nutrition_search = False
-        
+
         # ファジーマッチング使用の決定
         if use_fuzzy_matching is not None:
             self.use_fuzzy_matching = use_fuzzy_matching
@@ -66,48 +70,65 @@ class MealAnalysisPipeline:
         else:
             # デフォルトはファジーマッチング使用
             self.use_fuzzy_matching = True
-        
-        # Vision Serviceの初期化
+
+        # Vision Serviceの初期化（モデルID対応）
         try:
-            # DeepInfraServiceを試行
-            self.vision_service = DeepInfraService()
-            logger.info("Using DeepInfra Gemma 3 for image analysis")
+            # DeepInfraServiceを試行（model_idパラメータ付き）
+            self.vision_service = DeepInfraService(model_id=self.model_id)
+            logger.info(f"Using DeepInfra service with model: {self.vision_service.model_id}")
+
+            # モデル設定情報をログ出力
+            if self.vision_service.model_config:
+                expected_time = self.vision_service.model_config.get("expected_response_time_ms", "unknown")
+                best_for = self.vision_service.model_config.get("best_for", "general")
+                logger.info(f"Model characteristics - Expected time: {expected_time}ms, Best for: {best_for}")
+
         except ValueError as e:
             # 環境変数が設定されていない場合はフォールバック
             logger.warning(f"DeepInfra service initialization failed: {e}")
             logger.info("Falling back to legacy Gemini service")
             self.vision_service = None
-        
+
         # コンポーネントの初期化
         self.phase1_component = Phase1Component(vision_service=self.vision_service)
-        
-        # 栄養データベース検索コンポーネントの選択
-        if self.use_fuzzy_matching:
-            # 新しいファジーマッチング検索コンポーネント（推奨）
-            self.nutrition_search_component = FuzzyIngredientSearchComponent()
-            self.search_component_name = "FuzzyIngredientSearchComponent"
-            logger.info("Using Fuzzy Ingredient Search (5-tier cascade, high-precision matching)")
-        elif use_mynetdiary_specialized:
-            # MyNetDiary専用検索コンポーネント
-            self.nutrition_search_component = MyNetDiaryNutritionSearchComponent(
-                results_per_db=5
-            )
-            self.search_component_name = "MyNetDiaryNutritionSearchComponent"
-            logger.info("Using MyNetDiary specialized nutrition search (ingredient strict matching)")
-        else:
-            # 従来のElasticsearch検索コンポーネント
-            self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
-                strategic_search_mode=True,
-                results_per_db=5
-            )
-            self.search_component_name = "ElasticsearchNutritionSearchComponent"
-            logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
-            
+
+        # 栄養データベース検索コンポーネントの選択 - 新しいAdvancedNutritionSearchComponentを優先使用
+        try:
+            # 新しい高性能AdvancedNutritionSearchComponent（API + Elasticsearch統合）を試行
+            from ..components.advanced_nutrition_search_component import AdvancedNutritionSearchComponent
+            self.nutrition_search_component = AdvancedNutritionSearchComponent()
+            self.search_component_name = "AdvancedNutritionSearchComponent"
+            logger.info("Using Advanced Nutrition Search (Multi-tier: API + Elasticsearch, alternative name support)")
+        except ImportError as e:
+            logger.warning(f"AdvancedNutritionSearchComponent not available: {e}, falling back to legacy components")
+
+            # フォールバック: 既存のコンポーネント選択ロジック
+            if self.use_fuzzy_matching:
+                # 新しいファジーマッチング検索コンポーネント（推奨）
+                self.nutrition_search_component = FuzzyIngredientSearchComponent()
+                self.search_component_name = "FuzzyIngredientSearchComponent"
+                logger.info("Using Fuzzy Ingredient Search (5-tier cascade, high-precision matching)")
+            elif use_mynetdiary_specialized:
+                # MyNetDiary専用検索コンポーネント
+                self.nutrition_search_component = MyNetDiaryNutritionSearchComponent(
+                    results_per_db=5
+                )
+                self.search_component_name = "MyNetDiaryNutritionSearchComponent"
+                logger.info("Using MyNetDiary specialized nutrition search (ingredient strict matching)")
+            else:
+                # 従来のElasticsearch検索コンポーネント
+                self.nutrition_search_component = ElasticsearchNutritionSearchComponent(
+                    strategic_search_mode=True,
+                    results_per_db=5
+                )
+                self.search_component_name = "ElasticsearchNutritionSearchComponent"
+                logger.info("Using Elasticsearch nutrition database search (high-performance, multi-DB mode)")
+
         # 栄養計算コンポーネントの初期化
         self.nutrition_calculation_component = NutritionCalculationComponent()
-        
+
         # TODO: Phase2Componentを追加
-        
+
         self.logger = logging.getLogger(f"{__name__}.{self.pipeline_id}")
         
     async def execute_complete_analysis(
@@ -174,7 +195,14 @@ class MealAnalysisPipeline:
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
             # === 統一された栄養検索入力を作成 ===
-            if self.use_fuzzy_matching:
+            if self.search_component_name == "AdvancedNutritionSearchComponent":
+                # 新しいAdvancedNutritionSearchComponentの場合
+                nutrition_search_input = NutritionQueryInput(
+                    ingredient_names=phase1_result.get_all_ingredient_names(),
+                    dish_names=phase1_result.get_all_dish_names(),
+                    preferred_source="advanced_search"
+                )
+            elif self.use_fuzzy_matching:
                 # ファジーマッチング検索の場合は、食材名のリストを直接渡す
                 ingredient_names = phase1_result.get_all_ingredient_names()
                 nutrition_search_input = [{"name": name} for name in ingredient_names]
@@ -186,11 +214,14 @@ class MealAnalysisPipeline:
                     dish_names=phase1_result.get_all_dish_names(),
                     preferred_source=preferred_source
                 )
-            
+
             # Nutrition Searchの詳細ログを作成
             search_log = result_manager.create_execution_log(self.search_component_name, f"{analysis_id}_nutrition_search") if result_manager else None
-            
-            if self.use_fuzzy_matching:
+
+            if self.search_component_name == "AdvancedNutritionSearchComponent":
+                # 新しいAdvancedNutritionSearchComponentの場合はprocessメソッドを使用
+                nutrition_search_result = await self.nutrition_search_component.process(nutrition_search_input)
+            elif self.use_fuzzy_matching:
                 # ファジーマッチングコンポーネントの場合はprocessメソッドを使用
                 nutrition_search_result = await self.nutrition_search_component.process(nutrition_search_input)
             else:
