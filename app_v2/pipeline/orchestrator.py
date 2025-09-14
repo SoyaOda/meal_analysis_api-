@@ -297,7 +297,8 @@ class MealAnalysisPipeline:
                     "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
                     "pipeline_status": "completed",
                     "processing_time_seconds": processing_time,
-                    "search_method": search_method
+                    "search_method": search_method,
+                    "nutrition_search_method": search_api_method
                 },
                 # 最終栄養結果
                 "final_nutrition_result": nutrition_calculation_dict,
