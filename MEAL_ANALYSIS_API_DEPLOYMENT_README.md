@@ -258,6 +258,22 @@ POST /api/v1/meal-analysis/complete
 ## 📈 Deployment Guide
 
 ### Environment Setup
+
+#### Prerequisites
+```bash
+# 1. Google Cloud SDK Setup (if not already installed)
+# Add to PATH if installed in home directory
+export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+
+# Verify installation and check current project
+gcloud config get-value project
+# Should show: new-snap-calorie (or your project ID)
+
+# 2. Enable required APIs
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com
+```
+
+#### Environment Configuration
 ```bash
 # 1. Environment Variables (.env)
 DEEPINFRA_API_KEY=your_deepinfra_key
@@ -265,16 +281,53 @@ DEEPINFRA_MODEL_ID=google/gemma-3-27b-it
 USE_ELASTICSEARCH_SEARCH=true
 elasticsearch_url=http://your-elasticsearch:9200
 
-# 2. Docker Deployment (Optional)
-docker build -f Dockerfile.minimal -t meal-analysis-api .
-docker run -p 8000:8000 meal-analysis-api
+# 2. Local Development
+python -m app_v2.main.app
 
-# 3. Cloud Run Deployment
+# 3. Docker Build & Deploy
+docker build -t meal-analysis-api .
+docker run -p 8000:8000 meal-analysis-api
+```
+
+#### Cloud Run Deployment
+```bash
+# 1. Enable required APIs
+export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+gcloud services enable run.googleapis.com cloudbuild.googleapis.com
+
+# 2. Build and deploy with Cloud Build
+gcloud builds submit --tag gcr.io/new-snap-calorie/meal-analysis-api:latest .
+
+# 3. Deploy to Cloud Run with environment variables
 gcloud run deploy meal-analysis-api \
-  --image gcr.io/PROJECT_ID/meal-analysis-api \
+  --image gcr.io/new-snap-calorie/meal-analysis-api:latest \
   --platform managed \
   --region us-central1 \
-  --allow-unauthenticated
+  --allow-unauthenticated \
+  --set-env-vars DEEPINFRA_API_KEY=your_key,DEEPINFRA_MODEL_ID=google/gemma-3-27b-it,USE_ELASTICSEARCH_SEARCH=false,API_LOG_LEVEL=INFO,FASTAPI_ENV=production
+```
+
+#### ✅ **DEPLOYMENT STATUS: LIVE**
+- **Service URL**: https://meal-analysis-api-1077966746907.us-central1.run.app
+- **Health Endpoint**: https://meal-analysis-api-1077966746907.us-central1.run.app/health
+- **API Documentation**: https://meal-analysis-api-1077966746907.us-central1.run.app/docs
+- **Deployment Date**: September 14, 2025
+- **Status**: Successfully deployed and operational
+
+#### Production API Usage Examples
+```bash
+# Health Check
+curl "https://meal-analysis-api-1077966746907.us-central1.run.app/health"
+
+# Complete Meal Analysis
+curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/complete" \
+  -F "image=@test_images/food1.jpg"
+
+# With Model Selection and Optional Text
+curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/complete" \
+  -F "image=@test_images/food1.jpg" \
+  -F "model_id=google/gemma-3-27b-it" \
+  -F "optional_text=This is a homemade low-sodium meal"
 ```
 
 ### Production Configuration
