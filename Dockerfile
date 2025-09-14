@@ -22,6 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy application code
 COPY app_v2/ ./app_v2/
+COPY data/ ./data/
 COPY .env .env
 
 # Create non-root user for security
