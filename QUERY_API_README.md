@@ -136,14 +136,14 @@ curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/
 | ↳ timestamp | string | ✅ 必須 | 処理時刻 | ISO 8601 UTC形式 |
 | ↳ suggestion_type | string | ✅ 必須 | 提案タイプ | 固定値: "autocomplete" |
 | **suggestions** | array | ✅ 必須 | 検索候補リスト | 最大50件 |
-| ↳ rank | integer | ✅ 必須 | 順位 | 1から始まる連番 |
+| ↳ rank | number | ✅ 必須 | 順位 | 1から始まる連番 |
 | ↳ suggestion | string | ✅ 必須 | 提案食材名 | UTF-8文字列 |
 | ↳ match_type | string | ✅ 必須 | マッチタイプ | "exact_match", "prefix_match", "phrase_match", "fuzzy_match" |
 | ↳ confidence_score | number | ✅ 必須 | 信頼度スコア | 0-100の数値 |
 | ↳ **food_info** | object | ✅ 必須 | 食材詳細情報 | - |
 | ↳ ↳ search_name | string | ✅ 必須 | 検索名 | UTF-8文字列 |
 | ↳ ↳ search_name_list | array | ✅ 必須 | 検索名リスト | string配列 |
-| ↳ ↳ description | string | ❌ 任意 | 食材説明 | UTF-8文字列 or null |
+| ↳ ↳ description | string | ❌ 任意 | 食材説明 | UTF-8文字列 or "None" |
 | ↳ ↳ original_name | string | ✅ 必須 | 元の食材名 | UTF-8文字列 |
 | ↳ **nutrition_preview** | object | ✅ 必須 | 栄養プレビュー | - |
 | ↳ ↳ calories | number | ✅ 必須 | カロリー | kcal単位（小数点可） |
@@ -151,16 +151,18 @@ curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/
 | ↳ ↳ per_serving | string | ✅ 必須 | 基準量 | 固定値: "100g" |
 | ↳ alternative_names | array | ✅ 必須 | 代替名リスト | string配列（空配列可） |
 | **metadata** | object | ✅ 必須 | メタデータ | - |
-| ↳ total_suggestions | integer | ✅ 必須 | 総提案数 | 正の整数 |
-| ↳ total_hits | integer | ✅ 必須 | 総ヒット数 | 正の整数 |
-| ↳ search_time_ms | integer | ✅ 必須 | 検索時間 | ミリ秒単位 |
-| ↳ processing_time_ms | integer | ✅ 必須 | 処理時間 | ミリ秒単位 |
+| ↳ total_suggestions | number | ✅ 必須 | 総提案数 | 正の数値 |
+| ↳ total_hits | number | ✅ 必須 | 総ヒット数 | 正の数値 |
+| ↳ search_time_ms | number | ✅ 必須 | 検索時間 | ミリ秒単位 |
+| ↳ processing_time_ms | number | ✅ 必須 | 処理時間 | ミリ秒単位 |
 | ↳ elasticsearch_index | string | ✅ 必須 | 使用インデックス | 固定値: "mynetdiary_list_support_db" |
 | **status** | object | ✅ 必須 | ステータス情報 | - |
 | ↳ success | boolean | ✅ 必須 | 成功フラグ | true/false |
 | ↳ message | string | ✅ 必須 | ステータスメッセージ | UTF-8文字列 |
 
 ### エラーレスポンス (HTTP 422)
+
+**注意**: 現在の実装では`status.success=false`のケースは存在しません。検索結果が0件の場合でも`success=true`となり、`suggestions`が空配列になります。
 
 | フィールド | 型 | 必須/任意 | 説明 | フォーマット |
 |-----------|---|-----------|------|-------------|
@@ -177,8 +179,8 @@ curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/
 - **日付**: ISO 8601形式 (`2025-09-16T03:01:10.376227Z`)
 - **カロリー**: kcal単位、小数点以下有効（例: `164.02`）
 - **タンパク質**: g単位、小数点以下有効（例: `9.15`）
-- **処理時間**: ミリ秒単位の整数（例: `34`）
-- **信頼度**: 0-100の数値（例: `100.0`）
+- **処理時間**: ミリ秒単位の数値（例: `34`）
+- **信頼度**: 0-100の数値（例: `100`）
 
 ### 4. 栄養検索ヘルスチェック
 ```
@@ -193,6 +195,19 @@ GET /docs
 Swagger UI（インタラクティブAPI仕様書）
 
 ## 🎯 検索機能の特徴
+
+### 🤔 なぜ単純な配列ではなく複雑な構造？
+
+Query APIが単純な食材名配列ではなく、構造化されたレスポンスを返す理由：
+
+1. **高度な検索戦略**: 7段階Tier検索により、様々なマッチタイプ（完全一致・前方一致・フレーズ一致・曖昧一致）を提供
+2. **栄養プレビュー**: カロリー・タンパク質を即座に確認でき、詳細分析前の判断材料に
+3. **代替名サポート**: "chickpeas" ↔ "garbanzo beans"等の双方向検索で利用者の多様な表現に対応
+4. **信頼度スコア**: 検索結果の信頼性を数値で提示し、AIの判断精度向上に寄与
+5. **デバッグ・メタデータ**: 処理時間、検索方法等の情報で開発・運用時のトラブルシューティングが可能
+6. **API統合容易性**: 構造化データにより他のシステムとの連携が容易
+
+**→ 単なる食材リストではなく、栄養分析AI system全体のパフォーマンス向上を目的とした設計**
 
 ### 7段階Tier検索戦略
 
