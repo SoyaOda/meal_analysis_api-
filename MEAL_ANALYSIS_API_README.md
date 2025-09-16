@@ -95,15 +95,46 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 
 ```json
 {
-  "analysis_id": "31ea9010",
+  "analysis_id": "dc24ec32",
+  "phase1_result": {
+    "detected_food_items": [],
+    "dishes": [
+      {
+        "dish_name": "Tacos",
+        "confidence": 0.95,
+        "ingredients": [
+          {
+            "ingredient_name": "tortillas white flour",
+            "confidence": null,
+            "weight_g": 40.0
+          }
+        ],
+        "attributes": []
+      }
+    ],
+    "analysis_confidence": 0.95,
+    "processing_notes": ["Structured analysis generated 0 food items"]
+  },
+  "nutrition_search_result": {
+    "matches_count": 5,
+    "match_rate": 0.8333333333333334,
+    "search_summary": {
+      "total_searches": 6,
+      "successful_matches": 5,
+      "failed_searches": 1,
+      "match_rate_percent": 83.3,
+      "search_method": "word_query_api"
+    },
+    "search_method": "elasticsearch"
+  },
   "processing_summary": {
-    "total_dishes": 3,
-    "total_ingredients": 9,
-    "nutrition_search_match_rate": "12/12 (100.0%)",
+    "total_dishes": 1,
+    "total_ingredients": 5,
+    "nutrition_search_match_rate": "5/6 (83.3%)",
     "nutrition_calculation_status": "completed",
-    "total_calories": 774.87,
+    "total_calories": 479.77,
     "pipeline_status": "completed",
-    "processing_time_seconds": 14.2,
+    "processing_time_seconds": 9.089,
     "search_method": "elasticsearch",
     "nutrition_search_method": "elasticsearch"
   },
@@ -154,10 +185,16 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
     }
   },
   "model_used": "google/gemma-3-27b-it",
+  "model_config": {
+    "expected_response_time_ms": 30000,
+    "confidence_range": [0.8, 0.9],
+    "best_for": "diversity_and_detail"
+  },
   "metadata": {
     "pipeline_version": "v2.0",
-    "timestamp": "2025-09-14T09:22:13.823Z",
-    "components_used": ["Phase1Component", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"]
+    "timestamp": "2025-09-16T03:02:26.111553",
+    "components_used": ["Phase1Component", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"],
+    "nutrition_search_method": "elasticsearch"
   }
 }
 ```
@@ -182,19 +219,24 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 | ↳ analysis_confidence | number | ✅ 必須 | 全体分析信頼度 | 0.0-1.0の小数 |
 | ↳ processing_notes | array | ✅ 必須 | 処理ノート | string配列 |
 | **nutrition_search_result** | object | ✅ 必須 | 栄養検索結果 | - |
-| ↳ matches_count | integer | ✅ 必須 | マッチ数 | 正の整数 |
+| ↳ matches_count | number | ✅ 必須 | マッチ数 | 正の数値 |
 | ↳ match_rate | number | ✅ 必須 | マッチ率 | 0.0-1.0の小数 |
 | ↳ **search_summary** | object | ✅ 必須 | 検索サマリー | - |
-| ↳ ↳ total_searches | integer | ✅ 必須 | 総検索数 | 正の整数 |
-| ↳ ↳ successful_matches | integer | ✅ 必須 | 成功マッチ数 | 正の整数 |
-| ↳ ↳ failed_searches | integer | ✅ 必須 | 失敗検索数 | 正の整数 |
+| ↳ ↳ total_searches | number | ✅ 必須 | 総検索数 | 正の数値 |
+| ↳ ↳ successful_matches | number | ✅ 必須 | 成功マッチ数 | 正の数値 |
+| ↳ ↳ failed_searches | number | ✅ 必須 | 失敗検索数 | 正の数値 |
 | ↳ ↳ match_rate_percent | number | ✅ 必須 | マッチ率パーセント | 0.0-100.0の小数 |
 | ↳ ↳ search_method | string | ✅ 必須 | 検索方法 | 固定値: "word_query_api" |
-| ↳ ↳ search_time_ms | integer | ✅ 必須 | 検索時間 | ミリ秒単位 |
+| ↳ ↳ search_time_ms | number | ✅ 必須 | 検索時間 | ミリ秒単位 |
+| ↳ ↳ total_results | number | ✅ 必須 | 総結果数 | 正の数値 |
+| ↳ ↳ word_query_api_enabled | boolean | ✅ 必須 | Word Query API有効フラグ | true/false |
+| ↳ ↳ alternative_name_support | boolean | ✅ 必須 | 代替名サポートフラグ | true/false |
+| ↳ ↳ seven_tier_search | boolean | ✅ 必須 | 7段階検索フラグ | true/false |
+| ↳ ↳ total_processing_time_ms | number | ✅ 必須 | 総処理時間 | ミリ秒単位 |
 | ↳ search_method | string | ✅ 必須 | 検索手法 | 固定値: "elasticsearch" |
 | **processing_summary** | object | ✅ 必須 | 処理サマリー | - |
-| ↳ total_dishes | integer | ✅ 必須 | 総料理数 | 正の整数 |
-| ↳ total_ingredients | integer | ✅ 必須 | 総食材数 | 正の整数 |
+| ↳ total_dishes | number | ✅ 必須 | 総料理数 | 正の数値 |
+| ↳ total_ingredients | number | ✅ 必須 | 総食材数 | 正の数値 |
 | ↳ nutrition_search_match_rate | string | ✅ 必須 | 栄養検索マッチ率 | "5/6 (83.3%)"形式 |
 | ↳ nutrition_calculation_status | string | ✅ 必須 | 栄養計算ステータス | 固定値: "completed" |
 | ↳ total_calories | number | ✅ 必須 | 総カロリー | kcal単位（小数点可） |
@@ -226,11 +268,11 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 | ↳ ↳ calculation_metadata | object | ❌ 任意 | 計算メタデータ | - |
 | ↳ **total_nutrition** | object | ✅ 必須 | 全体合計栄養価 | calculated_nutritionと同構造 |
 | ↳ **calculation_summary** | object | ✅ 必須 | 計算サマリー | - |
-| ↳ ↳ total_dishes | integer | ✅ 必須 | 計算対象料理数 | 正の整数 |
-| ↳ ↳ successful_calculations | integer | ✅ 必須 | 成功計算数 | 正の整数 |
-| ↳ ↳ failed_calculations | integer | ✅ 必須 | 失敗計算数 | 正の整数 |
-| ↳ ↳ total_ingredients | integer | ✅ 必須 | 計算対象食材数 | 正の整数 |
-| ↳ ↳ processing_time_ms | integer | ✅ 必須 | 処理時間 | ミリ秒単位 |
+| ↳ ↳ total_dishes | number | ✅ 必須 | 計算対象料理数 | 正の数値 |
+| ↳ ↳ successful_calculations | number | ✅ 必須 | 成功計算数 | 正の数値 |
+| ↳ ↳ failed_calculations | number | ✅ 必須 | 失敗計算数 | 正の数値 |
+| ↳ ↳ total_ingredients | number | ✅ 必須 | 計算対象食材数 | 正の数値 |
+| ↳ ↳ processing_time_ms | number | ✅ 必須 | 処理時間 | ミリ秒単位 |
 | ↳ warnings | array | ✅ 必須 | 警告メッセージ | string配列（空配列可） |
 | **metadata** | object | ✅ 必須 | メタデータ | - |
 | ↳ pipeline_version | string | ✅ 必須 | パイプラインバージョン | 固定値: "v2.0" |
@@ -239,7 +281,7 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 | ↳ nutrition_search_method | string | ✅ 必須 | 栄養検索方法 | 固定値: "elasticsearch" |
 | **model_used** | string | ✅ 必須 | 使用AIモデル | "google/gemma-3-27b-it"等 |
 | **model_config** | object | ❌ 任意 | モデル設定情報 | - |
-| ↳ expected_response_time_ms | integer | ❌ 任意 | 想定応答時間 | ミリ秒単位 |
+| ↳ expected_response_time_ms | number | ❌ 任意 | 想定応答時間 | ミリ秒単位 |
 | ↳ confidence_range | array | ❌ 任意 | 信頼度範囲 | [min, max]の数値配列 |
 | ↳ best_for | string | ❌ 任意 | 適用場面 | モデル特性説明 |
 | **optional_text_used** | string | ❌ 任意 | 使用追加テキスト | optional_text指定時のみ |
