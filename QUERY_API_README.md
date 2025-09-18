@@ -1,4 +1,4 @@
-# Query API Documentation
+# Word Query API Documentation
 
 ## 概要
 
@@ -7,18 +7,19 @@ MyNetDiary栄養検索システムを基盤とした高性能な食材検索予�
 ## 🚀 本番環境情報
 
 ### API基本情報
-- **API URL**: `https://meal-analysis-api-v2-1077966746907.us-central1.run.app`
-- **バージョン**: v2.0
-- **アーキテクチャ**: Component-based Pipeline
-- **プラットフォーム**: Google Cloud Run
-- **データベース**: Elasticsearch 8.19.3 (Google Compute Engine VM)
+- **API URL**: `https://word-query-api-1077966746907.us-central1.run.app`
+- **バージョン**: v2.0 Enhanced
+- **プラットフォーム**: Google Cloud Run (独立サービス)
+- **データベース**: Elasticsearch 8.15.1 (Google Compute Engine VM)
+- **OpenAPI/Swagger**: 完全対応（リアルなExample値付き）
 
 ### インフラ構成
 - **Cloud Run**:
-  - メモリ: 2GB
-  - CPU: 2コア
+  - メモリ: 1GB
+  - CPU: 1コア
   - タイムアウト: 300秒
   - 自動スケーリング対応
+  - 独立したword-query-apiサービス
 - **Elasticsearch VM**:
   - インスタンス: `elasticsearch-vm`
   - ゾーン: `us-central1-a`
@@ -35,9 +36,9 @@ API基本情報の取得
 **レスポンス例**:
 ```json
 {
-  "message": "食事分析 API v2.0 - コンポーネント化版",
+  "message": "Word Query API v2.0 Enhanced",
   "version": "2.0.0",
-  "architecture": "Component-based Pipeline",
+  "features": ["7-Tier Search", "Real Example Values", "Complete OpenAPI Schema"],
   "docs": "/docs"
 }
 ```
@@ -52,8 +53,9 @@ API稼働状況の確認
 ```json
 {
   "status": "healthy",
-  "version": "v2.0",
-  "components": ["Phase1Component", "USDAQueryComponent"]
+  "service": "word_query_api",
+  "elasticsearch_status": "connected",
+  "version": "v2.0 Enhanced"
 }
 ```
 
@@ -74,10 +76,10 @@ GET /api/v1/nutrition/suggest
 #### リクエスト例
 ```bash
 # 基本的な検索
-curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chicken&limit=5"
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chicken&limit=5"
 
 # デバッグ情報付き
-curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chickpeas&limit=10&debug=true"
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chickpeas&limit=10&debug=true"
 ```
 
 #### レスポンス形式
@@ -103,8 +105,10 @@ curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutr
         "original_name": "Chickpeas or garbanzo beans boiled with salt"
       },
       "nutrition_preview": {
-        "calories": 164.02,
-        "protein": 9.15,
+        "calories": 165.0,
+        "protein": 31.0,
+        "carbohydrates": 0.0,
+        "fat": 3.6,
         "per_serving": "100g"
       },
       "alternative_names": ["garbanzo beans"]
@@ -166,13 +170,13 @@ Swagger UI（インタラクティブAPI仕様書）
 
 ```bash
 # 1. チキン料理の検索
-curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chicken&limit=3"
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chicken&limit=3"
 
 # 2. 代替名検索（ひよこ豆/ガルバンゾ豆）
-curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=garbanzo&limit=5"
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=garbanzo&limit=5"
 
 # 3. 部分一致検索
-curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=brown%20rice&limit=5"
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=brown%20rice&limit=5"
 ```
 
 ### レスポンス時間ベンチマーク
@@ -189,17 +193,18 @@ curl "https://meal-analysis-api-v2-1077966746907.us-central1.run.app/api/v1/nutr
 
 ### 最新デプロイ状況
 
-- **デプロイ日時**: 2025-09-13 18:18
-- **リビジョン**: `meal-analysis-api-v2-00004-t4r`
-- **コンテナイメージ**: `gcr.io/new-snap-calorie/meal-analysis-api-v2:latest`
-- **ステータス**: 🟢 稼働中
+- **デプロイ日時**: 2025-09-18 08:25
+- **リビジョン**: `word-query-api-00003-b8h`
+- **コンテナイメージ**: `gcr.io/new-snap-calorie/word-query-api:v2-examples`
+- **ステータス**: 🟢 稼働中（Enhanced版）
 
 ### 環境変数
 
-- `USDA_API_KEY`: vSWtKJ3jYD0Cn9LRyVJUFkuyCt9p8rEtVXz74PZg
-- `GEMINI_PROJECT_ID`: new-snap-calorie
-- `GEMINI_LOCATION`: us-central1
-- `GEMINI_MODEL_NAME`: gemini-2.5-flash-preview-05-20
+- `elasticsearch_url`: http://35.193.16.212:9200
+- `elasticsearch_index_name`: mynetdiary_list_support_db
+- `API_LOG_LEVEL`: INFO
+- `HOST`: 0.0.0.0
+- `PORT`: 8000
 
 ### 依存関係
 
@@ -293,15 +298,39 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 
 ## 🔄 更新履歴
 
+### 2025-09-18 v2.0 Enhanced - 大幅改善リリース ✨
+
+#### 🎯 主要改善項目
+- ✅ **OpenAPI/Swaggerスキーマ完全修正**: 空のレスポンススキーマ `{}` を完全な構造化スキーマに修正
+- ✅ **リアルなExample値追加**: calories: 165.0, protein: 31.0 など実際の数値をSwaggerに表示
+- ✅ **栄養データ修正**: carbohydratesとfatデータが正しく返されるよう修正
+- ✅ **7段階Tier検索システム実装**: 高精度な食材検索機能
+- ✅ **独立サービス化**: meal-analysis-apiから分離したword-query-api専用サービス
+- ✅ **本番環境デプロイ完了**: meal-analysis-apiを保護しながらword-query-apiのみ安全更新
+
+#### 🔧 技術的改善
+1. **Pydanticモデル完全実装**:
+   - `SuggestionResponse`, `QueryInfo`, `FoodInfo`, `NutritionPreview` など
+   - 全フィールドにリアルなExample値を設定
+
+2. **APIレスポンス修正**:
+   - JSONResponse直接返却からPydantic model返却に変更
+   - FastAPIの自動OpenAPIスキーマ生成を活用
+
+3. **栄養データフィールド修正**:
+   - Elasticsearchの"carbs"フィールドを"carbohydrates"として正しく返却
+   - "fat"フィールドを追加してより完全な栄養情報を提供
+
 ### 2025-09-13 v2.0
 - 7段階Tier検索システム実装
 - 代替名検索機能追加（chickpeas ↔ garbanzo beans）
 - Cloud Run本番環境デプロイ完了
 - Elasticsearch VM統合
 - ローカル vs API 100%互換性確認
-- 平均応答時間33%改善
 
 ---
 
-**🎊 APIは正常に稼働中です！**
-本格的な食材検索予測機能をご利用いただけます。
+**🎊 Word Query API Enhanced版が正常稼働中！**
+完全なSwagger仕様書とリアルなExample値付きで、本格的な食材検索予測機能をご利用いただけます。
+
+**📖 Swagger UI**: https://word-query-api-1077966746907.us-central1.run.app/docs

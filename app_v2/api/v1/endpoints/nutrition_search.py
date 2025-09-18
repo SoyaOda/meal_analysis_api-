@@ -7,6 +7,12 @@ import requests
 import json
 from datetime import datetime
 
+# レスポンスモデルをインポート
+from app_v2.models.nutrition_search_models import (
+    SuggestionResponse, SuggestionErrorResponse, QueryInfo, Suggestion,
+    FoodInfo, NutritionPreview, SearchMetadata, SearchStatus, DebugInfo
+)
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -65,7 +71,7 @@ def elasticsearch_search_optimized(query: str, size: int = 10) -> dict:
     except Exception as e:
         return {"error": str(e)}
 
-@router.get("/suggest")
+@router.get("/suggest", response_model=SuggestionResponse)
 async def suggest_foods(
     q: str = Query(..., min_length=2, description="検索クエリ（最小2文字）"),
     limit: int = Query(10, ge=1, le=50, description="提案数（1-50件）"),
@@ -126,11 +132,13 @@ async def suggest_foods(
             description = source.get("description", "")
             original_name = source.get("original_name", "")
 
-            # 栄養情報（プレビュー用）
+            # 栄養情報（プレビュー用）- 修正：正しいフィールド名を使用
             nutrition = source.get("nutrition", {})
             nutrition_preview = {
                 "calories": nutrition.get("calories", 0),
                 "protein": nutrition.get("protein", 0),
+                "carbohydrates": nutrition.get("carbs", 0),  # 修正: carbs -> carbohydrates
+                "fat": nutrition.get("fat", 0),  # 追加: 脂質も含める
                 "per_serving": "100g"
             }
 
@@ -206,10 +214,8 @@ async def suggest_foods(
 
         logger.info(f"Suggestion completed: {len(suggestions)} results in {processing_time}ms")
 
-        return JSONResponse(
-            status_code=200,
-            content=response_data
-        )
+        # Pydanticモデルとして返す
+        return SuggestionResponse(**response_data)
 
     except HTTPException:
         raise
@@ -217,24 +223,26 @@ async def suggest_foods(
         logger.error(f"Nutrition suggestion failed: {e}", exc_info=True)
         processing_time = int((time.time() - start_time) * 1000)
 
-        return JSONResponse(
-            status_code=500,
-            content={
-                "query_info": {
-                    "original_query": q,
-                    "timestamp": datetime.now().isoformat() + "Z"
-                },
-                "suggestions": [],
-                "metadata": {
-                    "total_suggestions": 0,
-                    "processing_time_ms": processing_time
-                },
-                "status": {
-                    "success": False,
-                    "message": f"Suggestion search failed: {str(e)}"
-                }
-            }
+        error_response = SuggestionErrorResponse(
+            query_info=QueryInfo(
+                original_query=q,
+                processed_query=q,
+                timestamp=datetime.now().isoformat() + "Z"
+            ),
+            suggestions=[],
+            metadata=SearchMetadata(
+                total_suggestions=0,
+                total_hits=0,
+                search_time_ms=0,
+                processing_time_ms=processing_time,
+                elasticsearch_index=INDEX_NAME
+            ),
+            status=SearchStatus(
+                success=False,
+                message=f"Suggestion search failed: {str(e)}"
+            )
         )
+        return JSONResponse(status_code=500, content=error_response.dict())
 
 @router.get("/suggest/health")
 async def suggestion_health_check():

@@ -166,3 +166,78 @@ class NutritionQueryOutput(BaseModel):
             "elasticsearch_strategic",
             "two_stage_search"
         ] 
+
+
+# Word Query API専用レスポンスモデル
+class QueryInfo(BaseModel):
+    """検索クエリ情報"""
+    original_query: str = Field(..., description="元の検索クエリ", example="chicken")
+    processed_query: str = Field(..., description="処理後検索クエリ", example="chicken") 
+    timestamp: str = Field(..., description="処理時刻（ISO 8601 UTC形式）", example="2025-09-18T07:42:15.123456Z")
+    suggestion_type: str = Field(default="autocomplete", description="提案タイプ", example="autocomplete")
+
+
+class FoodInfo(BaseModel):
+    """食材詳細情報"""
+    search_name: str = Field(..., description="検索名", example="chicken breast")
+    search_name_list: List[str] = Field(..., description="検索名リスト", example=["chicken breast", "chicken breast fillet"])
+    description: Optional[str] = Field(None, description="食材説明", example="boneless, skinless, raw")
+    original_name: str = Field(..., description="元の食材名", example="Chicken breast boneless skinless raw")
+
+
+class NutritionPreview(BaseModel):
+    """栄養プレビュー"""
+    calories: float = Field(..., description="カロリー（kcal）", example=165.0)
+    protein: float = Field(..., description="タンパク質（g）", example=31.0)
+    carbohydrates: float = Field(..., description="炭水化物（g）", example=0.0)
+    fat: float = Field(..., description="脂質（g）", example=3.6)
+    per_serving: str = Field(default="100g", description="基準量", example="100g")
+
+
+class Suggestion(BaseModel):
+    """検索候補"""
+    rank: int = Field(..., description="順位", example=1)
+    suggestion: str = Field(..., description="提案食材名", example="chicken breast")
+    match_type: str = Field(..., description="マッチタイプ", example="exact_match")
+    confidence_score: float = Field(..., description="信頼度スコア（0-100）", example=95.8)
+    food_info: FoodInfo = Field(..., description="食材詳細情報")
+    nutrition_preview: NutritionPreview = Field(..., description="栄養プレビュー")
+    alternative_names: List[str] = Field(..., description="代替名リスト", example=["chicken breast fillet", "chicken breast meat"])
+
+
+class SearchMetadata(BaseModel):
+    """検索メタデータ"""
+    total_suggestions: int = Field(..., description="総提案数", example=10)
+    total_hits: int = Field(..., description="総ヒット数", example=25)
+    search_time_ms: int = Field(..., description="検索時間（ミリ秒）", example=350)
+    processing_time_ms: int = Field(..., description="処理時間（ミリ秒）", example=385)
+    elasticsearch_index: str = Field(..., description="使用インデックス", example="mynetdiary_list_support_db")
+
+
+class SearchStatus(BaseModel):
+    """検索ステータス"""
+    success: bool = Field(..., description="成功フラグ", example=True)
+    message: str = Field(..., description="ステータスメッセージ", example="Suggestions generated successfully")
+
+
+class DebugInfo(BaseModel):
+    """デバッグ情報（debug=true時）"""
+    elasticsearch_query_used: str = Field(..., description="使用されたElasticsearchクエリタイプ")
+    tier_scoring: Dict[str, int] = Field(..., description="Tier検索スコア設定")
+
+
+class SuggestionResponse(BaseModel):
+    """Word Query API レスポンスモデル"""
+    query_info: QueryInfo = Field(..., description="検索クエリ情報")
+    suggestions: List[Suggestion] = Field(..., description="検索候補リスト")
+    metadata: SearchMetadata = Field(..., description="検索メタデータ")
+    status: SearchStatus = Field(..., description="検索ステータス")
+    debug_info: Optional[DebugInfo] = Field(None, description="デバッグ情報（debug=true時のみ）")
+
+
+class SuggestionErrorResponse(BaseModel):
+    """Word Query API エラーレスポンスモデル"""
+    query_info: QueryInfo = Field(..., description="検索クエリ情報")
+    suggestions: List[Suggestion] = Field(default_factory=list, description="空の検索候補リスト")
+    metadata: SearchMetadata = Field(..., description="検索メタデータ")
+    status: SearchStatus = Field(..., description="検索ステータス")
