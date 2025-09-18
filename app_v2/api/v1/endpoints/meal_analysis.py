@@ -4,13 +4,18 @@ from typing import Optional
 import logging
 
 from ....pipeline import MealAnalysisPipeline
+from ....models.meal_analysis_models import (
+    SimplifiedCompleteAnalysisResponse,
+    HealthCheckResponse,
+    PipelineInfoResponse
+)
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
 
-@router.post("/complete")
+@router.post("/complete", response_model=SimplifiedCompleteAnalysisResponse)
 async def complete_meal_analysis(
     image: UploadFile = File(...),
     save_detailed_logs: bool = Form(True),
@@ -20,7 +25,7 @@ async def complete_meal_analysis(
     optional_text: Optional[str] = Form(None),
     temperature: Optional[float] = Form(0.0),
     seed: Optional[int] = Form(123456)
-):
+) -> SimplifiedCompleteAnalysisResponse:
     """
     完全な食事分析を実行（v2.0 コンポーネント化版）
     
@@ -110,10 +115,9 @@ async def complete_meal_analysis(
         
         logger.info(f"Complete analysis pipeline v2.0 finished successfully with model: {effective_model}")
         
-        return JSONResponse(
-            status_code=200,
-            content=result
-        )
+        # Convert complex result to simplified model
+        simplified_response = _convert_to_simplified_response(result)
+        return simplified_response
         
     except HTTPException:
         raise
@@ -125,14 +129,95 @@ async def complete_meal_analysis(
         )
 
 
-@router.get("/health")
-async def health_check():
+def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisResponse:
+    """Convert complex API result to simplified response model"""
+    from ....models.meal_analysis_models import SimplifiedCompleteAnalysisResponse, DishSummary, SimplifiedNutritionInfo, IngredientSummary
+
+    # Extract dishes information
+    dishes = []
+    phase1_result = result.get("phase1_result", {})
+    final_nutrition_result = result.get("final_nutrition_result", {})
+
+    for dish_data in phase1_result.get("dishes", []):
+        # Find corresponding nutrition data
+        dish_nutrition = None
+        for nutrition_dish in final_nutrition_result.get("dishes", []):
+            if nutrition_dish.get("dish_name") == dish_data.get("dish_name"):
+                dish_nutrition = nutrition_dish
+                break
+
+        # Extract ingredients with details
+        ingredients = []
+        for ingredient_data in dish_data.get("ingredients", []):
+            # Find corresponding nutrition calculation for this ingredient
+            ingredient_calories = 0.0
+            if dish_nutrition:
+                for nutrition_ingredient in dish_nutrition.get("ingredients", []):
+                    if nutrition_ingredient.get("ingredient_name") == ingredient_data.get("ingredient_name"):
+                        ingredient_calories = nutrition_ingredient.get("calculated_nutrition", {}).get("calories", 0.0)
+                        break
+
+            ingredients.append(IngredientSummary(
+                name=ingredient_data.get("ingredient_name", "Unknown"),
+                weight_g=ingredient_data.get("weight_g", 0.0),
+                calories=ingredient_calories
+            ))
+
+        total_calories = 0.0
+        if dish_nutrition:
+            total_calories = dish_nutrition.get("total_nutrition", {}).get("calories", 0.0)
+
+        dishes.append(DishSummary(
+            dish_name=dish_data.get("dish_name", "Unknown"),
+            confidence=dish_data.get("confidence", 0.0),
+            ingredient_count=len(ingredients),
+            ingredients=ingredients,
+            total_calories=total_calories
+        ))
+    
+    # Extract total nutrition
+    total_nutrition_data = final_nutrition_result.get("total_nutrition", {})
+    total_nutrition = SimplifiedNutritionInfo(
+        calories=total_nutrition_data.get("calories", 0.0),
+        protein=total_nutrition_data.get("protein", 0.0),
+        fat=total_nutrition_data.get("fat", 0.0),
+        carbs=total_nutrition_data.get("carbs", 0.0)
+    )
+    
+    # Extract search match rate
+    nutrition_search_result = result.get("nutrition_search_result", {})
+    match_rate = nutrition_search_result.get("match_rate", 0.0) * 100.0  # Convert to percentage
+    
+    # Extract processing time
+    processing_summary = result.get("processing_summary", {})
+    processing_time = processing_summary.get("processing_time_seconds", 0.0)
+    
+    return SimplifiedCompleteAnalysisResponse(
+        analysis_id=result.get("analysis_id", "unknown"),
+        total_dishes=len(dishes),
+        total_ingredients=processing_summary.get("total_ingredients", 0),
+        processing_time_seconds=processing_time,
+        dishes=dishes,
+        total_nutrition=total_nutrition,
+        model_used=result.get("model_used", "unknown"),
+        match_rate_percent=match_rate,
+        search_method=result.get("processing_summary", {}).get("search_method", "elasticsearch")
+    )
+
+
+@router.get("/health", response_model=HealthCheckResponse)
+async def health_check() -> HealthCheckResponse:
     """ヘルスチェック"""
-    return {"status": "healthy", "version": "v2.0", "message": "食事分析API v2.0 - コンポーネント化版"}
+    return HealthCheckResponse(
+        status="healthy", 
+        version="v2.0", 
+        components=["Phase1Component", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"]
+    )
 
 
-@router.get("/pipeline-info")
-async def get_pipeline_info():
+@router.get("/pipeline-info", response_model=PipelineInfoResponse)
+async def get_pipeline_info() -> PipelineInfoResponse:
     """パイプライン情報の取得"""
     pipeline = MealAnalysisPipeline()
-    return pipeline.get_pipeline_info() 
+    info = pipeline.get_pipeline_info()
+    return PipelineInfoResponse(**info) 
