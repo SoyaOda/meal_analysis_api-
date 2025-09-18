@@ -91,200 +91,135 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
   -F "save_detailed_logs=false"
 ```
 
-#### レスポンス形式
+#### レスポンス形式 (簡略化版 - Enhanced Swagger)
+
+**2025-09-18更新**: Swaggerドキュメント改善のため、レスポンス構造を簡略化しました。
 
 ```json
 {
-  "analysis_id": "dc24ec32",
-  "phase1_result": {
-    "detected_food_items": [],
-    "dishes": [
-      {
-        "dish_name": "Tacos",
-        "confidence": 0.95,
-        "ingredients": [
-          {
-            "ingredient_name": "tortillas white flour",
-            "confidence": null,
-            "weight_g": 40.0
-          }
-        ],
-        "attributes": []
-      }
-    ],
-    "analysis_confidence": 0.95,
-    "processing_notes": ["Structured analysis generated 0 food items"]
-  },
-  "nutrition_search_result": {
-    "matches_count": 5,
-    "match_rate": 0.8333333333333334,
-    "search_summary": {
-      "total_searches": 6,
-      "successful_matches": 5,
-      "failed_searches": 1,
-      "match_rate_percent": 83.3,
-      "search_method": "word_query_api"
-    },
-    "search_method": "elasticsearch"
-  },
-  "processing_summary": {
-    "total_dishes": 1,
-    "total_ingredients": 5,
-    "nutrition_search_match_rate": "5/6 (83.3%)",
-    "nutrition_calculation_status": "completed",
-    "total_calories": 479.77,
-    "pipeline_status": "completed",
-    "processing_time_seconds": 9.089,
-    "search_method": "elasticsearch",
-    "nutrition_search_method": "elasticsearch"
-  },
-  "final_nutrition_result": {
-    "dishes": [
-      {
-        "dish_name": "Caesar Salad",
-        "confidence": 0.95,
-        "ingredients": [
-          {
-            "ingredient_name": "lettuce romaine raw",
-            "weight_g": 150,
-            "calculated_nutrition": {
-              "calories": 25.5,
-              "protein": 2.31,
-              "fat": 0.45,
-              "carbs": 4.65,
-              "fiber": 3.15,
-              "sugar": 2.31,
-              "sodium": 12.0
-            },
-            "source_db": "word_query_api"
-          }
-        ],
-        "total_nutrition": {
-          "calories": 413.47,
-          "protein": 12.84,
-          "fat": 34.12,
-          "carbs": 18.95,
-          "fiber": 4.23,
-          "sugar": 3.67,
-          "sodium": 892.15
+  "analysis_id": "58de2533",
+  "total_dishes": 3,
+  "total_ingredients": 9,
+  "processing_time_seconds": 14.557481,
+  "dishes": [
+    {
+      "dish_name": "Caesar Salad",
+      "confidence": 0.95,
+      "ingredient_count": 4,
+      "ingredients": [
+        {
+          "name": "lettuce romaine raw",
+          "weight_g": 150.0,
+          "calories": 25.53191489361702
+        },
+        {
+          "name": "croutons seasoned",
+          "weight_g": 30.0,
+          "calories": 139.5
+        },
+        {
+          "name": "Parmesan cheese grated",
+          "weight_g": 15.0,
+          "calories": 63.0
+        },
+        {
+          "name": "Salad dressing caesar regular",
+          "weight_g": 20.0,
+          "calories": 82.04255319148938
         }
-      }
-    ],
-    "total_nutrition": {
-      "calories": 774.87,
-      "protein": 24.51,
-      "fat": 45.63,
-      "carbs": 62.18,
-      "fiber": 6.89,
-      "sugar": 8.92,
-      "sodium": 1245.67
+      ],
+      "total_calories": 310.0744680851064
     },
-    "calculation_summary": {
-      "total_dishes": 3,
-      "total_ingredients": 9
+    {
+      "dish_name": "Penne Pasta with Tomato Sauce",
+      "confidence": 0.9,
+      "ingredient_count": 3,
+      "ingredients": [
+        {
+          "name": "pasta white cooked without salt",
+          "weight_g": 250.0,
+          "calories": 394.64285714285717
+        },
+        {
+          "name": "tomato sauce canned",
+          "weight_g": 80.0,
+          "calories": 19.26530612244898
+        },
+        {
+          "name": "olive or extra virgin olive oil",
+          "weight_g": 5.0,
+          "calories": 42.5
+        }
+      ],
+      "total_calories": 456.40816326530614
+    },
+    {
+      "dish_name": "Iced Tea",
+      "confidence": 0.98,
+      "ingredient_count": 2,
+      "ingredients": [
+        {
+          "name": "tea black regular prepared without milk or sugar",
+          "weight_g": 300.0,
+          "calories": 0.0
+        },
+        {
+          "name": "ice (frozen water)",
+          "weight_g": 50.0,
+          "calories": 0.0
+        }
+      ],
+      "total_calories": 0.0
     }
+  ],
+  "total_nutrition": {
+    "calories": 766.4826313504125,
+    "protein": 26.252540165002173,
+    "fat": 0.0,
+    "carbs": 0.0
   },
   "model_used": "google/gemma-3-27b-it",
-  "model_config": {
-    "expected_response_time_ms": 30000,
-    "confidence_range": [0.8, 0.9],
-    "best_for": "diversity_and_detail"
-  },
-  "metadata": {
-    "pipeline_version": "v2.0",
-    "timestamp": "2025-09-16T03:02:26.111553",
-    "components_used": ["Phase1Component", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"],
-    "nutrition_search_method": "elasticsearch"
-  }
+  "match_rate_percent": 100.0,
+  "search_method": "elasticsearch"
 }
 ```
 
-## 📋 詳細レスポンススキーマ
+## 📋 簡略化レスポンススキーマ (Enhanced Swagger v2.0)
 
-### 成功レスポンス (HTTP 200)
+**2025-09-18更新**: Swagger UIでの可読性向上のため、レスポンス構造を簡略化しました。
 
-| フィールド | 型 | 必須/任意 | 説明 | フォーマット |
-|-----------|---|-----------|------|-------------|
-| **analysis_id** | string | ✅ 必須 | 分析セッションID | 8文字のUUID短縮形 |
-| **phase1_result** | object | ✅ 必須 | Phase1画像認識結果 | - |
-| ↳ detected_food_items | array | ✅ 必須 | 検出食品アイテム | object配列（空配列可） |
-| ↳ **dishes** | array | ✅ 必須 | 検出料理リスト | - |
-| ↳ ↳ dish_name | string | ✅ 必須 | 料理名 | UTF-8文字列 |
-| ↳ ↳ confidence | number | ✅ 必須 | 認識信頼度 | 0.0-1.0の小数 |
-| ↳ ↳ **ingredients** | array | ✅ 必須 | 食材リスト | - |
-| ↳ ↳ ↳ ingredient_name | string | ✅ 必須 | 食材名 | UTF-8文字列 |
-| ↳ ↳ ↳ weight_g | number | ✅ 必須 | 重量 | g単位（小数点可） |
-| ↳ ↳ ↳ confidence | number | ❌ 任意 | 食材信頼度 | 0.0-1.0 or null |
-| ↳ ↳ attributes | array | ✅ 必須 | 料理属性 | object配列（空配列可） |
-| ↳ analysis_confidence | number | ✅ 必須 | 全体分析信頼度 | 0.0-1.0の小数 |
-| ↳ processing_notes | array | ✅ 必須 | 処理ノート | string配列 |
-| **nutrition_search_result** | object | ✅ 必須 | 栄養検索結果 | - |
-| ↳ matches_count | number | ✅ 必須 | マッチ数 | 正の数値 |
-| ↳ match_rate | number | ✅ 必須 | マッチ率 | 0.0-1.0の小数 |
-| ↳ **search_summary** | object | ✅ 必須 | 検索サマリー | - |
-| ↳ ↳ total_searches | number | ✅ 必須 | 総検索数 | 正の数値 |
-| ↳ ↳ successful_matches | number | ✅ 必須 | 成功マッチ数 | 正の数値 |
-| ↳ ↳ failed_searches | number | ✅ 必須 | 失敗検索数 | 正の数値 |
-| ↳ ↳ match_rate_percent | number | ✅ 必須 | マッチ率パーセント | 0.0-100.0の小数 |
-| ↳ ↳ search_method | string | ✅ 必須 | 検索方法 | 固定値: "word_query_api" |
-| ↳ ↳ search_time_ms | number | ✅ 必須 | 検索時間 | ミリ秒単位 |
-| ↳ ↳ total_results | number | ✅ 必須 | 総結果数 | 正の数値 |
-| ↳ ↳ word_query_api_enabled | boolean | ✅ 必須 | Word Query API有効フラグ | true/false |
-| ↳ ↳ alternative_name_support | boolean | ✅ 必須 | 代替名サポートフラグ | true/false |
-| ↳ ↳ seven_tier_search | boolean | ✅ 必須 | 7段階検索フラグ | true/false |
-| ↳ ↳ total_processing_time_ms | number | ✅ 必須 | 総処理時間 | ミリ秒単位 |
-| ↳ search_method | string | ✅ 必須 | 検索手法 | 固定値: "elasticsearch" |
-| **processing_summary** | object | ✅ 必須 | 処理サマリー | - |
-| ↳ total_dishes | number | ✅ 必須 | 総料理数 | 正の数値 |
-| ↳ total_ingredients | number | ✅ 必須 | 総食材数 | 正の数値 |
-| ↳ nutrition_search_match_rate | string | ✅ 必須 | 栄養検索マッチ率 | "5/6 (83.3%)"形式 |
-| ↳ nutrition_calculation_status | string | ✅ 必須 | 栄養計算ステータス | 固定値: "completed" |
-| ↳ total_calories | number | ✅ 必須 | 総カロリー | kcal単位（小数点可） |
-| ↳ pipeline_status | string | ✅ 必須 | パイプラインステータス | 固定値: "completed" |
-| ↳ processing_time_seconds | number | ✅ 必須 | 処理時間 | 秒単位（小数点可） |
-| ↳ search_method | string | ✅ 必須 | 検索方法 | 固定値: "elasticsearch" |
-| ↳ nutrition_search_method | string | ✅ 必須 | 栄養検索方法 | 固定値: "elasticsearch" |
-| **final_nutrition_result** | object | ✅ 必須 | 最終栄養結果 | - |
-| ↳ **dishes** | array | ✅ 必須 | 料理別栄養情報 | - |
-| ↳ ↳ dish_name | string | ✅ 必須 | 料理名 | UTF-8文字列 |
-| ↳ ↳ confidence | number | ✅ 必須 | 信頼度 | 0.0-1.0の小数 |
-| ↳ ↳ **ingredients** | array | ✅ 必須 | 食材栄養情報 | - |
-| ↳ ↳ ↳ ingredient_name | string | ✅ 必須 | 食材名 | UTF-8文字列 |
-| ↳ ↳ ↳ weight_g | number | ✅ 必須 | 重量 | g単位（小数点可） |
-| ↳ ↳ ↳ **nutrition_per_100g** | object | ✅ 必須 | 100g当たり栄養価 | - |
-| ↳ ↳ ↳ ↳ calories | number | ✅ 必須 | カロリー | kcal単位（小数点可） |
-| ↳ ↳ ↳ ↳ protein | number | ✅ 必須 | タンパク質 | g単位（小数点可） |
-| ↳ ↳ ↳ **calculated_nutrition** | object | ✅ 必須 | 実重量計算栄養価 | - |
-| ↳ ↳ ↳ ↳ calories | number | ✅ 必須 | カロリー | kcal単位（小数点可） |
-| ↳ ↳ ↳ ↳ protein | number | ✅ 必須 | タンパク質 | g単位（小数点可） |
-| ↳ ↳ ↳ ↳ fat | number | ✅ 必須 | 脂質 | g単位（小数点可、0.0可） |
-| ↳ ↳ ↳ ↳ carbs | number | ✅ 必須 | 炭水化物 | g単位（小数点可、0.0可） |
-| ↳ ↳ ↳ ↳ fiber | number | ❌ 任意 | 食物繊維 | g単位 or null |
-| ↳ ↳ ↳ ↳ sugar | number | ❌ 任意 | 糖質 | g単位 or null |
-| ↳ ↳ ↳ ↳ sodium | number | ❌ 任意 | ナトリウム | mg単位 or null |
-| ↳ ↳ ↳ source_db | string | ✅ 必須 | データソース | "mynetdiary_api"等 |
-| ↳ ↳ ↳ calculation_notes | array | ✅ 必須 | 計算メモ | string配列 |
-| ↳ ↳ **total_nutrition** | object | ✅ 必須 | 料理合計栄養価 | calculated_nutritionと同構造 |
-| ↳ ↳ calculation_metadata | object | ❌ 任意 | 計算メタデータ | - |
-| ↳ **total_nutrition** | object | ✅ 必須 | 全体合計栄養価 | calculated_nutritionと同構造 |
-| ↳ **calculation_summary** | object | ✅ 必須 | 計算サマリー | - |
-| ↳ ↳ total_dishes | number | ✅ 必須 | 計算対象料理数 | 正の数値 |
-| ↳ ↳ successful_calculations | number | ✅ 必須 | 成功計算数 | 正の数値 |
-| ↳ ↳ failed_calculations | number | ✅ 必須 | 失敗計算数 | 正の数値 |
-| ↳ ↳ total_ingredients | number | ✅ 必須 | 計算対象食材数 | 正の数値 |
-| ↳ ↳ processing_time_ms | number | ✅ 必須 | 処理時間 | ミリ秒単位 |
-| ↳ warnings | array | ✅ 必須 | 警告メッセージ | string配列（空配列可） |
-| **metadata** | object | ✅ 必須 | メタデータ | - |
-| ↳ pipeline_version | string | ✅ 必須 | パイプラインバージョン | 固定値: "v2.0" |
-| ↳ timestamp | string | ✅ 必須 | 処理時刻 | ISO 8601形式 |
-| ↳ components_used | array | ✅ 必須 | 使用コンポーネント | string配列 |
-| ↳ nutrition_search_method | string | ✅ 必須 | 栄養検索方法 | 固定値: "elasticsearch" |
-| **model_used** | string | ✅ 必須 | 使用AIモデル | "google/gemma-3-27b-it"等 |
-| **model_config** | object | ❌ 任意 | モデル設定情報 | - |
-| ↳ expected_response_time_ms | number | ❌ 任意 | 想定応答時間 | ミリ秒単位 |
-| ↳ confidence_range | array | ❌ 任意 | 信頼度範囲 | [min, max]の数値配列 |
-| ↳ best_for | string | ❌ 任意 | 適用場面 | モデル特性説明 |
-| **optional_text_used** | string | ❌ 任意 | 使用追加テキスト | optional_text指定時のみ |
+### 成功レスポンス (HTTP 200) - SimplifiedCompleteAnalysisResponse
+
+| フィールド | 型 | 必須/任意 | 説明 | 例 |
+|-----------|---|-----------|------|-----|
+| **analysis_id** | string | ✅ 必須 | 分析セッションID | "58de2533" |
+| **total_dishes** | integer | ✅ 必須 | 検出された料理数 | 3 |
+| **total_ingredients** | integer | ✅ 必須 | 総食材数 | 9 |
+| **processing_time_seconds** | number | ✅ 必須 | 処理時間（秒） | 14.557481 |
+| **dishes** | array | ✅ 必須 | 料理一覧（DishSummary配列） | - |
+| ↳ **dish_name** | string | ✅ 必須 | 料理名 | "Caesar Salad" |
+| ↳ **confidence** | number | ✅ 必須 | 識別信頼度 | 0.95 |
+| ↳ **ingredient_count** | integer | ✅ 必須 | 食材数 | 4 |
+| ↳ **ingredients** | array | ✅ 必須 | 食材詳細（IngredientSummary配列） | - |
+| ↳ ↳ **name** | string | ✅ 必須 | 食材名 | "lettuce romaine raw" |
+| ↳ ↳ **weight_g** | number | ✅ 必須 | 重量（g） | 150.0 |
+| ↳ ↳ **calories** | number | ✅ 必須 | カロリー（kcal） | 25.5 |
+| ↳ **total_calories** | number | ✅ 必須 | 料理の総カロリー | 310.07 |
+| **total_nutrition** | object | ✅ 必須 | 総栄養価（SimplifiedNutritionInfo） | - |
+| ↳ **calories** | number | ✅ 必須 | 総カロリー（kcal） | 766.48 |
+| ↳ **protein** | number | ✅ 必須 | 総タンパク質（g） | 26.25 |
+| ↳ **fat** | number | ✅ 必須 | 総脂質（g） | 30.45 |
+| ↳ **carbs** | number | ✅ 必須 | 総炭水化物（g） | 45.2 |
+| **model_used** | string | ✅ 必須 | 使用AIモデル | "google/gemma-3-27b-it" |
+| **match_rate_percent** | number | ✅ 必須 | 栄養検索マッチ率（%） | 100.0 |
+| **search_method** | string | ✅ 必須 | 検索方法 | "elasticsearch" |
+
+### 主な改善点
+
+1. **構造簡略化**: 複雑なネストを削減し、必要な情報のみに集約
+2. **食材詳細**: 各食材の名前・重量・カロリーを明示
+3. **Swagger互換**: Pydantic modelによる自動スキーマ生成
+4. **実用性重視**: 実際の使用場面で必要な情報に焦点
 
 ### エラーレスポンス (HTTP 400/422/500)
 
@@ -409,10 +344,11 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 
 ### 最新デプロイ状況
 
-- **デプロイ日時**: 2025-09-14 17:30
-- **リビジョン**: `meal-analysis-api-00002-rrw`
-- **コンテナイメージ**: `gcr.io/new-snap-calorie/meal-analysis-api:8bc75b1`
+- **デプロイ日時**: 2025-09-18 18:30
+- **リビジョン**: `meal-analysis-api-00003-5qc` (Enhanced Swagger版)
+- **コンテナイメージ**: `gcr.io/new-snap-calorie/meal-analysis-api:enhanced-swagger`
 - **ステータス**: 🟢 稼働中
+- **主要更新**: Swagger UIドキュメント構造化・簡略化対応
 
 ### 環境変数
 
@@ -512,6 +448,14 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 - `md_files/api_deploy.md`: デプロイメント手順
 
 ## 🔄 更新履歴
+
+### 2025-09-18 v2.0 Enhanced Swagger
+- **Swagger UI改善**: 空の`{}`レスポンススキーマ問題を修正
+- **レスポンス構造簡略化**: `SimplifiedCompleteAnalysisResponse`モデル追加
+- **食材詳細情報**: 食材名・重量・カロリー詳細をSwaggerに表示
+- **Pydantic統合**: FastAPIの自動スキーマ生成機能を活用
+- **実用性向上**: 複雑なネスト構造を削減、必要情報に集約
+- **Cloud Runデプロイ**: リビジョン meal-analysis-api-00003-5qc
 
 ### 2025-09-14 v2.0
 - DeepInfra Gemma 3-27B Vision統合
