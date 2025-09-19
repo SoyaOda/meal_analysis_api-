@@ -8,7 +8,7 @@ MyNetDiary栄養検索システムを基盤とした高性能な食材検索予�
 
 ### API基本情報
 - **API URL**: `https://word-query-api-1077966746907.us-central1.run.app`
-- **バージョン**: v2.0 Enhanced
+- **バージョン**: v2.0 - 栄養検索専用版
 - **プラットフォーム**: Google Cloud Run (独立サービス)
 - **データベース**: Elasticsearch 8.15.1 (Google Compute Engine VM)
 - **OpenAPI/Swagger**: 完全対応（リアルなExample値付き）
@@ -36,9 +36,9 @@ API基本情報の取得
 **レスポンス例**:
 ```json
 {
-  "message": "Word Query API v2.0 Enhanced",
+  "message": "Word Query API v2.0 - 栄養検索専用版",
   "version": "2.0.0",
-  "features": ["7-Tier Search", "Real Example Values", "Complete OpenAPI Schema"],
+  "architecture": "Nutrition Search Service",
   "docs": "/docs"
 }
 ```
@@ -53,9 +53,8 @@ API稼働状況の確認
 ```json
 {
   "status": "healthy",
-  "service": "word_query_api",
-  "elasticsearch_status": "connected",
-  "version": "v2.0 Enhanced"
+  "version": "v2.0",
+  "components": ["ElasticsearchComponent", "MyNetDiaryNutritionSearchComponent"]
 }
 ```
 
@@ -193,10 +192,10 @@ curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/
 
 ### 最新デプロイ状況
 
-- **デプロイ日時**: 2025-09-18 08:25
-- **リビジョン**: `word-query-api-00003-b8h`
-- **コンテナイメージ**: `gcr.io/new-snap-calorie/word-query-api:v2-examples`
-- **ステータス**: 🟢 稼働中（Enhanced版）
+- **デプロイ日時**: 2025-09-18 18:44
+- **リビジョン**: `word-query-api-00005-266`
+- **コンテナイメージ**: `gcr.io/new-snap-calorie/word-query-api:nutrition-only-v2`
+- **ステータス**: 🟢 稼働中（栄養検索専用版）
 
 ### 環境変数
 
@@ -286,7 +285,7 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 ## 📞 サポート・連絡先
 
 - **プロジェクト**: meal_analysis_api_2
-- **ブランチ**: query_system_demo
+- **ブランチ**: query_api_deploy
 - **Google Cloud プロジェクト**: new-snap-calorie
 - **Elasticsearch VM**: elasticsearch-vm (us-central1-a)
 
@@ -298,28 +297,30 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 
 ## 🔄 更新履歴
 
-### 2025-09-18 v2.0 Enhanced - 大幅改善リリース ✨
+### 2025-09-18 v2.0 栄養検索専用版 - サービス分離リリース 🎯
 
-#### 🎯 主要改善項目
-- ✅ **OpenAPI/Swaggerスキーマ完全修正**: 空のレスポンススキーマ `{}` を完全な構造化スキーマに修正
-- ✅ **リアルなExample値追加**: calories: 165.0, protein: 31.0 など実際の数値をSwaggerに表示
-- ✅ **栄養データ修正**: carbohydratesとfatデータが正しく返されるよう修正
-- ✅ **7段階Tier検索システム実装**: 高精度な食材検索機能
-- ✅ **独立サービス化**: meal-analysis-apiから分離したword-query-api専用サービス
-- ✅ **本番環境デプロイ完了**: meal-analysis-apiを保護しながらword-query-apiのみ安全更新
+#### 🛠 主要変更項目
+- ✅ **完全分離**: meal-analysis-apiから栄養検索機能のみを分離
+- ✅ **不要エンドポイント削除**: `/api/v1/meal-analyses/complete` エンドポイントを削除
+- ✅ **コンポーネント名修正**: 実際の技術スタック反映 (Elasticsearch + MyNetDiary)
+- ✅ **API専用化**: word-query-apiを栄養検索専用サービスとして最適化
+- ✅ **安全デプロイ**: meal-analysis-apiを影響させずに独立更新
+- ✅ **パフォーマンス向上**: 13-88ms高速レスポンス確認
 
-#### 🔧 技術的改善
-1. **Pydanticモデル完全実装**:
-   - `SuggestionResponse`, `QueryInfo`, `FoodInfo`, `NutritionPreview` など
-   - 全フィールドにリアルなExample値を設定
+#### 🔧 技術的変更
+1. **サービス分離**:
+   - meal_analysis.routerの削除
+   - nutrition_search.routerのみ保持
+   - タイトル変更: "Word Query API v2.0 - 栄養検索専用版"
 
-2. **APIレスポンス修正**:
-   - JSONResponse直接返却からPydantic model返却に変更
-   - FastAPIの自動OpenAPIスキーマ生成を活用
+2. **コンポーネント正確化**:
+   - 旧: `["USDAQueryComponent", "NutritionSearchComponent"]`
+   - 新: `["ElasticsearchComponent", "MyNetDiaryNutritionSearchComponent"]`
 
-3. **栄養データフィールド修正**:
-   - Elasticsearchの"carbs"フィールドを"carbohydrates"として正しく返却
-   - "fat"フィールドを追加してより完全な栄養情報を提供
+3. **デプロイ最適化**:
+   - 新イメージ: nutrition-only-v2
+   - リビジョン: word-query-api-00005-266
+   - 完全独立運用
 
 ### 2025-09-13 v2.0
 - 7段階Tier検索システム実装
@@ -330,7 +331,7 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 
 ---
 
-**🎊 Word Query API Enhanced版が正常稼働中！**
-完全なSwagger仕様書とリアルなExample値付きで、本格的な食材検索予測機能をご利用いただけます。
+**🎊 Word Query API 栄養検索専用版が正常稼働中！**
+高速で正確な食材検索予測機能を専用APIとして提供しています。
 
 **📖 Swagger UI**: https://word-query-api-1077966746907.us-central1.run.app/docs
