@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from ..api.v1.endpoints import meal_analysis, nutrition_search
+from ..api.v1.endpoints import nutrition_search
 from ..config import get_settings
 
 # 環境変数の設定（既存のappと同じ）
@@ -21,8 +21,8 @@ logging.basicConfig(
 
 # FastAPIアプリの作成
 app = FastAPI(
-    title="食事分析 API v2.0",
-    description="コンポーネント化された食事分析システム",
+    title="Word Query API v2.0",
+    description="栄養検索・食材照合専用システム",
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -39,12 +39,6 @@ app.add_middleware(
 
 # ルーターの登録
 app.include_router(
-    meal_analysis.router,
-    prefix="/api/v1/meal-analyses",
-    tags=["Complete Meal Analysis v2.0"]
-)
-
-app.include_router(
     nutrition_search.router,
     prefix="/api/v1/nutrition",
     tags=["Nutrition Search & Suggestions"]
@@ -55,9 +49,9 @@ app.include_router(
 async def root():
     """ルートエンドポイント"""
     return {
-        "message": "食事分析 API v2.0 - コンポーネント化版",
+        "message": "Word Query API v2.0 - 栄養検索専用版",
         "version": "2.0.0",
-        "architecture": "Component-based Pipeline",
+        "architecture": "Nutrition Search Service",
         "docs": "/docs"
     }
 
@@ -67,7 +61,7 @@ async def health():
     return {
         "status": "healthy",
         "version": "v2.0",
-        "components": ["Phase1Component", "USDAQueryComponent"]
+        "components": ["ElasticsearchComponent", "MyNetDiaryNutritionSearchComponent"]
     }
 
 if __name__ == "__main__":
