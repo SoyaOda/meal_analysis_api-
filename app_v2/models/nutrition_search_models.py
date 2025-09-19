@@ -29,6 +29,8 @@ class NutritionMatch(BaseModel):
     # 検索に関するメタデータ
     search_metadata: Optional[Dict[str, Any]] = Field(None, description="検索に関するメタデータ")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class AdvancedSearchOptions(BaseModel):
     """高度な検索オプション"""
@@ -42,6 +44,8 @@ class AdvancedSearchOptions(BaseModel):
     levenshtein_threshold: float = Field(default=0.7, description="Levenshtein類似度の閾値")
     first_stage_size: int = Field(default=50, description="第一段階で取得する候補数")
     final_result_size: int = Field(default=10, description="最終結果数")
+
+    model_config = {"protected_namespaces": ()}
 
 
 class NutritionQueryInput(BaseModel):
@@ -60,6 +64,8 @@ class NutritionQueryInput(BaseModel):
     
     # 検索戦略
     search_strategy: str = Field(default="basic", description="検索戦略（basic, strategic, advanced_structured）")
+
+    model_config = {"protected_namespaces": ()}
 
     def get_all_search_terms(self) -> List[str]:
         """全ての検索語彙を取得"""
@@ -112,6 +118,8 @@ class NutritionQueryOutput(BaseModel):
     
     # 高度な検索結果のメタデータ
     advanced_search_metadata: Optional[Dict[str, Any]] = Field(None, description="高度な検索のメタデータ")
+
+    model_config = {"protected_namespaces": ()}
 
     def get_match_rate(self) -> float:
         """照合成功率を計算"""

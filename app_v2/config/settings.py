@@ -10,8 +10,35 @@ class Settings(BaseSettings):
     """
     # Deep Infra設定
     DEEPINFRA_API_KEY: Optional[str] = None  # Deep Infra APIキー
-    DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子
+    DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子（デフォルト）
     DEEPINFRA_BASE_URL: str = "https://api.deepinfra.com/v1/openai"  # OpenAI互換エンドポイント
+    
+    # サポートされるモデル一覧（一元管理）
+    SUPPORTED_VISION_MODELS: List[str] = [
+        "Qwen/Qwen2.5-VL-32B-Instruct",  # Qwen2.5VL-32B（高速・高精度）
+        "google/gemma-3-27b-it",         # Gemma-3-27B（多様性重視）
+        "meta-llama/Llama-3.2-90B-Vision-Instruct",  # Llama3.2-90B（最新）
+        "microsoft/DialoGPT-large"       # 実験用モデル
+    ]
+    
+    # モデル別設定（パフォーマンス特性）
+    MODEL_PERFORMANCE_CONFIG: dict = {
+        "Qwen/Qwen2.5-VL-32B-Instruct": {
+            "expected_response_time_ms": 12500,
+            "confidence_range": [0.85, 0.95],
+            "best_for": "speed_and_accuracy"
+        },
+        "google/gemma-3-27b-it": {
+            "expected_response_time_ms": 30000,
+            "confidence_range": [0.80, 0.90],
+            "best_for": "diversity_and_detail"
+        },
+        "meta-llama/Llama-3.2-90B-Vision-Instruct": {
+            "expected_response_time_ms": 45000,
+            "confidence_range": [0.90, 0.98],
+            "best_for": "maximum_accuracy"
+        }
+    }
     
     # 栄養データベース検索設定
     USE_ELASTICSEARCH_SEARCH: bool = True  # Elasticsearch栄養データベース検索を使用するかどうか
@@ -48,10 +75,19 @@ class Settings(BaseSettings):
     # 結果保存設定
     RESULTS_DIR: str = "analysis_results"
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-        extra = "ignore"  # 追加の環境変数を無視
+    def validate_model_id(self, model_id: str) -> bool:
+        """指定されたモデルIDがサポートされているかを検証"""
+        return model_id in self.SUPPORTED_VISION_MODELS
+    
+    def get_model_config(self, model_id: str) -> dict:
+        """指定されたモデルの設定情報を取得"""
+        return self.MODEL_PERFORMANCE_CONFIG.get(model_id, {})
+    
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": True,
+        "extra": "ignore"
+    }  # 追加の環境変数を無視  # 追加の環境変数を無視
 
 
 @lru_cache()

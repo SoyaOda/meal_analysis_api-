@@ -6,24 +6,16 @@ class Phase1Prompts:
     @classmethod
     def _get_mynetdiary_ingredients_section(cls) -> str:
         """MyNetDiary食材名リストのセクションを生成"""
-        try:
-            ingredients_list = format_mynetdiary_ingredients_for_prompt()
-            return f"""
+        ingredients_list = format_mynetdiary_ingredients_for_prompt()
+        return f"""
 MYNETDIARY INGREDIENT CONSTRAINT:
-For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list. 
+For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list.
 Do NOT create custom ingredient names. Use the EXACT names as they appear in this list:
 
 {ingredients_list}
 
-IMPORTANT: If you cannot find a suitable match in the MyNetDiary list for a visible ingredient, 
+IMPORTANT: If you cannot find a suitable match in the MyNetDiary list for a visible ingredient,
 choose the closest available option or omit that ingredient rather than creating a custom name.
-"""
-        except Exception as e:
-            # フォールバック: ファイルが読み込めない場合
-            return """
-MYNETDIARY INGREDIENT CONSTRAINT:
-For ALL ingredients, you MUST select from the predefined MyNetDiary ingredient database.
-Use standard, searchable ingredient names that exist in nutrition databases.
 """
     
     @classmethod

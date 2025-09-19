@@ -1,7 +1,8 @@
 import json
 from typing import Optional
+from datetime import datetime
 
-from .base import BaseComponent
+from .base import BaseComponent, ComponentError
 from ..models.phase1_models import (
     Phase1Input, Phase1Output, Dish, Ingredient, 
     DetectedFoodItem, FoodAttribute, AttributeType
@@ -27,21 +28,73 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
         if vision_service is None:
             # DeepInfraServiceを使用
             settings = get_settings()
+            # DeepInfraではバージョンピンサポートなし、基本モデルのみ使用
             self.vision_service = DeepInfraService(
-                api_key=settings.DEEPINFRA_API_KEY,
-                model_id=settings.DEEPINFRA_MODEL_ID,
-                base_url=settings.DEEPINFRA_BASE_URL
+                model_id=settings.DEEPINFRA_MODEL_ID
             )
         else:
             self.vision_service = vision_service
     
-    async def process(self, input_data: Phase1Input) -> Phase1Output:
+    async def execute(self, input_data: Phase1Input, execution_log: Optional = None, temperature: Optional[float] = 0.0, seed: Optional[int] = 123456):
         """
-        Phase1の主処理: 構造化画像分析（栄養データベース検索特化）
-        
+        Phase1専用のexecuteメソッド（temperatureとseedパラメータ対応）
+
         Args:
             input_data: Phase1Input (image_bytes, image_mime_type, optional_text)
-            
+            execution_log: 詳細実行ログ（オプション）
+            temperature: AI推論のランダム性制御 (0.0-1.0, デフォルト: 0.0)
+            seed: 再現性のためのシード値 (デフォルト: 123456)
+
+        Returns:
+            Phase1Output: 構造化された分析結果
+        """
+        self.execution_count += 1
+        execution_id = f"{self.component_name}_{self.execution_count}"
+
+        # 詳細ログの設定
+        if execution_log:
+            self.current_execution_log = execution_log
+            # 入力データを記録
+            self.current_execution_log.set_input(self._safe_serialize_input(input_data))
+
+        self.logger.info(f"[{execution_id}] Starting {self.component_name} processing (temperature={temperature}, seed={seed})")
+
+        try:
+            start_time = datetime.now()
+            result = await self.process(input_data, temperature=temperature, seed=seed)
+            end_time = datetime.now()
+
+            processing_time = (end_time - start_time).total_seconds()
+            self.logger.info(f"[{execution_id}] {self.component_name} completed in {processing_time:.2f}s")
+
+            # 詳細ログに出力データを記録
+            if self.current_execution_log:
+                self.current_execution_log.set_output(self._safe_serialize_output(result))
+                self.current_execution_log.finalize()
+
+            return result
+
+        except Exception as e:
+            self.logger.error(f"[{execution_id}] {self.component_name} failed: {str(e)}", exc_info=True)
+
+            # 詳細ログにエラーを記録
+            if self.current_execution_log:
+                self.current_execution_log.add_error(str(e))
+                self.current_execution_log.finalize()
+
+            raise ComponentError(f"{self.component_name} processing failed: {str(e)}") from e
+        finally:
+            self.current_execution_log = None
+
+    async def process(self, input_data: Phase1Input, temperature: Optional[float] = 0.0, seed: Optional[int] = 123456) -> Phase1Output:
+        """
+        Phase1の主処理: 構造化画像分析（栄養データベース検索特化）
+
+        Args:
+            input_data: Phase1Input (image_bytes, image_mime_type, optional_text)
+            temperature: AI推論のランダム性制御 (0.0-1.0, デフォルト: 0.0 - 決定的)
+            seed: 再現性のためのシード値 (デフォルト: 123456)
+
         Returns:
             Phase1Output: 構造化された分析結果（信頼度スコア、属性、ブランド情報等を含む）
         """
@@ -69,7 +122,9 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             raw_response = await self.vision_service.analyze_image(
                 image_bytes=input_data.image_bytes,
                 image_mime_type=input_data.image_mime_type,
-                prompt=prompt
+                prompt=prompt,
+                temperature=temperature,
+                seed=seed
             )
             # JSON文字列をパース
             vision_result = parse_json_from_string(raw_response)

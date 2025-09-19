@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ..api.v1.endpoints import meal_analysis
 from ..config import get_settings
+from ..models.meal_analysis_models import RootResponse
 
 # ロギング設定
 logging.basicConfig(
@@ -38,15 +39,15 @@ app.include_router(
 )
 
 # ルートエンドポイント
-@app.get("/")
-async def root():
+@app.get("/", response_model=RootResponse)
+async def root() -> RootResponse:
     """ルートエンドポイント"""
-    return {
-        "message": "食事分析 API v2.0 - コンポーネント化版",
-        "version": "2.0.0",
-        "architecture": "Component-based Pipeline",
-        "docs": "/docs"
-    }
+    return RootResponse(
+        message="食事分析 API v2.0 - コンポーネント化版",
+        version="2.0.0",
+        architecture="Component-based Pipeline",
+        docs="/docs"
+    )
 
 @app.get("/health")
 async def health():
