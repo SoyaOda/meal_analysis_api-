@@ -1,0 +1,1 @@
+NutritionCalculationComponent is not yet implemented

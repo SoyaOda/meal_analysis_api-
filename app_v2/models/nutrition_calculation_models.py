@@ -19,6 +19,8 @@ class NutritionInfo(BaseModel):
     sugar: Optional[float] = Field(None, description="糖質 (g)")
     sodium: Optional[float] = Field(None, description="ナトリウム (mg)")
     
+    model_config = {"protected_namespaces": ()}
+    
     def __add__(self, other: 'NutritionInfo') -> 'NutritionInfo':
         """栄養情報の加算"""
         return NutritionInfo(
@@ -41,6 +43,8 @@ class IngredientNutrition(BaseModel):
     source_db: str = Field(..., description="栄養データのソースデータベース")
     calculation_notes: List[str] = Field(default_factory=list, description="計算に関する注記")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class DishNutrition(BaseModel):
     """料理レベルの栄養計算結果"""
@@ -50,6 +54,8 @@ class DishNutrition(BaseModel):
     total_nutrition: NutritionInfo = Field(..., description="料理全体の栄養情報")
     calculation_metadata: Dict[str, Any] = Field(default_factory=dict, description="計算メタデータ")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class MealNutrition(BaseModel):
     """食事全体の栄養計算結果"""
@@ -58,15 +64,21 @@ class MealNutrition(BaseModel):
     calculation_summary: Dict[str, Any] = Field(default_factory=dict, description="計算サマリー")
     warnings: List[str] = Field(default_factory=list, description="計算時の警告")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class NutritionCalculationInput(BaseModel):
     """栄養計算コンポーネントの入力"""
     phase1_result: Any = Field(..., description="Phase1の結果（Phase1Output）")
     nutrition_search_result: Any = Field(..., description="栄養検索の結果（NutritionQueryOutput）")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class NutritionCalculationOutput(BaseModel):
     """栄養計算コンポーネントの出力"""
     meal_nutrition: MealNutrition = Field(..., description="食事全体の栄養計算結果")
     calculation_metadata: Dict[str, Any] = Field(default_factory=dict, description="計算プロセスのメタデータ")
-    processing_time_ms: int = Field(..., description="処理時間（ミリ秒）") 
+    processing_time_ms: int = Field(..., description="処理時間（ミリ秒）")
+
+    model_config = {"protected_namespaces": ()} 

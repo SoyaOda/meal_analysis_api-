@@ -398,9 +398,9 @@ class ElasticsearchNutritionSearchComponent(BaseComponent[NutritionQueryInput, N
                     }
                 }
             except Exception as script_error:
-                # スクリプトエラーの場合はbool queryにフォールバック
-                self.logger.warning(f"Script score error, falling back to bool query: {script_error}")
-                query = bool_query
+                # スクリプトエラーの場合はエラーを発生させる
+                self.logger.error(f"Script score configuration error: {script_error}")
+                raise RuntimeError(f"Elasticsearch script score configuration failed: {script_error}") from script_error
         else:
             query = bool_query
         
