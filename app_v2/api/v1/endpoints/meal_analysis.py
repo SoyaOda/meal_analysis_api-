@@ -21,7 +21,7 @@ async def complete_meal_analysis(
     save_detailed_logs: bool = Form(True),
     test_execution: bool = Form(False),
     test_results_dir: Optional[str] = Form(None),
-    model_id: Optional[str] = Form(None),
+    ai_model_id: Optional[str] = Form(None),
     optional_text: Optional[str] = Form(None),
     temperature: Optional[float] = Form(0.0),
     seed: Optional[int] = Form(123456)
@@ -38,7 +38,7 @@ async def complete_meal_analysis(
         save_detailed_logs: 分析ログを保存するかどうか (デフォルト: True)
         test_execution: テスト実行モード (デフォルト: False)
         test_results_dir: テスト結果保存先ディレクトリ (テスト実行時のみ)
-        model_id: 使用する画像分析モデルID (オプション)
+        ai_model_id: 使用する画像分析モデルID (オプション)
                  指定可能: "Qwen/Qwen2.5-VL-32B-Instruct", "google/gemma-3-27b-it", 
                           "meta-llama/Llama-3.2-90B-Vision-Instruct"
                  未指定: 設定ファイルのデフォルトモデルを使用
@@ -56,11 +56,11 @@ async def complete_meal_analysis(
         from app_v2.config.settings import get_settings
         settings = get_settings()
 
-        if model_id and not settings.validate_model_id(model_id):
+        if ai_model_id and not settings.validate_model_id(ai_model_id):
             available_models = ", ".join(settings.SUPPORTED_VISION_MODELS)
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported model_id: {model_id}. Available models: {available_models}"
+                detail=f"Unsupported ai_model_id: {ai_model_id}. Available models: {available_models}"
             )
 
         # temperatureパラメータの範囲検証
@@ -78,7 +78,7 @@ async def complete_meal_analysis(
         image_data = await image.read()
         
         # モデル情報をログに出力
-        effective_model = model_id or settings.DEEPINFRA_MODEL_ID
+        effective_model = ai_model_id or settings.DEEPINFRA_MODEL_ID
         model_config = settings.get_model_config(effective_model)
         
         # ログ出力（パラメータ情報を含む）
@@ -92,7 +92,7 @@ async def complete_meal_analysis(
             logger.info(f"Model characteristics: {model_config}")
         
         # パイプラインの実行（全パラメータ付き）
-        pipeline = MealAnalysisPipeline(model_id=model_id)
+        pipeline = MealAnalysisPipeline(model_id=ai_model_id)
         result = await pipeline.execute_complete_analysis(
             image_bytes=image_data,
             image_mime_type=image.content_type or 'image/jpeg',  # Default to image/jpeg if None
@@ -199,7 +199,7 @@ def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisR
         processing_time_seconds=processing_time,
         dishes=dishes,
         total_nutrition=total_nutrition,
-        model_used=result.get("model_used", "unknown"),
+        ai_model_used=result.get("model_used", "unknown"),
         match_rate_percent=match_rate,
         search_method=result.get("processing_summary", {}).get("search_method", "elasticsearch")
     )

@@ -20,6 +20,8 @@ class FoodAttribute(BaseModel):
     value: str = Field(..., description="属性の値")
     confidence: float = Field(..., ge=0.0, le=1.0, description="この属性の信頼度スコア")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class DetectedFoodItem(BaseModel):
     """検出された食品アイテム（構造化）"""
@@ -30,6 +32,8 @@ class DetectedFoodItem(BaseModel):
     category_hints: List[str] = Field(default=[], description="推定される食品カテゴリ")
     negative_cues: List[str] = Field(default=[], description="画像から判断できる「含まれない」要素")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class Ingredient(BaseModel):
     """食材情報モデル（栄養データベース検索用・従来互換性）"""
@@ -37,6 +41,8 @@ class Ingredient(BaseModel):
     weight_g: float = Field(..., gt=0, description="写真から推定される食材の重量（グラム）")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="食材特定の信頼度")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この食材に関連する属性")
+
+    model_config = {"protected_namespaces": ()}
 
 
 class Dish(BaseModel):
@@ -46,6 +52,8 @@ class Dish(BaseModel):
     ingredients: List[Ingredient] = Field(..., description="その料理に含まれる食材のリスト")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この料理に関連する属性")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class Phase1Input(BaseModel):
     """Phase1コンポーネントの入力モデル"""
@@ -53,8 +61,7 @@ class Phase1Input(BaseModel):
     image_mime_type: str = Field(..., description="画像のMIMEタイプ")
     optional_text: Optional[str] = Field(None, description="オプションのテキスト情報")
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = {"arbitrary_types_allowed": True, "protected_namespaces": ()}
 
 
 class Phase1Output(BaseModel):
@@ -69,6 +76,8 @@ class Phase1Output(BaseModel):
     analysis_confidence: float = Field(..., ge=0.0, le=1.0, description="全体的な分析の信頼度")
     processing_notes: List[str] = Field(default=[], description="処理に関する注記")
     warnings: Optional[List[str]] = Field(None, description="処理中の警告メッセージ")
+
+    model_config = {"protected_namespaces": ()}
 
     def get_all_ingredient_names(self) -> List[str]:
         """全ての食材名のリストを取得（栄養データベース検索用・従来互換性）"""

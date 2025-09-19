@@ -83,10 +83,11 @@ class Settings(BaseSettings):
         """指定されたモデルの設定情報を取得"""
         return self.MODEL_PERFORMANCE_CONFIG.get(model_id, {})
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-        extra = "ignore"  # 追加の環境変数を無視  # 追加の環境変数を無視
+    model_config = {
+        "env_file": ".env",
+        "case_sensitive": True,
+        "extra": "ignore"
+    }  # 追加の環境変数を無視  # 追加の環境変数を無視
 
 
 @lru_cache()

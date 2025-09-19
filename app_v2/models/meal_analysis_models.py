@@ -18,12 +18,16 @@ class SimplifiedNutritionInfo(BaseModel):
     fat: float = Field(default=0.0, description="脂質（g）", example=30.45)
     carbs: float = Field(default=0.0, description="炭水化物（g）", example=45.2)
 
+    model_config = {"protected_namespaces": ()}
+
 
 class IngredientSummary(BaseModel):
     """食材概要情報"""
     name: str = Field(..., description="食材名", example="lettuce romaine raw")
     weight_g: float = Field(..., description="重量（グラム）", example=150.0)
     calories: float = Field(..., description="カロリー（kcal）", example=25.5)
+
+    model_config = {"protected_namespaces": ()}
 
 
 class DishSummary(BaseModel):
@@ -33,6 +37,8 @@ class DishSummary(BaseModel):
     ingredient_count: int = Field(..., description="食材数", example=4)
     ingredients: List[IngredientSummary] = Field(..., description="食材詳細リスト")
     total_calories: float = Field(..., description="料理の総カロリー（kcal）", example=310.07)
+
+    model_config = {"protected_namespaces": ()}
 
 
 class SimplifiedCompleteAnalysisResponse(BaseModel):
@@ -51,9 +57,11 @@ class SimplifiedCompleteAnalysisResponse(BaseModel):
     total_nutrition: SimplifiedNutritionInfo = Field(..., description="総栄養価")
 
     # デバッグ・メタデータ（重要な部分のみ）
-    model_used: str = Field(..., description="使用AIモデル", example="google/gemma-3-27b-it")
+    ai_model_used: str = Field(..., description="使用AIモデル", example="google/gemma-3-27b-it")
     match_rate_percent: float = Field(..., description="栄養検索マッチ率（%）", example=100.0)
     search_method: str = Field(..., description="検索方法", example="elasticsearch")
+
+    model_config = {"protected_namespaces": ()}
 
 
 # ============================================================================
@@ -68,12 +76,16 @@ class HealthCheckResponse(BaseModel):
     components: List[str] = Field(..., description="利用可能なコンポーネント",
                                 example=["Phase1Component", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"])
 
+    model_config = {"protected_namespaces": ()}
+
 
 class ComponentInfo(BaseModel):
     """コンポーネント情報"""
     component_name: str = Field(..., description="コンポーネント名", example="Phase1Component")
     component_type: str = Field(..., description="コンポーネントタイプ", example="analysis")
     execution_count: int = Field(..., description="実行回数", example=0)
+
+    model_config = {"protected_namespaces": ()}
 
 
 class PipelineInfoResponse(BaseModel):
@@ -83,6 +95,8 @@ class PipelineInfoResponse(BaseModel):
     nutrition_search_method: str = Field(..., description="栄養検索方法", example="elasticsearch")
     components: List[ComponentInfo] = Field(..., description="コンポーネント詳細情報")
 
+    model_config = {"protected_namespaces": ()}
+
 
 class RootResponse(BaseModel):
     """ルートエンドポイントレスポンス"""
@@ -90,3 +104,5 @@ class RootResponse(BaseModel):
     version: str = Field(..., description="バージョン", example="2.0.0")
     architecture: str = Field(..., description="アーキテクチャ", example="Component-based Pipeline")
     docs: str = Field(..., description="ドキュメントURL", example="/docs")
+
+    model_config = {"protected_namespaces": ()}
