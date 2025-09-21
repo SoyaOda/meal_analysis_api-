@@ -108,7 +108,7 @@ class Phase1SpeechComponent(BaseComponent):
         llm_model_id: Optional[str] = None
     ) -> Phase1Output:
         """
-        音声分析の主処理
+        音声分析の主処理（WAV形式のみ対応）
 
         Args:
             input_data: VoiceAnalysisInput
@@ -120,21 +120,11 @@ class Phase1SpeechComponent(BaseComponent):
         """
         self.logger.info("Starting speech analysis for food extraction")
 
-        # Step 1: 音声フォーマット検出
-        audio_encoding, sample_rate = self.speech_service.detect_audio_format(input_data.audio_bytes)
-        self.log_processing_detail("detected_audio_format", {"encoding": audio_encoding, "sample_rate": sample_rate})
-
-        # Step 2: 音声認識（Speech-to-Text）
+        # Step 1: 音声認識（Speech-to-Text）- WAV形式のみ対応
         self.logger.info("Step 1: Speech-to-Text conversion")
         try:
-            # MP3の場合は明示的にMP3として指定
-            if input_data.audio_mime_type and "mp3" in input_data.audio_mime_type.lower():
-                audio_encoding = "MP3"
-
             transcript = await self.speech_service.transcribe_audio(
                 audio_data=input_data.audio_bytes,
-                sample_rate=sample_rate,
-                encoding=audio_encoding,
                 language_code=language_code
             )
             self.log_processing_detail("speech_recognition_result", transcript)
@@ -148,7 +138,7 @@ class Phase1SpeechComponent(BaseComponent):
             self.logger.error(error_msg)
             raise ComponentError(error_msg)
 
-        # Step 3: NLU処理（食品抽出）
+        # Step 2: NLU処理（食品抽出）
         self.logger.info("Step 2: NLU processing for food extraction")
         try:
             # プロンプトをログに記録（画像分析と同様）
@@ -170,7 +160,7 @@ class Phase1SpeechComponent(BaseComponent):
             self.logger.error(f"NLU food extraction failed: {e}")
             raise ComponentError(f"Food extraction from text failed: {e}") from e
 
-        # Step 4: 既存Phase1Output形式に変換
+        # Step 3: 既存Phase1Output形式に変換
         self.logger.info("Step 3: Converting to Phase1Output format")
         try:
             phase1_output = self._convert_to_phase1_output(nlu_result, transcript)

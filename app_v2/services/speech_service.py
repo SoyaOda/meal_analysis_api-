@@ -30,75 +30,89 @@ class SpeechService:
     async def transcribe_audio(
         self,
         audio_data: bytes,
-        sample_rate: int = 16000,
-        encoding: str = "LINEAR16",
         language_code: str = "en-US"
     ) -> str:
         """
-        音声バイナリデータをテキストに変換する
-
+        WAV音声バイナリデータをテキストに変換する
+        
         Args:
-            audio_data: 音声バイナリデータ
-            sample_rate: サンプリングレート（Hz）
-            encoding: 音声エンコーディング（LINEAR16, FLAC, MP3, etc.）
+            audio_data: WAV音声バイナリデータ
             language_code: 言語コード（デフォルト: en-US）
-
+        
         Returns:
             認識されたテキスト
-
+        
         Raises:
             RuntimeError: 音声認識が失敗した場合
         """
         logger.info(f"Starting speech recognition for audio data ({len(audio_data)} bytes)")
-
+        
         try:
+            # WAVヘッダーからサンプルレートを検出
+            sample_rate = self._extract_sample_rate_from_wav(audio_data)
+            logger.info(f"Detected sample rate: {sample_rate} Hz")
+            
             # 音声設定
             audio = speech.RecognitionAudio(content=audio_data)
-
-            # エンコーディングの設定
-            if encoding == "LINEAR16":
-                audio_encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
-            elif encoding == "FLAC":
-                audio_encoding = speech.RecognitionConfig.AudioEncoding.FLAC
-            elif encoding == "MP3":
-                audio_encoding = speech.RecognitionConfig.AudioEncoding.MP3
-            elif encoding == "WAV":
-                audio_encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
-            else:
-                logger.warning(f"Unknown encoding {encoding}, defaulting to LINEAR16")
-                audio_encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
-
-            # 認識設定
+            
+            # 認識設定 - WAV形式のみ対応、サンプルレートは省略（WAVヘッダーから自動検出）
             config = speech.RecognitionConfig(
-                encoding=audio_encoding,
-                sample_rate_hertz=sample_rate,
+                encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
                 language_code=language_code,
                 enable_automatic_punctuation=True,  # 句読点を自動付与
                 use_enhanced=True,  # 高精度モデルを使用
                 model="latest_long"  # 長い音声に適したモデル
             )
-
+            
             # 音声認識を実行
-            logger.info(f"Calling Google Speech-to-Text API (language: {language_code}, encoding: {encoding})")
+            logger.info(f"Calling Google Speech-to-Text API (language: {language_code}, WAV format)")
             response = self.client.recognize(config=config, audio=audio)
-
+            
             # 結果からテキストを抽出
             transcript = ""
             for result in response.results:
                 transcript += result.alternatives[0].transcript
-
+            
             transcript = transcript.strip()
-
+            
             if transcript:
                 logger.info(f"Speech recognition successful: '{transcript[:100]}{'...' if len(transcript) > 100 else ''}'")
                 return transcript
             else:
                 logger.warning("Speech recognition returned empty result")
                 raise RuntimeError("No speech detected in audio data")
-
+        
         except Exception as e:
             logger.error(f"Speech recognition failed: {e}")
             raise RuntimeError(f"Speech-to-text conversion failed: {e}") from e
+    
+    def _extract_sample_rate_from_wav(self, audio_data: bytes) -> int:
+        """
+        WAVファイルのヘッダーからサンプルレートを抽出
+        
+        Args:
+            audio_data: WAVファイルのバイナリデータ
+            
+        Returns:
+            サンプルレート（Hz）
+            
+        Raises:
+            ValueError: WAVヘッダーが無効な場合
+        """
+        if len(audio_data) < 44:
+            raise ValueError("Invalid WAV file: too short")
+        
+        # WAVヘッダーの確認
+        if audio_data[:4] != b'RIFF' or audio_data[8:12] != b'WAVE':
+            raise ValueError("Invalid WAV file header")
+        
+        # サンプルレートはオフセット24-27バイト（リトルエンディアン）
+        sample_rate = int.from_bytes(audio_data[24:28], byteorder='little')
+        
+        if sample_rate <= 0:
+            raise ValueError(f"Invalid sample rate: {sample_rate}")
+        
+        return sample_rate
 
     def detect_audio_format(self, audio_data: bytes) -> tuple[str, int]:
         """
@@ -115,7 +129,10 @@ class SpeechService:
             return "LINEAR16", 16000
         elif audio_data.startswith(b'fLaC'):
             return "FLAC", 16000
-        elif audio_data.startswith(b'ID3') or audio_data[0:2] == b'\xff\xfb':
+        elif (audio_data.startswith(b'ID3') or 
+              audio_data[:2] == b'\xff\xfb' or  # MP3 フレーム (MPEG-1 Layer 3)
+              audio_data[:2] == b'\xff\xf3' or  # MP3 フレーム (MPEG-1 Layer 3, 別パターン)
+              audio_data[:2] == b'\xff\xf2'):   # MP3 フレーム (MPEG-2 Layer 3)
             return "MP3", 16000
         else:
             # デフォルト

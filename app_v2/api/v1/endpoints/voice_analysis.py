@@ -193,7 +193,7 @@ async def analyze_meal_from_voice(
 
 
 async def _validate_audio_input(audio: UploadFile) -> None:
-    """音声入力の検証"""
+    """WAV音声入力の検証"""
     # ファイル名チェック
     if not audio.filename:
         raise HTTPException(
@@ -204,32 +204,30 @@ async def _validate_audio_input(audio: UploadFile) -> None:
             }
         )
 
-    # 拡張子チェック
-    allowed_extensions = [".wav", ".mp3", ".m4a", ".flac", ".ogg", ".aac"]
-    file_extension = None
-    for ext in allowed_extensions:
-        if audio.filename.lower().endswith(ext):
-            file_extension = ext
-            break
-
-    if not file_extension:
+    # WAV拡張子チェックのみ
+    if not audio.filename.lower().endswith('.wav'):
         raise HTTPException(
             status_code=400,
             detail={
                 "code": VoiceAnalysisErrorCodes.UNSUPPORTED_AUDIO_FORMAT,
-                "message": f"Unsupported audio format. Supported formats: {', '.join(allowed_extensions)}"
+                "message": "Only WAV format is supported"
             }
         )
 
-    # MIMEタイプチェック（利用可能な場合）
-    if audio.content_type and not audio.content_type.startswith('audio/'):
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "code": VoiceAnalysisErrorCodes.INVALID_AUDIO_FILE,
-                "message": "Uploaded file must be an audio file"
-            }
-        )
+    # MIMEタイプチェック（緩和版）- None の場合は拡張子チェックを優先
+    if audio.content_type and audio.content_type not in [
+        'audio/wav', 'audio/wave', 'audio/x-wav', 'audio/vnd.wave',
+        'application/octet-stream'  # ブラウザがWAVを正しく認識しない場合
+    ]:
+        # MIMEタイプが設定されているが、WAVでもoctet-streamでもない場合のみエラー
+        if not audio.content_type.startswith('audio/'):
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "code": VoiceAnalysisErrorCodes.INVALID_AUDIO_FILE,
+                    "message": f"Uploaded file must be an audio file (received: {audio.content_type})"
+                }
+            )
 
 
 def _build_unified_response(
