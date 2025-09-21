@@ -10,6 +10,7 @@ import httpx
 from typing import Dict, Any, Optional
 
 from ..config.settings import get_settings
+from ..config.prompts import VoicePrompts
 
 logger = logging.getLogger(__name__)
 
@@ -131,70 +132,25 @@ class NLUService:
             logger.error(f"Unexpected error during food extraction: {e}")
             raise RuntimeError(f"Food extraction failed: {e}") from e
 
-    def _build_system_prompt(self) -> str:
-        """食品抽出用のシステムプロンプトを構築"""
-        return """You are an AI assistant specialized in nutrition analysis. Your task is to extract food and meal information from user speech transcripts and convert them into a structured JSON format.
+    def _build_system_prompt(self, use_mynetdiary_constraint: bool = True) -> str:
+        """
+        食品抽出用のシステムプロンプトを構築
 
-**Instructions:**
-1. Identify dishes/meals and their ingredients from the user's description
-2. Estimate reasonable serving sizes and weights in grams for each ingredient
-3. Output in the following JSON structure only, no additional text
+        Args:
+            use_mynetdiary_constraint: MyNetDiary制約を使用するかどうか
 
-**Required JSON format:**
-{
-  "dishes": [
-    {
-      "dish_name": "Dish Name",
-      "confidence": 0.9,
-      "ingredients": [
-        {
-          "ingredient_name": "ingredient name",
-          "weight_g": 100.0
-        }
-      ]
-    }
-  ]
-}
-
-**Guidelines:**
-- Use standard ingredient names (e.g., "egg" not "scrambled eggs")
-- Estimate typical serving weights (e.g., 1 egg ≈ 50g, 1 slice bread ≈ 30g)
-- For complex dishes, break down into main ingredients
-- If quantity mentioned (e.g., "two eggs"), calculate total weight
-- Confidence should reflect how certain you are about the identification
-
-**Example input:** "I had scrambled eggs and toast with butter for breakfast"
-**Example output:**
-{
-  "dishes": [
-    {
-      "dish_name": "Scrambled Eggs",
-      "confidence": 0.95,
-      "ingredients": [
-        {"ingredient_name": "egg", "weight_g": 100.0}
-      ]
-    },
-    {
-      "dish_name": "Buttered Toast",
-      "confidence": 0.9,
-      "ingredients": [
-        {"ingredient_name": "bread", "weight_g": 30.0},
-        {"ingredient_name": "butter", "weight_g": 5.0}
-      ]
-    }
-  ]
-}"""
+        Returns:
+            システムプロンプト文字列
+        """
+        return VoicePrompts.get_complete_prompt(
+            use_mynetdiary_constraint=use_mynetdiary_constraint,
+            include_examples=True
+        )
 
     def _create_fallback_result(self, text: str) -> Dict[str, Any]:
         """JSONパースが失敗した場合のフォールバック結果を作成"""
-        # 簡単なキーワード検出による基本的な結果生成
-        common_foods = {
-            "egg": 50, "eggs": 100, "bread": 30, "toast": 30,
-            "coffee": 200, "tea": 200, "milk": 200,
-            "apple": 150, "banana": 120, "orange": 150,
-            "chicken": 150, "beef": 150, "fish": 150,
-            "rice": 100, "pasta": 100, "salad": 150
-        }
+        # VoicePromptsクラスから統一されたフォールバック食品リストを取得
+        common_foods = VoicePrompts.get_fallback_foods()
 
         detected_foods = []
         text_lower = text.lower()
