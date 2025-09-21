@@ -151,6 +151,15 @@ class Phase1SpeechComponent(BaseComponent):
         # Step 3: NLU処理（食品抽出）
         self.logger.info("Step 2: NLU processing for food extraction")
         try:
+            # プロンプトをログに記録（画像分析と同様）
+            from ..config.prompts import VoicePrompts
+            system_prompt = VoicePrompts.get_complete_prompt(use_mynetdiary_constraint=True, include_examples=True)
+            self.log_prompt("voice_nlu_system_prompt", system_prompt, {
+                "model_id": llm_model_id,
+                "language_code": language_code,
+                "input_text": transcript[:200] + "..." if len(transcript) > 200 else transcript
+            })
+
             nlu_result = await self.nlu_service.extract_foods_from_text(
                 text=transcript,
                 model_id=llm_model_id
