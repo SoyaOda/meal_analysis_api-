@@ -64,9 +64,23 @@ class SpeechService:
                 model="latest_long"  # 長い音声に適したモデル
             )
             
-            # 音声認識を実行
+            # 音声の長さを推定（バイト数から概算）
+            # WAVファイルの場合: データサイズ / (サンプルレート * チャンネル数 * ビット深度/8)
+            # 簡易計算: 44バイトのヘッダーを除く
+            audio_data_size = len(audio_data) - 44
+            estimated_duration_seconds = audio_data_size / (sample_rate * 2 * 2)  # 16bit stereo想定
+            
+            # gRPCタイムアウトを設定（推奨式: 3 * 音声長 + 5秒、最小60秒）
+            timeout_seconds = max(60, int(3 * estimated_duration_seconds + 5))
+            logger.info(f"Setting gRPC timeout to {timeout_seconds} seconds for estimated {estimated_duration_seconds:.1f}s audio")
+            
+            # 音声認識を実行（タイムアウト設定付き）
             logger.info(f"Calling Google Speech-to-Text API (language: {language_code}, WAV format)")
-            response = self.client.recognize(config=config, audio=audio)
+            response = self.client.recognize(
+                config=config, 
+                audio=audio,
+                timeout=timeout_seconds  # 明示的タイムアウト設定
+            )
             
             # 結果からテキストを抽出
             transcript = ""
