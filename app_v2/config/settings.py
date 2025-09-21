@@ -12,6 +12,13 @@ class Settings(BaseSettings):
     DEEPINFRA_API_KEY: Optional[str] = None  # Deep Infra APIキー
     DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子（デフォルト）
     DEEPINFRA_BASE_URL: str = "https://api.deepinfra.com/v1/openai"  # OpenAI互換エンドポイント
+
+    # Google Cloud設定（音声認識用）
+    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None  # Google Cloud認証情報ファイルパス
+    GOOGLE_CLOUD_PROJECT: str = "new-snap-calorie"  # Google CloudプロジェクトID
+    GOOGLE_CLOUD_PROJECT_NUMBER: str = "1077966746907"  # Google Cloudプロジェクト番号
+    GOOGLE_CLOUD_ACCOUNT: Optional[str] = None  # Google Cloudアカウント
+    GOOGLE_CLOUD_REGION: str = "us-central1"  # Google Cloudリージョン
     
     # サポートされるモデル一覧（一元管理）
     SUPPORTED_VISION_MODELS: List[str] = [
