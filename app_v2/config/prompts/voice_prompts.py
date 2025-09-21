@@ -66,7 +66,24 @@ If you cannot find an exact match in the MyNetDiary list, choose the closest ava
 
         if use_mynetdiary_constraint:
             mynetdiary_section = cls._get_mynetdiary_ingredients_section()
-            base_prompt = f"{base_prompt}\n\n{mynetdiary_section}"
+            base_prompt = f"""{base_prompt}
+
+{mynetdiary_section}
+
+**CRITICAL FORMATTING REQUIREMENTS:**
+- For ALL ingredients, you MUST select ONLY from the MyNetDiary ingredient list above
+- Use the EXACT names as they appear in the list (e.g., "Rice brown long grain cooked without salt")
+- Do NOT add commas between descriptive words (e.g., "Rice, brown, long grain, cooked, without salt" is WRONG)
+- The ingredient names in the MyNetDiary list are already in the correct format - use them exactly as shown
+- If you cannot find a suitable match, choose the closest available option or omit that ingredient
+
+**CRITICAL FINAL VERIFICATION STEP:**
+Before finalizing your response, you MUST perform a strict verification check:
+• Go through EVERY SINGLE ingredient name in your response
+• Verify that each ingredient name appears EXACTLY as written in the MyNetDiary ingredient list provided above
+• Check for exact spelling, capitalization, and word order matches
+• If ANY ingredient name does not match EXACTLY, you MUST replace it with the correct name from the list
+• This verification is MANDATORY - ingredient names that don't match exactly will cause system failures"""
 
         return base_prompt
 
@@ -82,15 +99,30 @@ If you cannot find an exact match in the MyNetDiary list, choose the closest ava
       "dish_name": "Scrambled Eggs",
       "confidence": 0.95,
       "ingredients": [
-        {"ingredient_name": "egg", "weight_g": 100.0}
+        {"ingredient_name": "Eggs whole raw", "weight_g": 100.0}
       ]
     },
     {
       "dish_name": "Buttered Toast",
       "confidence": 0.9,
       "ingredients": [
-        {"ingredient_name": "bread", "weight_g": 30.0},
-        {"ingredient_name": "butter", "weight_g": 5.0}
+        {"ingredient_name": "Bread white commercial", "weight_g": 30.0},
+        {"ingredient_name": "Butter with salt", "weight_g": 5.0}
+      ]
+    }
+  ]
+}
+
+**Example input:** "I had brown rice with steamed broccoli"
+**Example output:**
+{
+  "dishes": [
+    {
+      "dish_name": "Brown Rice with Steamed Broccoli",
+      "confidence": 0.9,
+      "ingredients": [
+        {"ingredient_name": "Rice brown long grain cooked without salt", "weight_g": 150.0},
+        {"ingredient_name": "Broccoli steamed without salt", "weight_g": 100.0}
       ]
     }
   ]
