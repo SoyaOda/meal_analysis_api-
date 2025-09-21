@@ -6,6 +6,7 @@ Nutrition Search Models
 """
 
 from typing import List, Dict, Optional, Any, Union
+from enum import Enum
 from pydantic import BaseModel, Field
 
 
@@ -194,11 +195,26 @@ class NutritionPreview(BaseModel):
     per_serving: str = Field(default="100g", description="基準量", example="100g")
 
 
+class MatchType(str, Enum):
+    """マッチタイプのEnum定義"""
+    EXACT_MATCH = "exact_match"
+    TIER_1_EXACT = "tier_1_exact"
+    TIER_2_DESCRIPTION = "tier_2_description"
+    TIER_3_PHRASE = "tier_3_phrase"
+    TIER_4_PHRASE_DESC = "tier_4_phrase_desc"
+    TIER_5_TERM = "tier_5_term"
+    TIER_6_MULTI = "tier_6_multi"
+    TIER_7_FUZZY = "tier_7_fuzzy"
+    # 下位互換性のため従来の値も維持
+    FUZZY_MATCH = "fuzzy_match"
+    PREFIX_MATCH = "prefix_match"
+    PARTIAL_MATCH = "partial_match"
+
 class Suggestion(BaseModel):
     """検索候補"""
     rank: int = Field(..., description="順位", example=1)
     suggestion: str = Field(..., description="提案食材名", example="chicken breast")
-    match_type: str = Field(..., description="マッチタイプ", example="exact_match")
+    match_type: MatchType = Field(..., description="マッチタイプ（exact_match=original_name完全一致, tier_1_exact=search_name完全一致, tier_3_phrase=prefix一致, tier_5_term=部分一致, tier_7_fuzzy=ファジー一致）", example=MatchType.EXACT_MATCH)
     confidence_score: float = Field(..., description="信頼度スコア（0-100）", example=95.8)
     food_info: FoodInfo = Field(..., description="食材詳細情報")
     nutrition_preview: NutritionPreview = Field(..., description="栄養プレビュー")
