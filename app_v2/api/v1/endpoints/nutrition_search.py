@@ -145,6 +145,63 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
     # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
     return elasticsearch_search_optimized_fallback(query, size)
 
+def determine_match_type(query: str, explanation: str, original_name: str, 
+                        search_name_list: list, description: str) -> str:
+    """
+    改善されたマッチタイプ判定ロジック
+    
+    Args:
+        query: 検索クエリ
+        explanation: Elasticsearchの_explanationフィールド
+        original_name: オリジナル名
+        search_name_list: 検索名リスト
+        description: 説明文
+        
+    Returns:
+        適切なマッチタイプフラグ
+    """
+    q_lower = query.lower()
+    
+    # 1. Exact Match（original_nameで完全一致）の判定
+    if explanation == "exact_match_original_name_keyword":
+        return "exact_match"
+    elif explanation == "exact_match_original_name_case_insensitive":
+        return "exact_match"
+    
+    # 2. original_nameでの直接比較（フォールバック）
+    if original_name and original_name.lower() == q_lower:
+        return "exact_match"
+    
+    # 3. Tier 1: search_nameでの完全一致
+    for name in search_name_list:
+        if name.lower() == q_lower:
+            return "tier_1_exact"
+    
+    # 4. Tier 2: descriptionでの完全一致
+    if description and description.lower() == q_lower:
+        return "tier_2_description"
+    
+    # 5. Tier 3: search_nameでのプレフィックスマッチ
+    for name in search_name_list:
+        if name.lower().startswith(q_lower):
+            return "tier_3_phrase"
+    
+    # 6. Tier 4: descriptionでのプレフィックスマッチ
+    if description and description.lower().startswith(q_lower):
+        return "tier_4_phrase_desc"
+    
+    # 7. Tier 5: search_nameでの部分マッチ
+    for name in search_name_list:
+        if q_lower in name.lower():
+            return "tier_5_term"
+    
+    # 8. Tier 6: descriptionでの部分マッチ
+    if description and q_lower in description.lower():
+        return "tier_6_multi"
+    
+    # 9. Tier 7: その他（ファジーマッチ）
+    return "tier_7_fuzzy"
+
 
 def elasticsearch_search_optimized_fallback(query: str, size: int = 10) -> dict:
     """元のTierアルゴリズム（フォールバック用）"""
@@ -260,6 +317,7 @@ async def suggest_foods(
         for i, hit in enumerate(hits, 1):
             source = hit["_source"]
             score = hit["_score"]
+            explanation = hit.get("_explanation", "")
 
             # 基本情報
             search_name_array = source.get("search_name", ["Unknown"])
@@ -283,17 +341,8 @@ async def suggest_foods(
                 "per_serving": "100g"
             }
 
-            # マッチタイプの判定
-            match_type = "fuzzy_match"
-            q_lower = q.lower()
-            for name in search_name_list:
-                if name.lower() == q_lower:
-                    match_type = "exact_match"
-                    break
-                elif name.lower().startswith(q_lower):
-                    match_type = "prefix_match"
-                elif q_lower in name.lower():
-                    match_type = "partial_match"
+            # 改善されたマッチタイプの判定
+            match_type = determine_match_type(q.strip(), explanation, original_name, search_name_list, description)
 
             # 信頼度スコア（0-100）
             confidence_score = min(100, (score / 15) * 100)
@@ -341,8 +390,10 @@ async def suggest_foods(
         # デバッグ情報追加
         if debug:
             response_data["debug_info"] = {
-                "elasticsearch_query_used": "7_tier_optimized_search_name_list",
+                "elasticsearch_query_used": "exact_match_first_with_7_tier_fallback",
                 "tier_scoring": {
+                    "exact_match_original_name": 999,
+                    "exact_match_case_insensitive": 998,
                     "tier_1_exact_match": 15,
                     "tier_2_exact_description": 12,
                     "tier_3_phrase_match": 10,

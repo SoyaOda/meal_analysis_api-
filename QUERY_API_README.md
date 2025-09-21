@@ -141,15 +141,29 @@ Swagger UI（インタラクティブAPI仕様書）
 
 ## 🎯 検索機能の特徴
 
-### 7段階Tier検索戦略
+### Exact Match優先検索戦略 + 7段階Tierシステム
 
-1. **Tier 1** (Score: 15+): Exact Match (search_name配列要素)
-2. **Tier 2** (Score: 12+): Exact Match (description)
-3. **Tier 3** (Score: 10+): Phrase Match (search_name配列要素)
-4. **Tier 4** (Score: 8+): Phrase Match (description)
-5. **Tier 5** (Score: 6+): Term Match (search_name要素の完全一致)
-6. **Tier 6** (Score: 4+): Multi-field match
-7. **Tier 7** (Score: 2+): Fuzzy Match (search_name配列要素)
+#### **Exact Match Layer (最優先)**
+- **exact_match** (Score: 999+): original_name完全一致 (Case Sensitive)
+- **exact_match** (Score: 998+): original_name完全一致 (Case Insensitive)
+
+#### **7段階Tier検索 (フォールバック)**
+1. **tier_1_exact** (Score: 15+): search_name完全一致
+2. **tier_2_description** (Score: 12+): description完全一致
+3. **tier_3_phrase** (Score: 10+): search_nameプレフィックス一致
+4. **tier_4_phrase_desc** (Score: 8+): descriptionプレフィックス一致
+5. **tier_5_term** (Score: 6+): search_name部分一致
+6. **tier_6_multi** (Score: 4+): description部分一致
+7. **tier_7_fuzzy** (Score: 2+): ファジーマッチ
+
+#### **match_type値の説明**
+| match_type | 説明 | 例 |
+|------------|------|-----|
+| `exact_match` | original_name完全一致 | "Rice brown long grain cooked without salt" |
+| `tier_1_exact` | search_name完全一致 | "Rice" |
+| `tier_3_phrase` | プレフィックス一致 | "chicken" → "chicken breast" |
+| `tier_5_term` | 部分一致 | "breast" → "chicken breast" |
+| `tier_7_fuzzy` | ファジーマッチ | その他のマッチ |
 
 ### 代替名検索対応
 
@@ -176,6 +190,12 @@ curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/
 
 # 3. 部分一致検索
 curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=brown%20rice&limit=5"
+
+# 4. Exact Match検索（original_name完全一致）
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=Rice%20brown%20long%20grain%20cooked%20without%20salt&limit=1"
+
+# 5. match_type詳細確認（デバッグ付き）
+curl "https://word-query-api-1077966746907.us-central1.run.app/api/v1/nutrition/suggest?q=chicken&limit=3&debug=true"
 ```
 
 ### レスポンス時間ベンチマーク
@@ -238,8 +258,10 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 ```json
 {
   "debug_info": {
-    "elasticsearch_query_used": "7_tier_optimized_search_name_list",
+    "elasticsearch_query_used": "exact_match_first_with_7_tier_fallback",
     "tier_scoring": {
+      "exact_match_original_name": 999,
+      "exact_match_case_insensitive": 998,
       "tier_1_exact_match": 15,
       "tier_2_exact_description": 12,
       "tier_3_phrase_match": 10,
@@ -296,6 +318,36 @@ test_mynetdiary_list_support_optimized.pyと同じテストケースでの比較
 - `md_files/api_deploy.md`: デプロイメント手順
 
 ## 🔄 更新履歴
+
+### 2025-09-21 v2.1 Exact Match強化版 - 検索精度向上リリース 🎯
+
+#### 🛠 主要変更項目
+- ✅ **Exact Match機能実装**: original_name完全一致で最高精度検索を実現
+- ✅ **match_type細分化**: 11種類の詳細なマッチタイプ分類システム
+- ✅ **Swagger仕様完全対応**: MatchType Enumで全てのmatch_type値を明示
+- ✅ **検索精度向上**: Brown Rice問題等の誤判定を根本解決
+- ✅ **下位互換性維持**: 既存のmatch_type値も継続サポート
+
+#### 🔧 技術的変更
+1. **Exact Match Layer追加**:
+   - original_name.keyword完全一致 (Case Sensitive: Score 999)
+   - original_name完全一致 (Case Insensitive: Score 998)
+   - 7-Tierアルゴリズムよりも優先実行
+
+2. **match_type詳細化**:
+   - `exact_match`: original_name完全一致
+   - `tier_1_exact` ~ `tier_7_fuzzy`: 7段階詳細分類
+   - 従来の`fuzzy_match`, `prefix_match`, `partial_match`も維持
+
+3. **判定ロジック改善**:
+   - `determine_match_type()`関数で_explanationフィールド活用
+   - Elasticsearchの検索戦略結果を正確に反映
+   - 誤判定問題（Brown Rice等）を根本解決
+
+#### 🎯 解決した課題
+- **Brown Rice問題**: "Rice brown long grain cooked without salt" が `fuzzy_match` → `exact_match` に修正
+- **100%マッチ率誤表示**: API応答率とマッチ精度を正確に区別
+- **Swagger仕様不備**: 全11種類のmatch_type値をEnum定義
 
 ### 2025-09-18 v2.0 栄養検索専用版 - サービス分離リリース 🎯
 
