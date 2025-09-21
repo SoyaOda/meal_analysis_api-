@@ -21,9 +21,134 @@ router = APIRouter()
 ELASTICSEARCH_URL = "http://35.193.16.212:9200"
 INDEX_NAME = "mynetdiary_list_support_db"
 
-def elasticsearch_search_optimized(query: str, size: int = 10) -> dict:
-    """成功している7段階検索戦略（test_mynetdiary_list_support_optimized.pyから）"""
+def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
+    """
+    実際のElasticsearchインデックス構造に基づくexact match優先検索
+    
+    インデックス構造:
+    - original_name (text) + original_name.keyword (keyword)
+    - search_name (text) + search_name.keyword (keyword)  
+    - description (text) + description.keyword (keyword)
+    """
+    
+    # Step 1: original_name.keyword での完全一致（大文字小文字区別）
+    exact_match_body = {
+        "query": {
+            "term": {
+                "original_name.keyword": query
+            }
+        },
+        "size": 1,
+        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+    }
+    
+    try:
+        response = requests.post(
+            f"{ELASTICSEARCH_URL}/{INDEX_NAME}/_search",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(exact_match_body),
+            timeout=5
+        )
+        response.raise_for_status()
+        exact_result = response.json()
+        
+        # Exact matchが見つかった場合は決定的に返す
+        hits = exact_result.get("hits", {}).get("hits", [])
+        if hits:
+            hit = hits[0]
+            formatted_result = {
+                "hits": {
+                    "total": {"value": 1},
+                    "hits": [{
+                        "_score": 999.0,  # 決定的スコア
+                        "_source": hit["_source"],
+                        "_explanation": "exact_match_original_name_keyword"
+                    }]
+                },
+                "took": exact_result.get("took", 0),
+                "_debug_info": {
+                    "search_strategy": "exact_match_original_name",
+                    "query_matched": query,
+                    "matched_original_name": hit["_source"]["original_name"]
+                }
+            }
+            return formatted_result
+            
+    except Exception as e:
+        # Exact match失敗時はフォールバックに進む
+        pass
+    
+    # Step 2: 大文字小文字を区別しないexact match
+    case_insensitive_body = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "match": {
+                        "original_name": {
+                            "query": query,
+                            "operator": "and",
+                            "analyzer": "standard"
+                        }
+                    }
+                }],
+                "filter": [{
+                    "script": {
+                        "script": {
+                            "source": "doc['original_name.keyword'].value.toLowerCase() == params.query.toLowerCase()",
+                            "params": {
+                                "query": query
+                            }
+                        }
+                    }
+                }]
+            }
+        },
+        "size": 1,
+        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+    }
+    
+    try:
+        response = requests.post(
+            f"{ELASTICSEARCH_URL}/{INDEX_NAME}/_search",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(case_insensitive_body),
+            timeout=5
+        )
+        response.raise_for_status()
+        exact_result = response.json()
+        
+        hits = exact_result.get("hits", {}).get("hits", [])
+        if hits:
+            hit = hits[0]
+            formatted_result = {
+                "hits": {
+                    "total": {"value": 1},
+                    "hits": [{
+                        "_score": 998.0,  # 決定的スコア（大文字小文字区別なし）
+                        "_source": hit["_source"],
+                        "_explanation": "exact_match_original_name_case_insensitive"
+                    }]
+                },
+                "took": exact_result.get("took", 0),
+                "_debug_info": {
+                    "search_strategy": "exact_match_original_name_case_insensitive",
+                    "query_matched": query,
+                    "matched_original_name": hit["_source"]["original_name"]
+                }
+            }
+            return formatted_result
+            
+    except Exception as e:
+        # Case insensitive exact match失敗時もフォールバックに進む
+        pass
+    
+    # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
+    return elasticsearch_search_optimized_fallback(query, size)
 
+
+def elasticsearch_search_optimized_fallback(query: str, size: int = 10) -> dict:
+    """元のTierアルゴリズム（フォールバック用）"""
+    
     search_body = {
         "query": {
             "bool": {
@@ -67,9 +192,25 @@ def elasticsearch_search_optimized(query: str, size: int = 10) -> dict:
             timeout=5
         )
         response.raise_for_status()
-        return response.json()
+        result = response.json()
+        
+        # フォールバック情報を追加
+        if "hits" in result:
+            result["_debug_info"] = {
+                "search_strategy": "tier_algorithm_fallback",
+                "reason": "exact_match_not_found"
+            }
+        
+        return result
     except Exception as e:
         return {"error": str(e)}
+
+def elasticsearch_search_optimized(query: str, size: int = 10) -> dict:
+    """
+    Exact match優先の検索戦略に移行
+    新しいelasticsearch_exact_match_first()を呼び出す
+    """
+    return elasticsearch_exact_match_first(query, size)
 
 @router.get("/suggest", response_model=SuggestionResponse)
 async def suggest_foods(
