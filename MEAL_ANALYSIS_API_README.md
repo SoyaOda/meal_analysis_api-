@@ -194,28 +194,28 @@ POST /api/v1/meal-analyses/voice
 
 | パラメータ | 型 | 必須 | 説明 | デフォルト | 制限 |
 |-----------|---|-----|-----|---------|-----|
-| `audio` | file | ✅ | 分析対象の音声ファイル | - | WAV/MP3/M4A/FLAC, ~10MB |
+| `audio` | file | ✅ | 分析対象の音声ファイル（WAV専用） | - | **WAV形式のみ**, ~10MB |
 | `llm_model_id` | string | ❌ | 使用するLLMモデルID | デフォルト | Gemma3-27B等 |
-| `language_code` | string | ❌ | 音声認識言語コード | "en-US" | "en-US", "ja-JP"等 |
+| `language_code` | string | ❌ | 音声認識言語コード | "en-US" | **必ず"en-US"推奨** |
 | `test_execution` | boolean | ❌ | テスト実行モード | false | - |
 | `save_detailed_logs` | boolean | ❌ | 分析ログ保存 | true | - |
 
 #### リクエスト例
 ```bash
-# 基本的な音声分析（MIMEタイプ指定推奨）
+# 基本的な音声分析（WAV形式・英語音声）
 curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/voice" \
-  -F "audio=@breakfast.mp3;type=audio/mp3" \
+  -F "audio=@breakfast.wav;type=audio/wav" \
   -F "language_code=en-US"
 
-# 日本語音声での分析
+# 高精度分析（推奨設定）
 curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/voice" \
   -F "audio=@meal_voice.wav;type=audio/wav" \
-  -F "language_code=ja-JP" \
-  -F "save_detailed_logs=false"
+  -F "language_code=en-US" \
+  -F "save_detailed_logs=true"
 
-# WAV音声での高精度分析
+# テスト用（実証済み設定）
 curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/voice" \
-  -F "audio=@high_quality.wav;type=audio/wav" \
+  -F "audio=@breakfast_detailed.wav;type=audio/wav" \
   -F "language_code=en-US"
 ```
 
@@ -276,13 +276,41 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 
 #### 音声入力の特徴
 
-- **対応フォーマット**: WAV (推奨), MP3, M4A, FLAC, OGG
+- **対応フォーマット**: **WAV形式のみ**（高精度保証）
 - **最大ファイルサイズ**: 10MB
 - **推奨音声長**: 10-60秒
+- **言語設定**: **英語（en-US）必須**（最高精度）
 - **処理フロー**: 音声認識 → NLU抽出 → 栄養検索 → 栄養計算
 - **処理時間**: 15-35秒（音声長により変動）
-- **実測処理時間**: 33.4秒（test-audio/breakfast_detailed.mp3での結果）
+- **実測処理時間**: 8.6秒（breakfast_detailed.wav+en-US設定）
 - **料金**: 約¥0.41/回（10秒音声の場合）
+
+## 🚨 音声入力の重要な注意事項
+
+### ⚠️ 言語設定が認識精度に決定的影響
+
+**音声内容の言語と `language_code` パラメータを必ず一致させてください：**
+
+#### ✅ 推奨設定（高精度）
+- **音声言語**: 英語での発話
+- **language_code**: `"en-US"`
+- **音声形式**: WAV形式
+- **認識精度**: 95%以上
+
+#### ❌ 避けるべき設定（低精度）
+- **言語設定ミスマッチ**: 英語音声に `"ja-JP"` 設定
+- **結果**: 認識精度が大幅に低下
+
+#### 🔍 実測比較例
+
+**同じ音声ファイル（breakfast_detailed.wav）での結果:**
+
+| 設定 | 認識結果 | 精度 | 抽出料理数 |
+|------|----------|------|----------|
+| `language_code="en-US"` | "Two large eggs and one slice of whole wheat toast with butter." | ✅ 完璧 | 2料理 |
+| `language_code="ja-JP"` | "トゥナイト エッグス and When the for with with but。" | ❌ 不正確 | 1料理 |
+
+**📌 重要**: 音声内容の言語と `language_code` パラメータを必ず一致させてください。
 
 ## 📋 レスポンススキーマ
 
@@ -482,15 +510,14 @@ curl -X POST "https://meal-analysis-api-1077966746907.us-central1.run.app/api/v1
 - その他DeepInfra対応テキストモデル
 
 ### 音声認識対応言語 ⭐ **NEW**
-- **英語**: `en-US` (米国), `en-GB` (英国)
-- **日本語**: `ja-JP`
-- **その他**: Google Cloud Speech-to-Text v2対応言語
+- **英語**: `en-US` (米国) **← 強く推奨・最高精度**
+- **注意**: 他言語（ja-JP等）は認識精度が著しく低下
 
 ### 対応音声フォーマット ⭐ **NEW**
-- **推奨**: WAV (PCM 16bit, 16kHz)
-- **対応**: MP3, M4A (AAC), FLAC, OGG
+- **対応**: **WAV形式のみ**（24kHz対応）
 - **最大サイズ**: 10MB
 - **推奨音声長**: 10-60秒
+- **品質**: 自動サンプルレート検出で最適化
 
 ### 環境変数
 
@@ -654,17 +681,17 @@ curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
   }
 }
 ```
-**解決法**: curlでMIMEタイプを明示的に指定
+**解決法**: WAV形式の音声ファイルを使用
 ```bash
-# 正しい指定方法
-curl -F "audio=@file.mp3;type=audio/mp3"
+# 正しい指定方法（WAV形式のみ）
+curl -F "audio=@file.wav;type=audio/wav"
 ```
 
 ```json
 {
   "detail": {
     "code": "UNSUPPORTED_AUDIO_FORMAT",
-    "message": "Unsupported audio format. Supported formats: .wav, .mp3, .m4a, .flac, .ogg"
+    "message": "Only WAV format is supported"
   }
 }
 ```
