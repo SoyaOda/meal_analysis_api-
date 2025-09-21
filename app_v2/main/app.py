@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from ..api.v1.endpoints import meal_analysis
+from ..api.v1.endpoints import meal_analysis, voice_analysis
 from ..config import get_settings
 from ..models.meal_analysis_models import RootResponse
 
@@ -38,6 +38,13 @@ app.include_router(
     tags=["Complete Meal Analysis v2.0"]
 )
 
+# 音声分析ルーターの登録
+app.include_router(
+    voice_analysis.router,
+    prefix="/api/v1/meal-analyses",
+    tags=["Voice Meal Analysis v2.0"]
+)
+
 # ルートエンドポイント
 @app.get("/", response_model=RootResponse)
 async def root() -> RootResponse:
@@ -55,7 +62,7 @@ async def health():
     return {
         "status": "healthy",
         "version": "v2.0",
-        "components": ["Phase1Component", "ElasticsearchNutritionSearchComponent"]
+        "components": ["Phase1Component", "Phase1SpeechComponent", "AdvancedNutritionSearchComponent", "NutritionCalculationComponent"]
     }
 
 if __name__ == "__main__":

@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚀 Quick Setup - Google Cloud SDK
+
+**ローカルGoogle Cloud SDK パス**: `/Users/odasoya/google-cloud-sdk/bin/gcloud`
+
+```bash
+# 迷った時の確認コマンド
+/Users/odasoya/google-cloud-sdk/bin/gcloud config get-value project  # => new-snap-calorie
+/Users/odasoya/google-cloud-sdk/bin/gcloud config get-value account  # => odssuu@gmail.com
+
+# PATHに追加する場合
+export PATH="$PATH:/Users/odasoya/google-cloud-sdk/bin"
+gcloud config get-value project  # => new-snap-calorie
+```
+
 ## Project Overview
 
 必ず serena MCP が日本語で対応すること！
