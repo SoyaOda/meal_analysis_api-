@@ -122,12 +122,8 @@ class NutritionQueryOutput(BaseModel):
     model_config = {"protected_namespaces": ()}
 
     def get_match_rate(self) -> float:
-        """照合成功率を計算"""
-        total_searches = self.search_summary.get("total_searches", 0)
-        successful_matches = self.search_summary.get("successful_matches", 0)
-        if total_searches == 0:
-            return 0.0
-        return successful_matches / total_searches
+        """Exact Match率を計算"""
+        return self.search_summary.get("exact_match_rate_percent", 0.0) / 100.0
 
     def get_total_matches(self) -> int:
         """総照合件数を取得（マルチDB検索対応）"""

@@ -133,7 +133,7 @@ def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisR
     """Convert complex API result to simplified response model"""
     from ....models.meal_analysis_models import SimplifiedCompleteAnalysisResponse, DishSummary, SimplifiedNutritionInfo, IngredientSummary
 
-    # Extract dishes information
+    # Extract dishes information（実際のレスポンス構造に合わせて修正）
     dishes = []
     phase1_result = result.get("phase1_result", {})
     final_nutrition_result = result.get("final_nutrition_result", {})
@@ -146,33 +146,50 @@ def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisR
                 dish_nutrition = nutrition_dish
                 break
 
-        # Extract ingredients with details
+        # Extract ingredients with full details（実際の構造に合わせて）
         ingredients = []
         for ingredient_data in dish_data.get("ingredients", []):
             # Find corresponding nutrition calculation for this ingredient
-            ingredient_calories = 0.0
+            nutrition_ingredient = None
             if dish_nutrition:
-                for nutrition_ingredient in dish_nutrition.get("ingredients", []):
-                    if nutrition_ingredient.get("ingredient_name") == ingredient_data.get("ingredient_name"):
-                        ingredient_calories = nutrition_ingredient.get("calculated_nutrition", {}).get("calories", 0.0)
+                for nutr_ing in dish_nutrition.get("ingredients", []):
+                    if nutr_ing.get("ingredient_name") == ingredient_data.get("ingredient_name"):
+                        nutrition_ingredient = nutr_ing
                         break
 
-            ingredients.append(IngredientSummary(
-                name=ingredient_data.get("ingredient_name", "Unknown"),
-                weight_g=ingredient_data.get("weight_g", 0.0),
-                calories=ingredient_calories
-            ))
+            if nutrition_ingredient:
+                ingredients.append(IngredientSummary(
+                    ingredient_name=nutrition_ingredient.get("ingredient_name", "Unknown"),
+                    weight_g=nutrition_ingredient.get("weight_g", 0.0),
+                    nutrition_per_100g=nutrition_ingredient.get("nutrition_per_100g", {}),
+                    calculated_nutrition=nutrition_ingredient.get("calculated_nutrition", {}),
+                    source_db=nutrition_ingredient.get("source_db", "unknown"),
+                    calculation_notes=nutrition_ingredient.get("calculation_notes", [])
+                ))
+            else:
+                # Fallback to basic data
+                ingredients.append(IngredientSummary(
+                    ingredient_name=ingredient_data.get("ingredient_name", "Unknown"),
+                    weight_g=ingredient_data.get("weight_g", 0.0),
+                    nutrition_per_100g={},
+                    calculated_nutrition={"calories": 0.0, "protein": 0.0, "fat": 0.0, "carbs": 0.0, "fiber": None, "sugar": None, "sodium": None},
+                    source_db="unknown",
+                    calculation_notes=[]
+                ))
 
-        total_calories = 0.0
+        # Build dish summary with full nutrition and metadata
+        total_nutrition = {}
+        calculation_metadata = {}
         if dish_nutrition:
-            total_calories = dish_nutrition.get("total_nutrition", {}).get("calories", 0.0)
+            total_nutrition = dish_nutrition.get("total_nutrition", {})
+            calculation_metadata = dish_nutrition.get("calculation_metadata", {})
 
         dishes.append(DishSummary(
             dish_name=dish_data.get("dish_name", "Unknown"),
             confidence=dish_data.get("confidence", 0.0),
-            ingredient_count=len(ingredients),
             ingredients=ingredients,
-            total_calories=total_calories
+            total_nutrition=total_nutrition,
+            calculation_metadata=calculation_metadata
         ))
     
     # Extract total nutrition
@@ -194,6 +211,7 @@ def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisR
     
     return SimplifiedCompleteAnalysisResponse(
         analysis_id=result.get("analysis_id", "unknown"),
+        input_type="image",  # 画像分析特有のフィールド
         total_dishes=len(dishes),
         total_ingredients=processing_summary.get("total_ingredients", 0),
         processing_time_seconds=processing_time,

@@ -35,7 +35,11 @@ async def analyze_meal_from_voice(
     audio: UploadFile = File(...),
     llm_model_id: Optional[str] = Form(None),
     language_code: str = Form("en-US"),
+    optional_text: Optional[str] = Form(None),
+    temperature: Optional[float] = Form(0.0),
+    seed: Optional[int] = Form(123456),
     test_execution: bool = Form(False),
+    test_results_dir: Optional[str] = Form(None),
     save_detailed_logs: bool = Form(True)
 ) -> SimplifiedCompleteAnalysisResponse:
     """
@@ -48,7 +52,12 @@ async def analyze_meal_from_voice(
         audio: 分析対象の音声ファイル（WAV, MP3, M4A, FLAC等）
         llm_model_id: 使用するLLMモデルID（オプション、デフォルト: gemma-3-27b-it）
         language_code: 音声認識言語コード（デフォルト: en-US）
+        optional_text: 追加のテキスト情報（英語想定）- 音声と併せて分析に使用
+                      例: "This is a homemade breakfast", "Restaurant meal with extra cheese"
+        temperature: AI推論のランダム性制御 (0.0-1.0, デフォルト: 0.0 - 決定的)
+        seed: 再現性のためのシード値 (デフォルト: 123456)
         test_execution: テスト実行モード（デフォルト: False）
+        test_results_dir: テスト結果保存先ディレクトリ（テスト実行時のみ）
         save_detailed_logs: 詳細ログ保存（デフォルト: True）
 
     Returns:
@@ -60,11 +69,20 @@ async def analyze_meal_from_voice(
     analysis_id = str(uuid.uuid4())[:8]
     start_time = datetime.now()
 
-    logger.info(f"[{analysis_id}] Starting voice meal analysis (language: {language_code})")
+    logger.info(f"[{analysis_id}] Starting voice meal analysis (language: {language_code}, temperature: {temperature}, seed: {seed})")
+    if optional_text:
+        logger.info(f"[{analysis_id}] Optional text provided: '{optional_text[:50]}{'...' if len(optional_text) > 50 else ''}'")
 
     try:
         # Step 1: 入力検証
         await _validate_audio_input(audio)
+
+        # temperature パラメータの範囲検証
+        if temperature is not None and (temperature < 0.0 or temperature > 1.0):
+            raise HTTPException(
+                status_code=400,
+                detail={"code": VoiceAnalysisErrorCodes.INVALID_PARAMETERS, "message": "temperature must be between 0.0 and 1.0"}
+            )
 
         # 音声データ読み込み
         audio_data = await audio.read()
@@ -81,7 +99,14 @@ async def analyze_meal_from_voice(
         logger.info(f"[{analysis_id}] Phase 1: Voice analysis (Speech-to-Text + NLU)")
 
         # ResultManagerの初期化
-        result_manager = ResultManager(analysis_id) if save_detailed_logs else None
+        if save_detailed_logs:
+            result_manager = ResultManager()
+            if test_execution and test_results_dir:
+                result_manager.initialize_session(analysis_id, test_results_dir)
+            else:
+                result_manager.initialize_session(analysis_id)
+        else:
+            result_manager = None
 
         # Phase1Speechコンポーネントの実行
         phase1_speech_component = Phase1SpeechComponent()
@@ -89,7 +114,10 @@ async def analyze_meal_from_voice(
             audio_bytes=audio_data,
             audio_mime_type=audio.content_type or "audio/wav",
             llm_model_id=llm_model_id,
-            language_code=language_code
+            language_code=language_code,
+            optional_text=optional_text,  # 追加テキスト情報
+            temperature=temperature,       # ランダム性制御
+            seed=seed                     # 再現性制御
         )
 
         # Phase1の詳細ログを作成
@@ -100,10 +128,92 @@ async def analyze_meal_from_voice(
             input_data=voice_input,
             execution_log=phase1_log,
             language_code=language_code,
-            llm_model_id=llm_model_id
+            llm_model_id=llm_model_id,
+            temperature=temperature,
+            seed=seed
         )
 
         logger.info(f"[{analysis_id}] Phase 1 completed - Detected {len(phase1_result.dishes)} dishes")
+
+        # ResultManagerにPhase1結果を追加（音声データを含む）
+        if result_manager:
+            # 音声テキスト変換データを含むPhase1結果を構築
+            phase1_data = {
+                "detected_food_items": [
+                    {
+                        "item_name": item.item_name,
+                        "confidence": item.confidence,
+                        "attributes": [
+                            {
+                                "type": attr.type.value if hasattr(attr.type, 'value') else str(attr.type),
+                                "value": attr.value,
+                                "confidence": attr.confidence
+                            }
+                            for attr in item.attributes
+                        ],
+                        "brand": item.brand or "",
+                        "category_hints": item.category_hints,
+                        "negative_cues": item.negative_cues
+                    }
+                    for item in phase1_result.detected_food_items
+                ],
+                "dishes": [
+                    {
+                        "dish_name": dish.dish_name,
+                        "confidence": dish.confidence,
+                        "ingredients": [
+                            {
+                                "ingredient_name": ing.ingredient_name,
+                                "confidence": ing.confidence,
+                                "weight_g": ing.weight_g
+                            }
+                            for ing in dish.ingredients
+                        ],
+                        "attributes": [
+                            {
+                                "type": attr.type.value if hasattr(attr.type, 'value') else str(attr.type),
+                                "value": attr.value,
+                                "confidence": attr.confidence
+                            }
+                            for attr in dish.detected_attributes
+                        ]
+                    }
+                    for dish in phase1_result.dishes
+                ],
+                "analysis_confidence": phase1_result.analysis_confidence,
+                "processing_notes": phase1_result.processing_notes,
+                # 音声入力データを追加
+                "input_data": {
+                    "audio_bytes": len(audio_data),  # バイト数のみ保存（実際のデータは大きすぎるため）
+                    "audio_mime_type": audio.content_type or "audio/wav",
+                    "language_code": language_code,
+                    "llm_model_id": llm_model_id,
+                    "optional_text": optional_text,
+                    "temperature": temperature,
+                    "seed": seed
+                },
+                # 音声テキスト変換結果を追加（Phase1Speechから取得）
+                "processing_details": {}
+            }
+            
+            # Phase1SpeechComponentから音声認識結果を取得
+            if hasattr(phase1_log, 'get_speech_transcription'):
+                speech_transcription = phase1_log.get_speech_transcription()
+                if speech_transcription:
+                    phase1_data["processing_details"]["speech_recognition_result"] = speech_transcription
+            
+            # 代替手段：Phase1Speechの実行ログから音声認識結果を抽出
+            if phase1_log and hasattr(phase1_log, 'logs'):
+                for log_entry in phase1_log.logs:
+                    if "Speech recognition successful:" in log_entry.get("message", ""):
+                        # ログメッセージから音声認識結果を抽出
+                        message = log_entry["message"]
+                        if "'" in message:
+                            transcription = message.split("'")[1]
+                            phase1_data["processing_details"]["speech_recognition_result"] = transcription
+                            break
+            
+            result_manager.add_phase_result("Phase1SpeechComponent", phase1_data)
 
         # Step 3: 栄養検索（既存コンポーネント再利用）
         logger.info(f"[{analysis_id}] Phase 2: Nutrition database search")
@@ -122,6 +232,44 @@ async def analyze_meal_from_voice(
 
         logger.info(f"[{analysis_id}] Phase 2 completed - {nutrition_search_result.get_match_rate():.1%} match rate")
 
+        # ResultManagerに栄養検索結果を追加
+        if result_manager:
+            # 安全な方式でmatchesを処理
+            matches_data = []
+            try:
+                for match in nutrition_search_result.matches:
+                    if hasattr(match, 'query_term'):
+                        # 正常なオブジェクトの場合
+                        match_data = {
+                            "query_term": match.query_term,
+                            "matched_food": getattr(match, 'matched_food', str(match)),
+                            "confidence_score": getattr(match, 'confidence_score', 0.0),
+                            "source_database": getattr(match, 'source_database', 'unknown'),
+                            "nutrition_per_100g": getattr(match, 'nutrition_per_100g', {})
+                        }
+                    else:
+                        # 文字列または他の形式の場合
+                        match_data = {
+                            "query_term": str(match),
+                            "matched_food": str(match),
+                            "confidence_score": 1.0,
+                            "source_database": "elasticsearch",
+                            "nutrition_per_100g": {}
+                        }
+                    matches_data.append(match_data)
+            except Exception as e:
+                logger.warning(f"Error processing matches: {e}, using simplified format")
+                matches_data = [{"query_term": str(match), "matched_food": str(match)} for match in nutrition_search_result.matches]
+            
+            nutrition_search_data = {
+                "matches_count": len(nutrition_search_result.matches),
+                "match_rate": nutrition_search_result.get_match_rate(),
+                "search_summary": nutrition_search_result.search_summary,
+                "search_method": "elasticsearch",
+                "matches": matches_data
+            }
+            result_manager.add_phase_result("AdvancedNutritionSearchComponent", nutrition_search_data)
+
         # Step 4: 栄養計算（既存コンポーネント再利用）
         logger.info(f"[{analysis_id}] Phase 3: Nutrition calculation")
 
@@ -137,6 +285,61 @@ async def analyze_meal_from_voice(
         nutrition_calculation_result = await nutrition_calculation_component.execute(nutrition_calculation_input, calculation_log)
 
         logger.info(f"[{analysis_id}] Phase 3 completed - {nutrition_calculation_result.meal_nutrition.total_nutrition.calories:.1f} kcal total")
+
+        # ResultManagerに栄養計算結果を追加
+        if result_manager:
+            nutrition_calculation_data = {
+                "dishes": [
+                    {
+                        "dish_name": dish.dish_name,
+                        "confidence": dish.confidence,
+                        "ingredients": [
+                            {
+                                "ingredient_name": ing.ingredient_name,
+                                "weight_g": ing.weight_g,
+                                "nutrition_per_100g": ing.nutrition_per_100g,
+                                "calculated_nutrition": {
+                                    "calories": ing.calculated_nutrition.calories,
+                                    "protein": ing.calculated_nutrition.protein,
+                                    "fat": ing.calculated_nutrition.fat,
+                                    "carbs": ing.calculated_nutrition.carbs,
+                                    "fiber": ing.calculated_nutrition.fiber,
+                                    "sugar": ing.calculated_nutrition.sugar,
+                                    "sodium": ing.calculated_nutrition.sodium
+                                },
+                                "source_db": ing.source_db,
+                                "calculation_notes": ing.calculation_notes
+                            }
+                            for ing in dish.ingredients
+                        ],
+                        "total_nutrition": {
+                            "calories": dish.total_nutrition.calories,
+                            "protein": dish.total_nutrition.protein,
+                            "fat": dish.total_nutrition.fat,
+                            "carbs": dish.total_nutrition.carbs,
+                            "fiber": dish.total_nutrition.fiber,
+                            "sugar": dish.total_nutrition.sugar,
+                            "sodium": dish.total_nutrition.sodium
+                        },
+                        "calculation_metadata": dish.calculation_metadata
+                    }
+                    for dish in nutrition_calculation_result.meal_nutrition.dishes
+                ],
+                "total_nutrition": {
+                    "calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
+                    "protein": nutrition_calculation_result.meal_nutrition.total_nutrition.protein,
+                    "fat": nutrition_calculation_result.meal_nutrition.total_nutrition.fat,
+                    "carbs": nutrition_calculation_result.meal_nutrition.total_nutrition.carbs,
+                    "fiber": nutrition_calculation_result.meal_nutrition.total_nutrition.fiber,
+                    "sugar": nutrition_calculation_result.meal_nutrition.total_nutrition.sugar,
+                    "sodium": nutrition_calculation_result.meal_nutrition.total_nutrition.sodium
+                },
+                "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
+                "warnings": nutrition_calculation_result.meal_nutrition.warnings,
+                "match_rate_percent": nutrition_search_result.get_match_rate() * 100,
+                "search_method": "elasticsearch"
+            }
+            result_manager.add_phase_result("NutritionCalculationComponent", nutrition_calculation_data)
 
         # Step 5: レスポンス構築
         end_time = datetime.now()
@@ -159,7 +362,10 @@ async def analyze_meal_from_voice(
                 "input_type": "voice",
                 "processing_time_seconds": processing_time,
                 "total_dishes": len(phase1_result.dishes),
-                "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories
+                "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
+                "optional_text_used": optional_text,
+                "temperature": temperature,
+                "seed": seed
             })
             result_manager.finalize_pipeline()
             saved_files = result_manager.save_phase_results()
@@ -240,22 +446,44 @@ def _build_unified_response(
 ) -> SimplifiedCompleteAnalysisResponse:
     """画像分析と同一フォーマットのレスポンスを構築"""
 
-    # 料理情報を構築
+    # 料理情報を構築（実際のレスポンス構造に合わせて修正）
     dishes = []
     for dish in nutrition_calculation_result.meal_nutrition.dishes:
+        # 食材詳細リストを構築
+        ingredients = []
+        for ing in dish.ingredients:
+            ingredient_data = {
+                "ingredient_name": ing.ingredient_name,
+                "weight_g": ing.weight_g,
+                "nutrition_per_100g": ing.nutrition_per_100g,
+                "calculated_nutrition": {
+                    "calories": ing.calculated_nutrition.calories,
+                    "protein": ing.calculated_nutrition.protein,
+                    "fat": ing.calculated_nutrition.fat,
+                    "carbs": ing.calculated_nutrition.carbs,
+                    "fiber": ing.calculated_nutrition.fiber,
+                    "sugar": ing.calculated_nutrition.sugar,
+                    "sodium": ing.calculated_nutrition.sodium
+                },
+                "source_db": ing.source_db,
+                "calculation_notes": ing.calculation_notes
+            }
+            ingredients.append(ingredient_data)
+
         dish_data = {
             "dish_name": dish.dish_name,
             "confidence": dish.confidence,
-            "ingredient_count": len(dish.ingredients),
-            "ingredients": [
-                {
-                    "name": ing.ingredient_name,
-                    "weight_g": ing.weight_g,
-                    "calories": ing.calculated_nutrition.calories
-                }
-                for ing in dish.ingredients
-            ],
-            "total_calories": dish.total_nutrition.calories
+            "ingredients": ingredients,
+            "total_nutrition": {
+                "calories": dish.total_nutrition.calories,
+                "protein": dish.total_nutrition.protein,
+                "fat": dish.total_nutrition.fat,
+                "carbs": dish.total_nutrition.carbs,
+                "fiber": dish.total_nutrition.fiber,
+                "sugar": dish.total_nutrition.sugar,
+                "sodium": dish.total_nutrition.sodium
+            },
+            "calculation_metadata": dish.calculation_metadata
         }
         dishes.append(dish_data)
 
@@ -264,16 +492,20 @@ def _build_unified_response(
         "calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
         "protein": nutrition_calculation_result.meal_nutrition.total_nutrition.protein,
         "fat": nutrition_calculation_result.meal_nutrition.total_nutrition.fat,
-        "carbs": nutrition_calculation_result.meal_nutrition.total_nutrition.carbs
+        "carbs": nutrition_calculation_result.meal_nutrition.total_nutrition.carbs,
+        "fiber": nutrition_calculation_result.meal_nutrition.total_nutrition.fiber,
+        "sugar": nutrition_calculation_result.meal_nutrition.total_nutrition.sugar,
+        "sodium": nutrition_calculation_result.meal_nutrition.total_nutrition.sodium
     }
 
-    # 使用モデル決定
+    # 使用モデル決定（音声分析ではNLUでLLMを使用）
     from ....config.settings import get_settings
     settings = get_settings()
     ai_model_used = llm_model_id or settings.DEEPINFRA_MODEL_ID
 
     return SimplifiedCompleteAnalysisResponse(
         analysis_id=analysis_id,
+        input_type="voice",  # 音声分析特有のフィールド
         total_dishes=len(dishes),
         total_ingredients=sum(len(dish["ingredients"]) for dish in dishes),
         processing_time_seconds=processing_time,

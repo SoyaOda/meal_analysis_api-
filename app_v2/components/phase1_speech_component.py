@@ -39,7 +39,9 @@ class Phase1SpeechComponent(BaseComponent):
         input_data: VoiceAnalysisInput,
         execution_log: Optional = None,
         language_code: str = "en-US",
-        llm_model_id: Optional[str] = None
+        llm_model_id: Optional[str] = None,
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None
     ) -> Phase1Output:
         """
         音声分析専用のexecuteメソッド
@@ -49,6 +51,8 @@ class Phase1SpeechComponent(BaseComponent):
             execution_log: 詳細実行ログ（オプション）
             language_code: 音声認識言語コード
             llm_model_id: 使用するLLMモデルID
+            temperature: AI推論のランダム性制御 (0.0-1.0)
+            seed: 再現性のためのシード値
 
         Returns:
             Phase1Output: 既存システムと同等の構造化分析結果
@@ -64,14 +68,28 @@ class Phase1SpeechComponent(BaseComponent):
                 "audio_size_bytes": len(input_data.audio_bytes),
                 "audio_mime_type": input_data.audio_mime_type,
                 "language_code": language_code,
-                "llm_model_id": llm_model_id
+                "llm_model_id": llm_model_id,
+                "temperature": temperature,
+                "seed": seed,
+                "optional_text": getattr(input_data, 'optional_text', None)
             })
 
         self.logger.info(f"[{execution_id}] Starting {self.component_name} processing (language: {language_code})")
+        if temperature is not None:
+            self.logger.info(f"[{execution_id}] Using temperature: {temperature}, seed: {seed}")
 
         try:
             start_time = datetime.now()
-            result = await self.process(input_data, language_code=language_code, llm_model_id=llm_model_id)
+            
+            # 新しいパラメータを process() メソッドに渡す
+            result = await self.process(
+                input_data, 
+                language_code=language_code, 
+                llm_model_id=llm_model_id,
+                temperature=temperature,
+                seed=seed
+            )
+            
             end_time = datetime.now()
 
             processing_time = (end_time - start_time).total_seconds()
@@ -105,7 +123,9 @@ class Phase1SpeechComponent(BaseComponent):
         self,
         input_data: VoiceAnalysisInput,
         language_code: str = "en-US",
-        llm_model_id: Optional[str] = None
+        llm_model_id: Optional[str] = None,
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None
     ) -> Phase1Output:
         """
         音声分析の主処理（WAV形式のみ対応）
@@ -114,6 +134,8 @@ class Phase1SpeechComponent(BaseComponent):
             input_data: VoiceAnalysisInput
             language_code: 音声認識言語コード
             llm_model_id: 使用するLLMモデルID
+            temperature: AI推論のランダム性制御 (0.0-1.0)
+            seed: 再現性のためのシード値
 
         Returns:
             Phase1Output: 既存システムと同等の構造化分析結果
@@ -141,18 +163,29 @@ class Phase1SpeechComponent(BaseComponent):
         # Step 2: NLU処理（食品抽出）
         self.logger.info("Step 2: NLU processing for food extraction")
         try:
+            # optional_textがあれば音声認識結果と結合
+            combined_text = transcript
+            if hasattr(input_data, 'optional_text') and input_data.optional_text:
+                combined_text = f"{transcript}. Additional context: {input_data.optional_text}"
+                self.logger.info(f"Combined transcript with optional text: {combined_text[:150]}...")
+
             # プロンプトをログに記録（画像分析と同様）
             from ..config.prompts import VoicePrompts
             system_prompt = VoicePrompts.get_complete_prompt(use_mynetdiary_constraint=True, include_examples=True)
             self.log_prompt("voice_nlu_system_prompt", system_prompt, {
                 "model_id": llm_model_id,
                 "language_code": language_code,
-                "input_text": transcript[:200] + "..." if len(transcript) > 200 else transcript
+                "input_text": combined_text[:200] + "..." if len(combined_text) > 200 else combined_text,
+                "temperature": temperature,
+                "seed": seed
             })
 
+            # NLUサービスに新しいパラメータを渡す
             nlu_result = await self.nlu_service.extract_foods_from_text(
-                text=transcript,
-                model_id=llm_model_id
+                text=combined_text,
+                model_id=llm_model_id,
+                temperature=temperature,
+                seed=seed
             )
             self.log_processing_detail("nlu_extraction_result", nlu_result)
 

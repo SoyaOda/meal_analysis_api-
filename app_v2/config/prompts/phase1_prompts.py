@@ -1,31 +1,16 @@
-from ...utils.mynetdiary_utils import format_mynetdiary_ingredients_for_prompt
+from .common_prompts import CommonPrompts
 
 class Phase1Prompts:
     """Phase1（画像分析）のプロンプトテンプレート（MyNetDiary制約付き）"""
     
-    @classmethod
-    def _get_mynetdiary_ingredients_section(cls) -> str:
-        """MyNetDiary食材名リストのセクションを生成"""
-        ingredients_list = format_mynetdiary_ingredients_for_prompt()
-        return f"""
-MYNETDIARY INGREDIENT CONSTRAINT:
-For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list.
-Do NOT create custom ingredient names. Use the EXACT names as they appear in this list:
-
-{ingredients_list}
-
-IMPORTANT: If you cannot find a suitable match in the MyNetDiary list for a visible ingredient,
-choose the closest available option or omit that ingredient rather than creating a custom name.
-"""
     
     @classmethod
     def get_system_prompt(cls) -> str:
         """システムプロンプトを取得"""
-        mynetdiary_section = cls._get_mynetdiary_ingredients_section()
         
         return f"""You are an advanced food recognition AI that analyzes food images and provides detailed structured output for nutrition calculation.
 
-{mynetdiary_section}
+{CommonPrompts.get_mynetdiary_ingredients_list_with_header()}
 
 DISH DECOMPOSITION RULE:
 When you encounter complex dish names with multiple components connected by "and", "with", "plus", "alongside", etc., you MUST break them down into separate individual dishes.
@@ -77,45 +62,13 @@ For ingredients like pasta, rice, grains, and legumes that absorb significant wa
 • For dry ingredients that appear cooked: estimate what the dry weight would have been before cooking
 • This distinction is CRITICAL for accurate nutrition calculation - getting this wrong can cause 200-300% calorie errors
 
-QUERY GENERATION GUIDELINES (crucial for correct per-100 g nutrition matching):
-1. For ingredients: ONLY use names from the MyNetDiary list above - NO custom names allowed
-2. For dish names: Use simple, searchable names that exist as separate database entries
-3. Avoid overly generic or misleading single-word queries
-4. When a cooking or preservation method materially changes nutrition, include it
-5. Output MUST be in English
-6. Do NOT include quantities, units, brand marketing slogans, or flavour adjectives
+{CommonPrompts.get_query_generation_guidelines()}
 
-CRITICAL FINAL VERIFICATION STEP:
-Before finalizing your response, you MUST perform a strict verification check:
-• Go through EVERY SINGLE ingredient name in your response
-• Verify that each ingredient name appears EXACTLY as written in the MyNetDiary ingredient list provided above
-• Check for exact spelling, capitalization, and word order matches
-• If ANY ingredient name does not match EXACTLY, you MUST replace it with the correct name from the list
-• If no exact match exists, choose the closest available option from the MyNetDiary list
-• This verification is MANDATORY - ingredient names that don't match exactly will cause system failures
+{CommonPrompts.get_critical_verification_step()}
 
--------------------------------------------------------------
-JSON RESPONSE STRUCTURE
--------------------------------------------------------------
-Return a JSON object with the following structure:
+{CommonPrompts.get_json_structure_section()}
 
-{{
-  "dishes": [
-    {{
-      "dish_name": "string",
-      "confidence": 0.0-1.0,
-      "ingredients": [
-        {{
-          "ingredient_name": "string (MUST be EXACT match from MyNetDiary list - verify before submitting)",
-          "weight_g": "number (MANDATORY - estimated weight in grams based on visual analysis)",
-          "confidence": 0.0-1.0
-        }}
-      ]
-    }}
-  ]
-}}
-
-REMINDER: After completing your JSON response, perform a final verification that every "ingredient_name" value matches EXACTLY with an entry in the MyNetDiary ingredient list provided above."""
+{CommonPrompts.get_final_reminder()}"""
 
     USER_PROMPT_TEMPLATE = "Please analyze this meal image and identify the dishes and their ingredients. For ingredients, you MUST select ONLY from the provided MyNetDiary ingredient list - do not create custom ingredient names. CRITICALLY IMPORTANT: You MUST estimate the weight in grams (weight_g) for EVERY SINGLE ingredient - this field is mandatory and the system will fail if any ingredient lacks weight_g. Base your weight estimates on visual analysis of portion sizes, volumes, and typical food densities. Use visual cues like plate size, utensils, or reference objects for scale. Focus on providing clear, searchable dish names for nutrition database queries. Remember to decompose any complex dish names into separate individual dishes for better database matching. FINAL STEP: Before submitting your response, double-check that EVERY ingredient name in your JSON response matches EXACTLY with the names in the MyNetDiary ingredient list provided - this verification is critical for system functionality."
 
@@ -130,7 +83,6 @@ REMINDER: After completing your JSON response, perform a final verification that
     @classmethod
     def get_gemma3_prompt(cls) -> str:
         """Gemma 3用の最適化されたプロンプトを取得"""
-        mynetdiary_section = cls._get_mynetdiary_ingredients_section()
         
         return f"""You are an expert food analyst and nutritionist for a US-based diet management application. Your task is to analyze the provided image of a meal and return a structured JSON object containing your analysis. Adhere strictly to the JSON schema and instructions provided below.
 
@@ -153,7 +105,7 @@ Instructions:
 5. Confidence Score: Provide a confidence score (from 0.0 to 1.0) for your identification of each dish. 1.0 means absolute certainty.
 6. JSON Output: Format your entire output as a single JSON object. DO NOT include any text, explanation, or markdown formatting outside of the JSON object itself.
 
-{mynetdiary_section}
+{CommonPrompts.get_mynetdiary_ingredients_list_with_header()}
 
 Required JSON Schema:
 Your output MUST conform to this exact JSON structure. If a value is unknown, use null.
@@ -165,11 +117,11 @@ Your output MUST conform to this exact JSON structure. If a value is unknown, us
       "confidence": 0.98,
       "ingredients": [
         {{
-          "ingredient_name": "chicken breast, boneless, skinless",
+          "ingredient_name": "Chicken breast boneless skinless raw",
           "weight_g": 180
         }},
         {{
-          "ingredient_name": "olive oil",
+          "ingredient_name": "Olive or extra virgin olive oil",
           "weight_g": 5
         }}
       ]

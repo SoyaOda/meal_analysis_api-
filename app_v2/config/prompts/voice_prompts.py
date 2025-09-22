@@ -4,24 +4,12 @@
 音声認識されたテキストから料理・食材・重量を抽出するためのプロンプトを管理します。
 """
 from typing import Optional
-from ...utils.mynetdiary_utils import format_mynetdiary_ingredients_for_prompt
+from .common_prompts import CommonPrompts
 
 
 class VoicePrompts:
     """音声分析（NLU処理）のプロンプトテンプレート（MyNetDiary制約付き）"""
 
-    @classmethod
-    def _get_mynetdiary_ingredients_section(cls) -> str:
-        """MyNetDiary食材名リストのセクションを生成"""
-        ingredients_list = format_mynetdiary_ingredients_for_prompt()
-        return f"""
-MYNETDIARY INGREDIENT CONSTRAINT:
-You must ONLY use ingredient names from this approved MyNetDiary database. Do not use any ingredient names that are not in this list.
-
-{ingredients_list}
-
-If you cannot find an exact match in the MyNetDiary list, choose the closest available ingredient or break down complex dishes into their basic MyNetDiary-approved components.
-"""
 
     @classmethod
     def get_system_prompt(cls, use_mynetdiary_constraint: bool = True) -> str:
@@ -34,56 +22,26 @@ If you cannot find an exact match in the MyNetDiary list, choose the closest ava
         Returns:
             システムプロンプト文字列
         """
-        base_prompt = """You are an AI assistant specialized in nutrition analysis. Your task is to extract food and meal information from user speech transcripts and convert them into a structured JSON format.
+        base_prompt = f"""You are an AI assistant specialized in nutrition analysis. Your task is to extract food and meal information from user speech transcripts and convert them into a structured JSON format.
 
 **Instructions:**
-1. Identify dishes/meals and their ingredients from the user's description
-2. Estimate reasonable serving sizes and weights in grams for each ingredient
-3. Output in the following JSON structure only, no additional text
+1. Extract ONLY individual ingredients (not dish names) from the user's description
+2. For each ingredient, select the EXACT name from the MyNetDiary ingredient list provided below
+3. Estimate reasonable serving sizes and weights in grams for each ingredient
+4. Output in the following JSON structure only, no additional text
 
-**Required JSON format:**
-{
-  "dishes": [
-    {
-      "dish_name": "Dish Name",
-      "confidence": 0.9,
-      "ingredients": [
-        {
-          "ingredient_name": "ingredient name",
-          "weight_g": 100.0
-        }
-      ]
-    }
-  ]
-}
+{CommonPrompts.get_json_format_section()}
 
-**Guidelines:**
-- Use standard ingredient names (e.g., "egg" not "scrambled eggs")
-- Estimate typical serving weights (e.g., 1 egg ≈ 50g, 1 slice bread ≈ 30g)
-- For complex dishes, break down into main ingredients
-- If quantity mentioned (e.g., "two eggs"), calculate total weight
-- Confidence should reflect how certain you are about the identification"""
+{CommonPrompts.get_basic_guidelines()}"""
 
         if use_mynetdiary_constraint:
-            mynetdiary_section = cls._get_mynetdiary_ingredients_section()
             base_prompt = f"""{base_prompt}
 
-{mynetdiary_section}
+{CommonPrompts.get_mynetdiary_ingredients_list_with_header()}
 
-**CRITICAL FORMATTING REQUIREMENTS:**
-- For ALL ingredients, you MUST select ONLY from the MyNetDiary ingredient list above
-- Use the EXACT names as they appear in the list (e.g., "Rice brown long grain cooked without salt")
-- Do NOT add commas between descriptive words (e.g., "Rice, brown, long grain, cooked, without salt" is WRONG)
-- The ingredient names in the MyNetDiary list are already in the correct format - use them exactly as shown
-- If you cannot find a suitable match, choose the closest available option or omit that ingredient
+{CommonPrompts.get_formatting_requirements()}
 
-**CRITICAL FINAL VERIFICATION STEP:**
-Before finalizing your response, you MUST perform a strict verification check:
-• Go through EVERY SINGLE ingredient name in your response
-• Verify that each ingredient name appears EXACTLY as written in the MyNetDiary ingredient list provided above
-• Check for exact spelling, capitalization, and word order matches
-• If ANY ingredient name does not match EXACTLY, you MUST replace it with the correct name from the list
-• This verification is MANDATORY - ingredient names that don't match exactly will cause system failures"""
+{CommonPrompts.get_final_verification_for_voice()}"""
 
         return base_prompt
 
@@ -99,15 +57,15 @@ Before finalizing your response, you MUST perform a strict verification check:
       "dish_name": "Scrambled Eggs",
       "confidence": 0.95,
       "ingredients": [
-        {"ingredient_name": "Eggs whole raw", "weight_g": 100.0}
+        {"ingredient_name": "Egg whole raw", "weight_g": 100.0}
       ]
     },
     {
       "dish_name": "Buttered Toast",
       "confidence": 0.9,
       "ingredients": [
-        {"ingredient_name": "Bread white commercial", "weight_g": 30.0},
-        {"ingredient_name": "Butter with salt", "weight_g": 5.0}
+        {"ingredient_name": "White bread", "weight_g": 30.0},
+        {"ingredient_name": "Butter salted", "weight_g": 5.0}
       ]
     }
   ]
@@ -122,7 +80,7 @@ Before finalizing your response, you MUST perform a strict verification check:
       "confidence": 0.9,
       "ingredients": [
         {"ingredient_name": "Rice brown long grain cooked without salt", "weight_g": 150.0},
-        {"ingredient_name": "Broccoli steamed without salt", "weight_g": 100.0}
+        {"ingredient_name": "Broccoli steamed", "weight_g": 100.0}
       ]
     }
   ]

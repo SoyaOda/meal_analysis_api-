@@ -111,625 +111,301 @@ class DetailedExecutionLog:
 
 
 class ResultManager:
-    """解析結果と詳細ログの管理クラス（フェーズ別整理版）"""
+    """分析結果の管理とファイル出力を行うクラス"""
     
-    def __init__(self, analysis_id: str, save_directory: str = "analysis_results"):
+    def __init__(self, base_dir: str = "analysis_results"):
+        self.base_dir = base_dir
+        self.session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.analysis_id = None
+        self.session_dir = None
+        self.analysis_dir = None
+        self.phase_results = {}  # フェーズ別結果を管理
+        
+    def initialize_session(self, analysis_id: str) -> str:
+        """セッションを初期化し、分析IDを設定"""
         self.analysis_id = analysis_id
-        self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.session_dir = os.path.join(self.base_dir, f"meal_analysis_{self.session_id}")
+        self.analysis_dir = os.path.join(self.session_dir, f"analysis_{analysis_id}")
         
-        # 実行ごとのフォルダを作成（分かりやすい階層構造）
-        timestamp_dir = Path(save_directory) / f"meal_analysis_{self.timestamp}"
-        timestamp_dir.mkdir(parents=True, exist_ok=True)
+        # 基本ディレクトリのみ作成
+        os.makedirs(self.analysis_dir, exist_ok=True)
         
-        self.analysis_folder_name = f"analysis_{self.analysis_id}"
-        self.analysis_dir = timestamp_dir / self.analysis_folder_name
-        self.analysis_dir.mkdir(parents=True, exist_ok=True)
+        return self.analysis_dir
+
+    def add_phase_result(self, phase_name: str, phase_data: dict) -> None:
+        """フェーズ結果を追加
         
-        # 各フェーズのフォルダを作成
-        self.phase1_dir = self.analysis_dir / "phase1"
-        self.nutrition_search_dir = self.analysis_dir / "nutrition_search_query"
-        self.phase2_dir = self.analysis_dir / "phase2"
-        self.nutrition_dir = self.analysis_dir / "nutrition_calculation"
+        Args:
+            phase_name: フェーズ名（例：Phase1SpeechComponent）
+            phase_data: フェーズの結果データ
+        """
+        self.phase_results[phase_name] = phase_data
+    
+    def save_phase_results(self, phase1_data: dict, nutrition_query_results: dict, 
+                          nutrition_calculation_results: dict, component_logs: list,
+                          processing_time_seconds: float) -> dict:
+        """新しい3ファイル構造で結果を保存"""
         
-        for phase_dir in [self.phase1_dir, self.nutrition_search_dir, self.phase2_dir, self.nutrition_dir]:
-            phase_dir.mkdir(exist_ok=True)
+        if not self.analysis_dir:
+            raise ValueError("Session not initialized")
         
-        self.pipeline_start_time = datetime.now()
-        self.pipeline_end_time = None
-        self.execution_logs: List[DetailedExecutionLog] = []
-        self.final_result = {}
-        self.pipeline_metadata = {
-            "analysis_id": analysis_id,
-            "version": "v2.0",
-            "analysis_folder": self.analysis_folder_name,
-            "pipeline_start_time": self.pipeline_start_time.isoformat()
+        # 1. analysis_summary.json - 軽量サマリー（API応答用）
+        summary_data = self._create_analysis_summary(
+            phase1_data, nutrition_calculation_results, processing_time_seconds
+        )
+        summary_path = os.path.join(self.analysis_dir, "analysis_summary.json")
+        self._save_json(summary_path, summary_data)
+        
+        # 2. detailed_analysis.json - 包括的データ（デバッグ・分析用）
+        detailed_data = self._create_detailed_analysis(
+            phase1_data, nutrition_query_results, nutrition_calculation_results
+        )
+        detailed_path = os.path.join(self.analysis_dir, "detailed_analysis.json")
+        self._save_json(detailed_path, detailed_data)
+        
+        # 3. execution_log.json - 詳細ログ（開発・トラブルシューティング用）
+        log_data = self._create_execution_log(
+            component_logs, processing_time_seconds
+        )
+        log_path = os.path.join(self.analysis_dir, "execution_log.json")
+        self._save_json(log_path, log_data)
+        
+        return {
+            "analysis_summary_path": summary_path,
+            "detailed_analysis_path": detailed_path,
+            "execution_log_path": log_path,
+            "analysis_dir": self.analysis_dir
         }
-        
-    def create_execution_log(self, component_name: str, execution_id: str) -> DetailedExecutionLog:
-        """新しい実行ログを作成"""
-        log = DetailedExecutionLog(component_name, execution_id)
-        self.execution_logs.append(log)
-        return log
     
-    def set_final_result(self, result: Dict[str, Any]):
-        """最終結果を設定"""
-        self.final_result = result
+    def _create_analysis_summary(self) -> dict:
+        """軽量サマリーデータを作成（API応答用）"""
         
-    def finalize_pipeline(self):
-        """パイプライン完了時の最終処理"""
-        self.pipeline_end_time = datetime.now()
-        self.pipeline_metadata["pipeline_end_time"] = self.pipeline_end_time.isoformat()
-        self.pipeline_metadata["total_execution_time_seconds"] = (
-            self.pipeline_end_time - self.pipeline_start_time
-        ).total_seconds()
-    
-    def save_phase_results(self) -> Dict[str, str]:
-        """フェーズ別に結果を保存"""
-        saved_files = {}
+        # phase_resultsから各フェーズのデータを取得
+        phase1_data = self.phase_results.get("Phase1SpeechComponent", self.phase_results.get("Phase1Component", {}))
+        nutrition_calculation_data = self.phase_results.get("NutritionCalculationComponent", {})
         
-        # 実行されたコンポーネントのログを処理
-        executed_components = set()
-        for log in self.execution_logs:
-            if log.component_name == "Phase1Component":
-                files = self._save_phase1_results(log)
-                saved_files.update(files)
-                executed_components.add("Phase1Component")
-            elif log.component_name in ["ElasticsearchNutritionSearchComponent"]:
-                files = self._save_nutrition_search_results(log)
-                saved_files.update(files)
-                executed_components.add(log.component_name)
-            elif log.component_name == "Phase2Component":
-                files = self._save_phase2_results(log)
-                saved_files.update(files)
-                executed_components.add("Phase2Component")
-            elif log.component_name == "NutritionCalculationComponent":
-                files = self._save_nutrition_results(log)
-                saved_files.update(files)
-                executed_components.add("NutritionCalculationComponent")
+        # 入力タイプを判定
+        input_type = "image"
+        if phase1_data.get("input_data", {}).get("audio_bytes") or phase1_data.get("input_data", {}).get("language_code"):
+            input_type = "voice"
         
-        # 未実装/未実行のコンポーネントにプレースホルダーファイルを作成
-        if "Phase2Component" not in executed_components:
-            placeholder_log = DetailedExecutionLog("Phase2Component", f"{self.analysis_id}_phase2_placeholder")
-            placeholder_log.input_data = {"note": "Phase2Component not yet implemented"}
-            placeholder_log.output_data = {"note": "Phase2Component not yet implemented"}
-            placeholder_log.finalize()
-            files = self._save_phase2_results(placeholder_log)
-            saved_files.update(files)
+        # final_resultから基本情報を取得
+        final_result = getattr(self, 'final_result', {})
+        processing_time = final_result.get("processing_time_seconds", 0.0)
         
-        if "NutritionCalculationComponent" not in executed_components:
-            placeholder_log = DetailedExecutionLog("NutritionCalculationComponent", f"{self.analysis_id}_nutrition_placeholder")
-            placeholder_log.input_data = {"note": "NutritionCalculationComponent not yet implemented"}
-            placeholder_log.output_data = {"note": "NutritionCalculationComponent not yet implemented"}
-            placeholder_log.finalize()
-            files = self._save_nutrition_results(placeholder_log)
-            saved_files.update(files)
-        
-        # パイプライン全体のサマリーを保存
-        summary_files = self._save_pipeline_summary()
-        saved_files.update(summary_files)
-        
-        return saved_files
-    
-    def _save_phase1_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """Phase1の結果を保存"""
-        files = {}
-        
-        # 1. JSON形式の入出力データ
-        input_output_file = self.phase1_dir / "input_output.json"
-        with open(input_output_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "input_data": log.input_data,
-                "output_data": log.output_data,
-                "execution_time_seconds": log.get_execution_time()
-            }, f, indent=2, ensure_ascii=False)
-        files["phase1_input_output"] = str(input_output_file)
-        
-        # 2. プロンプトと推論理由のマークダウン
-        prompts_md_file = self.phase1_dir / "prompts_and_reasoning.md"
-        prompts_content = self._generate_phase1_prompts_md(log)
-        with open(prompts_md_file, 'w', encoding='utf-8') as f:
-            f.write(prompts_content)
-        files["phase1_prompts_md"] = str(prompts_md_file)
-        
-        # 3. 検出された料理・食材のテキスト
-        detected_items_file = self.phase1_dir / "detected_items.txt"
-        detected_content = self._generate_phase1_detected_items_txt(log)
-        with open(detected_items_file, 'w', encoding='utf-8') as f:
-            f.write(detected_content)
-        files["phase1_detected_txt"] = str(detected_items_file)
-        
-        return files
-    
-    def _save_nutrition_search_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """栄養データベース検索の結果を保存（ElasticsearchNutritionSearchComponent対応）"""
-        files = {}
-        
-        # 検索方法の判定
-        search_method = "unknown"
-        db_source = "unknown"
-        
-        if log.component_name == "ElasticsearchNutritionSearchComponent":
-            search_method = "elasticsearch"
-            db_source = "elasticsearch_nutrition_db"
-        
-        # 1. JSON形式の入出力データ（検索方法情報を含む）
-        input_output_file = self.nutrition_search_dir / "input_output.json"
-        with open(input_output_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "input_data": log.input_data,
-                "output_data": log.output_data,
-                "execution_time_seconds": log.get_execution_time(),
-                "search_metadata": {
-                    "component_name": log.component_name,
-                    "search_method": search_method,
-                    "database_source": db_source,
-                    "timestamp": log.execution_end_time.isoformat() if log.execution_end_time else None
-                }
-            }, f, indent=2, ensure_ascii=False)
-        files["nutrition_search_input_output"] = str(input_output_file)
-        
-        # 2. 検索結果の詳細マークダウン
-        search_results_md_file = self.nutrition_search_dir / "search_results.md"
-        search_content = self._generate_nutrition_search_results_md(log, search_method, db_source)
-        with open(search_results_md_file, 'w', encoding='utf-8') as f:
-            f.write(search_content)
-        files["nutrition_search_results_md"] = str(search_results_md_file)
-        
-        # 3. マッチ詳細のテキスト
-        match_details_file = self.nutrition_search_dir / "match_details.txt"
-        match_content = self._generate_nutrition_match_details_txt(log, search_method, db_source)
-        with open(match_details_file, 'w', encoding='utf-8') as f:
-            f.write(match_content)
-        files["nutrition_search_match_details"] = str(match_details_file)
-        
-        return files
-    
-    def _save_phase2_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """Phase2の結果を保存（将来実装用）"""
-        files = {}
-        
-        # 1. JSON形式の入出力データ
-        input_output_file = self.phase2_dir / "input_output.json"
-        with open(input_output_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "input_data": log.input_data,
-                "output_data": log.output_data,
-                "execution_time_seconds": log.get_execution_time(),
-                "note": "Phase2Component is not yet implemented"
-            }, f, indent=2, ensure_ascii=False)
-        files["phase2_input_output"] = str(input_output_file)
-        
-        # 2. 戦略決定のマークダウン
-        strategy_md_file = self.phase2_dir / "strategy_decisions.md"
-        with open(strategy_md_file, 'w', encoding='utf-8') as f:
-            f.write("# Phase2 Strategy Decisions\n\n*Phase2Component is not yet implemented*\n")
-        files["phase2_strategy_md"] = str(strategy_md_file)
-        
-        # 3. 選択項目のテキスト
-        selected_items_file = self.phase2_dir / "selected_items.txt"
-        with open(selected_items_file, 'w', encoding='utf-8') as f:
-            f.write("Phase2Component is not yet implemented\n")
-        files["phase2_items_txt"] = str(selected_items_file)
-        
-        return files
-    
-    def _save_nutrition_results(self, log: DetailedExecutionLog) -> Dict[str, str]:
-        """栄養計算の結果を保存（将来実装用）"""
-        files = {}
-        
-        # 1. JSON形式の入出力データ
-        input_output_file = self.nutrition_dir / "input_output.json"
-        with open(input_output_file, 'w', encoding='utf-8') as f:
-            json.dump({
-                "input_data": log.input_data,
-                "output_data": log.output_data,
-                "execution_time_seconds": log.get_execution_time(),
-                "note": "NutritionCalculationComponent is not yet implemented"
-            }, f, indent=2, ensure_ascii=False)
-        files["nutrition_input_output"] = str(input_output_file)
-        
-        # 2. 計算式のマークダウン
-        formulas_md_file = self.nutrition_dir / "calculation_formulas.md"
-        with open(formulas_md_file, 'w', encoding='utf-8') as f:
-            f.write("# Nutrition Calculation Formulas\n\n*NutritionCalculationComponent is not yet implemented*\n")
-        files["nutrition_formulas_md"] = str(formulas_md_file)
-        
-        # 3. 栄養サマリーのテキスト
-        summary_txt_file = self.nutrition_dir / "nutrition_summary.txt"
-        with open(summary_txt_file, 'w', encoding='utf-8') as f:
-            f.write("NutritionCalculationComponent is not yet implemented\n")
-        files["nutrition_summary_txt"] = str(summary_txt_file)
-        
-        return files
-    
-    def _save_pipeline_summary(self) -> Dict[str, str]:
-        """パイプライン全体のサマリーを保存"""
-        files = {}
-        
-        # 1. パイプラインサマリーJSON
-        summary_file = self.analysis_dir / "pipeline_summary.json"
         summary_data = {
             "analysis_id": self.analysis_id,
-            "timestamp": self.timestamp,
-            "pipeline_metadata": self.pipeline_metadata,
-            "execution_summary": {
-                log.component_name: {
-                    "execution_time": log.get_execution_time(),
-                    "success": len(log.errors) == 0,
-                    "warnings_count": len(log.warnings),
-                    "errors_count": len(log.errors)
-                }
-                for log in self.execution_logs
-            },
-            "final_result": self.final_result
+            "input_type": input_type,
+            "total_dishes": len(nutrition_calculation_data.get("dishes", [])),
+            "total_ingredients": sum(len(dish.get("ingredients", [])) for dish in nutrition_calculation_data.get("dishes", [])),
+            "processing_time_seconds": processing_time,
+            "dishes": nutrition_calculation_data.get("dishes", []),
+            "total_nutrition": nutrition_calculation_data.get("total_nutrition", {}),
+            "ai_model_used": phase1_data.get("input_data", {}).get("llm_model_id", "unknown"),
+            "match_rate_percent": nutrition_calculation_data.get("match_rate_percent", 0.0),
+            "search_method": nutrition_calculation_data.get("search_method", "unknown")
         }
         
-        with open(summary_file, 'w', encoding='utf-8') as f:
-            json.dump(summary_data, f, indent=2, ensure_ascii=False)
-        files["pipeline_summary"] = str(summary_file)
+        # 音声入力の場合、テキスト変換の基本情報を追加
+        if input_type == "voice":
+            processing_details = phase1_data.get("processing_details", {})
+            if "speech_recognition_result" in processing_details:
+                transcript = processing_details["speech_recognition_result"]
+                summary_data["speech_transcription_summary"] = {
+                    "original_text": transcript,
+                    "text_length": len(transcript),
+                    "language_code": phase1_data.get("input_data", {}).get("language_code", "en-US")
+                }
         
-        # 2. 完全な詳細ログJSON
-        complete_log_file = self.analysis_dir / "complete_analysis_log.json"
-        complete_data = {
-            "pipeline_metadata": self.pipeline_metadata,
-            "execution_logs": [log.to_dict() for log in self.execution_logs],
-            "final_result": self.final_result,
-            "summary": {
-                "total_components": len(self.execution_logs),
-                "total_warnings": sum(len(log.warnings) for log in self.execution_logs),
-                "total_errors": sum(len(log.errors) for log in self.execution_logs)
+        return summary_data
+    
+    def _create_detailed_analysis(self) -> dict:
+        """包括的データを作成（デバッグ・分析用）"""
+        
+        # phase_resultsから各フェーズのデータを取得
+        phase1_data = self.phase_results.get("Phase1SpeechComponent", self.phase_results.get("Phase1Component", {}))
+        nutrition_search_data = self.phase_results.get("AdvancedNutritionSearchComponent", {})
+        nutrition_calculation_data = self.phase_results.get("NutritionCalculationComponent", {})
+        
+        # 音声入力のテキスト変換結果を抽出
+        speech_transcription = None
+        if phase1_data.get("input_data", {}).get("audio_bytes") or phase1_data.get("input_data", {}).get("language_code"):
+            # 音声入力の場合、処理詳細からテキスト変換結果を取得
+            processing_details = phase1_data.get("processing_details", {})
+            if "speech_recognition_result" in processing_details:
+                speech_transcription = {
+                    "original_text": processing_details["speech_recognition_result"],
+                    "language_code": phase1_data.get("input_data", {}).get("language_code", "en-US"),
+                    "audio_size_bytes": phase1_data.get("input_data", {}).get("audio_bytes", 0),
+                    "timestamp": datetime.now().isoformat()
+                }
+        
+        detailed_data = {
+            "analysis_id": self.analysis_id,
+            "timestamp": datetime.now().isoformat(),
+            "input_type": "voice" if speech_transcription else "image",
+            "phase1_results": phase1_data,
+            "nutrition_search_results": nutrition_search_data,
+            "nutrition_calculation_results": nutrition_calculation_data,
+            "input_data": {
+                "phase1_input": phase1_data.get("input_data", {}),
+                "nutrition_query_input": nutrition_search_data.get("input_data", {}),
+                "nutrition_calculation_input": nutrition_calculation_data.get("input_data", {})
+            },
+            "intermediate_data": {
+                "extracted_foods": phase1_data.get("detected_food_items", []),
+                "search_terms": nutrition_search_data.get("search_summary", {}).get("search_terms", []),
+                "nutrition_mappings": nutrition_search_data.get("matches", [])
+            },
+            "output_data": {
+                "final_dishes": nutrition_calculation_data.get("dishes", []),
+                "total_nutrition": nutrition_calculation_data.get("total_nutrition", {}),
+                "search_summary": nutrition_search_data.get("search_summary", {})
             }
         }
         
-        with open(complete_log_file, 'w', encoding='utf-8') as f:
-            json.dump(complete_data, f, indent=2, ensure_ascii=False)
-        files["complete_log"] = str(complete_log_file)
-        
-        return files
+        # 音声入力の場合、テキスト変換結果を追加
+        if speech_transcription:
+            detailed_data["speech_transcription"] = speech_transcription
+            
+        return detailed_data
     
-    def _generate_phase1_prompts_md(self, log: DetailedExecutionLog) -> str:
-        """Phase1のプロンプトと推論理由のマークダウンを生成"""
-        content = f"""# Phase1: 画像分析 - プロンプトと推論
-
-## 実行情報
-- 実行ID: {log.execution_id}
-- 開始時刻: {log.execution_start_time.isoformat()}
-- 終了時刻: {log.execution_end_time.isoformat() if log.execution_end_time else 'N/A'}
-- 実行時間: {log.get_execution_time():.2f}秒
-
-## 使用されたプロンプト
-
-"""
-        
-        # プロンプト情報
-        for prompt_name, prompt_data in log.prompts_used.items():
-            content += f"### {prompt_name.replace('_', ' ').title()}\n\n"
-            content += f"**タイムスタンプ**: {prompt_data['timestamp']}\n\n"
-            content += f"```\n{prompt_data['content']}\n```\n\n"
-            
-            if prompt_data.get('variables'):
-                content += f"**変数**:\n"
-                for var_name, var_value in prompt_data['variables'].items():
-                    content += f"- {var_name}: {var_value}\n"
-                content += "\n"
-        
-        # 推論理由
-        content += "## AI推論の詳細\n\n"
-        
-        # 料理識別の推論
-        dish_reasoning = [r for r in log.reasoning.items() if r[0].startswith('dish_identification_')]
-        if dish_reasoning:
-            content += "### 料理識別の推論\n\n"
-            for decision_point, reasoning_data in dish_reasoning:
-                dish_num = decision_point.split('_')[-1]
-                content += f"**料理 {dish_num}**:\n"
-                content += f"- 推論: {reasoning_data['reason']}\n"
-                content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
-        
-        # 食材選択の推論
-        ingredient_reasoning = [r for r in log.reasoning.items() if r[0].startswith('ingredient_selection_')]
-        if ingredient_reasoning:
-            content += "### 食材選択の推論\n\n"
-            for decision_point, reasoning_data in ingredient_reasoning:
-                content += f"**{decision_point.replace('_', ' ').title()}**:\n"
-                content += f"- 推論: {reasoning_data['reason']}\n"
-                content += f"- タイムスタンプ: {reasoning_data['timestamp']}\n\n"
-        
-        # 警告とエラー
-        if log.warnings:
-            content += "## 警告\n\n"
-            for warning in log.warnings:
-                content += f"- {warning['message']} (at {warning['timestamp']})\n"
-            content += "\n"
-        
-        if log.errors:
-            content += "## エラー\n\n"
-            for error in log.errors:
-                content += f"- {error['message']} (at {error['timestamp']})\n"
-            content += "\n"
-        
-        return content
+    def _create_execution_log(self, component_logs: list, processing_time: float) -> dict:
+        """詳細ログデータを作成（開発・トラブルシューティング用）"""
+        return {
+            "analysis_id": self.analysis_id,
+            "timestamp": datetime.now().isoformat(),
+            "processing_time_seconds": processing_time,
+            "component_execution_logs": component_logs,
+            "pipeline_summary": {
+                "total_components": len(component_logs),
+                "successful_components": len([log for log in component_logs if log.get("status") == "success"]),
+                "failed_components": len([log for log in component_logs if log.get("status") == "error"]),
+                "warnings_count": sum(len(log.get("warnings", [])) for log in component_logs),
+                "errors_count": sum(len(log.get("errors", [])) for log in component_logs)
+            },
+            "system_info": {
+                "session_id": self.session_id,
+                "analysis_dir": self.analysis_dir,
+                "timestamp_utc": datetime.utcnow().isoformat()
+            }
+        }
     
-    def _generate_phase1_detected_items_txt(self, log: DetailedExecutionLog) -> str:
-        """Phase1で検出された料理・食材のテキストを生成"""
-        content = f"Phase1 検出結果 - {log.execution_start_time.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        content += "=" * 60 + "\n\n"
-        
-        if 'output_data' in log.output_data and 'dishes' in log.output_data['output_data']:
-            dishes = log.output_data['output_data']['dishes']
-            content += f"検出された料理数: {len(dishes)}\n\n"
-            
-            for i, dish in enumerate(dishes, 1):
-                content += f"料理 {i}: {dish['dish_name']}\n"
-                content += f"  食材数: {len(dish['ingredients'])}\n"
-                content += "  食材詳細:\n"
-                
-                for j, ingredient in enumerate(dish['ingredients'], 1):
-                    content += f"    {j}. {ingredient['ingredient_name']}\n"
-                content += "\n"
-        
+    def _save_json(self, file_path: str, data: dict):
+        """JSONファイルを保存"""
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    
+    def get_analysis_summary_path(self) -> str:
+        """サマリーファイルパスを取得"""
+        if not self.analysis_dir:
+            raise ValueError("Session not initialized")
+        return os.path.join(self.analysis_dir, "analysis_summary.json") 
 
-        
-        # 処理詳細
-        if log.processing_details:
-            content += "処理詳細:\n"
-            for detail_key, detail_value in log.processing_details.items():
-                if isinstance(detail_value, (dict, list)):
-                    content += f"  {detail_key}: {json.dumps(detail_value, ensure_ascii=False)}\n"
-                else:
-                    content += f"  {detail_key}: {detail_value}\n"
-        
-        return content
     
-    def _generate_nutrition_search_results_md(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
-        """栄養データベース検索結果のマークダウンを生成（ローカル/Elasticsearch対応）"""
-        content = []
-        
-        content.append(f"# Nutrition Database Search Results")
-        content.append(f"")
-        content.append(f"**Search Method:** {search_method}")
-        content.append(f"**Database Source:** {db_source}")
-        content.append(f"**Component:** {log.component_name}")
-        content.append(f"**Execution Time:** {log.get_execution_time():.3f} seconds")
-        content.append(f"**Timestamp:** {log.execution_start_time.isoformat()}")
-        content.append(f"")
-        
-        # 入力データの表示
-        if log.input_data:
-            content.append(f"## Input Data")
-            if 'ingredient_names' in log.input_data:
-                ingredients = log.input_data['ingredient_names']
-                content.append(f"**Ingredients ({len(ingredients)}):** {', '.join(ingredients)}")
-            
-            if 'dish_names' in log.input_data:
-                dishes = log.input_data['dish_names']
-                content.append(f"**Dishes ({len(dishes)}):** {', '.join(dishes)}")
-            content.append(f"")
-        
-        # 出力データの表示
-        if log.output_data and 'matches' in log.output_data:
-            matches = log.output_data['matches']
-            content.append(f"## Search Results")
-            content.append(f"**Total Matches:** {len(matches)}")
-            content.append(f"")
-            
-            for i, (search_term, match_data) in enumerate(matches.items(), 1):
-                content.append(f"### {i}. {search_term}")
-                if isinstance(match_data, dict):
-                    content.append(f"**ID:** {match_data.get('id', 'N/A')}")
-                    
-                    # search_name と description を適切に表示
-                    search_name = match_data.get('search_name', 'N/A')
-                    description = match_data.get('description', None)
-                    content.append(f"**Search Name:** {search_name}")
-                    if description:
-                        content.append(f"**Description:** {description}")
-                    else:
-                        content.append(f"**Description:** None")
-                    
-                    content.append(f"**Data Type:** {match_data.get('data_type', 'N/A')}")
-                    content.append(f"**Source:** {match_data.get('source', 'N/A')}")
-                    
-                    # スコア情報を改善
-                    score = match_data.get('score', 'N/A')
-                    if score != 'N/A' and 'search_metadata' in match_data:
-                        metadata = match_data['search_metadata']
-                        score_breakdown = metadata.get('score_breakdown', {})
-                        calculation = metadata.get('calculation', '')
-                        match_type = score_breakdown.get('match_type', 'unknown')
-                        
-                        if calculation:
-                            content.append(f"**Score:** {score} *({match_type}: {calculation})*")
-                        else:
-                            content.append(f"**Score:** {score} *(text similarity + data type priority)*")
-                    else:
-                        content.append(f"**Score:** {score}")
-                    
-                    if 'nutrients' in match_data and match_data['nutrients']:
-                        content.append(f"**Nutrients ({len(match_data['nutrients'])}):**")
-                        for nutrient in match_data['nutrients'][:5]:  # 最初の5つだけ表示
-                            if isinstance(nutrient, dict):
-                                name = nutrient.get('name', 'Unknown')
-                                amount = nutrient.get('amount', 0)
-                                unit = nutrient.get('unit_name', '')
-                                content.append(f"  - {name}: {amount} {unit}")
-                        if len(match_data['nutrients']) > 5:
-                            content.append(f"  - ... and {len(match_data['nutrients']) - 5} more nutrients")
-                content.append(f"")
-        
-        # 検索サマリー
-        if log.output_data and 'search_summary' in log.output_data:
-            summary = log.output_data['search_summary']
-            content.append(f"## Search Summary")
-            content.append(f"**Total Searches:** {summary.get('total_searches', 0)}")
-            content.append(f"**Successful Matches:** {summary.get('successful_matches', 0)}")
-            content.append(f"**Failed Searches:** {summary.get('failed_searches', 0)}")
-            content.append(f"**Match Rate:** {summary.get('match_rate_percent', 0)}%")
-            content.append(f"**Search Method:** {summary.get('search_method', 'unknown')}")
-            content.append(f"")
-        
-        # 推論理由があれば表示
-        if log.reasoning:
-            content.append(f"## Search Reasoning")
-            for decision_point, reason_data in log.reasoning.items():
-                reason = reason_data.get('reason', '') if isinstance(reason_data, dict) else str(reason_data)
-                content.append(f"**{decision_point}:** {reason}")
-            content.append(f"")
-        
-        # 警告・エラーがあれば表示
-        if log.warnings:
-            content.append(f"## Warnings")
-            for warning in log.warnings:
-                content.append(f"- {warning}")
-            content.append(f"")
-        
-        if log.errors:
-            content.append(f"## Errors")
-            for error in log.errors:
-                content.append(f"- {error}")
-            content.append(f"")
-        
-        return "\n".join(content)
+    def set_final_result(self, final_result: dict):
+        """互換性のため: 最終結果を設定（既存のパイプラインとの互換性維持）"""
+        self.final_result = final_result
     
-    def _generate_nutrition_match_details_txt(self, log: DetailedExecutionLog, search_method: str, db_source: str) -> str:
-        """栄養データベース検索のマッチ詳細テキストを生成（ローカル/Elasticsearch/マルチDB対応）"""
-        lines = []
-        
-        lines.append(f"Nutrition Database Search Match Details")
-        lines.append(f"=" * 50)
-        lines.append(f"Search Method: {search_method}")
-        lines.append(f"Database Source: {db_source}")
-        lines.append(f"Component: {log.component_name}")
-        lines.append(f"Execution Time: {log.get_execution_time():.3f} seconds")
-        lines.append(f"Timestamp: {log.execution_start_time.isoformat()}")
-        lines.append(f"")
-        
-        if log.output_data and 'matches' in log.output_data:
-            matches = log.output_data['matches']
+    def finalize_pipeline(self):
+        """パイプラインの終了処理：3つのファイルを作成して保存"""
+        try:
+            # 3つのファイルを作成して保存
+            # 1. analysis_summary.json
+            summary_data = self._create_analysis_summary()
+            summary_path = os.path.join(self.analysis_dir, "analysis_summary.json")
+            self._save_json(summary_path, summary_data)
             
-            # 総マッチ数を計算（単一結果とリスト結果両方に対応）
-            total_matches = 0
-            for match_data in matches.values():
-                if isinstance(match_data, list):
-                    total_matches += len(match_data)
-                elif isinstance(match_data, dict):
-                    total_matches += 1
+            # 2. detailed_analysis.json
+            detailed_data = self._create_detailed_analysis()
+            detailed_path = os.path.join(self.analysis_dir, "detailed_analysis.json")
+            self._save_json(detailed_path, detailed_data)
             
-            lines.append(f"Total Matches: {total_matches}")
-            lines.append(f"")
+            # 3. execution_log.json
+            component_logs = []
+            for phase_name, phase_data in self.phase_results.items():
+                component_logs.append({
+                    "component_name": phase_name,
+                    "status": "success",
+                    "timestamp": datetime.now().isoformat(),
+                    "execution_time_ms": 0,
+                    "warnings": [],
+                    "errors": []
+                })
             
-            for search_term, match_data in matches.items():
-                lines.append(f"Query: {search_term}")
-                lines.append(f"-" * 30)
-                
-                # マルチDB検索結果（リスト形式）への対応
-                if isinstance(match_data, list):
-                    lines.append(f"  Found {len(match_data)} results from multiple databases:")
-                    lines.append(f"")
-                    
-                    for i, match_item in enumerate(match_data, 1):
-                        lines.append(f"  Result {i}:")
-                        lines.append(f"    ID: {match_item.get('id', 'N/A')}")
-                        
-                        search_name = match_item.get('search_name', 'N/A')
-                        description = match_item.get('description', None)
-                        lines.append(f"    Search Name: {search_name}")
-                        if description:
-                            lines.append(f"    Description: {description}")
-                        else:
-                            lines.append(f"    Description: None")
-                        
-                        lines.append(f"    Data Type: {match_item.get('data_type', 'N/A')}")
-                        lines.append(f"    Source: {match_item.get('source', 'N/A')}")
-                        
-                        # スコア情報
-                        score = match_item.get('score', 'N/A')
-                        if score != 'N/A' and 'search_metadata' in match_item:
-                            metadata = match_item['search_metadata']
-                            source_db = metadata.get('source_database', 'unknown')
-                            lines.append(f"    Score: {score:.3f} (from {source_db})")
-                        else:
-                            lines.append(f"    Score: {score}")
-                        
-                        # 栄養情報（簡略版）
-                        if 'nutrition' in match_item and match_item['nutrition']:
-                            nutrition = match_item['nutrition']
-                            calories = nutrition.get('calories', 0)
-                            protein = nutrition.get('protein', 0)
-                            fat = nutrition.get('fat', 0)
-                            carbs = nutrition.get('carbs', 0)
-                            lines.append(f"    Nutrition (100g): {calories:.1f} kcal, P:{protein:.1f}g, F:{fat:.1f}g, C:{carbs:.1f}g")
-                        
-                        lines.append(f"")
-                
-                # 単一結果（辞書形式）への対応（従来の方式）
-                elif isinstance(match_data, dict):
-                    lines.append(f"  ID: {match_data.get('id', 'N/A')}")
-                    
-                    search_name = match_data.get('search_name', 'N/A')
-                    description = match_data.get('description', None)
-                    lines.append(f"  Search Name: {search_name}")
-                    if description:
-                        lines.append(f"  Description: {description}")
-                    else:
-                        lines.append(f"  Description: None")
-                    
-                    lines.append(f"  Data Type: {match_data.get('data_type', 'N/A')}")
-                    lines.append(f"  Source: {match_data.get('source', 'N/A')}")
-                    
-                    # スコア情報を改善
-                    score = match_data.get('score', 'N/A')
-                    if score != 'N/A' and 'search_metadata' in match_data:
-                        metadata = match_data['search_metadata']
-                        score_breakdown = metadata.get('score_breakdown', {})
-                        calculation = metadata.get('calculation', '')
-                        match_type = score_breakdown.get('match_type', 'unknown')
-                        
-                        if calculation:
-                            lines.append(f"  Score: {score} ({match_type}: {calculation})")
-                        else:
-                            lines.append(f"  Score: {score} (text similarity + data type priority)")
-                    else:
-                        lines.append(f"  Score: {score}")
-                    
-                    if 'nutrients' in match_data and match_data['nutrients']:
-                        lines.append(f"  Nutrients ({len(match_data['nutrients'])}):")
-                        for nutrient in match_data['nutrients']:
-                            if isinstance(nutrient, dict):
-                                name = nutrient.get('name', 'Unknown')
-                                amount = nutrient.get('amount', 0)
-                                unit = nutrient.get('unit_name', '')
-                                lines.append(f"    - {name}: {amount} {unit}")
-                    
-                    if 'original_data' in match_data:
-                        original_data = match_data['original_data']
-                        if isinstance(original_data, dict):
-                            lines.append(f"  Original Data Source: {original_data.get('source', 'Unknown')}")
-                            if search_method == "local_search":
-                                lines.append(f"  Local DB Source: {original_data.get('db_source', 'Unknown')}")
-                    
-                    lines.append(f"")
-        
-        # 検索統計
-        if log.output_data and 'search_summary' in log.output_data:
-            summary = log.output_data['search_summary']
-            lines.append(f"Search Statistics:")
-            lines.append(f"  Total Searches: {summary.get('total_searches', 0)}")
-            lines.append(f"  Successful Matches: {summary.get('successful_matches', 0)}")
-            lines.append(f"  Failed Searches: {summary.get('failed_searches', 0)}")
-            lines.append(f"  Match Rate: {summary.get('match_rate_percent', 0)}%")
+            processing_time = getattr(self, 'final_result', {}).get('processing_time_seconds', 0.0)
+            execution_log_data = self._create_execution_log(component_logs, processing_time)
+            execution_log_path = os.path.join(self.analysis_dir, "execution_log.json")
+            self._save_json(execution_log_path, execution_log_data)
             
-            # マルチDB検索の場合の追加情報
-            if 'target_databases' in summary:
-                lines.append(f"  Target Databases: {', '.join(summary['target_databases'])}")
-                lines.append(f"  Results per Database: {summary.get('results_per_db', 'N/A')}")
-                lines.append(f"  Total Results: {summary.get('total_results', 'N/A')}")
+            print(f"✅ 分析結果が保存されました: {self.analysis_dir}")
             
-            if search_method == "local_search":
-                lines.append(f"  Total Database Items: {summary.get('total_database_items', 0)}")
-        
-        return "\n".join(lines)
+        except Exception as e:
+            print(f"❌ ファイル保存エラー: {e}")
+            raise  # 新しい構造では特別な終了処理は不要
     
     def get_analysis_folder_path(self) -> str:
-        """解析フォルダパスを取得"""
-        return str(self.analysis_dir) 
+        """互換性のため: 分析フォルダパスを取得"""
+        if not self.analysis_dir:
+            raise ValueError("Session not initialized")
+        return self.analysis_dir
+    
+    def save_phase_results(self, phase1_data: dict = None, nutrition_query_results: dict = None, 
+                          nutrition_calculation_results: dict = None, component_logs: list = None,
+                          processing_time_seconds: float = None) -> dict:
+        """
+        新しい3ファイル構造で結果を保存
+        互換性維持のため、引数が渡された場合は従来の動作をサポート
+        """
+        if not self.analysis_dir:
+            raise ValueError("Session not initialized")
+        
+        # 引数が渡された場合は従来の方式で処理（互換性維持）
+        if phase1_data is not None or nutrition_query_results is not None or nutrition_calculation_results is not None:
+            # 従来の引数ベースの処理
+            if phase1_data is None:
+                phase1_data = {}
+            if nutrition_query_results is None:
+                nutrition_query_results = {}
+            if nutrition_calculation_results is None:
+                nutrition_calculation_results = {}
+            if component_logs is None:
+                component_logs = []
+            if processing_time_seconds is None:
+                processing_time_seconds = 0.0
+                
+            # 従来の方式でデータを作成（メソッドは新しいバージョンを使用）
+            summary_data = self._create_analysis_summary()
+            detailed_data = self._create_detailed_analysis()
+            
+        else:
+            # 新しい方式：phase_resultsを使用
+            summary_data = self._create_analysis_summary()
+            detailed_data = self._create_detailed_analysis()
+        
+        # 新しい3ファイル構造で結果を保存
+        summary_path = os.path.join(self.analysis_dir, "analysis_summary.json")
+        self._save_json(summary_path, summary_data)
+        
+        detailed_path = os.path.join(self.analysis_dir, "detailed_analysis.json")
+        self._save_json(detailed_path, detailed_data)
+        
+        # 実行ログ作成（簡略化版）
+        log_data = self._create_execution_log(
+            component_logs or [], 
+            getattr(self, 'final_result', {}).get('processing_time_seconds', 0.0)
+        )
+        log_path = os.path.join(self.analysis_dir, "execution_log.json")
+        self._save_json(log_path, log_data)
+        
+        return {
+            "analysis_summary_path": summary_path,
+            "detailed_analysis_path": detailed_path,
+            "execution_log_path": log_path,
+            "analysis_dir": self.analysis_dir
+        }
+
+    
+    def create_execution_log(self, component_name: str, log_id: str):
+        """互換性のため: 実行ログオブジェクトを作成（既存のパイプラインとの互換性維持）"""
+        return DetailedExecutionLog(component_name, log_id)

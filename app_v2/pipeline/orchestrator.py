@@ -111,10 +111,12 @@ class MealAnalysisPipeline:
             if test_execution and test_results_dir:
                 # テスト実行時はテスト結果ディレクトリ内のapi_calls/フォルダに保存
                 api_calls_dir = f"{test_results_dir}/api_calls"
-                result_manager = ResultManager(analysis_id, save_directory=api_calls_dir)
+                result_manager = ResultManager(base_dir=api_calls_dir)
+                result_manager.initialize_session(analysis_id)
             else:
                 # 通常の実行時は既存の保存先
-                result_manager = ResultManager(analysis_id)
+                result_manager = ResultManager()
+                result_manager.initialize_session(analysis_id)
         else:
             result_manager = None
         
@@ -221,7 +223,16 @@ class MealAnalysisPipeline:
                     for dish in phase1_result.dishes
                 ],
                 "analysis_confidence": phase1_result.analysis_confidence,
-                "processing_notes": phase1_result.processing_notes
+                "processing_notes": phase1_result.processing_notes,
+                "metadata": {
+                    "ai_model_used": self.deepinfra_service.model_id if hasattr(self, 'deepinfra_service') else "unknown"
+                },
+                "input_data": {
+                    "image_mime_type": image_mime_type,
+                    "optional_text": optional_text,
+                    "temperature": temperature,
+                    "seed": seed
+                }
             }
             
             # 栄養計算結果を辞書形式に変換
@@ -272,7 +283,9 @@ class MealAnalysisPipeline:
                     "sodium": nutrition_calculation_result.meal_nutrition.total_nutrition.sodium
                 },
                 "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
-                "warnings": nutrition_calculation_result.meal_nutrition.warnings
+                "warnings": nutrition_calculation_result.meal_nutrition.warnings,
+                "match_rate_percent": nutrition_search_result.get_match_rate() * 100,
+                "search_method": "elasticsearch"
             }
             
             # 検索方法の特定（常にElasticsearch）
@@ -314,22 +327,52 @@ class MealAnalysisPipeline:
                 }
             }
             
-            # ResultManagerに最終結果を設定
+            # 新しいResultManagerで各フェーズの結果を保存
             if result_manager:
-                result_manager.set_final_result(complete_result)
+                # Phase1の結果を追加
+                result_manager.add_phase_result("phase1", phase1_dict)
+                
+                # 栄養検索の結果を追加
+                # 安全にmatchesを処理
+                matches_data = []
+                if hasattr(nutrition_search_result, 'matches') and nutrition_search_result.matches:
+                    for match in nutrition_search_result.matches:
+                        if hasattr(match, 'query_term'):  # matchがオブジェクトの場合
+                            matches_data.append({
+                                "query_term": match.query_term,
+                                "matched_food": match.matched_food,
+                                "confidence_score": match.confidence_score,
+                                "source_database": match.source_database,
+                                "nutrition_per_100g": match.nutrition_per_100g
+                            })
+                        elif isinstance(match, dict):  # matchが辞書の場合
+                            matches_data.append({
+                                "query_term": match.get("query_term", ""),
+                                "matched_food": match.get("matched_food", ""),
+                                "confidence_score": match.get("confidence_score", 0.0),
+                                "source_database": match.get("source_database", ""),
+                                "nutrition_per_100g": match.get("nutrition_per_100g", {})
+                            })
+
+                nutrition_search_dict = {
+                    "matches_count": len(nutrition_search_result.matches) if hasattr(nutrition_search_result, 'matches') else 0,
+                    "match_rate": nutrition_search_result.get_match_rate(),
+                    "search_summary": nutrition_search_result.search_summary,
+                    "search_method": search_method,
+                    "matches": matches_data
+                }
+                result_manager.add_phase_result("nutrition_search", nutrition_search_dict)
+                
+                # 栄養計算の結果を追加
+                result_manager.add_phase_result("nutrition_calculation", nutrition_calculation_dict)
+                
+                # 最終結果を保存
                 result_manager.finalize_pipeline()
-            
-            # 結果の保存
-            saved_files = {}
-            if save_detailed_logs and result_manager:
-                # 新しいフェーズ別保存方式
-                saved_files = result_manager.save_phase_results()
+                
                 complete_result["analysis_folder"] = result_manager.get_analysis_folder_path()
-                complete_result["saved_files"] = saved_files
                 
                 logger.info(f"[{analysis_id}] Analysis logs saved to folder: {result_manager.get_analysis_folder_path()}")
-                logger.info(f"[{analysis_id}] Saved {len(saved_files)} files across all phases")
-            
+                logger.info(f"[{analysis_id}] Saved 3 files in new structured format")
 
             
             self.logger.info(f"[{analysis_id}] Complete analysis pipeline finished successfully in {processing_time:.2f}s")
@@ -341,9 +384,9 @@ class MealAnalysisPipeline:
             
             # エラー時もResultManagerを保存
             if result_manager:
-                result_manager.set_final_result({"error": str(e), "timestamp": datetime.now().isoformat()})
+                error_data = {"error": str(e), "timestamp": datetime.now().isoformat()}
+                result_manager.add_phase_result("error", error_data)
                 result_manager.finalize_pipeline()
-                error_saved_files = result_manager.save_phase_results()
                 self.logger.info(f"[{analysis_id}] Error analysis logs saved to folder: {result_manager.get_analysis_folder_path()}")
             
             raise
