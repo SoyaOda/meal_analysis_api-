@@ -89,6 +89,9 @@ service-account-key.json
 # Sensitive analysis files that may contain credentials
 test_advanced_elasticsearch_architecture_*.txt
 
+# Analysis and Database directories
+analysis_results/
+db/
 /raw_nutrition_data/
 elasticsearch-*/data/
 elasticsearch-*/logs/
