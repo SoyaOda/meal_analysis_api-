@@ -20,8 +20,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app_v2/ ./app_v2/
+# Copy application code - Updated for unified architecture
+COPY apps/ ./apps/
+COPY shared/ ./shared/
 COPY data/ ./data/
 COPY .env .env
 
@@ -38,5 +39,6 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE $PORT
 
 # Run the application
-# Use uvicorn directly for better Cloud Run compatibility
-CMD uvicorn app_v2.main.app:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1
+# Updated for unified architecture - Default to meal_analysis_api
+# For word_query_api, override with: CMD python -m apps.word_query_api.main
+CMD python -m apps.meal_analysis_api.main
