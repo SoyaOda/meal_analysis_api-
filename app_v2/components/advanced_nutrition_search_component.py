@@ -45,11 +45,13 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         """
         start_time = time.time()
 
-        search_terms = input_data.get_all_search_terms()
+        # CHANGE: 料理名を除外して食材名のみで検索
+        search_terms = input_data.ingredient_names  # dish_namesを含めない
         query_count = len(search_terms)
 
         self.log_processing_detail("input_query_count", query_count)
         self.log_processing_detail("search_terms", search_terms)
+        self.log_processing_detail("excluded_dish_names", input_data.dish_names)  # 除外された料理名をログ出力
 
         # Use API for all queries (simplified approach)
         results = await self._api_search(search_terms, input_data)
@@ -62,9 +64,9 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
         self.log_processing_detail("total_processing_time_ms", processing_time)
         self.log_reasoning("search_completion",
-                          f"Completed {query_count} queries using Word Query API in {processing_time}ms")
+                          f"Completed {query_count} ingredient queries (excluding dish names) using Word Query API in {processing_time}ms")
 
-        self.logger.info(f"🚀 Word Query API search completed: {query_count} queries in {processing_time}ms")
+        self.logger.info(f"🚀 Word Query API search completed: {query_count} ingredient queries in {processing_time}ms")
 
         return results
 
@@ -79,6 +81,8 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         matches = {}
         errors = []
         successful_matches = 0
+        exact_matches = 0
+        tier_1_exact_matches = 0
 
         # Create parallel API requests
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -98,14 +102,26 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                 errors.append(error_msg)
             elif response and response.get("suggestions"):
                 # Convert API response to NutritionMatch
-                matches[term] = self._convert_api_suggestions_to_matches(
+                match_list = self._convert_api_suggestions_to_matches(
                     response["suggestions"], term
                 )
+                matches[term] = match_list
                 successful_matches += 1
+
+                # Check match quality for the top result
+                if match_list:
+                    top_match = match_list[0]
+                    match_type = top_match.search_metadata.get("match_type", "unknown")
+                    
+                    if match_type == "exact_match":
+                        exact_matches += 1
+                    elif match_type == "tier_1_exact":
+                        tier_1_exact_matches += 1
 
                 self.log_processing_detail(f"api_response_{i}", {
                     "term": term,
                     "suggestion_count": len(response["suggestions"]),
+                    "top_match_type": match_list[0].search_metadata.get("match_type", "unknown") if match_list else "none",
                     "processing_time_ms": response.get("metadata", {}).get("processing_time_ms", 0)
                 })
             else:
@@ -114,8 +130,8 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         api_time = int((time.time() - start_time) * 1000)
 
         return self._build_nutrition_query_output(
-            matches, successful_matches, len(search_terms), api_time,
-            "word_query_api", errors
+            matches, successful_matches, exact_matches, tier_1_exact_matches,
+            len(search_terms), api_time, "word_query_api", errors
         )
 
     async def _single_api_request(self, client: httpx.AsyncClient, term: str) -> Dict[str, Any]:
@@ -167,21 +183,46 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
     def _build_nutrition_query_output(self, matches: Dict[str, Any],
                                     successful_matches: int,
+                                    exact_matches: int,
+                                    tier_1_exact_matches: int,
                                     total_searches: int,
                                     search_time_ms: int,
                                     method: str,
                                     errors: List[str]) -> NutritionQueryOutput:
-        """Build standardized NutritionQueryOutput"""
+        """Build standardized NutritionQueryOutput with detailed match statistics"""
 
         total_results = sum(len(result_list) if isinstance(result_list, list) else 1
                            for result_list in matches.values())
-        match_rate = (successful_matches / total_searches * 100) if total_searches > 0 else 0
+        
+        # DEBUG: ログで実際の値を確認
+        self.logger.info(f"DEBUG EXACT MATCH CALCULATION:")
+        self.logger.info(f"  total_searches: {total_searches} (type: {type(total_searches)})")
+        self.logger.info(f"  exact_matches: {exact_matches} (type: {type(exact_matches)})")
+        self.logger.info(f"  tier_1_exact_matches: {tier_1_exact_matches} (type: {type(tier_1_exact_matches)})")
+        self.logger.info(f"  successful_matches: {successful_matches} (type: {type(successful_matches)})")
+        
+        # Calculate various match rates
+        api_response_rate = (successful_matches / total_searches * 100) if total_searches > 0 else 0
+        exact_match_rate = (exact_matches / total_searches * 100) if total_searches > 0 else 0
+        high_quality_match_rate = ((exact_matches + tier_1_exact_matches) / total_searches * 100) if total_searches > 0 else 0
+
+        # DEBUG: 計算結果もログ出力
+        self.logger.info(f"  api_response_rate: {api_response_rate}")
+        self.logger.info(f"  exact_match_rate: {exact_match_rate}")
+        self.logger.info(f"  high_quality_match_rate: {high_quality_match_rate}")
 
         search_summary = {
             "total_searches": total_searches,
             "successful_matches": successful_matches,
+            "exact_matches": exact_matches,
+            "tier_1_exact_matches": tier_1_exact_matches,
             "failed_searches": total_searches - successful_matches,
-            "match_rate_percent": round(match_rate, 1),
+            
+            # Renamed for clarity
+            "api_response_rate_percent": round(api_response_rate, 1),
+            "exact_match_rate_percent": round(exact_match_rate, 1),
+            "high_quality_match_rate_percent": round(high_quality_match_rate, 1),
+            
             "search_method": method,
             "search_time_ms": search_time_ms,
             "total_results": total_results,

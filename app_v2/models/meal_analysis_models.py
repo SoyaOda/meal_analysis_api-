@@ -22,42 +22,48 @@ class SimplifiedNutritionInfo(BaseModel):
 
 
 class IngredientSummary(BaseModel):
-    """食材概要情報"""
-    name: str = Field(..., description="食材名", example="lettuce romaine raw")
-    weight_g: float = Field(..., description="重量（グラム）", example=150.0)
-    calories: float = Field(..., description="カロリー（kcal）", example=25.5)
+    """食材概要情報（実際のレスポンス構造に合わせて詳細化）"""
+    ingredient_name: str = Field(..., description="食材名", example="Egg whole raw")
+    weight_g: float = Field(..., description="重量（グラム）", example=100.0)
+    nutrition_per_100g: dict = Field(..., description="100gあたりの栄養情報", example={"calories": 156.0, "protein": 12.0})
+    calculated_nutrition: dict = Field(..., description="計算済み栄養情報", example={"calories": 156.0, "protein": 12.0, "fat": 0.0, "carbs": 0.0, "fiber": None, "sugar": None, "sodium": None})
+    source_db: str = Field(..., description="データソース", example="mynetdiary_api")
+    calculation_notes: List[str] = Field(..., description="計算に関する注記", example=["Scaled from 100g base data using factor 1.000", "Source: mynetdiary_api database"])
 
     model_config = {"protected_namespaces": ()}
 
 
 class DishSummary(BaseModel):
-    """料理概要情報"""
-    dish_name: str = Field(..., description="料理名", example="Caesar Salad")
+    """料理概要情報（実際のレスポンス構造に合わせて修正）"""
+    dish_name: str = Field(..., description="料理名", example="Two Large Eggs")
     confidence: float = Field(..., description="識別信頼度", example=0.95)
-    ingredient_count: int = Field(..., description="食材数", example=4)
     ingredients: List[IngredientSummary] = Field(..., description="食材詳細リスト")
-    total_calories: float = Field(..., description="料理の総カロリー（kcal）", example=310.07)
+    total_nutrition: dict = Field(..., description="料理の総栄養価", example={"calories": 312.0, "protein": 24.0, "fat": 0.0, "carbs": 0.0, "fiber": None, "sugar": None, "sodium": None})
+    calculation_metadata: dict = Field(..., description="計算メタデータ", example={"ingredient_count": 2, "total_weight_g": 200.0, "calculation_method": "weight_based_scaling"})
 
     model_config = {"protected_namespaces": ()}
 
 
 class SimplifiedCompleteAnalysisResponse(BaseModel):
-    """簡略化された完全分析レスポンス"""
+    """簡略化された完全分析レスポンス（実際のレスポンス構造に合わせて修正）"""
     analysis_id: str = Field(..., description="分析ID", example="cc6aac84")
+    
+    # 音声分析特有のフィールド
+    input_type: Optional[str] = Field(None, description="入力タイプ", example="voice")
 
     # 処理サマリー（重要情報のみ）
     total_dishes: int = Field(..., description="検出された料理数", example=3)
     total_ingredients: int = Field(..., description="総食材数", example=9)
     processing_time_seconds: float = Field(..., description="処理時間（秒）", example=15.65)
 
-    # 料理一覧（簡略化）
+    # 料理一覧（詳細化）
     dishes: List[DishSummary] = Field(..., description="検出された料理一覧")
 
     # 総栄養価（実際に使用される部分のみ）
     total_nutrition: SimplifiedNutritionInfo = Field(..., description="総栄養価")
 
     # デバッグ・メタデータ（重要な部分のみ）
-    ai_model_used: str = Field(..., description="使用AIモデル", example="google/gemma-3-27b-it")
+    ai_model_used: Optional[str] = Field(None, description="使用AIモデル", example="google/gemma-3-27b-it")
     match_rate_percent: float = Field(..., description="栄養検索マッチ率（%）", example=100.0)
     search_method: str = Field(..., description="検索方法", example="elasticsearch")
 

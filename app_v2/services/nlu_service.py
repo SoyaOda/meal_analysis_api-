@@ -38,13 +38,21 @@ class NLUService:
 
         logger.info(f"NLU Service initialized with model: {self.model_id}")
 
-    async def extract_foods_from_text(self, text: str, model_id: Optional[str] = None) -> Dict[str, Any]:
+    async def extract_foods_from_text(
+        self, 
+        text: str, 
+        model_id: Optional[str] = None,
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None
+    ) -> Dict[str, Any]:
         """
         テキストから料理・食材・量を抽出してJSON構造を返す
 
         Args:
             text: 音声認識されたテキスト
             model_id: 使用するモデルID（オプション）
+            temperature: AI推論のランダム性制御 (0.0-1.0, デフォルト: 0.0)
+            seed: 再現性のためのシード値（オプション）
 
         Returns:
             抽出された食事情報のJSON構造
@@ -53,8 +61,13 @@ class NLUService:
             RuntimeError: LLM処理が失敗した場合
         """
         effective_model = model_id or self.model_id
+        effective_temperature = temperature if temperature is not None else 0.0
+        
         logger.info(f"Extracting food information from text using model: {effective_model}")
         logger.info(f"Input text: '{text[:200]}{'...' if len(text) > 200 else ''}'")
+        
+        if temperature is not None:
+            logger.info(f"Using temperature: {effective_temperature}, seed: {seed}")
 
         try:
             # プロンプトを構築
@@ -73,10 +86,14 @@ class NLUService:
             payload = {
                 "input": f"System: {system_prompt}\n\nUser: {user_prompt}\n\nAssistant:",
                 "max_tokens": 1024,
-                "temperature": 0.0,  # 決定論的出力
+                "temperature": effective_temperature,
                 "top_p": 0.9,
                 "stream": False
             }
+            
+            # seedパラメータがある場合は追加
+            if seed is not None:
+                payload["seed"] = seed
 
             # HTTPクライアントでAPI呼び出し
             async with httpx.AsyncClient(timeout=30.0) as client:
