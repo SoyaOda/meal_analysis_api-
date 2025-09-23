@@ -31,7 +31,11 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
     - description (text) + description.keyword (keyword)
     """
     
+    import time
+    start_time = time.time()
+    
     # Step 1: original_name.keyword での完全一致（大文字小文字区別）
+    step1_start = time.time()
     exact_match_body = {
         "query": {
             "term": {
@@ -51,10 +55,12 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
         )
         response.raise_for_status()
         exact_result = response.json()
+        step1_time = int((time.time() - step1_start) * 1000)
         
         # Exact matchが見つかった場合は決定的に返す
         hits = exact_result.get("hits", {}).get("hits", [])
         if hits:
+            logger.info(f"PERFORMANCE: Step1 exact match found in {step1_time}ms for query: {query}")
             hit = hits[0]
             formatted_result = {
                 "hits": {
@@ -73,12 +79,17 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
                 }
             }
             return formatted_result
+        else:
+            logger.info(f"PERFORMANCE: Step1 exact match not found in {step1_time}ms for query: {query}")
             
     except Exception as e:
+        step1_time = int((time.time() - step1_start) * 1000)
+        logger.error(f"PERFORMANCE: Step1 exact match failed in {step1_time}ms for query: {query}, error: {e}")
         # Exact match失敗時はフォールバックに進む
         pass
     
     # Step 2: 大文字小文字を区別しないexact match
+    step2_start = time.time()
     case_insensitive_body = {
         "query": {
             "bool": {
@@ -116,9 +127,11 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
         )
         response.raise_for_status()
         exact_result = response.json()
+        step2_time = int((time.time() - step2_start) * 1000)
         
         hits = exact_result.get("hits", {}).get("hits", [])
         if hits:
+            logger.info(f"PERFORMANCE: Step2 case-insensitive match found in {step2_time}ms for query: {query}")
             hit = hits[0]
             formatted_result = {
                 "hits": {
@@ -137,13 +150,181 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
                 }
             }
             return formatted_result
+        else:
+            logger.info(f"PERFORMANCE: Step2 case-insensitive match not found in {step2_time}ms for query: {query}")
             
     except Exception as e:
+        step2_time = int((time.time() - step2_start) * 1000)
+        logger.error(f"PERFORMANCE: Step2 case-insensitive match failed in {step2_time}ms for query: {query}, error: {e}")
         # Case insensitive exact match失敗時もフォールバックに進む
         pass
     
     # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
-    return elasticsearch_search_optimized_fallback(query, size)
+    step3_start = time.time()
+    logger.info(f"PERFORMANCE: Falling back to Tier algorithm for query: {query}")
+    
+    result = elasticsearch_search_optimized_fallback(query, size)
+    
+    step3_time = int((time.time() - step3_start) * 1000)
+    total_time = int((time.time() - start_time) * 1000)
+    
+    logger.info(f"PERFORMANCE: Tier fallback completed in {step3_time}ms, total time: {total_time}ms for query: {query}")
+    
+    return result
+
+def elasticsearch_exact_match_first_configurable(query: str, size: int = 10, skip_case_insensitive: bool = False) -> dict:
+    """
+    設定可能なexact match検索
+    
+    Args:
+        query: 検索クエリ
+        size: 結果数
+        skip_case_insensitive: case-insensitive検索をスキップするかどうか
+    """
+    
+    import time
+    start_time = time.time()
+    
+    # Step 1: original_name.keyword での完全一致（大文字小文字区別）
+    step1_start = time.time()
+    exact_match_body = {
+        "query": {
+            "term": {
+                "original_name.keyword": query
+            }
+        },
+        "size": 1,
+        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+    }
+    
+    try:
+        response = requests.post(
+            f"{ELASTICSEARCH_URL}/{INDEX_NAME}/_search",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(exact_match_body),
+            timeout=5
+        )
+        response.raise_for_status()
+        exact_result = response.json()
+        step1_time = int((time.time() - step1_start) * 1000)
+        
+        # Exact matchが見つかった場合は決定的に返す
+        hits = exact_result.get("hits", {}).get("hits", [])
+        if hits:
+            logger.info(f"PERFORMANCE: Step1 exact match found in {step1_time}ms for query: {query}")
+            hit = hits[0]
+            formatted_result = {
+                "hits": {
+                    "total": {"value": 1},
+                    "hits": [{
+                        "_score": 999.0,  # 決定的スコア
+                        "_source": hit["_source"],
+                        "_explanation": "exact_match_original_name_keyword"
+                    }]
+                },
+                "took": exact_result.get("took", 0),
+                "_debug_info": {
+                    "search_strategy": "exact_match_original_name",
+                    "query_matched": query,
+                    "matched_original_name": hit["_source"]["original_name"]
+                }
+            }
+            return formatted_result
+        else:
+            logger.info(f"PERFORMANCE: Step1 exact match not found in {step1_time}ms for query: {query}")
+            
+    except Exception as e:
+        step1_time = int((time.time() - step1_start) * 1000)
+        logger.error(f"PERFORMANCE: Step1 exact match failed in {step1_time}ms for query: {query}, error: {e}")
+        # Exact match失敗時はフォールバックに進む
+        pass
+    
+    # Step 2: 大文字小文字を区別しないexact match（スキップ可能）
+    if not skip_case_insensitive:
+        step2_start = time.time()
+        case_insensitive_body = {
+            "query": {
+                "bool": {
+                    "must": [{
+                        "match": {
+                            "original_name": {
+                                "query": query,
+                                "operator": "and",
+                                "analyzer": "standard"
+                            }
+                        }
+                    }],
+                    "filter": [{
+                        "script": {
+                            "script": {
+                                "source": "doc['original_name.keyword'].value.toLowerCase() == params.query.toLowerCase()",
+                                "params": {
+                                    "query": query
+                                }
+                            }
+                        }
+                    }]
+                }
+            },
+            "size": 1,
+            "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+        }
+        
+        try:
+            response = requests.post(
+                f"{ELASTICSEARCH_URL}/{INDEX_NAME}/_search",
+                headers={"Content-Type": "application/json"},
+                data=json.dumps(case_insensitive_body),
+                timeout=5
+            )
+            response.raise_for_status()
+            exact_result = response.json()
+            step2_time = int((time.time() - step2_start) * 1000)
+            
+            hits = exact_result.get("hits", {}).get("hits", [])
+            if hits:
+                logger.info(f"PERFORMANCE: Step2 case-insensitive match found in {step2_time}ms for query: {query}")
+                hit = hits[0]
+                formatted_result = {
+                    "hits": {
+                        "total": {"value": 1},
+                        "hits": [{
+                            "_score": 998.0,  # 決定的スコア（大文字小文字区別なし）
+                            "_source": hit["_source"],
+                            "_explanation": "exact_match_original_name_case_insensitive"
+                        }]
+                    },
+                    "took": exact_result.get("took", 0),
+                    "_debug_info": {
+                        "search_strategy": "exact_match_original_name_case_insensitive",
+                        "query_matched": query,
+                        "matched_original_name": hit["_source"]["original_name"]
+                    }
+                }
+                return formatted_result
+            else:
+                logger.info(f"PERFORMANCE: Step2 case-insensitive match not found in {step2_time}ms for query: {query}")
+                
+        except Exception as e:
+            step2_time = int((time.time() - step2_start) * 1000)
+            logger.error(f"PERFORMANCE: Step2 case-insensitive match failed in {step2_time}ms for query: {query}, error: {e}")
+            # Case insensitive exact match失敗時もフォールバックに進む
+            pass
+    else:
+        logger.info(f"PERFORMANCE: Skipping case-insensitive match for query: {query}")
+    
+    # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
+    step3_start = time.time()
+    logger.info(f"PERFORMANCE: Falling back to Tier algorithm for query: {query}")
+    
+    result = elasticsearch_search_optimized_fallback(query, size)
+    
+    step3_time = int((time.time() - step3_start) * 1000)
+    total_time = int((time.time() - start_time) * 1000)
+    
+    logger.info(f"PERFORMANCE: Tier fallback completed in {step3_time}ms, total time: {total_time}ms for query: {query}")
+    
+    return result
 
 def determine_match_type(query: str, explanation: str, original_name: str, 
                         search_name_list: list, description: str) -> str:
@@ -273,7 +454,9 @@ def elasticsearch_search_optimized(query: str, size: int = 10) -> dict:
 async def suggest_foods(
     q: str = Query(..., min_length=2, description="検索クエリ（最小2文字）"),
     limit: int = Query(10, ge=1, le=50, description="提案数（1-50件）"),
-    debug: bool = Query(False, description="デバッグ情報を含めるか")
+    debug: bool = Query(False, description="デバッグ情報を含めるか"),
+    skip_exact_match: bool = Query(False, description="exact match検索をスキップしてTier検索を直接実行"),
+    skip_case_insensitive: bool = Query(False, description="case-insensitive検索をスキップ")
 ):
     """
     栄養データベース検索予測API
@@ -284,6 +467,8 @@ async def suggest_foods(
         q: 検索クエリ（例: "chick", "tom", "brown r"）
         limit: 返す提案数（デフォルト: 10件、最大: 50件）
         debug: デバッグ情報を含めるかどうか
+        skip_exact_match: exact match検索をスキップしてTier検索を直接実行
+        skip_case_insensitive: case-insensitive検索をスキップ
 
     Returns:
         検索予測結果のJSON
@@ -292,7 +477,7 @@ async def suggest_foods(
     start_time = time.time()
 
     try:
-        logger.info(f"Nutrition suggestion request: query='{q}', limit={limit}")
+        logger.info(f"Nutrition suggestion request: query='{q}', limit={limit}, skip_exact={skip_exact_match}, skip_case_insensitive={skip_case_insensitive}")
 
         # バリデーション
         if len(q.strip()) < 2:
@@ -301,10 +486,17 @@ async def suggest_foods(
                 detail="Query must be at least 2 characters long"
             )
 
-        # Elasticsearch検索実行
-        es_start_time = time.time()
-        result = elasticsearch_search_optimized(q.strip(), size=limit)
-        es_time = int((time.time() - es_start_time) * 1000)
+        # 高速パス: Tier検索直行
+        if skip_exact_match:
+            logger.info(f"PERFORMANCE: Skipping exact match, going directly to Tier algorithm for query: {q}")
+            es_start_time = time.time()
+            result = elasticsearch_search_optimized_fallback(q.strip(), size=limit)
+            es_time = int((time.time() - es_start_time) * 1000)
+        else:
+            # 通常パス: exact match優先検索
+            es_start_time = time.time()
+            result = elasticsearch_exact_match_first_configurable(q.strip(), size=limit, skip_case_insensitive=skip_case_insensitive)
+            es_time = int((time.time() - es_start_time) * 1000)
 
         if "error" in result:
             raise Exception(f"Elasticsearch error: {result['error']}")
@@ -390,7 +582,11 @@ async def suggest_foods(
         # デバッグ情報追加
         if debug:
             response_data["debug_info"] = {
-                "elasticsearch_query_used": "exact_match_first_with_7_tier_fallback",
+                "elasticsearch_query_used": "exact_match_first_with_7_tier_fallback" if not skip_exact_match else "direct_tier_fallback",
+                "search_strategy_config": {
+                    "skip_exact_match": skip_exact_match,
+                    "skip_case_insensitive": skip_case_insensitive
+                },
                 "tier_scoring": {
                     "exact_match_original_name": 999,
                     "exact_match_case_insensitive": 998,
