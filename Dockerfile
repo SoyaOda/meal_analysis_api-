@@ -39,6 +39,6 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 EXPOSE $PORT
 
 # Run the application
-# Updated for unified architecture - Default to meal_analysis_api
-# For word_query_api, override with: CMD python -m apps.word_query_api.main
-CMD python -m apps.meal_analysis_api.main
+# Updated for unified architecture - Default to word_query_api
+# For meal_analysis_api, override with: CMD python -m apps.meal_analysis_api.main
+CMD python -m apps.word_query_api.main
