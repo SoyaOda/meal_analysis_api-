@@ -14,12 +14,45 @@ from shared.models.nutrition_search_models import (
 )
 
 logger = logging.getLogger(__name__)
+# NLTK stemming functionality
+import nltk
+from nltk.stem import PorterStemmer
+import re
+
+# Initialize Porter Stemmer
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    print("Downloading NLTK punkt tokenizer...")
+    nltk.download('punkt')
+
+stemmer = PorterStemmer()
+
+def stem_query(query: str) -> str:
+    """クエリを語幹化して返す"""
+    if not query:
+        return ""
+    
+    # 小文字に変換
+    query = query.lower()
+    
+    # 特殊文字を除去（アルファベットとスペースのみ残す）
+    query = re.sub(r'[^a-z\s]', ' ', query)
+    
+    # 複数のスペースを単一スペースに
+    query = re.sub(r'\s+', ' ', query).strip()
+    
+    # トークン化と語幹化
+    tokens = query.split()
+    stemmed_tokens = [stemmer.stem(token) for token in tokens]
+    
+    return ' '.join(stemmed_tokens)
 
 router = APIRouter()
 
 # Production Elasticsearch VM configuration
 ELASTICSEARCH_URL = "http://35.193.16.212:9200"
-INDEX_NAME = "mynetdiary_list_support_db"
+INDEX_NAME = "mynetdiary_converted_tool_calls_list_stemmed"
 
 def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
     """
@@ -329,19 +362,20 @@ def elasticsearch_exact_match_first_configurable(query: str, size: int = 10, ski
 def determine_match_type(query: str, explanation: str, original_name: str, 
                         search_name_list: list, description: str) -> str:
     """
-    改善されたマッチタイプ判定ロジック
+    語幹化フィールドに対応したマッチタイプ判定ロジック
     
     Args:
         query: 検索クエリ
         explanation: Elasticsearchの_explanationフィールド
         original_name: オリジナル名
-        search_name_list: 検索名リスト
-        description: 説明文
+        search_name_list: 検索名リスト（元のsearch_name）
+        description: 説明文（元のdescription）
         
     Returns:
         適切なマッチタイプフラグ
     """
     q_lower = query.lower()
+    stemmed_query = stem_query(query)
     
     # 1. Exact Match（original_nameで完全一致）の判定
     if explanation == "exact_match_original_name_keyword":
@@ -353,73 +387,88 @@ def determine_match_type(query: str, explanation: str, original_name: str,
     if original_name and original_name.lower() == q_lower:
         return "exact_match"
     
-    # 3. Tier 1: search_nameでの完全一致
+    # 語幹化ベースの判定（元のフィールドとの比較ではなく、語幹化クエリベース）
+    
+    # 3. Tier 1: stemmed_search_nameでの完全一致
     for name in search_name_list:
-        if name.lower() == q_lower:
+        stemmed_name = stem_query(name) if name else ""
+        if stemmed_name == stemmed_query:
             return "tier_1_exact"
     
-    # 4. Tier 2: descriptionでの完全一致
-    if description and description.lower() == q_lower:
-        return "tier_2_description"
+    # 4. Tier 2: stemmed_descriptionでの完全一致
+    if description:
+        stemmed_desc = stem_query(description)
+        if stemmed_desc == stemmed_query:
+            return "tier_2_description"
     
-    # 5. Tier 3: search_nameでのプレフィックスマッチ
+    # 5. Tier 3: stemmed_search_nameでのプレフィックスマッチ
     for name in search_name_list:
-        if name.lower().startswith(q_lower):
+        stemmed_name = stem_query(name) if name else ""
+        if stemmed_name.startswith(stemmed_query):
             return "tier_3_phrase"
     
-    # 6. Tier 4: descriptionでのプレフィックスマッチ
-    if description and description.lower().startswith(q_lower):
-        return "tier_4_phrase_desc"
+    # 6. Tier 4: stemmed_descriptionでのプレフィックスマッチ
+    if description:
+        stemmed_desc = stem_query(description)
+        if stemmed_desc.startswith(stemmed_query):
+            return "tier_4_phrase_desc"
     
-    # 7. Tier 5: search_nameでの部分マッチ
+    # 7. Tier 5: stemmed_search_nameでの部分マッチ
     for name in search_name_list:
-        if q_lower in name.lower():
+        stemmed_name = stem_query(name) if name else ""
+        if stemmed_query in stemmed_name:
             return "tier_5_term"
     
-    # 8. Tier 6: descriptionでの部分マッチ
-    if description and q_lower in description.lower():
-        return "tier_6_multi"
+    # 8. Tier 6: stemmed_descriptionでの部分マッチ
+    if description:
+        stemmed_desc = stem_query(description)
+        if stemmed_query in stemmed_desc:
+            return "tier_6_multi"
     
     # 9. Tier 7: その他（ファジーマッチ）
     return "tier_7_fuzzy"
 
 
 def elasticsearch_search_optimized_fallback(query: str, size: int = 10) -> dict:
-    """元のTierアルゴリズム（フォールバック用）"""
+    """語幹化フィールドを使用するTierアルゴリズム"""
+    
+    # クエリを語幹化
+    stemmed_query = stem_query(query)
+    logger.info(f"STEMMING: '{query}' -> '{stemmed_query}'")
     
     search_body = {
         "query": {
             "bool": {
                 "should": [
-                    # Tier 1: Exact Match (search_name配列要素) - Score: 15+
-                    {"match_phrase": {"search_name": {"query": query, "boost": 15}}},
+                    # Tier 1: Exact Match (stemmed_search_name) - Score: 15+
+                    {"match_phrase": {"stemmed_search_name": {"query": stemmed_query, "boost": 15}}},
 
-                    # Tier 2: Exact Match (description) - Score: 12+
-                    {"match_phrase": {"description": {"query": query, "boost": 12}}},
+                    # Tier 2: Exact Match (stemmed_description) - Score: 12+
+                    {"match_phrase": {"stemmed_description": {"query": stemmed_query, "boost": 12}}},
 
-                    # Tier 3: Phrase Match (search_name配列要素) - Score: 10+
-                    {"match": {"search_name": {"query": query, "boost": 10}}},
+                    # Tier 3: Phrase Match (stemmed_search_name) - Score: 10+
+                    {"match": {"stemmed_search_name": {"query": stemmed_query, "boost": 10}}},
 
-                    # Tier 4: Phrase Match (description) - Score: 8+
-                    {"match": {"description": {"query": query, "boost": 8}}},
+                    # Tier 4: Phrase Match (stemmed_description) - Score: 8+
+                    {"match": {"stemmed_description": {"query": stemmed_query, "boost": 8}}},
 
-                    # Tier 5: Term Match (search_name要素の完全一致) - Score: 6+
-                    {"term": {"search_name.keyword": {"value": query, "boost": 6}}},
+                    # Tier 5: Term Match (stemmed_search_name.keyword) - Score: 6+
+                    {"term": {"stemmed_search_name.keyword": {"value": stemmed_query, "boost": 6}}},
 
                     # Tier 6: Multi-field match - Score: 4+
                     {"multi_match": {
-                        "query": query,
-                        "fields": ["search_name^3", "description^2", "original_name"],
+                        "query": stemmed_query,
+                        "fields": ["stemmed_search_name^3", "stemmed_description^2", "original_name"],
                         "boost": 4
                     }},
 
-                    # Tier 7: Fuzzy Match (search_name配列要素) - Score: 2+
-                    {"fuzzy": {"search_name": {"value": query, "boost": 2}}}
+                    # Tier 7: Fuzzy Match (stemmed_search_name) - Score: 2+
+                    {"fuzzy": {"stemmed_search_name": {"value": stemmed_query, "boost": 2}}}
                 ]
             }
         },
         "size": size,
-        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+        "_source": ["search_name", "stemmed_search_name", "description", "stemmed_description", "original_name", "nutrition", "processing_method"]
     }
 
     try:
@@ -435,7 +484,9 @@ def elasticsearch_search_optimized_fallback(query: str, size: int = 10) -> dict:
         # フォールバック情報を追加
         if "hits" in result:
             result["_debug_info"] = {
-                "search_strategy": "tier_algorithm_fallback",
+                "search_strategy": "stemmed_tier_algorithm",
+                "original_query": query,
+                "stemmed_query": stemmed_query,
                 "reason": "exact_match_not_found"
             }
         
