@@ -289,7 +289,6 @@ async def analyze_meal_from_voice(
                 "matches_count": len(nutrition_search_result.matches),
                 "match_rate": nutrition_search_result.get_match_rate(),
                 "search_summary": nutrition_search_result.search_summary,
-                "search_method": "elasticsearch",
                 "matches": matches_data
             }
             result_manager.add_phase_result("AdvancedNutritionSearchComponent", nutrition_search_data)
@@ -360,8 +359,7 @@ async def analyze_meal_from_voice(
                 },
                 "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
                 "warnings": nutrition_calculation_result.meal_nutrition.warnings,
-                "match_rate_percent": nutrition_search_result.get_match_rate() * 100,
-                "search_method": "elasticsearch"
+                "match_rate_percent": nutrition_search_result.get_match_rate() * 100
             }
             result_manager.add_phase_result("NutritionCalculationComponent", nutrition_calculation_data)
 
@@ -538,6 +536,5 @@ def _build_unified_response(
         dishes=dishes,
         total_nutrition=total_nutrition,
         ai_model_used=ai_model_used,
-        match_rate_percent=nutrition_search_result.get_match_rate() * 100,
-        search_method="elasticsearch"
+        match_rate_percent=nutrition_search_result.get_match_rate() * 100
     )

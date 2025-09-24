@@ -65,7 +65,6 @@ class SimplifiedCompleteAnalysisResponse(BaseModel):
     # デバッグ・メタデータ（重要な部分のみ）
     ai_model_used: Optional[str] = Field(None, description="使用AIモデル", example="google/gemma-3-27b-it")
     match_rate_percent: float = Field(..., description="栄養検索マッチ率（%）", example=100.0)
-    search_method: str = Field(..., description="検索方法", example="elasticsearch")
 
     model_config = {"protected_namespaces": ()}
 

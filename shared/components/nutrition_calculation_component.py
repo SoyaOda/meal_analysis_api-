@@ -97,7 +97,6 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
         # メタデータ
         calculation_metadata = {
             "calculation_timestamp": end_time.isoformat(),
-            "nutrition_search_method": nutrition_search_result.get_search_method(),
             "total_nutrition_matches": nutrition_search_result.get_total_matches()
         }
         

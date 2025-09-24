@@ -88,7 +88,6 @@ class VoiceCompleteAnalysisResponse(BaseModel):
 
     ai_model_used: str = Field(..., description="使用されたAIモデル")
     match_rate_percent: float = Field(..., description="栄養検索マッチ率（%）")
-    search_method: str = Field(..., description="検索方法")
 
     warnings: List[str] = Field(default_factory=list, description="警告メッセージ")
 
