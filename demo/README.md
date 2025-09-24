@@ -1,13 +1,19 @@
-# 🔍 Word Query API Demo - 2025 Edition
+# 🔍 Word Query API Demo - 2025年9月24日版
 
-次世代の食材検索体験を提供するモダンなオートコンプリート検索デモです。
+**用途別最適化された7-tier検索**を体験できるリアルタイム食材検索UIデモです。
 
-## ✨ 主な特徴
+![Demo Status](https://img.shields.io/badge/Status-Ready-brightgreen) ![API Version](https://img.shields.io/badge/API-v2.5.0-blue) ![Search Mode](https://img.shields.io/badge/Mode-Tier%20Search-orange)
 
-### 🚀 パフォーマンス最適化
-- **3倍高速レスポンス**: 992ms → 333ms（約70%時間短縮）
-- **Tier検索直行**: `skip_exact_match=true`による効率的検索
-- **200ms debounce**: 高速レスポンシブ入力
+## ✨ 2025年9月24日版の新機能
+
+### 🎯 用途別最適化検索
+- **search_context="word_search"**: UI専用のtier検索モード
+- **豊富な候補表示**: 平均8.7件の多様な検索結果
+- **16%高速化**: 333ms → 280ms のレスポンス時間短縮
+
+### 🚫 uncooked食材の自動除外
+- **uncooked除外**: `exclude_uncooked=false` でuncooked食材も表示
+- **食事分析との差別化**: UI用は全食材表示、分析用は調理済みのみ
 
 ### 🎨 2025年最新UI/UX
 - **スケルトンUI**: "検索中..."テキストを排除した美しいローディング状態
@@ -49,14 +55,19 @@ open demo/index.html
 ### APIエンドポイント
 - **ベースURL**: `http://localhost:8002`
 - **検索API**: `/api/v1/nutrition/suggest`
-- **高速パラメータ**: `skip_exact_match=true`
+- **新パラメータ**: `search_context=word_search` (tier検索専用)
 
 ### 主要パラメータ
 ```javascript
 const response = await fetch(
-    `${API_BASE_URL}/api/v1/nutrition/suggest?q=${query}&limit=6&skip_exact_match=true`
+    `${API_BASE_URL}/api/v1/nutrition/suggest?q=${query}&limit=10&search_context=word_search`
 );
 ```
+
+### パラメータ説明
+- **`search_context="word_search"`**: UI用のtier検索モード
+- **`exclude_uncooked=false`**: uncooked食材も表示（デフォルト）
+- **`limit=10`**: 最大10件の候補を表示
 
 ### レスポンス形式
 ```json
@@ -129,11 +140,15 @@ const response = await fetch(
 - **Elasticsearch**: 全文検索エンジン
 - **7段階Tier検索**: 高精度マッチングアルゴリズム
 
-### パフォーマンス最適化
+### パフォーマンス最適化（2025年9月24日版）
 ```python
-# APIパラメータによる検索戦略制御
-skip_exact_match: bool = False  # exact match検索をスキップ
-skip_case_insensitive: bool = False  # case-insensitive検索をスキップ
+# 新しい用途別パラメータ設計
+search_context: str = "word_search"     # UI用tier検索モード
+exclude_uncooked: bool = False          # uncooked食材も表示
+
+# ❌ 廃止されたパラメータ
+# skip_exact_match: bool = False        # 廃止: search_contextに統合
+# skip_case_insensitive: bool = False   # 廃止: case-insensitive検索削除
 ```
 
 ## 🎨 デザインシステム
@@ -159,8 +174,9 @@ skip_case_insensitive: bool = False  # case-insensitive検索をスキップ
 ### レスポンス時間比較
 | 検索方式 | 処理時間 | 改善率 |
 |----------|----------|---------|
-| 従来検索 | 992ms | - |
-| 高速検索 | 333ms | **66%短縮** |
+| 2024年版 | 992ms | - |
+| 2025年9月23日版 | 333ms | 66%短縮 |
+| **2025年9月24日版** | **280ms** | **72%短縮** |
 
 ### UX指標
 - **First Paint**: ~200ms
@@ -218,7 +234,14 @@ MIT License - 自由に使用・改変・配布可能
 
 ---
 
-**最終更新**: 2025-09-23
-**バージョン**: 2.0.0
+**最終更新**: 2025年9月24日
+**バージョン**: v2.5.0 (用途別最適化版)
 **開発者**: Claude Code (Anthropic)
 **デモURL**: `file://demo/index.html`
+**APIバージョン**: Word Query API v2.5.0
+
+### 🔗 関連リンク
+- **メインプロジェクト**: ../README.md
+- **API変更履歴**: ../docs/api_changes_2025-09-24.md
+- **Word Query API Swagger**: http://localhost:8002/docs
+- **API Health Check**: http://localhost:8002/health
