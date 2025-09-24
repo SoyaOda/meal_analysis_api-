@@ -18,10 +18,16 @@ from shared.config.settings import get_settings
 from shared.utils.mynetdiary_utils import validate_ingredient_against_mynetdiary
 
 import logging
+import os
 logger = logging.getLogger(__name__)
 
 # Word Query API configuration
-API_BASE_URL = "http://localhost:8002"
+# Default: Production deployed API with stemming functionality
+# Override with WORD_QUERY_API_URL environment variable for local development
+API_BASE_URL = os.environ.get(
+    "WORD_QUERY_API_URL",
+    "https://word-query-api-1077966746907.us-central1.run.app"
+)
 
 class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, NutritionQueryOutput]):
     """
@@ -41,111 +47,159 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
     async def process(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
-        Main processing using deployed Word Query API
+        Word Query API強制使用 - fallback一切なし
+        料理名は栄養計算から除外
         """
         start_time = time.time()
 
-        # CHANGE: 料理名を除外して食材名のみで検索
+        # 食材名のみでWord Query APIを使用（料理名は除外）
         search_terms = input_data.ingredient_names  # dish_namesを含めない
         query_count = len(search_terms)
+
+        if query_count == 0:
+            raise ValueError("No ingredient names provided. ingredient_names is empty.")
 
         self.log_processing_detail("input_query_count", query_count)
         self.log_processing_detail("search_terms", search_terms)
         self.log_processing_detail("excluded_dish_names", input_data.dish_names)  # 除外された料理名をログ出力
+        self.log_processing_detail("word_query_api_url", self.api_base_url)
 
-        # Use API for all queries (simplified approach)
-        results = await self._api_search(search_terms, input_data)
+        # Word Query API接続テスト
+        await self._validate_word_query_api_connection()
+
+        # Word Query API強制使用 - エラー時は即停止
+        results = await self._word_query_api_only_search(search_terms, input_data)
 
         processing_time = int((time.time() - start_time) * 1000)
 
         # Add processing information to results
         if results.search_summary:
             results.search_summary["total_processing_time_ms"] = processing_time
+            results.search_summary["api_url_used"] = self.api_base_url
 
         self.log_processing_detail("total_processing_time_ms", processing_time)
         self.log_reasoning("search_completion",
-                          f"Completed {query_count} ingredient queries (excluding dish names) using Word Query API in {processing_time}ms")
+                          f"Completed {query_count} ingredient queries using ONLY Word Query API in {processing_time}ms (dish names excluded from nutrition search)")
 
-        self.logger.info(f"🚀 Word Query API search completed: {query_count} ingredient queries in {processing_time}ms")
+        self.logger.info(f"🚀 Word Query API ONLY search completed: {query_count} ingredient queries in {processing_time}ms (dish names excluded)")
 
         return results
 
-    async def _api_search(self, search_terms: List[str],
-                         input_data: NutritionQueryInput) -> NutritionQueryOutput:
+    async def _validate_word_query_api_connection(self):
+        """Word Query API接続確認 - 失敗時は即エラー"""
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(f"{self.api_base_url}/health")
+                if response.status_code != 200:
+                    raise ConnectionError(f"Word Query API health check failed: {response.status_code}")
+                self.logger.info(f"✅ Word Query API connection validated: {self.api_base_url}")
+        except Exception as e:
+            error_msg = f"❌ Word Query API connection failed: {self.api_base_url} - {str(e)}"
+            self.logger.error(error_msg)
+            raise ConnectionError(error_msg) from e
+
+    async def _word_query_api_only_search(self, search_terms: List[str],
+                                        input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
-        API search using deployed Word Query API
+        Word Query API専用検索 - エラー時は即座に例外発生
+        料理名はexact match rate計算から除外
         """
-        self.log_processing_detail("search_method", "word_query_api")
+        self.log_processing_detail("search_method", "word_query_api_only")
 
         start_time = time.time()
         matches = {}
-        errors = []
         successful_matches = 0
         exact_matches = 0
         tier_1_exact_matches = 0
+        
+        # 食材名のみでexact match rateを計算（料理名は除外）
+        ingredient_count = len(input_data.ingredient_names)
 
         # Create parallel API requests
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            tasks = []
-            for term in search_terms:
-                task = self._single_api_request(client, term)
-                tasks.append(task)
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                tasks = []
+                for term in search_terms:
+                    task = self._single_api_request_strict(client, term)
+                    tasks.append(task)
 
-            # Execute all requests in parallel
-            api_responses = await asyncio.gather(*tasks, return_exceptions=True)
+                # Execute all requests in parallel
+                api_responses = await asyncio.gather(*tasks)  # return_exceptions=Falseで例外は即座に伝播
 
-        # Process results
+        except Exception as e:
+            error_msg = f"Word Query API batch request failed: {str(e)}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+        # Process results - すべて成功している前提
         for i, (term, response) in enumerate(zip(search_terms, api_responses)):
-            if isinstance(response, Exception):
-                error_msg = f"API request failed for '{term}': {str(response)}"
+            if not response or not response.get("suggestions"):
+                error_msg = f"Word Query API returned no suggestions for '{term}'"
                 self.logger.error(error_msg)
-                errors.append(error_msg)
-            elif response and response.get("suggestions"):
-                # Convert API response to NutritionMatch
-                match_list = self._convert_api_suggestions_to_matches(
-                    response["suggestions"], term
-                )
-                matches[term] = match_list
-                successful_matches += 1
+                raise RuntimeError(error_msg)
 
-                # Check match quality for the top result
-                if match_list:
-                    top_match = match_list[0]
-                    match_type = top_match.search_metadata.get("match_type", "unknown")
-                    
-                    if match_type == "exact_match":
-                        exact_matches += 1
-                    elif match_type == "tier_1_exact":
-                        tier_1_exact_matches += 1
+            # Convert API response to NutritionMatch
+            match_list = self._convert_api_suggestions_to_matches(
+                response["suggestions"], term
+            )
+            matches[term] = match_list
+            successful_matches += 1
 
-                self.log_processing_detail(f"api_response_{i}", {
-                    "term": term,
-                    "suggestion_count": len(response["suggestions"]),
-                    "top_match_type": match_list[0].search_metadata.get("match_type", "unknown") if match_list else "none",
-                    "processing_time_ms": response.get("metadata", {}).get("processing_time_ms", 0)
-                })
-            else:
-                self.logger.warning(f"No results for '{term}'")
+            # Check match quality for the top result - 食材名のみをexact match rate計算に含める
+            if match_list and term in input_data.ingredient_names:
+                top_match = match_list[0]
+                match_type = top_match.search_metadata.get("match_type", "unknown")
+
+                if match_type == "exact_match":
+                    exact_matches += 1
+                elif match_type == "tier_1_exact":
+                    tier_1_exact_matches += 1
+
+            self.log_processing_detail(f"api_response_{i}", {
+                "term": term,
+                "is_ingredient": term in input_data.ingredient_names,
+                "is_dish": term in input_data.dish_names,
+                "suggestion_count": len(response["suggestions"]),
+                "top_match_type": match_list[0].search_metadata.get("match_type", "unknown") if match_list else "none",
+                "processing_time_ms": response.get("metadata", {}).get("processing_time_ms", 0)
+            })
 
         api_time = int((time.time() - start_time) * 1000)
 
         return self._build_nutrition_query_output(
             matches, successful_matches, exact_matches, tier_1_exact_matches,
-            len(search_terms), api_time, "word_query_api", errors
+            ingredient_count, api_time, "word_query_api", []
         )
 
-    async def _single_api_request(self, client: httpx.AsyncClient, term: str) -> Dict[str, Any]:
-        """Single API request with error handling"""
+    async def _single_api_request_strict(self, client: httpx.AsyncClient, term: str) -> Dict[str, Any]:
+        """厳密なAPI リクエスト - エラー時は即座に例外発生"""
         try:
             response = await client.get(
                 f"{self.api_base_url}/api/v1/nutrition/suggest",
                 params={"q": term, "limit": 5, "debug": "false"}
             )
             response.raise_for_status()
-            return response.json()
+
+            result = response.json()
+
+            # レスポンス形式チェック
+            if not isinstance(result, dict) or "suggestions" not in result:
+                raise ValueError(f"Invalid response format from Word Query API for term '{term}'")
+
+            return result
+
+        except httpx.TimeoutException as e:
+            error_msg = f"Word Query API timeout for '{term}': {str(e)}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+        except httpx.HTTPStatusError as e:
+            error_msg = f"Word Query API HTTP error for '{term}': {e.response.status_code}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
         except Exception as e:
-            self.logger.error(f"API request failed for '{term}': {e}")
-            raise
+            error_msg = f"Word Query API request failed for '{term}': {str(e)}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
 
     def _convert_api_suggestions_to_matches(self, suggestions: List[Dict],
                                           search_term: str) -> List[NutritionMatch]:

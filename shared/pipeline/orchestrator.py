@@ -121,7 +121,7 @@ class MealAnalysisPipeline:
             result_manager = None
         
         self.logger.info(f"[{analysis_id}] Starting complete meal analysis pipeline")
-        self.logger.info(f"[{analysis_id}] Nutrition search method: Elasticsearch (high-performance)")
+        self.logger.info(f"[{analysis_id}] Nutrition search method: Word Query API (high-performance)")
         
         try:
             # === Phase 1: 画像分析 ===
@@ -144,7 +144,7 @@ class MealAnalysisPipeline:
             if self.use_fuzzy_matching:
                 search_phase_name = "Fuzzy Ingredient Search"
             else:
-                search_phase_name = "Elasticsearch Search"
+                search_phase_name = "Word Query API Search"
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
             # === 栄養検索入力を作成（Word Query API用） ===
@@ -285,12 +285,12 @@ class MealAnalysisPipeline:
                 "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
                 "warnings": nutrition_calculation_result.meal_nutrition.warnings,
                 "match_rate_percent": nutrition_search_result.get_match_rate() * 100,
-                "search_method": "elasticsearch"
+                "search_method": "word_query_api"
             }
             
-            # 検索方法の特定（常にElasticsearch）
-            search_method = "elasticsearch"
-            search_api_method = "elasticsearch"
+            # 検索方法の特定（常にWord Query API）
+            search_method = "word_query_api"
+            search_api_method = "word_query_api"
             
             # 完全分析結果の構築
             end_time = datetime.now()
@@ -395,7 +395,7 @@ class MealAnalysisPipeline:
     
     def get_pipeline_info(self) -> Dict[str, Any]:
         """パイプライン情報を取得"""
-        search_method = "elasticsearch"
+        search_method = "word_query_api"
             
         return {
             "pipeline_id": self.pipeline_id,
