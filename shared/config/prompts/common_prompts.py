@@ -10,12 +10,17 @@ class CommonPrompts:
     """音声分析と画像分析で共通のプロンプトコンポーネント"""
 
     @classmethod
-    def get_mynetdiary_ingredients_list_with_header(cls) -> str:
-        """MyNetDiary食材名リスト（ヘッダー付き）を生成"""
-        ingredients_list = format_mynetdiary_ingredients_for_prompt()
+    def get_mynetdiary_ingredients_list_with_header(cls, exclude_uncooked: bool = True) -> str:
+        """MyNetDiary食材名リスト（ヘッダー付き）を生成
+        
+        Args:
+            exclude_uncooked: uncooked食材を除外するかどうか（デフォルト: True）
+        """
+        ingredients_list = format_mynetdiary_ingredients_for_prompt(exclude_uncooked=exclude_uncooked)
+        exclusion_note = " (excluding uncooked items)" if exclude_uncooked else ""
         return f"""
 MYNETDIARY INGREDIENT CONSTRAINT - ABSOLUTELY CRITICAL:
-For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list.
+For ALL ingredients, you MUST select ONLY from the following MyNetDiary ingredient list{exclusion_note}.
 Do NOT create custom ingredient names. Use the EXACTLY IDENTICAL names as they appear in this list.
 COPY the ingredient names EXACTLY, character-by-character, from this list:
 
@@ -28,9 +33,13 @@ ABSOLUTELY NO custom ingredient names are allowed - ONLY exact copies from the l
 """
 
     @classmethod
-    def get_mynetdiary_ingredients_list_only(cls) -> str:
-        """MyNetDiary食材名リストのみ（制約指示なし）を生成"""
-        return format_mynetdiary_ingredients_for_prompt()
+    def get_mynetdiary_ingredients_list_only(cls, exclude_uncooked: bool = True) -> str:
+        """MyNetDiary食材名リストのみ（制約指示なし）を生成
+        
+        Args:
+            exclude_uncooked: uncooked食材を除外するかどうか（デフォルト: True）
+        """
+        return format_mynetdiary_ingredients_for_prompt(exclude_uncooked=exclude_uncooked)
 
     @classmethod
     def get_query_generation_guidelines(cls) -> str:
