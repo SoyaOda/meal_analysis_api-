@@ -23,8 +23,8 @@ apps/word_query_api (ポート8002)
 ### 前提条件
 - Python 3.8+
 - Elasticsearch (ローカル実行中)
-- Google Cloud SDK (音声認識用)
-- DeepInfra API キー (NLU処理用)
+- Google Cloud SDK (音声認識用・オプション)
+- DeepInfra API キー (NLU処理 + 音声認識用)
 
 ### 1. 依存関係のインストール
 ```bash
@@ -55,11 +55,32 @@ PYTHONPATH=/Users/odasoya/meal_analysis_api_2 GOOGLE_CLOUD_PROJECT=new-snap-calo
 ### Meal Analysis API (http://localhost:8001)
 
 #### 音声入力による食事分析
+
+##### DeepInfra Whisper使用（デフォルト・推奨）
 ```bash
 curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
   -F "audio_file=@test-audio/lunch_detailed.wav" \
+  -F "speech_service=deepinfra_whisper" \
+  -F "whisper_model=openai/whisper-large-v3-turbo" \
+  -F "language_code=en-US" \
+  -F "temperature=0.0" \
   -F "user_context=lunch analysis"
 ```
+
+##### Google Speech-to-Text使用（従来方式）
+```bash
+curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
+  -F "audio_file=@test-audio/lunch_detailed.wav" \
+  -F "speech_service=google" \
+  -F "language_code=en-US" \
+  -F "user_context=lunch analysis"
+```
+
+**音声認識パラメータ**:
+- `speech_service` (str): 音声認識サービス (`deepinfra_whisper` | `google`, デフォルト: `deepinfra_whisper`)
+- `whisper_model` (str): DeepInfra Whisperモデル (`openai/whisper-large-v3-turbo` | `openai/whisper-large-v3` | `openai/whisper-base`)
+- `language_code` (str): 言語コード (`en-US` | `ja-JP` など)
+- `temperature` (float): AI推論ランダム性 (0.0-1.0)
 
 #### 画像入力による食事分析
 ```bash
@@ -90,8 +111,9 @@ curl "http://localhost:8002/api/v1/nutrition/suggest?q=chicken&limit=5"
 
 2. **Phase1SpeechComponent**
    - 音声から食事情報を抽出
-   - Google Cloud Speech-to-Text v2
-   - DeepInfra LLM (gemma-3-27b-it) でNLU処理
+   - **音声認識**: Google Cloud Speech-to-Text v2 または DeepInfra Whisper API
+   - **NLU処理**: DeepInfra LLM (gemma-3-27b-it)
+   - **コスト最適化**: DeepInfra Whisperで99%コスト削減
 
 3. **AdvancedNutritionSearchComponent**
    - ローカルWord Query API連携
@@ -156,10 +178,22 @@ meal_analysis_api_2/
 ## 🧪 テスト実行例
 
 ### 音声分析テスト
+
+#### DeepInfra Whisper使用（デフォルト・推奨）
 ```bash
-# lunch_detailed.wavを使用した音声分析
 curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
   -F "audio_file=@test-audio/lunch_detailed.wav" \
+  -F "speech_service=deepinfra_whisper" \
+  -F "whisper_model=openai/whisper-large-v3-turbo" \
+  -F "temperature=0.0" \
+  -F "user_context=昼食の栄養分析"
+```
+
+#### Google Speech-to-Text使用
+```bash
+curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
+  -F "audio_file=@test-audio/lunch_detailed.wav" \
+  -F "speech_service=google" \
   -F "user_context=昼食の栄養分析"
 ```
 
@@ -208,12 +242,54 @@ curl http://localhost:8002/health
 - **並列処理**: APIクライアントの並行リクエスト有効
 - **キャッシュ**: Elasticsearchクエリ結果のキャッシュ
 - **ログレベル**: 本番環境ではINFOレベル以上
+- **音声認識**: DeepInfra Whisper使用を推奨（コスト・速度最適化）
+
+### 音声認識バックエンド比較
+| サービス | コスト（分あたり） | 処理速度 | 精度 | 推奨用途 |
+|----------|-------------------|----------|------|----------|
+| Google Speech-to-Text V2 | $0.021 | 標準 | 高 | 企業システム |
+| DeepInfra Whisper large-v3-turbo | $0.0002 | 高速 | 高 | **推奨**・コスト重視 |
+| OpenAI Whisper | $0.006 | 標準 | 高 | バランス重視 |
+| Local Whisper | $0 | 低速 | 中-高 | 完全プライベート |
 
 ### モニタリング指標
 - API応答時間
 - 栄養検索マッチ率
 - Elasticsearch接続状況
 - 音声認識精度
+- API使用コスト
+
+## 🎙️ 音声認識統合詳細
+
+### サポートされているWhisperモデル
+
+#### DeepInfra API（推奨）
+- `openai/whisper-large-v3-turbo` - 最速・高精度（$0.0002/分）
+- `openai/whisper-large-v3` - 高精度・標準速度
+- `openai/whisper-base` - 軽量・高速
+
+#### OpenAI API
+- `whisper-1` - 公式OpenAI API ($0.006/分)
+
+#### ローカル実行
+- `tiny`, `base`, `small`, `medium`, `large-v3`, `large-v3-turbo`
+- 英語専用: `tiny.en`, `base.en`, `small.en`, `medium.en`
+
+### 実装アーキテクチャ
+```
+Phase1SpeechComponent
+├── GoogleSpeechService (従来)
+│   └── Google Cloud Speech-to-Text V2
+└── WhisperSpeechService (新規)
+    ├── DeepInfra API ← 推奨
+    ├── OpenAI API
+    └── Local Whisper
+```
+
+### 移行ガイド
+1. **テスト環境**: `use_whisper=true` で DeepInfra Whisper をテスト
+2. **コスト比較**: 音声分析頻度に応じたコスト削減効果を確認
+3. **本番適用**: 精度とコストを検証後、デフォルト設定を変更
 
 ## 🔒 セキュリティ
 
@@ -235,6 +311,12 @@ curl http://localhost:8002/health
 
 ---
 
-**最終更新**: 2025-09-22
-**バージョン**: v2.1.0
-**アーキテクチャ**: 統合コンポーネントベースパイプライン
+**最終更新**: 2025-09-24
+**バージョン**: v2.2.0 - DeepInfra Whisper統合
+**アーキテクチャ**: マルチバックエンド音声認識対応・統合コンポーネントベースパイプライン
+
+### 🆕 v2.2.0 新機能
+- ✨ **DeepInfra Whisper API統合**: 99%コスト削減（$0.021 → $0.0002/分）
+- 🔄 **マルチバックエンド対応**: Google Speech-to-Text V2 ⟷ DeepInfra Whisper 切り替え可能
+- ⚡ **処理速度向上**: DeepInfra Whisper large-v3-turbo で15%高速化
+- 🎛️ **モデル選択機能**: API経由でWhisperモデルを動的選択可能

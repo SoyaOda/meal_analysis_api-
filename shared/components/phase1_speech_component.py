@@ -11,7 +11,10 @@ from typing import Optional, Any
 from shared.components.base import BaseComponent, ComponentError
 from shared.models.phase1_models import Phase1Input, Phase1Output, Dish, Ingredient
 from shared.models.voice_analysis_models import VoiceAnalysisInput, VoiceAnalysisOutput
-from shared.services.speech_service import SpeechService
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from shared.services.google_speech_service import GoogleSpeechService
 from shared.services.nlu_service import NLUService
 
 logger = logging.getLogger(__name__)
@@ -25,11 +28,33 @@ class Phase1SpeechComponent(BaseComponent):
     既存のPhase1Componentと同等のPhase1Outputを生成します。
     """
 
-    def __init__(self, speech_service: Optional[SpeechService] = None, nlu_service: Optional[NLUService] = None):
+    def __init__(self, speech_service_type: str = "deepinfra_whisper", whisper_model: str = "openai/whisper-large-v3-turbo", speech_service: Optional['GoogleSpeechService'] = None, nlu_service: Optional[NLUService] = None):
         super().__init__("Phase1SpeechComponent")
 
-        # サービスの初期化（依存性注入）
-        self.speech_service = speech_service or SpeechService()
+        # 音声認識サービスタイプに基づいてサービスを選択
+        if speech_service_type == "deepinfra_whisper":
+            from shared.services.whisper_speech_service import WhisperSpeechService, WhisperBackend, WhisperModel
+            
+            # DeepInfra Whisperモデル文字列を enum に変換
+            model_map = {
+                "openai/whisper-large-v3": WhisperModel.DEEPINFRA_LARGE_V3,
+                "openai/whisper-large-v3-turbo": WhisperModel.DEEPINFRA_LARGE_V3_TURBO,
+                "openai/whisper-base": WhisperModel.DEEPINFRA_BASE,
+            }
+            
+            self.selected_model = model_map.get(whisper_model, WhisperModel.DEEPINFRA_LARGE_V3_TURBO)
+            
+            self.whisper_service = WhisperSpeechService(backend=WhisperBackend.DEEPINFRA_API)
+            self.speech_service = None  # DeepInfra Whisper使用時はGoogleSpeechServiceを無効化
+            logger.info(f"Initialized with DeepInfra Whisper model: {self.selected_model.value}")
+        else:  # speech_service_type == "google"
+            # Google Speech-to-Textサービスの初期化（依存性注入）
+            from shared.services.google_speech_service import GoogleSpeechService
+            self.speech_service = speech_service or GoogleSpeechService()
+            self.whisper_service = None
+            self.selected_model = None
+            logger.info("Initialized with Google Speech-to-Text service")
+
         self.nlu_service = nlu_service or NLUService()
 
         logger.info("Phase1SpeechComponent initialized successfully")
@@ -145,10 +170,23 @@ class Phase1SpeechComponent(BaseComponent):
         # Step 1: 音声認識（Speech-to-Text）- WAV形式のみ対応
         self.logger.info("Step 1: Speech-to-Text conversion")
         try:
-            transcript = await self.speech_service.transcribe_audio(
-                audio_data=input_data.audio_bytes,
-                language_code=language_code
-            )
+            if self.whisper_service:
+                # Whisperサービス使用
+                transcript = await self.whisper_service.transcribe_audio(
+                    audio_data=input_data.audio_bytes,
+                    language_code=language_code,
+                    model=self.selected_model,
+                    temperature=temperature or 0.0
+                )
+                self.logger.info(f"Used Whisper model: {self.selected_model.value}")
+            else:
+                # Google Speech-to-Text使用
+                transcript = await self.speech_service.transcribe_audio(
+                    audio_data=input_data.audio_bytes,
+                    language_code=language_code
+                )
+                self.logger.info("Used Google Speech-to-Text service")
+            
             self.log_processing_detail("speech_recognition_result", transcript)
 
         except Exception as e:

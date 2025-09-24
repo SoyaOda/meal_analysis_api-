@@ -40,7 +40,10 @@ async def analyze_meal_from_voice(
     seed: Optional[int] = Form(123456),
     test_execution: bool = Form(False),
     test_results_dir: Optional[str] = Form(None),
-    save_detailed_logs: bool = Form(True)
+    save_detailed_logs: bool = Form(True),
+    # 音声認識サービス選択パラメータ（統一）
+    speech_service: str = Form("deepinfra_whisper"),
+    whisper_model: str = Form("openai/whisper-large-v3-turbo")
 ) -> SimplifiedCompleteAnalysisResponse:
     """
     音声からの完全食事分析
@@ -59,6 +62,8 @@ async def analyze_meal_from_voice(
         test_execution: テスト実行モード（デフォルト: False）
         test_results_dir: テスト結果保存先ディレクトリ（テスト実行時のみ）
         save_detailed_logs: 詳細ログ保存（デフォルト: True）
+        speech_service: 音声認識サービス ("google" | "deepinfra_whisper", デフォルト: "deepinfra_whisper")
+        whisper_model: DeepInfra Whisperモデル ("openai/whisper-large-v3-turbo" | "openai/whisper-large-v3" | "openai/whisper-base")
 
     Returns:
         完全な栄養分析結果（画像分析と同一フォーマット）
@@ -69,7 +74,12 @@ async def analyze_meal_from_voice(
     analysis_id = str(uuid.uuid4())[:8]
     start_time = datetime.now()
 
-    logger.info(f"[{analysis_id}] Starting voice meal analysis (language: {language_code}, temperature: {temperature}, seed: {seed})")
+    logger.info(f"[{analysis_id}] Starting voice meal analysis (language: {language_code}, temperature: {temperature}, seed: {seed}, speech_service: {speech_service})")
+    if speech_service == "deepinfra_whisper":
+        logger.info(f"[{analysis_id}] Using DeepInfra Whisper model: {whisper_model}")
+    else:
+        logger.info(f"[{analysis_id}] Using Google Speech-to-Text")
+    
     if optional_text:
         logger.info(f"[{analysis_id}] Optional text provided: '{optional_text[:50]}{'...' if len(optional_text) > 50 else ''}'")
 
@@ -82,6 +92,14 @@ async def analyze_meal_from_voice(
             raise HTTPException(
                 status_code=400,
                 detail={"code": VoiceAnalysisErrorCodes.INVALID_PARAMETERS, "message": "temperature must be between 0.0 and 1.0"}
+            )
+
+        # speech_service パラメータ検証
+        valid_services = ["google", "deepinfra_whisper"]
+        if speech_service not in valid_services:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": VoiceAnalysisErrorCodes.INVALID_PARAMETERS, "message": f"Invalid speech_service. Must be one of: {valid_services}"}
             )
 
         # 音声データ読み込み
@@ -108,8 +126,12 @@ async def analyze_meal_from_voice(
         else:
             result_manager = None
 
-        # Phase1Speechコンポーネントの実行
-        phase1_speech_component = Phase1SpeechComponent()
+        # Phase1Speechコンポーネントを音声認識サービス設定で初期化
+        phase1_speech_component = Phase1SpeechComponent(
+            speech_service_type=speech_service,
+            whisper_model=whisper_model
+        )
+        
         voice_input = VoiceAnalysisInput(
             audio_bytes=audio_data,
             audio_mime_type=audio.content_type or "audio/wav",
@@ -190,7 +212,9 @@ async def analyze_meal_from_voice(
                     "llm_model_id": llm_model_id,
                     "optional_text": optional_text,
                     "temperature": temperature,
-                    "seed": seed
+                    "seed": seed,
+                    "speech_service": speech_service,
+                    "whisper_model": whisper_model if speech_service == "deepinfra_whisper" else None
                 },
                 # 音声テキスト変換結果を追加（Phase1Speechから取得）
                 "processing_details": {}
@@ -365,7 +389,9 @@ async def analyze_meal_from_voice(
                 "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
                 "optional_text_used": optional_text,
                 "temperature": temperature,
-                "seed": seed
+                "seed": seed,
+                "speech_service": speech_service,
+                "whisper_model": whisper_model if speech_service == "deepinfra_whisper" else None
             })
             result_manager.finalize_pipeline()
             saved_files = result_manager.save_phase_results()
