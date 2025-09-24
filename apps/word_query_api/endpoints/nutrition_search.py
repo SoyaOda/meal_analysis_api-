@@ -67,12 +67,12 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
     import time
     start_time = time.time()
     
-    # Step 1: original_name.keyword での完全一致（大文字小文字区別）
+    # Step 1: original_name.exact での完全一致（小文字化）
     step1_start = time.time()
     exact_match_body = {
         "query": {
             "term": {
-                "original_name.keyword": query
+                "original_name.exact": query.lower()
             }
         },
         "size": 1,
@@ -120,88 +120,17 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
         logger.error(f"PERFORMANCE: Step1 exact match failed in {step1_time}ms for query: {query}, error: {e}")
         # Exact match失敗時はフォールバックに進む
         pass
-    
-    # Step 2: 大文字小文字を区別しないexact match
+
+    # Step 2: Exact match失敗時、直接Tierアルゴリズムにフォールバック
     step2_start = time.time()
-    case_insensitive_body = {
-        "query": {
-            "bool": {
-                "must": [{
-                    "match": {
-                        "original_name": {
-                            "query": query,
-                            "operator": "and",
-                            "analyzer": "standard"
-                        }
-                    }
-                }],
-                "filter": [{
-                    "script": {
-                        "script": {
-                            "source": "doc['original_name.keyword'].value.toLowerCase() == params.query.toLowerCase()",
-                            "params": {
-                                "query": query
-                            }
-                        }
-                    }
-                }]
-            }
-        },
-        "size": 1,
-        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
-    }
-    
-    try:
-        response = requests.post(
-            f"{ELASTICSEARCH_URL}/{INDEX_NAME}/_search",
-            headers={"Content-Type": "application/json"},
-            data=json.dumps(case_insensitive_body),
-            timeout=5
-        )
-        response.raise_for_status()
-        exact_result = response.json()
-        step2_time = int((time.time() - step2_start) * 1000)
-        
-        hits = exact_result.get("hits", {}).get("hits", [])
-        if hits:
-            logger.info(f"PERFORMANCE: Step2 case-insensitive match found in {step2_time}ms for query: {query}")
-            hit = hits[0]
-            formatted_result = {
-                "hits": {
-                    "total": {"value": 1},
-                    "hits": [{
-                        "_score": 998.0,  # 決定的スコア（大文字小文字区別なし）
-                        "_source": hit["_source"],
-                        "_explanation": "exact_match_original_name_case_insensitive"
-                    }]
-                },
-                "took": exact_result.get("took", 0),
-                "_debug_info": {
-                    "search_strategy": "exact_match_original_name_case_insensitive",
-                    "query_matched": query,
-                    "matched_original_name": hit["_source"]["original_name"]
-                }
-            }
-            return formatted_result
-        else:
-            logger.info(f"PERFORMANCE: Step2 case-insensitive match not found in {step2_time}ms for query: {query}")
-            
-    except Exception as e:
-        step2_time = int((time.time() - step2_start) * 1000)
-        logger.error(f"PERFORMANCE: Step2 case-insensitive match failed in {step2_time}ms for query: {query}, error: {e}")
-        # Case insensitive exact match失敗時もフォールバックに進む
-        pass
-    
-    # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
-    step3_start = time.time()
     logger.info(f"PERFORMANCE: Falling back to Tier algorithm for query: {query}")
     
     result = elasticsearch_search_optimized_fallback(query, size)
     
-    step3_time = int((time.time() - step3_start) * 1000)
+    step2_time = int((time.time() - step2_start) * 1000)
     total_time = int((time.time() - start_time) * 1000)
     
-    logger.info(f"PERFORMANCE: Tier fallback completed in {step3_time}ms, total time: {total_time}ms for query: {query}")
+    logger.info(f"PERFORMANCE: Tier fallback completed in {step2_time}ms, total time: {total_time}ms for query: {query}")
     
     return result
 
@@ -218,12 +147,12 @@ def elasticsearch_exact_match_first_configurable(query: str, size: int = 10, ski
     import time
     start_time = time.time()
     
-    # Step 1: original_name.keyword での完全一致（大文字小文字区別）
+    # Step 1: original_name.exact での完全一致（小文字化）
     step1_start = time.time()
     exact_match_body = {
         "query": {
             "term": {
-                "original_name.keyword": query
+                "original_name.exact": query.lower()
             }
         },
         "size": 1,
@@ -347,15 +276,15 @@ def elasticsearch_exact_match_first_configurable(query: str, size: int = 10, ski
         logger.info(f"PERFORMANCE: Skipping case-insensitive match for query: {query}")
     
     # Step 3: すべてのexact match方法が失敗した場合、Tierアルゴリズムにフォールバック
-    step3_start = time.time()
+    step2_start = time.time()
     logger.info(f"PERFORMANCE: Falling back to Tier algorithm for query: {query}")
     
     result = elasticsearch_search_optimized_fallback(query, size)
     
-    step3_time = int((time.time() - step3_start) * 1000)
+    step2_time = int((time.time() - step2_start) * 1000)
     total_time = int((time.time() - start_time) * 1000)
     
-    logger.info(f"PERFORMANCE: Tier fallback completed in {step3_time}ms, total time: {total_time}ms for query: {query}")
+    logger.info(f"PERFORMANCE: Tier fallback completed in {step2_time}ms, total time: {total_time}ms for query: {query}")
     
     return result
 
@@ -379,8 +308,6 @@ def determine_match_type(query: str, explanation: str, original_name: str,
     
     # 1. Exact Match（original_nameで完全一致）の判定
     if explanation == "exact_match_original_name_keyword":
-        return "exact_match"
-    elif explanation == "exact_match_original_name_case_insensitive":
         return "exact_match"
     
     # 2. original_nameでの直接比較（フォールバック）

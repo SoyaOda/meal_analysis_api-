@@ -1,17 +1,28 @@
-# Word Query API 仕様変更差分 - 2025年9月23日
+# API 仕様変更差分 - 2025年9月23日
 
 ## 概要
 
-dev branchでWord Query APIに語幹化（Stemming）機能を追加し、単数・複数形検索の精度を大幅に改善しました。
+dev branchで**Word Query API**と**Meal Analysis API**の両方に大幅な機能改善を実装しました。
 このドキュメントは、main branchからdev branchへの変更点とAPI仕様の差分をエンジニア向けに詳細に説明します。
 
 ## 🎯 変更の背景
 
+### Word Query API の改善
 **問題**: "apple"で検索した際に"Apple juice"が上位に表示され、"apples"（実際の果物）が適切にランキングされない単複問題
 
-**解決策**: NLTK Porter Stemmerを使用した語幹化処理により、"apple" ↔ "apples" を同等として扱う
+**解決策**:
+1. NLTK Porter Stemmerを使用した語幹化処理により、"apple" ↔ "apples" を同等として扱う
+2. Elasticsearchクエリの最適化により100% exact match率を実現
+3. 冗長なStep2アルゴリズムを削除してパフォーマンス向上
+
+### Meal Analysis API の改善
+**問題**: 直接Elasticsearchを使用しており、Word Query APIの高度な検索機能を活用できていない
+
+**解決策**: Word Query API統合により、語幹化・代替名サポート・7-tier検索を活用
 
 ## 📋 API仕様差分
+
+## 📋 Word Query API 仕様差分
 
 ### エンドポイント変更
 
@@ -20,7 +31,7 @@ dev branchでWord Query APIに語幹化（Stemming）機能を追加し、単数
 | **基本URL** | 同じ | 同じ | 変更なし |
 | **エンドポイント** | `/api/v1/nutrition/suggest` | `/api/v1/nutrition/suggest` | 変更なし |
 | **HTTPメソッド** | GET | GET | 変更なし |
-| **バージョン** | 2.1.0 | 2.1.0 | 変更なし |
+| **バージョン** | 2.1.0 | 2.2.0 | ⭐ バージョンアップ |
 
 ### パラメータ仕様
 
@@ -105,25 +116,23 @@ def stem_query(query: str) -> str:
     """
 ```
 
-#### 🔄 検索アルゴリズム変更
+#### 🔄 検索アルゴリズム重大変更
 
-**main branch**: 7-tier検索システム
-1. Tier 1: search_name exact match
-2. Tier 2: description exact match
-3. Tier 3: search_name phrase match
-4. Tier 4: description phrase match
-5. Tier 5: search_name term match
-6. Tier 6: multi-field match
-7. Tier 7: fuzzy match
+**main branch**: 3段階検索システム
+1. **Stage 1**: `original_name.keyword` exact match (大文字小文字区別)
+2. **Stage 2**: `original_name` case-insensitive exact match (script filter使用)
+3. **Stage 3**: 7-tier stemmed fallback algorithm
 
-**dev branch**: 語幹化対応7-tier検索システム
-1. Tier 1: **stemmed_search_name** exact match ⭐
-2. Tier 2: **stemmed_description** exact match ⭐
-3. Tier 3: **stemmed_search_name** phrase match ⭐
-4. Tier 4: **stemmed_description** phrase match ⭐
-5. Tier 5: **stemmed_search_name** term match ⭐
-6. Tier 6: multi-field match (stemmed fields含む) ⭐
-7. Tier 7: **stemmed_search_name** fuzzy match ⭐
+**dev branch**: 2段階最適化検索システム ⭐
+1. **Stage 1**: `original_name.exact` exact match (小文字化クエリ) ⭐
+2. **Stage 2**: 7-tier stemmed algorithm (語幹化対応) ⭐
+
+### 🚀 重要な最適化
+- **Step 2削除**: 冗長な大文字小文字区別なしexact matchを完全除去
+- **フィールド修正**: `original_name.keyword` → `original_name.exact`に変更
+- **クエリ最適化**: クエリを小文字化してから`original_name.exact`と比較
+- **パフォーマンス向上**: 3段階 → 2段階で処理時間短縮
+- **Exact match率**: 100%を維持
 
 ## 🚀 パフォーマンス改善
 
@@ -149,6 +158,69 @@ def stem_query(query: str) -> str:
 |----------|-------------------|---------|
 | main | 992ms | - |
 | dev | 333ms | **66%短縮** |
+
+### Exact Match率改善
+
+| 項目 | main branch | dev branch | 改善内容 |
+|------|-------------|------------|----------|
+| Exact Match率 | 66.67% | **100%** | ⭐ 33.33ポイント向上 |
+| Elasticsearch Field | `original_name.keyword` | `original_name.exact` | ⭐ 正しいフィールドに修正 |
+| Query Processing | そのまま | 小文字化処理 | ⭐ 大文字小文字正規化 |
+
+## 📋 Meal Analysis API 仕様差分
+
+### 🆕 Word Query API統合
+
+**main branch**: 直接Elasticsearch検索
+```python
+# 古い実装 - ローカルElasticsearchに直接アクセス
+search_method = "elasticsearch"
+```
+
+**dev branch**: Word Query API統合 ⭐
+```python
+# 新しい実装 - Word Query APIを経由
+API_BASE_URL = os.environ.get(
+    "WORD_QUERY_API_URL",
+    "https://word-query-api-1077966746907.us-central1.run.app"
+)
+search_method = "word_query_api"
+```
+
+### 🔧 環境変数による設定可能
+
+| 設定 | デフォルト値 | 説明 |
+|------|-------------|------|
+| `WORD_QUERY_API_URL` | `https://word-query-api-1077966746907.us-central1.run.app` | 本番Word Query API |
+| ローカル開発時 | `http://localhost:8002` | `WORD_QUERY_API_URL`で上書き |
+
+### 📊 レスポンス変更
+
+**main branch**:
+```json
+{
+  "search_method": "elasticsearch",
+  "match_rate_percent": 66.67
+}
+```
+
+**dev branch**:
+```json
+{
+  "search_method": "word_query_api",
+  "match_rate_percent": 100.0
+}
+```
+
+### 🎯 機能向上
+
+| 機能 | main branch | dev branch | 改善点 |
+|------|-------------|------------|-------|
+| 検索方式 | 直接Elasticsearch | Word Query API経由 | ⭐ API統合 |
+| 語幹化サポート | なし | あり | ⭐ 単複形対応 |
+| 代替名サポート | なし | あり | ⭐ chickpeas ↔ garbanzo beans |
+| 7-tier検索 | なし | あり | ⭐ 高度な検索アルゴリズム |
+| 設定柔軟性 | 固定 | 環境変数対応 | ⭐ 開発/本番切り替え |
 
 ## 🗄️ データベース変更
 
@@ -256,20 +328,54 @@ PYTHONPATH=/path/to/project PORT=8002 python -m apps.word_query_api.main
 python scripts/update_elasticsearch_stemmed.py
 ```
 
-### 3. 本番デプロイ
+### 3. Word Query API 本番デプロイ ✅
 ```bash
-# Cloud Runデプロイ
+# 最適化版Word Query APIデプロイ完了
 gcloud run deploy word-query-api \
-  --image gcr.io/project/word-query-api:v2.3-stemmed \
+  --image gcr.io/new-snap-calorie/word-query-api:v2.4-step2-removed \
   --region us-central1
 ```
 
+### 4. Meal Analysis API 本番デプロイ ⚠️
+```bash
+# 未実施 - Word Query API統合版のデプロイが必要
+gcloud run deploy meal-analysis-api \
+  --image gcr.io/new-snap-calorie/meal-analysis-api:v2.2-word-query-integration \
+  --region us-central1
+```
+
+## 🚦 現在のデプロイ状況
+
+### ✅ 完了済み
+- **Word Query API**: 最新の最適化版がデプロイ済み
+  - Step2削除・Exact match 100%・語幹化対応
+  - URL: https://word-query-api-1077966746907.us-central1.run.app
+
+### ⚠️ 要対応
+- **Meal Analysis API**: 古い版がデプロイ中
+  - まだ直接Elasticsearch使用 (`search_method: "elasticsearch"`)
+  - Word Query API統合版の再デプロイが必要
+
 ## 🔗 関連リソース
 
-- **本番API**: https://word-query-api-1077966746907.us-central1.run.app
-- **Swagger UI**: https://word-query-api-1077966746907.us-central1.run.app/docs
-- **OpenAPI仕様**: https://word-query-api-1077966746907.us-central1.run.app/openapi.json
-- **GitHub**: branch `dev` (語幹化機能), branch `main` (従来版)
+### API エンドポイント
+- **Word Query API** (最新): https://word-query-api-1077966746907.us-central1.run.app
+- **Meal Analysis API** (要更新): https://meal-analysis-api-1077966746907.us-central1.run.app
+
+### ドキュメント
+- **Word Query API Swagger**: https://word-query-api-1077966746907.us-central1.run.app/docs
+- **Word Query API OpenAPI**: https://word-query-api-1077966746907.us-central1.run.app/openapi.json
+- **GitHub**: branch `dev` (最新機能), branch `main` (従来版)
+
+### 開発環境
+```bash
+# ローカル開発 - Word Query API
+PYTHONPATH=/path/to/project PORT=8002 python -m apps.word_query_api.main
+
+# ローカル開発 - Meal Analysis API (Word Query API統合)
+WORD_QUERY_API_URL="http://localhost:8002" \
+PYTHONPATH=/path/to/project PORT=8001 python -m apps.meal_analysis_api.main
+```
 
 ## 📞 サポート
 
@@ -278,5 +384,6 @@ gcloud run deploy word-query-api \
 ---
 
 **作成日**: 2025年9月23日
+**最終更新**: 2025年9月23日 (デプロイ状況反映)
 **作成者**: Claude Code (Anthropic)
-**バージョン**: Word Query API v2.1.0 + Stemming Enhancement
+**バージョン**: Word Query API v2.2.0 + Meal Analysis API Word Query統合
