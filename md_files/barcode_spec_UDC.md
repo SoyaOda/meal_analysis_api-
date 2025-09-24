@@ -1,52 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Project Overview
-
-必ず serena MCP が日本語で対応すること！
-日本語で応答すること！
-
-### 3. API サーバーの起動
-
-#### Word Query API (ポート 8002)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8002 python -m apps.word_query_api.main
-```
-
-#### Meal Analysis API (ポート 8001)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 GOOGLE_CLOUD_PROJECT=new-snap-calorie PORT=8001 python -m apps.meal_analysis_api.main
-```
-
-## 📚 API エンドポイント
-
-### Meal Analysis API (http://localhost:8001)
-
-#### 音声入力による食事分析
-
-```bash
-curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
-  -F "audio_file=@test-audio/lunch_detailed.wav" \
-  -F "user_context=lunch analysis"
-```
-
-#### 画像入力による食事分析
-
-```bash
-curl -X POST "http://localhost:8001/api/v1/meal-analyses/complete" \
-  -F "image=@test_images/food1.jpg" \
-  -F "user_context=dinner analysis"
-```
-
-[Instruction]
-apps に 2 つの API が実装されている。詳細を README.md を見て理解すること。
-
-[命令]
-md_files/barcode_spec_UDC.md と md_files/barcode_spec1.md に沿って実装をしたい。まず、md_files/barcode_spec_UDC.md について、プライマリ API について、FoodData Central (FDC)のセットアップを実装していきたい。
-今回実装するステップ： 0) 「バーコード情報はどこにあるか？」
+0. 「バーコード情報はどこにあるか？」
 
 FDC の「Branded Foods」（USDA Global Branded Food Products Database）に、バーコードを示す**gtin_upc**が入っています（重複する gtin_upc は=製品更新。最新を選ぶには food テーブルの publication_date を見る）。
 fdc.nal.usda.gov
@@ -116,6 +68,24 @@ Nelson Gonzabato
 
 インポート時に主キー・インデックスを設定（branded_food.gtin_upc, food.fdc_id, food_nutrient(fdc_id, nutrient_id)）。
 
-[実装の上でのポイント]
-・一度に複数の Script を実装しないこと。Script ごとに機能の Test をして実装した内容がきちんと動くことを確認して次の機能の実装に移ること。
-・こちらで作業する必要がある部分や必要な情報があれば、その都度どのようにしたらいいか教えて。
+3. データモデリング／同一 GTIN の重複対策
+
+同一 gtin_upc の複数行は「製品更新（改定版）」を意味するため、food.publication_date で最新（最大）を採用。
+fdc.nal.usda.gov
+
+マップの流れ：
+
+gtin_upc → fdc_id（最新版に解決）
+
+fdc_id → food_nutrient（Energy, Fat, Carbs, Protein を抽出）
+
+単位：Energy は kcal、他は g（FDC 標準）。
+
+サービング（1 食分）が必要な場合は、branded_food.serving_size が g のときだけ、100 g あたり値 ×(serving_size/100)で近似の 1 食分値を算出。serving_size_unit が ml 等なら 100 g あたり値を返す（密度情報がないため）。
+fdc.nal.usda.gov
+
+（注）FDC API の**labelNutrients（1 食分ラベル値）は API 詳細で取得できますが、CSV 一括では 100 g 基準が基本です。必要なら API で補完**する設計を用意。
+Postman
+
+4. 実装（サンプルコード：DB 作成 & FastAPI）
+   4-1. 取り込みスクリプト（SQLite, pandas, 分割読み込み）
