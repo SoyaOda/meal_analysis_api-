@@ -5,16 +5,23 @@ import os
 from typing import List, Set
 from pathlib import Path
 
-def load_mynetdiary_ingredient_names() -> List[str]:
+def load_mynetdiary_ingredient_names(exclude_uncooked: bool = False) -> List[str]:
     """
-    MyNetDiaryの食材名リストを読み込む
+    MyNetDiary の食材名リストを読み込む
+    
+    Args:
+        exclude_uncooked: uncooked 食材を除外するかどうか
     
     Returns:
-        List[str]: MyNetDiaryの食材名のリスト
+        List[str]: MyNetDiary の食材名のリスト
     """
     # プロジェクトルートからの相対パス
     current_dir = Path(__file__).parent.parent.parent
-    file_path = current_dir / "data" / "mynetdiary_search_names.txt"
+    
+    if exclude_uncooked:
+        file_path = current_dir / "data" / "mynetdiary_search_names_no_uncooked.txt"
+    else:
+        file_path = current_dir / "data" / "mynetdiary_search_names.txt"
     
     if not file_path.exists():
         raise FileNotFoundError(f"MyNetDiary食材名リストが見つかりません: {file_path}")
@@ -33,14 +40,17 @@ def get_mynetdiary_ingredient_names_as_set() -> Set[str]:
     """
     return set(load_mynetdiary_ingredient_names())
 
-def format_mynetdiary_ingredients_for_prompt() -> str:
+def format_mynetdiary_ingredients_for_prompt(exclude_uncooked: bool = False) -> str:
     """
-    MyNetDiaryの食材名リストをプロンプト用にフォーマット
+    MyNetDiary の食材名リストをプロンプト用にフォーマット
+    
+    Args:
+        exclude_uncooked: uncooked 食材を除外するかどうか
     
     Returns:
         str: プロンプトに組み込み可能な形式の食材名リスト
     """
-    ingredient_names = load_mynetdiary_ingredient_names()
+    ingredient_names = load_mynetdiary_ingredient_names(exclude_uncooked=exclude_uncooked)
     
     # 食材名を番号付きリストとしてフォーマット
     formatted_list = []

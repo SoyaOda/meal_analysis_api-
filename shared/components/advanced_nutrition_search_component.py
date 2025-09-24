@@ -176,7 +176,13 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         try:
             response = await client.get(
                 f"{self.api_base_url}/api/v1/nutrition/suggest",
-                params={"q": term, "limit": 5, "debug": "false"}
+                params={
+                    "q": term, 
+                    "limit": 5, 
+                    "debug": "false",
+                    "search_context": "meal_analysis",
+                    "exclude_uncooked": "true"
+                }
             )
             response.raise_for_status()
 
