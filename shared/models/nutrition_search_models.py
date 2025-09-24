@@ -147,18 +147,7 @@ class NutritionQueryOutput(BaseModel):
         """警告が存在するかチェック"""
         return self.warnings is not None and len(self.warnings) > 0
     
-    def get_search_method(self) -> str:
-        """使用された検索方法を取得"""
-        return self.search_summary.get("search_method", "unknown")
-    
-    def is_advanced_search_result(self) -> bool:
-        """高度な検索の結果かチェック"""
-        search_method = self.get_search_method()
-        return search_method in [
-            "advanced_structured_elasticsearch", 
-            "elasticsearch_strategic",
-            "two_stage_search"
-        ] 
+ 
 
 # Nutrition Query API用の追加モデル（SuggestionResponse関連）
 from typing import List, Optional

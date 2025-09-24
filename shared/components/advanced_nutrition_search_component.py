@@ -242,8 +242,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                     "api_rank": suggestion.get("rank", 1),
                     "match_type": suggestion.get("match_type", "unknown"),
                     "confidence_score": suggestion.get("confidence_score", 0),
-                    "alternative_names": suggestion.get("alternative_names", []),
-                    "search_method": "word_query_api"
+                    "alternative_names": suggestion.get("alternative_names", [])
                 }
             )
             matches.append(match)
@@ -292,7 +291,6 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             "exact_match_rate_percent": round(exact_match_rate, 1),
             "high_quality_match_rate_percent": round(high_quality_match_rate, 1),
             
-            "search_method": method,
             "search_time_ms": search_time_ms,
             "total_results": total_results,
             "word_query_api_enabled": True,

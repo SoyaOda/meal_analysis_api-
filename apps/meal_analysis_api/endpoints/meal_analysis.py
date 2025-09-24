@@ -218,8 +218,7 @@ def _convert_to_simplified_response(result: dict) -> SimplifiedCompleteAnalysisR
         dishes=dishes,
         total_nutrition=total_nutrition,
         ai_model_used=result.get("model_used", "unknown"),
-        match_rate_percent=match_rate,
-        search_method=result.get("processing_summary", {}).get("search_method", "word_query_api")  # デフォルトをword_query_apiに変更
+        match_rate_percent=match_rate
     )
 
 

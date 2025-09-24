@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import logging
 
-from ..components import Phase1Component, ElasticsearchNutritionSearchComponent, MyNetDiaryNutritionSearchComponent, FuzzyIngredientSearchComponent, NutritionCalculationComponent
+from ..components import Phase1Component, NutritionCalculationComponent
 from ..services.deepinfra_service import DeepInfraService
 from ..models import (
     Phase1Input, Phase1Output,
@@ -284,26 +284,20 @@ class MealAnalysisPipeline:
                 },
                 "calculation_summary": nutrition_calculation_result.meal_nutrition.calculation_summary,
                 "warnings": nutrition_calculation_result.meal_nutrition.warnings,
-                "match_rate_percent": nutrition_search_result.get_match_rate() * 100,
-                "search_method": "word_query_api"
+                "match_rate_percent": nutrition_search_result.get_match_rate() * 100
             }
-            
-            # 検索方法の特定（常にWord Query API）
-            search_method = "word_query_api"
-            search_api_method = "word_query_api"
-            
+
             # 完全分析結果の構築
             end_time = datetime.now()
             processing_time = (end_time - start_time).total_seconds()
-            
+
             complete_result = {
                 "analysis_id": analysis_id,
                 "phase1_result": phase1_dict,
                 "nutrition_search_result": {
                     "matches_count": len(nutrition_search_result.matches),
                     "match_rate": nutrition_search_result.get_match_rate(),
-                    "search_summary": nutrition_search_result.search_summary,
-                    "search_method": search_method
+                    "search_summary": nutrition_search_result.search_summary
                 },
 
                 "processing_summary": {
@@ -313,17 +307,14 @@ class MealAnalysisPipeline:
                     "nutrition_calculation_status": "completed",
                     "total_calories": nutrition_calculation_result.meal_nutrition.total_nutrition.calories,
                     "pipeline_status": "completed",
-                    "processing_time_seconds": processing_time,
-                    "search_method": search_method,
-                    "nutrition_search_method": search_api_method
+                    "processing_time_seconds": processing_time
                 },
                 # 最終栄養結果
                 "final_nutrition_result": nutrition_calculation_dict,
                 "metadata": {
                     "pipeline_version": "v2.0",
                     "timestamp": datetime.now().isoformat(),
-                    "components_used": ["Phase1Component", self.search_component_name, "NutritionCalculationComponent"],
-                    "nutrition_search_method": search_api_method
+                    "components_used": ["Phase1Component", self.search_component_name, "NutritionCalculationComponent"]
                 }
             }
             
@@ -358,7 +349,6 @@ class MealAnalysisPipeline:
                     "matches_count": len(nutrition_search_result.matches) if hasattr(nutrition_search_result, 'matches') else 0,
                     "match_rate": nutrition_search_result.get_match_rate(),
                     "search_summary": nutrition_search_result.search_summary,
-                    "search_method": search_method,
                     "matches": matches_data
                 }
                 result_manager.add_phase_result("nutrition_search", nutrition_search_dict)
@@ -395,12 +385,9 @@ class MealAnalysisPipeline:
     
     def get_pipeline_info(self) -> Dict[str, Any]:
         """パイプライン情報を取得"""
-        search_method = "word_query_api"
-            
         return {
             "pipeline_id": self.pipeline_id,
             "version": "v2.0",
-            "nutrition_search_method": search_method,
             "components": [
                 {
                     "component_name": "Phase1Component",
