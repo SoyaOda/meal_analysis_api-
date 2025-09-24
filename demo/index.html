@@ -653,7 +653,7 @@
 
             try {
                 const response = await fetch(
-                    `${API_BASE_URL}/api/v1/nutrition/suggest?q=${encodeURIComponent(query)}&limit=6&skip_exact_match=true`
+                    `${API_BASE_URL}/api/v1/nutrition/suggest?q=${encodeURIComponent(query)}&limit=10&search_context=word_search`
                 );
 
                 if (!response.ok) {
