@@ -45,76 +45,84 @@ curl -X POST "http://localhost:8001/api/v1/meal-analyses/complete" \
 apps に 2 つの API が実装されている。詳細を README.md を見て理解すること。
 
 [命令]
-md_files/barcode_spec_UDC.md と md_files/barcode_spec1.md に沿って実装をしたい。まず、md_files/barcode_spec_UDC.md について、プライマリ API について、FoodData Central (FDC)のセットアップを実装していきたい。
-今回実装するステップ： 0) 「バーコード情報はどこにあるか？」
+md_files/barcode_spec_UDC.md と md_files/barcode_spec1.md に沿って実装をしたい。
+[未実装の部分]
 
-FDC の「Branded Foods」（USDA Global Branded Food Products Database）に、バーコードを示す**gtin_upc**が入っています（重複する gtin_upc は=製品更新。最新を選ぶには food テーブルの publication_date を見る）。
-fdc.nal.usda.gov
+[実装が完了した部分]
 
-栄養値は**food_nutrient テーブルにあり、amount は 100 g あたり**の量で入っています。
-fdc.nal.usda.gov
+## ✅ FDC データベースセットアップ
 
-つまり、**branded_food.gtin_upc → food.fdc_id で製品を特定し、food_nutrient**から必要栄養（Energy, Fat, Carbohydrate, Protein）を取るのが基本です。
+- **FDCDatabaseSetup** クラス実装完了 (`apps/barcode_api/scripts/setup_fdc_database.py`)
+- 453MB の FDC データ自動ダウンロード機能
+- SQLite データベース構築（正しいスキーマ）
+- 2,064,912 件の food レコード
+- 1,977,398 件の branded_food（バーコード付き商品）
+- 26,805,037 件の food_nutrient（栄養データ）
+- 477 件の nutrient（栄養素マスタ）
+- インデックス設定済み（gtin_upc 検索最適化）
+- データ整合性確認機能
+- 強制ダウンロードオプション
+- 進行状況表示機能
 
-1. どのように FDC にアクセスするか？（API？事前 DB インストール？）
-   おすすめ構成（商用・高トラフィック想定）
+## ✅ 依存関係
 
-A. FDC の「一括ダウンロード（CSV/JSON）」をローカル DB へ取り込み、API は使わない（または補助的に）
+- `requirements.txt`に必要パッケージ追加済み（requests, pandas）
 
-FDC は公式に全データの一括ダウンロードを提供しています（CSV/JSON）。ローカル DB 化すれば外部 API コール不要でスケールできます（ゼロ課金）。
-fdc.nal.usda.gov
+[未実装の部分]
 
-「Branded Foods」は毎月更新。月次で差分/全量を再取り込みしてください。
-fdc.nal.usda.gov
+## ❌ バーコード API 実装
 
-メリット：外部レート制限・ダウン・仕様変更の影響を受けにくい／レスポンス高速化。
+### 1. FastAPI アプリケーション
 
-デメリット：初期セットアップ＆定期更新の運用が必要（後述の自動化で解消）。
+- **未実装**: `apps/barcode_api/main.py` - メイン API アプリケーション
+- **未実装**: API サーバー起動設定
 
-代替：API 直叩き（補助／バックアップ用途）
+### 2. データモデル
 
-FDC は REST API（検索・詳細）を提供、API キー（api.data.gov）が必要。レート制限あり（デフォルト 1,000 リクエスト/時/キー。必要に応じて増枠相談）。
-Postman
-+1
+- **未実装**: `apps/barcode_api/models/nutrition.py` - 栄養情報データモデル
+- **未実装**: `apps/barcode_api/models/barcode.py` - バーコード関連モデル
 
-注意：/foods/search で GTIN を直接フィルタするパラメータは公表されていないため、query にバーコード数字を入れて dataType=Branded で検索 →fdcId 取得 →/food/{fdcId} で詳細、という実装が現実的です（Web のヘルプ上は GTIN 検索可能と明記）。
-fdc.nal.usda.gov
+### 3. ビジネスロジック
 
-本設計では API は未ヒット時の補助として提案します（ローカル DB が主）。
+- **未実装**: `apps/barcode_api/services/fdc_service.py` - FDC データベース検索サービス
+- **未実装**: `apps/barcode_api/services/gtin_service.py` - GTIN 正規化処理
+- **未実装**: `apps/barcode_api/services/cache_service.py` - キャッシュ管理
 
-2. 導入手順（コマンドベース or Web ブラウザ）
-   2-1. データ取得
+### 4. API エンドポイント
 
-方法 1（推奨／自動化向け）：コマンドでダウンロード（実運用は CI で最新アーカイブ URL を取得して curl -L -O→unzip）。
-最新のダウンロードページ（リリースごとの ZIP リンクあり）から URL を取得してスクリプトに渡してください。
-fdc.nal.usda.gov
+- **未実装**: `apps/barcode_api/api/barcode.py` - バーコード検索 API
+- **未実装**: `POST /api/v1/barcode/lookup` エンドポイント
+- **未実装**: バーコードから fdc_id 検索ロジック
+- **未実装**: 栄養情報取得・整形ロジック
 
-方法 2（手動）：ブラウザでダウンロードページにアクセス → 最新の**“Full Download of All Data Types (CSV or JSON)”**を取得。
-fdc.nal.usda.gov
+### 5. GTIN 処理機能
 
-必要ファイル（CSV 想定）
+- **未実装**: UPC-12 → EAN-13 変換
+- **未実装**: チェックデジット検証
+- **未実装**: GTIN 正規化（0 埋め処理）
 
-food.csv（fdc_id, publication_date ほか）
+### 6. データ検索・処理
 
-branded_food.csv（fdc_id, gtin_upc, serving_size, serving_size_unit ほか）
-fdc.nal.usda.gov
+- **未実装**: 重複 GTIN 最新版選択（publication_date 使用）
+- **未実装**: サービングサイズ計算ロジック
+- **未実験**: 主要栄養素抽出（Energy=1008, Fat=1004, Carbohydrate=1005, Protein=1003）
 
-food_nutrient.csv（100 g あたり各栄養の amount、fdc_id, nutrient_id）
-fdc.nal.usda.gov
+### 7. キャッシュシステム
 
-nutrient.csv（nutrient_id と名称/単位のマスタ）
+- **未実装**: インメモリキャッシュ（cachetools.TTLCache）
+- **未実装**: Redis 対応（オプション）
 
-栄養 ID（FDC 標準）：Energy=1008, Fat=1004, Carbohydrate=1005, Protein=1003（新体系）。※Energy=1008 については FDC 公式の仕様文書にも記載があります。
-fdc.nal.usda.gov
-+2
-Nelson Gonzabato
-+2
+### 8. Open Food Facts 連携
 
-2-2. ローカル DB 作成（SQLite 例）
+- **未実装**: FDC 未ヒット時のフォールバック検索
+- **未実装**: OFF API 連携
+- **未実装**: レートリミット管理
 
-運用は PostgreSQL/SQLite/DuckDB のいずれでも OK。まずは SQLite で最小構成 → 必要に応じて Postgres へ移行が実装コスト低。
+### 9. エラーハンドリング・ログ
 
-インポート時に主キー・インデックスを設定（branded_food.gtin_upc, food.fdc_id, food_nutrient(fdc_id, nutrient_id)）。
+- **未実装**: 包括的エラーハンドリング
+- **未実装**: ログ機能
+- **未実装**: ヘルスチェックエンドポイント
 
 [実装の上でのポイント]
 ・一度に複数の Script を実装しないこと。Script ごとに機能の Test をして実装した内容がきちんと動くことを確認して次の機能の実装に移ること。
