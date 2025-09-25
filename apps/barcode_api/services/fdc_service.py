@@ -16,6 +16,7 @@ from ..models.nutrition import (
     HouseholdServingInfo, AlternativeNutrients
 )
 from ..utils.unit_parser import UnitParser
+from .cache_service import get_cache_service
 
 
 logger = logging.getLogger(__name__)
@@ -24,12 +25,13 @@ logger = logging.getLogger(__name__)
 class FDCDatabaseService:
     """FDCデータベース検索サービス"""
 
-    def __init__(self, database_path: Optional[str] = None):
+    def __init__(self, database_path: Optional[str] = None, use_cache: bool = True):
         """
         FDCデータベースサービスの初期化
 
         Args:
             database_path: データベースファイルのパス。Noneの場合はデフォルトパスを使用
+            use_cache: キャッシュを使用するかどうか
         """
         if database_path is None:
             # プロジェクトルートからの相対パス
@@ -44,11 +46,18 @@ class FDCDatabaseService:
         # 単位解析器を初期化
         self.unit_parser = UnitParser()
 
-        logger.info(f"FDCデータベース初期化完了: {self.db_path}")
+        # キャッシュサービスを初期化
+        self.use_cache = use_cache
+        if use_cache:
+            self.cache_service = get_cache_service(max_size=1000, ttl_seconds=3600)  # 1時間キャッシュ
+        else:
+            self.cache_service = None
+
+        logger.info(f"FDCデータベース初期化完了: {self.db_path} (キャッシュ: {'有効' if use_cache else '無効'})")
 
     def search_by_gtin(self, gtin: str, include_all_nutrients: bool = False) -> Optional[NutritionResponse]:
         """
-        GTINコードで製品を検索（多単位栄養価対応）
+        GTINコードで製品を検索（多単位栄養価対応・キャッシュ対応）
 
         Args:
             gtin: GTINまたはUPCコード
@@ -57,6 +66,13 @@ class FDCDatabaseService:
         Returns:
             栄養情報レスポンス、見つからない場合はNone
         """
+        # キャッシュチェック
+        if self.use_cache and self.cache_service:
+            cached_result = self.cache_service.get(gtin, include_all_nutrients)
+            if cached_result:
+                # キャッシュからNutritionResponseオブジェクトを復元
+                return NutritionResponse(**cached_result)
+
         try:
             conn = sqlite3.connect(self.db_path)
             conn.row_factory = sqlite3.Row  # 辞書形式でアクセス可能にする
@@ -139,7 +155,8 @@ class FDCDatabaseService:
 
             conn.close()
 
-            return NutritionResponse(
+            # レスポンス作成
+            response = NutritionResponse(
                 success=True,
                 gtin=gtin,
                 product=ProductInfo(**product_info),
@@ -152,6 +169,14 @@ class FDCDatabaseService:
                 data_source="FDC",
                 cached=False
             )
+
+            # キャッシュに保存
+            if self.use_cache and self.cache_service:
+                # レスポンスを辞書に変換してキャッシュに保存
+                cache_data = response.model_dump()
+                self.cache_service.set(gtin, cache_data, include_all_nutrients)
+
+            return response
 
         except Exception as e:
             logger.error(f"GTIN検索エラー ({gtin}): {e}")

@@ -6,6 +6,7 @@
 """
 
 import logging
+from datetime import datetime
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 
@@ -148,6 +149,66 @@ async def get_database_statistics(
             status_code=500,
             detail="統計情報の取得に失敗しました"
         )
+
+@router.get("/cache-stats")
+async def get_cache_statistics():
+    """
+    キャッシュ統計情報を取得
+    """
+    try:
+        fdc_service = get_fdc_service()
+        
+        if not fdc_service.use_cache or not fdc_service.cache_service:
+            return {
+                "cache_enabled": False,
+                "message": "キャッシュが無効化されています"
+            }
+            
+        cache_stats = fdc_service.cache_service.get_stats()
+        cache_health = fdc_service.cache_service.health_check()
+        
+        return {
+            "cache_enabled": True,
+            "statistics": cache_stats,
+            "health": cache_health,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"キャッシュ統計取得エラー: {e}")
+        raise HTTPException(status_code=500, detail="キャッシュ統計情報の取得に失敗しました")
+
+
+@router.delete("/cache")
+async def clear_cache():
+    """
+    キャッシュをクリア
+    """
+    try:
+        fdc_service = get_fdc_service()
+        
+        if not fdc_service.use_cache or not fdc_service.cache_service:
+            return {
+                "cache_enabled": False,
+                "message": "キャッシュが無効化されています"
+            }
+            
+        success = fdc_service.cache_service.clear()
+        
+        if success:
+            return {
+                "success": True,
+                "message": "キャッシュをクリアしました",
+                "timestamp": datetime.now().isoformat()
+            }
+        else:
+            raise HTTPException(status_code=500, detail="キャッシュクリアに失敗しました")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"キャッシュクリアエラー: {e}")
+        raise HTTPException(status_code=500, detail="キャッシュクリアに失敗しました")
 
 
 # エラーハンドラー（将来の拡張用）
