@@ -44,7 +44,7 @@ class ServingInfo(BaseModel):
 
 class ProductInfo(BaseModel):
     """製品基本情報"""
-    fdc_id: int = Field(..., description="FDC ID")
+    fdc_id: Optional[int] = Field(None, description="FDC ID（FDCデータベース由来の場合のみ）")
     gtin_upc: str = Field(..., description="GTINまたはUPCコード")
     description: str = Field(..., description="製品名・説明")
     brand_owner: Optional[str] = Field(None, description="ブランドオーナー")
@@ -212,6 +212,48 @@ class AlternativeNutrients(BaseModel):
             }
         }
 
+class NutrientUnitOption(BaseModel):
+    """単位オプションごとの栄養価"""
+    unit_id: str = Field(..., description="単位ID（1g, 1cup, 1piece等）")
+    display_name: str = Field(..., description="表示名")
+    unit_type: str = Field(..., description="単位種別（weight/volume/count）")
+    is_primary: bool = Field(False, description="メーカー推奨単位かどうか")
+    equivalent_weight_g: Optional[float] = Field(None, description="グラム換算値")
+    
+    # 栄養価データ
+    energy_kcal: Optional[float] = Field(None, description="エネルギー (kcal)")
+    energy_kj: Optional[float] = Field(None, description="エネルギー (kJ)")
+    protein_g: Optional[float] = Field(None, description="タンパク質 (g)")
+    fat_g: Optional[float] = Field(None, description="脂質 (g)")
+    carbohydrate_g: Optional[float] = Field(None, description="炭水化物 (g)")
+    fiber_g: Optional[float] = Field(None, description="食物繊維 (g)")
+    sugars_g: Optional[float] = Field(None, description="糖類 (g)")
+    saturated_fat_g: Optional[float] = Field(None, description="飽和脂肪酸 (g)")
+    trans_fat_g: Optional[float] = Field(None, description="トランス脂肪酸 (g)")
+    cholesterol_mg: Optional[float] = Field(None, description="コレステロール (mg)")
+    sodium_mg: Optional[float] = Field(None, description="ナトリウム (mg)")
+    calcium_mg: Optional[float] = Field(None, description="カルシウム (mg)")
+    iron_mg: Optional[float] = Field(None, description="鉄 (mg)")
+    potassium_mg: Optional[float] = Field(None, description="カリウム (mg)")
+    vitamin_c_mg: Optional[float] = Field(None, description="ビタミンC (mg)")
+    vitamin_a_iu: Optional[float] = Field(None, description="ビタミンA (IU)")
+    vitamin_d_iu: Optional[float] = Field(None, description="ビタミンD (IU)")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "unit_id": "1cup",
+                "display_name": "1 cup (30g)",
+                "unit_type": "volume",
+                "is_primary": True,
+                "equivalent_weight_g": 30.0,
+                "energy_kcal": 135.0,
+                "protein_g": 5.0,
+                "fat_g": 11.0,
+                "carbohydrate_g": 11.0
+            }
+        }
+
 
 class NutritionResponse(BaseModel):
     """バーコード検索APIのレスポンス"""
@@ -223,6 +265,7 @@ class NutritionResponse(BaseModel):
     nutrients_per_100g: Optional[MainNutrients] = Field(None, description="100gあたりの主要栄養素")
     nutrients_per_serving: Optional[ServingNutrients] = Field(None, description="1食分の栄養素")
     alternative_nutrients: Optional[List[AlternativeNutrients]] = Field(None, description="代替単位での栄養素")
+    unit_options: Optional[List[NutrientUnitOption]] = Field(None, description="複数単位での栄養価オプション")
     all_nutrients: Optional[List[NutrientInfo]] = Field(None, description="全栄養素詳細情報")
     data_source: str = Field(default="FDC", description="データソース")
     cached: bool = Field(default=False, description="キャッシュから取得したかどうか")
@@ -266,6 +309,30 @@ class NutritionResponse(BaseModel):
                 "alternative_nutrients": [
                     {
                         "unit_description": "per cookie",
+                        "energy_kcal": 67.5,
+                        "fat_g": 2.8,
+                        "carbohydrate_g": 9.8,
+                        "protein_g": 1.0
+                    }
+                ],
+                "unit_options": [
+                    {
+                        "unit_id": "1g",
+                        "display_name": "1グラム",
+                        "unit_type": "weight",
+                        "is_primary": False,
+                        "equivalent_weight_g": 1.0,
+                        "energy_kcal": 4.5,
+                        "fat_g": 0.185,
+                        "carbohydrate_g": 0.652,
+                        "protein_g": 0.068
+                    },
+                    {
+                        "unit_id": "1cookie",
+                        "display_name": "1枚（クッキー）",
+                        "unit_type": "count",
+                        "is_primary": True,
+                        "equivalent_weight_g": 15.0,
                         "energy_kcal": 67.5,
                         "fat_g": 2.8,
                         "carbohydrate_g": 9.8,

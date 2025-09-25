@@ -25,13 +25,14 @@ logger = logging.getLogger(__name__)
 class FDCDatabaseService:
     """FDCデータベース検索サービス"""
 
-    def __init__(self, database_path: Optional[str] = None, use_cache: bool = True):
+    def __init__(self, database_path: Optional[str] = None, use_cache: bool = True, use_off_fallback: bool = True):
         """
         FDCデータベースサービスの初期化
 
         Args:
             database_path: データベースファイルのパス。Noneの場合はデフォルトパスを使用
             use_cache: キャッシュを使用するかどうか
+            use_off_fallback: Open Food Factsフォールバックを使用するかどうか
         """
         if database_path is None:
             # プロジェクトルートからの相対パス
@@ -46,6 +47,10 @@ class FDCDatabaseService:
         # 単位解析器を初期化
         self.unit_parser = UnitParser()
 
+        # SmartUnitGeneratorを初期化
+        from ..utils.smart_unit_generator import SmartUnitGenerator
+        self.unit_generator = SmartUnitGenerator()
+
         # キャッシュサービスを初期化
         self.use_cache = use_cache
         if use_cache:
@@ -53,11 +58,19 @@ class FDCDatabaseService:
         else:
             self.cache_service = None
 
-        logger.info(f"FDCデータベース初期化完了: {self.db_path} (キャッシュ: {'有効' if use_cache else '無効'})")
+        # Open Food Factsフォールバックサービスを初期化
+        self.use_off_fallback = use_off_fallback
+        if use_off_fallback:
+            from .off_service import get_off_service
+            self.off_service = get_off_service(timeout=10.0)
+        else:
+            self.off_service = None
 
-    def search_by_gtin(self, gtin: str, include_all_nutrients: bool = False) -> Optional[NutritionResponse]:
+        logger.info(f"FDCデータベース初期化完了: {self.db_path} (キャッシュ: {'有効' if use_cache else '無効'}, OFF: {'有効' if use_off_fallback else '無効'})")
+
+    async def search_by_gtin(self, gtin: str, include_all_nutrients: bool = False) -> Optional[NutritionResponse]:
         """
-        GTINコードで製品を検索（多単位栄養価対応・キャッシュ対応）
+        GTINコードで製品を検索（多単位栄養価対応・キャッシュ対応・Open Food Factsフォールバック）
 
         Args:
             gtin: GTINまたはUPCコード
@@ -73,6 +86,40 @@ class FDCDatabaseService:
                 # キャッシュからNutritionResponseオブジェクトを復元
                 return NutritionResponse(**cached_result)
 
+        # まずFDCデータベースで検索
+        fdc_result = await self._search_fdc_database(gtin, include_all_nutrients)
+        if fdc_result:
+            # キャッシュに保存
+            if self.use_cache and self.cache_service:
+                cache_data = fdc_result.model_dump()
+                self.cache_service.set(gtin, cache_data, include_all_nutrients)
+            return fdc_result
+
+        # FDCで見つからない場合、Open Food Factsで検索
+        if self.use_off_fallback and self.off_service:
+            logger.info(f"FDC未ヒットのためOpen Food Factsでフォールバック検索: {gtin}")
+            off_result = await self.off_service.lookup_barcode(gtin)
+            if off_result:
+                # キャッシュに保存
+                if self.use_cache and self.cache_service:
+                    cache_data = off_result.model_dump()
+                    self.cache_service.set(gtin, cache_data, include_all_nutrients)
+                return off_result
+
+        logger.warning(f"製品が見つかりません（FDC・OFF両方で未ヒット）: {gtin}")
+        return None
+
+    async def _search_fdc_database(self, gtin: str, include_all_nutrients: bool = False) -> Optional[NutritionResponse]:
+        """
+        FDCデータベースで製品を検索
+
+        Args:
+            gtin: GTINまたはUPCコード
+            include_all_nutrients: 全栄養素情報を含めるかどうか
+
+        Returns:
+            栄養情報レスポンス、見つからない場合はNone
+        """
         try:
             conn = sqlite3.connect(self.db_path)
             conn.row_factory = sqlite3.Row  # 辞書形式でアクセス可能にする
@@ -148,7 +195,23 @@ class FDCDatabaseService:
                         for alt in alt_nutrients:
                             alternative_nutrients.append(AlternativeNutrients(**alt))
 
-            # 6. 全栄養素情報を取得（オプション）
+            # 6. スマートユニットオプションを生成
+            unit_options = None
+            try:
+                product_info_obj = ProductInfo(**product_info)
+                serving_size_g = serving_info.serving_size if serving_info else None
+                
+                unit_options = self.unit_generator.generate_unit_options(
+                    nutrients_100g=main_nutrients,
+                    product_info=product_info_obj,
+                    household_serving_info=household_serving_info,
+                    serving_size_g=serving_size_g
+                )
+                logger.debug(f"スマートユニット生成完了: {len(unit_options)}個 ({gtin})")
+            except Exception as e:
+                logger.warning(f"スマートユニット生成エラー ({gtin}): {e}")
+
+            # 7. 全栄養素情報を取得（オプション）
             all_nutrients = None
             if include_all_nutrients:
                 all_nutrients = self._get_all_nutrients(conn, product_info['fdc_id'])
@@ -165,21 +228,16 @@ class FDCDatabaseService:
                 nutrients_per_100g=main_nutrients,
                 nutrients_per_serving=serving_nutrients,
                 alternative_nutrients=alternative_nutrients if alternative_nutrients else None,
+                unit_options=unit_options,
                 all_nutrients=all_nutrients,
                 data_source="FDC",
                 cached=False
             )
 
-            # キャッシュに保存
-            if self.use_cache and self.cache_service:
-                # レスポンスを辞書に変換してキャッシュに保存
-                cache_data = response.model_dump()
-                self.cache_service.set(gtin, cache_data, include_all_nutrients)
-
             return response
 
         except Exception as e:
-            logger.error(f"GTIN検索エラー ({gtin}): {e}")
+            logger.error(f"FDCデータベース検索エラー ({gtin}): {e}")
             if 'conn' in locals():
                 conn.close()
             return None

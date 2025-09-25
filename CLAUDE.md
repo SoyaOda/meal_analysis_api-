@@ -172,13 +172,43 @@ md_files/barcode_spec_UDC.md と md_files/barcode_spec1.md に沿って実装を
 - **完了**: キャッシュ統計API（`GET /api/v1/barcode/cache-stats`）
 - **完了**: キャッシュクリアAPI（`DELETE /api/v1/barcode/cache`）
 
+### Open Food Facts フォールバック連携 ✅
+
+- **完了**: `apps/barcode_api/services/off_service.py` - Open Food Facts APIクライアント
+- **完了**: FDC未ヒット時の自動フォールバック検索機能
+- **完了**: OFF栄養素データの正規化・変換処理
+- **完了**: HTTPエラー・タイムアウト処理
+- **完了**: シングルトンパターンによるサービス管理
+- **完了**: ヘルスチェック機能（Nutella製品でテスト）
+- **完了**: 非同期HTTPクライアント（httpx使用）
+- **完了**: データソース識別（`"data_source": "Open Food Facts"`）
+
+### スマート単位生成システム ✅ (v3.0.0)
+
+- **完了**: `apps/barcode_api/utils/smart_unit_generator.py` - 食品タイプ別単位生成エンジン
+- **完了**: `NutrientUnitOption` データモデル（全17栄養素対応）
+- **完了**: `unit_options` フィールドをNutritionResponseに追加
+- **完了**: 食品タイプ自動判定（liquid, baked_goods, snacks, cereal, candy）
+- **完了**: 食品タイプ別密度推定（0.3〜1.0）による体積→重量変換
+- **完了**: メーカー指定サービング優先（`is_primary: true`）
+- **完了**: 家庭用サービング情報解析・統合
+- **完了**: 推奨単位自動生成（cup, oz, piece等）
+- **完了**: 重複除去・優先順位ソート機能
+- **完了**: エラー時フォールバック単位（1g, 100g）
+- **完了**: 英語表記出力（国際対応）
+- **完了**: FDC・OFF両サービス統合済み
+
 ## ❌ 未実装の部分
 
-### Open Food Facts 連携 ❌
+### 現在未実装の項目はありません
 
-- **未実装**: FDC 未ヒット時のフォールバック検索
-- **未実装**: OFF API 連携
-- **未実装**: レートリミット管理
+すべての主要機能が実装完了しています：
+- ✅ FDCデータベース検索（プライマリ）
+- ✅ Open Food Factsフォールバック（セカンダリ）
+- ✅ スマート単位生成システム
+- ✅ 17栄養素対応
+- ✅ TTLキャッシュシステム
+- ✅ 英語表記出力
 
 [実装の上でのポイント]
 ・一度に複数の Script を実装しないこと。Script ごとに機能の Test をして実装した内容がきちんと動くことを確認して次の機能の実装に移ること。

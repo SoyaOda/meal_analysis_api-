@@ -41,7 +41,7 @@ async def lookup_barcode(
     fdc_service: FDCDatabaseService = Depends(get_fdc_service)
 ) -> NutritionResponse:
     """
-    バーコードから栄養情報を検索
+    バーコードから栄養情報を検索（Open Food Factsフォールバック対応）
 
     Args:
         request: バーコード検索リクエスト
@@ -64,20 +64,20 @@ async def lookup_barcode(
                 detail="GTINコードは数字のみである必要があります"
             )
 
-        # FDCデータベースで検索
-        result = fdc_service.search_by_gtin(
+        # FDCデータベース + Open Food Factsフォールバックで検索
+        result = await fdc_service.search_by_gtin(
             gtin=gtin,
             include_all_nutrients=request.include_all_nutrients
         )
 
         if not result:
-            logger.warning(f"製品が見つかりません: {gtin}")
+            logger.warning(f"製品が見つかりません（FDC・OFF両方で未ヒット）: {gtin}")
             raise HTTPException(
                 status_code=404,
                 detail=f"バーコード '{gtin}' の製品が見つかりません"
             )
 
-        logger.info(f"バーコード検索成功: {gtin} -> FDC ID: {result.product.fdc_id if result.product else 'None'}")
+        logger.info(f"バーコード検索成功: {gtin} -> {result.data_source} -> {result.product.description if result.product else 'None'}")
         return result
 
     except HTTPException:
