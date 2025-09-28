@@ -1,0 +1,8 @@
+# テスト結果ファイル
+*.json
+*.log
+*.csv
+
+# ただし、このディレクトリは保持
+!.gitignore
+!README.md
