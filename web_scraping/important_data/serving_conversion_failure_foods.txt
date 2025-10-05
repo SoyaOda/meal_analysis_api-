@@ -1,0 +1,113 @@
+================================================================================
+Serving変換情報取得失敗食材リスト
+================================================================================
+
+抽出日時: 2025-10-05
+総失敗数: 14食材（重複除外後: 6食材）
+
+以下の食材は "XXX cals / YYY g" パターンのServing変換情報が
+raw_serving_dataから抽出できませんでした。
+
+Web（MyNetDiary）で直接確認して、以下の形式で情報を入力してください：
+
+形式:
+  食材番号. 食材名
+  カロリー情報
+  unit1 XXXcals / YYYg
+  unit2 XXXcals / YYYg
+  ...
+  ---
+
+================================================================================
+失敗食材一覧（重複除外済み）
+================================================================================
+
+1128. Baker's yeast compressed, cake (0.6 oz)
+18cals
+Select Serving
+cake (0.6 oz) 18cals / 17 g
+gram 1cals / 1 g
+oz 30cals / 28.3 g
+lb 476cals / 453.6 g
+
+
+---
+
+1129. Cardamom, tbsp, ground
+18cals
+Select Serving
+tbsp, ground 18cals / 5.8 g
+tsp, ground 6cals / 2 g
+oz 88cals / 28.3 g
+gram 3cals / 1 g
+lb 1,411cals / 453.6 g
+
+
+---
+
+1140. Sea bass mixed species raw, fillet
+125cals
+Select Serving
+fillet 125cals / 129 g
+gram 1cals / 1 g
+3 oz 82cals / 85 g
+lb 440cals / 453.6 g
+
+
+---
+
+1147. Jellies, 1 tbsp
+58cals
+Select Serving
+tbsp 58cals / 21 g
+packet (0.5 oz) 39cals / 14 g
+gram 3cals / 1 g
+oz 79cals / 28.3 g
+lb 1,261cals / 453.6 g
+
+
+---
+
+1156. Walnuts dry roasted with salt, oz
+182cals
+Select Serving
+oz 182cals / 28.3 g
+gram 6cals / 1 g
+lb 2,917cals / 453.6 g
+
+
+---
+
+1157. Walnuts glazed, oz
+142cals
+Select Serving
+oz 142cals / 28.3 g
+gram 5cals / 1 g
+lb 2,268cals / 453.6 g
+
+
+---
+
+================================================================================
+入力例
+================================================================================
+
+526. Chicken fat, cup
+1,845cals
+cup 1845cals / 205g
+tablespoon 115cals / 12.8g
+teaspoon 38cals / 4.3g
+gram 9cals / 1g
+oz 255cals / 28.3g
+---
+
+================================================================================
+注意事項
+================================================================================
+
+• 上記6食材のみ入力してください（重複は除外済み）
+• "None"や除外すべき食材がある場合は、その旨を記載してください
+• Webで見つからない場合は "Web情報なし" と記載してください
+• できるだけ多くのunit変換情報を記載してください（cup, tablespoon, teaspoon, gram, oz等）
+
+================================================================================

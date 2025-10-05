@@ -13,6 +13,8 @@ MyNetDiaryの食材データを効率的にスクレイピングし、包括的�
 - **Playwright使用**: ChromeDriverの安定性問題を完全解決
 - **生データ収集**: Servingと栄養素の生情報を抽出・保存
 - **柔軟な収集モード**: 全食材、サンプル、カテゴリ別収集に対応
+- **中断再開機能**: 処理中断時の自動再開、中間保存対応
+- **進行状況管理**: 10食材ごとの中間保存、処理済み食材のスキップ
 
 #### 使用方法
 
@@ -28,10 +30,52 @@ python comprehensive_food_data_collection_main.py --mode sample
 
 # 特定カテゴリのみ
 python comprehensive_food_data_collection_main.py --mode category --category "Fish & Seafood"
+
+# 中断再開機能
+# 自動再開（最新の未完了ファイルから）
+python comprehensive_food_data_collection_main.py --auto-resume
+
+# 特定ファイルから再開
+python comprehensive_food_data_collection_main.py --resume-file data/comprehensive_food_collection_all_20250928_123456.json
+
+# 中間保存間隔を調整（デフォルト10食材ごと）
+python comprehensive_food_data_collection_main.py --save-interval 5
+
+# 組み合わせ例：自動再開 + 間隔調整
+python comprehensive_food_data_collection_main.py --auto-resume --save-interval 20
+```
+
+#### 中断再開機能の詳細
+
+**自動未完了ファイル検出**
+- `data/`ディレクトリから最新の未完了ファイルを自動検出
+- `collection_summary`の`total_foods`と実際の結果数を比較
+- 成功率100%未満のファイルを未完了として判定
+
+**処理済み食材のスキップ**
+- `overall_success: true`の食材を処理済みとして認識
+- 未処理の食材のみを抽出してフィルタリング
+- 重複処理を完全に回避
+
+**中間保存システム**
+- デフォルト10食材ごとに自動保存
+- `*_intermediate_*.json`ファイルに中間結果を保存
+- 処理中断時でもデータロストを防止
+
+**使用例**
+```bash
+# 処理を開始
+python comprehensive_food_data_collection_main.py
+
+# Ctrl+C で中断後、自動再開
+python comprehensive_food_data_collection_main.py --auto-resume
+
+# 200食材処理済み → 残り1,293食材から再開
 ```
 
 #### 出力結果
 - **出力ファイル**: `data/comprehensive_food_collection_all_YYYYMMDD_HHMMSS.json`
+- **中間ファイル**: `data/comprehensive_food_collection_all_YYYYMMDD_HHMMSS_intermediate_N.json`
 - **データ構造**: 食材ごとのServing情報 + 栄養素情報の生データ
 - **カタログ情報**: カテゴリ名、食材名の正規化情報を含む
 
@@ -353,12 +397,49 @@ python tests/test_catalog_integration.py --rebuild-catalog
 - 月1回程度のカタログ再構築を推奨
 - 新規食材追加・削除に対応
 
-## 📝 出力ファイル
+## 📝 データ処理パイプライン
 
-### 自動生成ファイル
+### 🔄 完全な処理フロー
+
+1. **生データ収集** (comprehensive_food_data_collection_main.py)
+   - 1,588個の食材を収集
+   - 出力: `data/comprehensive_food_collection_all_*.json`
+
+2. **後処理・フォーマット** (scripts/food_data_processor.py)
+   - Web収集1,124食材をAPI用フォーマットに変換
+   - 出力: `processed_data/processed_foods_*.json`
+
+3. **手作業食材の処理** (scripts/manual_foods_processor.py)
+   - manual_work_50_foods.txtから47食材を処理
+   - 出力: `processed_data/manual_foods_processed_*.json`
+
+4. **重複除外統合** (scripts/merge_without_duplicates.py)
+   - Web収集1,124 + 手作業28（重複19除外）= 1,152食材
+   - 出力: **`processed_data/all_foods_final_1152.json`** ← **✅ 最終成果物**
+
+### 📊 最終成果物
+
+**完成版データファイル:**
+- **`processed_data/all_foods_final_1152.json`** - 1,152食材の完全データ（重複なし）
+- **`processed_data/all_foods_final_1152_summary.json`** - サマリー統計
+
+**データ内訳:**
+- Web収集食材: 1,124個
+- 手作業食材（重複除外後）: 28個
+- **合計: 1,152食材**（重複19個を除外済み）
+
+**データ品質:**
+- ✅ 元データとの100%一致確認済み
+- ✅ Serving情報の完全性検証済み
+- ✅ 重複除外完了
+- ✅ API使用可能な形式
+
+### 🗂️ 自動生成ファイル
 - `data/comprehensive_food_collection_all_*.json` - 網羅的収集結果
 - `data/structured_nutrition_data_*.json` - 構造化データ
 - `data/playwright_improved_comprehensive_collection_*.json` - Playwrightテスト結果
+- `data/manual_work_50_foods.txt` - 手作業入力食材（47個）
+- `processed_data/all_foods_final_1152.json` - **✅ 最終完成版（API用）**
 - `test_results/food_catalog_latest.json` - 最新カタログ (Selenium版)
 - `test_results/food_catalog_YYYYMMDD_HHMMSS.json` - 履歴カタログ
 
@@ -380,6 +461,9 @@ python comprehensive_food_data_collection_main.py
 
 # サンプル実行 (テスト用)
 python comprehensive_food_data_collection_main.py --mode sample --limit 10
+
+# 中断後の再開 (重要: 長時間処理のため)
+python comprehensive_food_data_collection_main.py --auto-resume
 ```
 
 ### 3. データ構造化
@@ -403,10 +487,12 @@ python tests/test_catalog_integration.py
 
 1. **安定性の向上** - PlaywrightによりChromeDriverクラッシュ問題を完全解決
 2. **包括的データ収集** - 1,493個の全食材に対応
-3. **効率的な処理** - FOODタブリセットによる高速ナビゲーション
-4. **生データ保存** - フィルタリングなしの完全な情報保存
-5. **構造化パイプライン** - 生データ→構造化データの変換システム
-6. **一度構築、何度でも活用** - カタログシステムによる効率化
-7. **コンポーネント分離** - 各機能が独立しており、再利用可能
-8. **エラー耐性** - 各段階でのフォールバック機能
-9. **永続化対応** - 一度の作業で継続利用可能
+3. **中断再開機能** - 処理中断時の自動再開、データロスなし
+4. **効率的な処理** - FOODタブリセットによる高速ナビゲーション
+5. **生データ保存** - フィルタリングなしの完全な情報保存
+6. **進行状況管理** - 10食材ごとの中間保存、処理済みスキップ
+7. **構造化パイプライン** - 生データ→構造化データの変換システム
+8. **一度構築、何度でも活用** - カタログシステムによる効率化
+9. **コンポーネント分離** - 各機能が独立しており、再利用可能
+10. **エラー耐性** - 各段階でのフォールバック機能
+11. **永続化対応** - 一度の作業で継続利用可能

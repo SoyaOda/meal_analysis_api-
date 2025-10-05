@@ -1,0 +1,917 @@
+================================================================================
+複数候補あり食材リスト（2個以上マッチ）
+================================================================================
+総数: 67個
+================================================================================
+
+1. Black beans canned
+   ID: 10000000004
+   マッチ数: 3個
+   候補:
+      1. Black beans canned, cup 218cals
+         ID: food_0479
+      2. Black beans canned low sodium, cup 218cals
+         ID: food_0480
+      3. Black beans canned no salt added, cup 220cals
+         ID: food_0481
+
+2. Cannellini or white kidney beans canned
+   ID: 10000000010
+   マッチ数: 2個
+   候補:
+      1. Cannellini or white kidney beans canned, cup 299cals
+         ID: food_0486
+      2. Cannellini or white kidney beans canned no salt added, cup 200cals
+         ID: food_0487
+
+3. Chickpeas or garbanzo beans canned
+   ID: 10000000014
+   マッチ数: 2個
+   候補:
+      1. Chickpeas or garbanzo beans canned, can drained, rinsed 353cals
+         ID: food_0490
+      2. Chickpeas or garbanzo beans canned no salt added, cup 361cals
+         ID: food_0491
+
+4. Kidney beans canned
+   ID: 10000000022
+   マッチ数: 3個
+   候補:
+      1. Cannellini or white kidney beans canned, cup 299cals
+         ID: food_0486
+      2. Cannellini or white kidney beans canned no salt added, cup 200cals
+         ID: food_0487
+      3. Kidney beans canned, can drained solids 330cals
+         ID: food_0498
+
+5. Liqueur
+   ID: 10000000080
+   マッチ数: 2個
+   候補:
+      1. Liqueur chocolate, serving 336cals
+         ID: food_0952
+      2. Liqueur, serving 284cals
+         ID: food_1144
+
+6. Quinine water
+   ID: 10000000090
+   マッチ数: 2個
+   候補:
+      1. Quinine water, serving 33cals
+         ID: food_0960
+      2. Quinine water diet, serving 0cals
+         ID: food_0961
+
+7. Water
+   ID: 10000000113
+   マッチ数: 14個
+   候補:
+      1. Watercress raw, cup, chopped 4cals
+         ID: food_0311
+      2. Sardines canned in water drained, can 164cals
+         ID: food_0457
+      3. Tuna light canned in water, cup, solid or chunks 132cals
+         ID: food_0471
+      4. Tuna white albacore canned in water, can 220cals
+         ID: food_0473
+      5. Carbonated tonic water, fl oz 10cals
+         ID: food_0935
+      6. Diet tonic water, serving 0cals
+         ID: food_0941
+      7. Ice (frozen water), fl oz 0cals
+         ID: food_0948
+      8. Quinine water, serving 33cals
+         ID: food_0960
+      9. Quinine water diet, serving 0cals
+         ID: food_0961
+      10. Seltzer water, serving 0cals
+         ID: food_0969
+      11. Coconut water raw, cup 46cals
+         ID: food_1082
+      12. Water, cup 0cals
+         ID: food_1146
+      13. Watermelon, cup, balls 46cals
+         ID: food_1147
+      14. Watermelon seed kernels (shelled) dried, cup 602cals
+         ID: food_1152
+
+8. English muffin
+   ID: 10000000127
+   マッチ数: 2個
+   候補:
+      1. English muffin, oz 63cals
+         ID: food_0596
+      2. English muffin whole wheat, oz 58cals
+         ID: food_0597
+
+9. Tortillas white flour
+   ID: 10000000149
+   マッチ数: 2個
+   候補:
+      1. Tortillas white flour, oz 92cals
+         ID: food_0618
+      2. Tortillas white flour low sodium, tortilla 7-inch 130cals
+         ID: food_0619
+
+10. Tortillas whole wheat flour
+   ID: 10000000151
+   マッチ数: 2個
+   候補:
+      1. Tortillas whole wheat flour, tortilla medium 140cals
+         ID: food_0620
+      2. Tortillas whole wheat flour low carb, tortilla 10-inch 110cals
+         ID: food_0621
+
+11. White bread
+   ID: 10000000152
+   マッチ数: 2個
+   候補:
+      1. Toasted white bread, cup, crumbs 131cals
+         ID: food_0614
+      2. White bread, cup, crumbs 120cals
+         ID: food_0622
+
+12. Whole wheat bread
+   ID: 10000000153
+   マッチ数: 5個
+   候補:
+      1. Chapati or roti whole wheat bread, piece 123cals
+         ID: food_0593
+      2. Naan whole wheat bread, piece 303cals
+         ID: food_0604
+      3. Paratha whole wheat bread, piece 262cals
+         ID: food_0605
+      4. Toasted whole wheat bread, oz 87cals
+         ID: food_0615
+      5. Whole wheat bread, oz 71cals
+         ID: food_0623
+
+13. Colby cheese
+   ID: 10000000161
+   マッチ数: 2個
+   候補:
+      1. Cheddar or colby cheese low fat, cup, diced 228cals
+         ID: food_0629
+      2. Colby cheese, cup, diced 520cals
+         ID: food_0631
+
+14. Cream cheese
+   ID: 10000000167
+   マッチ数: 3個
+   候補:
+      1. Cream cheese, cup 812cals
+         ID: food_0635
+      2. Cream cheese fat free, serving 105cals
+         ID: food_0636
+      3. Cream cheese low fat, cup 499cals
+         ID: food_0637
+
+15. Monterey cheese
+   ID: 10000000178
+   マッチ数: 2個
+   候補:
+      1. Monterey cheese, cup, diced 492cals
+         ID: food_0647
+      2. Monterey cheese low fat, cup, diced 413cals
+         ID: food_0648
+
+16. Mozzarella string cheese
+   ID: 10000000183
+   マッチ数: 2個
+   候補:
+      1. Mozzarella string cheese, piece 80cals
+         ID: food_0652
+      2. Mozzarella string cheese light, piece 50cals
+         ID: food_0653
+
+17. Muenster cheese
+   ID: 10000000185
+   マッチ数: 2個
+   候補:
+      1. Muenster cheese, cup, diced 486cals
+         ID: food_0654
+      2. Muenster cheese low fat, cup, shredded 306cals
+         ID: food_0655
+
+18. Parmesan cheese grated
+   ID: 10000000188
+   マッチ数: 2個
+   候補:
+      1. Parmesan cheese grated, cup 420cals
+         ID: food_0657
+      2. Parmesan cheese grated reduced fat, cup 265cals
+         ID: food_0658
+
+19. Provolone cheese
+   ID: 10000000195
+   マッチ数: 2個
+   候補:
+      1. Provolone cheese, cup, diced 463cals
+         ID: food_0664
+      2. Provolone cheese reduced fat, cup, diced 362cals
+         ID: food_0665
+
+20. Roquefort cheese
+   ID: 10000000204
+   マッチ数: 3個
+   候補:
+      1. Roquefort cheese, oz 105cals
+         ID: food_0674
+      2. Salad dressing blue or roquefort cheese, tablespoon 65cals
+         ID: food_0838
+      3. Salad dressing blue or roquefort cheese reduced calorie, cup 214cals
+         ID: food_0839
+
+21. Swiss cheese
+   ID: 10000000207
+   マッチ数: 4個
+   候補:
+      1. Processed Swiss cheese, cup, diced 468cals
+         ID: food_0663
+      2. Swiss cheese, cup, diced 519cals
+         ID: food_0675
+      3. Swiss cheese low fat, cup, diced 236cals
+         ID: food_0676
+      4. Swiss cheese nonfat or fat free, serving 36cals
+         ID: food_0677
+
+22. Marinara or spaghetti sauce
+   ID: 10000000225
+   マッチ数: 2個
+   候補:
+      1. Marinara or spaghetti sauce, cup 154cals
+         ID: food_0817
+      2. Marinara or spaghetti sauce low sodium, cup 128cals
+         ID: food_0818
+
+23. Mayonnaise regular
+   ID: 10000000228
+   マッチ数: 2個
+   候補:
+      1. Mayonnaise regular, tablespoon 94cals
+         ID: food_0821
+      2. Vegan mayonnaise regular, tbsp 50cals
+         ID: food_0868
+
+24. Salad dressing blue or roquefort cheese
+   ID: 10000000245
+   マッチ数: 2個
+   候補:
+      1. Salad dressing blue or roquefort cheese, tablespoon 65cals
+         ID: food_0838
+      2. Salad dressing blue or roquefort cheese reduced calorie, cup 214cals
+         ID: food_0839
+
+25. Salad dressing coleslaw
+   ID: 10000000248
+   マッチ数: 2個
+   候補:
+      1. Salad dressing coleslaw, cup 1,010cals
+         ID: food_0841
+      2. Salad dressing coleslaw reduced fat, cup 885cals
+         ID: food_0842
+
+26. Salad dressing italian
+   ID: 10000000253
+   マッチ数: 2個
+   候補:
+      1. Salad dressing italian, tbsp 41cals
+         ID: food_0846
+      2. Salad dressing italian fat-free, tbsp 7cals
+         ID: food_0847
+
+27. Salad dressing russian
+   ID: 10000000257
+   マッチ数: 2個
+   候補:
+      1. Salad dressing russian, cup 841cals
+         ID: food_0850
+      2. Salad dressing russian low calorie, tablespoon 23cals
+         ID: food_0851
+
+28. Salsa
+   ID: 10000000263
+   マッチ数: 2個
+   候補:
+      1. Salsa verde, tbsp 5cals
+         ID: food_0856
+      2. Salsa, cup 75cals
+         ID: food_1138
+
+29. Soy sauce
+   ID: 10000000266
+   マッチ数: 2個
+   候補:
+      1. Soy sauce, cup 135cals
+         ID: food_0858
+      2. Soy sauce reduced sodium, tbsp 14cals
+         ID: food_0859
+
+30. Tamari sauce
+   ID: 10000000271
+   マッチ数: 2個
+   候補:
+      1. Tamari sauce, tbsp 11cals
+         ID: food_0863
+      2. Tamari sauce reduced sodium, tbsp 10cals
+         ID: food_0864
+
+31. Teriyaki sauce
+   ID: 10000000273
+   マッチ数: 2個
+   候補:
+      1. Teriyaki sauce, cup 256cals
+         ID: food_0865
+      2. Teriyaki sauce reduced sodium, tbsp 16cals
+         ID: food_0866
+
+32. Worcestershire sauce
+   ID: 10000000282
+   マッチ数: 2個
+   候補:
+      1. Worcestershire sauce, cup 212cals
+         ID: food_0873
+      2. Worcestershire sauce vegan, teaspoon 5cals
+         ID: food_0874
+
+33. Cream half & half
+   ID: 10000000303
+   マッチ数: 2個
+   候補:
+      1. Cream half & half, cup 317cals
+         ID: food_0758
+      2. Cream half & half fat-free, cup 143cals
+         ID: food_0759
+
+34. Cream sour
+   ID: 10000000309
+   マッチ数: 3個
+   候補:
+      1. Cream sour, cup 455cals
+         ID: food_0763
+      2. Cream sour fat free, serving 74cals
+         ID: food_0764
+      3. Cream sour light, cup 313cals
+         ID: food_0765
+
+35. Yogurt plain low fat
+   ID: 10000000344
+   マッチ数: 2個
+   候補:
+      1. Greek yogurt plain low fat, container (7 oz) 153cals
+         ID: food_0778
+      2. Yogurt plain low fat, cup (8 fl oz) 154cals
+         ID: food_0799
+
+36. Yogurt plain whole milk
+   ID: 10000000345
+   マッチ数: 2個
+   候補:
+      1. Greek yogurt plain whole milk, serving 85cals
+         ID: food_0780
+      2. Yogurt plain whole milk, cup (8 fl oz) 149cals
+         ID: food_0800
+
+37. Corn oil
+   ID: 10000000353
+   マッチ数: 2個
+   候補:
+      1. Popcorn oil popped, cup 55cals
+         ID: food_0055
+      2. Corn oil, tbsp 122cals
+         ID: food_0529
+
+38. Safflower oil
+   ID: 10000000364
+   マッチ数: 2個
+   候補:
+      1. Safflower oil, tablespoon 120cals
+         ID: food_0540
+      2. Safflower oil high linoleic content over 70%, cup 1,927cals
+         ID: food_0541
+
+39. Sunflower oil
+   ID: 10000000367
+   マッチ数: 2個
+   候補:
+      1. Sunflower oil, cup 1,927cals
+         ID: food_0544
+      2. Sunflower oil high oleic content over 70%, tbsp 124cals
+         ID: food_0545
+
+40. Eel raw
+   ID: 10000000390
+   マッチ数: 2個
+   候補:
+      1. Cucumber with peel raw, cup slices 16cals
+         ID: food_0203
+      2. Eel raw, fillet 375cals
+         ID: food_0421
+
+41. Salmon chinook smoked
+   ID: 10000000419
+   マッチ数: 2個
+   候補:
+      1. Salmon chinook smoked, cup, cooked 159cals
+         ID: food_0449
+      2. Salmon chinook smoked lox, oz 33cals
+         ID: food_0450
+
+42. Shrimp raw
+   ID: 10000000431
+   マッチ数: 2個
+   候補:
+      1. Shrimp raw, serving 85cals
+         ID: food_0461
+      2. Shrimp raw frozen medium peeled and deveined tail off, oz 42cals
+         ID: food_0462
+
+43. Lime juice
+   ID: 10000000463
+   マッチ数: 2個
+   候補:
+      1. Lime juice, cup 62cals
+         ID: food_0570
+      2. Lime juice canned or bottled unsweetened, cup 52cals
+         ID: food_0571
+
+44. Flour whole wheat
+   ID: 10000000581
+   マッチ数: 2個
+   候補:
+      1. Flour whole wheat, cup 408cals
+         ID: food_0031
+      2. Flour whole wheat pastry, cup 440cals
+         ID: food_0032
+
+45. Spaghetti with pesto sauce
+   ID: 10000000631
+   マッチ数: 2個
+   候補:
+      1. Spaghetti with pesto sauce, cup 276cals
+         ID: food_0081
+      2. Spaghetti with pesto sauce and meat, cup 267cals
+         ID: food_0082
+
+46. Hazelnuts or filberts
+   ID: 10000000725
+   マッチ数: 2個
+   候補:
+      1. Hazelnuts or filberts, cup, chopped 722cals
+         ID: food_1083
+      2. Hazelnuts or filberts dry roasted without salt, oz 183cals
+         ID: food_1084
+
+47. Lemon pepper seasoning
+   ID: 10000000832
+   マッチ数: 2個
+   候補:
+      1. Lemon pepper seasoning, tsp 9cals
+         ID: food_0120
+      2. Lemon pepper seasoning salt free, tsp 0cals
+         ID: food_0121
+
+48. Paprika
+   ID: 10000000843
+   マッチ数: 3個
+   候補:
+      1. Paprika Hungarian, tsp 6cals
+         ID: food_0130
+      2. Paprika smoked, tsp 6cals
+         ID: food_0131
+      3. Paprika, tbsp 19cals
+         ID: food_1129
+
+49. Salt
+   ID: 10000000855
+   マッチ数: 127個
+   候補:
+      1. Buckwheat groats or kasha cooked without salt, cup 155cals
+         ID: food_0008
+      2. Couscous or cous cous cooked without salt, cup, cooked 177cals
+         ID: food_0022
+      3. Noodles egg cooked with salt, cup 221cals
+         ID: food_0036
+      4. Noodles egg cooked without salt, cup 221cals
+         ID: food_0037
+      5. Oatmeal or rolled oats cooked with salt, cup 159cals
+         ID: food_0041
+      6. Oatmeal or rolled oats cooked without salt, cup 166cals
+         ID: food_0042
+      7. Pasta corn cooked without salt, cup 176cals
+         ID: food_0045
+      8. Pasta white cooked without salt, cup 221cals
+         ID: food_0047
+      9. Pasta whole wheat cooked without salt, cup 209cals
+         ID: food_0049
+      10. Rice brown instant cooked without salt, cup 228cals
+         ID: food_0060
+      11. Rice brown long grain cooked without salt, cup 240cals
+         ID: food_0061
+      12. Rice brown medium grain cooked without salt, cup 218cals
+         ID: food_0063
+      13. Rice white cooked without salt, cup 242cals
+         ID: food_0067
+      14. Rice white glutinous cooked without salt, cup 169cals
+         ID: food_0068
+      15. Rice white long grain cooked with salt, cup 205cals
+         ID: food_0070
+      16. Rice white long grain cooked without salt, cup 205cals
+         ID: food_0071
+      17. Rice white short grain cooked without salt, cup 242cals
+         ID: food_0074
+      18. Rice wild cooked without salt, cup 166cals
+         ID: food_0076
+      19. Spaghetti whole wheat cooked without salt, cup 174cals
+         ID: food_0080
+      20. Cajun seasoning salt free, tsp 0cals
+         ID: food_0095
+      21. Everything bagel seasoning salt free, teaspoon 20cals
+         ID: food_0113
+      22. Kosher salt, tsp 0cals
+         ID: food_0119
+      23. Lemon pepper seasoning salt free, tsp 0cals
+         ID: food_0121
+      24. Artichokes boiled without salt, artichoke, medium 64cals
+         ID: food_0157
+      25. Asparagus boiled with salt, cup 40cals
+         ID: food_0160
+      26. Asparagus boiled without salt, cup 40cals
+         ID: food_0161
+      27. Broccoli boiled without salt, stalk, large (11"-12" long) 98cals
+         ID: food_0170
+      28. Broccoli roasted without salt, serving 88cals
+         ID: food_0175
+      29. Brussels sprouts boiled without salt, sprout 8cals
+         ID: food_0178
+      30. Cauliflower boiled without salt, cup (1" pieces) 29cals
+         ID: food_0187
+      31. Collard greens boiled without salt, cup, chopped 63cals
+         ID: food_0196
+      32. Corn sweet yellow boiled without salt, ear, small (5-1/2" to 6-1/2" long) 85cals
+         ID: food_0199
+      33. Eggplant boiled without salt, cup (1" cubes) 35cals
+         ID: food_0207
+      34. Green beans boiled without salt, cup 44cals
+         ID: food_0216
+      35. Green peas frozen boiled without salt, package (10 oz) yields 197cals
+         ID: food_0219
+      36. Parsnips boiled without salt, cup slices 111cals
+         ID: food_0254
+      37. Potatoes baked with skin without salt, potato large (3" to 4-1/4" dia) 278cals
+         ID: food_0264
+      38. Potatoes boiled with skin without salt, cup 136cals
+         ID: food_0265
+      39. Rutabagas boiled without salt, cup, cubes 51cals
+         ID: food_0274
+      40. Snowpeas or sugar snap peas boiled without salt, cup 67cals
+         ID: food_0282
+      41. Spinach cooked boiled drained without salt, cup 41cals
+         ID: food_0284
+      42. Squash butternut baked without salt, cup, cubes 82cals
+         ID: food_0287
+      43. Squash butternut frozen boiled without salt, cup, mashed 94cals
+         ID: food_0288
+      44. Squash spaghetti cooked without salt, cup 42cals
+         ID: food_0291
+      45. Squash summer all types cooked without salt, cup, sliced 36cals
+         ID: food_0293
+      46. Squash winter all types cooked without salt, cup, cubes 76cals
+         ID: food_0295
+      47. Sweet potato baked with skin without salt, cup 180cals
+         ID: food_0297
+      48. Swiss chard boiled without salt, cup, chopped 35cals
+         ID: food_0299
+      49. Turnips boiled without salt, cup, cubes 34cals
+         ID: food_0309
+      50. Yam boiled or baked without salt, cup, cubes 158cals
+         ID: food_0312
+      51. Zucchini boiled without salt, cup, sliced 27cals
+         ID: food_0314
+      52. Corn sweet yellow canned cream style no salt added, cup 184cals
+         ID: food_0373
+      53. Corn sweet yellow canned no salt added, cup 166cals
+         ID: food_0374
+      54. Pumpkin canned with salt, cup 83cals
+         ID: food_0380
+      55. Pumpkin canned without salt, cup 83cals
+         ID: food_0381
+      56. Tomato paste canned no salt added, cup 215cals
+         ID: food_0387
+      57. Tomato puree canned no salt added, cup 95cals
+         ID: food_0389
+      58. Tomato sauce canned no salt added, cup 59cals
+         ID: food_0391
+      59. Tomatoes crushed canned no salt added, oz 9cals
+         ID: food_0393
+      60. Tomatoes diced canned no salt added, cup 41cals
+         ID: food_0395
+      61. Tomatoes whole canned no salt added, cup 38cals
+         ID: food_0399
+      62. Cod Atlantic dried and salted, oz 82cals
+         ID: food_0410
+      63. Black beans boiled without salt, cup 227cals
+         ID: food_0478
+      64. Black beans canned no salt added, cup 220cals
+         ID: food_0481
+      65. Black eyed peas boiled without salt, cup 200cals
+         ID: food_0483
+      66. Cannellini or white kidney beans canned no salt added, cup 200cals
+         ID: food_0487
+      67. Chickpeas or garbanzo beans boiled with salt, cup 269cals
+         ID: food_0488
+      68. Chickpeas or garbanzo beans boiled without salt, cup 269cals
+         ID: food_0489
+      69. Chickpeas or garbanzo beans canned no salt added, cup 361cals
+         ID: food_0491
+      70. Fava beans boiled without salt, cup 187cals
+         ID: food_0495
+      71. Kidney beans boiled without salt, cup 225cals
+         ID: food_0497
+      72. Lentils boiled without salt, cup 230cals
+         ID: food_0501
+      73. Lima beans large boiled without salt, cup 216cals
+         ID: food_0503
+      74. Pinto beans boiled without salt, cup 245cals
+         ID: food_0507
+      75. Split peas boiled without salt, cup 231cals
+         ID: food_0512
+      76. Margarine regular soft salted, cup 1,619cals
+         ID: food_0533
+      77. Margarine regular stick salted, tbsp 100cals
+         ID: food_0534
+      78. Butter reduced fat salted, serving 499cals
+         ID: food_0741
+      79. Butter reduced fat unsalted, serving 499cals
+         ID: food_0742
+      80. Butter salted, cup 1,628cals
+         ID: food_0743
+      81. Butter unsalted, tbsp 102cals
+         ID: food_0744
+      82. Butter whipped salted, cup 1,084cals
+         ID: food_0745
+      83. Butter whipped unsalted, tbsp 50cals
+         ID: food_0746
+      84. Egg scrambled, with salt, large egg 105cals
+         ID: food_0768
+      85. Almond butter with salt, cup 1,535cals
+         ID: food_1056
+      86. Almond butter without salt, cup 1,535cals
+         ID: food_1057
+      87. Almonds dry roasted with salt, cup whole kernels 825cals
+         ID: food_1060
+      88. Almonds dry roasted without salt, cup whole kernels 825cals
+         ID: food_1061
+      89. Almonds oil roasted with salt, cup whole kernels 953cals
+         ID: food_1062
+      90. Cashew butter with salt, tbsp 94cals
+         ID: food_1065
+      91. Cashew butter without salt, tbsp 94cals
+         ID: food_1066
+      92. Cashews dry roasted with salt, cup, halves and whole 786cals
+         ID: food_1067
+      93. Cashews dry roasted without salt, cup, halves and whole 786cals
+         ID: food_1068
+      94. Cashews oil roasted with salt, cup, whole 749cals
+         ID: food_1069
+      95. Cashews oil roasted without salt, cup, whole 748cals
+         ID: food_1070
+      96. Hazelnuts or filberts dry roasted without salt, oz 183cals
+         ID: food_1084
+      97. Macadamias dry roasted with salt, cup, whole or halves 959cals
+         ID: food_1087
+      98. Macadamias dry roasted without salt, cup, whole or halves 959cals
+         ID: food_1088
+      99. Peanut butter chunky with salt, cup 1,520cals
+         ID: food_1090
+      100. Peanut butter chunky without salt, cup 1,520cals
+         ID: food_1091
+      101. Peanut butter smooth with salt, cup 1,520cals
+         ID: food_1092
+      102. Peanut butter smooth without salt, cup 1,543cals
+         ID: food_1093
+      103. Peanuts dry roasted with salt, oz 166cals
+         ID: food_1094
+      104. Peanuts dry roasted without salt, cup 857cals
+         ID: food_1095
+      105. Peanuts oil roasted with salt, cup, chopped 863cals
+         ID: food_1096
+      106. Peanuts oil roasted without salt, cup, chopped 797cals
+         ID: food_1097
+      107. Pecans dry roasted with salt, oz 201cals
+         ID: food_1099
+      108. Pecans dry roasted without salt, oz 201cals
+         ID: food_1100
+      109. Pecans oil roasted with salt, cup 787cals
+         ID: food_1101
+      110. Pecans oil roasted without salt, cup 787cals
+         ID: food_1102
+      111. Pistachios dry roasted with salt, cup 700cals
+         ID: food_1105
+      112. Pistachios dry roasted without salt, cup 700cals
+         ID: food_1106
+      113. Pumpkin seed kernels (shelled) roasted with salt, cup 677cals
+         ID: food_1110
+      114. Pumpkin seed kernels (shelled) roasted without salt, cup 677cals
+         ID: food_1111
+      115. Pumpkin seeds whole with shell roasted with salt, cup 285cals
+         ID: food_1112
+      116. Pumpkin seeds whole with shell roasted without salt, cup 285cals
+         ID: food_1113
+      117. Sesame seed kernels (shelled) toasted with salt, cup 726cals
+         ID: food_1116
+      118. Sesame seed kernels (shelled) toasted without salt, cup 726cals
+         ID: food_1117
+      119. Sunflower seed butter with salt, tbsp 99cals
+         ID: food_1118
+      120. Sunflower seed butter without salt, tbsp 99cals
+         ID: food_1119
+      121. Sunflower seed kernels (shelled) dry roasted with salt, cup 745cals
+         ID: food_1121
+      122. Sunflower seed kernels (shelled) dry roasted without salt, cup, hulled 745cals
+         ID: food_1122
+      123. Sunflower seed kernels (shelled) oil roasted with salt, cup 799cals
+         ID: food_1123
+      124. Sunflower seed kernels (shelled) oil roasted without salt, cup 799cals
+         ID: food_1124
+      125. Salt, cup 0cals
+         ID: food_1130
+      126. Sea salt iodized, gram 0cals
+         ID: food_1131
+      127. Walnuts dry roasted with salt, oz 182cals
+         ID: food_1149
+
+50. Vegetable broth
+   ID: 10000000895
+   マッチ数: 2個
+   候補:
+      1. Vegetable broth, cup 11cals
+         ID: food_0366
+      2. Vegetable broth or bouillon low sodium, cup 20cals
+         ID: food_0367
+
+51. Brown sugar
+   ID: 10000000899
+   マッチ数: 3個
+   候補:
+      1. Brown sugar, cup packed 836cals
+         ID: food_0876
+      2. Brown sugar baking blend (sucralose and brown sugar), tbsp 50cals
+         ID: food_0877
+      3. Brown sugar baking blend with erythritol and stevia, tsp 10cals
+         ID: food_0878
+
+52. Honey
+   ID: 10000000918
+   マッチ数: 3個
+   候補:
+      1. Balls of honeydew melon, frozen, cup 64cals
+         ID: food_0989
+      2. Honeydew melon raw, cup, balls 64cals
+         ID: food_1016
+      3. Honey, cup 1,031cals
+         ID: food_1139
+
+53. Nougat
+   ID: 10000000935
+   マッチ数: 3個
+   候補:
+      1. Nougat, piece 32cals
+         ID: food_0909
+      2. Nougat with nuts, homemade, piece 65cals
+         ID: food_0910
+      3. Nougat, homemade, piece 49cals
+         ID: food_0911
+
+54. Sugar white
+   ID: 10000000946
+   マッチ数: 2個
+   候補:
+      1. Sugar white, tsp 16cals
+         ID: food_0921
+      2. Sugar white baking blend (sucralose and sugar), tbsp 58cals
+         ID: food_0922
+
+55. Corn sweet yellow canned cream style
+   ID: 10000000952
+   マッチ数: 2個
+   候補:
+      1. Corn sweet yellow canned cream style, cup 184cals
+         ID: food_0372
+      2. Corn sweet yellow canned cream style no salt added, cup 184cals
+         ID: food_0373
+
+56. Corn sweet yellow canned
+   ID: 10000000954
+   マッチ数: 4個
+   候補:
+      1. Corn sweet yellow canned, cup 110cals
+         ID: food_0371
+      2. Corn sweet yellow canned cream style, cup 184cals
+         ID: food_0372
+      3. Corn sweet yellow canned cream style no salt added, cup 184cals
+         ID: food_0373
+      4. Corn sweet yellow canned no salt added, cup 166cals
+         ID: food_0374
+
+57. Tomato juice
+   ID: 10000000966
+   マッチ数: 2個
+   候補:
+      1. Tomato juice, cup 41cals
+         ID: food_0384
+      2. Tomato juice low sodium, cup 41cals
+         ID: food_0385
+
+58. Tomato paste canned
+   ID: 10000000968
+   マッチ数: 2個
+   候補:
+      1. Tomato paste canned, cup 215cals
+         ID: food_0386
+      2. Tomato paste canned no salt added, cup 215cals
+         ID: food_0387
+
+59. Tomato puree
+   ID: 10000000970
+   マッチ数: 2個
+   候補:
+      1. Tomato puree, cup 95cals
+         ID: food_0388
+      2. Tomato puree canned no salt added, cup 95cals
+         ID: food_0389
+
+60. Tomato sauce canned
+   ID: 10000000972
+   マッチ数: 2個
+   候補:
+      1. Tomato sauce canned, cup 59cals
+         ID: food_0390
+      2. Tomato sauce canned no salt added, cup 59cals
+         ID: food_0391
+
+61. Tomatoes crushed canned
+   ID: 10000000974
+   マッチ数: 2個
+   候補:
+      1. Tomatoes crushed canned, serving 32cals
+         ID: food_0392
+      2. Tomatoes crushed canned no salt added, oz 9cals
+         ID: food_0393
+
+62. Tomatoes diced canned
+   ID: 10000000976
+   マッチ数: 2個
+   候補:
+      1. Tomatoes diced canned, cup 41cals
+         ID: food_0394
+      2. Tomatoes diced canned no salt added, cup 41cals
+         ID: food_0395
+
+63. Tomatoes sun dried or sundried
+   ID: 10000000978
+   マッチ数: 2個
+   候補:
+      1. Tomatoes sun dried or sundried, cup 139cals
+         ID: food_0396
+      2. Tomatoes sun dried or sundried packed in oil, cup 234cals
+         ID: food_0397
+
+64. Tomatoes whole canned
+   ID: 10000000980
+   マッチ数: 2個
+   候補:
+      1. Tomatoes whole canned, cup 38cals
+         ID: food_0398
+      2. Tomatoes whole canned no salt added, cup 38cals
+         ID: food_0399
+
+65. Vegetable juice cocktail
+   ID: 10000000983
+   マッチ数: 2個
+   候補:
+      1. Vegetable juice cocktail, cup 53cals
+         ID: food_0401
+      2. Vegetable juice cocktail low sodium, cup 48cals
+         ID: food_0402
+
+66. Cabbage raw
+   ID: 10000001008
+   マッチ数: 2個
+   候補:
+      1. Bok choy or pak choi or Chinese cabbage raw, cup, shredded 9cals
+         ID: food_0168
+      2. Cabbage raw, cup, chopped 22cals
+         ID: food_0181
+
+67. Potatoes with skin raw
+   ID: 10000001094
+   マッチ数: 3個
+   候補:
+      1. Potatoes with skin raw, potato large (3" to 4-1/4" dia) 284cals
+         ID: food_0267
+      2. Red potatoes with skin raw, potato large (3" to 4-1/4" dia) 258cals
+         ID: food_0271
+      3. Russet potatoes with skin raw, potato small (1-3/4" to 2-1/4" dia) 134cals
+         ID: food_0273
+

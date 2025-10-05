@@ -1,0 +1,743 @@
+================================================================================
+食材名単位の問題パターン分析
+================================================================================
+
+【パターン1】単位抽出失敗 (10個)
+================================================================================
+
+1. food_0052: Polenta precooked tube, half-inch slices 35cals
+   利用可能単位: gram, 0.25 cup, fl oz
+
+2. food_0163: Asparagus steamed, spears (1/2" base) 3cals
+   利用可能単位: gram, 0.5 cup, 4 spears (1/2" base)
+
+3. food_0170: Broccoli boiled without salt, stalk, large (11"-12" long) 98cals
+   利用可能単位: gram, lb, oz
+
+4. food_0179: Brussels sprouts frozen unprepared, package (10 oz) 116cals
+   利用可能単位: gram, 0.5 cup, fl oz
+
+5. food_0187: Cauliflower boiled without salt, cup (1" pieces) 29cals
+   利用可能単位: gram, 0.5 cup (1" pieces), 3 flowerets
+
+6. food_0188: Cauliflower frozen unprepared, package (10 oz) 68cals
+   利用可能単位: gram, 0.5 cup (1" pieces), 3 flowerets
+
+7. food_0191: Cauliflower steamed, cup (1" pieces) 29cals
+   利用可能単位: gram, 0.5 cup (1" pieces), 3 flowerets
+
+8. food_0194: Chayote fruit or mirliton squash raw, cup (1" pieces) 25cals
+   利用可能単位: gram, chayote (5-3/4"), cup (1" pieces)
+
+9. food_0198: Corn sweet white raw, ear, small (5-1/2" to 6-1/2" long) 63cals
+   利用可能単位: gram, cup, ear, large (7-3/4" to 9" long)
+
+10. food_0199: Corn sweet yellow boiled without salt, ear, small (5-1/2" to 6-1/2" long) 85cals
+   利用可能単位: gram, cup, ear, large (7-3/4" to 9" long)
+
+
+================================================================================
+【パターン2】Serving options不一致 (173個全て)
+================================================================================
+
+1. food_0014: Chickpea pasta dry uncooked, serving 190cals
+   抽出単位: serving
+   利用可能単位: gram, 0.25 cup, fl oz, lb, ml
+
+2. food_0025: Crackers whole wheat, cup, crushed 396cals
+   抽出単位: crushed
+   利用可能単位: gram, 3 crackers, lb, oz
+
+3. food_0035: Noodles chinese chow mein, cup 212cals
+   抽出単位: cup
+   利用可能単位: gram, 2 oz, lb
+
+4. food_0036: Noodles egg cooked with salt, cup 221cals
+   抽出単位: cup
+   利用可能単位: gram, 2 oz, lb
+
+5. food_0037: Noodles egg cooked without salt, cup 221cals
+   抽出単位: cup
+   利用可能単位: gram, 2 oz, lb
+
+6. food_0038: Noodles egg dry uncooked, cup 146cals
+   抽出単位: cup
+   利用可能単位: gram, 2 oz, lb
+
+7. food_0039: Noodles rice dry uncooked, serving 364cals
+   抽出単位: serving
+   利用可能単位: gram, 2 oz, lb
+
+8. food_0043: Oatmeal or rolled oats instant fortified dry uncooked, packet 101cals
+   抽出単位: packet
+   利用可能単位: gram, 0.75 cup, cup, fl oz, lb
+
+9. food_0103: Cinnamon stick spice, stick 5cals
+   抽出単位: stick
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+10. food_0111: Dill weed fresh or raw herb, cup sprigs 4cals
+   抽出単位: cup sprigs
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+11. food_0133: Parsley fresh or raw herb, cup, chopped 22cals
+   抽出単位: chopped
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+12. food_0171: Broccoli florets raw, cup flowerets 20cals
+   抽出単位: cup flowerets
+   利用可能単位: gram, lb, oz, serving
+
+13. food_0172: Broccoli frozen unprepared, cup 41cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+14. food_0174: Broccoli raw, cup chopped 31cals
+   抽出単位: cup chopped
+   利用可能単位: gram, lb, oz, serving
+
+15. food_0176: Broccoli steamed, cup 19cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+16. food_0185: Carrots raw, cup, chopped 52cals
+   抽出単位: chopped
+   利用可能単位: gram, cup, fl oz, large, lb
+
+17. food_0189: Cauliflower raw, cup, chopped 27cals
+   抽出単位: chopped
+   利用可能単位: gram, 0.5 cup (1" pieces), 3 flowerets, lb, oz
+
+18. food_0203: Cucumber with peel raw, cup slices 16cals
+   抽出単位: cup slices
+   利用可能単位: gram, cup, pared, chopped, cup, sliced, large (8-1/4" long), lb
+
+19. food_0228: Lettuce iceberg raw, cup, shredded or chopped 8cals
+   抽出単位: shredded or chopped
+   利用可能単位: gram, cup shredded, head, lb, leaf inner
+
+20. food_0229: Lettuce raw (butterhead boston or bibb type), cup, shredded or chopped 7cals
+   抽出単位: shredded or chopped
+   利用可能単位: gram, cup shredded, head, lb, leaf inner
+
+21. food_0237: Mushrooms maitake raw, cup diced 22cals
+   抽出単位: cup diced
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+22. food_0239: Mushrooms oyster raw, large 49cals
+   抽出単位: large
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+23. food_0240: Mushrooms portabella high vitamin D raw, cup diced 19cals
+   抽出単位: cup diced
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+24. food_0241: Mushrooms portabella raw, cup diced 19cals
+   抽出単位: cup diced
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+25. food_0243: Mushrooms white high vitamin D raw, cup pieces or slices 15cals
+   抽出単位: cup pieces or slices
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+26. food_0244: Mushrooms white raw, cup, pieces or slices 15cals
+   抽出単位: pieces or slices
+   利用可能単位: gram, cup sliced, cup whole, lb, oz
+
+27. food_0248: Okra raw, cup 33cals
+   抽出単位: cup
+   利用可能単位: gram, oz, package (10 oz)
+
+28. food_0250: Onions green spring or scallions raw, cup, chopped 32cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz, package (10 oz)
+
+29. food_0251: Onions raw, cup, chopped 64cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz, package (10 oz)
+
+30. food_0252: Onions red raw, cup, chopped 64cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz, package (10 oz)
+
+31. food_0253: Onions sweet raw, serving 47cals
+   抽出単位: serving
+   利用可能単位: gram, lb, oz, package (10 oz)
+
+32. food_0259: Peppers jalapeno raw, cup, sliced 26cals
+   抽出単位: sliced
+   利用可能単位: gram, 0.5 cup, chopped or diced, lb, oz, pepper
+
+33. food_0265: Potatoes boiled with skin without salt, cup 136cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, potato large (3" to 4-1/4" dia), potato medium (2-1/4" to 3-1/4" dia.)
+
+34. food_0270: Radishes raw, cup slices 19cals
+   抽出単位: cup slices
+   利用可能単位: gram, lb, oz, radish (7" long)
+
+35. food_0277: Seaweed laver raw, sheets 1cals
+   抽出単位: sheets
+   利用可能単位: gram, 2 tablespoon, cup, fl oz, lb
+
+36. food_0278: Seaweed spirulina raw, serving 26cals
+   抽出単位: serving
+   利用可能単位: gram, 2 tablespoon, cup, fl oz, lb
+
+37. food_0288: Squash butternut frozen boiled without salt, cup, mashed 94cals
+   抽出単位: mashed
+   利用可能単位: gram, cup, cubes, lb, oz, squash (4 inch dia)
+
+38. food_0293: Squash summer all types cooked without salt, cup, sliced 36cals
+   抽出単位: sliced
+   利用可能単位: gram, cup, cubes, lb, oz, squash (4 inch dia)
+
+39. food_0294: Squash summer all types raw, cup, sliced 18cals
+   抽出単位: sliced
+   利用可能単位: gram, cup, cubes, lb, oz, squash (4 inch dia)
+
+40. food_0298: Sweet potato raw, cup, cubes 114cals
+   抽出単位: cubes
+   利用可能単位: gram, cup, fl oz, large, lb
+
+41. food_0305: Tomatoes orange raw, cup, chopped 25cals
+   抽出単位: chopped
+   利用可能単位: gram, cup cherry tomatoes, lb, oz
+
+42. food_0307: Tomatoes yellow raw, cup, chopped 21cals
+   抽出単位: chopped
+   利用可能単位: gram, cup cherry tomatoes, lb, oz
+
+43. food_0315: Zucchini raw, cup, chopped 21cals
+   抽出単位: chopped
+   利用可能単位: gram, 0.5 cup, mashed, cup, sliced, lb, oz
+
+44. food_0319: Chicken breast tenderloins, serving 100cals
+   抽出単位: serving
+   利用可能単位: gram, 0.5 breast, oz, unit (yield from 1 lb ready-to-cook chicken)
+
+45. food_0320: Chicken drumstick skinless raw, drumstick without skin 144cals
+   抽出単位: drumstick without skin
+   利用可能単位: gram, 0.5 breast, oz, unit (yield from 1 lb ready-to-cook chicken)
+
+46. food_0322: Chicken ground raw, oz crumbled 40cals
+   抽出単位: oz crumbled
+   利用可能単位: gram, 0.5 breast, oz, unit (yield from 1 lb ready-to-cook chicken)
+
+47. food_0324: Chicken liver raw, serving 119cals
+   抽出単位: serving
+   利用可能単位: gram, 0.5 breast, oz, unit (yield from 1 lb ready-to-cook chicken)
+
+48. food_0325: Chicken or turkey sausage Italian low sodium, serving 183cals
+   抽出単位: serving
+   利用可能単位: gram, 0.5 breast, oz, unit (yield from 1 lb ready-to-cook chicken)
+
+49. food_0333: Rotisserie chicken thigh meat only skinless, thigh 174cals
+   抽出単位: thigh
+   利用可能単位: gram, 3 oz, breast, lb, oz
+
+50. food_0334: Rotisserie chicken wing meat only skinless, wing 104cals
+   抽出単位: wing
+   利用可能単位: gram, 3 oz, breast, lb, oz
+
+51. food_0338: Turkey dark meat only skinless roasted, cup, chopped or diced 242cals
+   抽出単位: chopped or diced
+   利用可能単位: gram, lb, oz, serving
+
+52. food_0343: Turkey sausage Italian smoked, 2 oz 91cals
+   抽出単位: 2 oz
+   利用可能単位: gram, lb, oz, serving
+
+53. food_0345: Beef broth dry cubes, portion, amount of dry mix to make 8 fl oz prepared 8cals
+   抽出単位: amount of dry mix to make 8 fl oz prepared
+   利用可能単位: gram, cube (6 fl oz prepared), lb, oz
+
+54. food_0346: Beef broth or bouillon canned, cup 17cals
+   抽出単位: cup
+   利用可能単位: gram, cube (6 fl oz prepared), lb, oz
+
+55. food_0350: Beef broth reduced sodium canned, cup 13cals
+   抽出単位: cup
+   利用可能単位: gram, cube (6 fl oz prepared), lb, oz
+
+56. food_0351: Beef stock homemade, cup 21cals
+   抽出単位: cup
+   利用可能単位: gram, cube (6 fl oz prepared), lb, oz
+
+57. food_0365: Soup onion mix dehydrated dry form, packet 105cals
+   抽出単位: packet
+   利用可能単位: gram, can (10.75 oz), cup, fl oz, lb
+
+58. food_0379: Peppers hot pickled canned, cup drained 30cals
+   抽出単位: cup drained
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+59. food_0383: Seaweed spirulina dried, cup 44cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, sheet
+
+60. food_0394: Tomatoes diced canned, cup 41cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+61. food_0395: Tomatoes diced canned no salt added, cup 41cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+62. food_0396: Tomatoes sun dried or sundried, cup 139cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+63. food_0397: Tomatoes sun dried or sundried packed in oil, cup 234cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+64. food_0398: Tomatoes whole canned, cup 38cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+65. food_0399: Tomatoes whole canned no salt added, cup 38cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+66. food_0400: Tomatoes whole stewed canned, cup 66cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+67. food_0411: Cod Atlantic raw, fillet 189cals
+   抽出単位: fillet
+   利用可能単位: gram, 3 oz, lb, oz, piece (5-1/2" x 1-1/2" x 1/2")
+
+68. food_0412: Cod Pacific cooked dry heat, fillet 77cals
+   抽出単位: fillet
+   利用可能単位: gram, 3 oz, lb, oz, piece (5-1/2" x 1-1/2" x 1/2")
+
+69. food_0413: Cod Pacific raw, fillet 80cals
+   抽出単位: fillet
+   利用可能単位: gram, 3 oz, lb, oz, piece (5-1/2" x 1-1/2" x 1/2")
+
+70. food_0416: Crab blue canned, cup 112cals
+   抽出単位: cup
+   利用可能単位: gram, 3 oz, lb, leg
+
+71. food_0417: Crab blue cooked moist heat, cup, flaked and pieces 98cals
+   抽出単位: flaked and pieces
+   利用可能単位: gram, 3 oz, lb, leg
+
+72. food_0423: Fish roe mixed species raw, tbsp 20cals
+   抽出単位: tbsp
+   利用可能単位: gram, 3 oz, lb, oz
+
+73. food_0426: Haddock smoked, oz, boneless 33cals
+   抽出単位: boneless
+   利用可能単位: gram, 3 oz, fillet, lb
+
+74. food_0429: Herring Atlantic kippered, oz, boneless 62cals
+   抽出単位: boneless
+   利用可能単位: gram, 3 oz, fillet, lb
+
+75. food_0430: Herring Atlantic pickled, cup 367cals
+   抽出単位: cup
+   利用可能単位: gram, 3 oz, fillet, lb
+
+76. food_0431: Herring Atlantic raw, oz, boneless 45cals
+   抽出単位: boneless
+   利用可能単位: gram, 3 oz, fillet, lb
+
+77. food_0433: Lobster northern raw, lobster 116cals
+   抽出単位: lobster
+   利用可能単位: gram, 3 oz, cup, fl oz, lb
+
+78. food_0440: Oyster eastern wild raw, cup 126cals
+   抽出単位: cup
+   利用可能単位: gram, 3 oz, lb, medium
+
+79. food_0443: Pollock alaska raw, serving 76cals
+   抽出単位: serving
+   利用可能単位: gram, 0.5 fillet, 3 oz, lb
+
+80. food_0449: Salmon chinook smoked, cup, cooked 159cals
+   抽出単位: cooked
+   利用可能単位: gram, 0.5 fillet, 3 oz, lb
+
+81. food_0451: Salmon pink canned drained solids with bone, serving 138cals
+   抽出単位: serving
+   利用可能単位: gram, 0.5 fillet, 3 oz, lb
+
+82. food_0454: Salmon sockeye raw, oz, boneless 37cals
+   抽出単位: boneless
+   利用可能単位: gram, 0.5 fillet, 3 oz, lb
+
+83. food_0459: Scallops raw, unit 2 large or 5 small 21cals
+   抽出単位: unit 2 large or 5 small
+   利用可能単位: gram, lb, oz, serving
+
+84. food_0470: Tuna light canned in oil, cup, solid or chunks 289cals
+   抽出単位: solid or chunks
+   利用可能単位: gram, 3 oz, lb
+
+85. food_0471: Tuna light canned in water, cup, solid or chunks 132cals
+   抽出単位: solid or chunks
+   利用可能単位: gram, 3 oz, lb
+
+86. food_0472: Tuna white albacore canned in oil, can 331cals
+   抽出単位: can
+   利用可能単位: gram, 3 oz, lb
+
+87. food_0473: Tuna white albacore canned in water, can 220cals
+   抽出単位: can
+   利用可能単位: gram, 3 oz, lb
+
+88. food_0475: Tuna yellowfin raw, oz, boneless 31cals
+   抽出単位: boneless
+   利用可能単位: gram, 3 oz, lb
+
+89. food_0490: Chickpeas or garbanzo beans canned, can drained, rinsed 353cals
+   抽出単位: rinsed
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+90. food_0498: Kidney beans canned, can drained solids 330cals
+   抽出単位: can drained solids
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+91. food_0508: Pinto beans canned, can drained solids 316cals
+   抽出単位: can drained solids
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+92. food_0515: Tempeh uncooked, cup 319cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, serving
+
+93. food_0517: Tofu firm made with calcium sulfate, cup 363cals
+   抽出単位: cup
+   利用可能単位: gram, 0.2 block, lb, oz
+
+94. food_0518: Tofu firm made with nigari, cup 197cals
+   抽出単位: cup
+   利用可能単位: gram, 0.2 block, lb, oz
+
+95. food_0519: Tofu regular made with calcium sulfate, cup 188cals
+   抽出単位: cup
+   利用可能単位: gram, 0.2 block, lb, oz
+
+96. food_0548: Vegetable oil, tablespoon 120cals
+   抽出単位: tablespoon
+   利用可能単位: gram, lb, oz, sprays, about 1/3 second each spray
+
+97. food_0556: Cherries tart sweetened dried, cup 542cals
+   抽出単位: cup
+   利用可能単位: gram, cherry, lb, oz
+
+98. food_0620: Tortillas whole wheat flour, tortilla medium 140cals
+   抽出単位: tortilla medium
+   利用可能単位: gram, enchilada, lb, oz, tortilla
+
+99. food_0636: Cream cheese fat free, serving 105cals
+   抽出単位: serving
+   利用可能単位: gram, cubic inch, cup, fl oz, lb
+
+100. food_0650: Mozzarella cheese part skim low moisture, cup, diced 389cals
+   抽出単位: diced
+   利用可能単位: gram, lb, oz, serving
+
+101. food_0651: Mozzarella cheese whole milk, cup, shredded 335cals
+   抽出単位: shredded
+   利用可能単位: gram, lb, oz, serving
+
+102. food_0652: Mozzarella string cheese, piece 80cals
+   抽出単位: piece
+   利用可能単位: gram, lb, oz, serving
+
+103. food_0653: Mozzarella string cheese light, piece 50cals
+   抽出単位: piece
+   利用可能単位: gram, lb, oz, serving
+
+104. food_0667: Queso cotija cheese, tsp 10cals
+   抽出単位: tsp
+   利用可能単位: gram, cup crumbled, lb, oz
+
+105. food_0669: Queso seco cheese, cup grated 315cals
+   抽出単位: cup grated
+   利用可能単位: gram, cup crumbled, lb, oz
+
+106. food_0677: Swiss cheese nonfat or fat free, serving 36cals
+   抽出単位: serving
+   利用可能単位: gram, cubic inch, cup, diced, cup, shredded, lb
+
+107. food_0684: Beef flank steak lean and fat trimmed to 0" raw, serving 155cals
+   抽出単位: serving
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+108. food_0685: Beef ground 70% lean 30% fat raw, ounce 93cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+109. food_0686: Beef ground 75% lean 25% fat raw, ounce 82cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+110. food_0687: Beef ground 80% lean 20% fat or hamburger patty raw, ounce 71cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+111. food_0688: Beef ground 85% lean 15% fat raw, ounce 60cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+112. food_0689: Beef ground 90% lean 10% fat raw, ounce 49cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+113. food_0690: Beef ground 93% lean 7% fat raw, serving 172cals
+   抽出単位: serving
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+114. food_0691: Beef ground 95% lean 5% fat raw, ounce 38cals
+   抽出単位: ounce
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+115. food_0693: Beef ground grass fed raw, serving 168cals
+   抽出単位: serving
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+116. food_0695: Beef liver cooked pan-fried, slice 142cals
+   抽出単位: slice
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+117. food_0696: Beef liver raw, serving 135cals
+   抽出単位: serving
+   利用可能単位: gram, 4 oz, lb, oz, steak
+
+118. food_0715: Pork bacon cooked pan fried, slice cooked 37cals
+   抽出単位: slice cooked
+   利用可能単位: gram, 2 slices (6 per 6-oz pkg.), lb, oz, package (6 oz)
+
+119. food_0716: Pork bacon reduced sodium cooked, slice cooked 43cals
+   抽出単位: slice cooked
+   利用可能単位: gram, 2 slices (6 per 6-oz pkg.), lb, oz, package (6 oz)
+
+120. food_0728: Pork sausage link or ground cooked, link 278cals
+   抽出単位: link
+   利用可能単位: gram, 2 slices (6 per 6-oz pkg.), lb, oz, package (6 oz)
+
+121. food_0729: Pork sausage smoked andouille, link 160cals
+   抽出単位: link
+   利用可能単位: gram, 2 slices (6 per 6-oz pkg.), lb, oz, package (6 oz)
+
+122. food_0744: Butter unsalted, tbsp 102cals
+   抽出単位: tbsp
+   利用可能単位: gram, lb, oz, serving
+
+123. food_0746: Butter whipped unsalted, tbsp 50cals
+   抽出単位: tbsp
+   利用可能単位: gram, lb, oz, serving
+
+124. food_0752: Cashew yogurt plain unsweetened, serving 110cals
+   抽出単位: serving
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+125. food_0760: Cream half and half low fat, serving 76cals
+   抽出単位: serving
+   利用可能単位: gram, container, individual (.5 fl oz), cup, fl oz, lb
+
+126. food_0761: Cream heavy whipping, cup, whipped 408cals
+   抽出単位: whipped
+   利用可能単位: gram, container, individual (.5 fl oz), cup, fl oz, lb
+
+127. food_0762: Cream light whipping, cup, whipped 350cals
+   抽出単位: whipped
+   利用可能単位: gram, container, individual (.5 fl oz), cup, fl oz, lb
+
+128. food_0764: Cream sour fat free, serving 74cals
+   抽出単位: serving
+   利用可能単位: gram, container, individual (.5 fl oz), cup, fl oz, lb
+
+129. food_0768: Egg scrambled, with salt, large egg 105cals
+   抽出単位: large egg
+   利用可能単位: gram, 1.5 teaspoon, cup, fl oz, lb
+
+130. food_0771: Egg whole fried, large 88cals
+   抽出単位: large
+   利用可能単位: gram, 1.5 teaspoon, cup, fl oz, lb
+
+131. food_0772: Egg whole hard boiled, cup, chopped 211cals
+   抽出単位: chopped
+   利用可能単位: gram, 1.5 teaspoon, cup, fl oz, lb
+
+132. food_0774: Egg whole poached, large 77cals
+   抽出単位: large
+   利用可能単位: gram, 1.5 teaspoon, cup, fl oz, lb
+
+133. food_0775: Egg whole raw, large egg 78cals
+   抽出単位: large egg
+   利用可能単位: gram, 1.5 teaspoon, cup, fl oz, lb
+
+134. food_0780: Greek yogurt plain whole milk, serving 85cals
+   抽出単位: serving
+   利用可能単位: gram, container (7 oz), cup, fl oz, lb
+
+135. food_0791: Oat milk unsweetened, serving 48cals
+   抽出単位: serving
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+136. food_0792: Oat milk yogurt plain, serving 160cals
+   抽出単位: serving
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+137. food_0826: Olives black canned small to extra large, tbsp 10cals
+   抽出単位: tbsp
+   利用可能単位: gram, jumbo, lb, oz, super colossal
+
+138. food_0827: Olives green pickled canned or bottled, serving 145cals
+   抽出単位: serving
+   利用可能単位: gram, jumbo, lb, oz, super colossal
+
+139. food_0880: Chocolate chips vegan, tablespoon 70cals
+   抽出単位: tablespoon
+   利用可能単位: gram, cup chips, cup large chips, cup mini chips, lb
+
+140. food_0881: Chocolate for baking unsweetened, cup, grated 847cals
+   抽出単位: grated
+   利用可能単位: gram, cup chips, cup large chips, cup mini chips, lb
+
+141. food_0882: Chocolate fudge with chocolate cover, piece 99cals
+   抽出単位: piece
+   利用可能単位: gram, cup chips, cup large chips, cup mini chips, lb
+
+142. food_0883: Chocolate syrup, 2 tbsp 105cals
+   抽出単位: 2 tbsp
+   利用可能単位: gram, cup chips, cup large chips, cup mini chips, lb
+
+143. food_0896: Fructose liquid sweetener, serving 279cals
+   抽出単位: serving
+   利用可能単位: gram, cup, fl oz, individual packet, lb
+
+144. food_0906: Noncaloric sweetener Equal or aspartame (blue packet), tsp 13cals
+   抽出単位: tsp
+   利用可能単位: gram, lb, oz, packet
+
+145. food_0907: Noncaloric sweetener Sweet n Low or saccharin (pink packet), 1 packet 4cals
+   抽出単位: 1 packet
+   利用可能単位: gram, lb, oz, packet
+
+146. food_0908: Noncaloric sweetener stevia leaf (green packet), package 0cals
+   抽出単位: package
+   利用可能単位: gram, lb, oz, packet
+
+147. food_0917: Pie filling blueberry canned, cup 474cals
+   抽出単位: cup
+   利用可能単位: gram, crust, single 9", lb, oz, piece (1/8 of 9" crust)
+
+148. food_0928: Beer regular 5% ABV, can 153cals
+   抽出単位: can
+   利用可能単位: gram, 12 fl oz, cup, lb, ml
+
+149. food_0940: Coffee regular instant powder, tsp dry 3cals
+   抽出単位: tsp dry
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+150. food_0942: Espresso decaf prepared without milk or sugar, fluid ounce 3cals
+   抽出単位: fluid ounce
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+151. food_0943: Espresso regular prepared without milk or sugar, fluid ounce 3cals
+   抽出単位: fluid ounce
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+152. food_0949: Ice cubes, cube 0cals
+   抽出単位: cube
+   利用可能単位: gram, 8 fl oz, cup, lb, ml
+
+153. food_0973: Tea black regular instant powder unsweetened, 1 tsp 2cals
+   抽出単位: 1 tsp
+   利用可能単位: gram, 6 fl oz, cup, cup (8 fl oz), fl oz
+
+154. food_0999: Cherries sour red raw, cup, without pits 78cals
+   抽出単位: without pits
+   利用可能単位: gram, cup, unthawed, lb, oz, package (18 oz)
+
+155. food_1001: Cherries sweet raw, cup, with pits, yields 74cals
+   抽出単位: yields
+   利用可能単位: gram, cup, unthawed, lb, oz, package (18 oz)
+
+156. food_1021: Lemon raw, cup, sections 61cals
+   抽出単位: sections
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+157. food_1035: Peaches raw, cup slices 66cals
+   抽出単位: cup slices
+   利用可能単位: gram, 10 slice, cup, thawed, lb, oz
+
+158. food_1037: Pears raw, cup slices 94cals
+   抽出単位: cup slices
+   利用可能単位: gram, fruit 2-1/4" high x 2-1/2" dia, fruit 3-3/8" high x 3" diameter, lb, oz
+
+159. food_1039: Persimmons raw, fruit without refuse 32cals
+   抽出単位: fruit without refuse
+   利用可能単位: gram, fruit (2-1/2" dia), lb, oz
+
+160. food_1041: Pineapple raw, cup, diced 78cals
+   抽出単位: diced
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+161. food_1054: Strawberries raw, cup, halves 49cals
+   抽出単位: halves
+   利用可能単位: gram, berry, cup, thawed, cup, unthawed, lb
+
+162. food_1063: Almonds raw, cup, ground 550cals
+   抽出単位: ground
+   利用可能単位: gram, cup whole kernels, lb, oz, oz (22 whole kernels)
+
+163. food_1077: Coconut meat raw, cup, shredded 283cals
+   抽出単位: shredded
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+164. food_1095: Peanuts dry roasted without salt, cup 857cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, peanut
+
+165. food_1096: Peanuts oil roasted with salt, cup, chopped 863cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz, peanut
+
+166. food_1097: Peanuts oil roasted without salt, cup, chopped 797cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz, peanut
+
+167. food_1098: Peanuts raw, cup 828cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz, peanut
+
+168. food_1101: Pecans oil roasted with salt, cup 787cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz
+
+169. food_1102: Pecans oil roasted without salt, cup 787cals
+   抽出単位: cup
+   利用可能単位: gram, lb, oz
+
+170. food_1103: Pecans raw, cup, chopped 753cals
+   抽出単位: chopped
+   利用可能単位: gram, lb, oz
+
+171. food_1120: Sunflower seed kernels (shelled) dried, cup, with hulls, edible yield 269cals
+   抽出単位: edible yield
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+172. food_1122: Sunflower seed kernels (shelled) dry roasted without salt, cup, hulled 745cals
+   抽出単位: hulled
+   利用可能単位: gram, cup, fl oz, lb, ml
+
+173. food_1140: Jellies, 1 tbsp 58cals
+   抽出単位: 1 tbsp
+   利用可能単位: tablespoon, packet (0.5 oz), gram, oz, lb
+
+
+================================================================================
+統計情報
+================================================================================
+総食材数: 1125個
+単位抽出成功: 1024個 (91.0%)
+単位抽出失敗: 101個 (9.0%)
+Serving一致: 851個 (83.1%)
+Serving不一致: 173個 (16.9%)

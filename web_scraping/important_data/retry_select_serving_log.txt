@@ -1,0 +1,714 @@
+=== Select Serving再収集ログ ===
+開始時刻: 2025-10-05T11:27:54.786796
+
+🔄 Select Serving不在食材の再収集
+================================================================================
+対象食材数: 63個
+
+📝 全63食材を再収集します
+
+📚 カタログ読み込み中...
+✅ カタログ読み込み完了
+
+🔍 1/63: Cornstarch, cup
+488cals
+   カテゴリ: Grains & Grain Products
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 2/63: Baker's yeast active dry, tbsp
+39cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 3/63: Baker's yeast compressed, cake (0.6 oz)
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 4/63: Cardamom, tbsp, ground
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 5/63: Paprika, tbsp
+19cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 6/63: Cornstarch, cup
+488cals
+   カテゴリ: Grains & Grain Products
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 7/63: Baker's yeast active dry, tbsp
+39cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 8/63: Baker's yeast compressed, cake (0.6 oz)
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 9/63: Cardamom, tbsp, ground
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 10/63: Paprika, tbsp
+19cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 11/63: Salt, cup
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 12/63: Sea salt iodized, gram
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 13/63: Sea salt non-iodized, tsp
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 14/63: Za'atar or za'atar spice blend, tsp
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 15/63: Sea bass mixed species raw, fillet
+125cals
+   カテゴリ: Fish & Seafood
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 16/63: Hummus, cup
+583cals
+   カテゴリ: Beans & Peas
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 17/63: Natto, cup
+369cals
+   カテゴリ: Beans & Peas
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 18/63: Goat's milk, cup
+168cals
+   カテゴリ: Dairy, Dairy Substitutes & Egg
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 19/63: Guacamole, serving
+64cals
+   カテゴリ: Condiments, Dressings & Sauces
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 20/63: Salsa, cup
+75cals
+   カテゴリ: Condiments, Dressings & Sauces
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 21/63: Honey, cup
+1,031cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 22/63: Jellies, 1 tbsp
+58cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 23/63: Molasses, cup
+977cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 24/63: Champagne, serving
+82cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 25/63: Cognac, serving
+231cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 26/63: Liqueur, serving
+284cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 27/63: Martini, serving
+188cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 28/63: Water, cup
+0cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 29/63: Watermelon, cup, balls
+46cals
+   カテゴリ: Fruit - raw or frozen
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 30/63: Flaxseeds, cup, whole
+897cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 31/63: Walnuts dry roasted with salt, oz
+182cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 32/63: Walnuts glazed, oz
+142cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 33/63: Walnuts raw, cup, chopped
+765cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 34/63: Watermelon seed kernels (shelled) dried, cup
+602cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 35/63: Cornstarch, cup
+488cals
+   カテゴリ: Grains & Grain Products
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 36/63: Baker's yeast active dry, tbsp
+39cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 37/63: Baker's yeast compressed, cake (0.6 oz)
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 38/63: Cardamom, tbsp, ground
+18cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 39/63: Paprika, tbsp
+19cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 40/63: Salt, cup
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 41/63: Sea salt iodized, gram
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 42/63: Sea salt non-iodized, tsp
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 43/63: Za'atar or za'atar spice blend, tsp
+0cals
+   カテゴリ: Spices & Herbs
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 44/63: Sea bass mixed species raw, fillet
+125cals
+   カテゴリ: Fish & Seafood
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 45/63: Hummus, cup
+583cals
+   カテゴリ: Beans & Peas
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 46/63: Natto, cup
+369cals
+   カテゴリ: Beans & Peas
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 47/63: Goat's milk, cup
+168cals
+   カテゴリ: Dairy, Dairy Substitutes & Egg
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 48/63: Guacamole, serving
+64cals
+   カテゴリ: Condiments, Dressings & Sauces
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 49/63: Salsa, cup
+75cals
+   カテゴリ: Condiments, Dressings & Sauces
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 50/63: Honey, cup
+1,031cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 51/63: Jellies, 1 tbsp
+58cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 52/63: Molasses, cup
+977cals
+   カテゴリ: Sweets & Sweeteners
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 53/63: Champagne, serving
+82cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 54/63: Cognac, serving
+231cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 55/63: Liqueur, serving
+284cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 56/63: Martini, serving
+188cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 57/63: Water, cup
+0cals
+   カテゴリ: Beverages
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 58/63: Watermelon, cup, balls
+46cals
+   カテゴリ: Fruit - raw or frozen
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 59/63: Flaxseeds, cup, whole
+897cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 60/63: Walnuts dry roasted with salt, oz
+182cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 61/63: Walnuts glazed, oz
+142cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   ⚠️  'Select Serving'なし
+   → リセット中...
+   ✅ リセット完了
+
+🔍 62/63: Walnuts raw, cup, chopped
+765cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+🔍 63/63: Watermelon seed kernels (shelled) dried, cup
+602cals
+   カテゴリ: Nuts & Seeds
+   → 食材ページへ移動中...
+   ✅ ナビゲーション成功
+   → データ収集中...
+   ✅ データ収集成功
+   🎉 'Select Serving'発見！
+   → リセット中...
+   ✅ リセット完了
+
+================================================================================
+📊 実行結果
+================================================================================
+再収集試行: 63個
+成功: 63個
+失敗: 0個
+
+💾 結果保存: important_data/retry_select_serving_results.json
+📝 ログ保存: important_data/retry_select_serving_log.txt

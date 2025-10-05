@@ -1,0 +1,66 @@
+================================================================================
+🔍 食材データ完全性チェック結果
+================================================================================
+📁 データファイル: comprehensive_food_collection_all_20250930_194422.json
+📅 チェック実行日時: 2025-10-01 10:09:36
+
+📊 全体統計
+----------------------------------------
+📝 総食材数: 1,559個
+✅ 成功食材数: 1,470個 (94.3%)
+
+📋 データカバレッジ
+----------------------------------------
+🍽️ Serving情報あり: 1,194個 (76.6%)
+🥗 栄養情報あり: 1,194個 (76.6%)
+📊 両方のデータあり: 1,194個 (76.6%)
+
+✨ データ品質
+----------------------------------------
+🍽️ 完全なServing情報: 1,194個 (76.6%)
+🥗 完全な栄養情報: 1,169個 (75.0%)
+🏆 完全に有効なデータ: 1,169個 (75.0%)
+
+⚠️ 問題検出
+----------------------------------------
+❌ 収集失敗: 89個
+   • Cornstarch, cup
+488cals
+   • Baker's yeast active dry, tbsp
+39cals
+   • Baker's yeast compressed, cake (0.6 oz)
+18cals
+   • Cardamom, tbsp, ground
+18cals
+   • Paprika, tbsp
+19cals
+   • Salt, cup
+0cals
+   • Sea salt iodized, gram
+0cals
+   • Sea salt non-iodized, tsp
+0cals
+   • Za'atar or za'atar spice blend, tsp
+0cals
+   • Sea bass mixed species raw, fillet
+125cals
+   ... 他79個
+🥗 栄養情報不完全: 8個
+   • Italian seasoning dried, tsp
+0cals
+   • Peppermint extract, teaspoon
+10cals
+   • Olives kalamata pitted, olives
+9cals
+   • Crispbread multigrain, stick
+34cals
+   • Beer 7.7% ABV, fl oz
+19cals
+   • Beer Guinness stout 4.2% ABV, fl oz
+10cals
+   • Beer regular 5% ABV, can
+153cals
+   • Sea salt non-iodized, tsp
+0cals
+
+================================================================================

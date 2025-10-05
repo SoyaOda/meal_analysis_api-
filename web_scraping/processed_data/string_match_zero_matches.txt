@@ -1,0 +1,70 @@
+================================================================================
+マッチなし食材リスト（0個マッチ）
+================================================================================
+総数: 16個
+================================================================================
+
+1. Kidney beans raw
+   ID: 10000000023
+   マッチ: なし
+
+2. Tofu crumbles
+   ID: 10000000042
+   マッチ: なし
+
+3. Mexican blend cheese reduced fat
+   ID: 10000000175
+   マッチ: なし
+
+4. Chili garlic sauce or tuong ot toi Vietnam
+   ID: 10000000215
+   マッチ: なし
+
+5. Mayonnaise light or lite
+   ID: 10000000227
+   マッチ: なし
+
+6. Mayonnaise with olive oil reduced fat
+   ID: 10000000229
+   マッチ: なし
+
+7. Vinegar rice
+   ID: 10000000278
+   マッチ: なし
+
+8. Olive or extra virgin olive oil
+   ID: 10000000359
+   マッチ: なし
+
+9. Grapes red or green raw
+   ID: 10000000505
+   マッチ: なし
+
+10. Watermelon raw
+   ID: 10000000548
+   マッチ: なし
+
+11. Quinoa cooked without salt
+   ID: 10000000607
+   マッチ: なし
+
+12. Sea salt non-iodized
+   ID: 10000000857
+   マッチ: なし
+
+13. Za'atar or zaatar spice blend
+   ID: 10000000872
+   マッチ: なし
+
+14. Olives kalamata pitted
+   ID: 10000000958
+   マッチ: なし
+
+15. Peppers sweet green raw
+   ID: 10000001088
+   マッチ: なし
+
+16. Peppers sweet red raw
+   ID: 10000001089
+   マッチ: なし
+

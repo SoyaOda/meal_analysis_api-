@@ -1,0 +1,286 @@
+================================================================================
+【失敗食材リスト（全て）】
+================================================================================
+ 378. Olives kalamata pitted, olives
+9cals
+       カテゴリ: Vegetables - canned, dried, or juice
+       raw_nutrition要素数: 80
+None
+
+ 526. Chicken fat, cup
+1,845cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+
+Serving Size	cup (205g)
+
+
+ 529. Cod liver fish oil, cup
+1,966cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 162
+Serving Size	cup (218g)
+
+ 531. Flaxseed or flax oil, cup
+1,927cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+Serving Size	cup (218g)
+
+ 533. Lard or pig fat, cup
+1,849cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+Serving Size	cup (205g)
+
+ 534. Margarine regular soft salted, cup
+1,619cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+Serving Size	cup (227g)
+
+ 535. Margarine regular stick salted, tbsp
+100cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+Serving Size	tbsp (14g)
+
+ 545. Sunflower oil, cup
+1,927cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 175
+Serving Size	cup (218g)
+
+ 546. Sunflower oil high oleic content over 70%, tbsp
+124cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 175
+Serving Size	cup (218g)
+
+ 550. Walnut oil, cup
+1,927cals
+       カテゴリ: Fats & Oils
+       raw_nutrition要素数: 178
+Serving Size	cup (218g)
+
+ 682. Beef brisket flat cut trimmed to 1/8" fat raw, steak
+1,252cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	steak (452g)
+
+ 683. Beef chuck arm pot roast lean and fat trimmed to 1/8" fat raw, oz
+69cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 684. Beef chuck short ribs boneless lean and fat trimmed to 0" fat raw, oz
+67cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 685. Beef flank steak lean and fat trimmed to 0" raw, serving
+155cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	serving (100g)
+
+ 686. Beef ground 70% lean 30% fat raw, ounce
+93cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 687. Beef ground 75% lean 25% fat raw, ounce
+82cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 688. Beef ground 80% lean 20% fat or hamburger patty raw, ounce
+71cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 689. Beef ground 85% lean 15% fat raw, ounce
+60cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 690. Beef ground 90% lean 10% fat raw, ounce
+49cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 691. Beef ground 93% lean 7% fat raw, serving
+172cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	serving (113g)
+
+ 692. Beef ground 95% lean 5% fat raw, ounce
+38cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	ounce (28g)
+
+ 693. Beef ground 97% lean 3% fat raw, oz
+34cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 694. Beef ground grass fed raw, serving
+168cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	serving (85g)
+
+ 695. Beef jerky sweet and hot, oz
+80cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 696. Beef liver cooked pan-fried, slice
+142cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	slice (81g)
+
+ 697. Beef liver raw, serving
+135cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	serving (100g)
+
+ 698. Beef ribeye steak bone-in lean and trimmed to 1/8" fat all grades raw, oz
+47cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 699. Beef ribeye steak boneless lean and trimmed to 1/8" fat all grades raw, oz
+69cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 700. Beef round tip lean and fat trimmed to 1/8" raw, oz
+54cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 701. Beef round top steak boneless lean and trimmed to 0" fat all grades raw, oz
+35cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 702. Beef short or top loin lean and trimmed to 1/8" fat all grades raw, steak
+606cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	steak (266g)
+
+ 703. Beef tenderloin boneless lean meat only cooked roasted, oz
+50cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 704. Beef tongue raw, oz
+64cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	oz (28g)
+
+ 705. Beef top sirloin steak lean and fat trimmed to 1/8" raw, steak
+1,222cals
+       カテゴリ: Meats
+       raw_nutrition要素数: 174
+Serving Size	steak (608g)
+
+ 830. Pesto prepared refrigerated, cup
+1,053cals
+       カテゴリ: Condiments, Dressings & Sauces
+       raw_nutrition要素数: 171
+Serving Size	cup (252g)
+
+1057. Almond butter with salt, cup
+1,535cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 178
+Serving Size	cup (250g)
+
+1058. Almond butter without salt, cup
+1,535cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 178
+Serving Size	cup (250g)
+
+1059. Almond flour, cup
+642cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 178
+Serving Size	cup (112g)
+
+1060. Almond meal, tablespoon
+40cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 178
+Serving Size	tablespoon (7g)
+
+1091. Peanut butter chunky with salt, cup
+1,520cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 175
+Serving Size	cup (258g)
+
+1092. Peanut butter chunky without salt, cup
+1,520cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 175
+Serving Size	cup (258g)
+
+1093. Peanut butter smooth with salt, cup
+1,520cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 175
+Serving Size	cup (258g)
+
+1094. Peanut butter smooth without salt, cup
+1,543cals
+       カテゴリ: Nuts & Seeds
+       raw_nutrition要素数: 175
+Serving Size	cup (258g)
+
+1138. Sea salt non-iodized, tsp
+0cals
+       カテゴリ: Spices & Herbs
+       raw_nutrition要素数: 82
+None
+
+1146. Honey, cup
+1,031cals
+       カテゴリ: Sweets & Sweeteners
+       raw_nutrition要素数: 178
+Serving Size	cup (339g)
+
+1167. Sea salt non-iodized, tsp
+0cals
+       カテゴリ: Spices & Herbs
+       raw_nutrition要素数: 82
+1138と同様の内容なので除外
+
+1175. Honey, cup
+1,031cals
+       カテゴリ: Sweets & Sweeteners
+       raw_nutrition要素数: 178
+1146と同様の内容なので除外

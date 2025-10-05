@@ -1,0 +1,137 @@
+====================================================================================================
+🔍 包括的食材データ分析レポート
+====================================================================================================
+📅 分析実行日時: 2025-10-01 10:18:26
+
+📊 基本統計
+------------------------------------------------------------
+📋 カタログ総食材数: 1,154個
+📝 収集処理数: 1,154個
+✅ 成功収集数: 1,470個
+❌ 失敗収集数: 89個
+
+📋 カバレッジ分析
+------------------------------------------------------------
+🎯 カバー済み食材: 1,154個 (100.0%)
+📊 カバー済み成功率: 100.0%
+❓ 未カバー食材: 0個
+🆕 カタログ外食材: 0個
+
+🔄 潜在的重複食材
+------------------------------------------------------------
+検出数: 564組
+  • 97.5%: 'Sunflower seed kernels (shelled) oil roasted with salt, cup 799cals' ↔ 'Sunflower seed kernels (shelled) oil roasted without salt, cup 799cals'
+  • 97.3%: 'Macadamias dry roasted without salt, cup, whole or halves 959cals' ↔ 'Macadamias dry roasted with salt, cup, whole or halves 959cals'
+  • 97.2%: 'Pumpkin seed kernels (shelled) roasted with salt, cup 677cals' ↔ 'Pumpkin seed kernels (shelled) roasted without salt, cup 677cals'
+  • 97.2%: 'Pumpkin seeds whole with shell roasted without salt, cup 285cals' ↔ 'Pumpkin seeds whole with shell roasted with salt, cup 285cals'
+  • 97.2%: 'Cashews dry roasted with salt, cup, halves and whole 786cals' ↔ 'Cashews dry roasted without salt, cup, halves and whole 786cals'
+  • 97.2%: 'Sesame seed kernels (shelled) toasted with salt, cup 726cals' ↔ 'Sesame seed kernels (shelled) toasted without salt, cup 726cals'
+  • 97.1%: 'Butter reduced fat unsalted, serving 499cals' ↔ 'Butter reduced fat salted, serving 499cals'
+  • 97.0%: 'Chickpeas or garbanzo beans boiled with salt, cup 269cals' ↔ 'Chickpeas or garbanzo beans boiled without salt, cup 269cals'
+  • 97.0%: 'Almonds dry roasted without salt, cup whole kernels 825cals' ↔ 'Almonds dry roasted with salt, cup whole kernels 825cals'
+  • 96.7%: 'Oatmeal or rolled oats cooked without salt, cup 166cals' ↔ 'Oatmeal or rolled oats cooked with salt, cup 159cals'
+  ... 他554組
+
+📂 カテゴリ別分析
+------------------------------------------------------------
+📁 Grains & Grain Products
+   📋 カタログ: 89個
+   📝 収集: 89個 (100.0%)
+   ✅ 成功: 89個 (100.0%)
+
+📁 Spices & Herbs
+   📋 カタログ: 76個
+   📝 収集: 76個 (100.0%)
+   ✅ 成功: 76個 (100.0%)
+
+📁 Vegetables - raw, frozen, or cooked
+   📋 カタログ: 159個
+   📝 収集: 159個 (100.0%)
+   ✅ 成功: 159個 (100.0%)
+
+📁 Poultry
+   📋 カタログ: 29個
+   📝 収集: 29個 (100.0%)
+   ✅ 成功: 29個 (100.0%)
+
+📁 Stocks and Gravy
+   📋 カタログ: 23個
+   📝 収集: 23個 (100.0%)
+   ✅ 成功: 23個 (100.0%)
+
+📁 Vegetables - canned, dried, or juice
+   📋 カタログ: 36個
+   📝 収集: 36個 (100.0%)
+   ✅ 成功: 36個 (100.0%)
+
+📁 Fish & Seafood
+   📋 カタログ: 75個
+   📝 収集: 75個 (100.0%)
+   ✅ 成功: 75個 (100.0%)
+
+📁 Beans & Peas
+   📋 カタログ: 47個
+   📝 収集: 47個 (100.0%)
+   ✅ 成功: 47個 (100.0%)
+
+📁 Fats & Oils
+   📋 カタログ: 29個
+   📝 収集: 29個 (100.0%)
+   ✅ 成功: 29個 (100.0%)
+
+📁 Fruit - canned, dried, or juice
+   📋 カタログ: 35個
+   📝 収集: 35個 (100.0%)
+   ✅ 成功: 35個 (100.0%)
+
+📁 Breads & Rolls
+   📋 カタログ: 38個
+   📝 収集: 38個 (100.0%)
+   ✅ 成功: 38個 (100.0%)
+
+📁 Cheese
+   📋 カタログ: 57個
+   📝 収集: 57個 (100.0%)
+   ✅ 成功: 57個 (100.0%)
+
+📁 Meats
+   📋 カタログ: 58個
+   📝 収集: 58個 (100.0%)
+   ✅ 成功: 58個 (100.0%)
+
+📁 Dairy, Dairy Substitutes & Egg
+   📋 カタログ: 63個
+   📝 収集: 63個 (100.0%)
+   ✅ 成功: 63個 (100.0%)
+
+📁 Condiments, Dressings & Sauces
+   📋 カタログ: 76個
+   📝 収集: 76個 (100.0%)
+   ✅ 成功: 76個 (100.0%)
+
+📁 Sweets & Sweeteners
+   📋 カタログ: 52個
+   📝 収集: 52個 (100.0%)
+   ✅ 成功: 52個 (100.0%)
+
+📁 Beverages
+   📋 カタログ: 67個
+   📝 収集: 67個 (100.0%)
+   ✅ 成功: 67個 (100.0%)
+
+📁 Fruit - raw or frozen
+   📋 カタログ: 71個
+   📝 収集: 71個 (100.0%)
+   ✅ 成功: 71個 (100.0%)
+
+📁 Nuts & Seeds
+   📋 カタログ: 74個
+   📝 収集: 74個 (100.0%)
+   ✅ 成功: 74個 (100.0%)
+
+🎯 結論
+------------------------------------------------------------
+✅ 優秀: カバレッジ率が95%以上です
+✅ 優秀: カバー済み食材の成功率が90%以上です
+
+====================================================================================================

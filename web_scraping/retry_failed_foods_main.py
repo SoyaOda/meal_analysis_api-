@@ -118,60 +118,41 @@ class ComprehensiveFoodDataCollectionMain:
             return False
 
     def _select_foods_from_navigator(self, mode: str = "all", limit: int = None, category: str = None) -> List[str]:
-        """ナビゲーターから収集対象食材を選択（安定版）"""
+        """失敗食材リストから収集対象食材を選択"""
         try:
-            print(f"🎯 収集対象食材選択中 (モード: {mode})...")
+            print(f"🎯 失敗食材リストから収集対象を選択中...")
 
-            if mode == "all":
-                # 全食材を選択
-                selected_foods = []
-                for category_name, category_data in self.navigator.food_catalog.items():
-                    for food in category_data['foods']:
-                        selected_foods.append(food['food_name'])
-                
-                if limit:
-                    selected_foods = selected_foods[:limit]
-
-            elif mode == "category" and category:
-                # 特定カテゴリの食材を選択
-                if category in self.navigator.food_catalog:
-                    category_data = self.navigator.food_catalog[category]
-                    selected_foods = [food['food_name'] for food in category_data['foods']]
-                    if limit:
-                        selected_foods = selected_foods[:limit]
-                else:
-                    print(f"❌ カテゴリが見つかりません: {category}")
-                    return []
-
-            elif mode == "sample":
-                # 各カテゴリから少数をサンプリング
-                selected_foods = []
-                sample_per_category = limit // len(self.navigator.food_catalog) if limit else 2
-
-                for category_name, category_data in self.navigator.food_catalog.items():
-                    category_foods = [food['food_name'] for food in category_data['foods'][:sample_per_category]]
-                    selected_foods.extend(category_foods)
-
-                if limit:
-                    selected_foods = selected_foods[:limit]
-
-            else:
-                print(f"❌ 無効なモード: {mode}")
-                return []
-
-            print(f"✅ 選択完了: {len(selected_foods)}個の食材")
+            # 失敗食材リストファイルを読み込み
+            failed_foods_file = Path("data/failed_foods_list.json")
             
-            # 統計情報表示
-            total_foods = sum(len(cat_data['foods']) for cat_data in self.navigator.food_catalog.values())
-            print(f"📊 カタログ統計:")
-            print(f"   📂 カテゴリ数: {len(self.navigator.food_catalog)}個")
-            print(f"   🍽️ 総食材数: {total_foods}個")
-            print(f"   🎯 選択食材数: {len(selected_foods)}個")
+            if not failed_foods_file.exists():
+                print(f"❌ 失敗食材リストファイルが見つかりません: {failed_foods_file}")
+                return []
+            
+            with open(failed_foods_file, 'r', encoding='utf-8') as f:
+                failed_data = json.load(f)
+            
+            selected_foods = failed_data['failed_foods']
+            
+            print(f"✅ 失敗食材リスト読み込み完了: {len(selected_foods)}個")
+            
+            # limit が指定されている場合は制限
+            if limit:
+                selected_foods = selected_foods[:limit]
+                print(f"   🔢 制限適用: {len(selected_foods)}個")
+            
+            print(f"\n📋 処理対象食材:")
+            for i, food in enumerate(selected_foods[:10]):
+                print(f"   {i+1}. {food}")
+            if len(selected_foods) > 10:
+                print(f"   ... 他 {len(selected_foods) - 10}個")
             
             return selected_foods
 
         except Exception as e:
-            print(f"❌ 食材選択エラー: {e}")
+            print(f"❌ 失敗食材リスト読み込みエラー: {e}")
+            import traceback
+            traceback.print_exc()
             return []
 
     async def collect_food_data_comprehensive(self, food_names: List[str], save_interval: int = 10, existing_results: List[Dict] = None) -> List[Dict]:
@@ -533,9 +514,9 @@ class ComprehensiveFoodDataCollectionMain:
 
     async def run_comprehensive_collection(self, mode: str = "sample", limit: int = 10, category: str = None, 
                                           auto_resume: bool = False, resume_file: str = None, save_interval: int = 10):
-        """網羅的食材データ収集を実行（中断再開対応）"""
+        """失敗食材リトライ専用の収集実行"""
         try:
-            print("🚀 網羅的食材データ収集システム開始")
+            print("🚀 失敗食材リトライシステム開始")
             print("="*120)
 
             # 1. セッション初期化（先に実行）
@@ -549,90 +530,69 @@ class ComprehensiveFoodDataCollectionMain:
                 print("❌ カタログ読み込み失敗")
                 return False
 
-            # 3. 再開ファイルの検出・読み込み
-            existing_results = []
-            completed_foods = set()
-            failed_foods = []
-            
-            if auto_resume:
-                print("🔍 自動再開モード: 未完了ファイルを検索中...")
-                resume_file = self.find_latest_incomplete_file()
-                
-            if resume_file:
-                print(f"📄 再開ファイル指定: {resume_file}")
-                existing_data = self.load_existing_results(resume_file)
-                if existing_data:
-                    existing_results = existing_data.get('collection_results', [])
-                    completed_foods = self.extract_completed_foods(existing_results)
-                    failed_foods = self.extract_failed_foods(existing_results)  # 失敗食材を抽出
-                    
-                    # 前回のモード・設定を継承
-                    if not mode or mode == "sample":  # デフォルト値の場合は継承
-                        prev_mode = existing_data.get('collection_summary', {}).get('collection_mode', mode)
-                        print(f"📋 前回のモード継承: {prev_mode}")
-                        mode = prev_mode
-
-            # 4. 収集対象食材選択（ナビゲーター版を使用）
+            # 3. 失敗食材リストから収集対象を選択（auto-resumeは無視）
             all_selected_foods = self._select_foods_from_navigator(mode=mode, limit=limit, category=category)
             if not all_selected_foods:
                 print("❌ 収集対象食材が選択されませんでした")
                 return False
 
-            # 5. 未処理食材のフィルタリング + 失敗食材の再実行対象追加
-            if completed_foods or failed_foods:
-                remaining_foods = self.filter_remaining_foods(all_selected_foods, completed_foods)
-                
-                # 失敗した食材を再実行対象として追加
-                if failed_foods:
-                    print(f"🔄 失敗食材を再実行対象に追加: {len(failed_foods)}個")
-                    # 重複除去して失敗食材を追加
-                    for failed_food in failed_foods:
-                        if failed_food not in remaining_foods:
-                            remaining_foods.append(failed_food)
-                    
-                    print(f"📊 再実行対象合計: {len(remaining_foods)}個")
-                    print(f"   ├── 新規未処理: {len(remaining_foods) - len(failed_foods)}個")
-                    print(f"   └── 失敗再試行: {len(failed_foods)}個")
-                
-                if not remaining_foods:
-                    print("✅ 全ての食材が既に処理済みです")
-                    return True
-            else:
-                remaining_foods = all_selected_foods
-                print(f"🆕 新規実行: {len(remaining_foods)}食材を処理")
+            # 4. 既存結果の確認（リトライ専用なので新規実行）
+            existing_results = []
+            print(f"\n🆕 新規実行: {len(all_selected_foods)}食材をリトライ")
 
-            # 6. 包括的データ収集実行（中断再開対応）
+            # 5. 包括的データ収集実行
             print(f"\n🔬 データ収集開始:")
-            print(f"   📊 処理対象: {len(remaining_foods)}食材")
-            print(f"   🔄 既存結果: {len(existing_results)}食材")
+            print(f"   📊 処理対象: {len(all_selected_foods)}食材")
             print(f"   💾 保存間隔: {save_interval}食材ごと")
             
             results = await self.collect_food_data_comprehensive(
-                remaining_foods, 
+                all_selected_foods, 
                 save_interval=save_interval, 
                 existing_results=existing_results
             )
 
-            # 7. 最終結果保存
-            filename = self.save_comprehensive_results(results, mode=mode)
+            # 6. 最終結果保存（専用ファイル名）
+            output_dir = Path("data")
+            output_dir.mkdir(exist_ok=True)
+            
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = output_dir / f"retry_failed_foods_{timestamp}.json"
+            
+            output_data = {
+                "collection_summary": {
+                    "collection_mode": "retry_failed_foods",
+                    "total_foods": len(results),
+                    "successful_foods": len([r for r in results if r.get("overall_success")]),
+                    "failed_foods": len([r for r in results if not r.get("overall_success")]),
+                    "collection_timestamp": timestamp
+                },
+                "collection_results": results
+            }
+            
+            with open(filename, 'w', encoding='utf-8') as f:
+                json.dump(output_data, f, ensure_ascii=False, indent=2)
 
             successful = [r for r in results if r.get("overall_success")]
+            failed = [r for r in results if not r.get("overall_success")]
             success_rate = len(successful) / len(results) * 100 if results else 0
 
-            print(f"\n🎉 網羅的食材データ収集完了!")
+            print(f"\n🎉 失敗食材リトライ完了!")
             print(f"✅ 成功率: {success_rate:.1f}%")
+            print(f"✅ 成功: {len(successful)}個")
+            print(f"❌ 失敗: {len(failed)}個")
             print(f"📁 結果ファイル: {filename}")
             
-            if existing_results:
-                print(f"🔄 再開統計:")
-                print(f"   継続前: {len(existing_results)}食材")
-                print(f"   追加処理: {len(results) - len(existing_results)}食材")
-                print(f"   最終結果: {len(results)}食材")
+            if failed:
+                print(f"\n⚠️ まだ失敗している食材:")
+                for i, r in enumerate(failed[:10]):
+                    print(f"   {i+1}. {r.get('food_name', 'Unknown')}")
+                if len(failed) > 10:
+                    print(f"   ... 他 {len(failed) - 10}個")
 
             return success_rate >= 50  # 50%以上の成功率で成功とみなす
 
         except Exception as e:
-            print(f"❌ 網羅的データ収集システムエラー: {e}")
+            print(f"❌ リトライシステムエラー: {e}")
             import traceback
             traceback.print_exc()
             return False

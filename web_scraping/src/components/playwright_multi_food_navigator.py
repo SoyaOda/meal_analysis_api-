@@ -33,6 +33,10 @@ class PlaywrightMultiFoodNavigator:
         # 認証情報（Selenium版と同じ）
         self.username = "odssuu@gmail.com"
         self.password = "hojihoji2025"
+        
+        # ロガー初期化
+        import logging
+        self.logger = logging.getLogger(__name__)
 
     async def initialize_session(self) -> bool:
         """
@@ -234,8 +238,14 @@ class PlaywrightMultiFoodNavigator:
         self.food_index = index
 
     def _normalize_food_name(self, food_name: str) -> str:
-        """食材名を正規化"""
-        return food_name.lower().strip()
+        """食材名を正規化（改行・余分なスペースを削除）"""
+        # 改行文字を空白に置換
+        normalized = food_name.replace('\n', ' ').replace('\r', ' ')
+        # 複数の連続空白を1つに
+        import re
+        normalized = re.sub(r'\s+', ' ', normalized)
+        # 小文字化＆trim
+        return normalized.lower().strip()
 
     async def navigate_to_food_stable(self, food_name: str) -> bool:
         """
@@ -352,135 +362,488 @@ class PlaywrightMultiFoodNavigator:
             return False
 
     async def _select_category(self, category_name: str, category_xpath: str) -> bool:
-        """カテゴリを選択（Selenium版と同じロジック）"""
-        try:
-            print(f"📂 カテゴリ選択: {category_name}")
+        """カテゴリを選択（エラー対策強化版）"""
+        max_retries = 3
+        timeout_ms = 60000  # 30秒→60秒に延長
+        
+        for attempt in range(max_retries):
+            try:
+                print(f"📂 カテゴリ選択: {category_name} (試行 {attempt + 1}/{max_retries})")
 
-            # Selenium版と同じく、保存されたXPathを使用
-            category_element = await self.page.wait_for_selector(category_xpath)
+                # 複数のセレクター戦略を試行
+                selectors = [
+                    category_xpath,  # 保存されたXPath（優先）
+                    f"//span[text()='{category_name}']",  # テキストベース
+                    f"//span[contains(text(), '{category_name}')]",  # 部分マッチ
+                    f"//*[contains(@class, 'category') and contains(text(), '{category_name}')]"  # クラスベース
+                ]
+                
+                category_element = None
+                used_selector = None
+                
+                for selector in selectors:
+                    try:
+                        category_element = await self.page.wait_for_selector(selector, timeout=timeout_ms)
+                        used_selector = selector
+                        break
+                    except:
+                        continue
+                
+                if not category_element:
+                    if attempt < max_retries - 1:
+                        print(f"⚠️ カテゴリ要素が見つかりません。{2}秒後に再試行...")
+                        await asyncio.sleep(2)
+                        continue
+                    else:
+                        print(f"❌ カテゴリ選択失敗: {category_name} - 要素が見つかりません")
+                        return False
 
-            # スクロールして要素を表示
-            await category_element.scroll_into_view_if_needed()
-            await asyncio.sleep(1)
+                # スクロールして要素を表示
+                await category_element.scroll_into_view_if_needed()
+                await asyncio.sleep(1)
 
-            # クリック
-            await category_element.click()
-            await asyncio.sleep(2.0)  # REQUEST_DELAY * 2相当
+                # クリック
+                await category_element.click()
+                await asyncio.sleep(3.0)  # 待機時間を延長
 
-            print(f"✅ {category_name}カテゴリに移動完了")
-            return True
+                print(f"✅ {category_name}カテゴリに移動完了 (使用セレクター: {used_selector})")
+                return True
 
-        except Exception as e:
-            print(f"❌ カテゴリ選択エラー: {e}")
-            return False
+            except Exception as e:
+                print(f"⚠️ カテゴリ選択エラー (試行 {attempt + 1}/{max_retries}): {e}")
+                if attempt < max_retries - 1:
+                    print(f"🔄 {3}秒後に再試行...")
+                    await asyncio.sleep(3)
+                else:
+                    print(f"❌ カテゴリ選択最終失敗: {category_name}")
+                    return False
+        
+        return False
 
     async def _select_food_in_category(self, food_name: str, food_info: dict) -> bool:
-        """カテゴリ内で食材を選択（テキストマッチング優先で堅牢性向上）"""
+        """
+        カテゴリ内で特定の食材を選択する（適応的マッチング対応）
+        
+        カタログとWebページの不一致に対応するため、以下の戦略を使用：
+        1. 現在ページの食材を動的に取得
+        2. 類似度ベースの最適マッチング
+        3. フォールバック戦略による代替選択
+        4. 詳細ページ移動の確認
+        """
         try:
-            print(f"🍽️ 食材選択: {food_name}")
-
-            # ページ移動（必要に応じて）
-            target_page = food_info["page_number"]
-            current_page = 1
-
-            if target_page > 1:
-                print(f"📄 ページ{target_page}に移動中...")
-
-                while current_page < target_page:
-                    # 次ページボタンを探してクリック
-                    next_buttons = await self.page.query_selector_all(
-                        "//button[contains(@aria-label, 'next') or contains(text(), 'Next')]"
+            # 現在ページの食材を動的に取得
+            available_foods = await self._get_current_page_foods()
+            
+            if not available_foods:
+                self.logger.warning(f"ページに食材が見つかりません: カテゴリ内")
+                return False
+            
+            # 最適マッチを検索
+            best_match = await self._find_best_food_match(food_name, available_foods)
+            
+            if not best_match:
+                self.logger.warning(f"適合する食材が見つかりません: {food_name}")
+                return False
+            
+            matched_food_name = best_match['name']
+            confidence_score = best_match['confidence']  # 'similarity' → 'confidence'に修正
+            
+            self.logger.info(f"食材マッチング: '{food_name}' → '{matched_food_name}' (信頼度: {confidence_score:.2f})")
+            
+            # マッチした食材をクリックして詳細ページに移動
+            try:
+                # elementを直接使用
+                if 'element' in best_match:
+                    success = await self._click_food_and_verify(matched_food_name, best_match['element'])
+                else:
+                    # フォールバック: XPathで検索
+                    food_element = await self.page.wait_for_selector(
+                        f"//a[contains(text(), '{matched_food_name}')]",
+                        timeout=30000
                     )
+                    success = await self._click_food_and_verify(matched_food_name, food_element)
+                
+                if success:
+                    print(f"✅ 食材選択・詳細ページ移動成功: {matched_food_name}")
+                    return True
+                else:
+                    print(f"❌ 食材詳細ページ移動失敗: {matched_food_name}")
+                    return False
+                
+            except Exception as click_error:
+                self.logger.error(f"食材クリックに失敗: {matched_food_name}, エラー: {click_error}")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"食材選択中にエラー: {food_name}, エラー: {e}")
+            return False
 
-                    clicked = False
-                    for button in next_buttons:
-                        try:
-                            is_enabled = await button.is_enabled()
-                            is_visible = await button.is_visible()
-
-                            if is_enabled and is_visible:
-                                await button.scroll_into_view_if_needed()
-                                await asyncio.sleep(1)
-                                await button.click()
-                                await asyncio.sleep(2.0)  # REQUEST_DELAY * 2相当
-                                clicked = True
-                                break
-                        except:
-                            continue
-
-                    if not clicked:
-                        raise Exception(f"ページ{target_page}への移動失敗")
-
-                    current_page += 1
-
-            # 食材をクリック（改善：テキストマッチング優先）
-            print(f"🥗 食材をクリック: {food_name}")
-
-            # 方法1: テキストマッチングで直接検索
-            food_name_short = food_name.split()[0] if food_name else ""  # 最初の単語を取得
-            
-            text_selectors = [
-                f"//*[contains(text(), '{food_name_short}')]",
-                f"//div[contains(text(), '{food_name_short}')]",
-                f"//li[contains(text(), '{food_name_short}')]"
+    async def _verify_food_detail_page(self, food_name: str, timeout: int = 10000) -> bool:
+        """
+        食材詳細ページに正しく移動したかを確認
+        Amount eaten要素やFood Entry要素の存在をチェック
+        """
+        try:
+            # 食材詳細ページの特徴的要素を待機
+            indicators = [
+                "//div[contains(@class, 'food-entry') or contains(@id, 'food-entry')]",
+                "//*[contains(text(), 'Amount eaten')]",
+                "//*[contains(text(), 'Serving')]",
+                "//*[contains(text(), 'cal/g') or contains(text(), 'calories')]",
+                "//input[@type='number']",
+                "//input[contains(@placeholder, 'Amount')]"
             ]
-            
-            food_element = None
-            for selector in text_selectors:
+
+            # いずれかの要素が見つかれば詳細ページとみなす
+            for selector in indicators:
                 try:
-                    elements = await self.page.query_selector_all(selector)
-                    for elem in elements:
-                        text_content = await elem.text_content()
-                        if text_content and food_name_short.lower() in text_content.lower():
-                            # クリック可能な要素かチェック
-                            clickable_elem = elem
-                            try:
-                                # より具体的なクリック可能要素を探す
-                                parent = await elem.query_selector("..")
-                                if parent:
-                                    clickable_elem = parent
-                            except:
-                                pass
-                            
-                            food_element = clickable_elem
-                            print(f"✅ テキストマッチングで食材発見: {text_content[:50]}...")
-                            break
-                    if food_element:
-                        break
+                    element = await self.page.wait_for_selector(selector, timeout=2000)
+                    if element:
+                        print(f"✅ 食材詳細ページ確認成功: {selector}")
+                        return True
                 except:
                     continue
 
-            # 方法2: 位置ベースでフォールバック（元のロジック）
-            if not food_element:
-                print(f"⚠️ テキストマッチング失敗、位置ベース試行（位置: {food_info['position_in_page']}）")
-                
-                food_xpath = food_info.get("xpath", "")
-                try:
-                    if food_xpath:
-                        food_element = await self.page.wait_for_selector(food_xpath, timeout=5000)
-                    else:
-                        # 代替XPath
-                        alternative_xpath = f"//li[contains(@class, 'MuiListItem-container')]//div[contains(@class, 'MuiListItem-button')][{food_info['position_in_page']}]"
-                        food_element = await self.page.wait_for_selector(alternative_xpath, timeout=5000)
-                except:
-                    pass
+            # 全ての要素が見つからない場合はページ内容を確認
+            page_content = await self.page.content()
+            if "Amount eaten" in page_content or "cal/g" in page_content:
+                print(f"✅ 食材詳細ページ確認成功: コンテンツ内に詳細情報あり")
+                return True
 
-            if not food_element:
-                print(f"❌ 食材要素が見つかりません: {food_name}")
-                return False
-
-            # クリック実行
-            await food_element.scroll_into_view_if_needed()
-            await asyncio.sleep(1)
-            await food_element.click()
-            await asyncio.sleep(2.0)  # REQUEST_DELAY * 2相当
-
-            print(f"✅ {food_name} への移動完了")
-            return True
+            print(f"❌ 食材詳細ページ未確認: {food_name}")
+            return False
 
         except Exception as e:
-            print(f"❌ 食材選択エラー: {e}")
+            print(f"❌ 食材詳細ページ確認エラー: {e}")
             return False
+
+    async def _click_food_and_verify(self, food_name: str, food_element) -> bool:
+        """
+        食材をクリックして詳細ページに移動することを確認
+        """
+        try:
+            print(f"🎯 食材クリック試行: {food_name}")
+
+            # 食材をクリック
+            await food_element.click()
+
+            # 短時間待機
+            await self.page.wait_for_timeout(2000)
+
+            # 詳細ページに移動したかを確認
+            if await self._verify_food_detail_page(food_name):
+                print(f"✅ 食材詳細ページ移動成功: {food_name}")
+                return True
+            else:
+                print(f"❌ 食材詳細ページ移動失敗: {food_name}")
+                # スクリーンショット撮影
+                timestamp = datetime.now().strftime("%H%M%S")
+                screenshot_path = f"debug/food_click_failure_{timestamp}.png"
+                await self.page.screenshot(path=screenshot_path)
+                print(f"📸 スクリーンショット保存: {screenshot_path}")
+                return False
+
+        except Exception as e:
+            print(f"❌ 食材クリック・確認エラー: {e}")
+            return False
+
+    async def _get_current_page_foods(self) -> list:
+        """現在ページの食材リストを動的に取得"""
+        try:
+            # 食材リンクを取得（複数のセレクタパターンを試行）
+            selectors = [
+                "//div[@class='food-list']//a",
+                "//a[contains(@href, 'food')]",
+                "//td//a[not(contains(@href, 'category'))]",
+                "//a[contains(text(), 'cal')]"
+            ]
+            
+            foods = []
+            for selector in selectors:
+                try:
+                    elements = await self.page.query_selector_all(selector)
+                    if elements:
+                        for element in elements:
+                            text = await element.text_content()
+                            if text and text.strip():
+                                foods.append({
+                                    'name': text.strip(),
+                                    'element': element
+                                })
+                        break
+                except:
+                    continue
+            
+            # 重複除去
+            unique_foods = []
+            seen_names = set()
+            for food in foods:
+                if food['name'] not in seen_names:
+                    unique_foods.append(food)
+                    seen_names.add(food['name'])
+            
+            self.logger.info(f"現在ページで {len(unique_foods)} 個の食材を検出")
+            return unique_foods
+            
+        except Exception as e:
+            self.logger.error(f"現在ページの食材取得中にエラー: {e}")
+            return []
+
+    async def _find_best_food_match(self, target_food: str, available_foods: list) -> dict:
+        """最適な食材マッチを検索"""
+        if not available_foods:
+            return None
+        
+        best_match = None
+        best_score = 0.0
+        
+        # 完全一致を最優先
+        for food in available_foods:
+            if food['name'].lower() == target_food.lower():
+                return {
+                    'name': food['name'],
+                    'similarity': 1.0,
+                    'element': food['element']
+                }
+        
+        # 類似度ベースマッチング
+        for food in available_foods:
+            score = self._calculate_food_similarity(target_food, food['name'])
+            if score > best_score:
+                best_score = score
+                best_match = {
+                    'name': food['name'],
+                    'similarity': score,
+                    'element': food['element']
+                }
+        
+        # 最低類似度閾値をチェック
+        if best_score >= 0.5:  # 50%以上の類似度が必要
+            return best_match
+        
+        return None
+
+    def _extract_food_keywords(self, food_name: str) -> set:
+        """食材名からキーワードを抽出"""
+        # 不要な文字を除去
+        cleaned = food_name.lower()
+        cleaned = cleaned.replace(',', ' ').replace('(', ' ').replace(')', ' ')
+        
+        # 単語に分割してキーワードセットを作成
+        words = cleaned.split()
+        keywords = set()
+        
+        for word in words:
+            word = word.strip()
+            if word and len(word) > 1:  # 1文字の単語は除外
+                keywords.add(word)
+        
+        return keywords
+
+    def _calculate_food_similarity(self, food1: str, food2: str) -> float:
+        """2つの食材名の類似度を計算"""
+        keywords1 = self._extract_food_keywords(food1)
+        keywords2 = self._extract_food_keywords(food2)
+        
+        if not keywords1 or not keywords2:
+            return 0.0
+        
+        # Jaccard類似度を計算
+        intersection = keywords1 & keywords2
+        union = keywords1 | keywords2
+        
+        if not union:
+            return 0.0
+        
+        jaccard_score = len(intersection) / len(union)
+        
+        # 部分文字列マッチングでボーナス
+        substring_bonus = 0.0
+        if food1.lower() in food2.lower() or food2.lower() in food1.lower():
+            substring_bonus = 0.2
+        
+        return min(1.0, jaccard_score + substring_bonus)
+
+    async def _get_current_page_foods(self) -> list:
+        """現在ページの食材リストを動的に取得"""
+        try:
+            # debug scriptで成功したセレクタを優先使用
+            selectors = [
+                "//li[contains(@class, 'MuiListItem')]",  # debug scriptで成功
+                "//a[contains(@href, 'food')]",
+                "//td//a[not(contains(@href, 'category'))]",
+                "//a[contains(text(), 'cal')]",
+                "//div[@class='food-list']//a"
+            ]
+            
+            foods = []
+            for i, selector in enumerate(selectors):
+                try:
+                    elements = await self.page.query_selector_all(selector)
+                    self.logger.info(f"セレクタ {i+1}: '{selector}' → {len(elements)}個の要素")
+                    
+                    if elements:
+                        for element in elements:
+                            text = await element.text_content()
+                            if text and text.strip():
+                                # MuiListItemの場合、リンク要素を探す
+                                if 'MuiListItem' in selector:
+                                    link_element = await element.query_selector('a')
+                                    if link_element:
+                                        foods.append({
+                                            'text': text.strip(),
+                                            'element': link_element  # クリック可能なリンク要素を使用
+                                        })
+                                    else:
+                                        foods.append({
+                                            'text': text.strip(),
+                                            'element': element
+                                        })
+                                else:
+                                    foods.append({
+                                        'text': text.strip(),
+                                        'element': element
+                                    })
+                        
+                        self.logger.info(f"セレクタ {i+1}で {len(foods)}個の食材を取得")
+                        if foods:  # 食材が見つかったらbreak
+                            break
+                            
+                except Exception as e:
+                    self.logger.warning(f"セレクタ {i+1} エラー: {e}")
+                    continue
+            
+            # 重複除去
+            unique_foods = []
+            seen_texts = set()
+            for food in foods:
+                if food['text'] not in seen_texts:
+                    unique_foods.append(food)
+                    seen_texts.add(food['text'])
+            
+            self.logger.info(f"現在ページで {len(unique_foods)} 個の食材を検出")
+            
+            # デバッグ: 最初の5個の食材名を表示
+            if unique_foods:
+                sample_foods = [f['text'] for f in unique_foods[:5]]
+                self.logger.info(f"検出された食材例: {sample_foods}")
+            else:
+                self.logger.warning("食材が全く検出されませんでした")
+            
+            return unique_foods
+            
+        except Exception as e:
+            self.logger.error(f"現在ページの食材取得中にエラー: {e}")
+            return []
+
+    async def _find_best_food_match(self, target_food: str, available_foods: list) -> dict:
+        """最適な食材マッチを検索"""
+        if not available_foods:
+            self.logger.warning("利用可能な食材リストが空です")
+            return None
+        
+        self.logger.info(f"マッチング対象: '{target_food}' (検索候補: {len(available_foods)}個)")
+        
+        best_match = None
+        best_score = 0.0
+        
+        # 完全一致を最優先
+        for food in available_foods:
+            if food['text'].lower() == target_food.lower():
+                self.logger.info(f"完全一致発見: '{food['text']}'")
+                return {
+                    'name': food['text'],
+                    'confidence': 1.0,
+                    'element': food['element']
+                }
+        
+        # 類似度ベースマッチング
+        for food in available_foods:
+            score = self._calculate_food_similarity(target_food, food['text'])
+            self.logger.debug(f"'{food['text']}' → スコア: {score:.2f}")
+            
+            if score > best_score:
+                best_score = score
+                best_match = {
+                    'name': food['text'],
+                    'confidence': score,
+                    'element': food['element']
+                }
+        
+        # 最低類似度閾値をチェック
+        if best_score >= 0.5:  # 50%以上の類似度が必要
+            self.logger.info(f"ベストマッチ: '{best_match['name']}' (スコア: {best_score:.2f})")
+            return best_match
+        else:
+            self.logger.warning(f"十分な類似度のマッチが見つかりません (最高スコア: {best_score:.2f})")
+        
+        return None
+
+    def _extract_food_keywords(self, food_name: str) -> List[str]:
+        """食材名からキーワードを抽出"""
+        try:
+            # カロリー情報を除去
+            clean_name = food_name.replace('\n', ' ')
+            clean_name = ' '.join(clean_name.split()[:-1])  # 最後の要素（カロリー）を除去
+            
+            # 単位・数量を除去
+            units_to_remove = ['cup', 'tbsp', 'tsp', 'oz', 'fl oz', 'gram', 'g', 'ml', 'lb', 'piece', 'slice', 'serving']
+            words = clean_name.split()
+            
+            keywords = []
+            for word in words:
+                word_clean = word.lower().strip(',')
+                if word_clean not in units_to_remove and len(word_clean) > 2:
+                    keywords.append(word_clean)
+            
+            return keywords[:3]  # 最初の3つのキーワード
+            
+        except Exception as e:
+            print(f"⚠️ キーワード抽出エラー: {e}")
+            return []
+
+    def _calculate_food_similarity(self, target_keywords: List[str], candidate_text: str) -> float:
+        """食材の類似度を計算"""
+        try:
+            if not target_keywords:
+                return 0.0
+            
+            candidate_words = candidate_text.lower().split()
+            matches = 0
+            
+            for keyword in target_keywords:
+                # 完全一致
+                if keyword in candidate_words:
+                    matches += 1
+                # 部分一致
+                elif any(keyword in word for word in candidate_words):
+                    matches += 0.7
+                # 類似性チェック（簡易版）
+                elif any(abs(len(keyword) - len(word)) <= 2 and 
+                        self._simple_similarity(keyword, word) > 0.8 
+                        for word in candidate_words):
+                    matches += 0.5
+            
+            return matches / len(target_keywords)
+            
+        except Exception as e:
+            print(f"⚠️ 類似度計算エラー: {e}")
+            return 0.0
+
+    def _simple_similarity(self, str1: str, str2: str) -> float:
+        """簡易文字列類似度計算"""
+        try:
+            if len(str1) == 0 or len(str2) == 0:
+                return 0.0
+            
+            # 共通文字数の比率
+            common_chars = set(str1) & set(str2)
+            total_chars = set(str1) | set(str2)
+            
+            return len(common_chars) / len(total_chars) if total_chars else 0.0
+            
+        except:
+            return 0.0
 
     async def _close_any_open_modals(self) -> bool:
         """開いているモーダルを閉じる"""
