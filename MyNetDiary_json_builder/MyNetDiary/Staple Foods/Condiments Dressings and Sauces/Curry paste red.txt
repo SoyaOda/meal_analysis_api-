@@ -1,0 +1,98 @@
+
+Food Entry
+ Curry paste red	15 cals
+Amount eaten
+tbsp	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+15g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	tbsp (15g)
+Amount per serving
+Calories	15cals
+% Daily Value*
+Total Fat 0g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0g	
+Total Carbs 3g	1%
+Net Carbs 2g	
+Dietary Fiber 1g	4%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 1g	2%
+Cholesterol 0mg	0%
+Sodium 330mg	14%
+Vitamin A 60mcg	4%
+Iron 0.4mg	2%
+Potassium 0mg	0%
+Caffeine 0mg	
+Soluble Fiber 0g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0mg	0%
+Vitamin K 0mcg	0%
+Thiamin 0mg	0%
+Riboflavin 0mg	0%
+Niacin 0mg	0%
+Vitamin B-6 0mg	0%
+Folate 0mcg	0%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0mg	0%
+Phosphorus 0mg	0%
+Magnesium 0mg	0%
+Zinc 0mg	0%
+Selenium 0mcg	0%
+Copper 0mg	0%
+Manganese 0mg	0%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

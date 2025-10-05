@@ -1,0 +1,152 @@
+
+Food Entry
+ Barley hulled raw	651 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+184g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (184g)
+Amount per serving
+Calories	651cals
+% Daily Value*
+Total Fat 4.2g	7%
+Saturated Fat 0.9g	4%
+Trans Fat 0g	
+Monounsaturated Fat 0.5g	
+Polyunsaturated Fat 2g	
+Total Carbs 135g	45%
+Net Carbs 103g	
+Dietary Fiber 32g	127%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 23g	46%
+Cholesterol 0mg	0%
+Sodium 22mg	1%
+Vitamin A 2mcg	0%
+Vitamin C 0mg	0%
+Calcium 61mg	6%
+Iron 6.6mg	37%
+Potassium 832mg	24%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 6g	
+Fiber insoluble 26g	
+Starch 76g	
+Sucrose 1g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 24mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 294mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 74mcg	
+Delta-tocopherol 37mcg	
+Gamma-tocopherol 386mcg	
+Vitamin E 1mg	5%
+Vitamin K 4mcg	5%
+Thiamin 1.19mg	79%
+Riboflavin 0.52mg	31%
+Niacin 8.5mg	42%
+Vitamin B-6 0.59mg	29%
+Folate 35mcg	9%
+Folic Acid 0mcg	
+Folate DFE 35mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Choline 70mg	13%
+Phosphorus 486mg	49%
+Magnesium 245mg	61%
+Zinc 5.1mg	34%
+Selenium 69mcg	99%
+Copper 0.92mg	46%
+Manganese 3.58mg	179%
+Alanine 894mg	
+Arginine 1,150mg	
+Aspartic Acid 1,433mg	
+Cystine 508mg	
+Glutamic Acid 6,000mg	
+Glycine 832mg	
+Histidine 517mg	
+Isoleucine 839mg	
+Leucine 1,560mg	
+Lysine 856mg	
+Methionine 442mg	
+Phenylalanine 1,288mg	
+Proline 2,731mg	
+Serine 970mg	
+Threonine 780mg	
+Tryptophan 383mg	
+Tyrosine 659mg	
+Valine 1,126mg	
+Omega-3s 202mg	
+Omega-3 ALA 202mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 1,838mg	
+Omega-6 LA 1,838mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,153 @@
+
+Food Entry
+ Almond butter with salt	1,535 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+250g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (250g)
+Amount per serving
+Calories	1,535cals
+% Daily Value*
+Total Fat 138.8g	213%
+Saturated Fat 10.4g	52%
+Trans Fat 0g	
+Monounsaturated Fat 81.1g	
+Polyunsaturated Fat 34g	
+Total Carbs 47g	16%
+Net Carbs 21g	
+Dietary Fiber 26g	103%
+Total Sugars 11g	
+Added Sugars 0g	0%
+Protein 52g	105%
+Cholesterol 0mg	0%
+Sodium 568mg	24%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 868mg	87%
+Iron 8.7mg	48%
+Potassium 1,870mg	53%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 2g	
+Fiber insoluble 24g	
+Starch 0g	
+Sucrose 11g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 3mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 3mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 1,325mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 2,525mcg	
+Vitamin E 60.6mg	301%
+Vitamin K 0mcg	0%
+Thiamin 0.1mg	7%
+Riboflavin 2.35mg	138%
+Niacin 7.9mg	39%
+Vitamin B-6 0.26mg	13%
+Folate 133mcg	33%
+Folic Acid 0mcg	
+Folate DFE 133mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.8mg	8%
+Biotin 143.3mcg	478%
+Choline 130mg	24%
+Phosphorus 1,270mg	127%
+Magnesium 698mg	174%
+Zinc 8.2mg	55%
+Selenium 6mcg	9%
+Copper 2.34mg	117%
+Manganese 5.33mg	266%
+Alanine 2,475mg	
+Arginine 5,955mg	
+Aspartic Acid 5,993mg	
+Cystine 605mg	
+Glutamic Acid 14,780mg	
+Glycine 3,680mg	
+Histidine 1,375mg	
+Isoleucine 2,033mg	
+Leucine 3,708mg	
+Lysine 1,530mg	
+Methionine 305mg	
+Phenylalanine 2,873mg	
+Proline 2,288mg	
+Serine 2,315mg	
+Threonine 1,388mg	
+Tryptophan 398mg	
+Tyrosine 1,488mg	
+Valine 2,343mg	
+Omega-3s 18mg	
+Omega-3 ALA 18mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 34,013mg	
+Omega-6 LA 34,013mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

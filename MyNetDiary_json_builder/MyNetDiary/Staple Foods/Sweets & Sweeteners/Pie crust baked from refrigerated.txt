@@ -1,0 +1,151 @@
+
+Food Entry
+ Pie crust baked from refrigerated	1,003 cals
+Amount eaten
+pie crust	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+198g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	pie crust (198g)
+Amount per serving
+Calories	1,003cals
+% Daily Value*
+Total Fat 56g	86%
+Saturated Fat 23.7g	119%
+Trans Fat 0g	
+Monounsaturated Fat 22.9g	
+Polyunsaturated Fat 6.7g	
+Total Carbs 115g	38%
+Net Carbs 112g	
+Dietary Fiber 3g	11%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 7g	14%
+Cholesterol 0mg	0%
+Sodium 934mg	39%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 11mg	1%
+Iron 3.2mg	18%
+Potassium 77mg	2%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 2g	
+Fiber insoluble 1g	
+Starch 112g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 12mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 46mcg	
+Delta-tocopherol 14mcg	
+Gamma-tocopherol 3,651mcg	
+Vitamin E 1.1mg	5%
+Vitamin K 12mcg	15%
+Thiamin 0.51mg	34%
+Riboflavin 0.32mg	19%
+Niacin 3.9mg	19%
+Vitamin B-6 0.03mg	1%
+Folate 84mcg	21%
+Folic Acid 71mcg	
+Folate DFE 133mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.3mg	3%
+Choline 30mg	5%
+Phosphorus 83mg	8%
+Magnesium 17mg	4%
+Zinc 0.5mg	3%
+Selenium 23mcg	33%
+Copper 0.11mg	6%
+Manganese 0.47mg	23%
+Alanine 228mg	
+Arginine 283mg	
+Aspartic Acid 297mg	
+Cystine 149mg	
+Glutamic Acid 2,344mg	
+Glycine 251mg	
+Histidine 156mg	
+Hydroxyproline 0mg	
+Isoleucine 242mg	
+Leucine 487mg	
+Lysine 154mg	
+Methionine 125mg	
+Phenylalanine 352mg	
+Proline 810mg	
+Serine 348mg	
+Threonine 190mg	
+Tryptophan 85mg	
+Tyrosine 212mg	
+Valine 283mg	
+Omega-3s 447mg	
+Omega-3 ALA 447mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 6,089mg	
+Omega-6 LA 6,089mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0.3g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,133 @@
+
+Food Entry
+ Duck meat only raw	185 cals
+Amount eaten
+unit (yield from 1 lb ready-to-cook duck)	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+137g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	unit (yield from 1 lb ready-to-cook duck) (137g)
+Amount per serving
+Calories	185cals
+% Daily Value*
+Total Fat 8.2g	13%
+Saturated Fat 3.2g	16%
+Monounsaturated Fat 2.1g	
+Polyunsaturated Fat 1g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 25g	50%
+Cholesterol 105mg	35%
+Sodium 101mg	4%
+Vitamin A 32mcg	2%
+Vitamin C 8mg	13%
+Calcium 15mg	2%
+Iron 3.3mg	18%
+Potassium 371mg	11%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 33mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0.1mcg (4iu)	1%
+Vitamin E 1mg	5%
+Vitamin K 4mcg	5%
+Thiamin 0.49mg	33%
+Riboflavin 0.62mg	36%
+Niacin 7.3mg	36%
+Vitamin B-6 0.47mg	23%
+Folate 34mcg	9%
+Folic Acid 0mcg	
+Folate DFE 34mcg	
+Vitamin B-12 0.55mcg	9%
+Pantothenic Acid 2.2mg	22%
+Choline 73mg	13%
+Phosphorus 278mg	28%
+Magnesium 26mg	7%
+Zinc 2.6mg	17%
+Selenium 19mcg	27%
+Copper 0.35mg	17%
+Manganese 0.03mg	1%
+Alanine 1,586mg	
+Arginine 1,597mg	
+Aspartic Acid 2,452mg	
+Cystine 385mg	
+Glutamic Acid 3,918mg	
+Glycine 1,403mg	
+Histidine 662mg	
+Isoleucine 1,286mg	
+Leucine 2,115mg	
+Lysine 2,143mg	
+Methionine 677mg	
+Phenylalanine 1,049mg	
+Proline 1,230mg	
+Serine 1,078mg	
+Threonine 1,070mg	
+Tryptophan 348mg	
+Tyrosine 954mg	
+Valine 1,310mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,107 @@
+
+Food Entry
+ Tomato paste canned	215 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+262g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (262g)
+Amount per serving
+Calories	215cals
+% Daily Value*
+Total Fat 1.2g	2%
+Saturated Fat 0.3g	1%
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.4g	
+Total Carbs 50g	17%
+Net Carbs 39g	
+Dietary Fiber 11g	43%
+Total Sugars 32g	
+Added Sugars 0g	0%
+Protein 11g	23%
+Cholesterol 0mg	0%
+Sodium 2,070mg	86%
+Vitamin A 1,199mcg	80%
+Vitamin C 57mg	96%
+Calcium 94mg	9%
+Iron 7.8mg	43%
+Potassium 2,657mg	76%
+Alcohol 0g	
+Caffeine 0mg	
+Starch 1g	
+Sucrose 1g	
+Glucose (Dextrose) 15g	
+Fructose 15g	
+Lactose 0g	
+Maltose 1g	
+Alpha-carotene 76mcg	
+Beta-carotene 2,361mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 11.3mg	56%
+Vitamin K 30mcg	37%
+Thiamin 0.16mg	10%
+Riboflavin 0.4mg	24%
+Niacin 8.1mg	40%
+Vitamin B-6 0.57mg	28%
+Folate 31mcg	8%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.4mg	4%
+Phosphorus 217mg	22%
+Magnesium 110mg	28%
+Zinc 1.7mg	11%
+Selenium 14mcg	20%
+Copper 0.96mg	48%
+Manganese 0.79mg	40%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

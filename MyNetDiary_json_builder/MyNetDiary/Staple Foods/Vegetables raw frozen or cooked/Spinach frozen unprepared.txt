@@ -1,0 +1,145 @@
+
+Food Entry
+ Spinach frozen unprepared	45 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+156g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (156g)
+Amount per serving
+Calories	45cals
+% Daily Value*
+Total Fat 0.9g	1%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 7g	2%
+Net Carbs 2g	
+Dietary Fiber 5g	18%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 6g	11%
+Cholesterol 0mg	0%
+Sodium 115mg	5%
+Vitamin A 915mcg	61%
+Vitamin C 9mg	14%
+Calcium 201mg	20%
+Iron 2.9mg	16%
+Potassium 540mg	15%
+Alcohol 0g	
+Caffeine 0mg	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 10,975mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 19,736mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 4.5mg	22%
+Vitamin K 580mcg	725%
+Thiamin 0.15mg	10%
+Riboflavin 0.35mg	21%
+Niacin 0.8mg	4%
+Vitamin B-6 0.27mg	13%
+Folate 226mcg	57%
+Folic Acid 0mcg	
+Folate DFE 226mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.1mg	1%
+Choline 34mg	6%
+Phosphorus 76mg	8%
+Magnesium 117mg	29%
+Zinc 0.9mg	6%
+Selenium 9mcg	13%
+Copper 0.22mg	11%
+Manganese 1.1mg	55%
+Alanine 340mg	
+Arginine 750mg	
+Aspartic Acid 669mg	
+Cystine 45mg	
+Glutamic Acid 792mg	
+Glycine 345mg	
+Histidine 76mg	
+Isoleucine 197mg	
+Leucine 315mg	
+Lysine 392mg	
+Methionine 81mg	
+Phenylalanine 323mg	
+Proline 309mg	
+Serine 265mg	
+Threonine 339mg	
+Tryptophan 156mg	
+Tyrosine 335mg	
+Valine 278mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

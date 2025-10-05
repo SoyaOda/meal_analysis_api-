@@ -1,0 +1,152 @@
+
+Food Entry
+ Herring Atlantic pickled	367 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+140g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup (140g)
+Amount per serving
+Calories	367cals
+% Daily Value*
+Total Fat 25.2g	39%
+Saturated Fat 3.3g	17%
+Trans Fat 0g	
+Monounsaturated Fat 16.7g	
+Polyunsaturated Fat 2.4g	
+Total Carbs 13g	4%
+Net Carbs 13g	
+Dietary Fiber 0g	0%
+Total Sugars 11g	
+Added Sugars 13g	27%
+Protein 20g	40%
+Cholesterol 18mg	6%
+Sodium 1,218mg	51%
+Vitamin A 361mcg	24%
+Vitamin C 0mg	0%
+Calcium 108mg	11%
+Iron 1.7mg	9%
+Potassium 97mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 11g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 361mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 4mcg (158iu)	40%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 2.4mg	12%
+Vitamin K 0mcg	0%
+Thiamin 0.05mg	3%
+Riboflavin 0.19mg	11%
+Niacin 4.6mg	23%
+Vitamin B-6 0.24mg	12%
+Folate 3mcg	1%
+Folic Acid 0mcg	
+Folate DFE 3mcg	
+Vitamin B-12 5.98mcg	100%
+Pantothenic Acid 0.1mg	1%
+Choline 146mg	26%
+Phosphorus 125mg	12%
+Magnesium 11mg	3%
+Zinc 0.7mg	5%
+Selenium 82mcg	117%
+Copper 0.15mg	7%
+Manganese 0.06mg	3%
+Alanine 1,201mg	
+Arginine 1,189mg	
+Aspartic Acid 2,034mg	
+Cystine 213mg	
+Glutamic Acid 2,965mg	
+Glycine 953mg	
+Histidine 585mg	
+Isoleucine 916mg	
+Leucine 1,614mg	
+Lysine 1,824mg	
+Methionine 588mg	
+Phenylalanine 776mg	
+Proline 703mg	
+Serine 811mg	
+Threonine 871mg	
+Tryptophan 223mg	
+Tyrosine 671mg	
+Valine 1,023mg	
+Omega-3s 2,055mg	
+Omega-3 ALA 0mg	
+Omega-3 EPA 1,180mg	
+Omega-3 DHA 764mg	
+Omega-6s 294mg	
+Omega-6 LA 294mg	
+Omega-9 EA 7,232mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,150 @@
+
+Food Entry
+ Herring Atlantic cooked dry heat	290 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+143g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (143g)
+Amount per serving
+Calories	290cals
+% Daily Value*
+Total Fat 16.6g	25%
+Saturated Fat 3.7g	19%
+Trans Fat 0g	
+Monounsaturated Fat 6.8g	
+Polyunsaturated Fat 3.9g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 33g	66%
+Cholesterol 110mg	37%
+Sodium 164mg	7%
+Vitamin A 51mcg	3%
+Vitamin C 1mg	2%
+Calcium 106mg	11%
+Iron 2mg	11%
+Potassium 599mg	17%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 51mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 7.7mcg (306iu)	77%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 2mg	10%
+Vitamin K 0mcg	0%
+Thiamin 0.16mg	11%
+Riboflavin 0.43mg	25%
+Niacin 5.9mg	29%
+Vitamin B-6 0.5mg	25%
+Folate 17mcg	4%
+Folic Acid 0mcg	
+Folate DFE 17mcg	
+Vitamin B-12 18.79mcg	313%
+Pantothenic Acid 1.1mg	11%
+Choline 119mg	22%
+Phosphorus 433mg	43%
+Magnesium 59mg	15%
+Zinc 1.8mg	12%
+Selenium 67mcg	96%
+Copper 0.17mg	8%
+Manganese 0.06mg	3%
+Alanine 1,992mg	
+Arginine 1,971mg	
+Aspartic Acid 3,372mg	
+Cystine 353mg	
+Glutamic Acid 4,916mg	
+Glycine 1,582mg	
+Histidine 970mg	
+Isoleucine 1,517mg	
+Leucine 2,677mg	
+Lysine 3,024mg	
+Methionine 975mg	
+Phenylalanine 1,286mg	
+Proline 1,164mg	
+Serine 1,344mg	
+Threonine 1,444mg	
+Tryptophan 369mg	
+Tyrosine 1,113mg	
+Valine 1,697mg	
+Omega-3s 3,562mg	
+Omega-3 ALA 189mg	
+Omega-3 EPA 1,300mg	
+Omega-3 DHA 1,580mg	
+Omega-6s 329mg	
+Omega-6 LA 229mg	
+Omega-9 EA 1,540mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,152 @@
+
+Food Entry
+ Soup cream of chicken canned condensed	241 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+251g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup (251g)
+Amount per serving
+Calories	241cals
+% Daily Value*
+Total Fat 15.6g	24%
+Saturated Fat 4.8g	24%
+Trans Fat 0.4g	
+Monounsaturated Fat 6.6g	
+Polyunsaturated Fat 3.2g	
+Total Carbs 20g	7%
+Net Carbs 20g	
+Dietary Fiber 0g	1%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 5g	10%
+Cholesterol 25mg	8%
+Sodium 1,738mg	72%
+Vitamin A 48mcg	3%
+Vitamin C 0mg	0%
+Calcium 36mg	4%
+Iron 0.8mg	4%
+Potassium 92mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 18g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 1g	
+Maltose 0g	
+Galactose 0g	
+Retinol 21mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 316mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 2mcg	
+Lycopene 0mcg	
+Vitamin D 0.6mcg (24iu)	6%
+Beta-tocopherol 15mcg	
+Delta-tocopherol 161mcg	
+Gamma-tocopherol 796mcg	
+Vitamin E 0.6mg	3%
+Vitamin K 3mcg	3%
+Thiamin 0.11mg	7%
+Riboflavin 0.14mg	8%
+Niacin 1.7mg	8%
+Vitamin B-6 0.06mg	3%
+Folate 15mcg	4%
+Folic Acid 11mcg	
+Folate DFE 23mcg	
+Vitamin B-12 0.08mcg	1%
+Pantothenic Acid 0.2mg	2%
+Choline 27mg	5%
+Phosphorus 63mg	6%
+Magnesium 10mg	2%
+Zinc 0.5mg	3%
+Selenium 7mcg	10%
+Copper 0.04mg	2%
+Manganese 0.1mg	5%
+Alanine 236mg	
+Arginine 271mg	
+Aspartic Acid 394mg	
+Cystine 70mg	
+Glutamic Acid 946mg	
+Glycine 218mg	
+Histidine 138mg	
+Isoleucine 236mg	
+Leucine 364mg	
+Lysine 339mg	
+Methionine 118mg	
+Phenylalanine 208mg	
+Proline 291mg	
+Serine 191mg	
+Threonine 191mg	
+Tryptophan 60mg	
+Tyrosine 163mg	
+Valine 233mg	
+Omega-3s 188mg	
+Omega-3 ALA 181mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 5mg	
+Omega-6s 2,929mg	
+Omega-6 LA 2,907mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0.1g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

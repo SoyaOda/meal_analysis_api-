@@ -1,0 +1,152 @@
+
+Food Entry
+ Buttermilk regular whole	152 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+245g
+Food Grade
+B-
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B-
+Serving Size	cup (245g)
+Amount per serving
+Calories	152cals
+% Daily Value*
+Total Fat 8.1g	12%
+Saturated Fat 4.7g	23%
+Trans Fat 0.3g	
+Monounsaturated Fat 2g	
+Polyunsaturated Fat 0.5g	
+Total Carbs 12g	4%
+Net Carbs 12g	
+Dietary Fiber 0g	0%
+Total Sugars 12g	
+Added Sugars 0g	0%
+Protein 8g	16%
+Cholesterol 27mg	9%
+Sodium 257mg	11%
+Vitamin A 114mcg	8%
+Vitamin C 0mg	0%
+Calcium 282mg	28%
+Iron 0.1mg	0%
+Potassium 331mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 9g	
+Maltose 0g	
+Galactose 0g	
+Retinol 113mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 17mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 3.2mcg (127iu)	32%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0.2mg	1%
+Vitamin K 1mcg	1%
+Thiamin 0.12mg	8%
+Riboflavin 0.42mg	25%
+Niacin 0.2mg	1%
+Vitamin B-6 0.09mg	4%
+Folate 12mcg	3%
+Folic Acid 0mcg	
+Folate DFE 12mcg	
+Vitamin B-12 1.13mcg	19%
+Pantothenic Acid 0.9mg	9%
+Choline 36mg	7%
+Phosphorus 208mg	21%
+Magnesium 25mg	6%
+Zinc 0.9mg	6%
+Selenium 9mcg	13%
+Copper 0.06mg	3%
+Manganese 0.01mg	0%
+Alanine 265mg	
+Arginine 225mg	
+Aspartic Acid 674mg	
+Cystine 49mg	
+Glutamic Acid 1,766mg	
+Glycine 157mg	
+Histidine 238mg	
+Isoleucine 407mg	
+Leucine 745mg	
+Lysine 659mg	
+Methionine 206mg	
+Phenylalanine 407mg	
+Proline 777mg	
+Serine 473mg	
+Threonine 336mg	
+Tryptophan 100mg	
+Tyrosine 397mg	
+Valine 515mg	
+Omega-3s 186mg	
+Omega-3 ALA 186mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 240mg	
+Omega-6 LA 240mg	
+Omega-9 EA 0mg	
+MCTs 1g	
+Caproic Acid 0.2g	
+Caprylic Acid 0.2g	
+Capric Acid 0.2g	
+Lauric Acid 0.2g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

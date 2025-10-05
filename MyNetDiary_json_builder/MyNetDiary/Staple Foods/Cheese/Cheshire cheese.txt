@@ -1,0 +1,149 @@
+
+Food Entry
+ Cheshire cheese	110 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+Weight
+28g
+Food Grade
+C+
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C+
+Serving Size	oz (28g)
+Amount per serving
+Calories	110cals
+% Daily Value*
+Total Fat 8.7g	13%
+Saturated Fat 5.5g	28%
+Trans Fat 0.2g	
+Monounsaturated Fat 2.5g	
+Polyunsaturated Fat 0.2g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 7g	13%
+Cholesterol 29mg	10%
+Sodium 198mg	8%
+Vitamin A 66mcg	4%
+Vitamin C 0mg	0%
+Calcium 182mg	18%
+Iron 0.1mg	0%
+Potassium 27mg	1%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 1g	
+Maltose 0g	
+Galactose 0g	
+Retinol 62mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 43mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0.1mcg (3iu)	1%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 14mcg	
+Vitamin E 0.1mg	0%
+Vitamin K 1mcg	1%
+Thiamin 0.01mg	1%
+Riboflavin 0.08mg	5%
+Niacin 0mg	0%
+Vitamin B-6 0.02mg	1%
+Folate 5mcg	1%
+Folic Acid 0mcg	
+Folate DFE 5mcg	
+Vitamin B-12 0.24mcg	4%
+Pantothenic Acid 0.1mg	1%
+Choline 4mg	1%
+Phosphorus 132mg	13%
+Magnesium 6mg	1%
+Zinc 0.8mg	5%
+Selenium 4mcg	6%
+Copper 0.01mg	1%
+Manganese 0mg	0%
+Alanine 187mg	
+Arginine 250mg	
+Aspartic Acid 426mg	
+Cystine 33mg	
+Glutamic Acid 1,621mg	
+Glycine 114mg	
+Histidine 233mg	
+Isoleucine 411mg	
+Leucine 634mg	
+Lysine 551mg	
+Methionine 173mg	
+Phenylalanine 349mg	
+Proline 747mg	
+Serine 387mg	
+Threonine 236mg	
+Tryptophan 85mg	
+Tyrosine 320mg	
+Valine 442mg	
+Omega-3s 96mg	
+Omega-3 ALA 96mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 45mg	
+Omega-6 LA 45mg	
+Omega-9 EA 0mg	
+MCTs 1g	
+Caproic Acid 0.1g	
+Caprylic Acid 0.1g	
+Capric Acid 0.2g	
+Lauric Acid 0.1g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

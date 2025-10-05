@@ -1,0 +1,129 @@
+
+Food Entry
+ Elk ground raw	172 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+B+
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B+
+Serving Size	serving (100g)
+Amount per serving
+Calories	172cals
+% Daily Value*
+Total Fat 8.8g	14%
+Saturated Fat 3.5g	17%
+Monounsaturated Fat 2.5g	
+Polyunsaturated Fat 0.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 22g	44%
+Cholesterol 66mg	22%
+Sodium 79mg	3%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 12mg	1%
+Iron 2.8mg	15%
+Potassium 322mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin E 0.3mg	1%
+Thiamin 0.13mg	8%
+Riboflavin 0.26mg	15%
+Niacin 4.9mg	24%
+Vitamin B-6 0.34mg	17%
+Folate 7mcg	2%
+Folic Acid 0mcg	
+Folate DFE 7mcg	
+Vitamin B-12 2.13mcg	36%
+Pantothenic Acid 1mg	10%
+Phosphorus 195mg	20%
+Magnesium 22mg	6%
+Zinc 5.4mg	36%
+Selenium 8mcg	11%
+Copper 0.15mg	8%
+Manganese 0.02mg	1%
+Alanine 1,214mg	
+Arginine 1,302mg	
+Aspartic Acid 1,826mg	
+Cystine 214mg	
+Glutamic Acid 3,089mg	
+Glycine 1,107mg	
+Histidine 670mg	
+Hydroxyproline 204mg	
+Isoleucine 913mg	
+Leucine 1,622mg	
+Lysine 1,778mg	
+Methionine 534mg	
+Phenylalanine 797mg	
+Proline 923mg	
+Serine 777mg	
+Threonine 874mg	
+Tryptophan 194mg	
+Tyrosine 680mg	
+Valine 1,010mg	
+Omega-6s 10mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

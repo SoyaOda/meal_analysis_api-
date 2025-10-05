@@ -1,0 +1,139 @@
+
+Food Entry
+ Turkey breast meat only raw	1,300 cals
+Amount eaten
+breast	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+1,171g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	breast (1,171g)
+Amount per serving
+Calories	1,300cals
+% Daily Value*
+Total Fat 29.6g	46%
+Saturated Fat 7g	35%
+Trans Fat 1.5g	
+Monounsaturated Fat 43.4g	
+Polyunsaturated Fat 34g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 258g	515%
+Cholesterol 703mg	234%
+Sodium 1,452mg	61%
+Vitamin A 60mcg	4%
+Vitamin C 0mg	0%
+Calcium 94mg	9%
+Iron 4.8mg	27%
+Potassium 2,775mg	79%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 59mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 47mcg	
+Lycopene 0mcg	
+Vitamin D 2.3mcg (94iu)	23%
+Vitamin E 1.2mg	6%
+Vitamin K 0mcg	0%
+Thiamin 0.57mg	38%
+Riboflavin 1.82mg	107%
+Niacin 117.1mg	586%
+Vitamin B-6 9.84mg	492%
+Folate 82mcg	20%
+Folic Acid 0mcg	
+Folate DFE 82mcg	
+Vitamin B-12 3.86mcg	64%
+Pantothenic Acid 11.1mg	111%
+Choline 758mg	138%
+Phosphorus 2,120mg	212%
+Magnesium 293mg	73%
+Zinc 12.9mg	86%
+Selenium 261mcg	373%
+Copper 0.5mg	25%
+Manganese 0.06mg	3%
+Alanine 15,282mg	
+Arginine 16,734mg	
+Aspartic Acid 23,959mg	
+Cystine 2,412mg	
+Glutamic Acid 37,800mg	
+Glycine 11,429mg	
+Histidine 8,302mg	
+Hydroxyproline 937mg	
+Isoleucine 9,626mg	
+Leucine 20,820mg	
+Lysine 24,439mg	
+Methionine 7,225mg	
+Phenylalanine 9,263mg	
+Proline 12,038mg	
+Serine 10,715mg	
+Threonine 11,558mg	
+Tryptophan 3,009mg	
+Tyrosine 8,911mg	
+Valine 10,235mg	
+Omega-3s 995mg	
+Omega-3 ALA 433mg	
+Omega-3 EPA 129mg	
+Omega-3 DHA 199mg	
+Omega-6s 13,677mg	
+Omega-6 LA 13,232mg	
+Omega-9 EA 70mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

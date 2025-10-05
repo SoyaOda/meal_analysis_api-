@@ -1,0 +1,123 @@
+
+Food Entry
+ Grouper mixed species raw	238 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+259g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (259g)
+Amount per serving
+Calories	238cals
+% Daily Value*
+Total Fat 2.6g	4%
+Saturated Fat 0.6g	3%
+Monounsaturated Fat 0.5g	
+Polyunsaturated Fat 0.8g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Added Sugars 0g	0%
+Protein 50g	100%
+Cholesterol 96mg	32%
+Sodium 137mg	6%
+Vitamin A 111mcg	7%
+Vitamin C 0mg	0%
+Calcium 70mg	7%
+Iron 2.3mg	13%
+Potassium 1,251mg	36%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 111mcg	
+Thiamin 0.18mg	12%
+Riboflavin 0.01mg	1%
+Niacin 0.8mg	4%
+Vitamin B-6 0.78mg	39%
+Folate 23mcg	6%
+Folic Acid 0mcg	
+Folate DFE 23mcg	
+Vitamin B-12 1.55mcg	26%
+Pantothenic Acid 1.9mg	19%
+Phosphorus 420mg	42%
+Magnesium 80mg	20%
+Zinc 1.2mg	8%
+Selenium 95mcg	135%
+Copper 0.05mg	3%
+Manganese 0.04mg	2%
+Alanine 3,035mg	
+Arginine 3,002mg	
+Aspartic Acid 5,139mg	
+Cystine 539mg	
+Glutamic Acid 7,490mg	
+Glycine 2,409mg	
+Histidine 1,476mg	
+Isoleucine 2,313mg	
+Leucine 4,079mg	
+Lysine 4,608mg	
+Methionine 1,487mg	
+Phenylalanine 1,958mg	
+Proline 1,774mg	
+Serine 2,049mg	
+Threonine 2,199mg	
+Tryptophan 562mg	
+Tyrosine 1,694mg	
+Valine 2,585mg	
+Omega-3s 666mg	
+Omega-3 EPA 70mg	
+Omega-3 DHA 570mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,133 @@
+
+Food Entry
+ Tortillas whole wheat flour	140 cals
+Amount eaten
+tortilla medium	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+Weight
+45g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	tortilla medium (45g)
+Amount per serving
+Calories	140cals
+% Daily Value*
+Total Fat 4.4g	7%
+Saturated Fat 2.2g	11%
+Trans Fat 0g	
+Monounsaturated Fat 1.4g	
+Polyunsaturated Fat 0.4g	
+Total Carbs 21g	7%
+Net Carbs 16g	
+Dietary Fiber 4g	18%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 4g	9%
+Cholesterol 0mg	0%
+Sodium 278mg	12%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 110mg	11%
+Iron 1.2mg	7%
+Potassium 118mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 1mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 59mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.4mg	2%
+Vitamin K 2mcg	3%
+Thiamin 0.37mg	25%
+Riboflavin 0.13mg	8%
+Niacin 2.2mg	11%
+Vitamin B-6 0.14mg	7%
+Folate 62mcg	16%
+Folic Acid 0mcg	
+Folate DFE 62mcg	
+Vitamin B-12 0mcg	0%
+Choline 9mg	2%
+Phosphorus 156mg	16%
+Magnesium 38mg	10%
+Zinc 0.9mg	6%
+Selenium 17mcg	24%
+Copper 0.12mg	6%
+Alanine 180mg	
+Arginine 216mg	
+Aspartic Acid 282mg	
+Cystine 84mg	
+Glutamic Acid 1,292mg	
+Glycine 193mg	
+Histidine 115mg	
+Isoleucine 159mg	
+Leucine 302mg	
+Lysine 167mg	
+Methionine 73mg	
+Phenylalanine 220mg	
+Proline 588mg	
+Serine 208mg	
+Threonine 140mg	
+Tryptophan 58mg	
+Tyrosine 98mg	
+Valine 200mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

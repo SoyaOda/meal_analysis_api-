@@ -1,0 +1,151 @@
+
+Food Entry
+ Guavas common raw	112 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+165g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (165g)
+Amount per serving
+Calories	112cals
+% Daily Value*
+Total Fat 1.6g	2%
+Saturated Fat 0.4g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.7g	
+Total Carbs 24g	8%
+Net Carbs 15g	
+Dietary Fiber 9g	36%
+Total Sugars 15g	
+Added Sugars 0g	0%
+Protein 4g	8%
+Cholesterol 0mg	0%
+Sodium 3mg	0%
+Vitamin A 51mcg	3%
+Vitamin C 377mg	628%
+Calcium 30mg	3%
+Iron 0.4mg	2%
+Potassium 688mg	20%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 7g	
+Starch 0g	
+Sucrose 5g	
+Glucose (Dextrose) 5g	
+Fructose 5g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 617mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 8,587mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 1.2mg	6%
+Vitamin K 4mcg	5%
+Thiamin 0.11mg	7%
+Riboflavin 0.07mg	4%
+Niacin 1.8mg	9%
+Vitamin B-6 0.18mg	9%
+Folate 81mcg	20%
+Folic Acid 0mcg	
+Folate DFE 81mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.7mg	7%
+Choline 13mg	2%
+Phosphorus 66mg	7%
+Magnesium 36mg	9%
+Zinc 0.4mg	3%
+Selenium 1mcg	1%
+Copper 0.38mg	19%
+Manganese 0.25mg	12%
+Alanine 211mg	
+Arginine 107mg	
+Aspartic Acid 267mg	
+Glutamic Acid 549mg	
+Glycine 211mg	
+Histidine 36mg	
+Isoleucine 153mg	
+Leucine 282mg	
+Lysine 119mg	
+Methionine 26mg	
+Phenylalanine 10mg	
+Proline 129mg	
+Serine 124mg	
+Threonine 158mg	
+Tryptophan 36mg	
+Tyrosine 51mg	
+Valine 144mg	
+Omega-3s 185mg	
+Omega-3 ALA 185mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 475mg	
+Omega-6 LA 475mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

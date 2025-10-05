@@ -1,0 +1,113 @@
+
+Food Entry
+ Naan bread	262 cals
+Amount eaten
+piece	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+90g
+Food Grade
+B-
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B-
+Serving Size	piece (90g)
+Amount per serving
+Calories	262cals
+% Daily Value*
+Total Fat 5.1g	8%
+Saturated Fat 1.3g	6%
+Trans Fat 0g	
+Monounsaturated Fat 1.6g	
+Polyunsaturated Fat 1.9g	
+Total Carbs 45g	15%
+Net Carbs 43g	
+Dietary Fiber 2g	8%
+Total Sugars 3g	
+Added Sugars 2g	3%
+Protein 9g	17%
+Sodium 419mg	17%
+Calcium 76mg	8%
+Iron 2.9mg	16%
+Potassium 113mg	3%
+Caffeine 0mg	
+Starch 38g	
+Sucrose 0g	
+Glucose (Dextrose) 1g	
+Fructose 1g	
+Lactose 0g	
+Maltose 2g	
+Galactose 0g	
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 1mcg	
+Vitamin E 0.7mg	4%
+Thiamin 0.7mg	47%
+Riboflavin 0.46mg	27%
+Niacin 5.3mg	26%
+Vitamin B-6 0.09mg	4%
+Folate 92mcg	23%
+Pantothenic Acid 0.4mg	4%
+Phosphorus 90mg	9%
+Magnesium 24mg	6%
+Zinc 0.7mg	5%
+Selenium 25mcg	36%
+Copper 0.12mg	6%
+Manganese 0.46mg	23%
+Omega-3s 248mg	
+Omega-3 ALA 248mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 1,620mg	
+Omega-6 LA 1,611mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

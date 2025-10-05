@@ -1,0 +1,123 @@
+
+Food Entry
+ Crab blue raw	25 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+28g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	oz (28g)
+Amount per serving
+Calories	25cals
+% Daily Value*
+Total Fat 0.3g	0%
+Saturated Fat 0.1g	0%
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Added Sugars 0g	0%
+Protein 5g	10%
+Cholesterol 22mg	7%
+Sodium 83mg	3%
+Vitamin A 1mcg	0%
+Vitamin C 1mg	1%
+Calcium 25mg	3%
+Iron 0.2mg	1%
+Potassium 93mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 1mcg	
+Thiamin 0.02mg	2%
+Riboflavin 0.01mg	1%
+Niacin 0.8mg	4%
+Vitamin B-6 0.04mg	2%
+Folate 12mcg	3%
+Folic Acid 0mcg	
+Folate DFE 12mcg	
+Vitamin B-12 2.55mcg	43%
+Pantothenic Acid 0.1mg	1%
+Phosphorus 65mg	6%
+Magnesium 10mg	2%
+Zinc 1mg	7%
+Selenium 11mcg	15%
+Copper 0.19mg	9%
+Manganese 0.04mg	2%
+Alanine 290mg	
+Arginine 447mg	
+Aspartic Acid 529mg	
+Cystine 57mg	
+Glutamic Acid 873mg	
+Glycine 309mg	
+Histidine 104mg	
+Isoleucine 248mg	
+Leucine 406mg	
+Lysine 446mg	
+Methionine 144mg	
+Phenylalanine 216mg	
+Proline 169mg	
+Serine 202mg	
+Threonine 207mg	
+Tryptophan 71mg	
+Tyrosine 170mg	
+Valine 241mg	
+Omega-3s 91mg	
+Omega-3 EPA 48mg	
+Omega-3 DHA 43mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,102 @@
+
+Food Entry
+ Baby spinach	7 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+30g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (30g)
+Amount per serving
+Calories	7cals
+% Daily Value*
+Total Fat 0.1g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0g	
+Total Carbs 1g	0%
+Net Carbs 0g	
+Dietary Fiber 1g	3%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 1g	2%
+Cholesterol 0mg	0%
+Sodium 24mg	1%
+Vitamin A 840mcg	56%
+Vitamin C 8mg	14%
+Calcium 30mg	3%
+Iron 0.9mg	5%
+Potassium 167mg	5%
+Caffeine 0mg	
+Soluble Fiber 0g	
+Sugar Alcohols 0g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.6mg	3%
+Vitamin K 145mcg	181%
+Thiamin 0.02mg	2%
+Riboflavin 0.05mg	3%
+Niacin 0.2mg	1%
+Vitamin B-6 0.06mg	3%
+Folate 60mcg	15%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0mg	0%
+Biotin 0.5mcg	2%
+Phosphorus 10mg	1%
+Magnesium 24mg	6%
+Zinc 0.2mg	1%
+Selenium 0mcg	0%
+Copper 0.04mg	2%
+Manganese 0.26mg	13%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

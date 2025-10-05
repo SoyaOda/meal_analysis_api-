@@ -1,0 +1,152 @@
+
+Food Entry
+ Port de salut cheese	465 cals
+Amount eaten
+cup, diced	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+132g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup, diced (132g)
+Amount per serving
+Calories	465cals
+% Daily Value*
+Total Fat 37.2g	57%
+Saturated Fat 22g	110%
+Trans Fat 0.9g	
+Monounsaturated Fat 12.3g	
+Polyunsaturated Fat 1g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 31g	63%
+Cholesterol 162mg	54%
+Sodium 705mg	29%
+Vitamin A 416mcg	28%
+Vitamin C 0mg	0%
+Calcium 858mg	86%
+Iron 0.6mg	3%
+Potassium 180mg	5%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 1g	
+Maltose 0g	
+Galactose 0g	
+Retinol 413mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 38mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0.7mcg (28iu)	7%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 66mcg	
+Vitamin E 0.3mg	2%
+Vitamin K 3mcg	4%
+Thiamin 0.02mg	1%
+Riboflavin 0.32mg	19%
+Niacin 0.1mg	0%
+Vitamin B-6 0.07mg	3%
+Folate 24mcg	6%
+Folic Acid 0mcg	
+Folate DFE 24mcg	
+Vitamin B-12 1.98mcg	33%
+Pantothenic Acid 0.3mg	3%
+Choline 20mg	4%
+Phosphorus 475mg	48%
+Magnesium 32mg	8%
+Zinc 3.4mg	23%
+Selenium 19mcg	27%
+Copper 0.03mg	1%
+Manganese 0.01mg	1%
+Alanine 1,043mg	
+Arginine 1,092mg	
+Aspartic Acid 2,313mg	
+Cystine 177mg	
+Glutamic Acid 7,061mg	
+Glycine 640mg	
+Histidine 906mg	
+Isoleucine 1,909mg	
+Leucine 3,276mg	
+Lysine 2,623mg	
+Methionine 969mg	
+Phenylalanine 1,746mg	
+Proline 3,817mg	
+Serine 1,791mg	
+Threonine 1,156mg	
+Tryptophan 453mg	
+Tyrosine 1,874mg	
+Valine 2,253mg	
+Omega-3s 463mg	
+Omega-3 ALA 463mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 44mg	
+Omega-6 LA 44mg	
+Omega-9 EA 0mg	
+MCTs 3g	
+Caproic Acid 0.7g	
+Caprylic Acid 0.4g	
+Capric Acid 0.9g	
+Lauric Acid 1g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

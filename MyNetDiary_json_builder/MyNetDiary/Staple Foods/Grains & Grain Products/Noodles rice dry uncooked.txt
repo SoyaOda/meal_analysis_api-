@@ -1,0 +1,132 @@
+
+Food Entry
+ Noodles rice dry uncooked	364 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+C+
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C+
+Serving Size	serving (100g)
+Amount per serving
+Calories	364cals
+% Daily Value*
+Total Fat 0.6g	1%
+Saturated Fat 0.2g	1%
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.2g	
+Total Carbs 80g	27%
+Net Carbs 79g	
+Dietary Fiber 2g	6%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 6g	12%
+Cholesterol 0mg	0%
+Sodium 182mg	8%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 18mg	2%
+Iron 0.7mg	4%
+Potassium 30mg	1%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.1mg	1%
+Vitamin K 0mcg	0%
+Thiamin 0.03mg	2%
+Riboflavin 0.02mg	1%
+Niacin 0.2mg	1%
+Vitamin B-6 0.02mg	1%
+Folate 3mcg	1%
+Folic Acid 0mcg	
+Folate DFE 3mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.1mg	1%
+Choline 6mg	1%
+Phosphorus 153mg	15%
+Magnesium 12mg	3%
+Zinc 0.7mg	5%
+Selenium 15mcg	22%
+Copper 0.08mg	4%
+Manganese 0.5mg	25%
+Alanine 332mg	
+Arginine 516mg	
+Aspartic Acid 549mg	
+Cystine 107mg	
+Glutamic Acid 1,098mg	
+Glycine 267mg	
+Histidine 149mg	
+Isoleucine 244mg	
+Leucine 488mg	
+Lysine 207mg	
+Methionine 144mg	
+Phenylalanine 317mg	
+Proline 278mg	
+Serine 310mg	
+Threonine 210mg	
+Tryptophan 72mg	
+Tyrosine 314mg	
+Valine 348mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

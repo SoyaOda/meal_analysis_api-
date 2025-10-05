@@ -1,0 +1,153 @@
+
+Food Entry
+ Green beans raw	34 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+110g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (110g)
+Amount per serving
+Calories	34cals
+% Daily Value*
+Total Fat 0.2g	0%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 8g	3%
+Net Carbs 5g	
+Dietary Fiber 3g	12%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 2g	4%
+Cholesterol 0mg	0%
+Sodium 7mg	0%
+Vitamin A 38mcg	3%
+Vitamin C 13mg	22%
+Calcium 41mg	4%
+Iron 1.1mg	6%
+Potassium 232mg	7%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 2g	
+Starch 1g	
+Sucrose 0g	
+Glucose (Dextrose) 2g	
+Fructose 2g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 76mcg	
+Beta-carotene 417mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 704mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 99mcg	
+Vitamin E 0.5mg	2%
+Vitamin K 47mcg	59%
+Thiamin 0.09mg	6%
+Riboflavin 0.11mg	7%
+Niacin 0.8mg	4%
+Vitamin B-6 0.16mg	8%
+Folate 36mcg	9%
+Folic Acid 0mcg	
+Folate DFE 36mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.2mg	2%
+Choline 17mg	3%
+Phosphorus 42mg	4%
+Magnesium 28mg	7%
+Zinc 0.3mg	2%
+Selenium 1mcg	1%
+Copper 0.08mg	4%
+Manganese 0.24mg	12%
+Alanine 92mg	
+Arginine 80mg	
+Aspartic Acid 281mg	
+Cystine 20mg	
+Glutamic Acid 206mg	
+Glycine 72mg	
+Histidine 37mg	
+Isoleucine 73mg	
+Leucine 123mg	
+Lysine 97mg	
+Methionine 24mg	
+Phenylalanine 74mg	
+Proline 75mg	
+Serine 109mg	
+Threonine 87mg	
+Tryptophan 21mg	
+Tyrosine 46mg	
+Valine 99mg	
+Omega-3s 76mg	
+Omega-3 ALA 76mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 0mg	
+Omega-6 LA 0mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Fluoride 21mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

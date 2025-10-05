@@ -1,0 +1,152 @@
+
+Food Entry
+ Brie cheese	802 cals
+Amount eaten
+cup, melted	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+240g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup, melted (240g)
+Amount per serving
+Calories	802cals
+% Daily Value*
+Total Fat 66.4g	102%
+Saturated Fat 41.8g	209%
+Trans Fat 1.6g	
+Monounsaturated Fat 19.2g	
+Polyunsaturated Fat 2g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 50g	100%
+Cholesterol 240mg	80%
+Sodium 1,510mg	63%
+Vitamin A 417mcg	28%
+Vitamin C 0mg	0%
+Calcium 442mg	44%
+Iron 1.2mg	7%
+Potassium 365mg	10%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 1g	
+Maltose 0g	
+Galactose 0g	
+Retinol 415mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 22mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 1.2mcg (48iu)	12%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 96mcg	
+Vitamin E 0.6mg	3%
+Vitamin K 6mcg	7%
+Thiamin 0.17mg	11%
+Riboflavin 1.25mg	73%
+Niacin 0.9mg	5%
+Vitamin B-6 0.56mg	28%
+Folate 156mcg	39%
+Folic Acid 0mcg	
+Folate DFE 156mcg	
+Vitamin B-12 3.96mcg	66%
+Pantothenic Acid 1.7mg	17%
+Choline 37mg	7%
+Phosphorus 451mg	45%
+Magnesium 48mg	12%
+Zinc 5.7mg	38%
+Selenium 35mcg	50%
+Copper 0.05mg	2%
+Manganese 0.08mg	4%
+Alanine 2,062mg	
+Arginine 1,764mg	
+Aspartic Acid 3,240mg	
+Cystine 274mg	
+Glutamic Acid 10,529mg	
+Glycine 953mg	
+Histidine 1,718mg	
+Isoleucine 2,436mg	
+Leucine 4,630mg	
+Lysine 4,442mg	
+Methionine 1,421mg	
+Phenylalanine 2,779mg	
+Proline 5,902mg	
+Serine 2,803mg	
+Threonine 1,802mg	
+Tryptophan 773mg	
+Tyrosine 2,880mg	
+Valine 3,216mg	
+Omega-3s 751mg	
+Omega-3 ALA 751mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 331mg	
+Omega-6 LA 331mg	
+Omega-9 EA 0mg	
+MCTs 4g	
+Caproic Acid 0.8g	
+Caprylic Acid 0.7g	
+Capric Acid 1.6g	
+Lauric Acid 1.2g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

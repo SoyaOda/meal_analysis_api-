@@ -1,0 +1,149 @@
+
+Food Entry
+ Chocolate fudge with chocolate cover	99 cals
+Amount eaten
+piece	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+22g
+Food Grade
+C+
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C+
+Serving Size	piece (22g)
+Amount per serving
+Calories	99cals
+% Daily Value*
+Total Fat 3.5g	5%
+Saturated Fat 2.2g	11%
+Trans Fat 0.1g	
+Monounsaturated Fat 0.9g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 16g	5%
+Net Carbs 16g	
+Dietary Fiber 0g	2%
+Total Sugars 15g	
+Added Sugars 15g	30%
+Protein 1g	2%
+Cholesterol 4mg	1%
+Sodium 29mg	1%
+Vitamin A 12mcg	1%
+Vitamin C 0mg	0%
+Calcium 20mg	2%
+Iron 0.4mg	2%
+Potassium 44mg	1%
+Alcohol 0g	
+Caffeine 3mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 14g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 1g	
+Maltose 0g	
+Galactose 0g	
+Retinol 12mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 1mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 1mcg	
+Lycopene 0mcg	
+Vitamin D 0.1mcg (2iu)	1%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 7mcg	
+Gamma-tocopherol 150mcg	
+Vitamin E 0.1mg	0%
+Vitamin K 1mcg	1%
+Thiamin 0.01mg	1%
+Riboflavin 0.03mg	2%
+Niacin 0.1mg	0%
+Vitamin B-6 0mg	0%
+Folate 1mcg	0%
+Folic Acid 0mcg	
+Folate DFE 1mcg	
+Vitamin B-12 0.07mcg	1%
+Pantothenic Acid 0.1mg	1%
+Choline 5mg	1%
+Phosphorus 24mg	2%
+Magnesium 10mg	2%
+Zinc 0.3mg	2%
+Selenium 1mcg	1%
+Copper 0.08mg	4%
+Manganese 0.1mg	5%
+Alanine 29mg	
+Arginine 38mg	
+Aspartic Acid 72mg	
+Cystine 10mg	
+Glutamic Acid 153mg	
+Glycine 23mg	
+Histidine 19mg	
+Isoleucine 39mg	
+Leucine 65mg	
+Lysine 51mg	
+Methionine 16mg	
+Phenylalanine 38mg	
+Proline 70mg	
+Serine 41mg	
+Threonine 31mg	
+Tryptophan 10mg	
+Tyrosine 35mg	
+Valine 50mg	
+Omega-3s 13mg	
+Omega-3 ALA 13mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 62mg	
+Omega-6 LA 62mg	
+Omega-9 EA 0mg	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

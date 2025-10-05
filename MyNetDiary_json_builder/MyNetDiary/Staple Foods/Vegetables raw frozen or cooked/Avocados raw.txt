@@ -1,0 +1,150 @@
+
+Food Entry
+ Avocados raw	240 cals
+Amount eaten
+cup, cubes	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+150g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup, cubes (150g)
+Amount per serving
+Calories	240cals
+% Daily Value*
+Total Fat 22g	34%
+Saturated Fat 3.2g	16%
+Trans Fat 0g	
+Monounsaturated Fat 14.7g	
+Polyunsaturated Fat 2.7g	
+Total Carbs 13g	4%
+Net Carbs 3g	
+Dietary Fiber 10g	40%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 3g	6%
+Cholesterol 0mg	0%
+Sodium 11mg	0%
+Vitamin A 11mcg	1%
+Vitamin C 15mg	25%
+Calcium 18mg	2%
+Iron 0.8mg	5%
+Potassium 728mg	21%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 4g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 1g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 36mcg	
+Beta-carotene 93mcg	
+Beta-cryptoxanthin 42mcg	
+Lutein + Zeaxanthin 407mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 3.1mg	15%
+Vitamin K 32mcg	39%
+Thiamin 0.1mg	7%
+Riboflavin 0.2mg	11%
+Niacin 2.6mg	13%
+Vitamin B-6 0.39mg	19%
+Folate 122mcg	30%
+Folic Acid 0mcg	
+Folate DFE 122mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 2.1mg	21%
+Biotin 1.5mcg	5%
+Choline 21mg	4%
+Phosphorus 78mg	8%
+Magnesium 44mg	11%
+Zinc 1mg	6%
+Selenium 1mcg	1%
+Copper 0.28mg	14%
+Manganese 0.21mg	11%
+Alanine 164mg	
+Arginine 132mg	
+Aspartic Acid 354mg	
+Cystine 41mg	
+Glutamic Acid 431mg	
+Glycine 156mg	
+Histidine 74mg	
+Isoleucine 126mg	
+Leucine 215mg	
+Lysine 198mg	
+Methionine 57mg	
+Phenylalanine 146mg	
+Proline 147mg	
+Serine 171mg	
+Threonine 110mg	
+Tryptophan 38mg	
+Tyrosine 74mg	
+Valine 161mg	
+Omega-3s 167mg	
+Omega-3 ALA 167mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 23mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Fluoride 11mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

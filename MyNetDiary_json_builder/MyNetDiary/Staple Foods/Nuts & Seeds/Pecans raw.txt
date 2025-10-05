@@ -1,0 +1,156 @@
+
+Food Entry
+ Pecans raw	753 cals
+Amount eaten
+cup, chopped	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+109g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	cup, chopped (109g)
+Amount per serving
+Calories	753cals
+% Daily Value*
+Total Fat 78.4g	121%
+Saturated Fat 6.7g	34%
+Trans Fat 0g	
+Monounsaturated Fat 44.5g	
+Polyunsaturated Fat 23.6g	
+Total Carbs 15g	5%
+Net Carbs 5g	
+Dietary Fiber 10g	42%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 10g	20%
+Cholesterol 0mg	0%
+Sodium 0mg	0%
+Vitamin A 3mcg	0%
+Vitamin C 1mg	2%
+Calcium 76mg	8%
+Iron 2.8mg	15%
+Potassium 447mg	13%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 10g	
+Starch 1g	
+Sucrose 4g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 32mcg	
+Beta-cryptoxanthin 9.8mcg	
+Lutein + Zeaxanthin 19mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 425mcg	
+Delta-tocopherol 512mcg	
+Gamma-tocopherol 26,640mcg	
+Vitamin E 1.5mg	8%
+Vitamin K 4mcg	5%
+Thiamin 0.72mg	48%
+Riboflavin 0.14mg	8%
+Niacin 1.3mg	6%
+Vitamin B-6 0.23mg	11%
+Folate 24mcg	6%
+Folic Acid 0mcg	
+Folate DFE 24mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.9mg	9%
+Biotin 24.7mcg	82%
+Choline 44mg	8%
+Phosphorus 302mg	30%
+Magnesium 132mg	33%
+Zinc 4.9mg	33%
+Selenium 4mcg	6%
+Copper 1.31mg	65%
+Manganese 4.91mg	245%
+Alanine 433mg	
+Arginine 1,283mg	
+Aspartic Acid 1,013mg	
+Cysteine 332mg	
+Cystine 166mg	
+Glutamic Acid 1,994mg	
+Glycine 494mg	
+Histidine 286mg	
+Hydroxyproline 0mg	
+Isoleucine 366mg	
+Leucine 652mg	
+Lysine 313mg	
+Methionine 199mg	
+Phenylalanine 464mg	
+Proline 396mg	
+Serine 517mg	
+Threonine 334mg	
+Tryptophan 101mg	
+Tyrosine 234mg	
+Valine 448mg	
+Omega-3s 1,075mg	
+Omega-3 ALA 1,075mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 22,485mg	
+Omega-6 LA 22,485mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Fluoride 11mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

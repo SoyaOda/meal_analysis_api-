@@ -1,0 +1,150 @@
+
+Food Entry
+ Chicken whole meat and skin raw	660 cals
+Amount eaten
+unit (yield from 1 lb ready-to-cook chicken)	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+276g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	unit (yield from 1 lb ready-to-cook chicken) (276g)
+Amount per serving
+Calories	660cals
+% Daily Value*
+Total Fat 37.5g	58%
+Saturated Fat 10.5g	52%
+Trans Fat 1.2g	
+Monounsaturated Fat 14.7g	
+Polyunsaturated Fat 8.2g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 75g	151%
+Cholesterol 243mg	81%
+Sodium 226mg	9%
+Vitamin A 132mcg	9%
+Vitamin C 0mg	0%
+Calcium 41mg	4%
+Iron 3.5mg	19%
+Potassium 615mg	18%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 132mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0.1mcg (6iu)	1%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 455mcg	
+Vitamin E 0.7mg	4%
+Vitamin K 7mcg	8%
+Thiamin 0.17mg	12%
+Riboflavin 0.46mg	27%
+Niacin 23.4mg	117%
+Vitamin B-6 1.1mg	55%
+Folate 14mcg	3%
+Folic Acid 0mcg	
+Folate DFE 14mcg	
+Vitamin B-12 0.83mcg	14%
+Pantothenic Acid 2.8mg	28%
+Choline 182mg	33%
+Phosphorus 502mg	50%
+Magnesium 63mg	16%
+Zinc 5.4mg	36%
+Selenium 66mcg	94%
+Copper 0.18mg	9%
+Manganese 0.06mg	3%
+Alanine 4,391mg	
+Arginine 4,722mg	
+Aspartic Acid 6,718mg	
+Cystine 1,005mg	
+Glutamic Acid 11,015mg	
+Glycine 4,869mg	
+Histidine 2,214mg	
+Isoleucine 3,759mg	
+Leucine 5,481mg	
+Lysine 6,135mg	
+Methionine 2,004mg	
+Phenylalanine 2,928mg	
+Proline 3,649mg	
+Serine 2,658mg	
+Threonine 3,113mg	
+Tryptophan 842mg	
+Tyrosine 2,426mg	
+Valine 3,657mg	
+Omega-3s 489mg	
+Omega-3 ALA 295mg	
+Omega-3 EPA 28mg	
+Omega-3 DHA 110mg	
+Omega-6s 7,397mg	
+Omega-6 LA 7,093mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0.1g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

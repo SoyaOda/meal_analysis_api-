@@ -1,0 +1,151 @@
+
+Food Entry
+ Tuna white albacore canned in oil	331 cals
+Amount eaten
+can	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+178g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	can (178g)
+Amount per serving
+Calories	331cals
+% Daily Value*
+Total Fat 14.4g	22%
+Saturated Fat 2.3g	11%
+Trans Fat 0.2g	
+Monounsaturated Fat 5.8g	
+Polyunsaturated Fat 5.3g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 47g	94%
+Cholesterol 55mg	18%
+Sodium 705mg	29%
+Vitamin A 9mcg	1%
+Vitamin C 0mg	0%
+Calcium 7mg	1%
+Iron 1.2mg	6%
+Potassium 593mg	17%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 9mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 6.4mcg (254iu)	64%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 36mcg	
+Gamma-tocopherol 36mcg	
+Vitamin E 4.1mg	20%
+Vitamin K 12mcg	15%
+Thiamin 0.03mg	2%
+Riboflavin 0.14mg	8%
+Niacin 20.8mg	104%
+Vitamin B-6 0.77mg	38%
+Folate 9mcg	2%
+Folic Acid 0mcg	
+Folate DFE 9mcg	
+Vitamin B-12 3.92mcg	65%
+Pantothenic Acid 0.7mg	7%
+Choline 58mg	11%
+Phosphorus 475mg	48%
+Magnesium 61mg	15%
+Zinc 0.8mg	6%
+Selenium 107mcg	153%
+Copper 0.23mg	12%
+Manganese 0.03mg	1%
+Alanine 2,857mg	
+Arginine 2,827mg	
+Aspartic Acid 4,836mg	
+Cystine 506mg	
+Glutamic Acid 7,051mg	
+Glycine 2,268mg	
+Histidine 1,390mg	
+Isoleucine 2,177mg	
+Leucine 3,838mg	
+Lysine 4,338mg	
+Methionine 1,397mg	
+Phenylalanine 1,844mg	
+Proline 1,670mg	
+Serine 1,926mg	
+Threonine 2,070mg	
+Tryptophan 529mg	
+Tyrosine 1,595mg	
+Valine 2,433mg	
+Omega-3s 831mg	
+Omega-3 ALA 363mg	
+Omega-3 EPA 117mg	
+Omega-3 DHA 317mg	
+Omega-6s 4,432mg	
+Omega-6 LA 4,414mg	
+Omega-9 EA 21mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Fluoride 55mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,124 @@
+
+Food Entry
+ Catfish wild raw	151 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+159g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (159g)
+Amount per serving
+Calories	151cals
+% Daily Value*
+Total Fat 4.5g	7%
+Saturated Fat 1.1g	6%
+Monounsaturated Fat 1.3g	
+Polyunsaturated Fat 1.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Added Sugars 0g	0%
+Protein 26g	52%
+Cholesterol 92mg	31%
+Sodium 68mg	3%
+Vitamin A 24mcg	2%
+Vitamin C 1mg	2%
+Calcium 22mg	2%
+Iron 0.5mg	3%
+Potassium 569mg	16%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 24mcg	
+Vitamin D 19.9mcg (795iu)	199%
+Thiamin 0.33mg	22%
+Riboflavin 0.11mg	7%
+Niacin 3mg	15%
+Vitamin B-6 0.18mg	9%
+Folate 16mcg	4%
+Folic Acid 0mcg	
+Folate DFE 16mcg	
+Vitamin B-12 3.55mcg	59%
+Pantothenic Acid 1.2mg	12%
+Phosphorus 332mg	33%
+Magnesium 37mg	9%
+Zinc 0.8mg	5%
+Selenium 20mcg	29%
+Copper 0.05mg	3%
+Manganese 0.04mg	2%
+Alanine 1,576mg	
+Arginine 1,558mg	
+Aspartic Acid 2,666mg	
+Cystine 280mg	
+Glutamic Acid 3,888mg	
+Glycine 1,250mg	
+Histidine 766mg	
+Isoleucine 1,200mg	
+Leucine 2,116mg	
+Lysine 2,391mg	
+Methionine 771mg	
+Phenylalanine 1,016mg	
+Proline 921mg	
+Serine 1,062mg	
+Threonine 1,142mg	
+Tryptophan 291mg	
+Tyrosine 879mg	
+Valine 1,342mg	
+Omega-3s 738mg	
+Omega-3 EPA 207mg	
+Omega-3 DHA 372mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

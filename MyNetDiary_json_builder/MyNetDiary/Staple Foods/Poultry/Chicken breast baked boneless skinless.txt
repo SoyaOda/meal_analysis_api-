@@ -1,0 +1,133 @@
+
+Food Entry
+ Chicken breast baked boneless skinless	97 cals
+Amount eaten
+unit (yield from 1 lb ready-to-cook chicken)	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+52g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	unit (yield from 1 lb ready-to-cook chicken) (52g)
+Amount per serving
+Calories	97cals
+% Daily Value*
+Total Fat 2.4g	4%
+Saturated Fat 0.7g	3%
+Monounsaturated Fat 0.9g	
+Polyunsaturated Fat 0.6g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 17g	35%
+Cholesterol 47mg	16%
+Sodium 41mg	2%
+Vitamin A 4mcg	0%
+Vitamin C 0mg	0%
+Calcium 8mg	1%
+Iron 0.6mg	3%
+Potassium 144mg	4%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 4mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0.1mcg (3iu)	1%
+Vitamin E 0.2mg	1%
+Vitamin K 1mcg	2%
+Thiamin 0.04mg	3%
+Riboflavin 0.07mg	4%
+Niacin 7.7mg	38%
+Vitamin B-6 0.33mg	16%
+Folate 2mcg	1%
+Folic Acid 0mcg	
+Folate DFE 2mcg	
+Vitamin B-12 0.19mcg	3%
+Pantothenic Acid 0.5mg	5%
+Choline 50mg	9%
+Phosphorus 128mg	13%
+Magnesium 16mg	4%
+Zinc 0.6mg	4%
+Selenium 14mcg	19%
+Copper 0.03mg	2%
+Manganese 0.01mg	1%
+Alanine 948mg	
+Arginine 1,048mg	
+Aspartic Acid 1,548mg	
+Cystine 223mg	
+Glutamic Acid 2,612mg	
+Glycine 853mg	
+Histidine 539mg	
+Isoleucine 918mg	
+Leucine 1,305mg	
+Lysine 1,475mg	
+Methionine 481mg	
+Phenylalanine 691mg	
+Proline 718mg	
+Serine 599mg	
+Threonine 734mg	
+Tryptophan 203mg	
+Tyrosine 587mg	
+Valine 863mg	
+Omega-3s 31mg	
+Omega-3 EPA 5mg	
+Omega-3 DHA 16mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

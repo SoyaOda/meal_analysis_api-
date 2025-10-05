@@ -1,0 +1,155 @@
+
+Food Entry
+ Flaxseeds	897 cals
+Amount eaten
+cup, whole	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+168g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup, whole (168g)
+Amount per serving
+Calories	897cals
+% Daily Value*
+Total Fat 70.8g	109%
+Saturated Fat 6.2g	31%
+Trans Fat 0g	
+Monounsaturated Fat 12.6g	
+Polyunsaturated Fat 48.3g	
+Total Carbs 49g	16%
+Net Carbs 3g	
+Dietary Fiber 46g	183%
+Total Sugars 3g	
+Added Sugars 0g	0%
+Protein 31g	61%
+Cholesterol 0mg	0%
+Sodium 50mg	2%
+Vitamin A 0mcg	0%
+Vitamin C 1mg	2%
+Calcium 428mg	43%
+Iron 9.6mg	53%
+Potassium 1,366mg	39%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 14g	
+Fiber insoluble 32g	
+Starch 5g	
+Sucrose 2g	
+Glucose (Dextrose) 1g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 1,094mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 588mcg	
+Gamma-tocopherol 33,516mcg	
+Vitamin E 0.5mg	3%
+Vitamin K 7mcg	9%
+Thiamin 2.76mg	184%
+Riboflavin 0.27mg	16%
+Niacin 5.2mg	26%
+Vitamin B-6 0.79mg	40%
+Folate 146mcg	37%
+Folic Acid 0mcg	
+Folate DFE 146mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 1.7mg	17%
+Biotin 56.8mcg	189%
+Choline 132mg	24%
+Phosphorus 1,079mg	108%
+Magnesium 659mg	165%
+Zinc 7.3mg	49%
+Selenium 43mcg	61%
+Copper 2.05mg	102%
+Manganese 4.17mg	208%
+Alanine 1,554mg	
+Arginine 3,234mg	
+Aspartic Acid 3,437mg	
+Cysteine 928mg	
+Cystine 571mg	
+Glutamic Acid 6,786mg	
+Glycine 2,097mg	
+Histidine 793mg	
+Hydroxyproline 294mg	
+Isoleucine 1,505mg	
+Leucine 2,075mg	
+Lysine 1,448mg	
+Methionine 622mg	
+Phenylalanine 1,608mg	
+Proline 1,354mg	
+Serine 1,630mg	
+Threonine 1,287mg	
+Tryptophan 499mg	
+Tyrosine 828mg	
+Valine 1,801mg	
+Omega-3s 38,326mg	
+Omega-3 ALA 38,326mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 9,917mg	
+Omega-6 LA 9,917mg	
+Omega-9 EA 22mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,136 @@
+
+Food Entry
+ Mung beans raw	718 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+207g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (207g)
+Amount per serving
+Calories	718cals
+% Daily Value*
+Total Fat 2.4g	4%
+Saturated Fat 0.7g	4%
+Trans Fat 0g	
+Monounsaturated Fat 0.3g	
+Polyunsaturated Fat 0.8g	
+Total Carbs 130g	43%
+Net Carbs 96g	
+Dietary Fiber 34g	135%
+Total Sugars 14g	
+Added Sugars 0g	0%
+Protein 49g	99%
+Cholesterol 0mg	0%
+Sodium 31mg	1%
+Vitamin A 12mcg	1%
+Vitamin C 10mg	17%
+Calcium 273mg	27%
+Iron 14mg	78%
+Potassium 2,579mg	74%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 141mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 1.1mg	5%
+Vitamin K 19mcg	23%
+Thiamin 1.29mg	86%
+Riboflavin 0.48mg	28%
+Niacin 4.7mg	23%
+Vitamin B-6 0.79mg	40%
+Folate 1,294mcg	323%
+Folic Acid 0mcg	
+Folate DFE 1,294mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 4mg	40%
+Choline 203mg	37%
+Phosphorus 760mg	76%
+Magnesium 391mg	98%
+Zinc 5.5mg	37%
+Selenium 17mcg	24%
+Copper 1.95mg	97%
+Manganese 2.14mg	107%
+Alanine 2,174mg	
+Arginine 3,461mg	
+Aspartic Acid 5,705mg	
+Cystine 435mg	
+Glutamic Acid 8,826mg	
+Glycine 1,975mg	
+Histidine 1,439mg	
+Isoleucine 2,087mg	
+Leucine 3,823mg	
+Lysine 3,444mg	
+Methionine 592mg	
+Phenylalanine 2,987mg	
+Proline 2,267mg	
+Serine 2,434mg	
+Threonine 1,619mg	
+Tryptophan 538mg	
+Tyrosine 1,478mg	
+Valine 2,561mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 48mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,132 @@
+
+Food Entry
+ Bison ground raw	223 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+C
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C
+Serving Size	serving (100g)
+Amount per serving
+Calories	223cals
+% Daily Value*
+Total Fat 15.9g	25%
+Saturated Fat 6.8g	34%
+Monounsaturated Fat 6.2g	
+Polyunsaturated Fat 0.7g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 19g	37%
+Cholesterol 70mg	23%
+Sodium 66mg	3%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 11mg	1%
+Iron 2.6mg	14%
+Potassium 307mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin E 0.2mg	1%
+Thiamin 0.13mg	9%
+Riboflavin 0.23mg	13%
+Niacin 4.9mg	25%
+Vitamin B-6 0.35mg	18%
+Folate 11mcg	3%
+Folic Acid 0mcg	
+Folate DFE 11mcg	
+Vitamin B-12 1.79mcg	30%
+Pantothenic Acid 0.6mg	6%
+Phosphorus 181mg	18%
+Magnesium 19mg	5%
+Zinc 4.3mg	29%
+Selenium 19mcg	27%
+Copper 0.13mg	7%
+Manganese 0.01mg	0%
+Alanine 1,243mg	
+Arginine 1,271mg	
+Aspartic Acid 1,824mg	
+Cystine 223mg	
+Glutamic Acid 3,040mg	
+Glycine 1,211mg	
+Histidine 684mg	
+Hydroxyproline 233mg	
+Isoleucine 901mg	
+Leucine 1,601mg	
+Lysine 1,732mg	
+Methionine 505mg	
+Phenylalanine 793mg	
+Proline 956mg	
+Serine 776mg	
+Threonine 847mg	
+Tryptophan 141mg	
+Tyrosine 635mg	
+Valine 1,004mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

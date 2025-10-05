@@ -1,0 +1,136 @@
+
+Food Entry
+ Grapes American raw	62 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+92g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	cup (92g)
+Amount per serving
+Calories	62cals
+% Daily Value*
+Total Fat 0.3g	0%
+Saturated Fat 0.1g	1%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 16g	5%
+Net Carbs 15g	
+Dietary Fiber 1g	3%
+Total Sugars 15g	
+Added Sugars 0g	0%
+Protein 1g	1%
+Cholesterol 0mg	0%
+Sodium 2mg	0%
+Vitamin A 5mcg	0%
+Vitamin C 4mg	6%
+Calcium 13mg	1%
+Iron 0.3mg	1%
+Potassium 176mg	5%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 0mcg	
+Alpha-carotene 1mcg	
+Beta-carotene 54mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 66mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.2mg	1%
+Vitamin K 13mcg	17%
+Thiamin 0.08mg	6%
+Riboflavin 0.05mg	3%
+Niacin 0.3mg	1%
+Vitamin B-6 0.1mg	5%
+Folate 4mcg	1%
+Folic Acid 0mcg	
+Folate DFE 4mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0mg	0%
+Choline 5mg	1%
+Phosphorus 9mg	1%
+Magnesium 5mg	1%
+Zinc 0mg	0%
+Selenium 0mcg	0%
+Copper 0.04mg	2%
+Manganese 0.66mg	33%
+Alanine 24mg	
+Arginine 42mg	
+Aspartic Acid 71mg	
+Cystine 9mg	
+Glutamic Acid 121mg	
+Glycine 17mg	
+Histidine 21mg	
+Isoleucine 5mg	
+Leucine 12mg	
+Lysine 13mg	
+Methionine 19mg	
+Phenylalanine 12mg	
+Proline 19mg	
+Serine 28mg	
+Threonine 16mg	
+Tryptophan 3mg	
+Tyrosine 10mg	
+Valine 16mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

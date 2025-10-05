@@ -1,0 +1,150 @@
+
+Food Entry
+ English muffin whole wheat	58 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+28g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	oz (28g)
+Amount per serving
+Calories	58cals
+% Daily Value*
+Total Fat 0.6g	1%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.2g	
+Total Carbs 11g	4%
+Net Carbs 10g	
+Dietary Fiber 2g	8%
+Total Sugars 0g	
+Added Sugars 0g	1%
+Protein 2g	5%
+Cholesterol 0mg	0%
+Sodium 103mg	4%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 75mg	8%
+Iron 0.7mg	4%
+Potassium 60mg	2%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 2g	
+Starch 9g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 1mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 26mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 36mcg	
+Delta-tocopherol 6mcg	
+Gamma-tocopherol 317mcg	
+Vitamin E 0.1mg	1%
+Vitamin K 0mcg	0%
+Thiamin 0.09mg	6%
+Riboflavin 0.04mg	2%
+Niacin 1mg	5%
+Vitamin B-6 0.05mg	2%
+Folate 14mcg	3%
+Folic Acid 0mcg	
+Folate DFE 14mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.2mg	2%
+Choline 4mg	1%
+Phosphorus 80mg	8%
+Magnesium 20mg	5%
+Zinc 0.5mg	3%
+Selenium 11mcg	16%
+Copper 0.06mg	3%
+Manganese 0.51mg	25%
+Alanine 99mg	
+Arginine 118mg	
+Aspartic Acid 145mg	
+Cystine 54mg	
+Glutamic Acid 726mg	
+Glycine 103mg	
+Histidine 58mg	
+Isoleucine 100mg	
+Leucine 173mg	
+Lysine 88mg	
+Methionine 40mg	
+Phenylalanine 118mg	
+Proline 238mg	
+Serine 118mg	
+Threonine 80mg	
+Tryptophan 37mg	
+Tyrosine 77mg	
+Valine 117mg	
+Omega-3s 13mg	
+Omega-3 ALA 13mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 223mg	
+Omega-6 LA 223mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

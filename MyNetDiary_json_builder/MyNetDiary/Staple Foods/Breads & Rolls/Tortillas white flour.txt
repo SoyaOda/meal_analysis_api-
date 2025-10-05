@@ -1,0 +1,125 @@
+
+Food Entry
+ Tortillas white flour	92 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+28g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	oz (28g)
+Amount per serving
+Calories	92cals
+% Daily Value*
+Total Fat 2g	3%
+Saturated Fat 0.5g	2%
+Monounsaturated Fat 1.1g	
+Polyunsaturated Fat 0.3g	
+Total Carbs 16g	5%
+Net Carbs 15g	
+Dietary Fiber 1g	4%
+Added Sugars 1g	1%
+Protein 2g	5%
+Cholesterol 0mg	0%
+Sodium 136mg	6%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 11mg	1%
+Iron 0.9mg	5%
+Potassium 37mg	1%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Retinol 0mcg	
+Thiamin 0.15mg	10%
+Riboflavin 0.08mg	5%
+Niacin 1mg	5%
+Vitamin B-6 0.01mg	1%
+Folate 35mcg	9%
+Folic Acid 31mcg	
+Folate DFE 57mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.2mg	2%
+Phosphorus 35mg	4%
+Magnesium 7mg	2%
+Zinc 0.2mg	1%
+Selenium 7mcg	9%
+Copper 0.08mg	4%
+Manganese 0.13mg	7%
+Alanine 82mg	
+Arginine 101mg	
+Aspartic Acid 109mg	
+Cystine 51mg	
+Glutamic Acid 808mg	
+Glycine 90mg	
+Histidine 55mg	
+Isoleucine 87mg	
+Leucine 170mg	
+Lysine 60mg	
+Methionine 44mg	
+Phenylalanine 123mg	
+Proline 278mg	
+Serine 122mg	
+Threonine 69mg	
+Tryptophan 30mg	
+Tyrosine 75mg	
+Valine 101mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

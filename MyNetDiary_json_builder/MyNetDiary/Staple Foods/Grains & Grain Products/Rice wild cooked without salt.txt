@@ -1,0 +1,152 @@
+
+Food Entry
+ Rice wild cooked without salt	166 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+164g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (164g)
+Amount per serving
+Calories	166cals
+% Daily Value*
+Total Fat 0.6g	1%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.3g	
+Total Carbs 35g	12%
+Net Carbs 32g	
+Dietary Fiber 3g	12%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 7g	13%
+Cholesterol 0mg	0%
+Sodium 5mg	0%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 5mg	0%
+Iron 1mg	5%
+Potassium 166mg	5%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 3g	
+Starch 31g	
+Sucrose 1g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 3mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 105mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0.4mg	2%
+Vitamin K 1mcg	1%
+Thiamin 0.09mg	6%
+Riboflavin 0.14mg	8%
+Niacin 2.1mg	11%
+Vitamin B-6 0.22mg	11%
+Folate 43mcg	11%
+Folic Acid 0mcg	
+Folate DFE 43mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.3mg	3%
+Choline 17mg	3%
+Phosphorus 134mg	13%
+Magnesium 52mg	13%
+Zinc 2.2mg	15%
+Selenium 1mcg	2%
+Copper 0.2mg	10%
+Manganese 0.46mg	23%
+Alanine 366mg	
+Arginine 505mg	
+Aspartic Acid 630mg	
+Cystine 77mg	
+Glutamic Acid 1,140mg	
+Glycine 298mg	
+Histidine 171mg	
+Isoleucine 274mg	
+Leucine 453mg	
+Lysine 279mg	
+Methionine 195mg	
+Phenylalanine 320mg	
+Proline 230mg	
+Serine 346mg	
+Threonine 208mg	
+Tryptophan 80mg	
+Tyrosine 277mg	
+Valine 380mg	
+Omega-3s 156mg	
+Omega-3 ALA 156mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 195mg	
+Omega-6 LA 195mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

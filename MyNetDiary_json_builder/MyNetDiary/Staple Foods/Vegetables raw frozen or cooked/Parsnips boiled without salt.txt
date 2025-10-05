@@ -1,0 +1,152 @@
+
+Food Entry
+ Parsnips boiled without salt	111 cals
+Amount eaten
+cup slices	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+Weight
+156g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup slices (156g)
+Amount per serving
+Calories	111cals
+% Daily Value*
+Total Fat 0.5g	1%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 27g	9%
+Net Carbs 21g	
+Dietary Fiber 6g	22%
+Total Sugars 7g	
+Added Sugars 0g	0%
+Protein 2g	4%
+Cholesterol 0mg	0%
+Sodium 16mg	1%
+Vitamin A 0mcg	0%
+Vitamin C 20mg	34%
+Calcium 58mg	6%
+Iron 0.9mg	5%
+Potassium 573mg	16%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 4g	
+Starch 9g	
+Sucrose 5g	
+Glucose (Dextrose) 1g	
+Fructose 1g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 1.6mg	8%
+Vitamin K 2mcg	2%
+Thiamin 0.13mg	9%
+Riboflavin 0.08mg	5%
+Niacin 1.1mg	6%
+Vitamin B-6 0.15mg	7%
+Folate 90mcg	23%
+Folic Acid 0mcg	
+Folate DFE 90mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.9mg	9%
+Choline 42mg	8%
+Phosphorus 108mg	11%
+Magnesium 45mg	11%
+Zinc 0.4mg	3%
+Selenium 3mcg	4%
+Copper 0.22mg	11%
+Manganese 0.46mg	23%
+Iodine 0mcg	0%
+Alanine 106mg	
+Arginine 218mg	
+Aspartic Acid 206mg	
+Cystine 6mg	
+Glutamic Acid 193mg	
+Glycine 66mg	
+Histidine 33mg	
+Isoleucine 81mg	
+Leucine 111mg	
+Lysine 123mg	
+Methionine 25mg	
+Phenylalanine 70mg	
+Proline 69mg	
+Serine 75mg	
+Threonine 76mg	
+Tryptophan 22mg	
+Tyrosine 41mg	
+Valine 111mg	
+Omega-3s 5mg	
+Omega-3 ALA 5mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 0mg	
+Omega-6 LA 0mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

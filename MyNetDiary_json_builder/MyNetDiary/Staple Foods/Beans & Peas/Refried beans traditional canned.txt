@@ -1,0 +1,152 @@
+
+Food Entry
+ Refried beans traditional canned	227 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+252g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (252g)
+Amount per serving
+Calories	227cals
+% Daily Value*
+Total Fat 5.1g	8%
+Saturated Fat 1.6g	8%
+Trans Fat 0g	
+Monounsaturated Fat 1.5g	
+Polyunsaturated Fat 1.4g	
+Total Carbs 34g	11%
+Net Carbs 25g	
+Dietary Fiber 9g	37%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 13g	25%
+Cholesterol 0mg	0%
+Sodium 932mg	39%
+Vitamin A 0mcg	0%
+Vitamin C 15mg	25%
+Calcium 73mg	7%
+Iron 3.6mg	20%
+Potassium 804mg	23%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 8g	
+Starch 19g	
+Sucrose 1g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 2,041mcg	
+Vitamin E 0.2mg	1%
+Vitamin K 5mcg	7%
+Thiamin 0.19mg	13%
+Riboflavin 0.2mg	12%
+Niacin 0.9mg	5%
+Vitamin B-6 0.26mg	13%
+Folate 28mcg	7%
+Folic Acid 0mcg	
+Folate DFE 28mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Choline 53mg	10%
+Phosphorus 232mg	23%
+Magnesium 88mg	22%
+Zinc 1.5mg	10%
+Selenium 15mcg	21%
+Copper 0.33mg	16%
+Manganese 0.73mg	36%
+Alanine 580mg	
+Arginine 857mg	
+Aspartic Acid 1,673mg	
+Cystine 151mg	
+Glutamic Acid 2,109mg	
+Glycine 539mg	
+Histidine 386mg	
+Isoleucine 610mg	
+Leucine 1,104mg	
+Lysine 950mg	
+Methionine 209mg	
+Phenylalanine 748mg	
+Proline 587mg	
+Serine 753mg	
+Threonine 582mg	
+Tryptophan 164mg	
+Tyrosine 391mg	
+Valine 723mg	
+Omega-3s 426mg	
+Omega-3 ALA 426mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 907mg	
+Omega-6 LA 907mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

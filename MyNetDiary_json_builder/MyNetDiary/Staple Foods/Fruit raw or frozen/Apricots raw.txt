@@ -1,0 +1,153 @@
+
+Food Entry
+ Apricots raw	74 cals
+Amount eaten
+cup, halves	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+155g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup, halves (155g)
+Amount per serving
+Calories	74cals
+% Daily Value*
+Total Fat 0.6g	1%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0.3g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 17g	6%
+Net Carbs 14g	
+Dietary Fiber 3g	12%
+Total Sugars 14g	
+Added Sugars 0g	0%
+Protein 2g	4%
+Cholesterol 0mg	0%
+Sodium 2mg	0%
+Vitamin A 149mcg	10%
+Vitamin C 16mg	26%
+Calcium 20mg	2%
+Iron 0.6mg	3%
+Potassium 401mg	11%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 2g	
+Starch 0g	
+Sucrose 9g	
+Glucose (Dextrose) 4g	
+Fructose 1g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 29mcg	
+Beta-carotene 1,696mcg	
+Beta-cryptoxanthin 161.2mcg	
+Lutein + Zeaxanthin 138mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 109mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 109mcg	
+Vitamin E 1.4mg	7%
+Vitamin K 5mcg	6%
+Thiamin 0.05mg	3%
+Riboflavin 0.06mg	4%
+Niacin 0.9mg	5%
+Vitamin B-6 0.08mg	4%
+Folate 14mcg	3%
+Folic Acid 0mcg	
+Folate DFE 14mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.4mg	4%
+Choline 4mg	1%
+Phosphorus 36mg	4%
+Magnesium 16mg	4%
+Zinc 0.3mg	2%
+Selenium 0mcg	0%
+Copper 0.12mg	6%
+Manganese 0.12mg	6%
+Alanine 105mg	
+Arginine 70mg	
+Aspartic Acid 487mg	
+Cystine 5mg	
+Glutamic Acid 243mg	
+Glycine 62mg	
+Histidine 42mg	
+Isoleucine 64mg	
+Leucine 119mg	
+Lysine 150mg	
+Methionine 9mg	
+Phenylalanine 81mg	
+Proline 157mg	
+Serine 129mg	
+Threonine 73mg	
+Tryptophan 23mg	
+Tyrosine 45mg	
+Valine 73mg	
+Omega-3s 0mg	
+Omega-3 ALA 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 119mg	
+Omega-6 LA 119mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 28mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

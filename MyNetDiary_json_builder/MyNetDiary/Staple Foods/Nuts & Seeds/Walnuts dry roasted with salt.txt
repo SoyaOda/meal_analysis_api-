@@ -1,0 +1,112 @@
+
+Food Entry
+ Walnuts dry roasted with salt	182 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+Weight
+28g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	oz (28g)
+Amount per serving
+Calories	182cals
+% Daily Value*
+Total Fat 17.2g	26%
+Saturated Fat 1.5g	8%
+Trans Fat 0g	
+Monounsaturated Fat 2.4g	
+Polyunsaturated Fat 12.5g	
+Total Carbs 5g	2%
+Net Carbs 3g	
+Dietary Fiber 2g	8%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 4g	8%
+Cholesterol 0mg	0%
+Sodium 182mg	8%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	1%
+Calcium 20mg	2%
+Iron 0.7mg	4%
+Potassium 130mg	4%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 3mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 2mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.3mg	1%
+Vitamin K 1mcg	1%
+Thiamin 0.15mg	10%
+Riboflavin 0.08mg	5%
+Niacin 0.6mg	3%
+Vitamin B-6 0.15mg	7%
+Folate 26mcg	6%
+Folic Acid 0mcg	
+Folate DFE 26mcg	
+Vitamin B-12 0mcg	0%
+Choline 11mg	2%
+Phosphorus 93mg	9%
+Magnesium 43mg	11%
+Zinc 0.8mg	6%
+Selenium 1mcg	2%
+Copper 0.42mg	21%
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

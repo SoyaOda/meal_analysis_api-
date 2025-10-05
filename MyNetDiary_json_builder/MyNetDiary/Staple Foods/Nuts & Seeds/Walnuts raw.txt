@@ -1,0 +1,155 @@
+
+Food Entry
+ Walnuts raw	765 cals
+Amount eaten
+cup, chopped	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+117g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	cup, chopped (117g)
+Amount per serving
+Calories	765cals
+% Daily Value*
+Total Fat 76.3g	117%
+Saturated Fat 7.2g	36%
+Trans Fat 0g	
+Monounsaturated Fat 10.5g	
+Polyunsaturated Fat 55.2g	
+Total Carbs 16g	5%
+Net Carbs 8g	
+Dietary Fiber 8g	31%
+Total Sugars 3g	
+Added Sugars 0g	0%
+Protein 18g	36%
+Cholesterol 0mg	0%
+Sodium 2mg	0%
+Vitamin A 1mcg	0%
+Vitamin C 2mg	3%
+Calcium 115mg	11%
+Iron 3.4mg	19%
+Potassium 516mg	15%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 2g	
+Fiber insoluble 6g	
+Starch 0g	
+Sucrose 3g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 14mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 11mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 176mcg	
+Delta-tocopherol 2,211mcg	
+Gamma-tocopherol 24,371mcg	
+Vitamin E 0.8mg	4%
+Vitamin K 3mcg	4%
+Thiamin 0.4mg	27%
+Riboflavin 0.18mg	10%
+Niacin 1.3mg	7%
+Vitamin B-6 0.63mg	31%
+Folate 115mcg	29%
+Folic Acid 0mcg	
+Folate DFE 115mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.7mg	7%
+Biotin 20.2mcg	67%
+Choline 46mg	8%
+Phosphorus 405mg	40%
+Magnesium 185mg	46%
+Zinc 3.6mg	24%
+Selenium 6mcg	8%
+Copper 1.86mg	93%
+Manganese 3.99mg	200%
+Alanine 814mg	
+Arginine 2,665mg	
+Aspartic Acid 2,140mg	
+Cysteine 441mg	
+Cystine 243mg	
+Glutamic Acid 3,295mg	
+Glycine 955mg	
+Histidine 457mg	
+Hydroxyproline 0mg	
+Isoleucine 731mg	
+Leucine 1,369mg	
+Lysine 496mg	
+Methionine 276mg	
+Phenylalanine 832mg	
+Proline 826mg	
+Serine 1,093mg	
+Threonine 697mg	
+Tryptophan 199mg	
+Tyrosine 475mg	
+Valine 881mg	
+Omega-3s 10,624mg	
+Omega-3 ALA 10,624mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 44,569mg	
+Omega-6 LA 44,569mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

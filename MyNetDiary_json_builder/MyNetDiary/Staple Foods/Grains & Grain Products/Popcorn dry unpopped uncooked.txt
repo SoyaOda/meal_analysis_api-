@@ -1,0 +1,92 @@
+
+Food Entry
+ Popcorn dry unpopped uncooked	724 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+193g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (193g)
+Amount per serving
+Calories	724cals
+% Daily Value*
+Total Fat 8.3g	13%
+Saturated Fat 1.2g	6%
+Monounsaturated Fat 1.9g	
+Polyunsaturated Fat 4.8g	
+Total Carbs 143g	48%
+Net Carbs 118g	
+Dietary Fiber 25g	100%
+Total Sugars 2g	
+Added Sugars 0g	0%
+Protein 21g	42%
+Sodium 14mg	1%
+Calcium 10mg	1%
+Iron 5.9mg	33%
+Potassium 529mg	15%
+Caffeine 0mg	
+Vitamin E 0.4mg	2%
+Thiamin 0.62mg	41%
+Riboflavin 0.08mg	5%
+Niacin 3mg	15%
+Vitamin B-6 0.56mg	28%
+Folate 120mcg	30%
+Pantothenic Acid 0.8mg	8%
+Phosphorus 580mg	58%
+Magnesium 236mg	59%
+Zinc 5.2mg	35%
+Selenium 0mcg	0%
+Copper 0.44mg	22%
+Manganese 1.86mg	93%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

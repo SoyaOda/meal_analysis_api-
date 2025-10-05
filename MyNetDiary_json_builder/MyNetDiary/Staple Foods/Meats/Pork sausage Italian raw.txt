@@ -1,0 +1,113 @@
+
+Food Entry
+ Pork sausage Italian raw	328 cals
+Amount eaten
+link, 4/lb	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+113g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	link, 4/lb (113g)
+Amount per serving
+Calories	328cals
+% Daily Value*
+Total Fat 27.4g	42%
+Saturated Fat 9.7g	49%
+Trans Fat 0.1g	
+Monounsaturated Fat 12.5g	
+Polyunsaturated Fat 5g	
+Total Carbs 3g	1%
+Net Carbs 3g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 16g	31%
+Cholesterol 78mg	26%
+Sodium 636mg	27%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 14mg	1%
+Iron 2mg	11%
+Potassium 238mg	7%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Glucose (Dextrose) 1g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Riboflavin 0.26mg	15%
+Niacin 6.6mg	33%
+Folic Acid 0mcg	
+Vitamin B-12 1.13mcg	19%
+Phosphorus 142mg	14%
+Magnesium 18mg	5%
+Zinc 2.2mg	14%
+Selenium 13mcg	18%
+Copper 0.07mg	4%
+Manganese 0.04mg	2%
+Hydroxyproline 8mg	
+Omega-3s 232mg	
+Omega-3 ALA 172mg	
+Omega-3 EPA 2mg	
+Omega-3 DHA 3mg	
+Omega-6s 4,518mg	
+Omega-6 LA 4,260mg	
+Omega-9 EA 11mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

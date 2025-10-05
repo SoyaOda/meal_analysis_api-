@@ -1,0 +1,151 @@
+
+Food Entry
+ Turkey sausage Italian smoked	46 cals
+Amount eaten
+oz	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+28g
+Food Grade
+B
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B
+Serving Size	oz (28g)
+Amount per serving
+Calories	46cals
+% Daily Value*
+Total Fat 2.5g	4%
+Saturated Fat 0.7g	3%
+Trans Fat 0g	
+Monounsaturated Fat 1g	
+Polyunsaturated Fat 0.6g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 1g	3%
+Protein 4g	9%
+Cholesterol 14mg	5%
+Sodium 134mg	6%
+Vitamin A 3mcg	0%
+Vitamin C 0mg	0%
+Calcium 6mg	1%
+Iron 0.2mg	1%
+Potassium 56mg	2%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 1g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 3mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (2iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 25mcg	
+Vitamin E 0.1mg	0%
+Vitamin K 0mcg	0%
+Thiamin 0.01mg	1%
+Riboflavin 0.03mg	2%
+Niacin 1mg	5%
+Vitamin B-6 0.06mg	3%
+Folate 1mcg	0%
+Folic Acid 0mcg	
+Folate DFE 1mcg	
+Vitamin B-12 0.05mcg	1%
+Pantothenic Acid 0.1mg	1%
+Choline 12mg	2%
+Phosphorus 28mg	3%
+Magnesium 4mg	1%
+Zinc 0.4mg	2%
+Selenium 4mcg	5%
+Copper 0.01mg	1%
+Manganese 0mg	0%
+Alanine 256mg	
+Arginine 280mg	
+Aspartic Acid 394mg	
+Cystine 52mg	
+Glutamic Acid 653mg	
+Glycine 252mg	
+Histidine 128mg	
+Isoleucine 216mg	
+Leucine 322mg	
+Lysine 369mg	
+Methionine 117mg	
+Phenylalanine 167mg	
+Proline 196mg	
+Serine 167mg	
+Threonine 182mg	
+Tryptophan 48mg	
+Tyrosine 150mg	
+Valine 215mg	
+Omega-3s 39mg	
+Omega-3 ALA 26mg	
+Omega-3 EPA 1mg	
+Omega-3 DHA 8mg	
+Omega-6s 515mg	
+Omega-6 LA 486mg	
+Omega-9 EA 1mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 0mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,149 @@
+
+Food Entry
+ Salmon Atlantic wild cooked dry heat	561 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+308g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (308g)
+Amount per serving
+Calories	561cals
+% Daily Value*
+Total Fat 25g	39%
+Saturated Fat 3.9g	19%
+Trans Fat 0g	
+Monounsaturated Fat 8.3g	
+Polyunsaturated Fat 10g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 78g	157%
+Cholesterol 219mg	73%
+Sodium 172mg	7%
+Vitamin A 40mcg	3%
+Vitamin C 0mg	0%
+Calcium 46mg	5%
+Iron 3.2mg	18%
+Potassium 1,934mg	55%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 40mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 26.8mcg (1,072iu)	268%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 160mcg	
+Gamma-tocopherol 964mcg	
+Vitamin E 12.2mg	61%
+Vitamin K 2mcg	3%
+Thiamin 0.85mg	56%
+Riboflavin 1.5mg	88%
+Niacin 31mg	155%
+Vitamin B-6 2.91mg	145%
+Folate 89mcg	22%
+Folic Acid 0mcg	
+Folate DFE 89mcg	
+Vitamin B-12 9.39mcg	157%
+Pantothenic Acid 5.9mg	59%
+Choline 201mg	37%
+Phosphorus 788mg	79%
+Magnesium 114mg	28%
+Zinc 2.5mg	17%
+Selenium 144mcg	206%
+Copper 0.99mg	49%
+Manganese 0.06mg	3%
+Alanine 4,737mg	
+Arginine 4,688mg	
+Aspartic Acid 8,023mg	
+Cystine 841mg	
+Glutamic Acid 11,695mg	
+Glycine 3,761mg	
+Histidine 2,307mg	
+Isoleucine 3,610mg	
+Leucine 6,366mg	
+Lysine 7,195mg	
+Methionine 2,319mg	
+Phenylalanine 3,058mg	
+Proline 2,769mg	
+Serine 3,197mg	
+Threonine 3,434mg	
+Tryptophan 878mg	
+Tyrosine 2,646mg	
+Valine 4,035mg	
+Omega-3s 8,291mg	
+Omega-3 ALA 1,164mg	
+Omega-3 EPA 1,266mg	
+Omega-3 DHA 4,401mg	
+Omega-6s 1,731mg	
+Omega-6 LA 678mg	
+Omega-9 EA 1,103mg	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

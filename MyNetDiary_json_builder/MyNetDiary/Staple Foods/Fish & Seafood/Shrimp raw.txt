@@ -1,0 +1,96 @@
+
+Food Entry
+ Shrimp raw	85 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	85cals
+% Daily Value*
+Total Fat 0.5g	1%
+Saturated Fat 0.1g	1%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.2g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Added Sugars 0g	0%
+Protein 20g	40%
+Cholesterol 161mg	54%
+Sodium 119mg	5%
+Calcium 64mg	6%
+Iron 0.5mg	3%
+Potassium 264mg	8%
+Caffeine 0mg	
+Soluble Fiber 0g	
+Phosphorus 214mg	21%
+Magnesium 35mg	9%
+Zinc 1.3mg	9%
+Copper 0.39mg	20%
+Manganese 0.03mg	2%
+Iodine 15mcg	10%
+Omega-3s 65mg	
+Omega-3 ALA 2mg	
+Omega-3 EPA 30mg	
+Omega-3 DHA 31mg	
+Omega-6s 37mg	
+Omega-6 LA 31mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

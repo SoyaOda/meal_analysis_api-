@@ -1,0 +1,135 @@
+
+Food Entry
+ Black eyed peas raw	561 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+167g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (167g)
+Amount per serving
+Calories	561cals
+% Daily Value*
+Total Fat 2.1g	3%
+Saturated Fat 0.6g	3%
+Trans Fat 0g	
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.9g	
+Total Carbs 100g	33%
+Net Carbs 83g	
+Dietary Fiber 18g	71%
+Total Sugars 12g	
+Added Sugars 0g	0%
+Protein 39g	79%
+Cholesterol 0mg	0%
+Sodium 27mg	1%
+Vitamin A 4mcg	0%
+Vitamin C 3mg	4%
+Calcium 184mg	18%
+Iron 13.8mg	77%
+Potassium 1,857mg	53%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 50mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.7mg	3%
+Vitamin K 8mcg	10%
+Thiamin 1.42mg	95%
+Riboflavin 0.38mg	22%
+Niacin 3.5mg	17%
+Vitamin B-6 0.6mg	30%
+Folate 1,057mcg	264%
+Folic Acid 0mcg	
+Folate DFE 1,057mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 2.5mg	25%
+Choline 158mg	29%
+Phosphorus 708mg	71%
+Magnesium 307mg	77%
+Zinc 5.6mg	38%
+Selenium 15mcg	21%
+Copper 1.41mg	71%
+Manganese 2.55mg	128%
+Alanine 1,790mg	
+Arginine 2,720mg	
+Aspartic Acid 4,743mg	
+Cystine 434mg	
+Glutamic Acid 7,438mg	
+Glycine 1,622mg	
+Histidine 1,219mg	
+Isoleucine 1,597mg	
+Leucine 3,009mg	
+Lysine 2,657mg	
+Methionine 559mg	
+Phenylalanine 2,293mg	
+Proline 1,765mg	
+Serine 1,967mg	
+Threonine 1,495mg	
+Tryptophan 484mg	
+Tyrosine 1,269mg	
+Valine 1,872mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,94 @@
+
+Food Entry
+ Almond milk unsweetened fortified	30 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+245g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (245g)
+Amount per serving
+Calories	30cals
+% Daily Value*
+Total Fat 2.5g	4%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 1.5g	
+Polyunsaturated Fat 0.5g	
+Total Carbs 1g	0%
+Net Carbs 0g	
+Dietary Fiber 1g	4%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 1g	2%
+Cholesterol 0mg	0%
+Sodium 170mg	7%
+Vitamin A 150mcg	10%
+Calcium 450mg	45%
+Iron 0.7mg	4%
+Potassium 160mg	5%
+Caffeine 0mg	
+Sugar Alcohols 0g	
+Vitamin D 5mcg (200iu)	50%
+Vitamin E 7.6mg	38%
+Biotin 3.4mcg	11%
+Phosphorus 20mg	2%
+Magnesium 15mg	4%
+Omega-3s 2mg	
+Omega-3 ALA 2mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 676mg	
+Omega-6 LA 676mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

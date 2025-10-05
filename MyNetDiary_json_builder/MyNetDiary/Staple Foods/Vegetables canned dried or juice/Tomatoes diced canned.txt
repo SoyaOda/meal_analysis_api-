@@ -1,0 +1,100 @@
+
+Food Entry
+ Tomatoes diced canned	41 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+240g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (240g)
+Amount per serving
+Calories	41cals
+% Daily Value*
+Total Fat 0.3g	0%
+Saturated Fat 0g	0%
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 10g	3%
+Net Carbs 7g	
+Dietary Fiber 2g	10%
+Total Sugars 6g	
+Added Sugars 0g	0%
+Protein 2g	4%
+Cholesterol 0mg	0%
+Sodium 307mg	13%
+Vitamin A 90mcg	6%
+Vitamin C 22mg	37%
+Calcium 70mg	7%
+Iron 2.3mg	13%
+Potassium 451mg	13%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Sugar Alcohols 0g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 1.6mg	8%
+Vitamin K 7mcg	9%
+Thiamin 0.11mg	7%
+Riboflavin 0.14mg	8%
+Niacin 1.8mg	9%
+Vitamin B-6 0.26mg	13%
+Folate 20mcg	5%
+Vitamin B-12 0mcg	0%
+Phosphorus 50mg	5%
+Magnesium 28mg	7%
+Zinc 0.3mg	2%
+Selenium 0mcg	0%
+Copper 0.16mg	8%
+Manganese 0.18mg	9%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

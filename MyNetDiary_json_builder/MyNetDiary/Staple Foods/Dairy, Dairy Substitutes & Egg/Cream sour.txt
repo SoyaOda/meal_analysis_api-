@@ -1,0 +1,154 @@
+
+Food Entry
+ Cream sour	455 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+230g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup (230g)
+Amount per serving
+Calories	455cals
+% Daily Value*
+Total Fat 44.5g	68%
+Saturated Fat 23.3g	117%
+Trans Fat 2g	
+Monounsaturated Fat 10.6g	
+Polyunsaturated Fat 1.8g	
+Total Carbs 11g	4%
+Net Carbs 11g	
+Dietary Fiber 0g	0%
+Total Sugars 8g	
+Added Sugars 0g	0%
+Protein 6g	11%
+Cholesterol 136mg	45%
+Sodium 71mg	3%
+Vitamin A 283mcg	19%
+Vitamin C 2mg	3%
+Calcium 232mg	23%
+Iron 0.2mg	1%
+Potassium 288mg	8%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 8g	
+Maltose 0g	
+Galactose 0g	
+Retinol 278mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 58mcg	
+Beta-cryptoxanthin 2.3mcg	
+Lutein + Zeaxanthin 9mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 690mcg	
+Vitamin E 0.9mg	4%
+Vitamin K 3mcg	4%
+Thiamin 0.05mg	3%
+Riboflavin 0.39mg	23%
+Niacin 0.2mg	1%
+Vitamin B-6 0.09mg	5%
+Folate 14mcg	3%
+Folic Acid 0mcg	
+Folate DFE 14mcg	
+Vitamin B-12 0.48mcg	8%
+Pantothenic Acid 1.1mg	11%
+Biotin 4.4mcg	15%
+Choline 44mg	8%
+Phosphorus 175mg	17%
+Magnesium 23mg	6%
+Zinc 0.8mg	5%
+Selenium 9mcg	12%
+Copper 0.04mg	2%
+Manganese 0.03mg	2%
+Iodine 69mcg	46%
+Alanine 267mg	
+Arginine 269mg	
+Aspartic Acid 603mg	
+Cystine 67mg	
+Glutamic Acid 1,548mg	
+Glycine 175mg	
+Histidine 212mg	
+Isoleucine 375mg	
+Leucine 741mg	
+Lysine 633mg	
+Methionine 179mg	
+Phenylalanine 361mg	
+Proline 713mg	
+Serine 439mg	
+Threonine 327mg	
+Tryptophan 97mg	
+Tyrosine 350mg	
+Valine 449mg	
+Omega-3s 198mg	
+Omega-3 ALA 156mg	
+Omega-3 EPA 14mg	
+Omega-3 DHA 2mg	
+Omega-6s 1,021mg	
+Omega-6 LA 1,007mg	
+Omega-9 EA 0mg	
+MCTs 3g	
+Caproic Acid 0.5g	
+Caprylic Acid 0.3g	
+Capric Acid 0.9g	
+Lauric Acid 1g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

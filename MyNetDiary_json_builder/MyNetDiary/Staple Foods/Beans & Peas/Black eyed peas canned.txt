@@ -1,0 +1,120 @@
+
+Food Entry
+ Black eyed peas canned	185 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+240g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (240g)
+Amount per serving
+Calories	185cals
+% Daily Value*
+Total Fat 1.3g	2%
+Saturated Fat 0.3g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.6g	
+Total Carbs 33g	11%
+Net Carbs 25g	
+Dietary Fiber 8g	32%
+Added Sugars 0g	0%
+Protein 11g	23%
+Cholesterol 0mg	0%
+Sodium 703mg	29%
+Vitamin A 9mcg	1%
+Vitamin C 6mg	11%
+Calcium 48mg	5%
+Iron 2.3mg	13%
+Potassium 413mg	12%
+Caffeine 0mg	
+Soluble Fiber 1g	
+Retinol 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Thiamin 0.18mg	12%
+Riboflavin 0.18mg	10%
+Niacin 0.8mg	4%
+Vitamin B-6 0.11mg	5%
+Folate 122mcg	31%
+Folic Acid 0mcg	
+Folate DFE 122mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Phosphorus 168mg	17%
+Magnesium 67mg	17%
+Zinc 1.7mg	11%
+Selenium 6mcg	8%
+Copper 0.28mg	14%
+Manganese 0.68mg	34%
+Alanine 518mg	
+Arginine 787mg	
+Aspartic Acid 1,373mg	
+Cystine 125mg	
+Glutamic Acid 2,153mg	
+Glycine 470mg	
+Histidine 353mg	
+Isoleucine 463mg	
+Leucine 871mg	
+Lysine 770mg	
+Methionine 161mg	
+Phenylalanine 665mg	
+Proline 511mg	
+Serine 569mg	
+Threonine 432mg	
+Tryptophan 139mg	
+Tyrosine 367mg	
+Valine 542mg	
+MCTs 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

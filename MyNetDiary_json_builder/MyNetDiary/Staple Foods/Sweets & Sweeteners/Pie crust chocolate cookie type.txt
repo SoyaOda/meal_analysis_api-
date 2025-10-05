@@ -1,0 +1,150 @@
+
+Food Entry
+ Pie crust chocolate cookie type	881 cals
+Amount eaten
+crust	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+182g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	crust (182g)
+Amount per serving
+Calories	881cals
+% Daily Value*
+Total Fat 40.8g	63%
+Saturated Fat 8.6g	43%
+Trans Fat 0g	
+Monounsaturated Fat 26.4g	
+Polyunsaturated Fat 3.7g	
+Total Carbs 117g	39%
+Net Carbs 112g	
+Dietary Fiber 5g	20%
+Total Sugars 35g	
+Added Sugars 35g	71%
+Protein 11g	22%
+Cholesterol 0mg	0%
+Sodium 915mg	38%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 58mg	6%
+Iron 7.8mg	43%
+Potassium 340mg	10%
+Alcohol 0g	
+Caffeine 15mg	
+Soluble Fiber 2g	
+Fiber insoluble 3g	
+Starch 63g	
+Sucrose 35g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 22mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 309mcg	
+Delta-tocopherol 6,352mcg	
+Gamma-tocopherol 21,458mcg	
+Vitamin E 3.3mg	16%
+Vitamin K 33mcg	41%
+Thiamin 0.61mg	41%
+Riboflavin 0.48mg	28%
+Niacin 5.6mg	28%
+Vitamin B-6 0.08mg	4%
+Folate 131mcg	33%
+Folic Acid 91mcg	
+Folate DFE 195mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.3mg	3%
+Choline 30mg	5%
+Phosphorus 218mg	22%
+Magnesium 73mg	18%
+Zinc 3.8mg	25%
+Selenium 5mcg	7%
+Copper 1.4mg	70%
+Manganese 3.34mg	167%
+Alanine 433mg	
+Arginine 528mg	
+Aspartic Acid 826mg	
+Cystine 197mg	
+Glutamic Acid 2,399mg	
+Glycine 442mg	
+Histidine 204mg	
+Isoleucine 410mg	
+Leucine 695mg	
+Lysine 446mg	
+Methionine 133mg	
+Phenylalanine 504mg	
+Proline 763mg	
+Serine 473mg	
+Threonine 373mg	
+Tryptophan 146mg	
+Tyrosine 298mg	
+Valine 575mg	
+Omega-3s 58mg	
+Omega-3 ALA 58mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 3,716mg	
+Omega-6 LA 3,716mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

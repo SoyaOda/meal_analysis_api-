@@ -1,0 +1,135 @@
+
+Food Entry
+ Deer ground raw	157 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+B+
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B+
+Serving Size	serving (100g)
+Amount per serving
+Calories	157cals
+% Daily Value*
+Total Fat 7.1g	11%
+Saturated Fat 3.4g	17%
+Monounsaturated Fat 1.3g	
+Polyunsaturated Fat 0.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 22g	44%
+Cholesterol 80mg	27%
+Sodium 75mg	3%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 11mg	1%
+Iron 2.9mg	16%
+Potassium 330mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.5mg	2%
+Vitamin K 1mcg	2%
+Thiamin 0.55mg	36%
+Riboflavin 0.29mg	17%
+Niacin 5.7mg	29%
+Vitamin B-6 0.46mg	23%
+Folate 4mcg	1%
+Folic Acid 0mcg	
+Folate DFE 4mcg	
+Vitamin B-12 1.87mcg	31%
+Pantothenic Acid 0.7mg	7%
+Choline 88mg	16%
+Phosphorus 201mg	20%
+Magnesium 21mg	5%
+Zinc 4.2mg	28%
+Selenium 10mcg	14%
+Copper 0.14mg	7%
+Manganese 0.01mg	1%
+Alanine 1,262mg	
+Arginine 1,292mg	
+Aspartic Acid 1,877mg	
+Cystine 202mg	
+Glutamic Acid 3,069mg	
+Glycine 1,181mg	
+Histidine 646mg	
+Hydroxyproline 313mg	
+Isoleucine 929mg	
+Leucine 1,645mg	
+Lysine 1,756mg	
+Methionine 505mg	
+Phenylalanine 818mg	
+Proline 949mg	
+Serine 747mg	
+Threonine 818mg	
+Tryptophan 192mg	
+Tyrosine 676mg	
+Valine 1,050mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

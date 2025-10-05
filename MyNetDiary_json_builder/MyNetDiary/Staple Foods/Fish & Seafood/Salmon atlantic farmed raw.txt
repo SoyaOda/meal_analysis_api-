@@ -1,0 +1,139 @@
+
+Food Entry
+ Salmon atlantic farmed raw	824 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+396g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (396g)
+Amount per serving
+Calories	824cals
+% Daily Value*
+Total Fat 53.1g	82%
+Saturated Fat 12.1g	60%
+Monounsaturated Fat 14.9g	
+Polyunsaturated Fat 15.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 81g	162%
+Cholesterol 218mg	73%
+Sodium 234mg	10%
+Vitamin A 229mcg	15%
+Vitamin C 15mg	26%
+Calcium 36mg	4%
+Iron 1.3mg	7%
+Potassium 1,437mg	41%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 230mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 43.7mcg (1,746iu)	437%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 1mcg	
+Vitamin E 14.1mg	70%
+Vitamin K 2mcg	2%
+Thiamin 0.82mg	55%
+Riboflavin 0.61mg	36%
+Niacin 34.3mg	172%
+Vitamin B-6 2.52mg	126%
+Folate 103mcg	26%
+Folic Acid 0mcg	
+Folate DFE 103mcg	
+Vitamin B-12 12.79mcg	213%
+Pantothenic Acid 6.1mg	61%
+Choline 311mg	57%
+Phosphorus 950mg	95%
+Magnesium 107mg	27%
+Zinc 1.4mg	10%
+Selenium 95mcg	136%
+Copper 0.18mg	9%
+Manganese 0.04mg	2%
+Alanine 5,033mg	
+Arginine 4,835mg	
+Aspartic Acid 8,019mg	
+Cystine 867mg	
+Glutamic Acid 11,207mg	
+Glycine 3,802mg	
+Histidine 2,174mg	
+Hydroxyproline 166mg	
+Isoleucine 3,833mg	
+Leucine 6,395mg	
+Lysine 7,405mg	
+Methionine 2,479mg	
+Phenylalanine 3,346mg	
+Proline 2,855mg	
+Serine 3,548mg	
+Threonine 3,406mg	
+Tryptophan 828mg	
+Tyrosine 3,006mg	
+Valine 4,384mg	
+Omega-3s 9,912mg	
+Omega-3 ALA 586mg	
+Omega-3 EPA 3,414mg	
+Omega-3 DHA 4,356mg	
+Omega-6s 325mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

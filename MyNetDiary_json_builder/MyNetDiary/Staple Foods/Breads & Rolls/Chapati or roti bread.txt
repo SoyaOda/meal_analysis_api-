@@ -1,0 +1,150 @@
+
+Food Entry
+ Chapati or roti bread	192 cals
+Amount eaten
+piece	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+68g
+Food Grade
+B-
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B-
+Serving Size	piece (68g)
+Amount per serving
+Calories	192cals
+% Daily Value*
+Total Fat 5.1g	8%
+Saturated Fat 0.8g	4%
+Trans Fat 0g	
+Monounsaturated Fat 1.1g	
+Polyunsaturated Fat 2.9g	
+Total Carbs 32g	11%
+Net Carbs 30g	
+Dietary Fiber 1g	5%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 4g	9%
+Cholesterol 0mg	0%
+Sodium 278mg	12%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 7mg	1%
+Iron 1.9mg	11%
+Potassium 44mg	1%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 1g	
+Starch 30g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 7mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 71mcg	
+Delta-tocopherol 1,001mcg	
+Gamma-tocopherol 3,152mcg	
+Vitamin E 0.4mg	2%
+Vitamin K 9mcg	11%
+Thiamin 0.32mg	22%
+Riboflavin 0.2mg	12%
+Niacin 2.4mg	12%
+Vitamin B-6 0.02mg	1%
+Folate 53mcg	13%
+Folic Acid 45mcg	
+Folate DFE 84mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.2mg	2%
+Choline 4mg	1%
+Phosphorus 45mg	4%
+Magnesium 9mg	2%
+Zinc 0.3mg	2%
+Selenium 16mcg	23%
+Copper 0.06mg	3%
+Manganese 0.28mg	14%
+Alanine 137mg	
+Arginine 173mg	
+Aspartic Acid 180mg	
+Cystine 90mg	
+Glutamic Acid 1,438mg	
+Glycine 154mg	
+Histidine 95mg	
+Isoleucine 148mg	
+Leucine 294mg	
+Lysine 95mg	
+Methionine 75mg	
+Phenylalanine 215mg	
+Proline 495mg	
+Serine 214mg	
+Threonine 116mg	
+Tryptophan 52mg	
+Tyrosine 129mg	
+Valine 171mg	
+Omega-3s 326mg	
+Omega-3 ALA 326mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 2,512mg	
+Omega-6 LA 2,512mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

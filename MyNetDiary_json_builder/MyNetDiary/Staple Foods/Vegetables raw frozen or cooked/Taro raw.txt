@@ -1,0 +1,134 @@
+
+Food Entry
+ Taro raw	116 cals
+Amount eaten
+cup, sliced	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+104g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup, sliced (104g)
+Amount per serving
+Calories	116cals
+% Daily Value*
+Total Fat 0.2g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 28g	9%
+Net Carbs 23g	
+Dietary Fiber 4g	17%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 2g	3%
+Cholesterol 0mg	0%
+Sodium 11mg	0%
+Vitamin A 4mcg	0%
+Vitamin C 5mg	8%
+Calcium 45mg	4%
+Iron 0.6mg	3%
+Potassium 615mg	18%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 36mcg	
+Beta-cryptoxanthin 20.8mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 2.5mg	12%
+Vitamin K 1mcg	1%
+Thiamin 0.1mg	7%
+Riboflavin 0.03mg	2%
+Niacin 0.6mg	3%
+Vitamin B-6 0.29mg	15%
+Folate 23mcg	6%
+Folic Acid 0mcg	
+Folate DFE 23mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.3mg	3%
+Choline 18mg	3%
+Phosphorus 87mg	9%
+Magnesium 34mg	9%
+Zinc 0.2mg	2%
+Selenium 1mcg	1%
+Copper 0.18mg	9%
+Manganese 0.4mg	20%
+Alanine 76mg	
+Arginine 107mg	
+Aspartic Acid 200mg	
+Cystine 33mg	
+Glutamic Acid 181mg	
+Glycine 77mg	
+Histidine 35mg	
+Isoleucine 56mg	
+Leucine 115mg	
+Lysine 70mg	
+Methionine 21mg	
+Phenylalanine 85mg	
+Proline 62mg	
+Serine 96mg	
+Threonine 72mg	
+Tryptophan 24mg	
+Tyrosine 57mg	
+Valine 85mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 20mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

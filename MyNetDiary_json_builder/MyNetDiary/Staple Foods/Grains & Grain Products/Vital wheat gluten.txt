@@ -1,0 +1,150 @@
+
+Food Entry
+ Vital wheat gluten	370 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	370cals
+% Daily Value*
+Total Fat 1.9g	3%
+Saturated Fat 0.3g	1%
+Trans Fat 0g	
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.8g	
+Total Carbs 14g	5%
+Net Carbs 13g	
+Dietary Fiber 1g	2%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 75g	150%
+Cholesterol 0mg	0%
+Sodium 29mg	1%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 142mg	14%
+Iron 5.2mg	29%
+Potassium 100mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 13g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 113mcg	
+Delta-tocopherol 19mcg	
+Gamma-tocopherol 756mcg	
+Vitamin E 0mg	0%
+Vitamin K 0mcg	0%
+Thiamin 0mg	0%
+Riboflavin 0mg	0%
+Niacin 0mg	0%
+Vitamin B-6 0mg	0%
+Folate 0mcg	0%
+Folic Acid 0mcg	
+Folate DFE 0mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0mg	0%
+Choline 0mg	0%
+Phosphorus 260mg	26%
+Magnesium 25mg	6%
+Zinc 0.9mg	6%
+Selenium 40mcg	57%
+Copper 0.18mg	9%
+Manganese 0.22mg	11%
+Alanine 2,416mg	
+Arginine 3,036mg	
+Aspartic Acid 3,167mg	
+Cystine 1,565mg	
+Glutamic Acid 25,313mg	
+Glycine 2,700mg	
+Histidine 1,675mg	
+Isoleucine 2,598mg	
+Leucine 5,167mg	
+Lysine 1,659mg	
+Methionine 1,331mg	
+Phenylalanine 3,784mg	
+Proline 8,718mg	
+Serine 3,756mg	
+Threonine 2,044mg	
+Tryptophan 924mg	
+Tyrosine 2,271mg	
+Valine 3,022mg	
+Omega-3s 48mg	
+Omega-3 ALA 48mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 763mg	
+Omega-6 LA 763mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

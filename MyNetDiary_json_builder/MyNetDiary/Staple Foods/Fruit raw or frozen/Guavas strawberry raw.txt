@@ -1,0 +1,107 @@
+
+Food Entry
+ Guavas strawberry raw	168 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+244g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (244g)
+Amount per serving
+Calories	168cals
+% Daily Value*
+Total Fat 1.5g	2%
+Saturated Fat 0.4g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0.6g	
+Total Carbs 42g	14%
+Net Carbs 29g	
+Dietary Fiber 13g	53%
+Added Sugars 0g	0%
+Protein 1g	3%
+Cholesterol 0mg	0%
+Sodium 90mg	4%
+Vitamin A 66mcg	4%
+Vitamin C 90mg	150%
+Calcium 51mg	5%
+Iron 0.5mg	3%
+Potassium 712mg	20%
+Caffeine 0mg	
+Soluble Fiber 1g	
+Retinol 0mcg	
+Thiamin 0.07mg	5%
+Riboflavin 0.07mg	4%
+Niacin 1.5mg	7%
+Vitamin B-12 0mcg	0%
+Phosphorus 66mg	7%
+Magnesium 41mg	10%
+Alanine 71mg	
+Arginine 37mg	
+Aspartic Acid 90mg	
+Glutamic Acid 185mg	
+Glycine 71mg	
+Histidine 12mg	
+Isoleucine 51mg	
+Leucine 95mg	
+Lysine 39mg	
+Methionine 10mg	
+Phenylalanine 2mg	
+Proline 44mg	
+Serine 41mg	
+Threonine 54mg	
+Tryptophan 12mg	
+Tyrosine 17mg	
+Valine 49mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

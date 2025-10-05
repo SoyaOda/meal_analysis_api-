@@ -1,0 +1,154 @@
+
+Food Entry
+ Pecans oil roasted with salt	787 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+110g
+Food Grade
+C
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C
+Serving Size	cup (110g)
+Amount per serving
+Calories	787cals
+% Daily Value*
+Total Fat 82.8g	127%
+Saturated Fat 8g	40%
+Trans Fat 0g	
+Monounsaturated Fat 45.1g	
+Polyunsaturated Fat 25.9g	
+Total Carbs 14g	5%
+Net Carbs 4g	
+Dietary Fiber 10g	42%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 10g	20%
+Cholesterol 0mg	0%
+Sodium 432mg	18%
+Vitamin A 6mcg	0%
+Vitamin C 1mg	1%
+Calcium 74mg	7%
+Iron 2.7mg	15%
+Potassium 431mg	12%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 10g	
+Starch 0g	
+Sucrose 4g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 68mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 385mcg	
+Delta-tocopherol 1,177mcg	
+Gamma-tocopherol 26,620mcg	
+Vitamin E 2.8mg	14%
+Vitamin K 11mcg	14%
+Thiamin 0.52mg	35%
+Riboflavin 0.12mg	7%
+Niacin 1.3mg	7%
+Vitamin B-6 0.21mg	10%
+Folate 17mcg	4%
+Folic Acid 0mcg	
+Folate DFE 17mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.8mg	8%
+Biotin 25mcg	83%
+Choline 45mg	8%
+Phosphorus 289mg	29%
+Magnesium 133mg	33%
+Zinc 4.9mg	33%
+Selenium 7mcg	9%
+Copper 1.32mg	66%
+Manganese 4.07mg	204%
+Alanine 438mg	
+Arginine 1,299mg	
+Aspartic Acid 1,026mg	
+Cystine 168mg	
+Glutamic Acid 2,019mg	
+Glycine 499mg	
+Histidine 288mg	
+Isoleucine 371mg	
+Leucine 660mg	
+Lysine 317mg	
+Methionine 201mg	
+Phenylalanine 471mg	
+Proline 400mg	
+Serine 524mg	
+Threonine 338mg	
+Tryptophan 102mg	
+Tyrosine 238mg	
+Valine 454mg	
+Omega-3s 1,134mg	
+Omega-3 ALA 1,134mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 24,807mg	
+Omega-6 LA 24,807mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 119mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

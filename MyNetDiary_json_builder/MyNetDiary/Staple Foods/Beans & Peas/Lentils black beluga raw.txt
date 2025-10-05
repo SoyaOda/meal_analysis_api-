@@ -1,0 +1,101 @@
+
+Food Entry
+ Lentils black beluga raw	676 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+192g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (192g)
+Amount per serving
+Calories	676cals
+% Daily Value*
+Total Fat 2g	3%
+Saturated Fat 0.3g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.4g	
+Polyunsaturated Fat 1g	
+Total Carbs 122g	41%
+Net Carbs 101g	
+Dietary Fiber 21g	84%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 47g	94%
+Cholesterol 0mg	0%
+Sodium 12mg	1%
+Vitamin A 15mcg	1%
+Vitamin C 8mg	14%
+Calcium 70mg	7%
+Iron 12.4mg	69%
+Potassium 1,300mg	37%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 2g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 1mg	5%
+Vitamin K 10mcg	12%
+Thiamin 1.68mg	112%
+Riboflavin 0.41mg	24%
+Niacin 5mg	25%
+Vitamin B-6 1.04mg	52%
+Folate 920mcg	230%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 4.1mg	41%
+Phosphorus 540mg	54%
+Magnesium 92mg	23%
+Zinc 6.3mg	42%
+Selenium 0mcg	0%
+Copper 1.44mg	72%
+Manganese 2.68mg	134%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

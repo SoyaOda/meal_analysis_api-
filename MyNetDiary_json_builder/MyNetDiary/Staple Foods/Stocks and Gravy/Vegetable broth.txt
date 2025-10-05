@@ -1,0 +1,152 @@
+
+Food Entry
+ Vegetable broth	11 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+221g
+Food Grade
+C+
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+C+
+Serving Size	cup (221g)
+Amount per serving
+Calories	11cals
+% Daily Value*
+Total Fat 0.2g	0%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0g	
+Total Carbs 2g	1%
+Net Carbs 2g	
+Dietary Fiber 0g	0%
+Total Sugars 1g	
+Added Sugars 2g	3%
+Protein 1g	1%
+Cholesterol 0mg	0%
+Sodium 654mg	27%
+Vitamin A 26mcg	2%
+Vitamin C 1mg	1%
+Calcium 7mg	1%
+Iron 0.1mg	1%
+Potassium 42mg	1%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 1g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 141mcg	
+Beta-carotene 245mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 2mcg	
+Lycopene 15mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0mg	0%
+Vitamin K 2mcg	2%
+Thiamin 0.05mg	3%
+Riboflavin 0.05mg	3%
+Niacin 0.2mg	1%
+Vitamin B-6 0.02mg	1%
+Folate 0mcg	0%
+Folic Acid 0mcg	
+Folate DFE 0mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.1mg	1%
+Choline 1mg	0%
+Phosphorus 7mg	1%
+Magnesium 2mg	1%
+Zinc 0.1mg	0%
+Selenium 0mcg	0%
+Copper 0.02mg	1%
+Manganese 0.01mg	1%
+Alanine 31mg	
+Arginine 20mg	
+Aspartic Acid 49mg	
+Cystine 4mg	
+Glutamic Acid 69mg	
+Glycine 18mg	
+Histidine 9mg	
+Isoleucine 20mg	
+Leucine 29mg	
+Lysine 29mg	
+Methionine 7mg	
+Phenylalanine 18mg	
+Proline 15mg	
+Serine 18mg	
+Threonine 18mg	
+Tryptophan 4mg	
+Tyrosine 11mg	
+Valine 22mg	
+Omega-3s 0mg	
+Omega-3 ALA 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 9mg	
+Omega-6 LA 9mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

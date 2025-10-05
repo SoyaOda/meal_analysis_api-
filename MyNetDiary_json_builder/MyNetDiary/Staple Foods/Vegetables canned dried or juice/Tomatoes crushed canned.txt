@@ -1,0 +1,140 @@
+
+Food Entry
+ Tomatoes crushed canned	32 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	serving (100g)
+Amount per serving
+Calories	32cals
+% Daily Value*
+Total Fat 0.3g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 7g	2%
+Net Carbs 5g	
+Dietary Fiber 2g	8%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 2g	3%
+Cholesterol 0mg	0%
+Sodium 186mg	8%
+Vitamin A 11mcg	1%
+Vitamin C 9mg	15%
+Calcium 34mg	3%
+Iron 1.3mg	7%
+Potassium 293mg	8%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Sucrose 0g	
+Glucose (Dextrose) 2g	
+Fructose 2g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 129mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 158mcg	
+Lycopene 5,106mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 1.3mg	6%
+Vitamin K 5mcg	7%
+Thiamin 0.08mg	5%
+Riboflavin 0.05mg	3%
+Niacin 1.2mg	6%
+Vitamin B-6 0.15mg	8%
+Folate 13mcg	3%
+Folic Acid 0mcg	
+Folate DFE 13mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.3mg	3%
+Choline 13mg	2%
+Phosphorus 32mg	3%
+Magnesium 20mg	5%
+Zinc 0.3mg	2%
+Selenium 1mcg	1%
+Copper 0.18mg	9%
+Manganese 0.18mg	9%
+Alanine 45mg	
+Arginine 38mg	
+Aspartic Acid 215mg	
+Cystine 20mg	
+Glutamic Acid 570mg	
+Glycine 38mg	
+Histidine 23mg	
+Isoleucine 37mg	
+Leucine 57mg	
+Lysine 57mg	
+Methionine 13mg	
+Phenylalanine 40mg	
+Proline 30mg	
+Serine 42mg	
+Threonine 40mg	
+Tryptophan 12mg	
+Tyrosine 27mg	
+Valine 40mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

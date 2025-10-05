@@ -1,0 +1,151 @@
+
+Food Entry
+ Ricotta cheese nonfat	165 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+248g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (248g)
+Amount per serving
+Calories	165cals
+% Daily Value*
+Total Fat 0.5g	1%
+Saturated Fat 0.3g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.1g	
+Polyunsaturated Fat 0g	
+Total Carbs 15g	5%
+Net Carbs 15g	
+Dietary Fiber 0g	0%
+Total Sugars 15g	
+Added Sugars 0g	0%
+Protein 24g	47%
+Cholesterol 60mg	20%
+Sodium 601mg	25%
+Vitamin A 360mcg	24%
+Vitamin C 0mg	0%
+Calcium 601mg	60%
+Iron 0.2mg	1%
+Potassium 426mg	12%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 15g	
+Maltose 0g	
+Galactose 0g	
+Retinol 360mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 2mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0mg	0%
+Vitamin K 0mcg	0%
+Thiamin 0.12mg	8%
+Riboflavin 0.39mg	23%
+Niacin 0.2mg	1%
+Vitamin B-6 0.11mg	6%
+Folate 7mcg	2%
+Folic Acid 0mcg	
+Folate DFE 7mcg	
+Vitamin B-12 0.56mcg	9%
+Pantothenic Acid 1mg	10%
+Choline 42mg	8%
+Phosphorus 254mg	25%
+Magnesium 37mg	9%
+Zinc 1.2mg	8%
+Selenium 6mcg	8%
+Copper 0.01mg	1%
+Manganese 0.01mg	1%
+Alanine 598mg	
+Arginine 866mg	
+Aspartic Acid 1,481mg	
+Cystine 112mg	
+Glutamic Acid 5,082mg	
+Glycine 136mg	
+Histidine 536mg	
+Isoleucine 1,416mg	
+Leucine 2,525mg	
+Lysine 1,664mg	
+Methionine 660mg	
+Phenylalanine 1,257mg	
+Proline 2,252mg	
+Serine 1,272mg	
+Threonine 1,044mg	
+Tryptophan 305mg	
+Tyrosine 1,339mg	
+Valine 1,533mg	
+Omega-3s 10mg	
+Omega-3 ALA 10mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 10mg	
+Omega-6 LA 10mg	
+Omega-9 EA 0mg	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

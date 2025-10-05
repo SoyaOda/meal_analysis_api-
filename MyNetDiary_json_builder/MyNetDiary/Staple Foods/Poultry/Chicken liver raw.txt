@@ -1,0 +1,141 @@
+
+Food Entry
+ Chicken liver raw	119 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	serving (100g)
+Amount per serving
+Calories	119cals
+% Daily Value*
+Total Fat 4.8g	7%
+Saturated Fat 1.6g	8%
+Trans Fat 0.1g	
+Monounsaturated Fat 1.2g	
+Polyunsaturated Fat 1.3g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 17g	34%
+Cholesterol 345mg	115%
+Sodium 71mg	3%
+Vitamin A 3,323mcg	222%
+Vitamin C 18mg	30%
+Calcium 8mg	1%
+Iron 9mg	50%
+Potassium 230mg	7%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 3,290mcg	
+Alpha-carotene 11mcg	
+Beta-carotene 56mcg	
+Beta-cryptoxanthin 11mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 40mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0.7mg	3%
+Vitamin K 0mcg	0%
+Thiamin 0.31mg	20%
+Riboflavin 1.78mg	105%
+Niacin 9.7mg	49%
+Vitamin B-6 0.85mg	43%
+Folate 588mcg	147%
+Folic Acid 0mcg	
+Folate DFE 588mcg	
+Vitamin B-12 16.58mcg	276%
+Pantothenic Acid 6.2mg	62%
+Choline 194mg	35%
+Phosphorus 297mg	30%
+Magnesium 19mg	5%
+Zinc 2.7mg	18%
+Selenium 55mcg	78%
+Copper 0.49mg	25%
+Manganese 0.26mg	13%
+Alanine 993mg	
+Arginine 1,093mg	
+Aspartic Acid 1,593mg	
+Cystine 272mg	
+Glutamic Acid 2,093mg	
+Glycine 849mg	
+Histidine 507mg	
+Hydroxyproline 43mg	
+Isoleucine 813mg	
+Leucine 1,512mg	
+Lysine 1,332mg	
+Methionine 432mg	
+Phenylalanine 824mg	
+Proline 726mg	
+Serine 735mg	
+Threonine 725mg	
+Tryptophan 176mg	
+Tyrosine 653mg	
+Valine 998mg	
+Omega-3s 6mg	
+Omega-3 ALA 6mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 486mg	
+Omega-6 LA 475mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

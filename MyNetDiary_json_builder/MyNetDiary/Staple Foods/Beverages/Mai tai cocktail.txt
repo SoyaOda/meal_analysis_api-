@@ -1,0 +1,151 @@
+
+Food Entry
+ Mai tai cocktail	197 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+100g
+Food Grade
+B+
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B+
+Serving Size	serving (100g)
+Amount per serving
+Calories	197cals
+% Daily Value*
+Total Fat 0g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0g	
+Total Carbs 6g	2%
+Net Carbs 6g	
+Dietary Fiber 0g	0%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 0g	0%
+Cholesterol 0mg	0%
+Sodium 1mg	0%
+Vitamin A 0mcg	0%
+Vitamin C 6mg	9%
+Calcium 1mg	0%
+Iron 0mg	0%
+Potassium 17mg	0%
+Alcohol 25g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 4g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0.6mcg	
+Lutein + Zeaxanthin 2mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0mg	0%
+Vitamin K 0mcg	0%
+Thiamin 0.01mg	0%
+Riboflavin 0.01mg	0%
+Niacin 0mg	0%
+Vitamin B-6 0.01mg	0%
+Folate 3mcg	1%
+Folic Acid 0mcg	
+Folate DFE 3mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0mg	0%
+Choline 1mg	0%
+Phosphorus 4mg	0%
+Magnesium 1mg	0%
+Zinc 0mg	0%
+Selenium 0mcg	0%
+Copper 0.03mg	1%
+Manganese 0.02mg	1%
+Alanine 3mg	
+Arginine 3mg	
+Aspartic Acid 7mg	
+Cystine 1mg	
+Glutamic Acid 6mg	
+Glycine 5mg	
+Histidine 1mg	
+Isoleucine 1mg	
+Leucine 1mg	
+Lysine 2mg	
+Methionine 1mg	
+Phenylalanine 2mg	
+Proline 3mg	
+Serine 1mg	
+Threonine 1mg	
+Tryptophan 0mg	
+Tyrosine 1mg	
+Valine 2mg	
+Omega-3s 1mg	
+Omega-3 ALA 1mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 2mg	
+Omega-6 LA 2mg	
+Omega-9 EA 0mg	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

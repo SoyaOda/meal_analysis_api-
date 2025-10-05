@@ -1,0 +1,95 @@
+
+Food Entry
+ Tempeh cooked	195 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	195cals
+% Daily Value*
+Total Fat 11.4g	18%
+Saturated Fat 3.4g	17%
+Trans Fat 0g	
+Monounsaturated Fat 3.7g	
+Polyunsaturated Fat 2.6g	
+Total Carbs 8g	3%
+Net Carbs 1g	
+Dietary Fiber 7g	28%
+Protein 20g	40%
+Sodium 14mg	1%
+Calcium 96mg	10%
+Iron 2.1mg	12%
+Potassium 401mg	11%
+Vitamin D 0mcg (0iu)	0%
+Thiamin 0.05mg	4%
+Riboflavin 0.36mg	21%
+Niacin 2.1mg	11%
+Vitamin B-6 0.2mg	10%
+Folate 21mcg	5%
+Folic Acid 0mcg	
+Folate DFE 21mcg	
+Vitamin B-12 0.14mcg	2%
+Pantothenic Acid 0.5mg	5%
+Phosphorus 253mg	25%
+Magnesium 77mg	19%
+Zinc 1.6mg	10%
+Selenium 0mcg	0%
+Copper 0.54mg	27%
+Manganese 1.29mg	64%
+MCTs 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

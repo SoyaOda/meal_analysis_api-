@@ -1,0 +1,150 @@
+
+Food Entry
+ Salmon pink cooked dry heat	379 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+248g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (248g)
+Amount per serving
+Calories	379cals
+% Daily Value*
+Total Fat 13.1g	20%
+Saturated Fat 2.4g	12%
+Trans Fat 0.1g	
+Monounsaturated Fat 4g	
+Polyunsaturated Fat 2.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 61g	122%
+Cholesterol 136mg	45%
+Sodium 223mg	9%
+Vitamin A 104mcg	7%
+Vitamin C 0mg	0%
+Calcium 20mg	2%
+Iron 1.1mg	6%
+Potassium 1,089mg	31%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 104mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 32.4mcg (1,295iu)	324%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 1.2mg	6%
+Vitamin K 1mcg	2%
+Thiamin 0.23mg	15%
+Riboflavin 0.31mg	18%
+Niacin 23.8mg	119%
+Vitamin B-6 1.73mg	86%
+Folate 12mcg	3%
+Folic Acid 0mcg	
+Folate DFE 12mcg	
+Vitamin B-12 11.73mcg	196%
+Pantothenic Acid 3.1mg	31%
+Choline 281mg	51%
+Phosphorus 776mg	78%
+Magnesium 79mg	20%
+Zinc 1.1mg	8%
+Selenium 93mcg	133%
+Copper 0.19mg	9%
+Manganese 0.03mg	2%
+Alanine 3,889mg	
+Arginine 3,827mg	
+Aspartic Acid 7,658mg	
+Cystine 471mg	
+Glutamic Acid 8,635mg	
+Glycine 3,755mg	
+Histidine 1,614mg	
+Isoleucine 2,840mg	
+Leucine 4,648mg	
+Lysine 5,233mg	
+Methionine 1,716mg	
+Phenylalanine 2,512mg	
+Proline 2,577mg	
+Serine 2,693mg	
+Threonine 3,169mg	
+Tryptophan 657mg	
+Tyrosine 2,207mg	
+Valine 3,271mg	
+Omega-3s 2,021mg	
+Omega-3 ALA 134mg	
+Omega-3 EPA 541mg	
+Omega-3 DHA 990mg	
+Omega-6s 188mg	
+Omega-6 LA 149mg	
+Omega-9 EA 139mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

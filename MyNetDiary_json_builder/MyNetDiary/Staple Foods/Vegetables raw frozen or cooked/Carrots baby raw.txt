@@ -1,0 +1,136 @@
+
+Food Entry
+ Carrots baby raw	5 cals
+Amount eaten
+large	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+15g
+Food Grade
+B+
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B+
+Serving Size	large (15g)
+Amount per serving
+Calories	5cals
+% Daily Value*
+Total Fat 0g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0g	
+Total Carbs 1g	0%
+Net Carbs 1g	
+Dietary Fiber 0g	2%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 0g	0%
+Cholesterol 0mg	0%
+Sodium 12mg	0%
+Vitamin A 103mcg	7%
+Vitamin C 0mg	1%
+Calcium 5mg	0%
+Iron 0.1mg	1%
+Potassium 36mg	1%
+Caffeine 0mg	
+Soluble Fiber 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 565mcg	
+Beta-carotene 959mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 54mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin K 1mcg	2%
+Thiamin 0mg	0%
+Riboflavin 0.01mg	0%
+Niacin 0.1mg	0%
+Vitamin B-6 0.02mg	1%
+Folate 4mcg	1%
+Folic Acid 0mcg	
+Folate DFE 4mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.1mg	1%
+Biotin 0.4mcg	1%
+Choline 1mg	0%
+Phosphorus 4mg	0%
+Magnesium 2mg	0%
+Zinc 0mg	0%
+Selenium 0mcg	0%
+Copper 0.02mg	1%
+Manganese 0.02mg	1%
+Alanine 7mg	
+Arginine 5mg	
+Aspartic Acid 17mg	
+Cystine 1mg	
+Glutamic Acid 25mg	
+Glycine 4mg	
+Histidine 2mg	
+Isoleucine 5mg	
+Leucine 5mg	
+Lysine 5mg	
+Methionine 1mg	
+Phenylalanine 4mg	
+Proline 4mg	
+Serine 4mg	
+Threonine 5mg	
+Tryptophan 1mg	
+Tyrosine 2mg	
+Valine 5mg	
+MCTs 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,152 @@
+
+Food Entry
+ Bread crumbs whole wheat dry grated	415 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+120g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (120g)
+Amount per serving
+Calories	415cals
+% Daily Value*
+Total Fat 3g	5%
+Saturated Fat 0.5g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.5g	
+Polyunsaturated Fat 1.2g	
+Total Carbs 87g	29%
+Net Carbs 74g	
+Dietary Fiber 13g	50%
+Total Sugars 7g	
+Added Sugars 11g	22%
+Protein 17g	33%
+Cholesterol 0mg	0%
+Sodium 151mg	6%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 40mg	4%
+Iron 3.9mg	22%
+Potassium 488mg	14%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 3g	
+Fiber insoluble 9g	
+Sugar Alcohols 0g	
+Starch 60g	
+Sucrose 1g	
+Glucose (Dextrose) 1g	
+Fructose 0g	
+Lactose 0g	
+Maltose 5g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 5mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 224mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 235mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 1,948mcg	
+Vitamin E 0.7mg	4%
+Vitamin K 2mcg	2%
+Thiamin 1.27mg	84%
+Riboflavin 0.44mg	26%
+Niacin 8.6mg	43%
+Vitamin B-6 0.52mg	26%
+Folate 192mcg	48%
+Folic Acid 0mcg	
+Folate DFE 192mcg	
+Vitamin B-12 0.84mcg	14%
+Pantothenic Acid 1.5mg	15%
+Choline 39mg	7%
+Phosphorus 448mg	45%
+Magnesium 153mg	38%
+Zinc 3.2mg	21%
+Selenium 64mcg	92%
+Copper 0.53mg	26%
+Manganese 4.17mg	209%
+Alanine 685mg	
+Arginine 817mg	
+Aspartic Acid 1,051mg	
+Cystine 322mg	
+Glutamic Acid 4,980mg	
+Glycine 739mg	
+Histidine 439mg	
+Isoleucine 595mg	
+Leucine 1,151mg	
+Lysine 590mg	
+Methionine 289mg	
+Phenylalanine 841mg	
+Proline 2,323mg	
+Serine 794mg	
+Threonine 505mg	
+Tryptophan 210mg	
+Tyrosine 367mg	
+Valine 760mg	
+Omega-3s 74mg	
+Omega-3 ALA 74mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 1,115mg	
+Omega-6 LA 1,115mg	
+Omega-9 EA 0mg	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

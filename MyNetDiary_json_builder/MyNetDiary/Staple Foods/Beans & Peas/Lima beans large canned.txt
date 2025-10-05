@@ -1,0 +1,120 @@
+
+Food Entry
+ Lima beans large canned	190 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+241g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (241g)
+Amount per serving
+Calories	190cals
+% Daily Value*
+Total Fat 0.4g	1%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.2g	
+Total Carbs 36g	12%
+Net Carbs 24g	
+Dietary Fiber 12g	46%
+Added Sugars 0g	0%
+Protein 12g	24%
+Cholesterol 0mg	0%
+Sodium 810mg	34%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 51mg	5%
+Iron 4.4mg	24%
+Potassium 530mg	15%
+Caffeine 0mg	
+Soluble Fiber 2g	
+Retinol 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Thiamin 0.13mg	9%
+Riboflavin 0.08mg	5%
+Niacin 0.6mg	3%
+Vitamin B-6 0.22mg	11%
+Folate 121mcg	30%
+Folic Acid 0mcg	
+Folate DFE 121mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.6mg	6%
+Phosphorus 178mg	18%
+Magnesium 94mg	23%
+Zinc 1.6mg	10%
+Selenium 11mcg	15%
+Copper 0.43mg	22%
+Manganese 0.87mg	44%
+Alanine 605mg	
+Arginine 728mg	
+Aspartic Acid 1,530mg	
+Cystine 130mg	
+Glutamic Acid 1,680mg	
+Glycine 501mg	
+Histidine 364mg	
+Isoleucine 624mg	
+Leucine 1,024mg	
+Lysine 795mg	
+Methionine 149mg	
+Phenylalanine 684mg	
+Proline 540mg	
+Serine 790mg	
+Threonine 513mg	
+Tryptophan 140mg	
+Tyrosine 419mg	
+Valine 713mg	
+MCTs 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

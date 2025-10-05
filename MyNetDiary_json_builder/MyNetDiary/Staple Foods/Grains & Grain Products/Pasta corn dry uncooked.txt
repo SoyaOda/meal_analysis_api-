@@ -1,0 +1,125 @@
+
+Food Entry
+ Pasta corn dry uncooked	375 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+105g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (105g)
+Amount per serving
+Calories	375cals
+% Daily Value*
+Total Fat 2.2g	3%
+Saturated Fat 0.3g	2%
+Monounsaturated Fat 0.6g	
+Polyunsaturated Fat 1g	
+Total Carbs 83g	28%
+Net Carbs 72g	
+Dietary Fiber 12g	46%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 8g	16%
+Cholesterol 0mg	0%
+Sodium 3mg	0%
+Vitamin A 54mcg	4%
+Vitamin C 0mg	0%
+Calcium 4mg	0%
+Iron 1mg	5%
+Potassium 309mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Thiamin 0.24mg	16%
+Riboflavin 0.09mg	5%
+Niacin 2.6mg	13%
+Vitamin B-6 0.22mg	11%
+Folate 26mcg	7%
+Folic Acid 0mcg	
+Folate DFE 26mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Phosphorus 266mg	27%
+Magnesium 125mg	31%
+Zinc 1.9mg	13%
+Selenium 8mcg	12%
+Copper 0.21mg	11%
+Manganese 0.51mg	25%
+Alanine 586mg	
+Arginine 391mg	
+Aspartic Acid 545mg	
+Cystine 141mg	
+Glutamic Acid 1,470mg	
+Glycine 321mg	
+Histidine 239mg	
+Isoleucine 280mg	
+Leucine 961mg	
+Lysine 221mg	
+Methionine 164mg	
+Phenylalanine 384mg	
+Proline 684mg	
+Serine 372mg	
+Threonine 294mg	
+Tryptophan 56mg	
+Tyrosine 318mg	
+Valine 397mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

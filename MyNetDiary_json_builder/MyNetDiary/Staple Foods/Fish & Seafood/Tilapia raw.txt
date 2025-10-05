@@ -1,0 +1,138 @@
+
+Food Entry
+ Tilapia raw	96 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	96cals
+% Daily Value*
+Total Fat 1.7g	3%
+Saturated Fat 0.6g	3%
+Monounsaturated Fat 0.5g	
+Polyunsaturated Fat 0.4g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 20g	40%
+Cholesterol 50mg	17%
+Sodium 52mg	2%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 10mg	1%
+Iron 0.6mg	3%
+Potassium 302mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 3.1mcg (124iu)	31%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0.4mg	2%
+Vitamin K 1mcg	2%
+Thiamin 0.04mg	3%
+Riboflavin 0.06mg	4%
+Niacin 3.9mg	20%
+Vitamin B-6 0.16mg	8%
+Folate 24mcg	6%
+Folic Acid 0mcg	
+Folate DFE 24mcg	
+Vitamin B-12 1.58mcg	26%
+Pantothenic Acid 0.5mg	5%
+Choline 43mg	8%
+Phosphorus 170mg	17%
+Magnesium 27mg	7%
+Zinc 0.3mg	2%
+Selenium 42mcg	60%
+Copper 0.08mg	4%
+Manganese 0.04mg	2%
+Alanine 1,220mg	
+Arginine 1,277mg	
+Aspartic Acid 2,297mg	
+Cystine 220mg	
+Glutamic Acid 3,213mg	
+Glycine 1,043mg	
+Histidine 470mg	
+Isoleucine 930mg	
+Leucine 1,603mg	
+Lysine 1,810mg	
+Methionine 593mg	
+Phenylalanine 810mg	
+Proline 757mg	
+Serine 813mg	
+Threonine 950mg	
+Tryptophan 210mg	
+Tyrosine 680mg	
+Valine 970mg	
+Omega-3s 167mg	
+Omega-3 ALA 33mg	
+Omega-3 EPA 5mg	
+Omega-3 DHA 86mg	
+Omega-6s 3mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

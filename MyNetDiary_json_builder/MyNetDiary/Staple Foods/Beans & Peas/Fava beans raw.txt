@@ -1,0 +1,136 @@
+
+Food Entry
+ Fava beans raw	512 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+150g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (150g)
+Amount per serving
+Calories	512cals
+% Daily Value*
+Total Fat 2.3g	4%
+Saturated Fat 0.4g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.5g	
+Polyunsaturated Fat 0.9g	
+Total Carbs 87g	29%
+Net Carbs 50g	
+Dietary Fiber 38g	150%
+Total Sugars 9g	
+Added Sugars 0g	0%
+Protein 39g	78%
+Cholesterol 0mg	0%
+Sodium 20mg	1%
+Vitamin A 4mcg	0%
+Vitamin C 2mg	4%
+Calcium 155mg	15%
+Iron 10.1mg	56%
+Potassium 1,593mg	46%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 48mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.1mg	0%
+Vitamin K 14mcg	17%
+Thiamin 0.83mg	56%
+Riboflavin 0.5mg	29%
+Niacin 4.2mg	21%
+Vitamin B-6 0.55mg	27%
+Folate 635mcg	159%
+Folic Acid 0mcg	
+Folate DFE 635mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 1.5mg	15%
+Choline 144mg	26%
+Phosphorus 632mg	63%
+Magnesium 288mg	72%
+Zinc 4.7mg	31%
+Selenium 12mcg	18%
+Copper 1.24mg	62%
+Manganese 2.44mg	122%
+Alanine 1,605mg	
+Arginine 3,617mg	
+Aspartic Acid 4,374mg	
+Cystine 501mg	
+Glutamic Acid 6,656mg	
+Glycine 1,643mg	
+Histidine 996mg	
+Isoleucine 1,580mg	
+Leucine 2,946mg	
+Lysine 2,507mg	
+Methionine 320mg	
+Phenylalanine 1,655mg	
+Proline 1,649mg	
+Serine 1,793mg	
+Threonine 1,392mg	
+Tryptophan 371mg	
+Tyrosine 1,241mg	
+Valine 1,742mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Phytosterols 186mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

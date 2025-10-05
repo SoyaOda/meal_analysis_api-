@@ -1,0 +1,152 @@
+
+Food Entry
+ Salmon pink canned drained solids with bone	138 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	138cals
+% Daily Value*
+Total Fat 5g	8%
+Saturated Fat 0.9g	4%
+Trans Fat 0g	
+Monounsaturated Fat 1.2g	
+Polyunsaturated Fat 1.5g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 23g	46%
+Cholesterol 83mg	28%
+Sodium 381mg	16%
+Vitamin A 20mcg	1%
+Vitamin C 0mg	0%
+Calcium 283mg	28%
+Iron 0.8mg	4%
+Potassium 333mg	10%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 20mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 14.5mcg (580iu)	145%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 120mcg	
+Vitamin E 1.3mg	6%
+Vitamin K 0mcg	0%
+Thiamin 0.03mg	2%
+Riboflavin 0.2mg	12%
+Niacin 7.4mg	37%
+Vitamin B-6 0.11mg	5%
+Folate 4mcg	1%
+Folic Acid 0mcg	
+Folate DFE 4mcg	
+Vitamin B-12 4.95mcg	83%
+Pantothenic Acid 0.6mg	6%
+Biotin 5.9mcg	20%
+Choline 88mg	16%
+Phosphorus 379mg	38%
+Magnesium 32mg	8%
+Zinc 1mg	6%
+Selenium 40mcg	56%
+Copper 0.08mg	4%
+Manganese 0.03mg	2%
+Iodine 15mcg	10%
+Alanine 1,472mg	
+Arginine 1,449mg	
+Aspartic Acid 2,899mg	
+Cystine 179mg	
+Glutamic Acid 3,268mg	
+Glycine 1,421mg	
+Histidine 611mg	
+Isoleucine 1,074mg	
+Leucine 1,759mg	
+Lysine 1,980mg	
+Methionine 649mg	
+Phenylalanine 951mg	
+Proline 976mg	
+Serine 1,019mg	
+Threonine 1,200mg	
+Tryptophan 249mg	
+Tyrosine 835mg	
+Valine 1,238mg	
+Omega-3s 1,354mg	
+Omega-3 ALA 48mg	
+Omega-3 EPA 334mg	
+Omega-3 DHA 743mg	
+Omega-6s 103mg	
+Omega-6 LA 77mg	
+Omega-9 EA 55mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

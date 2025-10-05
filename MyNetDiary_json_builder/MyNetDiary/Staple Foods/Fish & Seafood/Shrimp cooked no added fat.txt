@@ -1,0 +1,151 @@
+
+Food Entry
+ Shrimp cooked no added fat	99 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	99cals
+% Daily Value*
+Total Fat 0.3g	0%
+Saturated Fat 0.1g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 24g	48%
+Cholesterol 189mg	63%
+Sodium 111mg	5%
+Vitamin A 15mcg	1%
+Vitamin C 0mg	0%
+Calcium 70mg	7%
+Iron 0.5mg	3%
+Potassium 259mg	7%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 15mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (1iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 8mcg	
+Gamma-tocopherol 33mcg	
+Vitamin E 0.4mg	2%
+Vitamin K 0mcg	0%
+Thiamin 0.03mg	2%
+Riboflavin 0.02mg	1%
+Niacin 2.4mg	12%
+Vitamin B-6 0.22mg	11%
+Folate 22mcg	6%
+Folic Acid 0mcg	
+Folate DFE 22mcg	
+Vitamin B-12 1.5mcg	25%
+Pantothenic Acid 0.5mg	5%
+Choline 122mg	22%
+Phosphorus 237mg	24%
+Magnesium 39mg	10%
+Zinc 1.6mg	11%
+Selenium 45mcg	64%
+Copper 0.38mg	19%
+Manganese 0.03mg	2%
+Iodine 15mcg	10%
+Alanine 1,484mg	
+Arginine 2,365mg	
+Aspartic Acid 2,674mg	
+Cystine 286mg	
+Glutamic Acid 4,212mg	
+Glycine 1,412mg	
+Histidine 527mg	
+Isoleucine 1,105mg	
+Leucine 2,053mg	
+Lysine 2,286mg	
+Methionine 700mg	
+Phenylalanine 1,044mg	
+Proline 1,102mg	
+Serine 978mg	
+Threonine 952mg	
+Tryptophan 274mg	
+Tyrosine 907mg	
+Valine 1,123mg	
+Omega-3s 32mg	
+Omega-3 ALA 1mg	
+Omega-3 EPA 15mg	
+Omega-3 DHA 15mg	
+Omega-6s 25mg	
+Omega-6 LA 18mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,80 @@
+
+Food Entry
+ Almond yogurt plain	140 cals
+Amount eaten
+container	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+150g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	container (150g)
+Amount per serving
+Calories	140cals
+% Daily Value*
+Total Fat 9g	14%
+Saturated Fat 0.5g	2%
+Trans Fat 0g	
+Total Carbs 12g	4%
+Net Carbs 9g	
+Dietary Fiber 3g	12%
+Total Sugars 5g	
+Added Sugars 5g	10%
+Protein 4g	8%
+Cholesterol 0mg	0%
+Sodium 10mg	0%
+Calcium 50mg	5%
+Iron 1mg	6%
+Potassium 121mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Sugar Alcohols 0g	
+Vitamin D 0mcg (0iu)	0%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

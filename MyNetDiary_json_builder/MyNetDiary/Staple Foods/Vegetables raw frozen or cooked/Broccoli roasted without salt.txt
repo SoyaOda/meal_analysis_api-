@@ -1,0 +1,102 @@
+
+Food Entry
+ Broccoli roasted without salt	88 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+70g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (70g)
+Amount per serving
+Calories	88cals
+% Daily Value*
+Total Fat 7.1g	11%
+Saturated Fat 1g	5%
+Trans Fat 0g	
+Monounsaturated Fat 5g	
+Polyunsaturated Fat 0.9g	
+Total Carbs 5g	2%
+Net Carbs 3g	
+Dietary Fiber 2g	9%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 3g	6%
+Cholesterol 0mg	0%
+Sodium 27mg	1%
+Vitamin A 893mcg	60%
+Vitamin C 92mg	154%
+Calcium 48mg	5%
+Iron 0.9mg	5%
+Potassium 324mg	9%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 1mg	5%
+Vitamin K 4mcg	5%
+Thiamin 0.07mg	4%
+Riboflavin 0.12mg	7%
+Niacin 0.6mg	3%
+Vitamin B-6 0.16mg	8%
+Folate 70mcg	18%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Choline 0mg	0%
+Phosphorus 66mg	7%
+Magnesium 25mg	6%
+Zinc 0.4mg	3%
+Selenium 3mcg	4%
+Copper 0.05mg	2%
+Manganese 0.25mg	12%
+Omega-3s 0mg	
+Omega-3 ALA 0mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

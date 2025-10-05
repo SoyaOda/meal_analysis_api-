@@ -1,0 +1,135 @@
+
+Food Entry
+ Cassava or manioc raw	330 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+206g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (206g)
+Amount per serving
+Calories	330cals
+% Daily Value*
+Total Fat 0.6g	1%
+Saturated Fat 0.2g	1%
+Trans Fat 0g	
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 78g	26%
+Net Carbs 75g	
+Dietary Fiber 4g	15%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 3g	6%
+Cholesterol 0mg	0%
+Sodium 29mg	1%
+Vitamin A 1mcg	0%
+Vitamin C 42mg	71%
+Calcium 33mg	3%
+Iron 0.6mg	3%
+Potassium 558mg	16%
+Alcohol 0g	
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 16mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.4mg	2%
+Vitamin K 4mcg	5%
+Thiamin 0.18mg	12%
+Riboflavin 0.1mg	6%
+Niacin 1.8mg	9%
+Vitamin B-6 0.18mg	9%
+Folate 56mcg	14%
+Folic Acid 0mcg	
+Folate DFE 56mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.2mg	2%
+Choline 49mg	9%
+Phosphorus 56mg	6%
+Magnesium 43mg	11%
+Zinc 0.7mg	5%
+Selenium 1mcg	2%
+Copper 0.21mg	10%
+Manganese 0.79mg	40%
+Alanine 78mg	
+Arginine 282mg	
+Aspartic Acid 163mg	
+Cystine 58mg	
+Glutamic Acid 424mg	
+Glycine 58mg	
+Histidine 41mg	
+Isoleucine 56mg	
+Leucine 80mg	
+Lysine 91mg	
+Methionine 23mg	
+Phenylalanine 54mg	
+Proline 68mg	
+Serine 68mg	
+Threonine 58mg	
+Tryptophan 39mg	
+Tyrosine 35mg	
+Valine 72mg	
+Omega-3s 0mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,123 @@
+
+Food Entry
+ Squash acorn raw	56 cals
+Amount eaten
+cup, cubes	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+Weight
+140g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 11, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup, cubes (140g)
+Amount per serving
+Calories	56cals
+% Daily Value*
+Total Fat 0.1g	0%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Monounsaturated Fat 0g	
+Polyunsaturated Fat 0.1g	
+Total Carbs 15g	5%
+Net Carbs 12g	
+Dietary Fiber 2g	8%
+Added Sugars 0g	0%
+Protein 1g	2%
+Cholesterol 0mg	0%
+Sodium 4mg	0%
+Vitamin A 26mcg	2%
+Vitamin C 15mg	26%
+Calcium 46mg	5%
+Iron 1mg	5%
+Potassium 486mg	14%
+Caffeine 0mg	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 308mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 53mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Thiamin 0.2mg	13%
+Riboflavin 0.01mg	1%
+Niacin 1mg	5%
+Vitamin B-6 0.22mg	11%
+Folate 24mcg	6%
+Folic Acid 0mcg	
+Folate DFE 24mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.6mg	6%
+Phosphorus 50mg	5%
+Magnesium 45mg	11%
+Zinc 0.2mg	1%
+Selenium 1mcg	1%
+Copper 0.09mg	5%
+Manganese 0.23mg	12%
+Alanine 46mg	
+Arginine 62mg	
+Aspartic Acid 120mg	
+Cystine 10mg	
+Glutamic Acid 196mg	
+Glycine 41mg	
+Histidine 21mg	
+Isoleucine 43mg	
+Leucine 63mg	
+Lysine 41mg	
+Methionine 14mg	
+Phenylalanine 43mg	
+Proline 39mg	
+Serine 43mg	
+Threonine 34mg	
+Tryptophan 15mg	
+Tyrosine 38mg	
+Valine 48mg	
+MCTs 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

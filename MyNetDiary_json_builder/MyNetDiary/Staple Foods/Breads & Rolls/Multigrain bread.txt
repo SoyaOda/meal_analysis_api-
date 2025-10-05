@@ -1,0 +1,94 @@
+
+Food Entry
+ Multigrain bread	96 cals
+Amount eaten
+slice	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+36g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	slice (36g)
+Amount per serving
+Calories	96cals
+% Daily Value*
+Total Fat 1.5g	2%
+Saturated Fat 0.3g	1%
+Monounsaturated Fat 0.3g	
+Polyunsaturated Fat 0.7g	
+Total Carbs 16g	5%
+Net Carbs 13g	
+Dietary Fiber 3g	11%
+Total Sugars 2g	
+Added Sugars 2g	4%
+Protein 5g	10%
+Cholesterol 0mg	0%
+Sodium 137mg	6%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 37mg	4%
+Iron 0.9mg	5%
+Potassium 83mg	2%
+Alcohol 0g	
+Caffeine 0mg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.1mg	0%
+Vitamin K 1mcg	1%
+Thiamin 0.1mg	7%
+Riboflavin 0mg	0%
+Niacin 1.5mg	8%
+Vitamin B-6 0.1mg	5%
+Folate 27mcg	7%
+Phosphorus 82mg	8%
+Magnesium 28mg	7%
+Zinc 0.6mg	4%
+Selenium 12mcg	17%
+Copper 0.1mg	5%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

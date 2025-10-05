@@ -1,0 +1,125 @@
+
+Food Entry
+ Salmon chinook raw	709 cals
+Amount eaten
+fillet	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+396g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	fillet (396g)
+Amount per serving
+Calories	709cals
+% Daily Value*
+Total Fat 41.3g	64%
+Saturated Fat 12.3g	61%
+Monounsaturated Fat 17.4g	
+Polyunsaturated Fat 11.1g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 79g	158%
+Cholesterol 198mg	66%
+Sodium 186mg	8%
+Vitamin A 538mcg	36%
+Vitamin C 16mg	26%
+Calcium 103mg	10%
+Iron 1mg	6%
+Potassium 1,560mg	45%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 539mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin E 4.8mg	24%
+Thiamin 0.21mg	14%
+Riboflavin 0.45mg	26%
+Niacin 33.3mg	167%
+Vitamin B-6 1.58mg	79%
+Folate 119mcg	30%
+Folic Acid 0mcg	
+Folate DFE 119mcg	
+Vitamin B-12 5.15mcg	86%
+Pantothenic Acid 3mg	30%
+Phosphorus 1,144mg	114%
+Magnesium 376mg	94%
+Zinc 1.7mg	12%
+Selenium 145mcg	206%
+Copper 0.16mg	8%
+Manganese 0.06mg	3%
+Alanine 4,803mg	
+Arginine 4,752mg	
+Aspartic Acid 8,134mg	
+Cystine 851mg	
+Glutamic Acid 11,856mg	
+Glycine 3,813mg	
+Histidine 2,336mg	
+Isoleucine 3,659mg	
+Leucine 6,455mg	
+Lysine 7,294mg	
+Methionine 2,352mg	
+Phenylalanine 3,101mg	
+Proline 2,808mg	
+Serine 3,239mg	
+Threonine 3,481mg	
+Tryptophan 891mg	
+Tyrosine 2,681mg	
+Valine 4,091mg	
+Omega-3s 8,930mg	
+Omega-3 EPA 4,000mg	
+Omega-3 DHA 3,738mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

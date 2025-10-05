@@ -1,0 +1,155 @@
+
+Food Entry
+ Cream heavy whipping	408 cals
+Amount eaten
+cup, whipped	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+120g
+Food Grade
+D
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+D
+Serving Size	cup, whipped (120g)
+Amount per serving
+Calories	408cals
+% Daily Value*
+Total Fat 43.3g	67%
+Saturated Fat 27.6g	138%
+Trans Fat 1.5g	
+Monounsaturated Fat 10.9g	
+Polyunsaturated Fat 1.9g	
+Total Carbs 3g	1%
+Net Carbs 3g	
+Dietary Fiber 0g	0%
+Total Sugars 4g	
+Added Sugars 0g	0%
+Protein 3g	7%
+Cholesterol 136mg	45%
+Sodium 32mg	1%
+Vitamin A 493mcg	33%
+Vitamin C 1mg	1%
+Calcium 79mg	8%
+Iron 0.1mg	1%
+Potassium 114mg	3%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 4g	
+Maltose 0g	
+Galactose 0g	
+Retinol 486mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 86mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 1.9mcg (76iu)	19%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 288mcg	
+Vitamin E 1.1mg	5%
+Vitamin K 4mcg	5%
+Thiamin 0.02mg	2%
+Riboflavin 0.23mg	13%
+Niacin 0.1mg	0%
+Vitamin B-6 0.04mg	2%
+Folate 5mcg	1%
+Folic Acid 0mcg	
+Folate DFE 5mcg	
+Vitamin B-12 0.19mcg	3%
+Pantothenic Acid 0.6mg	6%
+Biotin 1.7mcg	6%
+Choline 20mg	4%
+Phosphorus 70mg	7%
+Magnesium 8mg	2%
+Zinc 0.3mg	2%
+Selenium 4mcg	5%
+Copper 0.01mg	1%
+Manganese 0.01mg	0%
+Iodine 34mcg	22%
+Alanine 109mg	
+Arginine 79mg	
+Aspartic Acid 251mg	
+Cystine 18mg	
+Glutamic Acid 686mg	
+Glycine 79mg	
+Histidine 79mg	
+Isoleucine 175mg	
+Leucine 281mg	
+Lysine 149mg	
+Methionine 79mg	
+Phenylalanine 156mg	
+Proline 362mg	
+Serine 113mg	
+Threonine 151mg	
+Tryptophan 79mg	
+Tyrosine 161mg	
+Valine 204mg	
+Omega-3s 181mg	
+Omega-3 ALA 146mg	
+Omega-3 EPA 11mg	
+Omega-3 DHA 0mg	
+Omega-6s 1,051mg	
+Omega-6 LA 1,049mg	
+Omega-9 EA 4mg	
+MCTs 4g	
+Caproic Acid 0.7g	
+Caprylic Acid 0.5g	
+Capric Acid 1.1g	
+Lauric Acid 1.3g	
+Fluoride 4mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

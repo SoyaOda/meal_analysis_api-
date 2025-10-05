@@ -1,0 +1,122 @@
+
+Food Entry
+ Dates medjool	66 cals
+Amount eaten
+date, pitted	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+24g
+Food Grade
+B+
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+B+
+Serving Size	date, pitted (24g)
+Amount per serving
+Calories	66cals
+% Daily Value*
+Total Fat 0g	0%
+Trans Fat 0g	
+Total Carbs 18g	6%
+Net Carbs 16g	
+Dietary Fiber 2g	6%
+Total Sugars 16g	
+Added Sugars 0g	0%
+Protein 0g	1%
+Sodium 0mg	0%
+Vitamin A 2mcg	0%
+Vitamin C 0mg	0%
+Calcium 15mg	2%
+Iron 0.2mg	1%
+Potassium 167mg	5%
+Caffeine 0mg	
+Sucrose 0g	
+Glucose (Dextrose) 8g	
+Fructose 8g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Alpha-carotene 0mcg	
+Beta-carotene 21mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 6mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin K 1mcg	1%
+Thiamin 0.01mg	1%
+Riboflavin 0.01mg	1%
+Niacin 0.4mg	2%
+Vitamin B-6 0.06mg	3%
+Folate 4mcg	1%
+Folic Acid 0mcg	
+Folate DFE 4mcg	
+Pantothenic Acid 0.2mg	2%
+Choline 2mg	0%
+Phosphorus 15mg	1%
+Magnesium 13mg	3%
+Zinc 0.1mg	1%
+Copper 0.09mg	4%
+Manganese 0.07mg	4%
+Alanine 19mg	
+Arginine 14mg	
+Aspartic Acid 53mg	
+Cystine 11mg	
+Glutamic Acid 64mg	
+Glycine 22mg	
+Histidine 7mg	
+Isoleucine 11mg	
+Leucine 20mg	
+Lysine 13mg	
+Methionine 4mg	
+Phenylalanine 12mg	
+Proline 27mg	
+Serine 15mg	
+Threonine 10mg	
+Tryptophan 2mg	
+Tyrosine 4mg	
+Valine 16mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

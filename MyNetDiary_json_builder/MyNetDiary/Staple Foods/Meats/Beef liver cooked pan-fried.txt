@@ -1,0 +1,146 @@
+
+Food Entry
+ Beef liver cooked pan-fried	142 cals
+Amount eaten
+slice	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+81g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	slice (81g)
+Amount per serving
+Calories	142cals
+% Daily Value*
+Total Fat 3.8g	6%
+Saturated Fat 2g	10%
+Trans Fat 0.3g	
+Monounsaturated Fat 0.9g	
+Polyunsaturated Fat 0.8g	
+Total Carbs 4g	1%
+Net Carbs 4g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 21g	43%
+Cholesterol 309mg	103%
+Sodium 62mg	3%
+Vitamin A 6,339mcg	423%
+Vitamin C 1mg	1%
+Calcium 5mg	0%
+Iron 5mg	28%
+Potassium 284mg	8%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Retinol 6,260mcg	
+Alpha-carotene 9mcg	
+Beta-carotene 147mcg	
+Beta-cryptoxanthin 17mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 1mcg (40iu)	10%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0.4mg	2%
+Vitamin K 3mcg	4%
+Thiamin 0.14mg	10%
+Riboflavin 2.77mg	163%
+Niacin 14.2mg	71%
+Vitamin B-6 0.83mg	42%
+Folate 211mcg	53%
+Folic Acid 0mcg	
+Folate DFE 211mcg	
+Vitamin B-12 67.34mcg	1122%
+Pantothenic Acid 5.6mg	56%
+Biotin 29.4mcg	98%
+Choline 339mg	62%
+Phosphorus 393mg	39%
+Magnesium 18mg	4%
+Zinc 4.2mg	28%
+Selenium 27mcg	38%
+Copper 11.82mg	591%
+Manganese 0.29mg	14%
+Iodine 13mcg	9%
+Alanine 1,202mg	
+Arginine 1,281mg	
+Aspartic Acid 1,989mg	
+Cystine 388mg	
+Glutamic Acid 2,697mg	
+Glycine 1,202mg	
+Histidine 650mg	
+Hydroxyproline 37mg	
+Isoleucine 999mg	
+Leucine 1,972mg	
+Lysine 1,659mg	
+Methionine 561mg	
+Phenylalanine 1,119mg	
+Proline 992mg	
+Serine 935mg	
+Threonine 897mg	
+Tryptophan 271mg	
+Tyrosine 833mg	
+Valine 1,301mg	
+Omega-3s 14mg	
+Omega-3 ALA 14mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 535mg	
+Omega-6 LA 505mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+Fluoride 4mcg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

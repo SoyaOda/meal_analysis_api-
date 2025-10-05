@@ -1,0 +1,104 @@
+
+Food Entry
+ Guacamole	64 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+49g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	serving (49g)
+Amount per serving
+Calories	64cals
+% Daily Value*
+Total Fat 5.5g	9%
+Saturated Fat 0.8g	4%
+Trans Fat 0g	
+Monounsaturated Fat 3.7g	
+Polyunsaturated Fat 0.7g	
+Total Carbs 4g	1%
+Net Carbs 2g	
+Dietary Fiber 3g	11%
+Total Sugars 1g	
+Added Sugars 0g	0%
+Protein 1g	2%
+Cholesterol 0mg	0%
+Sodium 298mg	12%
+Vitamin A 54mcg	4%
+Vitamin C 10mg	16%
+Calcium 10mg	1%
+Iron 0.3mg	2%
+Potassium 211mg	6%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Sugar Alcohols 0g	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.9mg	5%
+Vitamin K 15mcg	19%
+Thiamin 0.03mg	2%
+Riboflavin 0.06mg	4%
+Niacin 0.7mg	4%
+Vitamin B-6 0.13mg	6%
+Folate 33mcg	8%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Phosphorus 24mg	2%
+Magnesium 13mg	3%
+Zinc 0.3mg	2%
+Selenium 0mcg	0%
+Copper 0.08mg	4%
+Manganese 0.11mg	5%
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

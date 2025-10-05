@@ -1,0 +1,153 @@
+
+Food Entry
+ Peanuts dry roasted without salt	857 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+146g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	cup (146g)
+Amount per serving
+Calories	857cals
+% Daily Value*
+Total Fat 72.5g	112%
+Saturated Fat 11.3g	56%
+Trans Fat 0g	
+Monounsaturated Fat 38.2g	
+Polyunsaturated Fat 14.3g	
+Total Carbs 31g	10%
+Net Carbs 19g	
+Dietary Fiber 12g	49%
+Total Sugars 7g	
+Added Sugars 0g	0%
+Protein 36g	71%
+Cholesterol 0mg	0%
+Sodium 9mg	0%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 85mg	8%
+Iron 2.3mg	13%
+Potassium 926mg	26%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 12g	
+Starch 6g	
+Sucrose 7g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 526mcg	
+Delta-tocopherol 891mcg	
+Gamma-tocopherol 9,227mcg	
+Vitamin E 7.2mg	36%
+Vitamin K 0mcg	0%
+Thiamin 0.22mg	15%
+Riboflavin 0.29mg	17%
+Niacin 21mg	105%
+Vitamin B-6 0.68mg	34%
+Folate 142mcg	35%
+Folic Acid 0mcg	
+Folate DFE 142mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 1.5mg	15%
+Biotin 25.6mcg	85%
+Choline 94mg	17%
+Phosphorus 530mg	53%
+Magnesium 260mg	65%
+Zinc 4mg	27%
+Selenium 14mcg	19%
+Copper 0.62mg	31%
+Manganese 2.61mg	130%
+Alanine 1,374mg	
+Arginine 4,135mg	
+Aspartic Acid 4,216mg	
+Cystine 444mg	
+Glutamic Acid 7,226mg	
+Glycine 2,083mg	
+Histidine 875mg	
+Isoleucine 1,216mg	
+Leucine 2,241mg	
+Lysine 1,241mg	
+Methionine 425mg	
+Phenylalanine 1,791mg	
+Proline 1,526mg	
+Serine 1,704mg	
+Threonine 1,184mg	
+Tryptophan 336mg	
+Tyrosine 1,406mg	
+Valine 1,450mg	
+Omega-3s 37mg	
+Omega-3 ALA 37mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 14,177mg	
+Omega-6 LA 14,153mg	
+Omega-9 EA 80mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

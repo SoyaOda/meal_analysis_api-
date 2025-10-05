@@ -1,0 +1,113 @@
+
+Food Entry
+ Oat milk unsweetened	48 cals
+Amount eaten
+serving	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+100g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	serving (100g)
+Amount per serving
+Calories	48cals
+% Daily Value*
+Total Fat 2.8g	4%
+Saturated Fat 0g	0%
+Trans Fat 0g	
+Total Carbs 5g	2%
+Net Carbs 4g	
+Dietary Fiber 1g	3%
+Total Sugars 2g	
+Protein 1g	2%
+Vitamin A 26mcg	2%
+Calcium 148mg	15%
+Iron 0.3mg	1%
+Sucrose 2g	
+Glucose (Dextrose) 1g	
+Fructose 0g	
+Lactose 0g	
+Maltose 2g	
+Galactose 0g	
+Vitamin K 0mcg	1%
+Thiamin 0.04mg	3%
+Riboflavin 0.28mg	17%
+Niacin 0.1mg	0%
+Vitamin B-6 0.01mg	0%
+Folic Acid 6mcg	
+Vitamin B-12 0.51mcg	9%
+Biotin 1.4mcg	5%
+Phosphorus 89mg	9%
+Magnesium 6mg	1%
+Zinc 0.1mg	1%
+Selenium 3mcg	4%
+Copper 0.03mg	1%
+Manganese 0.13mg	6%
+Molybdenum 10.1mcg	22%
+Alanine 38mg	
+Arginine 82mg	
+Aspartic Acid 82mg	
+Cysteine 25mg	
+Glutamic Acid 150mg	
+Glycine 56mg	
+Isoleucine 25mg	
+Leucine 81mg	
+Lysine 61mg	
+Methionine 10mg	
+Phenylalanine 72mg	
+Proline 72mg	
+Serine 56mg	
+Threonine 22mg	
+Tryptophan 9mg	
+Tyrosine 41mg	
+Valine 32mg	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

@@ -1,0 +1,99 @@
+
+Food Entry
+ Elbow macaroni dry uncooked	390 cals
+Amount eaten
+cup	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+
+
+Weight
+105g
+Food Grade
+A-
+F	
+C	
+P	
+Day
+Jul 10, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A-
+Serving Size	cup (105g)
+Amount per serving
+Calories	390cals
+% Daily Value*
+Total Fat 1.6g	2%
+Saturated Fat 0.3g	2%
+Trans Fat 0g	
+Monounsaturated Fat 0.2g	
+Polyunsaturated Fat 0.6g	
+Total Carbs 78g	26%
+Net Carbs 75g	
+Dietary Fiber 3g	14%
+Total Sugars 3g	
+Protein 14g	27%
+Cholesterol 0mg	0%
+Sodium 6mg	0%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 20mg	2%
+Iron 3.4mg	19%
+Potassium 234mg	7%
+Alcohol 0g	
+Caffeine 0mg	
+Vitamin D 0mcg (0iu)	0%
+Vitamin E 0.2mg	1%
+Vitamin K 0mcg	0%
+Thiamin 0.93mg	62%
+Riboflavin 0.42mg	25%
+Niacin 7.6mg	38%
+Vitamin B-6 0.14mg	7%
+Folate 248mcg	62%
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 0.5mg	5%
+Phosphorus 200mg	20%
+Magnesium 56mg	14%
+Zinc 1.5mg	10%
+Selenium 66mcg	95%
+Copper 0.3mg	15%
+Manganese 0.96mg	48%
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

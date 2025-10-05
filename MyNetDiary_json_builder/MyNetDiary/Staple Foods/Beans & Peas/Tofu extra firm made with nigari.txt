@@ -1,0 +1,150 @@
+
+Food Entry
+ Tofu extra firm made with nigari	378 cals
+Amount eaten
+block	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+455g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	block (455g)
+Amount per serving
+Calories	378cals
+% Daily Value*
+Total Fat 23.9g	37%
+Saturated Fat 4.2g	21%
+Trans Fat 0g	
+Monounsaturated Fat 6g	
+Polyunsaturated Fat 12.1g	
+Total Carbs 5g	2%
+Net Carbs 4g	
+Dietary Fiber 2g	7%
+Total Sugars 3g	
+Added Sugars 0g	0%
+Protein 45g	91%
+Cholesterol 0mg	0%
+Sodium 18mg	1%
+Vitamin A 0mcg	0%
+Vitamin C 0mg	0%
+Calcium 1,283mg	128%
+Iron 9.3mg	52%
+Potassium 592mg	17%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 1g	
+Fiber insoluble 1g	
+Starch 0g	
+Sucrose 3g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 0mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 0mcg (0iu)	0%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 0mcg	
+Gamma-tocopherol 0mcg	
+Vitamin E 0mg	0%
+Vitamin K 13mcg	16%
+Thiamin 0.22mg	15%
+Riboflavin 0.22mg	13%
+Niacin 1.1mg	5%
+Vitamin B-6 0.38mg	19%
+Folate 41mcg	10%
+Folic Acid 0mcg	
+Folate DFE 41mcg	
+Vitamin B-12 0mcg	0%
+Pantothenic Acid 3.8mg	38%
+Choline 150mg	27%
+Phosphorus 505mg	51%
+Magnesium 159mg	40%
+Zinc 4.9mg	32%
+Selenium 59mcg	85%
+Copper 0.91mg	46%
+Manganese 3.03mg	152%
+Alanine 2,034mg	
+Arginine 3,595mg	
+Aspartic Acid 5,351mg	
+Cystine 150mg	
+Glutamic Acid 8,640mg	
+Glycine 1,925mg	
+Histidine 1,133mg	
+Isoleucine 2,230mg	
+Leucine 3,658mg	
+Lysine 2,321mg	
+Methionine 555mg	
+Phenylalanine 2,193mg	
+Proline 2,848mg	
+Serine 2,666mg	
+Threonine 2,061mg	
+Tryptophan 614mg	
+Tyrosine 1,843mg	
+Valine 2,289mg	
+Omega-3s 1,188mg	
+Omega-3 ALA 1,188mg	
+Omega-3 EPA 0mg	
+Omega-3 DHA 0mg	
+Omega-6s 10,542mg	
+Omega-6 LA 10,542mg	
+Omega-9 EA 0mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us

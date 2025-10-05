@@ -1,0 +1,150 @@
+
+Food Entry
+ Tuna white albacore canned in water	220 cals
+Amount eaten
+can	
+Enter eaten amount like 1.5 or 2
+
+
+
+
+Weight
+172g
+Food Grade
+A
+F	
+C	
+P	
+Day
+Jul 9, 2024
+Meal
+	Timestamp food & exercise with MyNetDiary Premium
+Nutrition Facts	grade
+A
+Serving Size	can (172g)
+Amount per serving
+Calories	220cals
+% Daily Value*
+Total Fat 5.1g	8%
+Saturated Fat 1.4g	7%
+Trans Fat 0.1g	
+Monounsaturated Fat 1.3g	
+Polyunsaturated Fat 1.9g	
+Total Carbs 0g	0%
+Net Carbs 0g	
+Dietary Fiber 0g	0%
+Total Sugars 0g	
+Added Sugars 0g	0%
+Protein 41g	81%
+Cholesterol 72mg	24%
+Sodium 648mg	27%
+Vitamin A 10mcg	1%
+Vitamin C 0mg	0%
+Calcium 24mg	2%
+Iron 1.7mg	9%
+Potassium 408mg	12%
+Alcohol 0g	
+Caffeine 0mg	
+Soluble Fiber 0g	
+Fiber insoluble 0g	
+Starch 0g	
+Sucrose 0g	
+Glucose (Dextrose) 0g	
+Fructose 0g	
+Lactose 0g	
+Maltose 0g	
+Galactose 0g	
+Retinol 10mcg	
+Alpha-carotene 0mcg	
+Beta-carotene 0mcg	
+Beta-cryptoxanthin 0mcg	
+Lutein + Zeaxanthin 0mcg	
+Lycopene 0mcg	
+Vitamin D 3.4mcg (138iu)	34%
+Beta-tocopherol 0mcg	
+Delta-tocopherol 34mcg	
+Gamma-tocopherol 52mcg	
+Vitamin E 1.5mg	7%
+Vitamin K 4mcg	5%
+Thiamin 0.01mg	1%
+Riboflavin 0.08mg	4%
+Niacin 10mg	50%
+Vitamin B-6 0.37mg	19%
+Folate 3mcg	1%
+Folic Acid 0mcg	
+Folate DFE 3mcg	
+Vitamin B-12 2.01mcg	34%
+Pantothenic Acid 0.2mg	2%
+Choline 50mg	9%
+Phosphorus 373mg	37%
+Magnesium 57mg	14%
+Zinc 0.8mg	6%
+Selenium 113mcg	161%
+Copper 0.07mg	3%
+Manganese 0.03mg	2%
+Alanine 2,456mg	
+Arginine 2,430mg	
+Aspartic Acid 4,161mg	
+Cystine 435mg	
+Glutamic Acid 6,065mg	
+Glycine 1,950mg	
+Histidine 1,195mg	
+Isoleucine 1,871mg	
+Leucine 3,302mg	
+Lysine 3,731mg	
+Methionine 1,202mg	
+Phenylalanine 1,586mg	
+Proline 1,436mg	
+Serine 1,658mg	
+Threonine 1,780mg	
+Tryptophan 456mg	
+Tyrosine 1,371mg	
+Valine 2,093mg	
+Omega-3s 1,723mg	
+Omega-3 ALA 122mg	
+Omega-3 EPA 401mg	
+Omega-3 DHA 1,082mg	
+Omega-6s 115mg	
+Omega-6 LA 29mg	
+Omega-9 EA 76mg	
+MCTs 0g	
+Caproic Acid 0g	
+Caprylic Acid 0g	
+Capric Acid 0g	
+Lauric Acid 0g	
+* The % Daily Value tells how much a nutrient is contained in this serving. You can personalize percentages:
+Use 2,000 calorie diet for calculating percentages, just like on the food package.
+Show percentages of my personal Nutrient Targets.
+Nutritional information of this food comes from the NCC database - a research-quality, premier food and nutrient database developed and maintained by the Nutritional Coordinating Center of the University of Minnesota.
+© 2024 MyNetDiary Inc.
+
+All rights reserved. MyNetDiary is a registered trademark of MyNetDiary Inc.
+
+Success stories
+Efficacy report
+Member testimonials
+Community
+Dietitian's Blog
+Ask a Dietitian
+Instant food search
+Diabetes and health tracking
+iPhone/iPod app
+iPad app
+Android app
+Diabetes app for iPhone
+Diabetes app for Android
+Products and features
+Fitbit linking
+Withings linking
+Garmin linking
+Gift cards & Group discounts
+For trainers
+For healthcare professionals
+For families
+Help
+Learn more
+Diet articles
+About
+Privacy policy
+Terms of use
+Contact us
