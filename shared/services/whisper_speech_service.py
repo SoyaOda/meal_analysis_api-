@@ -275,40 +275,41 @@ class WhisperSpeechService:
 
             # マルチパートフォームデータの準備
             async with aiohttp.ClientSession() as session:
-                with aiohttp.FormData() as data:
-                    # 音声ファイルをアップロード
-                    with open(temp_file_path, 'rb') as audio_file:
-                        data.add_field('audio', audio_file, 
-                                     filename='audio.wav',
-                                     content_type='audio/wav')
-                    
-                    # オプションパラメータ
-                    if whisper_language != "en":
-                        data.add_field('language', whisper_language)
-                    if temperature != 0.0:
-                        data.add_field('temperature', str(temperature))
-                    if prompt:
-                        data.add_field('prompt', prompt)
-                    
-                    logger.info(f"Calling DeepInfra Whisper API: {api_url}")
+                data = aiohttp.FormData()
+                # 音声ファイルをアップロード
+                with open(temp_file_path, 'rb') as audio_file:
+                    audio_content = audio_file.read()
+                    data.add_field('audio', audio_content,
+                                 filename='audio.wav',
+                                 content_type='audio/wav')
 
-                    async with session.post(api_url, headers=headers, data=data) as response:
-                        if response.status != 200:
-                            error_text = await response.text()
-                            raise RuntimeError(f"DeepInfra API error {response.status}: {error_text}")
-                        
-                        result = await response.json()
-                        
-                        # DeepInfraのレスポンス形式に応じた処理
-                        if 'text' in result:
-                            transcript = result['text']
-                        elif 'results' in result and result['results']:
-                            transcript = result['results'][0].get('text', '')
-                        else:
-                            transcript = str(result)
+                # オプションパラメータ
+                if whisper_language != "en":
+                    data.add_field('language', whisper_language)
+                if temperature != 0.0:
+                    data.add_field('temperature', str(temperature))
+                if prompt:
+                    data.add_field('prompt', prompt)
 
-                        logger.info(f"DeepInfra API transcription successful: '{transcript[:100]}{'...' if len(transcript) > 100 else ''}'")
-                        return transcript.strip()
+                logger.info(f"Calling DeepInfra Whisper API: {api_url}")
+
+                async with session.post(api_url, headers=headers, data=data) as response:
+                    if response.status != 200:
+                        error_text = await response.text()
+                        raise RuntimeError(f"DeepInfra API error {response.status}: {error_text}")
+
+                    result = await response.json()
+
+                    # DeepInfraのレスポンス形式に応じた処理
+                    if 'text' in result:
+                        transcript = result['text']
+                    elif 'results' in result and result['results']:
+                        transcript = result['results'][0].get('text', '')
+                    else:
+                        transcript = str(result)
+
+                    logger.info(f"DeepInfra API transcription successful: '{transcript[:100]}{'...' if len(transcript) > 100 else ''}'")
+                    return transcript.strip()
 
         finally:
             # 一時ファイルのクリーンアップ
