@@ -10,7 +10,11 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Optional
 
-from ..models.nutrition import BarcodeRequest, NutritionResponse, ErrorResponse
+from ..models.nutrition import (
+    BarcodeRequest, NutritionResponse, ErrorResponse,
+    HealthCheckResponse, DatabaseStatsResponse, CacheStatsResponse, CacheClearResponse,
+    DatabaseStats
+)
 from ..services.fdc_service import FDCDatabaseService
 
 logger = logging.getLogger(__name__)
@@ -91,10 +95,10 @@ async def lookup_barcode(
         )
 
 
-@router.get("/health")
+@router.get("/health", response_model=HealthCheckResponse)
 async def health_check(
     fdc_service: FDCDatabaseService = Depends(get_fdc_service)
-) -> dict:
+) -> HealthCheckResponse:
     """
     バーコードAPIのヘルスチェック
 
@@ -108,29 +112,30 @@ async def health_check(
         # データベース統計取得
         stats = fdc_service.get_database_stats()
 
-        return {
-            "status": "healthy" if db_healthy else "unhealthy",
-            "database_connected": db_healthy,
-            "database_stats": stats,
-            "service": "barcode_api",
-            "version": "1.0.0"
-        }
+        return HealthCheckResponse(
+            status="healthy" if db_healthy else "unhealthy",
+            database_connected=db_healthy,
+            database_stats=DatabaseStats(**stats) if stats else None,
+            service="barcode_api",
+            version="1.0.0"
+        )
 
     except Exception as e:
         logger.error(f"ヘルスチェックエラー: {e}")
-        return {
-            "status": "unhealthy",
-            "database_connected": False,
-            "error": str(e),
-            "service": "barcode_api",
-            "version": "1.0.0"
-        }
+        return HealthCheckResponse(
+            status="unhealthy",
+            database_connected=False,
+            database_stats=None,
+            service="barcode_api",
+            version="1.0.0",
+            error=str(e)
+        )
 
 
-@router.get("/stats")
+@router.get("/stats", response_model=DatabaseStatsResponse)
 async def get_database_statistics(
     fdc_service: FDCDatabaseService = Depends(get_fdc_service)
-) -> dict:
+) -> DatabaseStatsResponse:
     """
     データベース統計情報を取得
 
@@ -139,10 +144,10 @@ async def get_database_statistics(
     """
     try:
         stats = fdc_service.get_database_stats()
-        return {
-            "success": True,
-            "statistics": stats
-        }
+        return DatabaseStatsResponse(
+            success=True,
+            statistics=DatabaseStats(**stats)
+        )
     except Exception as e:
         logger.error(f"統計情報取得エラー: {e}")
         raise HTTPException(
@@ -150,60 +155,60 @@ async def get_database_statistics(
             detail="統計情報の取得に失敗しました"
         )
 
-@router.get("/cache-stats")
-async def get_cache_statistics():
+@router.get("/cache-stats", response_model=CacheStatsResponse)
+async def get_cache_statistics() -> CacheStatsResponse:
     """
     キャッシュ統計情報を取得
     """
     try:
         fdc_service = get_fdc_service()
-        
+
         if not fdc_service.use_cache or not fdc_service.cache_service:
-            return {
-                "cache_enabled": False,
-                "message": "キャッシュが無効化されています"
-            }
-            
+            return CacheStatsResponse(
+                cache_enabled=False,
+                message="キャッシュが無効化されています"
+            )
+
         cache_stats = fdc_service.cache_service.get_stats()
         cache_health = fdc_service.cache_service.health_check()
-        
-        return {
-            "cache_enabled": True,
-            "statistics": cache_stats,
-            "health": cache_health,
-            "timestamp": datetime.now().isoformat()
-        }
-        
+
+        return CacheStatsResponse(
+            cache_enabled=True,
+            statistics=cache_stats,
+            health=cache_health,
+            timestamp=datetime.now().isoformat()
+        )
+
     except Exception as e:
         logger.error(f"キャッシュ統計取得エラー: {e}")
         raise HTTPException(status_code=500, detail="キャッシュ統計情報の取得に失敗しました")
 
 
-@router.delete("/cache")
-async def clear_cache():
+@router.delete("/cache", response_model=CacheClearResponse)
+async def clear_cache() -> CacheClearResponse:
     """
     キャッシュをクリア
     """
     try:
         fdc_service = get_fdc_service()
-        
+
         if not fdc_service.use_cache or not fdc_service.cache_service:
-            return {
-                "cache_enabled": False,
-                "message": "キャッシュが無効化されています"
-            }
-            
+            return CacheClearResponse(
+                cache_enabled=False,
+                message="キャッシュが無効化されています"
+            )
+
         success = fdc_service.cache_service.clear()
-        
+
         if success:
-            return {
-                "success": True,
-                "message": "キャッシュをクリアしました",
-                "timestamp": datetime.now().isoformat()
-            }
+            return CacheClearResponse(
+                success=True,
+                message="キャッシュをクリアしました",
+                timestamp=datetime.now().isoformat()
+            )
         else:
             raise HTTPException(status_code=500, detail="キャッシュクリアに失敗しました")
-            
+
     except HTTPException:
         raise
     except Exception as e:

@@ -29,6 +29,7 @@ API_BASE_URL = os.environ.get(
     "https://word-query-api-1077966746907.us-central1.run.app"
 )
 
+
 class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, NutritionQueryOutput]):
     """
     Advanced Nutrition Search Component using deployed Word Query API
@@ -47,8 +48,12 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
     async def process(self, input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
-        Word Query API強制使用 - fallback一切なし
+        Word Query API強制使用 - exact match優先、tier search fallback
         料理名は栄養計算から除外
+
+        検索戦略:
+        1. exact match優先 (search_context=meal_analysis)
+        2. 失敗時はtier search fallback (search_context=word_search)
         """
         start_time = time.time()
 
@@ -101,8 +106,16 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
     async def _word_query_api_only_search(self, search_terms: List[str],
                                         input_data: NutritionQueryInput) -> NutritionQueryOutput:
         """
-        Word Query API専用検索 - エラー時は即座に例外発生
+        Word Query API専用検索 - exact matchで失敗した場合はtier search fallbackを実行
         料理名はexact match rate計算から除外
+
+        検索戦略:
+        1. Phase 1: exact match (search_context=meal_analysis)
+        2. Phase 2 (fallback): 7-tier search (search_context=word_search)
+
+        match_typeでマッチレベルを追跡:
+        - exact_match: original_nameでの完全一致
+        - tier_1_exact ~ tier_7_fuzzy: Tier検索でのマッチレベル
         """
         self.log_processing_detail("search_method", "word_query_api_only")
 
@@ -115,7 +128,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         # 食材名のみでexact match rateを計算（料理名は除外）
         ingredient_count = len(input_data.ingredient_names)
 
-        # Create parallel API requests
+        # Create parallel API requests (第1試行)
         try:
             async with httpx.AsyncClient(timeout=30.0) as client:
                 tasks = []
@@ -123,22 +136,34 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                     task = self._single_api_request_strict(client, term)
                     tasks.append(task)
 
-                # Execute all requests in parallel
-                api_responses = await asyncio.gather(*tasks)  # return_exceptions=Falseで例外は即座に伝播
+                # Execute all requests in parallel - 例外もキャッチ
+                api_responses = await asyncio.gather(*tasks, return_exceptions=True)
 
         except Exception as e:
             error_msg = f"Word Query API batch request failed: {str(e)}"
             self.logger.error(error_msg)
             raise RuntimeError(error_msg) from e
 
-        # Process results - すべて成功している前提
+        # 成功と失敗を分類
+        failed_terms = []
+        failed_indices = []
+        
         for i, (term, response) in enumerate(zip(search_terms, api_responses)):
+            # 例外が発生した場合
+            if isinstance(response, Exception):
+                self.logger.warning(f"API request failed for '{term}': {str(response)}")
+                failed_terms.append(term)
+                failed_indices.append(i)
+                continue
+            
+            # suggestionsが空の場合
             if not response or not response.get("suggestions"):
-                error_msg = f"Word Query API returned no suggestions for '{term}'"
-                self.logger.error(error_msg)
-                raise RuntimeError(error_msg)
+                self.logger.warning(f"Word Query API returned no suggestions for '{term}'")
+                failed_terms.append(term)
+                failed_indices.append(i)
+                continue
 
-            # Convert API response to NutritionMatch
+            # 成功したものを処理
             match_list = self._convert_api_suggestions_to_matches(
                 response["suggestions"], term
             )
@@ -164,6 +189,66 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                 "processing_time_ms": response.get("metadata", {}).get("processing_time_ms", 0)
             })
 
+        # フォールバック処理: 失敗したものがある場合、tier searchでリトライ
+        if failed_terms:
+            self.logger.info(f"🔄 Starting tier search fallback for {len(failed_terms)} failed ingredients: {failed_terms}")
+
+            try:
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    tier_search_tasks = []
+                    for term in failed_terms:
+                        task = self._single_api_request_tier_search(client, term)
+                        tier_search_tasks.append(task)
+
+                    tier_search_responses = await asyncio.gather(*tier_search_tasks, return_exceptions=True)
+
+                # tier searchの結果を処理
+                for term, response in zip(failed_terms, tier_search_responses):
+                    if isinstance(response, Exception):
+                        self.logger.error(f"Tier search failed for '{term}': {str(response)}")
+                        continue
+
+                    if not response or not response.get("suggestions"):
+                        self.logger.warning(f"Tier search returned no suggestions for '{term}'")
+                        continue
+
+                    # 成功した場合はmatchesに追加
+                    match_list = self._convert_api_suggestions_to_matches(
+                        response["suggestions"], term
+                    )
+
+                    # フォールバックメタデータを追加
+                    for match in match_list:
+                        match.search_metadata["tier_search_fallback"] = True
+
+                    matches[term] = match_list
+                    successful_matches += 1
+
+                    # exact matchの統計も更新（tier searchの結果を含める）
+                    if match_list and term in input_data.ingredient_names:
+                        top_match = match_list[0]
+                        match_type = top_match.search_metadata.get("match_type", "unknown")
+
+                        self.logger.info(
+                            f"✅ Tier search succeeded for '{term}' -> '{top_match.name}' "
+                            f"(match_type: {match_type})"
+                        )
+
+                        if match_type == "exact_match":
+                            exact_matches += 1
+                        elif match_type == "tier_1_exact":
+                            tier_1_exact_matches += 1
+
+            except Exception as e:
+                self.logger.error(f"Tier search batch request failed: {str(e)}")
+
+        # 最終的にまだ失敗しているものがある場合はエラー
+        final_failed = [term for term in search_terms if term not in matches]
+        if final_failed:
+            error_msg = f"Word Query API failed for {len(final_failed)} ingredients even after tier search fallback: {final_failed}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg)
+
         api_time = int((time.time() - start_time) * 1000)
 
         return self._build_nutrition_query_output(
@@ -172,13 +257,13 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         )
 
     async def _single_api_request_strict(self, client: httpx.AsyncClient, term: str) -> Dict[str, Any]:
-        """厳密なAPI リクエスト - エラー時は即座に例外発生"""
+        """厳密なAPI リクエスト（exact matchのみ） - エラー時は即座に例外発生"""
         try:
             response = await client.get(
                 f"{self.api_base_url}/api/v1/nutrition/suggest",
                 params={
-                    "q": term, 
-                    "limit": 5, 
+                    "q": term,
+                    "limit": 5,
                     "debug": "false",
                     "search_context": "meal_analysis",
                     "exclude_uncooked": "true"
@@ -204,6 +289,72 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             raise RuntimeError(error_msg) from e
         except Exception as e:
             error_msg = f"Word Query API request failed for '{term}': {str(e)}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+
+    async def _single_api_request_tier_search(self, client: httpx.AsyncClient, term: str) -> Dict[str, Any]:
+        """Tier search API リクエスト（7-tier algorithm） - エラー時は即座に例外発生
+        
+        Tier search実行前に、「with salt」「without salt」などのノイズを削除してクエリを最適化
+        """
+        import re
+        
+        # Tier search用にクエリを清浄化（with/without salt を削除）
+        cleaned_term = term
+        
+        # 削除するパターン（大文字小文字を区別せず）
+        noise_patterns = [
+            r'\bwithout\s+salt\b',
+            r'\bwith\s+salt\b',
+            r'\bunsalted\b',
+            r'\bsalted\b',
+        ]
+        
+        for pattern in noise_patterns:
+            cleaned_term = re.sub(pattern, '', cleaned_term, flags=re.IGNORECASE)
+        
+        # 余分な空白を削除
+        cleaned_term = ' '.join(cleaned_term.split()).strip()
+        
+        # クエリが空にならないようにチェック
+        if not cleaned_term:
+            self.logger.warning(f"Tier search query became empty after cleaning '{term}', using original")
+            cleaned_term = term
+        
+        if cleaned_term != term:
+            self.logger.info(f"Tier search query cleaned: '{term}' -> '{cleaned_term}'")
+        
+        try:
+            response = await client.get(
+                f"{self.api_base_url}/api/v1/nutrition/suggest",
+                params={
+                    "q": cleaned_term,  # 清浄化したクエリを使用
+                    "limit": 5,
+                    "debug": "false",
+                    "search_context": "word_search",  # Tier searchモードを使用
+                    "exclude_uncooked": "true"
+                }
+            )
+            response.raise_for_status()
+
+            result = response.json()
+
+            # レスポンス形式チェック
+            if not isinstance(result, dict) or "suggestions" not in result:
+                raise ValueError(f"Invalid response format from Word Query API for term '{term}'")
+
+            return result
+
+        except httpx.TimeoutException as e:
+            error_msg = f"Word Query API (tier search) timeout for '{term}': {str(e)}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+        except httpx.HTTPStatusError as e:
+            error_msg = f"Word Query API (tier search) HTTP error for '{term}': {e.response.status_code}"
+            self.logger.error(error_msg)
+            raise RuntimeError(error_msg) from e
+        except Exception as e:
+            error_msg = f"Word Query API (tier search) request failed for '{term}': {str(e)}"
             self.logger.error(error_msg)
             raise RuntimeError(error_msg) from e
 
@@ -236,6 +387,10 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                 source_db="mynetdiary_api",
                 nutrition=nutrition_data,
                 weight=100,  # Default weight
+                # 新方式の栄養データフィールド（default_unit + unit_to_grams方式）
+                default_unit=suggestion.get("default_unit"),
+                default_nutrition=suggestion.get("default_nutrition"),
+                unit_to_grams=suggestion.get("unit_to_grams"),
                 score=suggestion.get("confidence_score", 0),
                 search_metadata={
                     "search_term": search_term,
@@ -303,3 +458,4 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             search_summary=search_summary,
             errors=errors if errors else None
         )
+

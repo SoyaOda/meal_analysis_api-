@@ -166,7 +166,7 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
     
     async def _calculate_ingredient_nutrition(self, ingredient, nutrition_matches: Dict[str, Any]) -> IngredientNutrition:
         """
-        食材レベルの栄養計算
+        食材レベルの栄養計算（新方式: default_unit + unit_to_grams）
         
         Args:
             ingredient: Phase1で検出された食材
@@ -194,35 +194,90 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
         if not isinstance(nutrition_match, NutritionMatch):
             raise ValueError(f"Invalid nutrition match type for ingredient '{ingredient_name}': {type(nutrition_match)}")
         
-        nutrition_per_100g = nutrition_match.nutrition
         source_db = nutrition_match.source_db
+
+        # 新方式の栄養データフィールドを取得（NutritionMatchオブジェクトの属性として）
+        default_unit = nutrition_match.default_unit
+        default_nutrition = nutrition_match.default_nutrition
+        unit_to_grams = nutrition_match.unit_to_grams
+
+        # 旧方式の栄養データ（100g基準、フォールバック用）
+        nutrition_data = nutrition_match.nutrition
         
-        # 必須栄養価データの検証
-        required_nutrients = ["calories", "protein", "fat", "carbs"]
-        for nutrient in required_nutrients:
-            if nutrient not in nutrition_per_100g:
-                raise ValueError(f"Missing required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
-            if nutrition_per_100g[nutrient] is None:
-                raise ValueError(f"Null value for required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
+        # 新方式データの存在確認
+        if not default_unit or not default_nutrition or not unit_to_grams:
+            # フォールバック: 旧方式（100g基準）
+            nutrition_per_100g = nutrition_data
+            
+            # 必須栄養価データの検証
+            required_nutrients = ["calories", "protein", "fat", "carbs"]
+            for nutrient in required_nutrients:
+                if nutrient not in nutrition_per_100g:
+                    raise ValueError(f"Missing required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
+                if nutrition_per_100g[nutrient] is None:
+                    raise ValueError(f"Null value for required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
+            
+            # 100g基準の計算（フォールバック）
+            scaling_factor = weight_g / 100.0
+            
+            calculated_nutrition = NutritionInfo(
+                calories=nutrition_per_100g["calories"] * scaling_factor,
+                protein=nutrition_per_100g["protein"] * scaling_factor,
+                fat=nutrition_per_100g["fat"] * scaling_factor,
+                carbs=nutrition_per_100g["carbs"] * scaling_factor,
+                fiber=nutrition_per_100g.get("fiber") * scaling_factor if nutrition_per_100g.get("fiber") is not None else None,
+                sugar=nutrition_per_100g.get("sugar") * scaling_factor if nutrition_per_100g.get("sugar") is not None else None,
+                sodium=nutrition_per_100g.get("sodium") * scaling_factor if nutrition_per_100g.get("sodium") is not None else None
+            )
+            
+            calculation_notes = [
+                f"Scaled from 100g base data using factor {scaling_factor:.3f} (fallback method)",
+                f"Source: {source_db} database"
+            ]
+            
+        else:
+            # 新方式: default_unit + unit_to_gramsを使用
+            
+            # default_unitがunit_to_gramsに存在することを確認
+            if default_unit not in unit_to_grams:
+                raise ValueError(f"default_unit '{default_unit}' not found in unit_to_grams for ingredient '{ingredient_name}'")
+            
+            # 必須栄養価データの検証（新方式フィールド名）
+            required_nutrients = ["calorie", "Protein_g", "Total_Fat_g", "Total_Carbs_g"]
+            for nutrient in required_nutrients:
+                if nutrient not in default_nutrition:
+                    raise ValueError(f"Missing required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
+                if default_nutrition[nutrient] is None:
+                    raise ValueError(f"Null value for required nutrition data '{nutrient}' for ingredient '{ingredient_name}' from {source_db}")
+            
+            # グラム換算係数を計算
+            grams_per_unit = unit_to_grams[default_unit]
+            per_gram_factor = 1.0 / grams_per_unit
+            
+            # 栄養計算（新方式）
+            calculated_nutrition = NutritionInfo(
+                calories=default_nutrition["calorie"] * per_gram_factor * weight_g,
+                protein=default_nutrition["Protein_g"] * per_gram_factor * weight_g,
+                fat=default_nutrition["Total_Fat_g"] * per_gram_factor * weight_g,
+                carbs=default_nutrition["Total_Carbs_g"] * per_gram_factor * weight_g,
+                fiber=default_nutrition.get("Dietary_Fiber_g") * per_gram_factor * weight_g if default_nutrition.get("Dietary_Fiber_g") is not None else None,
+                sugar=default_nutrition.get("Total_Sugars_g") * per_gram_factor * weight_g if default_nutrition.get("Total_Sugars_g") is not None else None,
+                sodium=default_nutrition.get("Sodium_mg") * per_gram_factor * weight_g if default_nutrition.get("Sodium_mg") is not None else None
+            )
+            
+            calculation_notes = [
+                f"Calculated using default_unit method: {default_nutrition['calorie']:.1f}kcal/{default_unit} = {default_nutrition['calorie'] * per_gram_factor:.3f}kcal/g × {weight_g}g",
+                f"Conversion: 1 {default_unit} = {grams_per_unit}g",
+                f"Source: {source_db} database"
+            ]
         
-        # 重量に基づく栄養計算（100gあたり → 実際の重量）
-        scaling_factor = weight_g / 100.0
-        
-        calculated_nutrition = NutritionInfo(
-            calories=nutrition_per_100g["calories"] * scaling_factor,
-            protein=nutrition_per_100g["protein"] * scaling_factor,
-            fat=nutrition_per_100g["fat"] * scaling_factor,
-            carbs=nutrition_per_100g["carbs"] * scaling_factor,
-            fiber=nutrition_per_100g.get("fiber") * scaling_factor if nutrition_per_100g.get("fiber") is not None else None,
-            sugar=nutrition_per_100g.get("sugar") * scaling_factor if nutrition_per_100g.get("sugar") is not None else None,
-            sodium=nutrition_per_100g.get("sodium") * scaling_factor if nutrition_per_100g.get("sodium") is not None else None
-        )
-        
-        # 計算ノート
-        calculation_notes = [
-            f"Scaled from 100g base data using factor {scaling_factor:.3f}",
-            f"Source: {source_db} database"
-        ]
+        # 100g換算値（互換性のため）
+        nutrition_per_100g = {
+            "calories": calculated_nutrition.calories / weight_g * 100 if weight_g > 0 else 0,
+            "protein": calculated_nutrition.protein / weight_g * 100 if weight_g > 0 else 0,
+            "fat": calculated_nutrition.fat / weight_g * 100 if weight_g > 0 else 0,
+            "carbs": calculated_nutrition.carbs / weight_g * 100 if weight_g > 0 else 0,
+        }
         
         return IngredientNutrition(
             ingredient_name=ingredient_name,

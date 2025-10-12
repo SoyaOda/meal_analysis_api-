@@ -448,3 +448,124 @@ class NutrientConstants:
         VITAMIN_A_IU: "IU",
         VITAMIN_D_IU: "IU"
     }
+
+
+# ヘルスチェック・統計情報レスポンスモデル
+
+class DatabaseStats(BaseModel):
+    """データベース統計情報"""
+    total_products: Optional[int] = Field(None, description="総製品数")
+    total_branded_foods: Optional[int] = Field(None, description="ブランド食品数")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "total_products": 150000,
+                "total_branded_foods": 120000
+            }
+        }
+
+
+class HealthCheckResponse(BaseModel):
+    """バーコードAPIヘルスチェックレスポンス"""
+    status: str = Field(..., description="ヘルス状態 (healthy/unhealthy)", example="healthy")
+    database_connected: bool = Field(..., description="データベース接続状態", example=True)
+    database_stats: Optional[DatabaseStats] = Field(None, description="データベース統計情報")
+    service: str = Field(..., description="サービス名", example="barcode_api")
+    version: str = Field(..., description="APIバージョン", example="1.0.0")
+    error: Optional[str] = Field(None, description="エラーメッセージ（unhealthyの場合）")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "status": "healthy",
+                "database_connected": True,
+                "database_stats": {
+                    "total_products": 150000,
+                    "total_branded_foods": 120000
+                },
+                "service": "barcode_api",
+                "version": "1.0.0"
+            }
+        }
+
+
+class DatabaseStatsResponse(BaseModel):
+    """データベース統計レスポンス"""
+    success: bool = Field(..., description="取得成功フラグ", example=True)
+    statistics: DatabaseStats = Field(..., description="統計情報")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "statistics": {
+                    "total_products": 150000,
+                    "total_branded_foods": 120000
+                }
+            }
+        }
+
+
+class CacheHealth(BaseModel):
+    """キャッシュヘルス情報"""
+    connected: Optional[bool] = Field(None, description="キャッシュ接続状態")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "connected": True
+            }
+        }
+
+
+class CacheStatistics(BaseModel):
+    """キャッシュ統計情報"""
+    total_entries: Optional[int] = Field(None, description="総エントリ数")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "total_entries": 1250
+            }
+        }
+
+
+class CacheStatsResponse(BaseModel):
+    """キャッシュ統計レスポンス"""
+    cache_enabled: bool = Field(..., description="キャッシュが有効かどうか", example=True)
+    statistics: Optional[CacheStatistics] = Field(None, description="キャッシュ統計情報")
+    health: Optional[CacheHealth] = Field(None, description="キャッシュヘルス情報")
+    timestamp: Optional[str] = Field(None, description="取得タイムスタンプ（ISO 8601形式）", example="2025-01-15T10:30:00")
+    message: Optional[str] = Field(None, description="メッセージ（cache_enabled=Falseの場合）", example="キャッシュが無効化されています")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "cache_enabled": True,
+                "statistics": {
+                    "total_entries": 1250
+                },
+                "health": {
+                    "connected": True
+                },
+                "timestamp": "2025-01-15T10:30:00"
+            }
+        }
+
+
+class CacheClearResponse(BaseModel):
+    """キャッシュクリアレスポンス"""
+    cache_enabled: Optional[bool] = Field(None, description="キャッシュが有効かどうか")
+    success: Optional[bool] = Field(None, description="クリア成功フラグ")
+    message: str = Field(..., description="結果メッセージ", example="キャッシュをクリアしました")
+    timestamp: Optional[str] = Field(None, description="クリア実行タイムスタンプ（ISO 8601形式）", example="2025-01-15T10:30:00")
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "success": True,
+                "message": "キャッシュをクリアしました",
+                "timestamp": "2025-01-15T10:30:00"
+            }
+        }

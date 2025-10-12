@@ -10,7 +10,8 @@ from datetime import datetime
 # レスポンスモデルをインポート
 from shared.models.nutrition_search_models import (
     SuggestionResponse, SuggestionErrorResponse, QueryInfo, Suggestion,
-    FoodInfo, NutritionPreview, SearchMetadata, SearchStatus, DebugInfo
+    FoodInfo, NutritionPreview, SearchMetadata, SearchStatus, DebugInfo,
+    NutritionHealthCheckResponse
 )
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ router = APIRouter()
 
 # Production Elasticsearch VM configuration
 ELASTICSEARCH_URL = "http://35.193.16.212:9200"
-INDEX_NAME = "mynetdiary_converted_tool_calls_list_stemmed"
+INDEX_NAME = "mynetdiary_converted_tool_calls_list_stemmed_with_nutrition"
 
 def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
     """
@@ -76,7 +77,7 @@ def elasticsearch_exact_match_first(query: str, size: int = 10) -> dict:
             }
         },
         "size": 1,
-        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method", "default_unit", "default_nutrition", "unit_to_grams"]
     }
     
     try:
@@ -158,7 +159,7 @@ def elasticsearch_exact_match_only(query: str, size: int = 10, exclude_uncooked:
             }
         },
         "size": size,
-        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method"]
+        "_source": ["search_name", "description", "original_name", "nutrition", "processing_method", "default_unit", "default_nutrition", "unit_to_grams"]
     }
     
     # uncookedを除外する場合
@@ -327,7 +328,7 @@ def elasticsearch_search_optimized_fallback(query: str, size: int = 10, exclude_
             }
         },
         "size": size,
-        "_source": ["search_name", "stemmed_search_name", "description", "stemmed_description", "original_name", "nutrition", "processing_method"]
+        "_source": ["search_name", "stemmed_search_name", "description", "stemmed_description", "original_name", "nutrition", "processing_method", "default_unit", "default_nutrition", "unit_to_grams"]
     }
 
     # uncookedを除外する場合
@@ -483,7 +484,12 @@ async def suggest_foods(
                     "original_name": original_name
                 },
                 "nutrition_preview": nutrition_preview,
-                "alternative_names": [name for name in search_name_list if name != search_name][:3]
+                "alternative_names": [name for name in search_name_list if name != search_name][:3],
+
+                # 新方式の栄養データフィールド（default_unit + unit_to_grams方式）
+                "default_unit": source.get("default_unit"),
+                "default_nutrition": source.get("default_nutrition"),
+                "unit_to_grams": source.get("unit_to_grams")
             }
 
             suggestions.append(suggestion)
@@ -563,20 +569,20 @@ async def suggest_foods(
         )
         return JSONResponse(status_code=500, content=error_response.dict())
 
-@router.get("/suggest/health")
+@router.get("/suggest/health", response_model=NutritionHealthCheckResponse)
 async def suggestion_health_check():
     """検索予測APIのヘルスチェック"""
     try:
         # 簡単なテストクエリ
         test_result = elasticsearch_search_optimized("test", size=1)
 
-        return {
-            "status": "healthy" if "error" not in test_result else "unhealthy",
-            "service": "nutrition_suggestion_api",
-            "elasticsearch_index": INDEX_NAME,
-            "algorithm": "7_tier_optimized",
-            "test_query_success": "error" not in test_result
-        }
+        return NutritionHealthCheckResponse(
+            status="healthy" if "error" not in test_result else "unhealthy",
+            service="nutrition_suggestion_api",
+            elasticsearch_index=INDEX_NAME,
+            algorithm="7_tier_optimized",
+            test_query_success="error" not in test_result
+        )
 
     except Exception as e:
         logger.error(f"Health check failed: {e}")

@@ -22,24 +22,23 @@ class VoicePrompts:
         Returns:
             システムプロンプト文字列
         """
-        base_prompt = f"""You are an AI assistant specialized in nutrition analysis. Your task is to extract food and meal information from user speech transcripts and convert them into a structured JSON format.
-
-**Instructions:**
-1. Extract ONLY individual ingredients (not dish names) from the user's description
-2. For each ingredient, select the EXACT name from the MyNetDiary ingredient list provided below
-3. Estimate reasonable serving sizes and weights in grams for each ingredient
-4. Output in the following JSON structure only, no additional text
-
-{CommonPrompts.get_json_format_section()}
-
-{CommonPrompts.get_basic_guidelines()}"""
-
-        if use_mynetdiary_constraint:
-            base_prompt = f"""{base_prompt}
+        base_prompt = f"""You are an AI assistant specialized in nutrition analysis from speech transcripts.
 
 {CommonPrompts.get_mynetdiary_ingredients_list_with_header()}
 
-{CommonPrompts.get_formatting_requirements()}
+{cls.get_voice_specific_flexible_matching()}
+
+{CommonPrompts.get_dish_decomposition_rule()}
+
+{CommonPrompts.get_nutritional_completeness_requirements()}
+
+{CommonPrompts.get_weight_estimation_requirements()}
+
+{CommonPrompts.get_cooking_state_requirements()}
+
+{CommonPrompts.get_query_generation_guidelines()}
+
+{CommonPrompts.get_json_structure_section()}
 
 {CommonPrompts.get_final_verification_for_voice()}"""
 
@@ -117,3 +116,32 @@ class VoicePrompts:
             "rice": 100, "pasta": 100, "salad": 150,
             "butter": 5, "cheese": 30, "yogurt": 150
         }
+
+    @classmethod
+    def get_voice_specific_flexible_matching(cls) -> str:
+        """音声特有の柔軟なマッチング指示"""
+        return """
+⚠️ VOICE INPUT SPECIAL RULE - EQUALLY CRITICAL AS ABOVE:
+The above rule says "ONLY exact copies from the list" - BUT for voice input, users speak informal names.
+You MUST interpret this rule flexibly: Find the CLOSEST MATCH from the MyNetDiary list, NOT fail because the spoken name isn't perfect.
+
+ABSOLUTELY CRITICAL - SYSTEM WILL FAIL OTHERWISE:
+• If user says "Pizza dough" → Search MyNetDiary list for bread/dough items (e.g., "Bread white", "Dough")
+• If user says "Pepperoni" → Search MyNetDiary list for processed pork/beef items (e.g., "Sausage", "Ham")
+• If user says "Mozzarella" → Search MyNetDiary list for cheese items (e.g., "Cheese mozzarella", "Mozzarella cheese")
+
+MATCHING PROCESS YOU MUST FOLLOW:
+1. User speaks a food name → Identify its food category (meat? cheese? vegetable? grain?)
+2. Scan the ENTIRE MyNetDiary list above for items in that category
+3. Pick the closest match based on:
+   - Same food type (if spoken "chicken", find "Chicken..." entries)
+   - Similar preparation (if spoken "grilled", look for "raw" or "cooked" variants)
+   - Comparable nutrition (high protein → meat/fish/eggs, high carbs → grains/bread)
+4. Output that MyNetDiary name EXACTLY as it appears in the list
+
+THE CRITICAL POINT:
+Your job is NOT to output what the user said. Your job is to TRANSLATE what the user said into a valid MyNetDiary ingredient name.
+Think of it like translation: "Pizza dough" (informal) → "Bread white" or "Dough refrigerated" (formal MyNetDiary name)
+
+DO NOT OUTPUT NAMES THAT DON'T EXIST IN THE MYNETDIARY LIST - THE SYSTEM WILL REJECT THEM AND FAIL.
+"""

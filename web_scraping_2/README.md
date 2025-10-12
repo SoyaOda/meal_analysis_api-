@@ -519,7 +519,9 @@ print(f"Large bagel: {large_calorie:.1f}cals")  # 362.8cals
 | `scripts/extract_all_foods_default_info.py` | デフォルト情報抽出 | manual_input_templates/*.txt | all_foods_default_unit_calories.json |
 | `scripts/add_unit_to_grams_mapping.py` | Unit-to-grams追加 | all_foods_default_unit_calories.json | all_foods_with_unit_grams.json |
 | `scripts/add_nutrition_data.py` | 栄養素情報追加 | all_foods_with_unit_grams.json | all_foods_with_nutrition.json |
-| `scripts/merge_stemmed_with_nutrition.py` | Stemmed DB統合 | stemmed.json + all_foods_with_nutrition.json | stemmed_with_nutrition.json |
+| `scripts/merge_stemmed_with_nutrition.py` | Stemmed DB統合（基本版） | stemmed.json + all_foods_with_nutrition.json | stemmed_with_nutrition.json (1,138件) |
+| `scripts/merge_stemmed_with_nutrition_v2_with_additional_food.py` | 追加食材統合版 | stemmed.json + all_foods_with_nutrition.json + 追加食材 | stemmed_with_nutrition.json (1,139件) |
+| `../scripts/update_elasticsearch_stemmed.py` | Elasticsearch更新 | stemmed_with_nutrition.json | Elasticsearch Index (1,139件) |
 | `scripts/verify_nutrition_values.py` | 栄養素検証 | manual_input_templates/*.txt | NUTRITION_VALUES_VERIFICATION_REPORT.md |
 
 ### 出力ファイル一覧
@@ -555,10 +557,191 @@ python scripts/add_nutrition_data.py
 
 ---
 
+## 🆕 追加食材の手動登録とElasticsearch反映（v3.2）
+
+### ⑤ 追加食材の手動登録
+
+**スクリプト:** `scripts/merge_stemmed_with_nutrition_v2_with_additional_food.py`
+
+**目的:** 既存のデータベースに新しい食材を手動で追加（例：Macaroni cooked enriched）
+
+**処理内容:**
+1. 既存のマージロジックを実行（①〜④と同じ）
+2. 新しい食材エントリを手動で追加
+3. per 100gの栄養値を自動計算
+4. 完全な構造で統合
+
+**追加食材の例：Macaroni cooked enriched**
+```python
+# per 100gの栄養値を計算（221 cal per 140g = 157.86 cal/100g）
+calories_per_100g = 221.0 / 140.0 * 100.0  # 157.86
+protein_per_100g = 8.0 / 140.0 * 100.0     # 5.71
+fat_per_100g = 1.3 / 140.0 * 100.0         # 0.93
+carbs_per_100g = 43.0 / 140.0 * 100.0      # 30.71
+
+macaroni_cooked_entry = {
+    "id": max_id + 1,
+    "original_name": "Macaroni cooked enriched",
+    "search_name": "macaroni",
+    "description": "cooked, enriched",
+    "nutrition": {
+        "calories": calories_per_100g,
+        "protein": protein_per_100g,
+        "fat": fat_per_100g,
+        "carbs": carbs_per_100g
+    },
+    "stemmed_search_name": "macaroni",
+    "stemmed_description": "cook enrich",
+    "default_unit": "cup elbow shaped",
+    "default_calories": 221.0,
+    "unit_to_grams": {
+        "cup elbow shaped": 140.0,
+        "cup spiral shaped": 134.0,
+        "cup small shells": 115.0,
+        "gram": 1.0,
+        "oz": 28.0,
+        # ... その他のunit変換
+    },
+    "default_nutrition": {
+        "calorie": 221.0,
+        "Total_Fat_g": 1.3,
+        "Saturated_Fat_g": 0.2,
+        # ... 全35種類の栄養素
+    }
+}
+```
+
+**実行方法:**
+```bash
+cd /Users/odasoya/meal_analysis_api_2/web_scraping_2
+
+# 追加食材を含む統合データベース生成
+python scripts/merge_stemmed_with_nutrition_v2_with_additional_food.py
+```
+
+**出力:** `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` (1,139件)
+
+---
+
+### ⑥ Elasticsearchへのデータ反映
+
+**スクリプト:** `scripts/update_elasticsearch_stemmed.py`
+
+**目的:** 更新されたデータベースをElasticsearchに反映し、APIで使用可能にする
+
+**処理フロー:**
+```
+db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json (1,139件)
+    ↓ ⑥ Elasticsearch更新
+Elasticsearch Index (1,139件) → API で利用可能
+```
+
+**処理内容:**
+1. **既存インデックスの削除**: `mynetdiary_converted_tool_calls_list_stemmed_with_nutrition`
+2. **新しいインデックス作成**: 語幹化対応設定で作成
+3. **データ一括インポート**: バッチ処理（100件ずつ）
+4. **インポート結果確認**: ドキュメント数とサンプルデータ確認
+
+**実行方法:**
+```bash
+cd /Users/odasoya/meal_analysis_api_2
+
+# Elasticsearchインデックス更新
+python scripts/update_elasticsearch_stemmed.py
+```
+
+**実行例:**
+```
+🚀 Elasticsearch 語幹化対応インデックス更新開始
+📄 対象ファイル: db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json
+📋 データタイプ: 語幹化データ
+🏷️ インデックス名: mynetdiary_converted_tool_calls_list_stemmed_with_nutrition
+======================================================================
+✅ Elasticsearch接続確認: yellow status
+🗑️ 既存インデックス削除完了
+🏗️ 新しいインデックス作成完了
+📊 読み込みレコード数: 1,139
+✅ 語幹化フィールド確認済み
+🔄 バッチ処理開始: 12バッチ（バッチサイズ: 100）
+⚡ バッチ 1/12 完了 (100件)
+⚡ バッチ 2/12 完了 (100件)
+...
+⚡ バッチ 12/12 完了 (39件)
+
+📊 インポート結果:
+   ✅ 成功: 1,139件
+   ❌ エラー: 0件
+
+🎉 Elasticsearch 語幹化対応インデックス更新完了！
+```
+
+**Elasticsearch設定:**
+- **URL:** `http://35.193.16.212:9200`
+- **インデックス名:** `mynetdiary_converted_tool_calls_list_stemmed_with_nutrition`
+- **設定ファイル:** `elasticsearch_settings.json`
+
+**更新後の確認:**
+```bash
+# Elasticsearchで追加食材を確認
+curl -X GET "http://35.193.16.212:9200/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition/_search" \
+  -H 'Content-Type: application/json' \
+  -d '{"query": {"match": {"original_name": "Macaroni cooked"}}}'
+```
+
+---
+
+## 🔄 完全パイプライン実行（追加食材 → Elasticsearch反映まで）
+
+```bash
+cd /Users/odasoya/meal_analysis_api_2
+
+# Step 1: Manual Templatesから栄養情報抽出（既存）
+cd web_scraping_2
+python scripts/extract_all_foods_default_info.py
+python scripts/add_unit_to_grams_mapping.py
+python scripts/add_nutrition_data.py
+
+# Step 2: Stemmed DBに統合（基本版）
+python scripts/merge_stemmed_with_nutrition.py
+
+# Step 3: 追加食材を含む統合版生成 ★NEW★
+python scripts/merge_stemmed_with_nutrition_v2_with_additional_food.py
+
+# Step 4: Elasticsearchに反映 ★NEW★
+cd ..
+python scripts/update_elasticsearch_stemmed.py
+
+# 完了！APIで新しい食材が使用可能に
+```
+
+---
+
+## 📝 変更履歴
+
+### v3.2 (2025-10-12) ★最新バージョン
+- ✅ **追加食材の手動登録機能**: `merge_stemmed_with_nutrition_v2_with_additional_food.py` を追加
+- ✅ **Macaroni cooked enriched追加**: ID 10000001142で追加（1,139件に増加）
+- ✅ **Elasticsearch自動更新**: `scripts/update_elasticsearch_stemmed.py` で1,139件をインポート
+- ✅ **per 100g栄養値自動計算**: 221 cal / 140g = 157.86 cal/100g
+- ✅ **完全な栄養情報**: 35種類の栄養素を含む`default_nutrition`を追加
+- ✅ **unit_to_grams完備**: 10種類のunit変換を追加
+
+### v3.1 (2025-10-12)
+- ✅ **カンマ正規化を削除**：unit名を正規化せず完全保持（例：`"bagel, mini (2-1/2" dia)"`）
+- ✅ **Stemmed DB統合**：merge_stemmed_with_nutrition.py を追加
+- ✅ `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` を生成（1,138件、99.6%）
+- ✅ 栄養情報なし食材を除外（Ice cubes, Sea salt）
+- ✅ マッピングなし食材を除外（3件）
+
+---
+
 **最終更新:** 2025年10月12日
-**データバージョン:** v3.1
+**データバージョン:** v3.2
 **栄養情報統合:** 1,152件 / 1,152件（100%）
+**追加食材:** 1件（Macaroni cooked enriched）
 **完全版データベース:**
 - Manual Templates版：`output/all_foods_with_nutrition.json` (1,152件)
-- Stemmed DB統合版：`db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` (1,138件、99.6%)
+- Stemmed DB統合版：`db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` (1,139件、99.9%)
+- Elasticsearch Index：`mynetdiary_converted_tool_calls_list_stemmed_with_nutrition` (1,139件)
+
 **処理成功率:** 100% ✅

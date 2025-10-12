@@ -16,7 +16,7 @@ from typing import Dict, Any, List
 # Production Elasticsearch VM設定
 ELASTICSEARCH_URL = "http://35.193.16.212:9200"
 SETTINGS_FILE = "elasticsearch_settings.json"
-DATA_FILE = "db/mynetdiary_converted_tool_calls_list_stemmed.json"
+DATA_FILE = "db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json"
 
 # JSONファイル名から動的にINDEX_NAMEを生成
 import os

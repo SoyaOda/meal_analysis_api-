@@ -12,55 +12,17 @@ class Phase1Prompts:
 
 {CommonPrompts.get_mynetdiary_ingredients_list_with_header()}
 
-DISH DECOMPOSITION RULE:
-When you encounter complex dish names with multiple components connected by "and", "with", "plus", "alongside", etc., you MUST break them down into separate individual dishes.
+{CommonPrompts.get_dish_decomposition_rule()}
 
-NUTRITIONAL COMPLETENESS REQUIREMENTS:
-For EACH dish, list ALL PRIMARY INGREDIENTS that materially contribute to nutrition calculations (protein, carbohydrate, fat sources, sauces, cooking oils, etc.):
-• The goal is to avoid omitting any ingredient that would significantly affect calorie or macro-nutrient totals.
-• This exhaustive ingredient list is critical because downstream nutrition calculation logic relies on having every significant component represented in the query set.
-• ALL ingredient names MUST be selected from the MyNetDiary list provided above.
+{CommonPrompts.get_nutritional_completeness_requirements()}
 
-WEIGHT ESTIMATION REQUIREMENTS (MANDATORY):
-For EACH ingredient, you MUST estimate the weight in grams (weight_g) based on visual analysis:
-• This field is MANDATORY - the system will fail if any ingredient lacks weight_g
-• Analyze the portion size, volume, and visual density of each ingredient in the photo
-• Consider typical serving sizes and food density for accurate weight estimation
-• Use visual cues like plate size, utensils, or other reference objects for scale
-• For liquids: estimate volume and convert to weight (1ml ≈ 1g for most beverages)
-• For solids: consider the 3D volume and typical density of the food item
-• Provide realistic weights that reflect what is actually visible in the image
-• Weight estimates should be practical and achievable (e.g., 50-200g for main ingredients, 5-30g for seasonings/sauces)
-• NEVER omit the weight_g field - it is required for every single ingredient
+{CommonPrompts.get_weight_estimation_requirements()}
 
-PLATE-BASED VISUAL WEIGHT ESTIMATION:
-• Carefully observe the plate/bowl size, shape, and depth in the image
-• Use the plate as your primary reference for scale - standard dinner plates are typically 25-28cm (10-11 inches) diameter
-• Estimate how much of the plate/bowl is covered by each ingredient and at what depth/height
-• Consider the 3D volume: height/thickness of food items relative to the plate rim
-• For pasta/rice: estimate the volume they occupy in the bowl/plate and convert to weight (cooked pasta ~1.1g/ml, cooked rice ~1.5g/ml)
-• For salads: consider the leaf density and compression - loose greens are ~0.2-0.3g/ml, compressed ~0.5g/ml
-• For sauces/dressings: observe the coverage area and estimated thickness on the plate
-• Cross-reference your estimates: does the total weight seem reasonable for what's visible on the plate?
-• If multiple dishes are present, compare their relative sizes to ensure proportional weight estimates
+{cls.get_plate_based_visual_weight_estimation()}
 
-AMERICAN PORTION SIZE CONTEXT:
-• Assume this is a typical American meal serving - American portions are generally 25-50% larger than international standards
-• Restaurant portions in America are typically generous and designed to provide satisfaction and value
-• Main dishes (pasta, rice, meat) should reflect American restaurant/dining portion sizes
-• For pasta dishes: American restaurant servings are typically 200-300g cooked weight (equivalent to 80-120g dry)
-• For proteins: American servings are typically 150-250g (6-8 oz)
-• For side salads: American portions are typically 100-200g of greens
-• Consider that American dining culture emphasizes generous portions and hearty meals
+{cls.get_american_portion_context()}
 
-CRITICAL COOKING STATE CONSIDERATION:
-For ingredients like pasta, rice, grains, and legumes that absorb significant water during cooking:
-• ALWAYS specify the cooking state in the ingredient_name (e.g., "pasta white dry uncooked" vs "pasta white cooked")
-• Be extremely careful about weight estimation - cooked vs uncooked has dramatically different nutrition per gram
-• Cooked pasta/rice typically weighs 2-3x more than dry due to water absorption, but nutrition per gram is 2-3x LESS
-• When you see cooked pasta/rice in the image, estimate the COOKED weight, but ensure ingredient_name reflects "cooked" state
-• For dry ingredients that appear cooked: estimate what the dry weight would have been before cooking
-• This distinction is CRITICAL for accurate nutrition calculation - getting this wrong can cause 200-300% calorie errors
+{CommonPrompts.get_cooking_state_requirements()}
 
 {CommonPrompts.get_query_generation_guidelines()}
 
@@ -128,3 +90,33 @@ Your output MUST conform to this exact JSON structure. If a value is unknown, us
     }}
   ]
 }}""" 
+
+    @classmethod
+    def get_plate_based_visual_weight_estimation(cls) -> str:
+        """プレートベースの視覚的重量推定（画像特有）"""
+        return """
+PLATE-BASED VISUAL WEIGHT ESTIMATION:
+• Carefully observe the plate/bowl size, shape, and depth in the image
+• Use the plate as your primary reference for scale - standard dinner plates are typically 25-28cm (10-11 inches) diameter
+• Estimate how much of the plate/bowl is covered by each ingredient and at what depth/height
+• Consider the 3D volume: height/thickness of food items relative to the plate rim
+• For pasta/rice: estimate the volume they occupy in the bowl/plate and convert to weight (cooked pasta ~1.1g/ml, cooked rice ~1.5g/ml)
+• For salads: consider the leaf density and compression - loose greens are ~0.2-0.3g/ml, compressed ~0.5g/ml
+• For sauces/dressings: observe the coverage area and estimated thickness on the plate
+• Cross-reference your estimates: does the total weight seem reasonable for what's visible on the plate?
+• If multiple dishes are present, compare their relative sizes to ensure proportional weight estimates
+"""
+
+    @classmethod
+    def get_american_portion_context(cls) -> str:
+        """アメリカンポーションコンテキスト（画像特有）"""
+        return """
+AMERICAN PORTION SIZE CONTEXT:
+• Assume this is a typical American meal serving - American portions are generally 25-50% larger than international standards
+• Restaurant portions in America are typically generous and designed to provide satisfaction and value
+• Main dishes (pasta, rice, meat) should reflect American restaurant/dining portion sizes
+• For pasta dishes: American restaurant servings are typically 200-300g cooked weight (equivalent to 80-120g dry)
+• For proteins: American servings are typically 150-250g (6-8 oz)
+• For side salads: American portions are typically 100-200g of greens
+• Consider that American dining culture emphasizes generous portions and hearty meals
+"""

@@ -52,10 +52,15 @@ class Settings(BaseSettings):
     USE_LOCAL_NUTRITION_SEARCH: bool = False  # ローカル栄養データベース検索を使用するかどうか（レガシー）
     NUTRITION_DB_EXPERIMENT_PATH: Optional[str] = None  # nutrition_db_experimentへのパス（自動検出する場合はNone）
     
-    # Elasticsearch設定
+    # Elasticsearch設定（栄養データベース検索用）
     elasticsearch_url: str = "http://localhost:9200"
     elasticsearch_index_name: str = "nutrition_fuzzy_search"
     elasticsearch_timeout: int = 30
+
+    # Elasticsearch設定（食材リスト取得用）
+    INGREDIENT_ELASTICSEARCH_URL: str = "http://35.193.16.212:9200"
+    INGREDIENT_ELASTICSEARCH_INDEX: str = "mynetdiary_converted_tool_calls_list_stemmed_with_nutrition"
+    INGREDIENT_ELASTICSEARCH_TIMEOUT: int = 10
     
     # ファジーマッチング設定
     fuzzy_search_enabled: bool = True  # ファジーマッチング機能を有効にするかどうか
