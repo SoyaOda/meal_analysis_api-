@@ -24,24 +24,12 @@ def extract_default_info(file_path):
         rest_part = match.group(3).strip()
         calories_str = match.group(4).strip()
 
-        # rest_partから最後のunitを分離
-        # rest_partが "homemade, piece" の場合、最後のカンマで分割
-        if ', ' in rest_part:
-            rest_parts = rest_part.rsplit(', ', 1)
-            food_name_suffix = rest_parts[0]
-            default_unit = rest_parts[1]
-            food_name = f"{first_part} {food_name_suffix}"
-        else:
-            # rest_partがunitのみの場合（カンマなし）
-            default_unit = rest_part
-            food_name = first_part
-
         # タイトル全体とカロリー文字列を保存
         title_full_name = f"{first_part}, {rest_part}"
         title_calories = f"{calories_str}cals"
 
-        # カロリーをfloatに変換
-        calories_float = float(calories_str.replace(',', ''))
+        # food_nameはfirst_partのみ（カンマの前）
+        food_name = first_part
 
         # 食材の全セクションを取得（次の番号付きタイトルまで）
         start_pos = match.end()
@@ -51,6 +39,41 @@ def extract_default_info(file_path):
             food_content = content[match.start():end_pos]
         else:
             food_content = content[match.start():]
+
+        # 【栄養情報】セクションからdefault_unitとdefault_caloriesを抽出
+        nutrition_match = re.search(r'【栄養情報】\n(.*?)(?=\n【|$)', food_content, re.DOTALL)
+
+        default_unit = None
+        calories_float = None
+        unit_coefficient = 1.0
+
+        if nutrition_match:
+            nutrition_content = nutrition_match.group(1).strip()
+
+            # 【栄養情報】が"None"の場合をチェック
+            if nutrition_content != "None":
+                # Serving Size行からdefault_unitを抽出
+                # 例: "Serving Size	bagel, mini (2-1/2" dia) (26g)"
+                serving_size_match = re.search(r'Serving Size\s+(.+?)\s+\(([\d,.]+)g\)', nutrition_content)
+                if serving_size_match:
+                    default_unit = serving_size_match.group(1).strip()
+
+                # Calories行からdefault_caloriesを抽出
+                # 例: "Calories	72cals"
+                calories_match = re.search(r'Calories\s+([\d,.]+)cals', nutrition_content)
+                if calories_match:
+                    calories_float = float(calories_match.group(1).replace(',', ''))
+
+        # default_unitの数字係数を処理
+        if default_unit:
+            number_pattern = re.compile(r'^([\d.]+)\s+(.+)$')
+            unit_match = number_pattern.match(default_unit)
+            if unit_match:
+                unit_coefficient = float(unit_match.group(1))
+                default_unit = unit_match.group(2)  # 基本単位のみに正規化
+                # カロリーを係数で割る
+                if calories_float:
+                    calories_float = calories_float / unit_coefficient
 
         # 【栄養情報】セクションの有無を確認
         has_nutrition = '【栄養情報】' in food_content
@@ -68,6 +91,7 @@ def extract_default_info(file_path):
             'food_name': food_name,
             'default_unit': default_unit,
             'default_calories': calories_float,
+            'unit_coefficient': unit_coefficient,  # 係数を保存
             'title_full_name': title_full_name,
             'title_calories': title_calories,
             'status': status,
@@ -148,6 +172,7 @@ def main():
             ('food_name', f['food_name']),
             ('default_unit', f['default_unit']),
             ('default_calories', f['default_calories']),
+            ('unit_coefficient', f['unit_coefficient']),
             ('title_full_name', f['title_full_name']),
             ('title_calories', f['title_calories']),
             ('status', f['status'])

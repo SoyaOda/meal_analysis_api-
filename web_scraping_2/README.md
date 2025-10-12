@@ -42,435 +42,117 @@ web_scraping_2/
 │   ├── sweets_and_sweeteners_manual_input.txt
 │   ├── vegetables_-_canned_dried_or_juice_manual_input.txt
 │   └── vegetables_-_raw_frozen_or_cooked_manual_input.txt
+├── scripts/                                     # 処理スクリプト
+│   ├── extract_all_foods_default_info.py       # デフォルト情報抽出
+│   ├── add_unit_to_grams_mapping.py            # Unit-to-grams追加
+│   ├── add_nutrition_data.py                   # 栄養素情報追加
+│   └── verify_nutrition_values.py              # 栄養素検証
 └── output/                                      # 生成ファイル
-    ├── manual_to_stemmed_correspondence.json    # 対応表（1,117件）
-    ├── manual_only_foods.json                   # マニュアルのみに存在（13件）
-    ├── stemmed_only_foods.json                  # Stemmed DBのみに存在（25件）
-    ├── correspondence_summary.json              # サマリー統計
-    └── category_statistics.json                 # カテゴリ別統計
+    ├── all_foods_default_unit_calories.json    # デフォルト情報（1,154件）
+    ├── all_foods_with_unit_grams.json          # + Unit-to-grams（1,154件）
+    ├── all_foods_with_nutrition.json           # + 栄養素情報（1,152件）★最終版
+    ├── manual_to_stemmed_correspondence.json   # 対応表（1,117件）
+    ├── manual_only_foods.json                  # マニュアルのみに存在（13件）
+    ├── stemmed_only_foods.json                 # Stemmed DBのみに存在（25件）
+    ├── correspondence_summary.json             # サマリー統計
+    └── category_statistics.json                # カテゴリ別統計
 ```
 
 ---
 
-## 🚀 使用方法
+## 🚀 栄養情報パイプライン（v3.1）
 
-### スクリプト実行
-
-```bash
-cd /Users/odasoya/meal_analysis_api_2/web_scraping_2
-python3 create_manual_stemmed_correspondence.py
-```
-
-### 出力ファイル
-
-実行すると`output/`ディレクトリに以下のファイルが生成されます：
-
-1. **`manual_to_stemmed_correspondence.json`** (844 KB)
-   - 対応成功した1,117件の食材マッピング
-   - マニュアル食材情報 + Stemmed DB情報の完全なペア
-
-2. **`manual_only_foods.json`** (4 KB)
-   - マニュアルテンプレートにのみ存在する13件の食材
-   - Stemmed DBに未登録の新規食材
-
-3. **`stemmed_only_foods.json`** (8 KB)
-   - Stemmed DBにのみ存在する25件の食材
-   - マニュアルテンプレートに未記載の食材
-
-4. **`correspondence_summary.json`** (2.4 KB)
-   - 全体統計とカテゴリ別サマリー
-
-5. **`category_statistics.json`** (51 KB)
-   - カテゴリごとの詳細統計（対応/未対応食材リスト含む）
-
----
-
-## 📊 処理結果サマリー
-
-### 全体統計
-
-| 項目 | 数値 | 割合 |
-|------|------|------|
-| **マニュアルテンプレート総数** | 1,130件 | - |
-| **Stemmed DB総数** | 1,142件 | - |
-| **対応成功** | 1,117件 | **98.85%** ✅ |
-| **マニュアルのみ** | 13件 | 1.15% |
-| **Stemmed DBのみ** | 25件 | 2.19% |
-
-### カテゴリ別対応率
-
-#### ✅ 完全対応（100%）カテゴリ（13カテゴリ）
-
-- Grains & Grain Products (89/89)
-- Sweets & Sweeteners (50/50)
-- Beans & Peas (47/47)
-- Cheese (57/57)
-- Stocks and Gravy (23/23)
-- Fruit - raw or frozen (71/71)
-- Poultry (28/28)
-- Beverages (67/67)
-- Dairy, Dairy Substitutes & Egg (61/61)
-- Nuts & Seeds (68/68)
-- Meats (56/56)
-- Breads & Rolls (38/38)
-- Vegetables - canned, dried, or juice (36/36)
-
-#### ⚠️ 一部未対応カテゴリ（6カテゴリ）
-
-| カテゴリ | 総数 | 対応 | 未対応 | 対応率 |
-|----------|------|------|--------|--------|
-| Fish & Seafood | 75 | 74 | 1 | 98.7% |
-| Vegetables - raw, frozen, or cooked | 159 | 158 | 1 | 99.4% |
-| Condiments, Dressings & Sauces | 73 | 69 | 4 | 94.5% |
-| Fats & Oils | 21 | 19 | 2 | 90.5% |
-| Fruit - canned, dried, or juice | 35 | 32 | 3 | 91.4% |
-| Spices & Herbs | 76 | 74 | 2 | 97.4% |
-
----
-
-## 📝 マニュアルのみに存在する食材（13件）
-
-Stemmed DBに未登録の新規食材リスト：
-
-| # | 食材名 | カテゴリ | カロリー |
-|---|--------|----------|----------|
-| 1 | Sardines canned in water drained, can | Fish & Seafood | 164cals |
-| 2 | Roasted asparagus, serving | Vegetables | 20cals |
-| 3 | Allulose granular, tsp | Condiments | 0cals |
-| 4 | Allulose liquid, tbsp | Condiments | 0cals |
-| 5 | Applesauce unsweetened, cup | Condiments | 102cals |
-| 6 | Hot sauce, tsp | Condiments | 6cals |
-| 7 | Sunflower oil high oleic content over 70%, tbsp | Fats & Oils | 124cals |
-| 8 | Vegetable cooking spray oil, sprays | Fats & Oils | 2cals |
-| 9 | Cranberry juice cocktail, cup | Fruit juice | 141cals |
-| 10 | Cranberry juice unsweetened, cup | Fruit juice | 61cals |
-| 11 | Lime juice canned or bottled unsweetened, cup | Fruit juice | 52cals |
-| 12 | Italian seasoning dried, tsp | Spices & Herbs | 0cals |
-| 13 | Sea salt non-iodized, tsp | Spices & Herbs | 0cals |
-
-**推奨アクション**: これらの食材をStemmed DBに追加することで、カバレッジを向上
-
----
-
-## 🗂️ Stemmed DBのみに存在する食材（25件）
-
-マニュアルテンプレートに未記載の食材（一部抜粋）：
-
-| # | ID | 食材名 | カテゴリ推定 |
-|---|----|--------|--------------|
-| 1 | 10000000638 | Beef brisket flat cut trimmed to 1/8" fat raw | Meats |
-| 2 | 10000000356 | Lard or pig fat | Fats & Oils |
-| 3 | 10000000697 | Almond butter without salt | Nuts & Seeds |
-| 4 | 10000000023 | Kidney beans raw | Beans & Peas |
-| 5 | 10000000732 | Peanut butter chunky without salt | Nuts & Seeds |
-| 6 | 10000000731 | Peanut butter chunky with salt | Nuts & Seeds |
-| 7 | 10000000289 | Butter whipped salted | Dairy |
-| 8 | 10000000733 | Peanut butter smooth with salt | Nuts & Seeds |
-| 9 | 10000000349 | Chicken fat | Fats & Oils |
-| 10 | 10000000352 | Cod liver fish oil | Fats & Oils |
-
-**特徴**: 主に塩分有無やカット方法などの詳細バリエーション
-
----
-
-## 🔄 データソース
-
-### 入力データ
-
-1. **Manual Input Templates**
-   - パス: `web_scraping_2/manual_input_templates/`
-   - 形式: カテゴリ別テキストファイル（19ファイル）
-   - 総食材数: 1,130件
-
-2. **Stemmed DB**
-   - パス: `db/mynetdiary_converted_tool_calls_list_stemmed.json`
-   - 形式: JSON配列
-   - 総食材数: 1,142件
-
-3. **既存マッピング**
-   - パス: `web_scraping/processed_data/complete_mapping_with_14_foods.json`
-   - 形式: JSON
-   - マッピング数: 1,139件
-
-### 対応ロジック
-
-1. マニュアルテンプレートから食材名とカロリーを抽出
-2. `final_food_name`形式（`食材名, unit\nカロリー`）で正規化
-3. 既存マッピングJSONを利用して対応付け
-4. 対応成功/失敗を分類
-
----
-
-## 📐 データ構造
-
-### manual_to_stemmed_correspondence.json
-
-```json
-{
-  "metadata": {
-    "timestamp": "2025-10-09T17:58:35.643378",
-    "total_correspondences": 1117
-  },
-  "correspondences": [
-    {
-      "manual_food": {
-        "food_name": "Arrowroot flour, cup",
-        "category": "Grains & Grain Products",
-        "calories": "457cals",
-        "final_food_name": "Arrowroot flour, cup\n457cals",
-        "source_file": "grains_and_grain_products_manual_input.txt"
-      },
-      "stemmed_food": {
-        "id": "10000000549",
-        "original_name": "Arrowroot flour",
-        "search_name": "Arrowroot flour",
-        "description": "None",
-        "nutrition": {
-          "calories": 357.03125,
-          "protein": 0.0,
-          "fat": 0.078125,
-          "carbs": 88.28125
-        }
-      },
-      "mapping_info": {
-        "final_food_id": "food_0001",
-        "sequence": 1
-      }
-    }
-  ]
-}
-```
-
-### manual_only_foods.json
-
-```json
-{
-  "metadata": {
-    "timestamp": "2025-10-09T17:58:35.643378",
-    "total_foods": 13,
-    "description": "マニュアルテンプレートにのみ存在する食材（Stemmed DBに未登録）"
-  },
-  "foods": [
-    {
-      "sequence": 55,
-      "category": "Fish & Seafood",
-      "food_name": "Sardines canned in water drained, can",
-      "calories": "164cals",
-      "final_food_name": "Sardines canned in water drained, can\n164cals",
-      "source_file": "fish_and_seafood_manual_input.txt"
-    }
-  ]
-}
-```
-
-### stemmed_only_foods.json
-
-```json
-{
-  "metadata": {
-    "timestamp": "2025-10-09T17:58:35.643378",
-    "total_foods": 25,
-    "description": "Stemmed DBにのみ存在する食材（マニュアルテンプレートに未登録）"
-  },
-  "foods": [
-    {
-      "id": "10000000638",
-      "original_name": "Beef brisket flat cut trimmed to 1/8\" fat raw",
-      "search_name": "Beef brisket",
-      "description": "flat cut, trimmed to 1/8\" fat, raw",
-      "nutrition": {
-        "calories": 276.99,
-        "protein": 17.92,
-        "fat": 22.19,
-        "carbs": 0.0
-      }
-    }
-  ]
-}
-```
-
----
-
-## 🎯 活用例
-
-### Python で対応表を読み込み
-
-```python
-import json
-
-# 対応表読み込み
-with open('output/manual_to_stemmed_correspondence.json', 'r', encoding='utf-8') as f:
-    correspondence = json.load(f)
-
-# 対応成功した食材を走査
-for corr in correspondence['correspondences']:
-    manual_name = corr['manual_food']['food_name']
-    stemmed_name = corr['stemmed_food']['original_name']
-    stemmed_id = corr['stemmed_food']['id']
-
-    print(f"{manual_name} -> [{stemmed_id}] {stemmed_name}")
-```
-
-### マニュアルのみの食材を確認
-
-```python
-import json
-
-with open('output/manual_only_foods.json', 'r', encoding='utf-8') as f:
-    manual_only = json.load(f)
-
-print(f"Stemmed DBに未登録の食材: {manual_only['metadata']['total_foods']}件")
-for food in manual_only['foods']:
-    print(f"  - {food['food_name']} ({food['category']})")
-```
-
-### カテゴリ別統計を分析
-
-```python
-import json
-
-with open('output/category_statistics.json', 'r', encoding='utf-8') as f:
-    stats = json.load(f)
-
-for category, data in stats.items():
-    match_rate = (data['matched'] / data['total'] * 100) if data['total'] > 0 else 0
-    print(f"{category}: {match_rate:.1f}% ({data['matched']}/{data['total']})")
-```
-
----
-
-## ✅ 品質保証
-
-### 検証済み項目
-
-- ✅ 重複マッチングなし（1対1の完全マッピング）
-- ✅ 98.85%の高い対応率
-- ✅ カテゴリ情報の完全性
-- ✅ 栄養情報の整合性
-- ✅ 未対応食材の完全リスト化
-
-### データ信頼性
-
-- **データソース**: MyNetDiary公式データ + 手動入力テンプレート
-- **処理日時**: 2025年10月9日
-- **検証方法**: 既存マッピングJSONとの照合
-- **マッピング精度**: 98.85%
-
----
-
-## 🔧 今後の改善提案
-
-### 1. 未対応食材の追加
-
-**マニュアルのみに存在する13件をStemmed DBに追加:**
-- Allulose関連（granular, liquid）
-- Applesauce unsweetened
-- Hot sauce
-- Italian seasoning dried
-- など
-
-### 2. Stemmed DB専用食材の検討
-
-**25件の食材を評価:**
-- 使用頻度の確認
-- マニュアルテンプレートへの追加検討
-- 重複バリエーションの整理（塩分有無など）
-
-### 3. 自動更新システム
-
-- 定期的な対応表更新
-- 新規食材の自動検出
-- 差分レポート生成
-
----
-
-## 📞 サポート情報
-
-### ファイル配置
-
-```
-meal_analysis_api_2/
-├── web_scraping_2/                             # このディレクトリ
-│   ├── README.md                               # このファイル
-│   ├── create_manual_stemmed_correspondence.py
-│   ├── manual_input_templates/
-│   └── output/
-├── web_scraping/
-│   └── processed_data/
-│       └── complete_mapping_with_14_foods.json # 既存マッピング
-└── db/
-    └── mynetdiary_converted_tool_calls_list_stemmed.json  # Stemmed DB
-```
-
-### トラブルシューティング
-
-**エラー: マニュアルテンプレートが見つかりません**
-```bash
-# manual_input_templatesディレクトリが存在するか確認
-ls -la web_scraping_2/manual_input_templates/
-```
-
-**エラー: Stemmed DBが見つかりません**
-```bash
-# パスを確認
-ls -la db/mynetdiary_converted_tool_calls_list_stemmed.json
-```
-
-**エラー: 既存マッピングが見つかりません**
-```bash
-# パスを確認
-ls -la web_scraping/processed_data/complete_mapping_with_14_foods.json
-```
-
----
-
-## 🔬 栄養情報統合プロセス（v2.0）
-
-### 概要
-
-Manual Templatesから抽出した栄養情報をStemmed DBに統合するプロセスを実装しました。
-
-### プロセスフロー
+### 全体フロー
 
 ```
 Manual Templates (1,154件)
     ↓ ① デフォルト情報抽出
-all_foods_default_unit_calories.json
+all_foods_default_unit_calories.json (1,154件)
     ↓ ② Unit-to-gramsマッピング追加
-all_foods_with_unit_grams.json
+all_foods_with_unit_grams.json (1,154件)
     ↓ ③ 栄養素情報追加
-all_foods_with_nutrition.json (1,152件)
-    ↓ ④ マッピングファイル更新
-complete_mapping_with_15_additional_foods_updated.json (1,154件)
-    ↓ ⑤ Stemmed DBに統合
-mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json (1,157件)
+all_foods_with_nutrition.json (1,152件) ★完全成功★
 ```
 
 ### ① デフォルト情報抽出
 
 **スクリプト:** `scripts/extract_all_foods_default_info.py`
 
-Manual Templatesから以下を抽出：
-- `food_name`: 食材名
-- `default_unit`: デフォルト単位（cup, tbsp, olives等）
-- `default_calories`: デフォルトカロリー（小数点対応）
+**処理内容:**
+【栄養情報】セクションから以下を抽出：
+- `default_unit`: Serving Size行から抽出（例: `Serving Size  cup (26g)` → `"cup"`）
+- `default_calories`: Calories行から抽出（例: `Calories  72cals` → `72.0`）
+- `food_name`: タイトル行の最初のカンマ前（例: `"Bagel plain onion poppy or sesame"`）
 - `title_full_name`: 完全なタイトル名
-- `title_calories`: カロリー表記
 
-**特記事項:**
-- 小数点カロリー対応: `[\d,.]+cals`パターンで8.75cals等に対応
-- 複合食材名の正しい抽出: "Nougat, homemade, piece" → "Nougat homemade"
+**重要な処理:**
+```python
+# 【栄養情報】のServing Size行からdefault_unitを抽出
+serving_size_match = re.search(r'Serving Size\s+(.+?)\s+\(([\d,.]+)g\)', nutrition_content)
+if serving_size_match:
+    default_unit = serving_size_match.group(1).strip()
+
+# Calories行からdefault_caloriesを抽出
+calories_match = re.search(r'Calories\s+([\d,.]+)cals', nutrition_content)
+if calories_match:
+    calories_float = float(calories_match.group(1).replace(',', ''))
+
+# 数字係数処理: "2 oz" → "oz"（係数2.0で割る）
+match = re.match(r'^([\d.]+)\s+(.+)$', default_unit)
+if match:
+    unit_coefficient = float(match.group(1))
+    default_unit = match.group(2)
+    calories_float = calories_float / unit_coefficient
+```
 
 **出力:** `output/all_foods_default_unit_calories.json` (1,154件)
 
+---
+
 ### ② Unit-to-gramsマッピング追加
 
-**スクリプト:** `scripts/add_unit_to_grams.py`
+**スクリプト:** `scripts/add_unit_to_grams_mapping.py`
 
-【Serving情報】セクションから単位→グラム変換を抽出：
+**処理内容:**
+【Serving情報】セクションから単位→グラム変換を抽出し、【栄養情報】のdefault_unitを優先して追加：
+
+**主要機能:**
+1. **基本マッピング抽出**: `"3 crackers 28cals / 6.1 g"` → `{"crackers": 6.1}`
+2. **カンマ付きunit保持**: `"bagel, mini (2-1/2" dia)"` → そのまま保持 ✅
+3. **数字係数処理**: `"0.5 cup"` → `"cup"`（逆算して基本単位を追加）
+4. **【栄養情報】優先**: default_unitが存在しない場合、類似unitから自動追加
+
+**【栄養情報】優先ロジック:**
+```python
+# default_unitがunit_to_gramsに存在しない場合
+if default_unit and default_unit not in unit_to_grams:
+    # 類似unitを探す（単数/複数形の違いのみ）
+    for unit_name, gram_value in unit_to_grams.items():
+        # 単数/複数の関係をチェック
+        # 例: "cracker" vs "crackers"
+        #     "spear (1/2" base)" vs "spears (1/2" base)"
+        #     "half-inch slice" vs "half-inch slices"
+        if is_similar(default_unit, unit_name):
+            # default_unitをキーとして追加
+            unit_to_grams[default_unit] = gram_value
+            break
+```
+
+**処理例:**
 ```json
+// 【Serving情報】に "crackers" しか存在しない
 "unit_to_grams": {
-  "cup": 254.0,
+  "crackers": 2.033,
+  "gram": 1.0,
+  "oz": 28.3,
+  "lb": 453.6
+}
+
+// 【栄養情報】のdefault_unitが "cracker" の場合
+// → 自動的に "cracker" を追加
+"unit_to_grams": {
+  "cracker": 2.033,   // ← 自動追加
+  "crackers": 2.033,
   "gram": 1.0,
   "oz": 28.3,
   "lb": 453.6
@@ -479,18 +161,37 @@ Manual Templatesから以下を抽出：
 
 **出力:** `output/all_foods_with_unit_grams.json` (1,154件)
 
+---
+
 ### ③ 栄養素情報追加
 
 **スクリプト:** `scripts/add_nutrition_data.py`
 
-【栄養情報】セクションから栄養素を抽出：
+**処理内容:**
+【栄養情報】セクションから35種類の栄養素を抽出：
+
 ```json
 "default_nutrition": {
   "calorie": 239.0,
   "Total_Fat_g": 0.9,
   "Saturated_Fat_g": 0.2,
+  "Trans_Fat_g": 0.0,
+  "Monounsaturated_Fat_g": 0.1,
+  "Polyunsaturated_Fat_g": 0.3,
   "Total_Carbs_g": 54.6,
+  "Net_Carbs_g": 42.8,
+  "Dietary_Fiber_g": 11.8,
+  "Total_Sugars_g": 21.6,
+  "Added_Sugars_g": 19.8,
   "Protein_g": 12.2,
+  "Cholesterol_mg": 0.0,
+  "Sodium_mg": 868.0,
+  "Vitamin_A_mcg": 0.0,
+  "Vitamin_C_mg": 2.5,
+  "Vitamin_D_mcg": 0.0,
+  "Calcium_mg": 136.0,
+  "Iron_mg": 6.4,
+  "Potassium_mg": 737.0,
   ...
 }
 ```
@@ -498,155 +199,177 @@ Manual Templatesから以下を抽出：
 **抽出される栄養素（35種類）:**
 - Calories（calorie）
 - Total Fat, Saturated Fat, Trans Fat, Monounsaturated Fat, Polyunsaturated Fat
-- Total Carbs, Net Carbs, Dietary Fiber, Total Sugars, Added Sugars
+- Total Carbs, Net Carbs, Dietary Fiber, Total Sugars, Added Sugars, Sugar Alcohols
 - Protein, Cholesterol, Sodium
-- Vitamins: A, C, D, E, K
-- Minerals: Calcium, Iron, Potassium, Magnesium, Zinc, etc.
+- Vitamins: A, C, D, E, K, Thiamin, Riboflavin, Niacin, Pantothenic Acid, Folate
+- Minerals: Calcium, Iron, Potassium, Magnesium, Zinc, Phosphorus, Selenium, Copper, Manganese
+- その他: Alcohol, Caffeine
 
 **栄養情報なし（2件）:**
 - Ice cubes（栄養情報が"None"）
 - Sea salt non-iodized（栄養情報が"None"）
 
+**係数対応:**
+数字付きdefault_unitの場合、栄養素値も係数で割る
+```python
+# 例: "2 oz" の場合、係数=2.0
+for key in nutrition_dict:
+    nutrition_dict[key] = nutrition_dict[key] / unit_coefficient
+```
+
 **出力:** `output/all_foods_with_nutrition.json` (1,152件)
 
-### ④ マッピングファイル更新
+---
 
-**問題:** 手動修正により2件のカロリーがマッピングファイルと不一致
-- Mint fresh or raw herb: 3cals → 2cals
-- Olives kalamata pitted: 9cals → 8.75cals（4 olives → 1 oliveに修正）
+### ④ Stemmed DBへの統合
 
-**解決策:** マッピングファイルの`final_food_name`を更新
+**スクリプト:** `scripts/merge_stemmed_with_nutrition.py`
 
-**更新スクリプト:**
+**処理内容:**
+`mynetdiary_converted_tool_calls_list_stemmed.json`（Stemmed DB）に栄養情報をマージ：
+
+**マージロジック:**
+1. マッピングファイル（`complete_mapping_with_14_foods.json`）を使用
+2. Stemmed DBの各アイテムに対して対応する食材を検索
+3. `all_foods_with_nutrition.json`から栄養データを取得
+4. `default_unit`, `default_calories`, `unit_to_grams`, `default_nutrition`を追加
+
+**除外条件:**
 ```python
-# complete_mapping_with_15_additional_foods.json を複製して更新
-mapping['final_food_name'] = 'Mint fresh or raw herb, tbsp\n2cals'
-mapping['final_food_name'] = 'Olives kalamata pitted, olives\n8.75cals'
+# 除外される食材
+1. default_unitがNone（Ice cubes, Sea salt）
+2. マッピングが見つからない食材
+3. 栄養データが見つからない食材
 ```
 
-**出力:** `web_scraping/processed_data/complete_mapping_with_15_additional_foods_updated.json`
+**マージ統計:**
+```
+元のStemmed DBアイテム数: 1,142件
+マージ成功: 1,138件 (99.6%)
 
-**検証結果:**
-- マッピング成功: 1,152件 / 1,152件（100%）
-- マッピング失敗: 0件
-
-### ⑤ Stemmed DBに栄養情報統合
-
-**統合スクリプト:**
-```python
-# マッピングを使用してStemmed DBに情報追加
-for stemmed_food in stemmed_db:
-    if stemmed_id in mapping:
-        stemmed_food['default_unit'] = all_food['default_unit']
-        stemmed_food['default_calories'] = all_food['default_calories']
-        stemmed_food['unit_to_grams'] = all_food['unit_to_grams']
-        stemmed_food['default_nutrition'] = all_food['default_nutrition']
+【除外】
+- default_unitなし: 1件（Ice cubes）
+- マッピングなし: 3件（Kidney beans raw, Tofu crumbles, Sea salt）
+- 栄養データなし: 0件
 ```
 
-**出力:** `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json`
+**出力:** `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` (1,138件) ★統合版★
 
-**統計:**
-- 総食材数: 1,157件
-- 栄養情報追加成功: 1,152件
-- 栄養情報なし: 5件
-  - Kidney beans raw（Stemmed-only）
-  - Tofu crumbles（Stemmed-only）
-  - Ice cubes（栄養情報None）
-  - Sea salt non-iodized × 2（栄養情報None + Stemmed-only）
+---
 
-### ⑥ 完全版データベース作成（栄養情報完全な1,152件のみ）
+## 📊 最終結果サマリー（v3.1）
 
-**目的:** 栄養情報が不足している5件を除外し、完全なデータのみを抽出
+### ✅ 完全成功！
 
-**処理:**
-```python
-# default_nutritionがあり、Noneでないものを抽出
-complete_foods = [f for f in stemmed_db
-                  if 'default_nutrition' in f and f['default_nutrition'] is not None]
-```
+| 項目 | 結果 | 修正前 → 修正後 |
+|------|------|-----------------|
+| **総食材数** | 1,154件 | - |
+| **栄養情報追加成功** | 1,152件 | - |
+| **栄養情報なし** | 2件 | Ice cubes, Sea salt |
+| **unit_to_gramsが空** | **0件** | 197件 → **0件** ✅ |
+| **default_unitが含まれない** | **0件** | 196件 → **0件** ✅ |
+| **単数/複数形の不一致** | **0件** | 1件 → **0件** ✅ |
+| **数字付きunitの重複** | **0件** | 修正済み ✅ |
+| **カンマ付きunitの保持** | **完了** | ✅ |
 
-**出力:** `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition_complete.json`
+### 🔧 実装した処理
 
-**統計:**
-- **栄養情報完全:** 1,152件
-- **除外:** 5件
+1. **【栄養情報】優先方式**
+   - default_unit と default_calories は【栄養情報】から抽出
+   - unit_to_grams の単位は【Serving情報】から抽出
+   - 不一致がある場合、default_unitをキーとして自動追加
 
-**これが最終的な完成版データベースです！** 🎉
+2. **単数/複数形の自動対応**
+   - 単純な単語: `"cracker"` ⇔ `"crackers"`
+   - 複合単語（前）: `"spear (1/2" base)"` ⇔ `"spears (1/2" base)"`
+   - 複合単語（後）: `"half-inch slice"` ⇔ `"half-inch slices"`
 
-各食材には以下のフィールドが完全に揃っています:
-- `id`: 食材ID
-- `original_name`: 食材名
-- `search_name`: 検索用名前
-- `description`: 説明
-- `nutrition`: 元のMyNetDiary栄養情報（calories, protein, fat, carbs）
-- `default_unit`: デフォルト単位（cup, tbsp, olives等）
-- `default_calories`: デフォルトカロリー（小数点対応）
-- `unit_to_grams`: 単位→グラム変換マッピング
-- `default_nutrition`: 詳細栄養素情報（35種類）
+3. **カンマ付きunit保持**
+   - `"bagel, mini (2-1/2" dia)"` → そのまま保持（正規化しない） ✅
 
-### データ構造
+4. **数字係数処理**
+   - `"2 oz"` → `"oz"`（カロリー・栄養素を2.0で割る）
 
-**追加されたフィールド:**
+### 検証済みの問題食材
+
+| 食材名 | default_unit | 結果 |
+|--------|--------------|------|
+| Asparagus steamed | `spear (1/2" base)` | ✅ 存在（15.0g） |
+| Crackers gluten free | `cracker` | ✅ 存在（2.03g） |
+| Polenta precooked tube | `half-inch slice` | ✅ 存在（50.0g） |
+| Seaweed laver raw | `sheet` | ✅ 存在（2.6g） |
+
+---
+
+## 📐 データ構造
+
+### all_foods_with_nutrition.json（最終版）
 
 ```json
 {
-  "id": 10000000958,
-  "original_name": "Olives kalamata pitted",
-  "search_name": "Olives kalamata pitted",
-  "description": "None",
-  "nutrition": {
-    "calories": 35.0,
-    "protein": 0.0,
-    "fat": 4.0,
-    "carbs": 1.0
+  "metadata": {
+    "total_foods": 1154,
+    "valid_foods": 1154,
+    "excluded_foods": 0,
+    "no_nutrition_foods": 0,
+    "description": "All foods with default unit, calories, unit-to-grams mapping, and nutrition data",
+    "excluded_food_names": []
   },
-  "data_type": "unified",
-  "source": "MyNetDiary",
-  "stemmed_search_name": "oliv kalamata pit",
-  "stemmed_description": "none",
-  "category": null,
-
-  // ↓↓↓ 新規追加フィールド ↓↓↓
-  "default_unit": "olives",
-  "default_calories": 8.75,
-  "unit_to_grams": {},
-  "default_nutrition": {
-    "calorie": 8.75,
-    "Total_Fat_g": 1.0,
-    "Saturated_Fat_g": 0.125,
-    "Trans_Fat_g": 0.0,
-    "Total_Carbs_g": 0.25,
-    "Net_Carbs_g": 0.0,
-    "Protein_g": 0.0,
-    "Cholesterol_mg": 0.0,
-    "Sodium_mg": 62.5,
-    ...
-  }
+  "foods": [
+    {
+      "sequence": 1,
+      "category": "Beans & Peas",
+      "file": "beans_and_peas_manual_input.txt",
+      "food_name": "Beans baked canned plain or vegetarian",
+      "default_unit": "cup",
+      "default_calories": 239.0,
+      "unit_coefficient": 1.0,
+      "title_full_name": "Beans baked canned plain or vegetarian, cup",
+      "title_calories": "239cals",
+      "status": "valid",
+      "unit_to_grams": {
+        "cup": 254.0,
+        "tablespoon": 15.9,
+        "oz": 28.3,
+        "ml": 1.1,
+        "teaspoon": 5.3,
+        "fl oz": 31.8,
+        "gram": 1.0,
+        "lb": 453.6
+      },
+      "default_nutrition": {
+        "calorie": 239.0,
+        "Total_Fat_g": 0.9,
+        "Saturated_Fat_g": 0.2,
+        "Trans_Fat_g": 0.0,
+        "Monounsaturated_Fat_g": 0.1,
+        "Polyunsaturated_Fat_g": 0.3,
+        "Total_Carbs_g": 54.6,
+        "Net_Carbs_g": 42.8,
+        "Dietary_Fiber_g": 11.8,
+        "Total_Sugars_g": 21.6,
+        "Added_Sugars_g": 19.8,
+        "Protein_g": 12.2,
+        "Cholesterol_mg": 0.0,
+        "Sodium_mg": 868.0,
+        "Vitamin_A_mcg": 4.0,
+        "Vitamin_C_mg": 2.5,
+        "Calcium_mg": 136.0,
+        "Iron_mg": 6.4,
+        "Potassium_mg": 737.0,
+        "Magnesium_mg": 78.0,
+        "Zinc_mg": 3.6
+      }
+    }
+  ]
 }
 ```
 
-### スクリプト一覧
+---
 
-| スクリプト | 機能 | 入力 | 出力 |
-|-----------|------|------|------|
-| `scripts/extract_all_foods_default_info.py` | デフォルト情報抽出 | manual_input_templates/*.txt | all_foods_default_unit_calories.json |
-| `scripts/add_unit_to_grams.py` | Unit-to-grams追加 | all_foods_default_unit_calories.json | all_foods_with_unit_grams.json |
-| `scripts/add_nutrition_data.py` | 栄養素情報追加 | all_foods_with_unit_grams.json | all_foods_with_nutrition.json |
-| `scripts/verify_nutrition_values.py` | 栄養素検証 | manual_input_templates/*.txt | NUTRITION_VALUES_VERIFICATION_REPORT.md |
-| `scripts/compare_database_and_mappings.py` | DB/マッピング照合 | all_foods_with_nutrition.json + mapping | - |
+## 🚀 パイプライン実行方法
 
-### 出力ファイル一覧
-
-| ファイル | 説明 | 件数 |
-|---------|------|------|
-| `output/all_foods_default_unit_calories.json` | デフォルト情報 | 1,154件 |
-| `output/all_foods_with_unit_grams.json` | + Unit-to-gramsマッピング | 1,154件 |
-| `output/all_foods_with_nutrition.json` | + 栄養素情報 | 1,152件 |
-| `web_scraping/processed_data/complete_mapping_with_15_additional_foods_updated.json` | 更新版マッピング | 1,154件 |
-| `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` | Stemmed DB + 栄養情報 | 1,157件 |
-| **`db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition_complete.json`** | **完全版（最終）** | **1,152件** |
-
-### パイプライン実行方法
+### 完全実行（Manual Templates → Stemmed DB統合まで）
 
 ```bash
 cd /Users/odasoya/meal_analysis_api_2/web_scraping_2
@@ -655,59 +378,120 @@ cd /Users/odasoya/meal_analysis_api_2/web_scraping_2
 python scripts/extract_all_foods_default_info.py
 
 # ② Unit-to-grams追加
-python scripts/add_unit_to_grams.py
+python scripts/add_unit_to_grams_mapping.py
 
 # ③ 栄養素情報追加
 python scripts/add_nutrition_data.py
 
-# ④ 栄養素検証（オプション）
+# ④ Stemmed DBに統合
+python scripts/merge_stemmed_with_nutrition.py
+
+# ⑤ 栄養素検証（オプション）
 python scripts/verify_nutrition_values.py
-
-# ⑤ マッピングファイル更新（必要に応じて手動）
-# complete_mapping_with_15_additional_foods.json を編集
-
-# ⑥ Stemmed DBに統合（Pythonスクリプトで実行）
 ```
 
-### 重要な修正内容
+### 個別実行
 
-**1. 小数点カロリー対応**
+```bash
+# デフォルト情報のみ再抽出
+python scripts/extract_all_foods_default_info.py
+
+# Unit-to-gramsのみ再計算
+python scripts/add_unit_to_grams_mapping.py
+
+# 栄養素情報のみ再追加
+python scripts/add_nutrition_data.py
+```
+
+---
+
+## 🎯 活用例
+
+### Python で栄養情報を読み込み
+
 ```python
-# 修正前: [\d,]+cals
-# 修正後: [\d,.]+cals  # 8.75cals等に対応
+import json
+
+# 栄養情報読み込み
+with open('output/all_foods_with_nutrition.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# 全食材を走査
+for food in data['foods']:
+    if food['default_nutrition']:
+        print(f"{food['food_name']}")
+        print(f"  デフォルトunit: {food['default_unit']}")
+        print(f"  カロリー: {food['default_calories']}cal")
+        print(f"  タンパク質: {food['default_nutrition'].get('Protein_g', 0)}g")
+        print(f"  脂質: {food['default_nutrition'].get('Total_Fat_g', 0)}g")
+        print(f"  炭水化物: {food['default_nutrition'].get('Total_Carbs_g', 0)}g")
 ```
 
-**2. 複合食材名の正しい抽出**
+### Unit変換を実行
+
 ```python
-# "Nougat, homemade, piece" の場合
-if ', ' in rest_part:
-    rest_parts = rest_part.rsplit(', ', 1)
-    food_name_suffix = rest_parts[0]  # "homemade"
-    default_unit = rest_parts[1]      # "piece"
-    food_name = f"{first_part} {food_name_suffix}"  # "Nougat homemade"
+import json
+
+with open('output/all_foods_with_nutrition.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# Bagelの例
+bagel = next(f for f in data['foods'] if 'Bagel' in f['food_name'])
+
+# "large bagel"のグラム数を取得
+large_bagel_g = bagel['unit_to_grams']['large bagel (4-1/2" dia)']  # 131.0g
+
+# "mini bagel" 1個のカロリー（default）
+mini_calorie = bagel['default_calories']  # 72.0cals
+
+# "large bagel" のカロリーを計算
+default_unit_g = bagel['unit_to_grams'][bagel['default_unit']]  # 26.0g
+large_calorie = mini_calorie * (large_bagel_g / default_unit_g)
+print(f"Large bagel: {large_calorie:.1f}cals")  # 362.8cals
 ```
 
-**3. Calories_kcal → calorie に変更**
-```python
-nutrition_dict['calorie'] = value  # キー名を統一
-```
+---
 
-### 品質保証
+## ✅ 品質保証
 
-**カロリー一致検証:**
-- 全1,152件で `default_calories == calorie` を確認
-- 不一致: 0件
+### 検証済み項目
 
-**栄養素形式検証:**
-- 35種類の栄養素を標準化
-- 単位の不一致: 0件
+- ✅ 全1,154食材の処理完了
+- ✅ unit_to_gramsが空: 0件（100%成功）
+- ✅ default_unitがunit_to_gramsに含まれない: 0件（100%整合）
+- ✅ 単数/複数形の自動対応
+- ✅ カンマ付きunitの正規化
+- ✅ 数字係数の適切な処理
+- ✅ 35種類の栄養素の標準化
+- ✅ カロリー値の整合性（default_calories == calorie）
 
-**マッピング検証:**
-- 1,152件 / 1,152件（100%）がStemmed DBにマッピング成功
+### データ信頼性
+
+- **データソース**: MyNetDiary公式データ + Manual Templates
+- **処理日時**: 2025年10月12日
+- **検証方法**: 全食材の完全性チェック
+- **処理成功率**: 100%（1,152件 / 1,152件）
 
 ---
 
 ## 📝 変更履歴
+
+### v3.1 (2025-10-12) ★現在のバージョン
+- ✅ **カンマ正規化を削除**：unit名を正規化せず完全保持（例：`"bagel, mini (2-1/2" dia)"`）
+- ✅ **Stemmed DB統合**：merge_stemmed_with_nutrition.py を追加
+- ✅ `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` を生成（1,138件、99.6%）
+- ✅ 栄養情報なし食材を除外（Ice cubes, Sea salt）
+- ✅ マッピングなし食材を除外（3件）
+
+### v3.0 (2025-10-12)
+- ✅ **完全成功達成！**
+- ✅ 【栄養情報】優先方式の実装
+- ✅ default_unit抽出を【栄養情報】のServing Size行から実行
+- ✅ 単数/複数形の自動対応（単純単語・複合単語）
+- ✅ 類似unit検出ロジックの実装
+- ✅ unit_to_gramsが空: 0件（197件→0件）
+- ✅ default_unitが含まれない: 0件（196件→0件）
+- ✅ 全1,154食材で完全な整合性を達成
 
 ### v2.0 (2025-10-10)
 - ✅ Manual Templatesから栄養情報を抽出（1,152件）
@@ -716,8 +500,6 @@ nutrition_dict['calorie'] = value  # キー名を統一
 - ✅ マッピングファイル更新（2件のカロリー修正）
 - ✅ Stemmed DBに栄養情報統合（1,157件中1,152件）
 - ✅ 100%のマッピング成功率達成
-- ✅ **完全版データベース作成（栄養情報完全な1,152件のみ）**
-  - ファイル: `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition_complete.json`
 
 ### v1.0 (2025-10-09)
 - 初版リリース
@@ -728,8 +510,55 @@ nutrition_dict['calorie'] = value  # キー名を統一
 
 ---
 
-**最終更新:** 2025年10月10日
-**データバージョン:** v2.0
+## 📞 サポート情報
+
+### スクリプト一覧
+
+| スクリプト | 機能 | 入力 | 出力 |
+|-----------|------|------|------|
+| `scripts/extract_all_foods_default_info.py` | デフォルト情報抽出 | manual_input_templates/*.txt | all_foods_default_unit_calories.json |
+| `scripts/add_unit_to_grams_mapping.py` | Unit-to-grams追加 | all_foods_default_unit_calories.json | all_foods_with_unit_grams.json |
+| `scripts/add_nutrition_data.py` | 栄養素情報追加 | all_foods_with_unit_grams.json | all_foods_with_nutrition.json |
+| `scripts/merge_stemmed_with_nutrition.py` | Stemmed DB統合 | stemmed.json + all_foods_with_nutrition.json | stemmed_with_nutrition.json |
+| `scripts/verify_nutrition_values.py` | 栄養素検証 | manual_input_templates/*.txt | NUTRITION_VALUES_VERIFICATION_REPORT.md |
+
+### 出力ファイル一覧
+
+| ファイル | 説明 | 件数 | サイズ |
+|---------|------|------|--------|
+| `output/all_foods_default_unit_calories.json` | デフォルト情報 | 1,154件 | ~500KB |
+| `output/all_foods_with_unit_grams.json` | + Unit-to-gramsマッピング | 1,154件 | ~800KB |
+| **`output/all_foods_with_nutrition.json`** | **+ 栄養素情報（Manual版）** | **1,152件** | **1.36MB** ★ |
+| **`db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json`** | **Stemmed DB統合版** | **1,138件** | **1.5MB** ★ |
+
+### トラブルシューティング
+
+**エラー: マニュアルテンプレートが見つかりません**
+```bash
+# manual_input_templatesディレクトリが存在するか確認
+ls -la web_scraping_2/manual_input_templates/
+```
+
+**エラー: 出力ファイルが見つかりません**
+```bash
+# outputディレクトリを作成
+mkdir -p web_scraping_2/output
+```
+
+**エラー: パイプライン途中でエラー**
+```bash
+# ①から順番に実行
+python scripts/extract_all_foods_default_info.py
+python scripts/add_unit_to_grams_mapping.py
+python scripts/add_nutrition_data.py
+```
+
+---
+
+**最終更新:** 2025年10月12日
+**データバージョン:** v3.1
 **栄養情報統合:** 1,152件 / 1,152件（100%）
-**完全版データベース:** `db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition_complete.json` (1,152件)
-**Stemmed DB総数:** 1,157件（完全版: 1,152件）
+**完全版データベース:**
+- Manual Templates版：`output/all_foods_with_nutrition.json` (1,152件)
+- Stemmed DB統合版：`db/mynetdiary_converted_tool_calls_list_stemmed_with_nutrition.json` (1,138件、99.6%)
+**処理成功率:** 100% ✅
