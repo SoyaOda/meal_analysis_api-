@@ -8,15 +8,15 @@ import re
 from pathlib import Path
 from collections import OrderedDict
 
-def extract_nutrition_info(file_path, food_name):
+def extract_nutrition_info(file_path, title_full_name):
     """指定した食材の【栄養情報】セクションを抽出"""
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # 食材のセクションを見つける
-    escaped_name = re.escape(food_name)
+    # 食材のセクションを見つける（title_full_nameを使用）
+    escaped_name = re.escape(title_full_name)
     # 小数点対応: 8.75cals, 1,849cals など
-    pattern = rf'\d+\.\s*{escaped_name},.*?\n[\d,.]+cals'
+    pattern = rf'\d+\.\s*{escaped_name}\n[\d,.]+cals'
 
     match = re.search(pattern, content)
     if not match:
@@ -130,11 +130,8 @@ def main():
         # ファイルパスを構築
         file_path = templates_dir / food['file']
 
-        # 栄養情報を抽出（title_full_nameからdefault_unitを除いた部分で検索）
-        # "Nougat, homemade, piece" → "Nougat, homemade"
-        title_parts = food['title_full_name'].rsplit(', ', 1)
-        search_name = title_parts[0] if len(title_parts) > 1 else food['title_full_name']
-        nutrition_info = extract_nutrition_info(file_path, search_name)
+        # 栄養情報を抽出（title_full_nameを使用）
+        nutrition_info = extract_nutrition_info(file_path, food['title_full_name'])
 
         if nutrition_info == "None":
             # 栄養情報が"None"の場合
@@ -151,6 +148,13 @@ def main():
             nutrition_dict = parse_nutrition_to_dict(nutrition_info)
 
             if nutrition_dict:
+                # unit_coefficientがあれば栄養素値を係数で割る
+                unit_coefficient = food.get('unit_coefficient', 1.0)
+                if unit_coefficient != 1.0:
+                    # 全ての栄養素値を係数で割る
+                    for key in nutrition_dict:
+                        nutrition_dict[key] = nutrition_dict[key] / unit_coefficient
+
                 food['default_nutrition'] = nutrition_dict
                 success_count += 1
                 if i <= 3:  # 最初の3件は詳細表示
