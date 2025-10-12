@@ -23,6 +23,11 @@ class NutritionMatch(BaseModel):
     nutrition: Dict[str, float] = Field(default_factory=dict, description="ローカルDBの栄養データ（100gあたり）")
     weight: Optional[float] = Field(None, description="元データの重量（g）")
     
+    # 新方式の栄養データフィールド（default_unit + unit_to_grams方式）
+    default_unit: Optional[str] = Field(None, description="デフォルト単位（例: 'cup', 'oz', 'piece'）")
+    default_nutrition: Optional[Dict[str, float]] = Field(None, description="1 default_unit当たりの栄養素")
+    unit_to_grams: Optional[Dict[str, float]] = Field(None, description="各単位をグラムに変換する係数")
+    
     # 検索スコア
     score: Optional[float] = Field(None, description="検索結果の関連度スコア")
     
@@ -154,47 +159,53 @@ from typing import List, Optional
 from datetime import datetime
 
 class QueryInfo(BaseModel):
-    original_query: str
-    processed_query: str
-    timestamp: str
-    suggestion_type: str = "autocomplete"
+    original_query: str = Field(..., description="元の検索クエリ", example="chicken")
+    processed_query: str = Field(..., description="処理済みクエリ", example="chicken")
+    timestamp: str = Field(..., description="リクエストタイムスタンプ（ISO 8601形式）", example="2025-01-15T10:30:00Z")
+    suggestion_type: str = Field(default="autocomplete", description="提案タイプ", example="autocomplete")
 
 class FoodInfo(BaseModel):
-    search_name: str
-    search_name_list: List[str]
-    description: str
-    original_name: str
+    search_name: str = Field(..., description="検索名（簡潔な名称）", example="Chicken breast skinless raw")
+    search_name_list: List[str] = Field(..., description="検索名の候補リスト", example=["Chicken breast skinless raw", "Chicken breast meat only raw"])
+    description: str = Field(..., description="詳細説明", example="Chicken, broilers or fryers, breast, meat only, raw")
+    original_name: str = Field(..., description="オリジナル名（データベース名）", example="Chicken breast skinless raw")
 
 class NutritionPreview(BaseModel):
-    calories: float
-    protein: float
-    carbohydrates: float
-    fat: float
-    per_serving: str = "100g"
+    calories: float = Field(..., description="カロリー (kcal)", example=165.0)
+    protein: float = Field(..., description="タンパク質 (g)", example=31.0)
+    carbohydrates: float = Field(..., description="炭水化物 (g)", example=0.0)
+    fat: float = Field(..., description="脂質 (g)", example=3.6)
+    per_serving: str = Field(default="100g", description="栄養価の基準量", example="100g")
 
 class Suggestion(BaseModel):
-    rank: int
-    suggestion: str
-    match_type: str
-    confidence_score: float
-    food_info: FoodInfo
-    nutrition_preview: NutritionPreview
-    alternative_names: List[str]
+    rank: int = Field(..., description="検索結果の順位", example=1)
+    suggestion: str = Field(..., description="提案された食品名", example="Chicken breast skinless raw")
+    match_type: str = Field(..., description="マッチタイプ（exact_match, tier_1_exact, tier_2_description等）", example="exact_match")
+    confidence_score: float = Field(..., description="信頼度スコア (0-100)", example=100.0, ge=0.0, le=100.0)
+    food_info: FoodInfo = Field(..., description="食品情報の詳細")
+    nutrition_preview: NutritionPreview = Field(..., description="栄養価プレビュー（100gあたり）")
+    alternative_names: List[str] = Field(..., description="代替名称リスト", example=["Chicken breast meat only", "Chicken breast"])
+
+    # 新方式の栄養データフィールド（default_unit + unit_to_grams方式）
+    default_unit: Optional[str] = Field(None, description="デフォルト単位（例: 'cup', 'oz', 'piece'）", example="oz")
+    default_nutrition: Optional[dict] = Field(None, description="1 default_unit当たりの栄養素", example={"calories": 46.9, "protein": 8.8})
+    unit_to_grams: Optional[dict] = Field(None, description="各単位をグラムに変換する係数", example={"1 oz": 28.35, "1 lb": 453.59})
 
 class SearchMetadata(BaseModel):
-    total_suggestions: int
-    total_hits: int
-    search_time_ms: int
-    processing_time_ms: int
-    elasticsearch_index: str
+    total_suggestions: int = Field(..., description="提案結果数", example=10)
+    total_hits: int = Field(..., description="総ヒット数", example=42)
+    search_time_ms: int = Field(..., description="Elasticsearch検索時間 (ms)", example=15)
+    processing_time_ms: int = Field(..., description="総処理時間 (ms)", example=23)
+    elasticsearch_index: str = Field(..., description="使用されたElasticsearchインデックス", example="mynetdiary_converted_tool_calls_list_stemmed_with_nutrition")
 
 class SearchStatus(BaseModel):
-    success: bool
-    message: str
+    success: bool = Field(..., description="検索成功フラグ", example=True)
+    message: str = Field(..., description="ステータスメッセージ", example="Suggestions generated successfully")
 
 class DebugInfo(BaseModel):
-    elasticsearch_query_used: str
-    tier_scoring: dict
+    elasticsearch_query_used: str = Field(..., description="使用されたElasticsearch検索戦略", example="exact_match_only")
+    search_strategy_config: Optional[dict] = Field(None, description="検索戦略設定", example={"search_context": "meal_analysis", "exclude_uncooked": True})
+    tier_scoring: dict = Field(..., description="Tierスコアリング設定", example={"exact_match_original_name": 999, "tier_1_exact_match": 15})
 
 class SuggestionResponse(BaseModel):
     query_info: QueryInfo
@@ -208,3 +219,11 @@ class SuggestionErrorResponse(BaseModel):
     suggestions: List[Suggestion]
     metadata: SearchMetadata
     status: SearchStatus
+
+class NutritionHealthCheckResponse(BaseModel):
+    """栄養検索APIヘルスチェックレスポンス"""
+    status: str = Field(..., description="ヘルス状態 (healthy/unhealthy)", example="healthy")
+    service: str = Field(..., description="サービス名", example="nutrition_suggestion_api")
+    elasticsearch_index: str = Field(..., description="Elasticsearchインデックス名", example="mynetdiary_converted_tool_calls_list_stemmed_with_nutrition")
+    algorithm: str = Field(..., description="検索アルゴリズム", example="7_tier_optimized")
+    test_query_success: bool = Field(..., description="テストクエリ成功フラグ", example=True)

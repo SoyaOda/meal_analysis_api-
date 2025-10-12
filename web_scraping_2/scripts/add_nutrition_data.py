@@ -155,6 +155,10 @@ def main():
                     for key in nutrition_dict:
                         nutrition_dict[key] = nutrition_dict[key] / unit_coefficient
 
+                # Protein_gが存在しない場合は0を追加（品質保証）
+                if 'Protein_g' not in nutrition_dict:
+                    nutrition_dict['Protein_g'] = 0.0
+
                 food['default_nutrition'] = nutrition_dict
                 success_count += 1
                 if i <= 3:  # 最初の3件は詳細表示
