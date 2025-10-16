@@ -80,7 +80,7 @@ class AIFallbackMatcherComponent(BaseComponent[AIFallbackMatcherInput, AIFallbac
 
     def __init__(
         self,
-        model: str = "google/gemma-2-27b-it",
+        model: str = "google/gemma-3-27b-it",
         temperature: float = 0.5,
         timeout: float = 60.0,
         max_tokens: int = 4000

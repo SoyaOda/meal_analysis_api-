@@ -1,0 +1,2313 @@
+# USDA FNDDS Raw Ingredients List (All Data)
+# Source: usda_database/surveyDownload.json
+# Generated: 2025-10-15
+# Note: 全データ出力（除外・統合ルール未適用）
+
+# Total Categories: 145
+# Total Raw: 1433
+
+================================================================================
+
+## Cookies and brownies
+## (89 raw)
+
+Anisette toast
+Cookie, NFS
+Cookie, almond
+Cookie, applesauce
+Cookie, brownie, NS as to icing
+Cookie, brownie, without icing
+Cookie, brownie, reduced fat, NS as to icing
+Cookie, butterscotch, brownie
+Cookie, bar, with chocolate
+Cookie, chocolate chip
+Cookie, chocolate chip, reduced fat
+Cookie, chocolate chip sandwich
+Cookie, chocolate, made with rice cereal
+Cookie, chocolate, made with oatmeal and coconut, no bake
+Cookie, chocolate or fudge
+Cookie, marshmallow, chocolate-covered
+Cookie, marshmallow pie, chocolate covered
+Cookie, chocolate, with icing or coating
+Cookie, sugar wafer, chocolate-covered
+Cookie, chocolate sandwich
+Cookie, chocolate sandwich, reduced fat
+Cookie, chocolate, sandwich, with extra filling
+Cookie, chocolate and vanilla sandwich
+Cookie, chocolate wafer
+Cookie bar, with chocolate, nuts, and graham crackers
+Cookie, coconut
+Cookie, fruit-filled bar
+Cookie, fig bar
+Cookie, fortune
+Cookie, cone shell, ice cream type, wafer or cake
+Cookie, gingersnaps
+Cookie, granola
+Cookie, ladyfinger
+Cookie, macaroon
+Cookie, marshmallow, with coconut
+Cookie, marshmallow, with rice cereal, no bake
+Cookie, marshmallow, with rice cereal and chocolate chips
+Cookie, marshmallow and peanut butter, with oat cereal, no bake
+Cookie, molasses
+Cookie, Lebkuchen
+Cookie, multigrain, high fiber
+Cookie, oatmeal
+Cookie, oatmeal, with raisins
+Cookie, oatmeal, reduced fat, NS as to raisins
+Cookie, oatmeal sandwich, with creme filling
+Cookie, oatmeal sandwich, with peanut butter and jelly filling
+Cookie, oatmeal, with chocolate and peanut butter, no bake
+Cookie, peanut butter
+Cookie, peanut butter with rice cereal, no bake
+Cookie, peanut butter sandwich
+Cookie, with peanut butter filling, chocolate-coated
+Cookie, Pfeffernusse
+Cookie, Pizzelle
+Cookie, pumpkin
+Cookie, raisin
+Cookie, raisin sandwich, cream-filled
+Cookie, rum ball, no bake
+Cookie, sandwich-type, not chocolate or vanilla
+Cookie, shortbread
+Cookie, shortbread, reduced fat
+Pocky
+Cookie, animal
+Cookie, animal, with frosting or icing
+Cookie, butter or sugar
+Marie biscuit
+Cookie, sugar wafer
+Cookie, toffee bar
+Cookie, vanilla sandwich
+Cookie, vanilla sandwich, extra filling
+Cookie, vanilla sandwich, reduced fat
+Cookie, butter or sugar, with chocolate icing or filling
+Cookie, tea, Japanese
+Cookie, vanilla wafer
+Cookie, vanilla wafer, reduced fat
+Cookie, vanilla with caramel, coconut, and chocolate coating
+Cookie, rugelach
+Cookie, chocolate chip, reduced sugar
+Cookie, oatmeal, reduced sugar
+Cookie, sandwich, reduced sugar
+Cookie, sugar or plain, sugar free
+Cookie, sugar wafer, sugar free
+Cookie, peanut butter, sugar free
+Cookie, gluten free
+Graham crackers
+Graham crackers (Teddy Grahams)
+Graham crackers, chocolate covered
+Crackers, Cuban
+Graham crackers, reduced fat
+Graham crackers, sandwich, with filling
+
+--------------------------------------------------------------------------------
+
+## Cheese
+## (48 raw)
+
+Cheese, Blue or Roquefort
+Cheese, Brick
+Cheese, Camembert
+Cheese, Brie
+Cheese, Cheddar
+Cheese, Cheddar, reduced fat
+Cheese, Cheddar, nonfat or fat free
+Cheese, Colby
+Cheese, Feta
+Cheese, Fontina
+Cheese, goat
+Cheese, Gouda or Edam
+Cheese, Gruyere
+Cheese, Limburger
+Cheese, Monterey
+Cheese, Monterey, reduced fat
+Cheese, Mozzarella, NFS
+Cheese, Mozzarella, part skim
+Cheese, Mozzarella, reduced sodium
+Cheese, Mozzarella, nonfat or fat free
+Cheese, Muenster
+Cheese, Muenster, reduced fat
+Cheese, Parmesan, dry grated, fat free
+Cheese, Port du Salut
+Cheese, Provolone
+Cheese, provolone, reduced fat
+Cheese, Swiss
+Cheese, Swiss, reduced sodium
+Cheese, Swiss, reduced fat
+Cheese, Swiss, nonfat or fat free
+Cheese, Cheddar, reduced sodium
+Cheese, Mexican blend
+Cheese, Mexican blend, reduced fat
+Queso Anejo, aged Mexican cheese
+Queso Asadero
+Queso Fresco
+Queso cotija
+Cheese, American and Swiss blends
+Cheese, American, reduced fat
+Cheese, American, nonfat or fat free
+Cheese, American, reduced sodium
+Cheese spread, American or Cheddar cheese base, reduced fat
+Cheese, processed cheese food
+Cheese,  with wine
+Cheese spread, American or Cheddar cheese base
+Cheese spread, Swiss cheese base
+Cheese spread, pressurized can
+Imitation cheese
+
+--------------------------------------------------------------------------------
+
+## Salad dressings and vegetable oils
+## (43 raw)
+
+Almond oil
+Coconut oil
+Corn oil
+Cottonseed oil
+Flaxseed oil
+Peanut oil
+Canola oil
+Safflower oil
+Sesame oil
+Soybean oil
+Sunflower oil
+Walnut oil
+Wheat germ oil
+Salad dressing, NFS, for salads
+Blue or roquefort cheese dressing
+Bacon and tomato dressing
+Caesar dressing
+Coleslaw dressing
+French or Catalina dressing
+Honey mustard dressing
+Italian dressing, made with vinegar and oil
+Russian dressing
+Avocado dressing
+Poppy seed dressing
+Sesame dressing
+Ranch dressing
+Thousand Island dressing
+Salad dressing, light, NFS
+French or Catalina dressing, light
+Caesar dressing, light
+Honey mustard dressing, light
+Italian dressing, light
+Ranch dressing, light
+Sesame dressing, light
+Thousand Island dressing, light
+Blue or roquefort cheese dressing, fat free
+Caesar dressing, fat free
+French or Catalina dressing, fat free
+Honey mustard dressing, fat free
+Italian dressing, fat free
+Ranch dressing, fat free
+Salad dressing, fat free, NFS
+Thousand Island dressing, fat free
+
+--------------------------------------------------------------------------------
+
+## Crackers, excludes saltines
+## (42 raw)
+
+Breadsticks, hard, NFS
+Croutons
+Melba toast
+Zwieback toast
+Breadsticks, hard, gluten free
+Crackers, NFS
+Crackers, oatmeal
+Crackers, butter, reduced sodium
+Crackers, matzo, reduced sodium
+Crackers, wheat, reduced sodium
+Crackers, woven wheat, reduced sodium
+Crackers, butter, plain
+Crackers, butter, flavored
+Crackers, butter (Ritz)
+Crackers, butter, reduced fat
+Crackers, cheese
+Crackers, cheese (Cheez-It)
+Crackers, cheese (Goldfish)
+Crackers, cheese, reduced fat
+Crackers, cheese, reduced sodium
+Crackers, cheese, whole grain
+Crackers, crispbread
+Crackers, matzo
+Crackers, milk
+Rice cake
+Crackers, rice
+Popcorn cake
+Crackers, multigrain
+Crackers, sandwich
+Crackers, sandwich, peanut butter filled
+Crackers, sandwich, reduced fat, peanut butter filled
+Crackers, whole grain, sandwich, peanut butter filled
+Crackers, sandwich, cheese filled
+Crackers, water
+Crackers, wonton
+Crackers, woven wheat, reduced fat
+Crackers, wheat, reduced fat
+Crackers, gluten free, plain
+Crackers, gluten free, flavored
+Pita chips
+Bagel chips
+Noodles, chow mein
+
+--------------------------------------------------------------------------------
+
+## Yeast breads
+## (37 raw)
+
+Bread, NS as to major flour
+Bread, made from home recipe or purchased at a bakery, NS as to major flour
+Bread, white
+Bread, Cuban
+Bread, French or Vienna
+Focaccia, Italian, plain
+Bread, naan
+Bread, Italian, Grecian, Armenian
+Bread, pita
+Bread, cheese
+Bread, cinnamon
+Bread, egg, Challah
+Garlic bread, NFS
+Garlic bread, from frozen
+Bread, reduced calorie and/or high fiber, white or NFS
+Bread, white, special formula, added fiber
+Bread, potato
+Bread, sour dough
+Bread, whole grain white
+Bread, whole wheat
+Bread, chappatti or roti
+Bread, paratha
+Bread, sprouted wheat
+Bread, wheat or cracked wheat
+Bread, French or Vienna, whole wheat
+Bread, pita, whole wheat
+Bread, pita, wheat or cracked wheat
+Bread, rye
+Bread, marble rye and pumpernickel
+Bread, pumpernickel
+Bread, black
+Bread, oatmeal
+Bread, oat bran
+Bread, multigrain
+Bread, barley
+Bread, rice
+Bread, gluten free
+
+--------------------------------------------------------------------------------
+
+## Cold cuts and cured meats
+## (36 raw)
+
+Beef, corned
+Beef jerky
+Ham, prosciutto
+Ham, canned
+Ham, ground
+Bologna
+Bologna, reduced fat
+Bologna, reduced sodium
+Head cheese
+Mortadella
+Pastrami, NFS
+Pastrami, made from any kind of meat, reduced fat
+Pepperoni, NFS
+Pepperoni, reduced fat
+Pepperoni, reduced sodium
+Salami, NFS
+Salami, made from any type of meat, reduced fat
+Salami, made from any type of meat, reduced sodium
+Luncheon meat, NFS
+Ham, prepackaged or deli, luncheon meat
+Ham, prepackaged or deli, luncheon meat, reduced sodium
+Chicken, prepackaged or deli, luncheon meat
+Chicken, prepackaged or deli, luncheon meat, reduced sodium
+Ham luncheon meat, loaf type
+Spam
+Spam, reduced sodium
+Liverwurst
+Luncheon meat, loaf type
+Turkey, prepackaged or deli, luncheon meat
+Turkey, prepackaged or deli, luncheon meat, reduced sodium
+Turkey ham, prepackaged or deli, luncheon meat
+Beef, prepackaged or deli, luncheon meat
+Beef, prepackaged or deli, luncheon meat, reduced sodium
+Meat spread or potted meat, NFS
+Chicken salad spread
+Ham salad spread
+
+--------------------------------------------------------------------------------
+
+## Nuts and seeds
+## (31 raw)
+
+Nuts, NFS
+Almonds, NFS
+Brazil nuts
+Cashews, NFS
+Chestnuts
+Coconut, fresh
+Coconut, packaged
+Hazelnuts
+Macadamia nuts
+Mixed nuts, NFS
+Peanuts, NFS
+Pecans, NFS
+Pine nuts
+Pistachio nuts, NFS
+Almond butter, lower sodium
+Almond paste
+Cashew butter
+Peanut butter
+Peanut butter, lower sodium
+Peanut butter, lower sugar
+Peanut butter, reduced fat
+Peanut butter, vitamin and mineral fortified
+Trail mix, NFS
+Pumpkin seeds, NFS
+Pumpkin seeds, unsalted
+Sunflower seeds, plain, unsalted
+Sunflower seeds, NFS
+Sesame seeds
+Tahini
+Flax seeds
+Chia seeds
+
+--------------------------------------------------------------------------------
+
+## Fruit drinks
+## (31 raw)
+
+Coconut water, unsweetened
+Fruit nectar, NFS
+Apricot nectar
+Guava nectar
+Mango nectar
+Peach nectar
+Papaya nectar
+Pear nectar
+Soursop, nectar
+Fruit juice drink
+Lemonade, fruit juice drink
+Lemonade, frozen concentrate, not reconstituted
+Fruit flavored drink
+Margarita mix, nonalcoholic
+Fruit flavored drink, with high vitamin C
+Cranberry juice drink, with high vitamin C
+Fruit juice drink, with high vitamin C
+Vegetable and fruit juice drink, with high vitamin C
+Fruit juice drink (Sunny D)
+Fruit juice drink, with high vitamin C, light
+Fruit juice drink, light
+Cranberry juice drink, with high vitamin C, light
+Orange juice beverage, 40-50% juice, light
+Apple juice beverage, 40-50% juice, light
+Lemonade, fruit juice drink, light
+Vegetable and fruit juice drink, with high vitamin C, light
+Fruit juice drink (Capri Sun)
+Fruit juice drink, added calcium (Sunny D)
+Wine, nonalcoholic
+Beer, nonalcoholic
+Fruit juice, acai blend
+
+--------------------------------------------------------------------------------
+
+## Rolls and buns
+## (31 raw)
+
+Roll, NS as to major flour
+Roll, hard, NS as to major flour
+Roll, bran, NS as to type of bran
+Roll, white, soft
+Roll, white, hard
+Roll, white, hot dog bun
+Roll, white, hamburger bun
+Roll, diet
+Roll, egg bread
+Roll, French or Vienna
+Roll, white, hoagie, submarine
+Roll, Mexican, bolillo
+Roll, sour dough
+Breadsticks, NFS
+Breadsticks, soft, NFS
+Roll, wheat or cracked wheat
+Roll, wheat or cracked wheat, hot dog bun
+Roll, wheat or cracked wheat, hamburger bun
+Roll, whole wheat
+Roll, whole wheat, hot dog bun
+Roll, whole wheat, hamburger bun
+Roll, whole grain white
+Roll, whole grain white, hot dog bun
+Roll, whole grain white, hamburger bun
+Roll, rye
+Roll, pumpernickel
+Roll, oatmeal
+Roll, multigrain
+Roll, multigrain, hot dog bun
+Roll, multigrain, hamburger bun
+Roll, gluten free
+
+--------------------------------------------------------------------------------
+
+## Cereal bars
+## (31 raw)
+
+Cereal or granola bar (General Mills Fiber One Chewy Bar)
+Cereal or granola bar (Kellogg's Nutri-Grain Cereal Bar)
+Cereal or granola bar (Kellogg's Nutri-Grain Yogurt Bar)
+Cereal or granola bar (Kellogg's Nutri-Grain Fruit and Nut Bar)
+Milk 'n Cereal bar
+Cereal or granola bar (Kellogg's Special K bar)
+Cereal or granola bar (General Mills Nature Valley Chewy Trail Mix)
+Cereal or granola bar, with yogurt coating (General Mills Nature Valley Chewy Granola Bar)
+Cereal or granola bar (General Mills Nature Valley Sweet and Salty Granola Bar)
+Cereal or granola bar (General Mills Nature Valley Crunchy Granola Bar)
+Cereal or granola bar (Quaker Chewy Granola Bar)
+Cereal or granola bar (Quaker Chewy 90 Calorie Granola Bar)
+Cereal or granola bar (Quaker Chewy 25% Less Sugar Granola Bar)
+Cereal or granola bar (Quaker Chewy Dipps Granola Bar)
+Cereal or granola bar (Quaker Granola Bites)
+Snack bar, oatmeal
+Cereal or Granola bar, NFS
+Cereal or granola bar, lowfat, NFS
+Cereal or granola bar, nonfat
+Cereal or granola bar, reduced sugar, NFS
+Cereal or granola bar, peanuts , oats, sugar, wheat germ
+Cereal or granola bar, chocolate coated, NFS
+Cereal or granola bar, with coconut, chocolate coated
+Cereal or granola bar with nuts, chocolate coated
+Cereal or granola bar, oats, nuts, coated with non-chocolate coating
+Cereal or granola bar, coated with non-chocolate coating
+Cereal or granola bar, high fiber, coated with non-chocolate yogurt coating
+Cereal or granola bar, with rice cereal
+Breakfast bar, NFS
+Breakfast bar, date, with yogurt coating
+Breakfast bar, cereal crust with fruit filling, lowfat
+
+--------------------------------------------------------------------------------
+
+## Not included in a food category
+## (28 raw)
+
+Milk, dry, not reconstituted
+Whey, sweet, dry
+Cocoa powder, not reconstituted
+Chocolate beverage powder, dry mix, not reconstituted
+Chocolate beverage powder, light, dry mix, not reconstituted
+Milk, malted, dry mix, not reconstituted
+Strawberry beverage powder, dry mix, not reconstituted
+Wheat germ
+Wheat bran
+Oats, raw
+Basil, raw
+Chives, raw
+Cilantro, raw
+Parsley, raw
+Yeast
+Bacon, for use with vegetables
+Ham, for use with vegetables
+Beef, for use with vegetables
+Chicken, for use with vegetables
+Coffee, instant, not reconstituted
+Coffee, instant, decaffeinated, not reconstituted
+Coffee, instant, decaffeinated, pre-lightened and pre-sweetened with sugar, not reconstituted
+Tea, iced, instant, black, unsweetened, dry
+Tea, iced, instant, black, pre-sweetened, dry
+Fruit flavored drink, with high vitamin C, powdered, not reconstituted
+Fruit flavored drink, powdered, not reconstituted
+Fruit flavored drink, powdered, not reconstituted, diet
+Sports drink, dry concentrate, not reconstituted
+
+--------------------------------------------------------------------------------
+
+## Pizza
+## (25 raw)
+
+Pizza, cheese, from frozen, thin crust
+Pizza, cheese, from frozen, thick crust
+Pizza, cheese, from restaurant or fast food, NS as to type of crust
+Pizza, cheese, from restaurant or fast food, thin crust
+Pizza, cheese, from restaurant or fast food, medium crust
+Pizza, cheese, from restaurant or fast food, thick crust
+Pizza, cheese, stuffed crust
+Pizza, cheese, from school lunch, thin crust
+Pizza, cheese, from school lunch, thick crust
+Pizza with pepperoni, from restaurant or fast food, NS as to type of crust
+Pizza with pepperoni, from restaurant or fast food, thin crust
+Pizza with pepperoni, from restaurant or fast food,  medium crust
+Pizza with pepperoni, from restaurant or fast food, thick crust
+Pizza with pepperoni, from school lunch, thin crust
+Pizza with pepperoni, from school lunch, thick crust
+Pizza with meat other than pepperoni, from restaurant or fast food, NS as to type of crust
+Pizza with meat other than pepperoni, from restaurant or fast food, thin crust
+Pizza with meat other than pepperoni, from restaurant or fast food, medium crust
+Pizza with meat other than pepperoni, from restaurant or fast food, thick crust
+Pizza, with meat other than pepperoni, from school lunch, thin crust
+Pizza, with meat other than pepperoni, from school lunch, thick crust
+Pizza with meat and vegetables, from frozen, thin crust
+Pizza with meat and vegetables, from frozen, medium crust
+Pizza with meat and vegetables, from frozen, thick crust
+Pizza rolls
+
+--------------------------------------------------------------------------------
+
+## Other vegetables and combinations
+## (25 raw)
+
+Avocado, raw
+Sprouts, NFS
+Alfalfa sprouts, raw
+Artichoke
+Asparagus, raw
+Bean sprouts, raw
+Beets, raw
+Broccoflower, raw
+Brussels sprouts, raw
+Cactus, raw
+Cauliflower, raw
+Celery, raw
+Fennel bulb, raw
+Cucumber, raw
+Eggplant, raw
+Jicama, raw
+Kohlrabi, raw
+Peppers, sweet, green, raw
+Peppers, banana, raw
+Radish
+Rutabaga, raw
+Snowpeas, raw
+Summer squash, yellow, raw
+Summer squash, green, raw
+Turnip, raw
+
+--------------------------------------------------------------------------------
+
+## Jams, syrups, toppings
+## (25 raw)
+
+Blueberry pie filling
+Syrup, NFS
+Pancake syrup
+Corn syrup
+Blueberry syrup
+Chocolate syrup
+Chocolate syrup, light
+Strawberry drink syrup
+Pancake syrup, light
+Topping, butterscotch or caramel
+Topping, chocolate
+Topping, fruit
+Topping, marshmallow
+Topping, nuts and syrup
+Chocolate hazelnut spread
+Icing, chocolate
+Icing, white
+Caramel dip, light
+Jelly
+Jam
+Fruit butter
+Marmalade
+Jam or jelly, sugar free
+Jam or jelly, reduced sugar
+Jam or jelly, fruit juice sweetened
+
+--------------------------------------------------------------------------------
+
+## Tea
+## (25 raw)
+
+Tea, hot, leaf, black
+Tea, hot, leaf, black, decaffeinated
+Tea, hot, leaf, green
+Tea, hot, leaf, green, decaffeinated
+Tea, hot, leaf, oolong
+Tea, iced, instant, black, pre-sweetened with low calorie sweetener
+Tea, iced, instant, green, unsweetened
+Tea, iced, instant, green, pre-sweetened with sugar
+Tea, iced, instant, green, pre-sweetened with low calorie sweetener
+Tea, hot, herbal
+Tea, hot, hibiscus
+Tea, hot, chamomile
+Tea, iced, brewed, black, unsweetened
+Tea, iced, brewed, black, decaffeinated, unsweetened
+Tea, iced, brewed, green, unsweetened
+Tea, iced, brewed, green, decaffeinated, unsweetened
+Tea, iced, bottled, black
+Tea, iced, bottled, black, decaffeinated
+Tea, iced, bottled, black, diet
+Tea, iced, bottled, black, decaffeinated, diet
+Tea, iced, bottled, black, unsweetened
+Tea, iced, bottled, black, decaffeinated, unsweetened
+Tea, iced, bottled, green
+Tea, iced, bottled, green, diet
+Tea, iced, bottled, green, unsweetened
+
+--------------------------------------------------------------------------------
+
+## Fish
+## (24 raw)
+
+Fish, canned
+Fish, stick
+Fish, anchovy
+Fish, catfish, NFS
+Fish, cod, NFS
+Fish, flounder, NFS
+Fish, haddock, NFS
+Fish, mackerel, NFS
+Fish, mackerel, canned
+Fish, perch, NFS
+Fish, pompano, NFS
+Fish, salmon, NFS
+Fish, salmon, canned
+Fish, sardines, canned
+Fish, bass, NFS
+Fish, trout, NFS
+Fish, tuna, raw
+Fish, tuna, NFS
+Fish, tuna, canned
+Fish, whiting, NFS
+Fish, tilapia, NFS
+Fish, white, mixed species, NFS
+Caviar
+Imitation crab meat
+
+--------------------------------------------------------------------------------
+
+## Ice cream and frozen dairy desserts
+## (20 raw)
+
+Frozen yogurt, NFS
+Frozen yogurt, vanilla
+Frozen yogurt, chocolate
+Frozen yogurt, soft serve, vanilla
+Frozen yogurt bar, vanilla
+Frozen yogurt bar, chocolate
+Ice cream, vanilla
+Ice cream, chocolate
+Ice cream, soft serve, vanilla
+Ice cream, soft serve, chocolate
+Gelato, vanilla
+Gelato, chocolate
+Ice cream bar, vanilla
+Ice cream bar, vanilla, chocolate coated
+Ice cream candy bar
+Ice cream cone, vanilla, prepackaged
+Ice cream sundae, NFS
+Creamsicle
+Sherbet, all flavors
+Fudgesicle, light
+
+--------------------------------------------------------------------------------
+
+## Doughnuts, sweet rolls, pastries
+## (20 raw)
+
+Roll, sweet, no frosting
+Roll, sweet, cinnamon bun, no frosting
+Roll, sweet, cinnamon bun, frosted
+Pan Dulce, with fruit, no frosting
+Roll, sweet, with fruit, frosted, diet
+Pan Dulce, no topping
+Coffee cake, yeast type
+Croissant
+Croissant, cheese
+Cream puff, eclair, custard or cream filled, iced
+Cream puff, no filling or icing
+Pastry, puff
+Breakfast pastry, NFS
+Danish pastry, plain or spice
+Danish pastry, with fruit
+Danish pastry, with cheese
+Doughnut, cake type, plain
+Doughnut, yeast type
+Breakfast tart
+Breakfast tart, lowfat
+
+--------------------------------------------------------------------------------
+
+## Chicken, whole pieces
+## (18 raw)
+
+Chicken breast, NS as to cooking method, skin eaten
+Chicken breast, NS as to cooking method, skin not eaten
+Chicken breast, rotisserie, skin eaten
+Chicken breast, rotisserie, skin not eaten
+Chicken drumstick, NS as to cooking method, skin eaten
+Chicken drumstick, NS as to cooking method, skin not eaten
+Chicken drumstick, rotisserie, skin eaten
+Chicken drumstick, rotisserie, skin not eaten
+Chicken thigh, NS as to cooking method, skin eaten
+Chicken thigh, NS as to cooking method, skin not eaten
+Chicken thigh, rotisserie, skin eaten
+Chicken thigh, rotisserie, skin not eaten
+Chicken wing, NS as to cooking method
+Chicken wing, rotisserie
+Chicken "wings", plain, from fast food / restaurant
+Chicken, tail
+Chicken feet
+Chicken, canned, meat only
+
+--------------------------------------------------------------------------------
+
+## Tortilla, corn, other chips
+## (18 raw)
+
+Soy chips
+Chips, rice
+Corn nuts
+Corn chips, plain (Fritos)
+Cheese flavored corn snacks
+Cheese flavored corn snacks, reduced fat
+Tortilla chips, plain
+Cheese flavored corn snacks (Cheetos)
+Tortilla chips, flavored
+Tortilla chips, nacho cheese flavor (Doritos)
+Tortilla chips, other flavors (Doritos)
+Tortilla chips, low fat, unsalted
+Onion flavored rings
+Shrimp chips
+Multigrain chips (Sun Chips)
+Cracker chips
+Plantain chips
+Taro chips
+
+--------------------------------------------------------------------------------
+
+## Mustard and other condiments
+## (18 raw)
+
+Worcestershire sauce
+Lemon juice, 100%, NS as to form
+Lemon juice, 100%, freshly squeezed
+Lemon juice, 100%, canned or bottled
+Lime juice, 100%, NS as to form
+Lime juice, 100%, freshly squeezed
+Lime juice, 100%, canned or bottled
+Vinegar
+Garlic, raw
+Pimiento
+Yeast extract spread
+Horseradish
+Mustard
+Hot pepper sauce
+Wasabi paste
+Horseradish sauce
+Sweet and sour sauce
+Duck sauce
+
+--------------------------------------------------------------------------------
+
+## Bagels and English muffins
+## (18 raw)
+
+Bagel
+Muffin, English
+Bagel, whole grain white
+Bagel, wheat
+Bagel, whole wheat
+Bagel, wheat bran
+Muffin, English, wheat bran
+Muffin, English, wheat or cracked wheat
+Muffin, English, whole wheat
+Muffin, English, whole wheat, with raisins
+Muffin, English, whole grain white
+Muffin, English, rye
+Bagel, pumpernickel
+Muffin, English, pumpernickel
+Bagel, oat bran
+Muffin, English, oat bran
+Bagel, multigrain
+Muffin, English, multigrain
+
+--------------------------------------------------------------------------------
+
+## Sport and energy drinks
+## (18 raw)
+
+Energy drink (Full Throttle)
+Energy drink (Monster)
+Energy drink (Mountain Dew AMP)
+Energy drink (No Fear)
+Energy drink (No Fear Motherload)
+Energy drink (NOS)
+Energy drink (Red Bull)
+Energy drink (Rockstar)
+Energy drink (SoBe Energize Energy Juice Drink)
+Energy drink (Vault)
+Energy Drink
+Energy drink (Ocean Spray Cran-Energy Juice Drink)
+Energy drink (XS)
+Energy drink (XS Gold Plus)
+Sports drink (Gatorade G)
+Sports drink (Powerade)
+Sports drink, NFS
+Fluid replacement, electrolyte solution
+
+--------------------------------------------------------------------------------
+
+## Protein and nutritional powders
+## (17 raw)
+
+Nutritional powder mix (Carnation Instant Breakfast)
+Nutritional powder mix, sugar free (Carnation Instant Breakfast)
+Nutritional powder mix (EAS Whey Protein Powder)
+Nutritional powder mix (EAS Soy Protein Powder)
+Nutritional powder mix, high protein (Herbalife)
+Nutritional powder mix (Isopure)
+Nutritional powder mix (Muscle Milk)
+Nutritional powder mix, light (Muscle Milk)
+Nutritional powder mix (Slim Fast)
+Nutritional powder mix, sugar free (Slim Fast)
+Nutritional powder mix, high protein (Slim Fast)
+Nutritional powder mix, NFS
+Nutritional powder mix, high protein, NFS
+Nutritional powder mix, whey based, NFS
+Nutritional powder mix, protein, soy based, NFS
+Nutritional powder mix, protein, light, NFS
+Nutritional powder mix, protein, NFS
+
+--------------------------------------------------------------------------------
+
+## Cream and cream substitutes
+## (16 raw)
+
+Cream, NS as to light, heavy, or half and half
+Cream, light
+Cream, half and half
+Cream, half and half, fat free
+Cream, heavy
+Coffee creamer, NFS
+Coffee creamer, liquid
+Coffee creamer, liquid, flavored
+Coffee creamer, liquid, fat free
+Coffee creamer, liquid, fat free, sugar free, flavored
+Coffee creamer, liquid, sugar free, flavored
+Coffee creamer, powder
+Coffee creamer, powder, flavored
+Coffee creamer, powder, fat free
+Coffee creamer,powder, sugar free, flavored
+Coffee creamer, soy, liquid
+
+--------------------------------------------------------------------------------
+
+## Potato chips
+## (16 raw)
+
+Potato chips, restructured, multigrain
+Potato chips, NFS
+Potato chips, plain
+Potato chips, barbecue flavored
+Potato chips, sour cream and onion flavored
+Potato chips, cheese flavored
+Potato chips, other flavored
+Potato chips, ruffled, plain
+Potato chips, ruffled, barbecue flavored
+Potato chips, ruffled, sour cream and onion flavored
+Potato chips, ruffled, cheese flavored
+Potato chips, ruffled, other flavored
+Potato chips, restructured, reduced fat, lightly salted
+Potato chips, popped, plain
+Potato chips, popped, NFS
+Potato sticks, plain
+
+--------------------------------------------------------------------------------
+
+## Other fruits and fruit salads
+## (15 raw)
+
+Apricot, raw
+Starfruit, raw
+Cherries, maraschino
+Cherries, raw
+Cherries, frozen
+Dragon fruit
+Fig, raw
+Guava, raw
+Kiwi fruit, raw
+Lychee
+Passion fruit, raw
+Persimmon, raw
+Plum, raw
+Pomegranate, raw
+Tamarind
+
+--------------------------------------------------------------------------------
+
+## Sausages
+## (14 raw)
+
+Beef sausage
+Blood sausage
+Bratwurst
+Chorizo
+Knockwurst
+Polish sausage
+Italian sausage
+Sausage, NFS
+Pork sausage
+Pork sausage, reduced fat
+Thuringer
+Turkey or chicken sausage
+Turkey or chicken and pork sausage
+Vienna sausage, canned
+
+--------------------------------------------------------------------------------
+
+## Cakes and pies
+## (14 raw)
+
+Cake, angel food
+Cake, Boston cream pie
+Snack cake, chocolate
+Snack cake, white
+Cake, fruit cake
+Cake, pound
+Cake, sponge
+Pie, NFS
+Tart, all types
+Pie, apple, fast food
+Pie, custard
+Pie shell
+Pie shell, graham cracker
+Turnover, fruit
+
+--------------------------------------------------------------------------------
+
+## Pretzels/snack mix
+## (14 raw)
+
+Pretzels, NFS
+Pretzels, hard, NFS
+Pretzels, hard, plain, salted
+Pretzels, hard, plain, unsalted
+Pretzels, hard, plain, gluten free
+Pretzels, hard, coated, NFS
+Pretzels, hard, chocolate coated
+Pretzels, hard, filled, NFS
+Pretzels, hard, cheese filled
+Pretzels, soft, NFS
+Pretzels, soft, ready-to-eat, NFS
+Pretzels, soft, ready-to-eat, unsalted, no butter
+Pretzels, soft, from frozen, NFS
+Pretzels, soft, from frozen, unsalted
+
+--------------------------------------------------------------------------------
+
+## Other fruit juice
+## (14 raw)
+
+Fruit juice blend, citrus, 100% juice
+Fruit juice blend, 100% juice
+Cranberry juice blend, 100% juice, with calcium added
+Blackberry juice, 100%
+Cranberry juice, 100%, not a blend
+Grape juice, 100%, with calcium added
+Papaya juice, 100%
+Passion fruit juice, 100%
+Pineapple juice, 100%
+Pomegranate juice, 100%
+Prune juice, 100%
+Watermelon juice, 100%
+Aloe vera juice drink
+Vegetable and fruit juice, 100% juice, with high vitamin C
+
+--------------------------------------------------------------------------------
+
+## Stir-fry and soy-based sauce mixtures
+## (13 raw)
+
+Sweet and sour pork
+Sweet and sour chicken or turkey
+Sweet and sour chicken or turkey, without vegetables
+Orange chicken
+Sesame chicken
+Szechuan beef
+Hunan beef
+Chicken or turkey and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+General Tso chicken
+Kung pao chicken
+Teriyaki chicken with rice and vegetable, diet frozen meal
+Egg foo yung, NFS
+Chow mein or chop suey, meatless, no noodles
+
+--------------------------------------------------------------------------------
+
+## Other Mexican mixed dishes
+## (13 raw)
+
+Mexican pizza
+Burrito bowl, NFS
+Enchilada, NFS
+Tamale, NFS
+Tamale, beef
+Tamale, pork
+Tamale, chicken
+Tamale, no meat
+Tamale casserole with meat
+Quesadilla, NFS
+Pupusa, cheese only
+Pupusa, with beans
+Pupusa, meat
+
+--------------------------------------------------------------------------------
+
+## Baby food: vegetables
+## (13 raw)
+
+Baby Toddler carrots, Stage 1
+Baby Toddler carrots, Stage 2
+Baby Toddler squash, Stage 1
+Baby Toddler squash, Stage 2
+Baby Toddler sweet potatoes, Stage 1
+Baby Toddler sweet potatoes, Stage 2
+Baby Toddler green beans, Stage 1
+Baby Toddler green beans, Stage 2
+Baby Toddler beets
+Baby Toddler multiple vegetables, Stage 2
+Baby Toddler multiple vegetables, Stage 3
+Baby Toddler peas, Stage 1
+Baby Toddler peas, Stage 2
+
+--------------------------------------------------------------------------------
+
+## Candy not containing chocolate
+## (13 raw)
+
+White chocolate candy
+Candy, licorice
+Candy, marshmallow
+Candy, peanut brittle
+Candy, gummy
+Candy, hard
+Candy, lollipop
+Candy, cotton
+Candy, fruit snacks
+Candy, fruit leather
+Candy, non chocolate, sugar free
+Chewing gum
+Chewing gum, sugar free
+
+--------------------------------------------------------------------------------
+
+## Soft drinks
+## (13 raw)
+
+Soft drink, NFS
+Soft drink, cola
+Soft drink, cola, decaffeinated
+Soft drink, pepper type
+Soft drink, pepper type, decaffeinated
+Soft drink, cream soda
+Soft drink, fruit flavored, caffeine free
+Soft drink, fruit flavored, caffeine containing
+Soft drink, ginger ale
+Soft drink, root beer
+Soft drink, chocolate flavored
+Soft drink, cola, fruit or vanilla flavored
+Soft drink, cola, chocolate flavored
+
+--------------------------------------------------------------------------------
+
+## Diet soft drinks
+## (13 raw)
+
+Soft drink, NFS, diet
+Soft drink, cola, diet
+Soft drink, cola, decaffeinated, diet
+Soft drink, pepper type, diet
+Soft drink, pepper type, decaffeinated, diet
+Soft drink, cream soda, diet
+Soft drink, fruit flavored, diet, caffeine free
+Soft drink, fruit flavored, caffeine containing, diet
+Soft drink, ginger ale, diet
+Soft drink, root beer, diet
+Soft drink, chocolate flavored, diet
+Soft drink, cola, fruit or vanilla flavored, diet
+Soft drink, cola, chocolate flavored, diet
+
+--------------------------------------------------------------------------------
+
+## Nutritional beverages
+## (13 raw)
+
+Nutritional drink or shake, ready-to-drink (Boost)
+Nutritional drink or shake, ready-to-drink (Boost Plus)
+Nutritional drink or shake, ready-to-drink (Ensure)
+Nutritional drink or shake, ready-to-drink (Ensure Plus)
+Nutritional drink or shake, ready-to-drink, sugar free (Glucerna)
+Nutritional drink or shake, ready-to-drink (Muscle Milk)
+Nutritional drink or shake, ready-to-drink (Slim Fast)
+Nutritional drink or shake, ready-to-drink, sugar free (Slim Fast)
+Nutritional drink or shake, high protein, ready-to-drink (Slim Fast)
+Nutritional drink or shake, ready-to-drink, NFS
+Nutritional drink or shake, high protein, ready-to-drink, NFS
+Nutritional drink or shake, high protein, light, ready-to-drink, NFS
+Nutritional drink or shake, liquid, soy-based
+
+--------------------------------------------------------------------------------
+
+## Dips, gravies, other sauces
+## (12 raw)
+
+Dip, NFS
+Cheese dip with chili pepper
+Gravy, poultry
+Gravy, beef
+Gravy, beef, fat free
+Gravy, poultry, fat free
+Gravy, NFS
+Hummus, plain
+Peanut sauce
+Gravy, vegetarian
+Enchilada sauce, green
+Salsa verde or salsa, green
+
+--------------------------------------------------------------------------------
+
+## Nutrition bars
+## (12 raw)
+
+Cereal or granola bar (Kashi Chewy)
+Cereal or granola bar (Kashi Crunchy)
+Nutrition bar (Balance Original Bar)
+Nutrition bar (Clif Bar)
+Nutrition bar (Clif Kids Organic Zbar)
+Nutrition bar (PowerBar)
+Nutrition bar (Slim Fast Original Meal Bar)
+Nutrition bar (Snickers Marathon Protein Bar)
+Nutrition bar (South Beach Living Meal Bar)
+Nutrition bar (South Beach Living High Protein Bar)
+Nutrition bar (Tiger's Milk)
+Nutrition bar (Zone Perfect Classic Crunch)
+
+--------------------------------------------------------------------------------
+
+## Baby food: fruit
+## (12 raw)
+
+Baby Toddler multiple fruit, Stage 2
+Baby Toddler multiple fruit, Stage 3
+Baby Toddler apples, Stage 1
+Baby Toddler apples, Stage 2
+Baby Toddler bananas, Stage 1
+Baby Toddler bananas, Stage 2
+Baby Toddler peaches, Stage 1
+Baby Toddler peaches, Stage 2
+Baby Toddler pears, Stage 1
+Baby Toddler pears, Stage 2
+Baby Toddler prunes
+Baby Toddler mangoes
+
+--------------------------------------------------------------------------------
+
+## Coffee
+## (12 raw)
+
+Coffee, NS as to type
+Coffee, NS as to brewed or instant
+Coffee, brewed
+Coffee, espresso
+Coffee, espresso, decaffeinated
+Coffee, brewed, flavored
+Coffee, NS as to brewed or instant, decaffeinated
+Coffee, brewed, decaffeinated
+Coffee and chicory, brewed
+Coffee and chicory, brewed, decaffeinated
+Coffee, bottled/canned
+Coffee substitute
+
+--------------------------------------------------------------------------------
+
+## Chicken patties, nuggets and tenders
+## (11 raw)
+
+Chicken patty, breaded
+Chicken fillet, breaded
+Chicken nuggets, NFS
+Chicken nuggets, from fast food
+Chicken nuggets, from restaurant
+Chicken nuggets, from school lunch
+Chicken nuggets, from frozen
+Chicken tenders or strips, NFS
+Chicken tenders or strips, breaded, from fast food
+Chicken tenders or strips, breaded, from school lunch
+Chicken tenders or strips, breaded, from frozen
+
+--------------------------------------------------------------------------------
+
+## Burgers
+## (11 raw)
+
+Cheeseburger, NFS
+Cheeseburger (McDonalds)
+Quarter Pounder (McDonalds)
+Whopper with cheese (Burger King)
+Quarter Pounder with cheese (McDonalds)
+Double cheeseburger (McDonalds)
+McDouble (McDonalds)
+Big Mac (McDonalds)
+Hamburger, NFS
+Hamburger (McDonalds)
+Whopper (Burger King)
+
+--------------------------------------------------------------------------------
+
+## Beans, peas, legumes
+## (11 raw)
+
+White beans, NFS
+Black beans, NFS
+Lima beans, NFS
+Pinto beans, NFS
+Kidney beans, NFS
+Pork and beans
+Blackeyed peas, NFS
+Chickpeas, NFS
+Wasabi peas
+Lentils, NFS
+Soy nuts
+
+--------------------------------------------------------------------------------
+
+## Soy and meat-alternative products
+## (11 raw)
+
+Soybean curd
+Soybean curd cheese
+Textured vegetable protein, dry
+Bacon strip, meatless
+Breakfast link, pattie, or slice, meatless
+Chicken, meatless, NFS
+Hot dog, vegetarian
+Luncheon slice, meatless-beef, chicken, salami or turkey
+Meatball, meatless
+Veggie burger patty, no bun
+Vegetarian, fillet
+
+--------------------------------------------------------------------------------
+
+## Biscuits, muffins, quick breads
+## (11 raw)
+
+Biscuit, NFS
+Biscuit, from refrigerated dough
+Biscuit, from fast food / restaurant
+Cornbread, prepared from mix
+Cornbread muffin, stick, round
+Hush puppy
+Muffin, NFS
+Muffin, fruit
+Muffin, fruit, low fat
+Muffin, oat bran
+Bread, Boston Brown
+
+--------------------------------------------------------------------------------
+
+## Pancakes, waffles, French toast
+## (11 raw)
+
+Pancakes, NFS
+Pancakes, plain, frozen
+Pancakes, gluten free
+Waffle, NFS
+Waffle, plain, frozen
+Waffle, whole grain, reduced fat
+Waffle, school
+Waffle, gluten free
+French toast, NFS
+French toast sticks, fast food / restaurant
+Crepe, NFS
+
+--------------------------------------------------------------------------------
+
+## Pasta mixed dishes, excludes macaroni and cheese
+## (11 raw)
+
+Lasagna with meat
+Lasagna with meat, canned
+Lasagna with meat, from restaurant
+Lasagna with meat, frozen
+Lasagna, meatless
+Ravioli, meat-filled, with tomato sauce or meat sauce, canned
+Ravioli, cheese-filled, with tomato sauce
+Ravioli, cheese-filled, with tomato sauce, canned
+Tortellini, cheese-filled, no sauce
+Pasta with sauce, NFS
+Spaghetti with meat sauce, diet frozen meal
+
+--------------------------------------------------------------------------------
+
+## Candy containing chocolate
+## (11 raw)
+
+Chocolate candy, other, NFS
+Chocolate candy
+Chocolate candy with nuts, other, NFS
+Chocolate candy with cereal
+Chocolate chips
+Dark chocolate candy, other, NFS
+Dark chocolate candy
+Dark chocolate candy with nuts, other, NFS
+Chocolate candy, cream filled
+Chocolate candy, sugar free
+Chocolate candy, candy shell
+
+--------------------------------------------------------------------------------
+
+## Diet sport and energy drinks
+## (11 raw)
+
+Energy drink, low calorie (Monster)
+Energy drink, sugar free (Monster)
+Energy drink, sugar free (Mountain Dew AMP)
+Energy drink, sugar free (No Fear)
+Energy drink, sugar-free (NOS)
+Energy drink, sugar-free (Red Bull)
+Energy drink, sugar free (Rockstar)
+Energy drink, sugar free (Vault)
+Sports drink, low calorie (Gatorade G2)
+Sports drink, low calorie (Powerade Zero)
+Sports drink, low calorie
+
+--------------------------------------------------------------------------------
+
+## Cream cheese, sour cream, whipped cream
+## (10 raw)
+
+Whipped topping
+Whipped topping, fat free
+Whipped topping, sugar free
+Sour cream, regular
+Sour cream, light
+Sour cream, fat free
+Sour cream, imitation
+Cream cheese, regular, plain
+Cream cheese, fat free
+Cheese spread, cream cheese
+
+--------------------------------------------------------------------------------
+
+## Shellfish
+## (10 raw)
+
+Shellfish, NFS
+Clams, raw
+Clams, canned
+Crab
+Crab, canned
+Lobster
+Mussels
+Oysters, raw
+Oysters, canned
+Shrimp, canned
+
+--------------------------------------------------------------------------------
+
+## French fries and other fried white potatoes
+## (10 raw)
+
+Potato, french fries, NFS
+Potato, french fries, NS as to fresh or frozen
+Potato, french fries, fast food
+Potato, french fries, restaurant
+Potato, home fries, NFS
+Potato, hash brown, NFS
+Potato, hash brown, from fast food
+Potato, hash brown, from restaurant
+Potato skins, NFS
+Potato tots, NFS
+
+--------------------------------------------------------------------------------
+
+## Gelatins, ices, sorbets
+## (10 raw)
+
+Gelatin dessert
+Gelatin dessert, sugar free
+Italian Ice
+Italian Ice, no sugar added
+Popsicle, NFS
+Popsicle
+Popsicle, no sugar added
+Freezer pop
+Snow cone
+Snow cone, no sugar added
+
+--------------------------------------------------------------------------------
+
+## Meat mixed dishes
+## (9 raw)
+
+Chili, NFS
+Salisbury steak with gravy
+Corned beef hash
+Corned beef patty
+Hash, NS as to type of meat
+Frozen dinner, NFS
+Beef dinner, NFS, frozen meal
+Salisbury steak dinner, NFS, frozen meal
+Meat loaf dinner, NFS, frozen meal
+
+--------------------------------------------------------------------------------
+
+## Soy-based condiments
+## (9 raw)
+
+Fish sauce
+Oyster sauce
+Miso
+Natto
+Hoisin sauce
+Soy sauce
+Soy sauce, reduced sodium
+Teriyaki sauce
+Teriyaki sauce, reduced sodium
+
+--------------------------------------------------------------------------------
+
+## Blueberries and other berries
+## (9 raw)
+
+Blackberries, raw
+Blackberries, frozen
+Blueberries, raw
+Bluberries, canned
+Blueberries, frozen
+Cranberries, raw
+Cranberry sauce
+Raspberries, raw
+Raspberries, frozen
+
+--------------------------------------------------------------------------------
+
+## Tomato-based condiments
+## (9 raw)
+
+Ketchup, reduced sodium
+Tomato chili sauce
+Salsa, NFS
+Salsa, red
+Salsa, red, homemade
+Enchilada sauce, red
+Barbecue sauce
+Steak sauce
+Cocktail sauce
+
+--------------------------------------------------------------------------------
+
+## Olives, pickles, pickled vegetables
+## (9 raw)
+
+Kimchi
+Pickles, dill
+Relish, pickle
+Pickles, sweet
+Olives, NFS
+Olives, green
+Olives, black
+Olives, stuffed
+Pickles, NFS
+
+--------------------------------------------------------------------------------
+
+## Mayonnaise
+## (9 raw)
+
+Sandwich spread
+Tartar sauce
+Mayonnaise, regular
+Vegan mayonnaise
+Mayonnaise-type salad dressing
+Mayonnaise, light
+Mayonnaise, reduced fat,  with olive oil
+Mayonnaise-type salad dressing, light
+Mayonnaise, fat free
+
+--------------------------------------------------------------------------------
+
+## Pudding
+## (8 raw)
+
+Pudding, chocolate, NFS
+Pudding, flavors other than chocolate, NFS
+Pudding, rice
+Pudding, tapioca, made from dry mix
+Pudding, flavors other than chocolate, ready-to-eat
+Pudding, chocolate, ready-to-eat
+Pudding, tapioca, ready-to-eat
+Dulce de leche
+
+--------------------------------------------------------------------------------
+
+## Citrus fruits
+## (8 raw)
+
+Clementine, raw
+Grapefruit, raw
+Grapefruit, canned
+Kumquat, raw
+Lemon, raw
+Lime, raw
+Orange, canned, juice pack
+Tangerine, raw
+
+--------------------------------------------------------------------------------
+
+## Other dark green vegetables
+## (8 raw)
+
+Beet greens, raw
+Chard, raw
+Collards, raw
+Cress, raw
+Dandelion greens, raw
+Kale, raw
+Mustard greens, raw
+Watercress, raw
+
+--------------------------------------------------------------------------------
+
+## Vegetables on a sandwich
+## (8 raw)
+
+Avocado, for use on a sandwich
+Cucumber, for use on a sandwich
+Lettuce, for use on a sandwich
+Mushrooms, for use on a sandwich
+Onions, for use on a sandwich
+Pepper, for use on a sandwich
+Spinach, for use on a sandwich
+Tomatoes, for use on a sandwich
+
+--------------------------------------------------------------------------------
+
+## Liquor and cocktails
+## (8 raw)
+
+Liqueur, coffee flavored
+Brandy
+Whiskey
+Scotch
+Gin
+Rum
+Vodka
+Tequila
+
+--------------------------------------------------------------------------------
+
+## Cottage/ricotta cheese
+## (7 raw)
+
+Cheese, cottage, NFS
+Cheese, cottage, creamed, large or small curd
+Cheese, cottage, dry curd
+Puerto Rican white cheese
+Cheese, cottage, low fat
+Cheese, cottage, lowfat, low sodium
+Cheese, cottage, lowfat, lactose reduced
+
+--------------------------------------------------------------------------------
+
+## Mashed potatoes and white potato mixtures
+## (7 raw)
+
+Potato, scalloped, NFS
+Potato, mashed, NFS
+Potato, mashed, from fast food
+Potato, mashed, ready-to-heat
+Potato, mashed, from fresh, NFS
+Potato, mashed, ready-to-heat, NFS
+Potato salad with egg, made with mayonnaise
+
+--------------------------------------------------------------------------------
+
+## Vegetable juice
+## (7 raw)
+
+Carrot juice, 100%
+Tomato juice, 100%
+Tomato juice, 100%, low sodium
+Tomato juice cocktail
+Tomato and vegetable juice, 100%
+Tomato and vegetable juice, 100%, low sodium
+Celery juice
+
+--------------------------------------------------------------------------------
+
+## Sugars and honey
+## (7 raw)
+
+Sugar, NFS
+Sugar, white, granulated or lump
+Sugar, white, confectioner's, powdered
+Sugar, brown
+Honey
+Agave liquid sweetener
+Molasses
+
+--------------------------------------------------------------------------------
+
+## Sugar substitutes
+## (7 raw)
+
+Sugar substitute, sucralose, powder
+Sugar substitute, stevia, powder
+Sugar substitute, stevia, liquid
+Sugar substitute, monk fruit, powder
+Sugar substitute, liquid, NFS
+Sugar substitute, saccharin, powder
+Sugar substitute, aspartame, powder
+
+--------------------------------------------------------------------------------
+
+## Wine
+## (7 raw)
+
+Wine, red
+Wine, white
+Wine, rose
+Wine, rice
+Wine, dessert, sweet
+Wine, light
+Wine cooler
+
+--------------------------------------------------------------------------------
+
+## Milk, whole
+## (6 raw)
+
+Milk, whole
+Milk, lactose free, whole
+Buttermilk
+Goat milk
+Milk, evaporated, NS as to fat content
+Milk, evaporated, whole
+
+--------------------------------------------------------------------------------
+
+## Plant-based milk
+## (6 raw)
+
+Soy milk, unsweetened
+Almond milk, unsweetened
+Rice milk
+Coconut milk
+Coconut milk, used in cooking
+Coconut cream, canned, sweetened
+
+--------------------------------------------------------------------------------
+
+## Yogurt, Greek
+## (6 raw)
+
+Yogurt, Greek, NS as to type of milk or flavor
+Yogurt, Greek, NS as to type of milk, plain
+Yogurt, Greek, whole milk, plain
+Yogurt, Greek, nonfat milk, plain
+Yogurt, Greek, NS as to type of milk, fruit
+Yogurt, Greek, NS as to type of milk, flavors other than fruit
+
+--------------------------------------------------------------------------------
+
+## Baby food: snacks and sweets
+## (6 raw)
+
+Baby Toddler bar
+Baby Toddler crackers
+Baby Toddler puffs, fruit
+Baby Toddler puffs, vegetable
+Baby Toddler pudding
+Baby Toddler yogurt melts
+
+--------------------------------------------------------------------------------
+
+## Citrus juice
+## (6 raw)
+
+Grapefruit juice, 100%, freshly squeezed
+Grapefruit juice, 100%, NS as to form
+Grapefruit juice, 100%, with calcium added
+Orange juice, 100%,  freshly squeezed
+Orange juice, 100%, frozen, not reconstituted
+Tangerine juice, 100%
+
+--------------------------------------------------------------------------------
+
+## Baby juice
+## (6 raw)
+
+Baby Toddler juice, NFS
+Baby Toddler juice, apple
+Baby Toddler juice, grape
+Baby Toddler juice, mixed fruit
+Baby Toddler juice, pear
+Baby Toddler juice, fruit and vegetable
+
+--------------------------------------------------------------------------------
+
+## Butter and animal fats
+## (6 raw)
+
+Butter, NFS
+Butter, stick
+Butter, tub
+Butter, light
+Lard
+Ghee, clarified butter
+
+--------------------------------------------------------------------------------
+
+## Beer
+## (6 raw)
+
+Beer
+Beer, light
+Beer, higher alcohol
+Alcoholic malt beverage, sweetened
+Alcoholic malt beverage
+Hard cider
+
+--------------------------------------------------------------------------------
+
+## Baby food: meat and dinners
+## (5 raw)
+
+Baby Toddler beef
+Baby Toddler ham
+Baby Toddler meat stick
+Baby Toddler chicken
+Baby Toddler turkey
+
+--------------------------------------------------------------------------------
+
+## Baby food: cereals
+## (5 raw)
+
+Baby Toddler cereal, barley, dry
+Baby Toddler cereal, oatmeal, dry
+Baby Toddler cereal, rice, dry
+Baby Toddler cereal, multigrain, dry
+Baby Toddler cereal, NFS
+
+--------------------------------------------------------------------------------
+
+## Flavored or carbonated water
+## (5 raw)
+
+Water, tonic
+Water, carbonated, plain
+Water, carbonated, flavored
+Water, non-carbonated, flavored
+Water beverage, fruit flavored
+
+--------------------------------------------------------------------------------
+
+## Yogurt, regular
+## (4 raw)
+
+Yogurt, NS as to type of milk or flavor
+Yogurt, NS as to type of milk, plain
+Yogurt, NS as to type of milk, fruit
+Yogurt, NS as to type of milk, flavors other than fruit
+
+--------------------------------------------------------------------------------
+
+## Milk shakes and other dairy drinks
+## (4 raw)
+
+Eggnog
+Milk shake, fast food, flavors other than chocolate
+Milk shake, bottled, flavors other than chocolate
+Chocolate milk drink
+
+--------------------------------------------------------------------------------
+
+## Frankfurters
+## (4 raw)
+
+Hot dog, NFS
+Hot dog, beef
+Hot dog, meat and poultry
+Hot dog, turkey
+
+--------------------------------------------------------------------------------
+
+## Turnovers and other grain-based items
+## (4 raw)
+
+Cornbread stuffing
+Empanada, NFS
+Pierogi
+Turnover or hot pocket, NFS
+
+--------------------------------------------------------------------------------
+
+## Tortillas
+## (4 raw)
+
+Tortilla, corn
+Tortilla, flour
+Tortilla, whole wheat
+Taco shell, corn
+
+--------------------------------------------------------------------------------
+
+## Saltine crackers
+## (4 raw)
+
+Crackers, oyster
+Crackers, saltine
+Crackers, saltine, reduced fat
+Crackers, saltine, multigrain
+
+--------------------------------------------------------------------------------
+
+## Popcorn
+## (4 raw)
+
+Popcorn, NFS
+Popcorn, microwave, NFS
+Popcorn, ready-to-eat, NFS
+Popcorn, ready-to-eat, cheese flavored
+
+--------------------------------------------------------------------------------
+
+## Lettuce and lettuce salads
+## (4 raw)
+
+Romaine lettuce, raw
+Radicchio, raw
+Lettuce, Boston, raw
+Lettuce, arugula, raw
+
+--------------------------------------------------------------------------------
+
+## Fried vegetables
+## (4 raw)
+
+Sweet potato fries, NFS
+Sweet potato fries, frozen
+Sweet potato fries, school
+Sweet potato tots, school
+
+--------------------------------------------------------------------------------
+
+## Milk, nonfat
+## (3 raw)
+
+Milk, fat free (skim)
+Milk, lactose free, fat free (skim)
+Milk, evaporated, fat free (skim)
+
+--------------------------------------------------------------------------------
+
+## Smoothies and grain drinks
+## (3 raw)
+
+Fruit smoothie juice drink, with dairy
+Fruit smoothie, bottled
+Fruit and vegetable smoothie, bottled
+
+--------------------------------------------------------------------------------
+
+## Formula, ready-to-feed
+## (3 raw)
+
+Infant formula, Similac Alimentum, ready-to-feed
+Toddler formula, PediaSure
+Infant formula, Similac for Diarrhea
+
+--------------------------------------------------------------------------------
+
+## Ramen and Asian broth-based soups
+## (3 raw)
+
+Soup, hot and sour
+Soup, egg drop
+Ramen bowl, NFS
+
+--------------------------------------------------------------------------------
+
+## Eggs and omelets
+## (3 raw)
+
+Egg, whole, raw
+Egg, white only, raw
+Egg, yolk only, raw
+
+--------------------------------------------------------------------------------
+
+## Fried rice and lo/chow mein
+## (3 raw)
+
+Lo mein, NFS
+Lo mein, meatless
+Pad Thai, NFS
+
+--------------------------------------------------------------------------------
+
+## Dried fruits
+## (3 raw)
+
+Banana chips
+Date
+Raisins
+
+--------------------------------------------------------------------------------
+
+## Melons
+## (3 raw)
+
+Cantaloupe, raw
+Honeydew melon, raw
+Watermelon, raw
+
+--------------------------------------------------------------------------------
+
+## Mango and papaya
+## (3 raw)
+
+Mango, raw
+Mango, frozen
+Papaya, raw
+
+--------------------------------------------------------------------------------
+
+## Peaches and nectarines
+## (3 raw)
+
+Nectarine, raw
+Peach, raw
+Peach, frozen
+
+--------------------------------------------------------------------------------
+
+## Strawberries
+## (3 raw)
+
+Strawberries, raw
+Strawberries, canned
+Strawberries, frozen
+
+--------------------------------------------------------------------------------
+
+## Other starchy vegetables
+## (3 raw)
+
+Plantain, raw
+Green peas, raw
+Water Chesnut
+
+--------------------------------------------------------------------------------
+
+## Broccoli
+## (3 raw)
+
+Broccoli raab, raw
+Broccoli, raw
+Broccoli, chinese, raw
+
+--------------------------------------------------------------------------------
+
+## Other red and orange vegetables
+## (3 raw)
+
+Winter squash, raw
+Sweet potato, NFS
+Peppers, sweet, red, raw
+
+--------------------------------------------------------------------------------
+
+## Pasta sauces, tomato-based
+## (3 raw)
+
+Spaghetti sauce
+Spaghetti sauce, reduced sodium
+Spaghetti sauce, fat free
+
+--------------------------------------------------------------------------------
+
+## Cabbage
+## (3 raw)
+
+Cabbage, green, raw
+Cabbage, Chinese, raw
+Cabbage, red, raw
+
+--------------------------------------------------------------------------------
+
+## Margarine
+## (3 raw)
+
+Butter replacement, liquid
+Butter replacement, powder
+Shortening, NS as to vegetable or animal
+
+--------------------------------------------------------------------------------
+
+## Milk, reduced fat
+## (2 raw)
+
+Milk, reduced fat (2%)
+Milk, lactose free, reduced fat (2%)
+
+--------------------------------------------------------------------------------
+
+## Milk, lowfat
+## (2 raw)
+
+Milk, low fat (1%)
+Milk, lactose free, low fat (1%)
+
+--------------------------------------------------------------------------------
+
+## Flavored milk, whole
+## (2 raw)
+
+Milk, condensed, sweetened
+Chocolate milk, whole
+
+--------------------------------------------------------------------------------
+
+## Formula, prepared from powder
+## (2 raw)
+
+Infant formula, Similac Alimentum, powder, made with water
+Toddler formula, store brand, pediatric shake
+
+--------------------------------------------------------------------------------
+
+## Poultry mixed dishes
+## (2 raw)
+
+Chicken dinner, NFS, frozen meal
+Turkey with gravy, dressing, potatoes, vegetable, frozen meal
+
+--------------------------------------------------------------------------------
+
+## Macaroni and cheese
+## (2 raw)
+
+Macaroni or noodles with cheese, from restaurant
+Macaroni or noodles with cheese, canned
+
+--------------------------------------------------------------------------------
+
+## Rice mixed dishes
+## (2 raw)
+
+Rice, white, with other vegetables, NS as to fat
+Spanish rice, from restaurant
+
+--------------------------------------------------------------------------------
+
+## Apples
+## (2 raw)
+
+Applesauce, unsweetened
+Apple pie filling
+
+--------------------------------------------------------------------------------
+
+## Pineapple
+## (2 raw)
+
+Pineapple, raw
+Pineapple, frozen
+
+--------------------------------------------------------------------------------
+
+## Apple juice
+## (2 raw)
+
+Apple cider
+Apple juice, 100%, with calcium added
+
+--------------------------------------------------------------------------------
+
+## Corn
+## (2 raw)
+
+Corn, raw
+Corn, creamed
+
+--------------------------------------------------------------------------------
+
+## Enhanced water
+## (2 raw)
+
+Water, enhanced, regular
+Water, enhanced, diet
+
+--------------------------------------------------------------------------------
+
+## Flavored milk, reduced fat
+## (1 raw)
+
+Chocolate milk, reduced fat (2%)
+
+--------------------------------------------------------------------------------
+
+## Flavored milk, nonfat
+## (1 raw)
+
+Chocolate milk, fat free (skim)
+
+--------------------------------------------------------------------------------
+
+## Flavored milk, lowfat
+## (1 raw)
+
+Chocolate milk, low fat (1%)
+
+--------------------------------------------------------------------------------
+
+## Beef, excludes ground
+## (1 raw)
+
+Beef, stew meat
+
+--------------------------------------------------------------------------------
+
+## Pork
+## (1 raw)
+
+Pork skin rinds
+
+--------------------------------------------------------------------------------
+
+## Turkey, duck, other poultry
+## (1 raw)
+
+Turkey, canned
+
+--------------------------------------------------------------------------------
+
+## Liver and organ meats
+## (1 raw)
+
+Liver, paste or pate
+
+--------------------------------------------------------------------------------
+
+## Deli and cured meat sandwiches
+## (1 raw)
+
+Sandwich wrap, NFS
+
+--------------------------------------------------------------------------------
+
+## Chicken fillet sandwiches
+## (1 raw)
+
+Chicken fillet sandwich, NFS
+
+--------------------------------------------------------------------------------
+
+## Seafood sandwiches
+## (1 raw)
+
+Fish sandwich, NFS
+
+--------------------------------------------------------------------------------
+
+## Frankfurter sandwiches
+## (1 raw)
+
+Corn dog
+
+--------------------------------------------------------------------------------
+
+## Bacon
+## (1 raw)
+
+Bacon bits
+
+--------------------------------------------------------------------------------
+
+## Pasta, noodles, cooked grains
+## (1 raw)
+
+Pasta, gluten free
+
+--------------------------------------------------------------------------------
+
+## Burritos and tacos
+## (1 raw)
+
+Burrito, NFS
+
+--------------------------------------------------------------------------------
+
+## Pears
+## (1 raw)
+
+Pear, Asian, raw
+
+--------------------------------------------------------------------------------
+
+## White potatoes, baked or boiled
+## (1 raw)
+
+Potato, NFS
+
+--------------------------------------------------------------------------------
+
+## Spinach
+## (1 raw)
+
+Spinach, raw
+
+--------------------------------------------------------------------------------
+
+## String beans
+## (1 raw)
+
+Green beans, raw
+
+--------------------------------------------------------------------------------
+
+## Onions
+## (1 raw)
+
+Onions, green, raw
+
+--------------------------------------------------------------------------------
+
+## Coleslaw, non-lettuce salads
+## (1 raw)
+
+Coleslaw, fast food / restaurant
+
+--------------------------------------------------------------------------------
+
+## Other diet drinks
+## (1 raw)
+
+Vegetable and fruit juice drink, with high vitamin C, diet
+
+--------------------------------------------------------------------------------
+
+## Tap water
+## (1 raw)
+
+Water, tap
+
+--------------------------------------------------------------------------------
+
+## Bottled water
+## (1 raw)
+
+Water, bottled, plain
+
+--------------------------------------------------------------------------------
+
+## Baby water
+## (1 raw)
+
+Water, baby
+
+--------------------------------------------------------------------------------
+

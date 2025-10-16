@@ -1,0 +1,389 @@
+# USDA FNDDS Prepared Ingredients List (All Data)
+# Source: usda_database/surveyDownload.json
+# Generated: 2025-10-15
+# Note: 全データ出力（除外・統合ルール未適用）
+
+# Total Categories: 35
+# Total Prepared: 169
+
+================================================================================
+
+## Yeast breads
+## (45 prepared)
+
+Bread, NS as to major flour, toasted
+Bread, made from home recipe or purchased at a bakery, toasted, NS as to major flour
+Bread, white, toasted
+Bread, white, made from home recipe or purchased at a bakery, toasted
+Bread, Cuban, toasted
+Bread, native, water, toasted, Puerto Rican style
+Bread, French or Vienna, toasted
+Bread, Italian, Grecian, Armenian, toasted
+Bread, cheese, toasted
+Bread, cinnamon, toasted
+Bread, cornmeal and molasses, toasted
+Bread, egg, Challah, toasted
+Bread, onion, toasted
+Bread, reduced calorie and/or high fiber, white or NFS, toasted
+Bread, reduced calorie and/or high fiber, white or NFS, with fruit and/or nuts, toasted
+Bread, white, special formula, added fiber, toasted
+Bread, high protein, toasted
+Bread, potato, toasted
+Bread, sour dough, toasted
+Bread, sweet potato, toasted
+Bread, vegetable, toasted
+Bread, whole grain white, toasted
+Bread, whole wheat, toasted
+Bread, whole wheat, made from home recipe or purchased at bakery, toasted
+Bread, whole wheat, with raisins, toasted
+Bread, sprouted wheat, toasted
+Bread, wheat or cracked wheat, toasted
+Bread, wheat or cracked wheat, made from home recipe or purchased at bakery, toasted
+Bread, wheat or cracked wheat, with raisins, toasted
+Bread, wheat or cracked wheat, reduced calorie and/or high fiber, toasted
+Bread, French or Vienna, whole wheat, toasted
+Bread, rye, toasted
+Bread, marble rye and pumpernickel, toasted
+Bread, pumpernickel, toasted
+Bread, black, toasted
+Bread, oatmeal, toasted
+Bread, oat bran, toasted
+Bread, multigrain, toasted
+Bread, multigrain, with raisins, toasted
+Bread, multigrain, reduced calorie and/or high fiber, toasted
+Bread, barley, toasted
+Bread, soy, toasted
+Bread, sunflower meal, toasted
+Bread, rice, toasted
+Bread, gluten free, toasted
+
+--------------------------------------------------------------------------------
+
+## Not included in a food category
+## (14 prepared)
+
+Spinach, cooked, as ingredient
+Broccoli, cooked, as ingredient
+Carrots, cooked, as ingredient
+Sweet potato, cooked, as ingredient
+Tomatoes, cooked, as ingredient
+Onions, cooked, as ingredient
+Mushrooms, cooked, as ingredient
+Green pepper, cooked, as ingredient
+Red pepper, cooked, as ingredient
+Cabbage, cooked, as ingredient
+Cauliflower, cooked, as ingredient
+Eggplant, cooked, as ingredient
+Green beans, cooked, as ingredient
+Celery, cooked, as ingredient
+
+--------------------------------------------------------------------------------
+
+## Other vegetables and combinations
+## (12 prepared)
+
+Peas and carrots, cooked, NS as to form
+Asparagus, canned, cooked, no added fat
+Asparagus, NS as to form, cooked
+Beets, canned, cooked, no added fat
+Beets, NS as to form, cooked
+Brussels sprouts, NS as to form, cooked
+Cauliflower, NS as to form, cooked
+Mushrooms, NS as to form, cooked
+Okra, NS as to form, cooked
+Snowpeas, NS as to form, cooked
+Summer squash, yellow or green, NS as to form, cooked
+Classic mixed vegetables, NS as to form, cooked
+
+--------------------------------------------------------------------------------
+
+## Dried fruits
+## (11 prepared)
+
+Apple, dried
+Apricot, dried
+Blueberries, dried
+Cherries, dried
+Currants, dried
+Cranberries, dried
+Fig, dried
+Mango, dried
+Peach, dried
+Pear, dried
+Prune, dried
+
+--------------------------------------------------------------------------------
+
+## Nuts and seeds
+## (10 prepared)
+
+Almonds, unroasted
+Cashews, unroasted
+Peanuts, boiled
+Peanuts, unroasted
+Peanuts, roasted, salted
+Peanuts, roasted, unsalted
+Peanuts, dry roasted, salted
+Peanuts, dry roasted, unsalted
+Pecans, unroasted
+Walnuts, excluding honey roasted
+
+--------------------------------------------------------------------------------
+
+## Bacon
+## (9 prepared)
+
+Beef, bacon, cooked
+Beef, bacon, reduced sodium, cooked
+Bacon, NS as to type of meat, reduced sodium, cooked
+Pork bacon, NS as to fresh, smoked or cured, reduced sodium, cooked
+Pork bacon, smoked or cured, cooked
+Bacon or side pork, fresh, cooked
+Pork bacon, smoked or cured, reduced sodium, cooked
+Turkey bacon, cooked
+Turkey bacon, reduced sodium, cooked
+
+--------------------------------------------------------------------------------
+
+## Chicken, whole pieces
+## (8 prepared)
+
+Chicken breast, baked or broiled, skin eaten, from pre-cooked
+Chicken breast, baked or broiled, skin not eaten, from pre-cooked
+Chicken drumstick, baked or broiled, skin eaten, from pre-cooked
+Chicken drumstick, baked or broiled, skin not eaten, from pre-cooked
+Chicken thigh, baked or broiled, skin eaten, from pre-cooked
+Chicken thigh, baked or broiled, skin not eaten, from pre-cooked
+Chicken wing, baked or broiled, from pre-cooked
+Chicken "wings", plain, from precooked
+
+--------------------------------------------------------------------------------
+
+## Beans, peas, legumes
+## (5 prepared)
+
+Baked beans
+Baked beans, vegetarian
+Refried beans
+Refried beans, from canned, reduced sodium
+Papad, grilled or broiled
+
+--------------------------------------------------------------------------------
+
+## Other dark green vegetables
+## (5 prepared)
+
+Collards, NS as to form, cooked
+Greens, NS as to form, cooked
+Kale, NS as to form, cooked
+Mustard greens, NS as to form, cooked
+Turrnip greens, NS as to form, cooked
+
+--------------------------------------------------------------------------------
+
+## Shellfish
+## (4 prepared)
+
+Clams, steamed or boiled
+Crayfish, cooked
+Oysters, steamed
+Shrimp, dried
+
+--------------------------------------------------------------------------------
+
+## Fish
+## (3 prepared)
+
+Fish, smoked
+Fish, pickled
+Fish, salmon, smoked
+
+--------------------------------------------------------------------------------
+
+## White potatoes, baked or boiled
+## (3 prepared)
+
+Potato, baked, NFS
+Potato, boiled, NFS
+Potato, roasted, NFS
+
+--------------------------------------------------------------------------------
+
+## French fries and other fried white potatoes
+## (3 prepared)
+
+Potato, french fries, from frozen, baked
+Potato tots, frozen, baked
+Potato tots, frozen, NS as to fried or baked
+
+--------------------------------------------------------------------------------
+
+## Carrots
+## (3 prepared)
+
+Carrots, canned, cooked, no added fat
+Carrots, NS as to form, cooked
+Carrots, canned, reduced sodium, cooked, no added fat
+
+--------------------------------------------------------------------------------
+
+## Corn
+## (3 prepared)
+
+Corn, canned, cooked, no added fat
+Corn, NS as to form, cooked
+Corn, canned, reduced sodium, cooked, no added fat
+
+--------------------------------------------------------------------------------
+
+## Other starchy vegetables
+## (3 prepared)
+
+Green peas, canned, cooked, no added fat
+Green peas, NS as to form, cooked
+Green peas, canned, reduced sodium, cooked, no added fat
+
+--------------------------------------------------------------------------------
+
+## Olives, pickles, pickled vegetables
+## (3 prepared)
+
+Beets, pickled
+Ginger root, pickled
+Peppers, hot, pickled
+
+--------------------------------------------------------------------------------
+
+## Cold cuts and cured meats
+## (2 prepared)
+
+Beef, dried, chipped, uncooked
+Canadian bacon, cooked
+
+--------------------------------------------------------------------------------
+
+## Turkey, duck, other poultry
+## (2 prepared)
+
+Turkey, light or dark meat, smoked, skin eaten
+Turkey, light or dark meat, smoked, skin not eaten
+
+--------------------------------------------------------------------------------
+
+## Soy and meat-alternative products
+## (2 prepared)
+
+Soybean curd, deep fried
+Chicken, meatless, breaded, fried
+
+--------------------------------------------------------------------------------
+
+## Fried rice and lo/chow mein
+## (2 prepared)
+
+Rice, fried, meatless
+Rice, fried, NFS
+
+--------------------------------------------------------------------------------
+
+## Spinach
+## (2 prepared)
+
+Spinach, canned, cooked, no added fat
+Spinach, NS as to form, cooked
+
+--------------------------------------------------------------------------------
+
+## Tomatoes
+## (2 prepared)
+
+Tomatoes, NS as to form, cooked
+Sun-dried tomatoes
+
+--------------------------------------------------------------------------------
+
+## String beans
+## (2 prepared)
+
+Green beans, canned, cooked, no added fat
+Green beans, canned, reduced sodium, cooked, no added fat
+
+--------------------------------------------------------------------------------
+
+## Cheese
+## (1 prepared)
+
+Mozzarella sticks, breaded, baked, or fried
+
+--------------------------------------------------------------------------------
+
+## Pork
+## (1 prepared)
+
+Pork, pig's feet, pickled
+
+--------------------------------------------------------------------------------
+
+## Sausages
+## (1 prepared)
+
+Scrapple, cooked
+
+--------------------------------------------------------------------------------
+
+## Eggs and omelets
+## (1 prepared)
+
+Egg, whole, boiled or poached
+
+--------------------------------------------------------------------------------
+
+## Dips, gravies, other sauces
+## (1 prepared)
+
+Bean dip, made with refried beans
+
+--------------------------------------------------------------------------------
+
+## Grits and other cooked cereals
+## (1 prepared)
+
+Cereal, cooked, NFS
+
+--------------------------------------------------------------------------------
+
+## Rice
+## (1 prepared)
+
+Rice, cooked, NFS
+
+--------------------------------------------------------------------------------
+
+## Egg rolls, dumplings, sushi
+## (1 prepared)
+
+Wonton, dumpling or pot sticker, steamed
+
+--------------------------------------------------------------------------------
+
+## Potato chips
+## (1 prepared)
+
+Potato chips, baked, plain
+
+--------------------------------------------------------------------------------
+
+## Broccoli
+## (1 prepared)
+
+Broccoli, NS as to form, cooked
+
+--------------------------------------------------------------------------------
+
+## Candy containing chocolate
+## (1 prepared)
+
+Chocolate candy with dried fruit
+
+--------------------------------------------------------------------------------
+
