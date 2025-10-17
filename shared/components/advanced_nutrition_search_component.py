@@ -93,7 +93,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
     async def _validate_word_query_api_connection(self):
         """Word Query API接続確認 - 失敗時は即エラー"""
         try:
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
                 response = await client.get(f"{self.api_base_url}/health")
                 if response.status_code != 200:
                     raise ConnectionError(f"Word Query API health check failed: {response.status_code}")
@@ -130,7 +130,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
 
         # Create parallel API requests (第1試行)
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                 tasks = []
                 for term in search_terms:
                     task = self._single_api_request_strict(client, term)
@@ -194,7 +194,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             self.logger.info(f"🔄 Starting tier search fallback for {len(failed_terms)} failed ingredients: {failed_terms}")
 
             try:
-                async with httpx.AsyncClient(timeout=30.0) as client:
+                async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
                     tier_search_tasks = []
                     for term in failed_terms:
                         task = self._single_api_request_tier_search(client, term)
@@ -361,6 +361,10 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
     def _convert_api_suggestions_to_matches(self, suggestions: List[Dict],
                                           search_term: str) -> List[NutritionMatch]:
         """Convert API suggestions to NutritionMatch objects"""
+        # source_dbは環境変数NUTRITION_DATA_SOURCEから取得
+        settings = get_settings()
+        source_db = settings.NUTRITION_DATA_SOURCE
+
         matches = []
         for suggestion in suggestions:
             food_info = suggestion.get("food_info", {})
@@ -369,12 +373,12 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
             # 必須の栄養価データを取得し、不足している場合はエラー
             required_nutrients = ["calories", "protein", "fat", "carbohydrates"]
             nutrition_data = {}
-            
+
             for nutrient in required_nutrients:
                 if nutrient not in nutrition_preview:
                     raise ValueError(f"Missing required nutrition data '{nutrient}' for ingredient '{search_term}'")
                 nutrition_data[nutrient] = nutrition_preview[nutrient]
-                
+
             # carbsキーも追加（標準化）
             nutrition_data["carbs"] = nutrition_data["carbohydrates"]
 
@@ -384,7 +388,7 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
                 search_name=food_info.get("search_name", "Unknown"),
                 description=food_info.get("description", ""),
                 data_type="api_result",
-                source_db="mynetdiary_api",
+                source_db=source_db,
                 nutrition=nutrition_data,
                 weight=100,  # Default weight
                 # 新方式の栄養データフィールド（default_unit + unit_to_grams方式）

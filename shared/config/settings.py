@@ -58,9 +58,18 @@ class Settings(BaseSettings):
     elasticsearch_timeout: int = 30
 
     # Elasticsearch設定（食材リスト取得用）
+    # 環境変数INGREDIENT_ELASTICSEARCH_INDEXで上書き可能
+    # デフォルト: mynetdiary_converted_tool_calls_list_stemmed_with_nutrition
+    # USDA使用時: INGREDIENT_ELASTICSEARCH_INDEX=usda_unified_nutrition_db
     INGREDIENT_ELASTICSEARCH_URL: str = "http://35.193.16.212:9200"
     INGREDIENT_ELASTICSEARCH_INDEX: str = "mynetdiary_converted_tool_calls_list_stemmed_with_nutrition"
     INGREDIENT_ELASTICSEARCH_TIMEOUT: int = 10
+
+    # データソース識別（source_db用）
+    # 環境変数NUTRITION_DATA_SOURCEで上書き可能
+    # デフォルト: mynetdiary_api
+    # USDA使用時: NUTRITION_DATA_SOURCE=usda_api
+    NUTRITION_DATA_SOURCE: str = "mynetdiary_api"
     
     # ファジーマッチング設定
     fuzzy_search_enabled: bool = True  # ファジーマッチング機能を有効にするかどうか

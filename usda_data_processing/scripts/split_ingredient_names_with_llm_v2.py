@@ -115,7 +115,9 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "ai_description": "extra info" or null,
   "consumption_frequency": "common" | "moderate" | "rare",
   "frequency_score": 3 | 2 | 1,
-  "food_specific_emoji": "🍓" or null
+  "food_specific_emoji": "🍓" or null,
+  "brand_name": "Brand Name" or null,
+  "item_type": "raw_ingredient" | "processed_ingredient" | "prepared_dish"
 }}
 
 📋 FIELD RULES:
@@ -210,6 +212,57 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
 
    - Set to null for 95%+ of items
 
+9️⃣ **brand_name** (OPTIONAL STRING or null)
+   - Extract brand names from parenthetical information ONLY
+   - Brand names are proper nouns identifying commercial products
+   - Examples of BRAND NAMES to extract:
+     * "Crackers, butter (Ritz)" → brand_name: "Ritz"
+     * "Energy drink (Red Bull)" → brand_name: "Red Bull"
+     * "Cheeseburger (McDonalds)" → brand_name: "McDonalds"
+     * "Instant oatmeal (Quaker)" → brand_name: "Quaker"
+
+   - Examples of NON-BRAND parenthetical info (set to null):
+     * "Milk, reduced fat (2%)" → brand_name: null (specification, not brand)
+     * "Milk, fat free (skim)" → brand_name: null (description, not brand)
+     * "Milk (vitamin D fortified)" → brand_name: null (feature, not brand)
+     * "Flour (enriched)" → brand_name: null (processing method, not brand)
+
+   - Set to null if:
+     * No parentheses exist in the description
+     * Parenthetical info is a specification/description, not a brand
+     * Unsure whether it's a brand name
+
+🔟 **item_type** (REQUIRED STRING)
+   - Classify into one of three categories:
+
+   **"raw_ingredient"** = Unprocessed, single-ingredient foods
+   - Fresh produce: vegetables, fruits, herbs
+   - Raw proteins: chicken, beef, fish, eggs (without cooking keywords)
+   - Basic grains/legumes: rice, beans, wheat
+   - Examples: "Chicken breast", "Tomato, raw", "Rice", "Apple"
+
+   **"processed_ingredient"** = Commercially processed but still ingredients
+   - Packaged foods: crackers, cereal, pasta, bread
+   - Processed proteins: bacon, sausage, deli meat
+   - Dairy products: cheese, yogurt, butter
+   - Condiments and sauces: ketchup, mayo, soy sauce
+   - Canned/jarred items: canned beans, pickles
+   - Items with brand names in parentheses
+   - Examples: "Crackers, butter (Ritz)", "Bread, white", "Cheese, Cheddar"
+
+   **"prepared_dish"** = Ready-to-eat or cooked dishes
+   - Contains cooking keywords: cooked, grilled, baked, fried, toasted, etc.
+   - Restaurant items: "from restaurant", "fast food"
+   - Ready-to-eat meals: "Pizza, cheese", "Sandwich, turkey"
+   - Composite dishes: foods made from multiple ingredients
+   - Examples: "Chicken breast, grilled", "Pizza, cheese, from restaurant", "Mashed potatoes"
+
+   CLASSIFICATION TIPS:
+   - If description contains cooking keywords (cooked, grilled, baked, fried, toasted, broiled, roasted, boiled, steamed, sauteed, braised, stewed, smoked) → "prepared_dish"
+   - If has brand name OR is packaged/commercially processed → "processed_ingredient"
+   - If raw, unprocessed, single ingredient → "raw_ingredient"
+   - Default to "processed_ingredient" if uncertain
+
 📚 EXAMPLES WITH AUTOCOMPLETE FOCUS:
 
 "Cookie, chocolate chip" (category emoji: 🍪)
@@ -221,7 +274,9 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "ai_description": null,
   "consumption_frequency": "common",
   "frequency_score": 3,
-  "food_specific_emoji": null
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "processed_ingredient"
 }}
 
 "Wine, rice" (category emoji: 🍷)
@@ -233,7 +288,9 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "ai_description": null,
   "consumption_frequency": "moderate",
   "frequency_score": 2,
-  "food_specific_emoji": null
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "processed_ingredient"
 }}
 
 "Bread, French or Vienna, toasted" (category emoji: 🍞)
@@ -245,7 +302,9 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "ai_description": null,
   "consumption_frequency": "common",
   "frequency_score": 3,
-  "food_specific_emoji": null
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "prepared_dish"
 }}
 
 "Pizza, cheese, from restaurant, thin crust" (category emoji: 🍕)
@@ -255,7 +314,11 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "display_variant": "Thin Crust",
   "display_badges": ["Restaurant"],
   "ai_description": "from restaurant",
-  "food_specific_emoji": null
+  "consumption_frequency": "common",
+  "frequency_score": 3,
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "prepared_dish"
 }}
 
 "Chicken breast, grilled, skinless" (category emoji: 🍗)
@@ -267,7 +330,37 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "ai_description": null,
   "consumption_frequency": "common",
   "frequency_score": 3,
-  "food_specific_emoji": null
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "prepared_dish"
+}}
+
+"Crackers, butter (Ritz)" (category emoji: 🍘)
+{{
+  "search_name": ["Ritz crackers", "Butter crackers", "Crackers Ritz", "Ritz", "Butter cracker"],
+  "display_name": "Butter Crackers",
+  "display_variant": null,
+  "display_badges": [],
+  "ai_description": null,
+  "consumption_frequency": "common",
+  "frequency_score": 3,
+  "food_specific_emoji": null,
+  "brand_name": "Ritz",
+  "item_type": "processed_ingredient"
+}}
+
+"Tomato, raw" (category emoji: 🍅)
+{{
+  "search_name": ["Tomato", "Raw tomato", "Fresh tomato", "Tomatoes"],
+  "display_name": "Tomato",
+  "display_variant": "Raw",
+  "display_badges": ["Raw"],
+  "ai_description": null,
+  "consumption_frequency": "common",
+  "frequency_score": 3,
+  "food_specific_emoji": null,
+  "brand_name": null,
+  "item_type": "raw_ingredient"
 }}
 
 CRITICAL: Return ONLY valid JSON. No explanatory text. No prefix like "Here is..." or "The result is...". Start directly with {{ and end with }}."""
@@ -399,6 +492,22 @@ async def generate_search_patterns(
             elif result['food_specific_emoji'] == "null" or result['food_specific_emoji'] == "":
                 result['food_specific_emoji'] = None
 
+            # 9. brand_name (オプション)の検証
+            if 'brand_name' not in result:
+                result['brand_name'] = None
+            elif result['brand_name'] == "null" or result['brand_name'] == "":
+                result['brand_name'] = None
+            elif isinstance(result['brand_name'], str) and len(result['brand_name']) > 50:
+                result['brand_name'] = result['brand_name'][:50]
+
+            # 10. item_type (必須)の検証
+            if 'item_type' not in result:
+                result['item_type'] = 'processed_ingredient'
+            else:
+                valid_types = ['raw_ingredient', 'processed_ingredient', 'prepared_dish']
+                if result['item_type'] not in valid_types:
+                    result['item_type'] = 'processed_ingredient'
+
             return result
 
         except json.JSONDecodeError as e:
@@ -421,7 +530,9 @@ async def generate_search_patterns(
         "ai_description": None,
         "consumption_frequency": "moderate",
         "frequency_score": 2,
-        "food_specific_emoji": None
+        "food_specific_emoji": None,
+        "brand_name": None,
+        "item_type": "processed_ingredient"
     }
 
 
@@ -467,6 +578,8 @@ async def process_batch(
                 'consumption_frequency': patterns.get('consumption_frequency', 'moderate'),  # 新規追加
                 'frequency_score': patterns.get('frequency_score', 2),  # 新規追加
                 'food_specific_emoji': patterns.get('food_specific_emoji'),  # 個別絵文字追加
+                'brand_name': patterns.get('brand_name'),  # ブランド名
+                'item_type': patterns.get('item_type', 'processed_ingredient'),  # 食材タイプ
                 'original_description': item.get('original_description'),
                 'foodNutrients': item.get('foodNutrients', [])
             })

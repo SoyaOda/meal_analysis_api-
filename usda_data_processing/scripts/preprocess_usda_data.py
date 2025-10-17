@@ -339,11 +339,12 @@ def normalize_description(description: str) -> Tuple[str, Optional[str]]:
     removed_info = []
 
     # 括弧とその内容を抽出（後で追加情報として保存）
-    bracket_pattern = r'\s*\([^)]*\)'
-    brackets = re.findall(bracket_pattern, description)
-    if brackets:
-        removed_info.extend([b.strip('() ') for b in brackets])
-        description = re.sub(bracket_pattern, '', description)
+    # 変更: 括弧を削除せず、LLMで処理させる
+    # bracket_pattern = r'\s*\([^)]*\)'
+    # brackets = re.findall(bracket_pattern, description)
+    # if brackets:
+    #     removed_info.extend([b.strip('() ') for b in brackets])
+    #     description = re.sub(bracket_pattern, '', description)
 
     # NFSを除去（"or NFS"パターンを優先的に処理）
     if " or NFS" in description:

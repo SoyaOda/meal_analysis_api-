@@ -15,7 +15,13 @@ class CommonPrompts:
 
     @classmethod
     def _get_provider(cls) -> ElasticsearchIngredientProvider:
-        """プロバイダーのシングルトンインスタンスを取得"""
+        """
+        プロバイダーのシングルトンインスタンスを取得
+
+        環境変数INGREDIENT_ELASTICSEARCH_INDEXで使用するインデックスを制御：
+        - デフォルト: mynetdiary_converted_tool_calls_list_stemmed_with_nutrition
+        - USDA使用時: INGREDIENT_ELASTICSEARCH_INDEX=usda_unified_nutrition_db
+        """
         if cls._provider is None:
             settings = get_settings()
             cls._provider = ElasticsearchIngredientProvider(
