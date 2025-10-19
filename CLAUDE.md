@@ -27,6 +27,25 @@ PYTHONPATH=/Users/odasoya/meal_analysis_api_2 GOOGLE_CLOUD_PROJECT=new-snap-calo
 PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8003 python -m apps.barcode_api.main
 ```
 
+#### USDA Word Query API (ポート 8004)
+
+```bash
+PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8004 python -m apps.usda_word_query_api.main
+```
+
+#### USDA Meal Analysis API (ポート 8005)
+
+```bash
+# USDA Word Query APIが起動していることが必須（ポート8004）
+WORD_QUERY_API_URL=http://localhost:8004 \
+INGREDIENT_ELASTICSEARCH_INDEX=usda_unified_nutrition_db \
+NUTRITION_DATA_SOURCE=usda_api \
+PYTHONPATH=/Users/odasoya/meal_analysis_api_2 \
+GOOGLE_CLOUD_PROJECT=new-snap-calorie \
+PORT=8005 \
+python -m apps.usda_meal_analysis_api.main
+```
+
 ## 📚 API エンドポイント
 
 ### Meal Analysis API (http://localhost:8001)
@@ -69,8 +88,51 @@ curl -X GET "http://localhost:8003/api/v1/barcode/cache-stats"
 curl -X DELETE "http://localhost:8003/api/v1/barcode/cache"
 ```
 
+### USDA Word Query API (http://localhost:8004)
+
+#### 食材検索
+
+```bash
+curl -X GET "http://localhost:8004/api/v1/usda/suggest?q=chicken&limit=5"
+```
+
+#### ヘルスチェック
+
+```bash
+curl -X GET "http://localhost:8004/health"
+```
+
+### USDA Meal Analysis API (http://localhost:8005)
+
+#### 画像入力による食事分析（USDA版）
+
+```bash
+curl -X POST "http://localhost:8005/api/v1/meal-analyses/complete" \
+  -F "image=@test_images/food1.jpg" \
+  -F "user_context=USDA analysis"
+```
+
+#### 音声入力による食事分析（USDA版）
+
+```bash
+curl -X POST "http://localhost:8005/api/v1/meal-analyses/voice" \
+  -F "audio_file=@test-audio/lunch_detailed.wav" \
+  -F "user_context=USDA lunch analysis"
+```
+
+#### ヘルスチェック
+
+```bash
+curl -X GET "http://localhost:8005/health"
+```
+
 [Instruction]
-apps に 3 つの API が実装されている。詳細を README.md を見て理解すること。
+apps に 5 つの API が実装されている。詳細を各 README.md を見て理解すること。
+- apps/word_query_api (MyNetDiary版)
+- apps/meal_analysis_api (MyNetDiary版)
+- apps/barcode_api
+- apps/usda_word_query_api (USDA FNDDS版)
+- apps/usda_meal_analysis_api (USDA FNDDS版)
 
 [命令]
 

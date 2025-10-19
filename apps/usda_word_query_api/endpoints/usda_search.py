@@ -114,6 +114,7 @@ def elasticsearch_usda_tier_search(
         "_source": [
             "id", "ingredient_type", "original_name", "search_name", "description",
             "stemmed_search_name", "stemmed_description", "ai_description",
+            "brand_name", "item_type",  # LLMで生成された新しいフィールド
             "default_unit", "default_calories", "default_nutrition", "unit_to_grams",
             "category", "category_emoji", "food_specific_emoji"
         ]
@@ -333,8 +334,10 @@ async def suggest_usda_foods(
                     "search_name_list": search_name_list,
                     "description": description,
                     "original_name": original_name,
-                    "ingredient_type": ingredient_type_value,  # USDA固有
-                    "ai_description": ai_description  # USDA固有
+                    "ingredient_type": ingredient_type_value,  # USDA固有（raw/prepared）
+                    "ai_description": ai_description,  # USDA固有
+                    "brand_name": source.get("brand_name"),  # LLMで生成されたブランド名
+                    "item_type": source.get("item_type")  # LLMで生成された食材タイプ（raw_ingredient/processed_ingredient/prepared_dish）
                 },
                 "nutrition_preview": nutrition_preview,
                 "alternative_names": [name for name in search_name_list if name != search_name][:3],

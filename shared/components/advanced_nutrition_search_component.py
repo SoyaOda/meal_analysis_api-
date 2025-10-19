@@ -57,15 +57,24 @@ class AdvancedNutritionSearchComponent(BaseComponent[NutritionQueryInput, Nutrit
         """
         start_time = time.time()
 
-        # 食材名のみでWord Query APIを使用（料理名は除外）
-        search_terms = input_data.ingredient_names  # dish_namesを含めない
+        # 食材名 + base_foods でWord Query APIを使用（料理名は除外・v3.0対応）
+        search_terms = input_data.ingredient_names.copy()  # dish_namesを含めない
+
+        # base_foodsのitem_nameも追加（v3.0粒度制御システム対応）
+        base_food_terms = []
+        for bf in input_data.base_foods:
+            if bf.get("item_name"):
+                search_terms.append(bf["item_name"])
+                base_food_terms.append(bf["item_name"])
+
         query_count = len(search_terms)
 
         if query_count == 0:
-            raise ValueError("No ingredient names provided. ingredient_names is empty.")
+            raise ValueError("No ingredient names or base_foods provided.")
 
         self.log_processing_detail("input_query_count", query_count)
         self.log_processing_detail("search_terms", search_terms)
+        self.log_processing_detail("base_food_terms", base_food_terms)  # v3.0: base_foodsをログ出力
         self.log_processing_detail("excluded_dish_names", input_data.dish_names)  # 除外された料理名をログ出力
         self.log_processing_detail("word_query_api_url", self.api_base_url)
 

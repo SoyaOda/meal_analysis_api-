@@ -18,7 +18,7 @@ from shared.models.nutrition_calculation_models import (
     DishNutrition,
     MealNutrition
 )
-from shared.models.phase1_models import Phase1Output
+from shared.models.phase1_models import Phase1Output, AnalysisMethod
 from shared.models.nutrition_search_models import NutritionQueryOutput, NutritionMatch
 
 
@@ -114,7 +114,7 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
     
     async def _calculate_dish_nutrition(self, dish, nutrition_matches: Dict[str, Any]) -> DishNutrition:
         """
-        料理レベルの栄養計算
+        料理レベルの栄養計算（v3.0粒度制御システム対応）
         
         Args:
             dish: Phase1で検出された料理
@@ -126,22 +126,72 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
         ingredient_nutritions = []
         dish_total_nutrition = None
         
-        for ingredient in dish.ingredients:
-            try:
-                ingredient_nutrition = await self._calculate_ingredient_nutrition(
-                    ingredient, nutrition_matches
+        # v3.0粒度制御システム: analysis_methodに応じた計算ロジック
+        analysis_method = dish.analysis_method if hasattr(dish, 'analysis_method') else None
+        
+        # USE_AS_IS: base_foodのみから計算
+        if analysis_method == AnalysisMethod.USE_AS_IS:
+            self.logger.info(f"USE_AS_IS mode for '{dish.dish_name}': calculating from base_food only")
+            
+            if dish.base_food and dish.base_food.item_name:
+                # base_foodから栄養計算
+                base_food_nutrition = await self._calculate_base_food_nutrition(
+                    dish.base_food, nutrition_matches
                 )
-                ingredient_nutritions.append(ingredient_nutrition)
-                
-                # 料理全体の栄養情報を累積
-                if dish_total_nutrition is None:
-                    dish_total_nutrition = ingredient_nutrition.calculated_nutrition
-                else:
-                    dish_total_nutrition = dish_total_nutrition + ingredient_nutrition.calculated_nutrition
+                ingredient_nutritions.append(base_food_nutrition)
+                dish_total_nutrition = base_food_nutrition.calculated_nutrition
+            else:
+                self.logger.warning(f"USE_AS_IS mode but no base_food for '{dish.dish_name}'")
+                dish_total_nutrition = NutritionInfo(calories=0.0, protein=0.0, fat=0.0, carbs=0.0)
+        
+        # HYBRID_DECOMPOSITION: base_food + ingredientsを合算
+        elif analysis_method == AnalysisMethod.HYBRID_DECOMPOSITION:
+            self.logger.info(f"HYBRID_DECOMPOSITION mode for '{dish.dish_name}': calculating from base_food + ingredients")
+            
+            # base_foodから栄養計算
+            if dish.base_food and dish.base_food.item_name:
+                base_food_nutrition = await self._calculate_base_food_nutrition(
+                    dish.base_food, nutrition_matches
+                )
+                ingredient_nutritions.append(base_food_nutrition)
+                dish_total_nutrition = base_food_nutrition.calculated_nutrition
+            
+            # 追加のingredientsを計算
+            for ingredient in dish.ingredients:
+                try:
+                    ingredient_nutrition = await self._calculate_ingredient_nutrition(
+                        ingredient, nutrition_matches
+                    )
+                    ingredient_nutritions.append(ingredient_nutrition)
                     
-            except Exception as e:
-                self.logger.error(f"Failed to calculate nutrition for ingredient '{ingredient.ingredient_name}': {e}")
-                raise
+                    if dish_total_nutrition is None:
+                        dish_total_nutrition = ingredient_nutrition.calculated_nutrition
+                    else:
+                        dish_total_nutrition = dish_total_nutrition + ingredient_nutrition.calculated_nutrition
+                except Exception as e:
+                    self.logger.error(f"Failed to calculate nutrition for ingredient '{ingredient.ingredient_name}': {e}")
+                    raise
+        
+        # DECOMPOSE_TO_INGREDIENTS または analysis_method=None: ingredientsのみから計算（従来通り）
+        else:
+            if analysis_method == AnalysisMethod.DECOMPOSE_TO_INGREDIENTS:
+                self.logger.info(f"DECOMPOSE_TO_INGREDIENTS mode for '{dish.dish_name}': calculating from ingredients only")
+            
+            for ingredient in dish.ingredients:
+                try:
+                    ingredient_nutrition = await self._calculate_ingredient_nutrition(
+                        ingredient, nutrition_matches
+                    )
+                    ingredient_nutritions.append(ingredient_nutrition)
+                    
+                    # 料理全体の栄養情報を累積
+                    if dish_total_nutrition is None:
+                        dish_total_nutrition = ingredient_nutrition.calculated_nutrition
+                    else:
+                        dish_total_nutrition = dish_total_nutrition + ingredient_nutrition.calculated_nutrition
+                except Exception as e:
+                    self.logger.error(f"Failed to calculate nutrition for ingredient '{ingredient.ingredient_name}': {e}")
+                    raise
         
         # デフォルト値の設定
         if dish_total_nutrition is None:
@@ -153,7 +203,8 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
         calculation_metadata = {
             "ingredient_count": len(ingredient_nutritions),
             "total_weight_g": sum(ing.weight_g for ing in ingredient_nutritions),
-            "calculation_method": "weight_based_scaling"
+            "calculation_method": "v3.0_granularity_control" if analysis_method else "weight_based_scaling",
+            "analysis_method": analysis_method.value if analysis_method else None
         }
         
         return DishNutrition(
@@ -164,6 +215,32 @@ class NutritionCalculationComponent(BaseComponent[NutritionCalculationInput, Nut
             calculation_metadata=calculation_metadata
         )
     
+
+    async def _calculate_base_food_nutrition(self, base_food, nutrition_matches: Dict[str, Any]) -> IngredientNutrition:
+        """
+        base_foodの栄養計算（v3.0粒度制御システム用）
+        
+        Args:
+            base_food: BaseFood object (item_name, weight_g)
+            nutrition_matches: 栄養検索結果のマッチング
+            
+        Returns:
+            IngredientNutrition: base_foodの栄養計算結果
+        """
+        # BaseFood objectからitem_nameとweight_gを取得
+        item_name = base_food.item_name
+        weight_g = base_food.weight_g
+        
+        # 疑似Ingredientオブジェクトを作成してヘルパーメソッドに渡す
+        from shared.models.phase1_models import Ingredient
+        pseudo_ingredient = Ingredient(
+            ingredient_name=item_name,
+            weight_g=weight_g
+        )
+        
+        # 既存の_calculate_ingredient_nutritionメソッドを流用
+        return await self._calculate_ingredient_nutrition(pseudo_ingredient, nutrition_matches)
+
     async def _calculate_ingredient_nutrition(self, ingredient, nutrition_matches: Dict[str, Any]) -> IngredientNutrition:
         """
         食材レベルの栄養計算（新方式: default_unit + unit_to_grams）

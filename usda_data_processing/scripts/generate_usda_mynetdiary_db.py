@@ -159,6 +159,10 @@ def map_basic_fields(item: Dict, ingredient_type: str) -> Dict:
         "search_name": item['search_name'],
         "description": item['description'],
         "ai_description": item.get('ai_description'),
+        
+        # LLMで生成された新しいフィールド
+        "brand_name": item.get('brand_name'),  # ブランド名（例: "Ritz", "McDonald's"）
+        "item_type": item.get('item_type'),  # 食材タイプ（raw_ingredient, processed_ingredient, prepared_dish）
 
         # メタデータ
         "data_type": "unified",

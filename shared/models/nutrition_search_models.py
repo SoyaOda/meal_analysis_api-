@@ -54,9 +54,10 @@ class AdvancedSearchOptions(BaseModel):
 
 
 class NutritionQueryInput(BaseModel):
-    """栄養データベース検索入力モデル（構造化入力対応）"""
+    """栄養データベース検索入力モデル（構造化入力対応・v3.0粒度制御システム対応）"""
     ingredient_names: List[str] = Field(default_factory=list, description="食材名のリスト")
     dish_names: List[str] = Field(default_factory=list, description="料理名のリスト")
+    base_foods: List[Dict[str, Any]] = Field(default_factory=list, description="base_food情報のリスト（v3.0）")
     search_options: Optional[Dict[str, Any]] = Field(None, description="検索オプション")
     preferred_source: str = Field(default="local_database", description="優先データソース")
     
@@ -74,7 +75,12 @@ class NutritionQueryInput(BaseModel):
 
     def get_all_search_terms(self) -> List[str]:
         """全ての検索語彙を取得"""
-        return list(set(self.ingredient_names + self.dish_names))
+        all_terms = list(set(self.ingredient_names + self.dish_names))
+        # base_foodsからもitem_nameを追加
+        for bf in self.base_foods:
+            if bf.get("item_name"):
+                all_terms.append(bf["item_name"])
+        return list(set(all_terms))
     
     def get_structured_search_terms(self) -> Optional[Dict[str, Any]]:
         """構造化された検索用語を取得"""
@@ -169,6 +175,14 @@ class FoodInfo(BaseModel):
     search_name_list: List[str] = Field(..., description="検索名の候補リスト", example=["Chicken breast skinless raw", "Chicken breast meat only raw"])
     description: str = Field(..., description="詳細説明", example="Chicken, broilers or fryers, breast, meat only, raw")
     original_name: str = Field(..., description="オリジナル名（データベース名）", example="Chicken breast skinless raw")
+    
+    # USDA固有フィールド（オプション）
+    ingredient_type: Optional[str] = Field(None, description="食材タイプ（USDA専用: raw/prepared）", example="raw")
+    ai_description: Optional[str] = Field(None, description="AI生成の説明文（USDA専用）", example="Chicken breast without skin, raw")
+    
+    # LLM生成フィールド（オプション）
+    brand_name: Optional[str] = Field(None, description="ブランド名（LLM生成）", example="Ritz")
+    item_type: Optional[str] = Field(None, description="食材タイプ分類（LLM生成: raw_ingredient/processed_ingredient/prepared_dish）", example="processed_ingredient")
 
 class NutritionPreview(BaseModel):
     calories: float = Field(..., description="カロリー (kcal)", example=165.0)

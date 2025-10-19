@@ -4,8 +4,9 @@ from datetime import datetime
 
 from .base import BaseComponent, ComponentError
 from ..models.phase1_models import (
-    Phase1Input, Phase1Output, Dish, Ingredient, 
-    DetectedFoodItem, FoodAttribute, AttributeType
+    Phase1Input, Phase1Output, Dish, Ingredient,
+    DetectedFoodItem, FoodAttribute, AttributeType,
+    AnalysisMethod, BaseFood
 )
 from ..services.deepinfra_service import DeepInfraService
 from ..config import get_settings
@@ -118,7 +119,8 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             # Vision AIによる構造化画像分析
             self.log_processing_detail("vision_api_call_start", "Calling Vision API for structured image analysis")
             
-            prompt = Phase1Prompts.get_gemma3_prompt()
+            # v3.0 粒度制御システム対応プロンプトを使用（USDA用: exclude_uncooked=False）
+            prompt = Phase1Prompts.get_gemma3_prompt_v3_granularity(exclude_uncooked=False)
             raw_response = await self.vision_service.analyze_image(
                 image_bytes=input_data.image_bytes,
                 image_mime_type=input_data.image_mime_type,
@@ -128,7 +130,11 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
             )
             # JSON文字列をパース
             vision_result = parse_json_from_string(raw_response)
-            
+
+            # 🔍 DEBUG: VLMのraw responseを確認
+            import json
+            self.logger.info(f"🔍 DEBUG VLM Response: {json.dumps(vision_result, indent=2, ensure_ascii=False)[:3000]}")
+
             self.log_processing_detail("vision_api_response", vision_result)
             
             # 結果を統一変数名に設定
@@ -252,12 +258,29 @@ class Phase1Component(BaseComponent[Phase1Input, Phase1Output]):
                                 confidence=attr_data.get("confidence", 0.5)
                             )
                             dish_attributes.append(attr)
-                    
+
+                    # v3.0 粒度制御システム対応: analysis_method と base_food をパース
+                    analysis_method = None
+                    if "analysis_method" in dish_data:
+                        try:
+                            analysis_method = AnalysisMethod(dish_data["analysis_method"])
+                        except ValueError:
+                            self.logger.warning(f"Unknown analysis_method: {dish_data['analysis_method']}")
+
+                    base_food = None
+                    if "base_food" in dish_data and dish_data["base_food"]:
+                        base_food = BaseFood(
+                            item_name=dish_data["base_food"].get("item_name"),
+                            weight_g=dish_data["base_food"].get("weight_g", 0)
+                        )
+
                     dish = Dish(
                         dish_name=dish_data["dish_name"],
                         confidence=dish_data.get("confidence"),
                         ingredients=ingredients,
-                        detected_attributes=dish_attributes
+                        detected_attributes=dish_attributes,
+                        analysis_method=analysis_method,
+                        base_food=base_food
                     )
                     dishes.append(dish)
             

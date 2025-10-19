@@ -3,7 +3,7 @@ Elasticsearch Index Settings for USDA Unified Database
 USDA統合DBのElasticsearchインデックス設定
 """
 
-from apps.usda_meal_analysis_api.config import USDA_INDEX_NAME
+from apps.usda_word_query_api.config import USDA_INDEX_NAME
 
 # アナライザー設定（語幹化用）
 USDA_INDEX_SETTINGS = {
@@ -70,6 +70,14 @@ USDA_INDEX_SETTINGS = {
             # AI生成フィールド（オプション）
             "ai_description": {
                 "type": "text"
+            },
+
+            # LLMで生成された新しいフィールド
+            "brand_name": {
+                "type": "keyword"  # ブランド名（例: "Ritz", "McDonald's"）
+            },
+            "item_type": {
+                "type": "keyword"  # 食材タイプ（raw_ingredient, processed_ingredient, prepared_dish）
             },
 
             # 栄養情報

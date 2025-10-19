@@ -39,14 +39,7 @@ class DeepInfraService:
         base_model = model_id or settings.DEEPINFRA_MODEL_ID
         # バージョンpin機能：MODEL:VERSION形式で固定
         self.model_id = f"{base_model}:{model_version}" if model_version else base_model
-        
-        # モデル検証
-        if not settings.validate_model_id(self.model_id):
-            logger.warning(f"指定されたモデル '{self.model_id}' はサポートリストにありません。利用可能モデル: {settings.SUPPORTED_VISION_MODELS}")
-        
-        # モデル設定を取得
-        self.model_config = settings.get_model_config(self.model_id)
-        
+
         base_url = settings.DEEPINFRA_BASE_URL
 
         # 非同期クライアントの初期化
@@ -55,8 +48,6 @@ class DeepInfraService:
             base_url=base_url,
         )
         logger.info(f"DeepInfraService initialized for model: {self.model_id}")
-        if self.model_config:
-            logger.info(f"Model config: {self.model_config}")
 
     def _encode_image_to_base64(self, image_bytes: bytes, mime_type: str = "image/jpeg") -> str:
         """
@@ -98,11 +89,6 @@ class DeepInfraService:
         image_hash = hashlib.sha256(image_bytes).hexdigest()
         prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         logger.info(f"[input_digest] model={self.model_id} image_sha256={image_hash} prompt_sha256={prompt_hash} temp={temperature} seed={seed}")
-
-        # 期待される処理時間をログに出力
-        if self.model_config and "expected_response_time_ms" in self.model_config:
-            expected_time = self.model_config["expected_response_time_ms"]
-            logger.info(f"Expected response time for {self.model_id}: {expected_time}ms")
 
         base64_image_url = self._encode_image_to_base64(image_bytes, image_mime_type)
 

@@ -51,12 +51,6 @@ class MealAnalysisPipeline:
             self.vision_service = DeepInfraService(model_id=self.model_id)
             logger.info(f"Using DeepInfra service with model: {self.vision_service.model_id}")
 
-            # モデル設定情報をログ出力
-            if self.vision_service.model_config:
-                expected_time = self.vision_service.model_config.get("expected_response_time_ms", "unknown")
-                best_for = self.vision_service.model_config.get("best_for", "general")
-                logger.info(f"Model characteristics - Expected time: {expected_time}ms, Best for: {best_for}")
-
         except ValueError as e:
             # 環境変数が設定されていない場合はエラーを発生させる
             logger.error(f"DeepInfra service initialization failed: {e}")
@@ -147,10 +141,11 @@ class MealAnalysisPipeline:
                 search_phase_name = "Word Query API Search"
             self.logger.info(f"[{analysis_id}] {search_phase_name} Phase: Database matching")
             
-            # === 栄養検索入力を作成（Word Query API用） ===
+            # === 栄養検索入力を作成（Word Query API用・v3.0粒度制御システム対応） ===
             nutrition_search_input = NutritionQueryInput(
                 ingredient_names=phase1_result.get_all_ingredient_names(),
                 dish_names=phase1_result.get_all_dish_names(),
+                base_foods=phase1_result.get_all_base_foods(),  # v3.0: base_foodsを追加
                 preferred_source="advanced_search"
             )
 

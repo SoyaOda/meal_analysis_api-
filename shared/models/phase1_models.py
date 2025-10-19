@@ -35,6 +35,22 @@ class DetectedFoodItem(BaseModel):
     model_config = {"protected_namespaces": ()}
 
 
+
+class AnalysisMethod(str, Enum):
+    """分析手法の列挙（v3.0粒度制御システム）"""
+    USE_AS_IS = "USE_AS_IS"
+    DECOMPOSE_TO_INGREDIENTS = "DECOMPOSE_TO_INGREDIENTS"
+    HYBRID_DECOMPOSITION = "HYBRID_DECOMPOSITION"
+
+
+class BaseFood(BaseModel):
+    """ベース食品情報（v3.0粒度制御システム用）"""
+    item_name: Optional[str] = Field(None, description="ベース食品の名称（DECOMPOSE_TO_INGREDIENTSの場合はnull）")
+    weight_g: float = Field(0, ge=0, description="ベース食品の重量（グラム）")
+
+    model_config = {"protected_namespaces": ()}
+
+
 class Ingredient(BaseModel):
     """食材情報モデル（栄養データベース検索用・従来互換性）"""
     ingredient_name: str = Field(..., description="食材の名称（栄養データベース検索で使用）")
@@ -46,11 +62,15 @@ class Ingredient(BaseModel):
 
 
 class Dish(BaseModel):
-    """料理情報モデル（栄養データベース検索用・従来互換性）"""
+    """料理情報モデル（栄養データベース検索用・v3.0粒度制御システム対応）"""
     dish_name: str = Field(..., description="特定された料理の名称（栄養データベース検索で使用）")
     confidence: Optional[float] = Field(None, ge=0.0, le=1.0, description="料理特定の信頼度")
     ingredients: List[Ingredient] = Field(..., description="その料理に含まれる食材のリスト")
     detected_attributes: List[FoodAttribute] = Field(default=[], description="この料理に関連する属性")
+    
+    # v3.0 粒度制御システム用フィールド
+    analysis_method: Optional[AnalysisMethod] = Field(None, description="分析手法（v3.0）")
+    base_food: Optional[BaseFood] = Field(None, description="ベース食品情報（v3.0）")
 
     model_config = {"protected_namespaces": ()}
 
@@ -90,6 +110,20 @@ class Phase1Output(BaseModel):
     def get_all_dish_names(self) -> List[str]:
         """全ての料理名のリストを取得（栄養データベース検索用・従来互換性）"""
         return [dish.dish_name for dish in self.dishes]
+
+    def get_all_base_foods(self) -> List[Dict[str, Any]]:
+        """全てのbase_foodのリストを取得（v3.0粒度制御システム用）"""
+        base_foods = []
+        for dish in self.dishes:
+            if dish.base_food and dish.base_food.item_name:
+                base_foods.append({
+                    "item_name": dish.base_food.item_name,
+                    "weight_g": dish.base_food.weight_g,
+                    "dish_name": dish.dish_name,
+                    "analysis_method": dish.analysis_method
+                })
+        return base_foods
+    
     
     def get_structured_search_terms(self) -> Dict[str, Any]:
         """構造化された検索用語を取得（新しい検索戦略用）"""
