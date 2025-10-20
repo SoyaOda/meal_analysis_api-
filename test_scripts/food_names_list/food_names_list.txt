@@ -181,6 +181,7 @@
 * Quinoa, no added fat
 * Rice, white, cooked, no added fat
 * Rice, brown, cooked, no added fat
+* Rice pilaf
 
 ## Ready-to-eat Cereals
 
@@ -205,6 +206,7 @@
 * Sweet potato, NFS
 * Sweet potato fries, NFS
 * Sweet potato, baked, no added fat
+* Potato, mashed, from fresh, made with milk
 
 ## Vegetables — Raw
 
@@ -234,6 +236,7 @@
 * Lettuce, raw
 * Mixed salad greens, raw
 * Coleslaw
+* Lettuce, salad with assorted vegetables including tomatoes and/or carrots, no dressing
 
 ## Vegetables — Cooked
 
