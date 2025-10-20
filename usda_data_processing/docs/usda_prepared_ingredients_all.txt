@@ -1,6 +1,6 @@
 # USDA FNDDS Prepared Ingredients List (All Data)
 # Source: usda_database/surveyDownload.json
-# Generated: 2025-10-15
+# Generated: 2025-10-20
 # Note: 全データ出力（除外・統合ルール未適用）
 
 # Total Categories: 35

@@ -1,0 +1,252 @@
+29. Baby puree;apples (stage 2);null
+31. Baby puree;bananas (stage 2);null
+36. Baby puree;carrots (stage 2);null
+45. Baby puree;green beans (stage 2);null
+56. Baby puree;multiple fruit (stage 3);null
+58. Baby puree;multiple vegetables (stage 3);null
+60. Baby puree;peaches (stage 2);null
+62. Baby puree;pears (stage 2);null
+64. Baby puree;peas (stage 2);null
+70. Baby puree;squash (stage 2);null
+72. Baby puree;sweet potatoes (stage 2);null
+88. Bagel;whole wheat;null
+100. Beef bacon;reduced sodium, cooked;null
+105. Beef lunch meat;reduced sodium;null
+108. Beer;higher alcohol;null
+109. Beer;light;null
+110. Beer;non-alcoholic;null
+127. Salad dressing;blue/roquefort (fat-free);null
+134. Bologna;reduced fat;null
+135. Bologna;reduced sodium;null
+166. Bread;multigrain (light/high-fiber, toasted);null
+179. Bread;pita (whole wheat);null
+184. Bread;light/high-fiber white;null
+185. Bread;light/high-fiber white (toasted);null
+201. Bread;wheat/cracked wheat (light/high-fiber, toasted);null
+206. Bread;white (added fiber);null
+207. Bread;white (added fiber, toasted);null
+217. Breadsticks;hard (gluten-free);null
+237. Butter;light;null
+247. Salad dressing;caesar (fat-free);null
+248. Salad dressing;caesar (light);null
+270. Carrots;canned, reduced sodium, cooked (no added fat);null
+293. Granola bar;Chewy 90 Calorie;Quaker
+295. Granola bar;Chewy;Quaker
+300. Granola bar;high-fiber, yogurt-coated;null
+301. Granola bar;low fat;null
+302. Granola bar;nonfat;null
+305. Granola bar;reduced sugar;null
+313. Cheese corn snacks;regular;Cheetos
+314. Cheese corn snacks;reduced fat;null
+322. Cheese;American, nonfat/fat free;null
+324. Cheese;American, reduced sodium;null
+330. Cheese;cheddar, nonfat/fat free;null
+331. Cheese;cheddar, reduced fat;null
+332. Cheese;cheddar, reduced sodium;null
+340. Cheese;Mexican blend, reduced fat;null
+342. Cheese;Monterey Jack, reduced fat;null
+344. Cheese;mozzarella, nonfat/fat free;null
+346. Cheese;mozzarella, reduced sodium;null
+348. Cheese;muenster, reduced fat;null
+353. Cheese;Swiss, nonfat/fat free;null
+354. Cheese;Swiss, reduced fat;null
+355. Cheese;Swiss, reduced sodium;null
+359. Cottage cheese;low fat;null
+360. Cottage cheese;low fat, lactose reduced;null
+361. Cottage cheese;low fat, low sodium;null
+364. Cheese;provolone, reduced fat;null
+373. Chewing gum;sugar-free;null
+412. Chicken lunch meat;reduced sodium;null
+419. Chocolate drink mix (powder);light, dry mix;null
+427. Chocolate candy;sugar-free;null
+431. Chocolate milk;fat free (skim);null
+432. Chocolate milk;low fat (1%);null
+434. Chocolate milk;whole;null
+436. Chocolate syrup;light;null
+454. Coffee with chicory;brewed, decaf;null
+458. Coffee creamer;liquid, fat free;null
+459. Coffee creamer;liquid, fat free, sugar free, flavored;null
+461. Coffee creamer;liquid, sugar free, flavored;null
+463. Coffee creamer;powder, fat free;null
+466. Coffee creamer;powder, sugar free, flavored;null
+470. Brewed coffee;decaf;null
+473. Espresso;decaf;null
+474. Instant coffee powder;decaf;null
+497. Cookie;chocolate chip, reduced fat;null
+498. Cookie;chocolate chip, reduced sugar;null
+501. Cookie;chocolate sandwich, reduced fat;null
+513. Cookie;gluten-free;null
+528. Cookie;oatmeal, reduced sugar;null
+534. Cookie;peanut butter, sugar-free;null
+543. Cookie;shortbread, reduced fat;null
+547. Cookie;sugar wafer, sugar-free;null
+552. Cookie;vanilla sandwich, reduced fat;null
+554. Cookie;vanilla wafer, reduced fat;null
+563. Corn;canned, reduced sodium, cooked, no added fat;null
+577. Butter crackers;original;Ritz
+580. Butter crackers;reduced fat;null
+581. Butter crackers;reduced sodium;null
+583. Cheese crackers;original;Cheez-It
+584. Cheese crackers;original;Goldfish
+585. Cheese crackers;reduced fat;null
+586. Cheese crackers;reduced sodium;null
+592. Matzo crackers;reduced sodium;null
+600. Saltine crackers;reduced fat;null
+607. Wheat crackers;reduced sodium;null
+611. Woven wheat crackers;reduced sodium;null
+616. Cranberry juice drink;light, high vitamin C;null
+620. Cream cheese;fat-free;null
+625. Cream;fat-free half & half;null
+664. Energy drink;unspecified;null
+666. Energy drink;regular;Monster
+667. Energy drink;regular;Mountain Dew AMP
+668. Energy drink;regular;NOS
+670. Energy drink;regular;No Fear
+672. Energy drink;regular;Red Bull
+673. Energy drink;regular;Rockstar
+675. Energy drink;regular;Vault
+677. Energy drink;regular;XS
+678. Energy drink;low calorie;Monster
+679. Energy drink;sugar-free;Monster
+680. Energy drink;sugar-free;Mountain Dew AMP
+681. Energy drink;sugar-free;No Fear
+682. Energy drink;sugar-free;Rockstar
+683. Energy drink;sugar-free;Vault
+684. Energy drink;sugar-free;NOS
+685. Energy drink;sugar-free;Red Bull
+722. French/Catalina dressing;fat-free;null
+723. French/Catalina dressing;light;null
+737. Fruit drink;powdered (diet, dry mix);null
+738. Fruit drink;high vitamin C;null
+743. Fruit juice drink;regular;Capri Sun
+744. Fruit juice drink;regular;Sunny D
+745. Fruit juice drink;added calcium;Sunny D
+746. Fruit juice drink;light;null
+747. Fruit juice drink;high vitamin C;null
+748. Fruit juice drink;light, high vitamin C;null
+758. Gelatin dessert;sugar-free;null
+767. Graham crackers;original;Teddy Grahams
+769. Graham crackers;reduced fat;null
+778. Gravy;beef, fat-free;null
+780. Gravy;poultry, fat-free;null
+783. Green beans;canned, reduced sodium, no added fat;null
+787. Green peas;canned, reduced sodium, no added fat;null
+798. Ham;deli/luncheon meat, reduced sodium;null
+801. Hamburger;unspecified;null
+808. Honey mustard dressing;fat-free;null
+809. Honey mustard dressing;light;null
+839. Italian ice;no sugar added;null
+840. Italian dressing;fat-free;null
+846. Jam/Jelly;reduced sugar;null
+870. Lemonade;drink, light;null
+899. Mayonnaise;fat-free;null
+900. Mayonnaise;light;null
+904. Mayo-style dressing;light;null
+916. Milk;evaporated skim;null
+918. Milk;skim;null
+919. Milk;lactose free skim;null
+920. Milk;lactose free 1%;null
+921. Milk;lactose free 2%;null
+922. Milk;lactose free whole;null
+923. Milk;1%;null
+926. Milk;whole;null
+944. Muffin;fruit, low fat;null
+955. Nutrition bar;Original;Balance
+956. Nutrition bar;Original;Clif
+959. Nutrition bar;Original Meal Bar;SlimFast
+963. Nutrition bar;null;Tiger's Milk
+965. Nutrition shake;high protein, light, ready to drink;null
+967. Nutrition shake;high protein, ready to drink;null
+970. Nutrition shake;ready to drink;Boost
+971. Nutrition shake;ready to drink;Ensure Plus
+972. Nutrition shake;ready to drink;Ensure
+973. Nutrition shake;ready to drink;Muscle Milk
+974. Nutrition shake;ready to drink;SlimFast
+975. Nutrition shake;ready to drink, unspecified;null
+976. Nutrition shake;ready to drink, sugar free;Glucerna
+977. Nutrition shake;ready to drink, sugar free;SlimFast
+982. Protein powder;unspecified;Muscle Milk
+984. Nutrition powder;unspecified;null
+986. Protein powder;high protein;SlimFast
+987. Protein powder;high protein, unspecified;null
+988. Protein powder;light;Muscle Milk
+989. Protein powder;unspecified;null
+990. Protein powder;light, unspecified;null
+993. Nutrition powder;sugar free;SlimFast
+1018. Pancake syrup;light;null
+1020. Pancakes;gluten free;null
+1032. Pastrami;reduced fat;null
+1040. Peanut butter;lower sugar;null
+1041. Peanut butter;reduced fat;null
+1042. Peanut butter;fortified;null
+1059. Pepperoni;reduced fat;null
+1060. Pepperoni;reduced sodium;null
+1119. Popsicle;unspecified;null
+1120. Popsicle;no sugar added;null
+1125. Pork sausage;reduced fat;null
+1128. Potato chips;unspecified;null
+1134. Potato chips;popped, unspecified;null
+1164. Mashed potatoes;ready to heat, unspecified;null
+1168. Pretzels;hard, unspecified;null
+1173. Pretzels;hard, plain, gluten free;null
+1178. Pretzels;soft, from frozen, unsalted;null
+1192. Pumpkin seeds;unsalted;null
+1208. Ranch dressing;fat-free;null
+1209. Ranch dressing;light;null
+1228. Bread roll;gluten-free;null
+1260. Salad dressing;fat-free (unspecified);null
+1261. Salad dressing;light (unspecified);null
+1263. Salami;reduced fat;null
+1264. Salami;reduced sodium;null
+1278. Sesame dressing;light;null
+1290. Snow cone;no sugar added;null
+1293. Soda;diet (unspecified);null
+1295. Soda;chocolate, diet;null
+1298. Soda;cola, chocolate, diet;null
+1299. Soda;cola, decaf;null
+1300. Soda;cola, decaf, diet;null
+1301. Soda;cola, diet;null
+1303. Soda;cola, fruit or vanilla, diet;null
+1305. Soda;cream soda, diet;null
+1307. Soda;fruit-flavored, caffeinated, diet;null
+1309. Soda;fruit-flavored, diet, caffeine-free;null
+1311. Soda;ginger ale, diet;null
+1313. Soda;pepper-style, decaf;null
+1314. Soda;pepper-style, decaf, diet;null
+1315. Soda;pepper-style, diet;null
+1317. Soda;root beer, diet;null
+1320. Sour cream;fat-free;null
+1322. Sour cream;light;null
+1329. Soy sauce;reduced sodium;null
+1335. Spaghetti sauce;fat-free;null
+1336. Spaghetti sauce;reduced sodium;null
+1339. Canned meat;reduced sodium;SPAM
+1347. Sports drink;unspecified;null
+1349. Sports drink;low calorie;null
+1375. Sunflower seeds;unspecified;null
+1407. Tea;hot, black (leaf), decaf;null
+1409. Tea;hot, green (leaf), decaf;null
+1412. Tea;iced, bottled, black, decaf;null
+1413. Tea;iced, bottled, black, decaf, diet;null
+1414. Tea;iced, bottled, black, decaf, unsweetened;null
+1415. Tea;iced, bottled, black, diet;null
+1416. Tea;iced, bottled, black, unsweetened;null
+1418. Tea;iced, bottled, green, diet;null
+1419. Tea;iced, bottled, green, unsweetened;null
+1420. Tea;iced, brewed, black, decaf, unsweetened;null
+1422. Tea;iced, brewed, green, decaf, unsweetened;null
+1433. Teriyaki sauce;reduced sodium;null
+1436. Thousand Island dressing;fat-free;null
+1437. Thousand Island dressing;light;null
+1440. Toddler nutrition shake;store brand;null
+1442. Tomato-vegetable juice;100%, low sodium;null
+1446. Tomato juice;100%, low sodium;null
+1465. Turkey bacon;reduced sodium, cooked;null
+1474. Turkey deli meat;reduced sodium;null
+1480. Fruit & vegetable juice drink;high vitamin C, diet;null
+1481. Fruit & vegetable juice drink;high vitamin C, light;null
+1489. Waffle;gluten-free;null
+1503. Water;Enhanced, diet;null
+1516. Whipped Topping;Fat-free;null
+1517. Whipped Topping;Sugar-free;null
+1526. Wine;Non-alcoholic;null

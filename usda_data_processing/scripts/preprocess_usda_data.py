@@ -328,6 +328,216 @@ def get_emoji(food_code: str, category: str = None) -> str:
     # デフォルト絵文字
     return "🍽️"
 
+
+def load_display_name_mappings(gpt_file_path: Path) -> Dict[int, Dict[str, Optional[str]]]:
+    """
+    display_info_list.txtからdisplay name mappingsを読み込む
+
+    Args:
+        gpt_file_path: display_info_list.txtファイルのパス
+
+    Returns:
+        番号をキーとし、display_name, display_variant, brand_nameを含む辞書を値とする辞書
+        例: {1: {'display_name': 'Agave syrup', 'display_variant': None, 'brand_name': None}, ...}
+    """
+    mappings = {}
+    
+    try:
+        with open(gpt_file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # フォーマット: "番号. display_name;display_variant;brand_name"
+                if '. ' in line:
+                    parts = line.split('. ', 1)
+                    if len(parts) == 2 and parts[0].isdigit():
+                        number = int(parts[0])
+                        content = parts[1]
+                        
+                        # セミコロンで分割
+                        fields = content.split(';')
+                        if len(fields) >= 3:
+                            display_name = fields[0].strip()
+                            display_variant = fields[1].strip() if fields[1].strip() != 'null' else None
+                            brand_name = fields[2].strip() if fields[2].strip() != 'null' else None
+                            
+                            mappings[number] = {
+                                'display_name': display_name,
+                                'display_variant': display_variant,
+                                'brand_name': brand_name
+                            }
+    except FileNotFoundError:
+        print(f"⚠️ GPTファイルが見つかりません: {gpt_file_path}")
+        return {}
+    except Exception as e:
+        print(f"⚠️ GPTファイルの読み込み中にエラーが発生しました: {e}")
+        return {}
+    
+    return mappings
+
+
+def load_exclusion_set(exclusion_file_path: Path) -> set:
+    """
+    exclusion_list.txtから除外する番号のセットを読み込む
+    
+    Args:
+        exclusion_file_path: exclusion_list.txtファイルのパス
+    
+    Returns:
+        除外する番号のセット
+        例: {29, 31, 36, 45, ...}
+    """
+    exclusion_set = set()
+    
+    try:
+        with open(exclusion_file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # フォーマット: "番号. display_name;display_variant;brand_name"
+                # 番号だけ抽出
+                if '. ' in line:
+                    parts = line.split('. ', 1)
+                    if len(parts) >= 1 and parts[0].isdigit():
+                        number = int(parts[0])
+                        exclusion_set.add(number)
+    except FileNotFoundError:
+        print(f"⚠️ 除外リストファイルが見つかりません: {exclusion_file_path}")
+        return set()
+    except Exception as e:
+        print(f"⚠️ 除外リストファイルの読み込み中にエラーが発生しました: {e}")
+        return set()
+    
+    return exclusion_set
+
+
+def load_search_name_mappings(search_name_file_path: Path) -> Dict[int, List[str]]:
+    """
+    search_name_list.txtからsearch name mappingsを読み込む
+    
+    Returns:
+        番号をキーとし、search nameのリストを値とする辞書
+        例: {1: ['agave syrup', 'agave nectar', 'liquid agave sweetener', 'agave sweetener'], ...}
+    """
+    mappings = {}
+    
+    try:
+        with open(search_name_file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # フォーマット: "番号. [...search names...]"
+                if '. ' in line:
+                    parts = line.split('. ', 1)
+                    if len(parts) == 2 and parts[0].isdigit():
+                        number = int(parts[0])
+                        
+                        # JSON配列をパース
+                        try:
+                            search_names = json.loads(parts[1])
+                            if isinstance(search_names, list):
+                                mappings[number] = search_names
+                        except json.JSONDecodeError as e:
+                            print(f"⚠️ JSON解析エラー (行番号{number}): {e}")
+                            continue
+    except FileNotFoundError:
+        print(f"⚠️ Search nameファイルが見つかりません: {search_name_file_path}")
+        return {}
+    except Exception as e:
+        print(f"⚠️ Search nameファイルの読み込み中にエラーが発生しました: {e}")
+        return {}
+    
+    return mappings
+
+
+def load_original_name_mapping(original_name_path: Path) -> Dict[str, int]:
+    """
+    original_name.txtから元の食品名と番号のマッピングを読み込む
+    
+    Args:
+        original_name_path: original_name.txtファイルのパス
+    
+    Returns:
+        元の食品名をキーとし、番号を値とする辞書
+        例: {'Agave liquid sweetener': 1, ...}
+    """
+    name_to_number = {}
+    
+    try:
+        with open(original_name_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # フォーマット: "番号. 元の食品名"
+                if '. ' in line:
+                    parts = line.split('. ', 1)
+                    if len(parts) == 2 and parts[0].isdigit():
+                        number = int(parts[0])
+                        original_name = parts[1].strip()
+                        name_to_number[original_name] = number
+    except FileNotFoundError:
+        print(f"⚠️ 元の食品名ファイルが見つかりません: {original_name_path}")
+        return {}
+    except Exception as e:
+        print(f"⚠️ 元の食品名ファイルの読み込み中にエラーが発生しました: {e}")
+        return {}
+    
+    return name_to_number
+
+
+def load_frequency_emoji_mappings(frequency_emoji_path: Path) -> Dict[int, Dict[str, Optional[str]]]:
+    """
+    frequency_emoji_list.txtから番号と消費頻度・絵文字のマッピングを読み込む
+    
+    Args:
+        frequency_emoji_path: frequency_emoji_list.txtファイルのパス
+    
+    Returns:
+        番号をキーとし、consumption_frequencyとfood_specific_emojiを含む辞書を値とする辞書
+        例: {1: {'consumption_frequency': 'rare', 'food_specific_emoji': '🍯'}, ...}
+    """
+    number_to_freq_emoji = {}
+    
+    try:
+        with open(frequency_emoji_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # フォーマット: "番号. JSONオブジェクト"
+                if '. ' in line:
+                    parts = line.split('. ', 1)
+                    if len(parts) == 2 and parts[0].isdigit():
+                        number = int(parts[0])
+                        try:
+                            # JSONオブジェクトをパース
+                            freq_emoji_data = json.loads(parts[1])
+                            number_to_freq_emoji[number] = {
+                                'consumption_frequency': freq_emoji_data.get('consumption_frequency'),
+                                'food_specific_emoji': freq_emoji_data.get('food_specific_emoji')
+                            }
+                        except json.JSONDecodeError as e:
+                            print(f"⚠️ JSON解析エラー (行番号 {number}): {e}")
+                            continue
+    except FileNotFoundError:
+        print(f"⚠️ 消費頻度・絵文字ファイルが見つかりません: {frequency_emoji_path}")
+        return {}
+    except Exception as e:
+        print(f"⚠️ 消費頻度・絵文字ファイルの読み込み中にエラーが発生しました: {e}")
+        return {}
+    
+    print(f"✅ {len(number_to_freq_emoji)}件の消費頻度・絵文字情報を読み込みました")
+    return number_to_freq_emoji
+
 def normalize_description(description: str) -> Tuple[str, Optional[str]]:
     """
     食材説明の正規化と追加情報の抽出
@@ -507,13 +717,28 @@ def extract_unit_to_grams(food_portions: List[Dict]) -> Dict[str, float]:
     
     return unit_to_grams
 
-def preprocess_food_item(food_item: Dict, category: str = None) -> Optional[Dict]:
+def preprocess_food_item(
+    food_item: Dict,
+    category: str = None,
+    display_name_mappings: Dict[int, Dict[str, Optional[str]]] = None,
+    original_name_mapping: Dict[str, int] = None,
+    exclusion_set: set = None,
+    stats: Dict = None,
+    search_name_mappings: Dict[int, List[str]] = None,
+    frequency_emoji_mappings: Dict[int, Dict[str, Optional[str]]] = None
+) -> Optional[Dict]:
     """
     個別の食品項目を前処理
 
     Args:
         food_item: 食品項目の辞書（foodCode, description, etc.）
         category: 食品のカテゴリ名
+        display_name_mappings: GPTファイルから読み込んだdisplay name mappings
+        original_name_mapping: original nameから番号へのマッピング
+        exclusion_set: 除外する番号のセット
+        stats: 統計情報（除外理由の記録用）
+        search_name_mappings: search_name_list.txtから読み込んだsearch name mappings
+        frequency_emoji_mappings: frequency_emoji_list.txtから読み込んだ消費頻度・絵文字mappings
 
     Returns:
         前処理済みの食品項目、または除外する場合はNone
@@ -522,29 +747,98 @@ def preprocess_food_item(food_item: Dict, category: str = None) -> Optional[Dict
     item = food_item.copy()
     original_desc = item['description']
 
-    # 正規化
+    # 除外リストチェック（original descriptionと照合）
+    if exclusion_set and original_name_mapping:
+        item_number = original_name_mapping.get(original_desc)
+        if item_number and item_number in exclusion_set:
+            # 除外リストに含まれている場合
+            if stats:
+                stats['excluded_by_list'] = stats.get('excluded_by_list', 0) + 1
+                stats['excluded_reasons']['Exclusion list'] += 1
+            return None
+
+    # display name mappingsの適用
+    display_name = None
+    display_variant = None
+    brand_name = None
+    display_name_applied = False
+    
+    if display_name_mappings and original_name_mapping:
+        item_number = original_name_mapping.get(original_desc)
+        if item_number and item_number in display_name_mappings:
+            mapping = display_name_mappings[item_number]
+            display_name = mapping.get('display_name')
+            display_variant = mapping.get('display_variant')
+            brand_name = mapping.get('brand_name')
+            display_name_applied = True
+            
+            if stats:
+                stats['display_name_applied'] = stats.get('display_name_applied', 0) + 1
+
+    # search name mappingsの適用
+    search_names = None
+    if search_name_mappings and original_name_mapping:
+        item_number = original_name_mapping.get(original_desc)
+        if item_number and item_number in search_name_mappings:
+            search_names = search_name_mappings[item_number]
+
+    # frequency_emoji mappingsの適用
+    consumption_frequency = None
+    food_specific_emoji = None
+    if frequency_emoji_mappings and original_name_mapping:
+        item_number = original_name_mapping.get(original_desc)
+        if item_number and item_number in frequency_emoji_mappings:
+            freq_emoji_data = frequency_emoji_mappings[item_number]
+            consumption_frequency = freq_emoji_data.get('consumption_frequency')
+            food_specific_emoji = freq_emoji_data.get('food_specific_emoji')
+
+    # 正規化（既存の処理も維持）
     normalized_desc, removed_info = normalize_description(original_desc)
 
     # NS as toやその他の理由で除外される場合
     if normalized_desc is None:
         return None
 
-    # ブランド名の抽出
-    clean_desc, brand = extract_brand_or_variety(normalized_desc)
+    # ブランド名の抽出（既存の処理）
+    clean_desc, extracted_brand = extract_brand_or_variety(normalized_desc)
+
+    # display nameが適用されている場合、それを使用
+    if display_name_applied and display_name:
+        # display nameを使用
+        final_description = display_name
+    else:
+        # 既存の正規化された説明を使用
+        final_description = clean_desc
 
     # 前処理済みデータの構造
     preprocessed = {
         'foodCode': item['foodCode'],
-        'description': clean_desc,
+        'description': final_description,
         'original_description': original_desc,
         'category': category,  # カテゴリを追加
         'category_emoji': get_emoji(item['foodCode'], category),  # 食品固有またはカテゴリの絵文字を取得
         'preprocessed_info': {
             'removed': removed_info,
-            'brand_or_variety': brand,
-            'was_modified': clean_desc != original_desc
+            'brand_or_variety': extracted_brand if not display_name_applied else brand_name,
+            'was_modified': final_description != original_desc,
+            'display_name_applied': display_name_applied
         }
     }
+
+    # display_variantとbrand_nameを追加
+    if display_name_applied:
+        preprocessed['display_variant'] = display_variant
+        preprocessed['brand_name'] = brand_name
+
+    # search_namesを追加
+    if search_names:
+        preprocessed['search_names'] = search_names
+
+    # consumption_frequencyとfood_specific_emojiを追加
+    if consumption_frequency:
+        preprocessed['consumption_frequency'] = consumption_frequency
+    if food_specific_emoji:
+        preprocessed['food_specific_emoji'] = food_specific_emoji
 
     # 栄養情報がある場合は保持
     if 'foodNutrients' in item:
@@ -558,9 +852,24 @@ def preprocess_food_item(food_item: Dict, category: str = None) -> Optional[Dict
 
     return preprocessed
 
-def preprocess_category(category_data: Dict[str, Dict]) -> Tuple[Dict[str, Dict], Dict]:
+def preprocess_category(
+    category_data: Dict[str, Dict],
+    display_name_mappings: Dict[int, Dict[str, Optional[str]]],
+    original_name_mapping: Dict[str, int],
+    exclusion_set: set,
+    search_name_mappings: Dict[int, List[str]] = None,
+    frequency_emoji_mappings: Dict[int, Dict[str, Optional[str]]] = None
+) -> Tuple[Dict[str, Dict], Dict]:
     """
     カテゴリごとの食品データを前処理
+
+    Args:
+        category_data: カテゴリごとの食品データ
+        display_name_mappings: GPTファイルから読み込んだdisplay name mappings
+        original_name_mapping: original nameから番号へのマッピング
+        exclusion_set: 除外する番号のセット
+        search_name_mappings: search_name_list.txtから読み込んだsearch name mappings
+        frequency_emoji_mappings: frequency_emoji_list.txtから読み込んだ消費頻度・絵文字mappings
 
     Returns:
         Tuple[前処理済みデータ, 統計情報]
@@ -570,7 +879,9 @@ def preprocess_category(category_data: Dict[str, Dict]) -> Tuple[Dict[str, Dict]
         'total_items': 0,
         'processed_items': 0,
         'excluded_items': 0,
+        'excluded_by_list': 0,
         'modified_items': 0,
+        'display_name_applied': 0,
         'excluded_reasons': Counter()
     }
 
@@ -585,7 +896,16 @@ def preprocess_category(category_data: Dict[str, Dict]) -> Tuple[Dict[str, Dict]
         for item in items:
             stats['total_items'] += 1
             # カテゴリ名を渡して前処理
-            processed = preprocess_food_item(item, category)
+            processed = preprocess_food_item(
+                item,
+                category,
+                display_name_mappings,
+                original_name_mapping,
+                exclusion_set,
+                stats,
+                search_name_mappings,
+                frequency_emoji_mappings
+            )
 
             if processed:
                 preprocessed_items.append(processed)
@@ -616,6 +936,7 @@ def main():
     base_dir = Path("/Users/odasoya/meal_analysis_api_2")
     input_dir = base_dir / "usda_data_processing" / "docs"
     output_dir = base_dir / "usda_data_processing" / "output"
+    display_name_dir = base_dir / "usda_data_processing" / "display_name_generation"
 
     # 出力ディレクトリ作成
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -623,6 +944,30 @@ def main():
     print("="*80)
     print("🧹 USDA食材データ前処理")
     print("="*80)
+
+    # Display name mappingsの読み込み
+    print("\n📚 Display name mappings の読み込み中...")
+    gpt_file = display_name_dir / "display_info_list.txt"
+    original_name_file = display_name_dir / "original_name.txt"
+    exclusion_file = display_name_dir / "exclusion_list.txt"
+    
+    display_name_mappings = load_display_name_mappings(gpt_file)
+    original_name_mapping = load_original_name_mapping(original_name_file)
+    exclusion_set = load_exclusion_set(exclusion_file)
+
+    # Search name mappingsの読み込み
+    search_name_file = display_name_dir / "search_name_list.txt"
+    search_name_mappings = load_search_name_mappings(search_name_file)
+
+    # Frequency emoji mappingsの読み込み
+    frequency_emoji_file = display_name_dir / "frequency_emoji_list.txt"
+    frequency_emoji_mappings = load_frequency_emoji_mappings(frequency_emoji_file)
+
+    print(f"   ✅ Display name mappings: {len(display_name_mappings)}件")
+    print(f"   ✅ Original name mappings: {len(original_name_mapping)}件")
+    print(f"   ✅ Exclusion list: {len(exclusion_set)}件")
+    print(f"   ✅ Search name mappings: {len(search_name_mappings)}件")
+    print(f"   ✅ Frequency emoji mappings: {len(frequency_emoji_mappings)}件")
 
     # 処理対象ファイル
     files_to_process = [
@@ -658,19 +1003,29 @@ def main():
             print(f"❌ 想定外のデータ形式です")
             continue
 
-        # 前処理実行
-        preprocessed_data, stats = preprocess_category(category_data)
+        # 前処理実行（マッピングを渡す）
+        preprocessed_data, stats = preprocess_category(
+            category_data,
+            display_name_mappings,
+            original_name_mapping,
+            exclusion_set,
+            search_name_mappings,
+            frequency_emoji_mappings
+        )
 
         # 結果を保存
         output_json = {
             "metadata": {
                 "source": input_file,
                 "preprocessing_applied": True,
+                "display_names_applied": True,
                 "processing_stats": {
                     "total_items": stats['total_items'],
                     "processed_items": stats['processed_items'],
                     "excluded_items": stats['excluded_items'],
+                    "excluded_by_list": stats.get('excluded_by_list', 0),
                     "modified_items": stats['modified_items'],
+                    "display_name_applied": stats.get('display_name_applied', 0),
                     "modification_rate": f"{(stats['modified_items']/stats['total_items']*100):.1f}%",
                     "exclusion_rate": f"{(stats['excluded_items']/stats['total_items']*100):.1f}%"
                 }
@@ -686,7 +1041,9 @@ def main():
         print(f"   総項目数: {stats['total_items']:,}")
         print(f"   処理済み: {stats['processed_items']:,}")
         print(f"   除外項目: {stats['excluded_items']:,}")
+        print(f"     - 除外リストによる除外: {stats.get('excluded_by_list', 0):,}")
         print(f"   修正項目: {stats['modified_items']:,}")
+        print(f"   Display name適用: {stats.get('display_name_applied', 0):,}")
         print(f"   修正率: {(stats['modified_items']/stats['total_items']*100):.1f}%")
 
         if stats['excluded_reasons']:
@@ -707,13 +1064,17 @@ def main():
     total_items = sum(s['total_items'] for s in overall_stats.values())
     total_processed = sum(s['processed_items'] for s in overall_stats.values())
     total_excluded = sum(s['excluded_items'] for s in overall_stats.values())
+    total_excluded_by_list = sum(s.get('excluded_by_list', 0) for s in overall_stats.values())
     total_modified = sum(s['modified_items'] for s in overall_stats.values())
+    total_display_name_applied = sum(s.get('display_name_applied', 0) for s in overall_stats.values())
 
     print(f"\n📈 全体統計:")
     print(f"   総処理項目: {total_items:,}")
     print(f"   処理成功: {total_processed:,} ({total_processed/total_items*100:.1f}%)")
     print(f"   除外項目: {total_excluded:,} ({total_excluded/total_items*100:.1f}%)")
+    print(f"     - 除外リストによる除外: {total_excluded_by_list:,}")
     print(f"   修正項目: {total_modified:,} ({total_modified/total_items*100:.1f}%)")
+    print(f"   Display name適用: {total_display_name_applied:,} ({total_display_name_applied/total_items*100:.1f}%)")
 
     print("\n✨ 前処理が完了しました！")
     print("   次のステップ: split_ingredient_names_with_llm.py を実行してください")

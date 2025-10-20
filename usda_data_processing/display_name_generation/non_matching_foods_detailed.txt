@@ -1,0 +1,33 @@
+# 検証結果: 不一致の食品名（詳細レポート）
+
+## 概要
+- **総選択食品数**: 1,209件
+- **一致**: 1,207件 (99.83%)
+- **不一致**: 2件 (0.17%)
+
+---
+
+## 不一致の詳細
+
+### 1. Lettuce, romaine, raw
+- **カテゴリ**: Vegetables — raw
+- **選択リストの名前**: `Lettuce, romaine, raw`
+- **元データの名前**: `Romaine lettuce, raw` (番号: 1110)
+- **問題**: 単語の順序が異なる
+- **推奨対応**: selected_food_list.txtを `Romaine lettuce, raw` に修正
+
+### 2. Pepperpot
+- **カテゴリ**: Soups & Stews（スープ・シチュー）
+- **選択リストの名前**: `Pepperpot`
+- **元データの名前**: `Soup, pepperpot` (番号: 2990)
+- **問題**: プレフィックス "Soup, " が欠けている
+- **推奨対応**: selected_food_list.txtを `Soup, pepperpot` に修正
+
+---
+
+## 次のステップ
+
+selected_food_list.txtの該当箇所を修正すれば、100%の一致率になります：
+
+1. `Lettuce, romaine, raw` → `Romaine lettuce, raw`
+2. `Pepperpot` → `Soup, pepperpot`

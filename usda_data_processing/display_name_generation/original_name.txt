@@ -1,0 +1,3841 @@
+# USDA FNDDS - Composite Dishes (Original Names)
+
+> 複合料理の元データ名リスト（元データの順番を保持）
+
+**Source**: `usda_database/surveyDownload.json`  
+**Generated**: 2025-10-20 12:50:20  
+**Total Items**: 3829
+
+**Number Range**: 1603 - 5431
+
+---
+
+1603. Milk, NFS
+1604. Kefir
+1605. Milk, dry, reconstituted, nonfat
+1606. Milk, dry, reconstituted, whole
+1607. Milk, evaporated, reduced fat (2%)
+1608. Non-dairy milk, NFS
+1609. Soy milk, sweetened
+1610. Soy milk, chocolate
+1611. Almond milk, sweetened
+1612. Almond milk, chocolate
+1613. Almond milk, NFS
+1614. Oat milk
+1615. Yogurt, NFS
+1616. Yogurt, whole milk, plain
+1617. Yogurt, low fat milk, plain
+1618. Yogurt, nonfat milk, plain
+1619. Yogurt, Greek, low fat milk, plain
+1620. Yogurt, whole milk, fruit
+1621. Yogurt, low fat milk, fruit
+1622. Yogurt, nonfat milk, fruit
+1623. Yogurt, Greek, whole milk, fruit
+1624. Yogurt, Greek, low fat milk, fruit
+1625. Yogurt, Greek, nonfat milk, fruit
+1626. Yogurt, whole milk, flavors other than fruit
+1627. Yogurt, low fat milk, flavors other than fruit
+1628. Yogurt, nonfat milk, flavors other than fruit
+1629. Yogurt, Greek, whole milk, flavors other than fruit
+1630. Yogurt, Greek, low fat milk, flavors other than fruit
+1631. Yogurt, Greek, nonfat milk, flavors other than fruit
+1632. Yogurt, Greek, with oats
+1633. Yogurt, liquid
+1634. Yogurt tube
+1635. Chipotle dip, yogurt based
+1636. Onion dip, yogurt based
+1637. Ranch dip, yogurt based
+1638. Spinach dip, yogurt based
+1639. Tzatziki dip
+1640. Vegetable dip, yogurt based
+1641. Yogurt parfait, with fruit
+1642. Frozen yogurt, soft serve, chocolate
+1643. Frozen yogurt sandwich
+1644. Frozen yogurt cone, chocolate
+1645. Frozen yogurt cone, vanilla
+1646. Frozen yogurt cone, vanilla, waffle cone
+1647. Frozen yogurt cone, chocolate, waffle cone
+1648. Baby Toddler food, NFS
+1649. Baby Toddler yogurt, plain
+1650. Baby Toddler yogurt, with fruit
+1651. Chocolate milk, NFS
+1652. Chocolate milk, reduced sugar, NFS
+1653. Hot chocolate / cocoa, NFS
+1654. Hot chocolate / cocoa, made with whole or reduced fat (2%) milk
+1655. Hot chocolate / cocoa, made with lowfat (1%) or fat free (skim) milk
+1656. Hot chocolate / cocoa, made with non-dairy milk
+1657. Hot chocolate / cocoa, with whipped cream
+1658. Chocolate milk, Nesquik, NS as to type of milk
+1659. Chocolate milk, Nesquik, made with non-dairy milk
+1660. Chocolate milk, reduced sugar, whole
+1661. Chocolate milk, reduced sugar, reduced fat (2%)
+1662. Chocolate milk, reduced sugar, low fat (1%)
+1663. Chocolate milk, reduced sugar, fat free (skim)
+1664. Hot chocolate / cocoa, dry mix, made with water
+1665. Hot chocolate / cocoa, dry mix, made with whole or reduced fat (2%) milk
+1666. Hot chocolate / cocoa, dry mix, made with lowfat (1%) or fat free (skim) milk
+1667. Hot chocolate / cocoa, dry mix , made with non-dairy milk
+1668. Hot chocolate / cocoa, dry mix, made with water, with whipped cream
+1669. Hot chocolate / cocoa, dry mix, reduced sugar, made with water
+1670. Hot chocolate / cocoa, dry mix, reduced sugar, made with whole or reduced fat (2%) milk
+1671. Hot chocolate / cocoa, reduced sugar, made with non-dairy milk
+1672. Hot chocolate / cocoa, reduced sugar, made with whole or reduced fat (2%) milk
+1673. Hot chocolate / cocoa, dry mix, reduced sugar, made with lowfat (1%) or fat free (skim) milk
+1674. Hot chocolate / cocoa, reduced sugar, made with lowfat (1%) or fat free (skim) milk
+1675. Hot chocolate / cocoa, dry mix, reduced sugar, made with non-dairy milk
+1676. Strawberry milk, NFS
+1677. Strawberry milk, whole
+1678. Strawberry milk, reduced fat (2%)
+1679. Strawberry milk, low fat (1%)
+1680. Strawberry milk, fat free  (skim)
+1681. Strawberry milk, reduced sugar
+1682. Milk, malted
+1683. Milk shake, home recipe, chocolate
+1684. Milk shake, home recipe, flavors other than chocolate
+1685. Milk shake, home recipe, chocolate, light
+1686. Milk shake, home recipe, flavors other than chocolate, light
+1687. Milk shake with malt
+1688. Milk shake, fast food, chocolate
+1689. Milk shake, bottled, chocolate
+1690. Licuado or Batido
+1691. Fruit smoothie, NFS
+1692. Fruit smoothie, with whole fruit and dairy
+1693. Fruit smoothie, with whole fruit and dairy, added protein
+1694. Infant formula, NFS
+1695. Infant formula, Similac, NFS
+1696. Infant formula, Similac Advance, ready-to-feed
+1697. Infant formula, Similac Advance, powder, made with tap water
+1698. Infant formula, Similac Advance, powder, made with bottled water
+1699. Infant formula, Similac Advance, powder, made with baby water
+1700. Infant formula, Similac Sensitive, ready-to-feed
+1701. Infant formula, Similac Sensitive, powder, made with tap water
+1702. Infant formula, Similac Sensitive, powder, made with bottled water
+1703. Infant formula, Similac Sensitive, powder, made with baby water
+1704. Infant formula, Similac for Spit-Up, ready-to-feed
+1705. Infant formula, Similac for Spit-Up, powder, made with water
+1706. Toddler formula, Similac Go and Grow
+1707. Infant formula, Enfamil, NFS
+1708. Infant formula, Enfamil Infant, ready-to-feed
+1709. Infant formula, Enfamil Infant, powder, made with tap water
+1710. Infant formula, Enfamil Infant, powder, made with bottled water
+1711. Infant formula, Enfamil Infant, powder, made with baby water
+1712. Infant formula, Enfamil AR, ready-to-feed
+1713. Infant formula, Enfamil AR, powder, made with water
+1714. Infant formula, Enfamil Gentlease, ready-to-feed
+1715. Infant formula, Enfamil Gentlease, powder, made with tap water
+1716. Infant formula, Enfamil Gentlease, powder, made with bottled water
+1717. Infant formula, Enfamil Gentlease, powder, made with baby water
+1718. Toddler formula, Enfamil Enfagrow
+1719. Toddler formula, Nido Kinder
+1720. Toddler formula, store brand, beginning or next stage
+1721. Infant formula, Gerber, NFS
+1722. Infant formula, Gerber Good Start Gentle, Stage 1, ready-to-feed
+1723. Infant formula, Gerber Good Start Gentle, Stage 1, powder, made with tap water
+1724. Infant formula, Gerber Good Start Gentle, Stage 1, powder, made with bottled water
+1725. Infant formula, Gerber Good Start Gentle, Stage 1, powder, made with baby water
+1726. Infant formula, Gerber Good Start Gentle, Stage 2
+1727. Toddler formula, Gerber Good Start, Stage 3
+1728. Infant formula, premature, powder, made with water
+1729. Infant formula, premature, ready-to-feed
+1730. Infant formula, organic, powder, made with water
+1731. Infant formula, organic, ready-to-feed
+1732. Infant formula, store brand, advantage or tender, powder, made with tap water
+1733. Infant formula, store brand, advantage or tender, powder, made with bottled water
+1734. Infant formula, store brand, advantage or tender, powder, made with baby water
+1735. Infant formula, store brand, gentle or sensitivity
+1736. Infant formula, store brand, added rice
+1737. Infant formula, Enfamil ProSobee, ready-to-feed
+1738. Infant formula, Enfamil ProSobee, powder, made with tap water
+1739. Infant formula, Enfamil ProSobee, powder, made with bottled water
+1740. Infant formula, Enfamil ProSobee, powder, made with baby water
+1741. Infant formula, Similac Isomil Soy, ready-to-feed
+1742. Infant formula, Similac Isomil Soy, powder, made with tap water
+1743. Infant formula, Similac Isomil Soy, powder, made with bottled water
+1744. Infant formula, Similac Isomil Soy, powder, made with baby water
+1745. Infant formula, Gerber Good Start Soy, Stage 1, ready-to-feed
+1746. Infant formula, Gerber Good Start Soy, Stage 1, powder, made with tap water
+1747. Infant formula, Gerber Good Start Soy, Stage 1, powder, made with bottled water
+1748. Infant formula, Gerber Good Start Soy, Stage 1, powder, made with baby water
+1749. Infant formula, store brand, soy
+1750. Infant formula, Enfamil Nutramigen, ready-to-feed
+1751. Infant formula, Enfamil Nutramigen, powder, made with water
+1752. Infant formula, Enfamil Pregestimil, ready-to-feed
+1753. Infant formula, Enfamil Pregestimil, powder, made with water
+1754. Infant formula, amino acids
+1755. Infant formula, low iron
+1756. Cream, half and half, flavored
+1757. Cream, whipped
+1758. Coffee creamer, liquid, fat free, flavored
+1759. Chipotle dip, regular
+1760. Chipotle dip, light
+1761. Onion dip, regular
+1762. Onion dip, light
+1763. Ranch dip, regular
+1764. Ranch dip, light
+1765. Spinach dip, regular
+1766. Spinach dip, light
+1767. Vegetable dip, regular
+1768. Vegetable dip, light
+1769. Ice cream, NFS
+1770. Ice cream, vanilla, with additional ingredients
+1771. Ice cream, chocolate, with additional ingredients
+1772. Ice cream bar, chocolate
+1773. Ice cream sandwich, vanilla
+1774. Ice cream sandwich, chocolate
+1775. Ice cream cookie sandwich
+1776. Ice cream cone, scooped, vanilla
+1777. Ice cream cone, scooped, vanilla, waffle cone
+1778. Ice cream cone, NFS
+1779. Ice cream cone, scooped, chocolate
+1780. Ice cream cone, scooped, chocolate, waffle cone
+1781. Ice cream cone, soft serve, vanilla
+1782. Ice cream cone, soft serve, chocolate
+1783. Ice cream cone, soft serve, vanilla, waffle cone
+1784. Ice cream cone, soft serve, chocolate, waffle cone
+1785. Ice cream cone, chocolate, prepackaged
+1786. Ice cream soda, flavors other than chocolate
+1787. Ice cream soda, chocolate
+1788. Ice cream sundae, fruit topping
+1789. Banana split
+1790. Ice cream sundae, hot fudge topping
+1791. Ice cream sundae, caramel topping
+1792. Ice cream, fried
+1793. Light ice cream, NFS
+1794. Light ice cream, vanilla
+1795. Light ice cream, chocolate
+1796. Soft serve, blended with candy or cookies, from fast food
+1797. Light ice cream sandwich, vanilla
+1798. Light ice cream sandwich, chocolate
+1799. Light ice cream bar, vanilla
+1800. Light ice cream bar, vanilla, chocolate coated
+1801. Light ice cream bar, chocolate
+1802. Fudgesicle
+1803. Light ice cream cone, vanilla, prepackaged
+1804. Light ice cream cone, chocolate, prepackaged
+1805. Pudding, bread
+1806. Custard
+1807. Flan
+1808. Creme brulee
+1809. Firni, Indian pudding
+1810. Pudding, flavors other than chocolate, made from dry mix
+1811. Pudding, chocolate, made from dry mix
+1812. Pudding, flavors other than chocolate, made from dry mix, sugar free
+1813. Pudding, chocolate, made from dry mix, sugar free
+1814. Pudding, flavors other than chocolate, ready-to-eat, sugar free
+1815. Pudding, chocolate, ready-to-eat, sugar free
+1816. Banana pudding
+1817. Mousse
+1818. Barfi or Burfi, Indian dessert
+1819. Trifle
+1820. Tiramisu
+1821. White sauce or gravy
+1822. Cheese, NFS
+1823. Cheese, Colby Jack
+1824. Cheese, Parmesan, dry grated
+1825. Cheese, Parmesan, dry grated, reduced fat
+1826. Cheese, Parmesan, hard
+1827. Cheese, paneer
+1828. Cottage cheese, farmer's
+1829. Cheese, Ricotta
+1830. Cheese, cottage, with fruit
+1831. Cheese, cottage, with vegetables
+1832. Cheese, cottage, salted, dry curd
+1833. Cheese, cottage, lowfat, with fruit
+1834. Cream cheese, regular, flavored
+1835. Cream cheese, light
+1836. Cheese, American
+1837. Cheese, processed, with vegetables
+1838. Cheese, cottage cheese, with gelatin dessert
+1839. Cheese, cottage cheese, with gelatin dessert and fruit
+1840. Cheese, cottage cheese, with gelatin dessert and vegetables
+1841. Cheese ball
+1842. Artichoke dip
+1843. Spinach and artichoke dip
+1844. Seafood dip
+1845. Cheese dip
+1846. Topping from cheese pizza
+1847. Topping from vegetable pizza
+1848. Topping from meat pizza
+1849. Topping from meat and vegetable pizza
+1850. Cheese fondue
+1851. Cheese souffle
+1852. Welsh rarebit
+1853. Cheese sandwich, NFS
+1854. Cheese sandwich, American cheese, on white bread
+1855. Cheese sandwich, American cheese, on wheat bread
+1856. Cheese sandwich, cheddar cheese, on white bread
+1857. Cheese sandwich, cheddar cheese, on wheat bread
+1858. Cheese sandwich, reduced fat cheese, on white bread
+1859. Cheese sandwich, reduced fat cheese, on wheat bread
+1860. Grilled cheese sandwich, NFS
+1861. Grilled cheese sandwich, American cheese, on white bread
+1862. Grilled cheese sandwich, American cheese, on wheat bread
+1863. Grilled cheese sandwich, cheddar cheese, on white bread
+1864. Grilled cheese sandwich, cheddar cheese, on wheat bread
+1865. Grilled cheese sandwich, reduced fat cheese, on white bread
+1866. Grilled cheese sandwich, reduced fat cheese, on wheat bread
+1867. Cheese sauce
+1868. Alfredo sauce
+1869. Alfredo sauce with added vegetables
+1870. Alfredo sauce with meat
+1871. Alfredo sauce with meat and added vegetables
+1872. Alfredo sauce with poultry
+1873. Alfredo sauce with poultry and added vegetables
+1874. Alfredo sauce with seafood
+1875. Alfredo sauce with seafood and added vegetables
+1876. Mozzarella cheese, tomato, and basil, with oil and vinegar dressing
+1877. Meat, NFS
+1878. Meat, ground, NFS
+1879. Baby Toddler meat, NFS
+1880. Beef, NFS
+1881. Steak, NS as to type of meat, NS as to fat eaten
+1882. Beef, steak, NFS
+1883. Beef, steak, chuck
+1884. Beef, steak, cube
+1885. Beef, steak, flank
+1886. Beef, steak, ribeye, NS as to fat eaten
+1887. Beef, steak, ribeye, lean and fat eaten
+1888. Beef, steak, ribeye, lean only eaten
+1889. Beef, steak, round
+1890. Beef, steak, sirloin, NS as to fat eaten
+1891. Beef, steak, sirloin, lean and fat eaten
+1892. Beef, steak, sirloin, lean only eaten
+1893. Beef, steak, strip, NS as to fat eaten
+1894. Beef, steak, strip, lean and fat eaten
+1895. Beef, steak, strip, lean only eaten
+1896. Beef, steak, T-bone, NS as to fat eaten
+1897. Beef, steak, T-bone,  lean and fat eaten
+1898. Beef, steak, T-bone, lean only eaten
+1899. Beef, steak, tenderloin
+1900. Beef, steak, country fried
+1901. Beef, oxtails
+1902. Beef, neck bones
+1903. Beef, shortribs
+1904. Beef, cow head
+1905. Beef, roast
+1906. Beef, pot roast
+1907. Beef, brisket
+1908. Beef, sandwich steak
+1909. Beef, ground, raw
+1910. Beef, ground
+1911. Beef, ground, patty
+1912. Beef, dried, chipped, cooked in fat
+1913. Pork, NFS
+1914. Pork, ground
+1915. Pork, carnitas
+1916. Pork jerky
+1917. Pork, chop, NS as to fat eaten
+1918. Pork, chop, lean and fat eaten
+1919. Pork, chop, lean only eaten
+1920. Pork, chop, coated, NS as to fat eaten
+1921. Pork, chop, coated, lean and fat eaten
+1922. Pork, chop, coated, lean only eaten
+1923. Pork, chop, stuffed
+1924. Pork, steak, NS as to fat eaten
+1925. Pork, steak, lean and fat eaten
+1926. Pork, steak, lean only eaten
+1927. Pork, steak, coated
+1928. Pork, tenderloin
+1929. Ham
+1930. Pork, roast
+1931. Pork, roll
+1932. Bacon, NS as to type of meat, cooked
+1933. Pork bacon, NS as to fresh, smoked or cured, cooked
+1934. Fat back, cooked
+1935. Ribs, NFS
+1936. Pork, ribs
+1937. Pork, cracklings
+1938. Pork, ears
+1939. Pork, bones
+1940. Pork, pig's feet
+1941. Pork, ham hocks
+1942. Pork, belly
+1943. Lamb, NS as to cut
+1944. Lamb, chop
+1945. Lamb, ground
+1946. Goat
+1947. Veal, chop
+1948. Veal, ground
+1949. Mock chicken legs
+1950. Rabbit
+1951. Venison, NFS
+1952. Venison, steak
+1953. Venison/deer jerky
+1954. Venison sausage
+1955. Moose
+1956. Bear
+1957. Caribou
+1958. Bison
+1959. Groundhog
+1960. Opossum
+1961. Squirrel
+1962. Beaver
+1963. Raccoon
+1964. Armadillo
+1965. Wild pig
+1966. Ostrich
+1967. Chicken, NS as to part and cooking method, NS as to skin eaten
+1968. Chicken, NS as to part and cooking method, skin eaten
+1969. Chicken, NS as to part and cooking method, skin not eaten
+1970. Chicken, NS as to part, baked, broiled, or roasted, NS as to skin eaten
+1971. Chicken, NS as to part, baked, broiled, or roasted, skin eaten
+1972. Chicken, NS as to part, baked, broiled, or roasted, skin not eaten
+1973. Chicken, NS as to part, rotisserie, NS as to skin eaten
+1974. Chicken, NS as to part, rotisserie, skin eaten
+1975. Chicken, NS as to part, rotisserie, skin not eaten
+1976. Chicken, NS as to part, stewed, NS as to skin eaten
+1977. Chicken, NS as to part, stewed, skin eaten
+1978. Chicken, NS as to part, stewed, skin not eaten
+1979. Chicken, NS as to part, grilled without sauce, NS as to skin eaten
+1980. Chicken, NS as to part, grilled without sauce, skin eaten
+1981. Chicken, NS as to part, grilled without sauce, skin not eaten
+1982. Chicken, NS as to part, grilled with sauce, NS as to skin eaten
+1983. Chicken, NS as to part, grilled with sauce, skin eaten
+1984. Chicken, NS as to part, grilled with sauce, skin not eaten
+1985. Chicken, NS as to part, sauteed, skin eaten
+1986. Chicken, NS as to part, sauteed, skin not eaten
+1987. Chicken, NS as to part, fried, coated, skin / coating eaten
+1988. Chicken, NS as to part, fried, coated, skin / coating not eaten
+1989. Chicken, NS as to part, baked, coated, skin / coating eaten
+1990. Chicken, NS as to part, baked, coated, skin / coating not eaten
+1991. Chicken breast, baked, broiled, or roasted, skin eaten, from raw
+1992. Chicken breast, baked, broiled, or roasted, skin not eaten, from raw
+1993. Chicken breast, baked or broiled, skin eaten, from fast food / restaurant
+1994. Chicken breast, baked or broiled, skin not eaten, from fast food / restaurant
+1995. Chicken breast, baked, broiled, or roasted with marinade, skin eaten, from raw
+1996. Chicken breast, baked, broiled, or roasted with marinade, skin not eaten, from raw
+1997. Chicken breast, stewed, skin eaten
+1998. Chicken breast, stewed, skin not eaten
+1999. Chicken breast, grilled without sauce, skin eaten
+2000. Chicken breast, grilled without sauce, skin not eaten
+2001. Chicken breast, grilled with sauce, skin eaten
+2002. Chicken breast, grilled with sauce, skin not eaten
+2003. Chicken breast, sauteed, skin eaten
+2004. Chicken breast, sauteed, skin not eaten
+2005. Chicken breast, fried, coated, skin / coating eaten, from raw
+2006. Chicken breast, fried, coated, skin / coating not eaten, from raw
+2007. Chicken breast, fried, coated, prepared skinless, coating eaten, from raw
+2008. Chicken breast, fried, coated, skin / coating eaten, from pre-cooked
+2009. Chicken breast, fried, coated, skin / coating not eaten, from pre-cooked
+2010. Chicken breast, fried, coated, skin / coating eaten, from fast food / restaurant
+2011. Chicken breast, fried, coated, skin / coating not eaten, from fast food / restaurant
+2012. Chicken breast, baked, coated, skin / coating eaten
+2013. Chicken breast, baked, coated, skin / coating not eaten
+2014. Chicken leg, drumstick and thigh, NS as to cooking method, skin eaten
+2015. Chicken leg, drumstick and thigh, NS as to cooking method, skin not eaten
+2016. Chicken leg, drumstick and thigh, baked or broiled, skin eaten
+2017. Chicken leg, drumstick and thigh, baked or broiled, skin not eaten
+2018. Chicken leg, drumstick and thigh, rotisserie, skin eaten
+2019. Chicken leg, drumstick and thigh, rotisserie, skin not eaten
+2020. Chicken leg, drumstick and thigh, stewed, skin eaten
+2021. Chicken leg, drumstick and thigh, stewed, skin not eaten
+2022. Chicken leg, drumstick and thigh, grilled without sauce, skin eaten
+2023. Chicken leg, drumstick and thigh, grilled without sauce, skin not eaten
+2024. Chicken leg, drumstick and thigh, grilled with sauce, skin eaten
+2025. Chicken leg, drumstick and thigh, grilled with sauce, skin not eaten
+2026. Chicken leg, drumstick and thigh, sauteed, skin eaten
+2027. Chicken leg, drumstick and thigh, sauteed, skin not eaten
+2028. Chicken leg, drumstick and thigh, fried, coated, skin / coating eaten
+2029. Chicken leg, drumstick and thigh, fried, coated, skin / coating not eaten
+2030. Chicken leg, drumstick and thigh, baked, coated, skin / coating eaten
+2031. Chicken leg, drumstick and thigh, baked, coated, skin / coating not eaten
+2032. Chicken drumstick, baked, broiled, or roasted, skin eaten, from raw
+2033. Chicken drumstick, baked, broiled, or roasted, skin not eaten, from raw
+2034. Chicken drumstick, baked or broiled, skin eaten, from fast food / restaurant
+2035. Chicken drumstick, baked or broiled, skin not eaten, from fast food / restaurant
+2036. Chicken drumstick, grilled without sauce, skin eaten
+2037. Chicken drumstick, grilled without sauce, skin not eaten
+2038. Chicken drumstick, grilled with sauce, skin eaten
+2039. Chicken drumstick, grilled with sauce, skin not eaten
+2040. Chicken drumstick, stewed, skin eaten
+2041. Chicken drumstick, stewed, skin not eaten
+2042. Chicken drumstick, sauteed, skin eaten
+2043. Chicken drumstick, sauteed, skin not eaten
+2044. Chicken drumstick, fried, coated, skin / coating eaten, from raw
+2045. Chicken drumstick, fried, coated, skin / coating not eaten, from raw
+2046. Chicken drumstick, fried, coated, prepared skinless, coating eaten, from raw
+2047. Chicken drumstick, fried, coated, skin / coating eaten, from pre-cooked
+2048. Chicken drumstick, fried, coated, skin / coating not eaten, from pre-cooked
+2049. Chicken drumstick, fried, coated, skin / coating eaten, from fast food / restaurant
+2050. Chicken drumstick, fried, coated, skin / coating not eaten, from fast food / restaurant
+2051. Chicken drumstick, baked, coated, skin / coating eaten
+2052. Chicken drumstick, baked, coated, skin / coating not eaten
+2053. Chicken thigh, baked, broiled, or roasted, skin eaten, from raw
+2054. Chicken thigh, baked, broiled, or roasted, skin not eaten, from raw
+2055. Chicken thigh, baked or broiled, skin eaten, from fast food / restaurant
+2056. Chicken thigh, baked or broiled, skin not eaten, from fast food / restaurant
+2057. Chicken thigh, stewed, skin eaten
+2058. Chicken thigh, stewed, skin not eaten
+2059. Chicken thigh, grilled without sauce, skin eaten
+2060. Chicken thigh, grilled without sauce, skin not eaten
+2061. Chicken thigh, grilled with sauce, skin eaten
+2062. Chicken thigh, grilled with sauce, skin not eaten
+2063. Chicken thigh, sauteed, skin eaten
+2064. Chicken thigh, sauteed, skin not eaten
+2065. Chicken thigh, fried, coated, skin / coating eaten, from raw
+2066. Chicken thigh, fried, coated, skin / coating not eaten, from raw
+2067. Chicken thigh, fried, coated, prepared skinless, coating eaten, from raw
+2068. Chicken thigh, fried, coated, skin / coating eaten, from pre-cooked
+2069. Chicken thigh, fried, coated, skin / coating not eaten, from pre-cooked
+2070. Chicken thigh, fried, coated, skin / coating eaten, from fast food
+2071. Chicken thigh, fried, coated, skin / coating not eaten, from fast food
+2072. Chicken thigh, fried, coated, skin / coating eaten, from restaurant
+2073. Chicken thigh, fried, coated, skin / coating not eaten, from restaurant
+2074. Chicken thigh, baked, coated, skin / coating eaten
+2075. Chicken thigh, baked, coated, skin / coating not eaten
+2076. Chicken wing, baked, broiled, or roasted, from raw
+2077. Chicken wing, baked or broiled, from fast food / restaurant
+2078. Chicken wing, stewed
+2079. Chicken wing, grilled without sauce
+2080. Chicken wing, grilled with sauce
+2081. Chicken wing, sauteed
+2082. Chicken wing, fried, coated, from raw
+2083. Chicken wing, fried, coated, from pre-cooked
+2084. Chicken wing, fried, coated, from fast food
+2085. Chicken wing, fried, coated, from restaurant
+2086. Chicken wing, baked, coated
+2087. Chicken "wings" with hot sauce, from fast food / restaurant
+2088. Chicken "wings" with other sauces or seasoning, from fast food / restaurant
+2089. Chicken "wings" with hot sauce, from precooked
+2090. Chicken "wings" with other sauces or seasoning, from precooked
+2091. Chicken "wings" with hot sauce, from other sources
+2092. Chicken "wings" with other sauces or seasoning, from other sources
+2093. Chicken "wings", plain, from other sources
+2094. Chicken "wings", boneless, with hot sauce, from fast food / restaurant
+2095. Chicken "wings", boneless, with hot sauce, from other sources
+2096. Chicken, back
+2097. Chicken, neck or ribs
+2098. Chicken skin
+2099. Chicken, chicken roll, roasted
+2100. Chicken fillet, grilled
+2101. Chicken, ground
+2102. Chicken nuggets, from other sources
+2103. Chicken tenders or strips, breaded, from restaurant
+2104. Chicken tenders or strips, breaded, from other sources
+2105. Turkey, NFS
+2106. Turkey, light meat, skin not eaten
+2107. Turkey, light meat, skin eaten
+2108. Turkey, light meat, breaded, baked or fried, skin not eaten
+2109. Turkey, light meat, breaded, baked or fried, skin eaten
+2110. Turkey, light meat, roasted, skin not eaten
+2111. Turkey, light meat, roasted, skin eaten
+2112. Turkey, dark meat, roasted, skin not eaten
+2113. Turkey, dark meat, roasted, skin eaten
+2114. Turkey, light and dark meat, roasted, skin not eaten
+2115. Turkey, light and dark meat, roasted, skin eaten
+2116. Turkey, light or dark meat, fried, coated, skin not eaten
+2117. Turkey, light or dark meat, fried, coated, skin eaten
+2118. Turkey, light or dark meat, stewed, skin not eaten
+2119. Turkey light or dark meat, stewed, skin eaten
+2120. Turkey, drumstick, cooked, skin not eaten
+2121. Turkey, drumstick, cooked, skin eaten
+2122. Turkey, drumstick, roasted, skin not eaten
+2123. Turkey, drumstick, roasted, skin eaten
+2124. Turkey, thigh, cooked, skin eaten
+2125. Turkey, thigh, cooked, skin not eaten
+2126. Turkey, neck
+2127. Turkey, wing, cooked, skin not eaten
+2128. Turkey, wing, cooked, skin eaten
+2129. Turkey, tail
+2130. Turkey, back
+2131. Turkey, ground
+2132. Turkey, nuggets
+2133. Duck, cooked, skin eaten
+2134. Duck, cooked, skin not eaten
+2135. Duck, roasted, skin eaten
+2136. Duck, roasted, skin not eaten
+2137. Duck, Peking
+2138. Goose, wild, roasted
+2139. Cornish game hen, cooked, skin eaten
+2140. Cornish game hen, cooked, skin not eaten
+2141. Cornish game hen, roasted, skin eaten
+2142. Cornish game hen, roasted, skin not eaten
+2143. Dove, cooked, NS as to cooking method
+2144. Dove, fried
+2145. Quail, cooked
+2146. Pheasant, cooked
+2147. Liver, beef
+2148. Liver, chicken
+2149. Heart
+2150. Kidney
+2151. Sweetbreads
+2152. Brains
+2153. Tongue
+2154. Tongue pot roast, Puerto Rican style
+2155. Tripe
+2156. Chitterlings
+2157. Hog maws
+2158. Gizzard
+2159. Hot dog, reduced fat
+2160. Beef sausage with cheese
+2161. Bratwurst, with cheese
+2162. Pork sausage, reduced sodium
+2163. Pork and beef sausage
+2164. Turkey or chicken sausage, reduced sodium
+2165. Pickled sausage
+2166. Fish, raw
+2167. Fish, NFS
+2168. Fish, NS as to type, baked or broiled
+2169. Fish, NS as to type, baked or broiled, coated
+2170. Fish, NS as to type, fried
+2171. Fish, NS as to type, steamed
+2172. Fish, carp
+2173. Fish, catfish, baked or broiled
+2174. Fish, catfish, grilled
+2175. Fish, catfish, baked or broiled, coated
+2176. Fish, catfish, fried
+2177. Fish, catfish, steamed
+2178. Fish, cod, baked or broiled
+2179. Fish, cod, grilled
+2180. Fish, cod, baked or broiled, coated
+2181. Fish, cod, fried
+2182. Fish, cod, steamed
+2183. Fish, croaker
+2184. Fish, eel
+2185. Fish, flounder, baked or broiled
+2186. Fish, flounder, grilled
+2187. Fish, flounder, baked or broiled, coated
+2188. Fish, flounder, fried
+2189. Fish, flounder, steamed
+2190. Fish, haddock, baked or broiled
+2191. Fish, haddock, grilled
+2192. Fish, haddock, baked or broiled, coated
+2193. Fish, haddock, fried
+2194. Fish, haddock, steamed
+2195. Fish, halibut
+2196. Fish, herring
+2197. Fish, mackerel, baked or broiled
+2198. Fish, mackerel, grilled
+2199. Fish, mackerel, baked or broiled, coated
+2200. Fish, mackerel, fried
+2201. Fish, mullet
+2202. Fish, perch, baked or broiled
+2203. Fish, perch, grilled
+2204. Fish, perch, baked or broiled, coated
+2205. Fish, perch, fried
+2206. Fish, perch, steamed
+2207. Fish, pike
+2208. Fish, pompano, baked or broiled
+2209. Fish, pompano, grilled
+2210. Fish, pompano, baked or broiled, coated
+2211. Fish, pompano, fried
+2212. Fish, pompano, steamed
+2213. Fish, snapper
+2214. Fish, salmon, raw
+2215. Fish, salmon, baked or broiled
+2216. Fish, salmon, grilled
+2217. Fish, salmon, baked or broiled, coated
+2218. Fish, salmon, fried
+2219. Fish, salmon, steamed
+2220. Fish, bass, baked or broiled
+2221. Fish, bass, grilled
+2222. Fish, bass, baked or broiled, coated
+2223. Fish, bass, fried
+2224. Fish, bass, steamed
+2225. Fish, shark
+2226. Fish, swordfish
+2227. Fish, trout, baked or broiled
+2228. Fish, trout, grilled
+2229. Fish, trout, baked or broiled, coated
+2230. Fish, trout, fried
+2231. Fish, trout, steamed
+2232. Fish, tuna, cooked
+2233. Fish, whiting, baked or broiled
+2234. Fish, whiting, grilled
+2235. Fish, whiting, baked or broiled, coated
+2236. Fish, whiting, fried
+2237. Fish, whiting, steamed
+2238. Fish, tilapia, baked or broiled
+2239. Fish, tilapia, grilled
+2240. Fish, tilapia, baked or broiled, coated
+2241. Fish, tilapia, fried
+2242. Fish, tilapia, steamed
+2243. Fish, white, mixed species, baked or broiled
+2244. Fish, white, mixed species, baked or broiled, coated
+2245. Fish, white, mixed species, fried
+2246. Fish, white, mixed species, steamed
+2247. Fish, white, mixed species, grilled
+2248. Frog legs
+2249. Octopus
+2250. Calamari, cooked
+2251. Calamari, fried
+2252. Turtle
+2253. Abalone
+2254. Clams, NFS
+2255. Clams, baked or broiled
+2256. Clams, fried
+2257. Crab, soft shell
+2258. Crayfish, fried
+2259. Oysters, baked or broiled
+2260. Oysters, fried
+2261. Scallops, baked or broiled
+2262. Scallops, grilled
+2263. Scallops, steamed or boiled
+2264. Scallops, fried
+2265. Shrimp, NFS
+2266. Shrimp, baked or broiled
+2267. Shrimp, grilled
+2268. Shrimp, steamed or boiled
+2269. Shrimp, fried
+2270. Shrimp, baked or broiled, coated
+2271. Escargot
+2272. Barbecue meat, NFS
+2273. Beef with tomato-based sauce
+2274. Beef burgundy
+2275. Guisada, beef
+2276. Chili with meat, from restaurant
+2277. Chili with meat and beans
+2278. Chili with meat, canned
+2279. Chili with meat
+2280. Sloppy joe, no bun
+2281. Beef with gravy
+2282. Beef with cream or white sauce
+2283. Beef stroganoff
+2284. Creamed chipped or dried beef
+2285. Swedish meatballs with cream or white sauce
+2286. Beef with mushroom sauce
+2287. Beef with soy-based sauce
+2288. Steak teriyaki
+2289. Beef curry
+2290. Beef curry with rice
+2291. Barbecue beef, with sauce
+2292. Barbecue beef, no sauce
+2293. Beef with sweet and sour sauce
+2294. Stewed seasoned ground beef, Mexican style
+2295. Steak tartare
+2296. Meatballs, Puerto Rican style
+2297. Stewed seasoned ground beef, Puerto Rican style
+2298. Stewed dried beef, Puerto Rican style
+2299. Ham or pork with gravy
+2300. Barbecue pork, with sauce
+2301. Barbecue pork, no sauce
+2302. Ham stroganoff
+2303. Ham or pork with mushroom sauce
+2304. Ham or pork with tomato-based sauce
+2305. Sausage with tomato-based sauce
+2306. Sausage gravy
+2307. Guisada, pork
+2308. Pork or ham with soy-based sauce
+2309. Chili hot dog, no bun
+2310. Frankfurters or hot dogs with tomato-based sauce
+2311. Pork with chili and tomatoes
+2312. Stewed pork, Puerto Rican style
+2313. Lamb or mutton with gravy
+2314. Stewed goat, Puerto Rican style
+2315. Veal scallopini
+2316. Veal Marsala
+2317. Veal parmigiana
+2318. Veal cordon bleu
+2319. Venison or deer with tomato-based sauce
+2320. Venison or deer with gravy
+2321. Chicken or turkey cacciatore
+2322. Spaghetti sauce with poultry
+2323. Spaghetti sauce with poultry and added vegetables
+2324. Stewed chicken with tomato-based sauce, Mexican style
+2325. Chili with chicken and beans
+2326. Chili with chicken
+2327. Chili, white
+2328. Chicken with gravy
+2329. Chicken or turkey fricassee
+2330. Turkey with gravy
+2331. Chicken or turkey with cream sauce
+2332. Chicken or turkey with mushroom sauce
+2333. Chicken or turkey with teriyaki
+2334. Barbecue chicken
+2335. Chicken curry
+2336. Chicken curry with rice
+2337. Chicken with mole sauce
+2338. Chicken or turkey with cheese sauce
+2339. Chicken or turkey cordon bleu
+2340. Chicken or turkey parmigiana
+2341. Chicken kiev
+2342. Stuffed chicken, drumstick or breast, Puerto Rican style
+2343. Fish with cream or white sauce, not tuna or lobster
+2344. Fish timbale or mousse
+2345. Shrimp cocktail
+2346. Tuna with cream or white sauce
+2347. Seafood thermidor
+2348. Seafood sauce
+2349. Spaghetti sauce with seafood
+2350. Spaghetti sauce with seafood and added vegetables
+2351. Shrimp with lobster sauce
+2352. Sweet and sour shrimp
+2353. Shrimp scampi
+2354. Fish with tomato-based sauce
+2355. Fish curry
+2356. Fish curry with rice
+2357. Shrimp teriyaki
+2358. Ceviche
+2359. Crabs in tomato-based sauce, Puerto Rican style
+2360. Shrimp in garlic sauce, Puerto Rican style
+2361. Stew, fish
+2362. Meatballs, NS as to type of meat, with sauce
+2363. Meat loaf, Puerto Rican style
+2364. Meat with tomato-based sauce
+2365. Spaghetti sauce with meat
+2366. Spaghetti sauce with meat and added vegetables
+2367. Stewed, seasoned, ground beef and pork, Mexican style
+2368. Meat with gravy, NS as to type of meat,
+2369. Beef and potatoes, no sauce
+2370. Beef and potatoes with cream sauce, white sauce or mushroom sauce
+2371. Beef, roast, hash
+2372. Beef and potatoes with cheese sauce
+2373. Stewed, seasoned, ground beef with potatoes, Mexican style
+2374. Beef and noodles, no sauce
+2375. Beef and macaroni with cheese sauce
+2376. Beef and noodles with tomato-based sauce
+2377. Chili with macaroni
+2378. Beef and noodles with gravy
+2379. Beef and noodles with cream or white sauce
+2380. Beef stroganoff with noodles
+2381. Beef and noodles with mushroom sauce
+2382. Beef and noodles with soy-based sauce
+2383. Beef and rice, no sauce
+2384. Biryani with meat
+2385. Beef and rice with tomato-based sauce
+2386. Porcupine balls with tomato-based sauce
+2387. Beef and rice with gravy
+2388. Beef and rice with cream sauce
+2389. Beef and rice with mushroom sauce
+2390. Porcupine balls with mushroom sauce
+2391. Beef and rice with soy-based sauce
+2392. Beef and rice with cheese sauce
+2393. Meat loaf made with beef
+2394. Meat loaf made with beef, with tomato-based sauce
+2395. Beef wellington
+2396. Beef stew with potatoes, Puerto Rican style
+2397. Meat loaf made with ham
+2398. Ham and noodles with cream or white sauce
+2399. Ham and rice with mushroom sauce
+2400. Ham or pork with stuffing
+2401. Ham croquette
+2402. Pork and rice with tomato-based sauce
+2403. Sausage and rice with tomato-based sauce
+2404. Sausage and rice with mushroom sauce
+2405. Sausage and rice with cheese sauce
+2406. Sausage and noodles with cream or white sauce
+2407. Ham and noodles, no sauce
+2408. Ham or pork and rice, no sauce
+2409. Ham or pork and potatoes with gravy
+2410. Ham or pork and potatoes with cheese sauce
+2411. Stewed pig's feet, Puerto Rican style
+2412. Stew, pork
+2413. Stew, pork, with pasta
+2414. Lamb or mutton loaf
+2415. Lamb or mutton and potatoes with gravy
+2416. Lamb or mutton and potatoes with tomato-based sauce
+2417. Lamb or mutton and noodles with gravy
+2418. Meat loaf made with venison/deer
+2419. Venison or deer and noodles with cream or white sauce
+2420. Chicken or turkey hash
+2421. Chicken or turkey and potatoes with gravy
+2422. Chicken or turkey and noodles, no sauce
+2423. Chicken or turkey and noodles with gravy
+2424. Chicken or turkey and noodles with mushroom sauce
+2425. Chicken or turkey and noodles with cream or white sauce
+2426. Chicken or turkey and noodles with cheese sauce
+2427. Chicken or turkey tetrazzini
+2428. Chicken or turkey and noodles with tomato-based sauce
+2429. Chicken or turkey and noodles with soy-based sauce
+2430. Chicken or turkey and rice, no sauce
+2431. Biryani with chicken
+2432. Chicken or turkey and rice with cream sauce
+2433. Chicken or turkey and rice with mushroom sauce
+2434. Chicken or turkey and rice with tomato-based sauce
+2435. Chicken or turkey and rice with soy-based sauce
+2436. Chicken or turkey with dumplings
+2437. Chicken or turkey with stuffing
+2438. Chicken or turkey cake, patty, or croquette
+2439. Chicken or turkey souffle
+2440. Meat loaf made with chicken or turkey
+2441. Meat loaf made with chicken or turkey, with tomato-based sauce
+2442. Crab, cake
+2443. Fish, cake or patty
+2444. Gefilte fish
+2445. Fish, salmon cake or patty
+2446. Shrimp and noodles, no sauce
+2447. Shrimp and noodles with gravy
+2448. Shrimp and noodles with mushroom sauce
+2449. Shrimp and noodles with cream or white sauce
+2450. Shrimp and noodles with soy-based sauce
+2451. Shrimp and noodles with cheese sauce
+2452. Shrimp and noodles with tomato sauce
+2453. Tuna cake or patty
+2454. Clam cake or patty
+2455. Flounder with crab stuffing
+2456. Lobster with bread stuffing, baked
+2457. Clams Casino
+2458. Shrimp, cake or patty
+2459. Shrimp with crab stuffing
+2460. Shrimp toast
+2461. Seafood souffle
+2462. Tuna noodle casserole with cream or white sauce
+2463. Tuna noodle casserole with mushroom sauce
+2464. Tuna and rice with mushroom sauce
+2465. Fish and rice with tomato-based sauce
+2466. Fish and rice with cream sauce
+2467. Fish and rice with mushroom sauce
+2468. Fish and noodles with mushroom sauce
+2469. Shellfish and noodles with tomato-based sauce
+2470. Stewed salmon, Puerto Rican style
+2471. Meat loaf, NS as to type of meat
+2472. Meatballs, with breading, NS as to type of meat, with gravy
+2473. Meat loaf made with beef and pork
+2474. Meat loaf made with beef, veal and pork
+2475. Meat loaf made with beef and pork, with tomato-based sauce
+2476. Vienna sausages stewed with potatoes, Puerto Rican style
+2477. Stewed, seasoned, ground beef and pork with potatoes, Mexican style
+2478. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2479. Beef, potatoes, and vegetables, excluding carrots, broccoli, and dark-green leafy; no sauce
+2480. Corned beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2481. Corned beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2482. Stew, beef, canned
+2483. Stew, beef
+2484. Stew, beef, with pasta
+2485. Shepherd's pie
+2486. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2487. Beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2488. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2489. Beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2490. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2491. Beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2492. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; cheese sauce
+2493. Beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2494. Beef, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce
+2495. Beef, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce
+2496. Beef, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2497. Beef, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2498. Beef chow mein or chop suey with noodles
+2499. Beef, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce
+2500. Beef, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce
+2501. Beef, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2502. Beef, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2503. Beef, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; mushroom sauce
+2504. Beef, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; mushroom sauce
+2505. Beef, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2506. Beef, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2507. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2508. Beef, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2509. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2510. Beef, rice, and vegetables excluding carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2511. Stuffed cabbage rolls with beef and rice
+2512. Stuffed grape leaves with beef and rice
+2513. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; mushroom sauce
+2514. Beef, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; mushroom sauce
+2515. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; cheese sauce
+2516. Beef, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2517. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2518. Beef, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2519. Beef, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce
+2520. Beef, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce
+2521. Pot pie, beef
+2522. Beef, dumplings, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2523. Beef, dumplings, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2524. Stuffed green pepper, Puerto Rican style
+2525. Ham or pork, noodles and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2526. Ham or pork, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2527. Ham or pork, noodles and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2528. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2529. Ham or pork, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2530. Sausage, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2531. Sausage, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2532. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2533. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2534. Sausage, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2535. Sausage, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2536. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2537. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2538. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2539. Pork chow mein or chop suey with noodles
+2540. Pork, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce
+2541. Pork, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce
+2542. Pork, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2543. Pork, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2544. Ham, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2545. Ham, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2546. Sweet and sour pork with rice
+2547. Lamb or mutton, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2548. Lamb or mutton, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2549. Lamb or mutton, rice, and vegetables  including carrots, broccoli, and/or dark-green leafy; gravy
+2550. Stuffed grape leaves with lamb and rice
+2551. Stew, lamb
+2552. Stewed rabbit, Puerto Rican style,
+2553. Venison or deer, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2554. Venison or deer, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2555. Venison or deer, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2556. Venison or deer, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2557. Chicken or turkey, potatoes, corn, and cheese, with gravy
+2558. Chicken or turkey, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2559. Chicken or turkey, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2560. Chicken or turkey, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2561. Chicken or turkey, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2562. Chicken or turkey, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2563. Chicken or turkey, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2564. Chicken or turkey, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; cheese sauce
+2565. Chicken or turkey, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2566. Chicken or turkey, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2567. Chicken or turkey, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2568. Stew, chicken, with pasta
+2569. Stew, chicken
+2570. Chicken or turkey, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2571. Chicken or turkey, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2572. Chicken or turkey, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2573. Chicken or turkey, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2574. Chicken or turkey, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2575. Chicken or turkey, noodles, and vegetables excluding carrots, broccoli, and/or dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2576. Chicken or turkey, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2577. Chicken or turkey, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2578. Chicken or turkey chow mein or chop suey with noodles
+2579. Chicken or turkey, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; cheese sauce
+2580. Chicken or turkey, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2581. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2582. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce
+2583. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2584. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2585. Chicken or turkey, rice, corn, and cheese, with gravy
+2586. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce
+2587. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce
+2588. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2589. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; cream sauce, white sauce, or mushroom sauce
+2590. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; cheese sauce
+2591. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2592. Chicken or turkey, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce
+2593. Chicken or turkey, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce
+2594. Pot pie, chicken
+2595. Chicken or turkey, stuffing, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce
+2596. Chicken or turkey,stuffing, and vegetables excluding carrots, broccoli, and dark green leafy; no sauce
+2597. Chicken or turkey, stuffing, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy
+2598. Chicken or turkey, stuffing, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy
+2599. Chicken or turkey, dumplings, and vegetables including carrots, broccoli, and/or dark green leafy; gravy
+2600. Chicken or turkey, dumplings, and vegetables excluding carrots, broccoli, and dark green leafy; gravy
+2601. Chicken fricassee, Puerto Rican style
+2602. Paella with seafood
+2603. Shrimp chow mein or chop suey with noodles
+2604. Shrimp creole, with rice
+2605. Tuna noodle casserole with vegetables, cream or white sauce
+2606. Fish, noodles, and vegetables including carrots, broccoli, and/or dark green leafy; cheese sauce
+2607. Fish, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; cheese sauce
+2608. Soup, bouillabaisse
+2609. Tuna noodle casserole with vegetables and mushroom sauce
+2610. Codfish with starchy vegetables, Puerto Rican style
+2611. Biscayne codfish, Puerto Rican style
+2612. Stew, NFS
+2613. Chow mein or chop suey, NS as to type of meat, with noodles
+2614. Paella, NFS
+2615. Chow mein or chop suey, various types of meat, with noodles
+2616. Stewed tripe, with potatoes, Puerto Rican style
+2617. Gumbo with rice
+2618. Jambalaya with meat and rice
+2619. Beef and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce
+2620. Beef and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce
+2621. Beef shish kabob with vegetables, excluding potatoes
+2622. Beef with vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce
+2623. Swiss steak
+2624. Beef rolls, stuffed with vegetables or meat mixture, tomato-based sauce
+2625. Beef with vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce
+2626. Beef with vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, mushroom sauce
+2627. Beef with vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, mushroom sauce
+2628. Beef and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2629. Beef and broccoli
+2630. Beef, tofu, and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2631. Beef chow mein or chop suey, no noodles
+2632. Kung Pao beef
+2633. Beef and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2634. Beef, tofu, and vegetables excluding carrots, broccoli,  and dark-green leafy; no potatoes, soy-based sauce
+2635. Beef and vegetables, Hawaiian style
+2636. Pepper steak
+2637. Beef, ground, with egg and onion
+2638. Beef salad
+2639. Beef taco filling: beef, cheese, tomato, taco sauce
+2640. Stir fried beef and vegetables in soy sauce
+2641. Beef and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, gravy
+2642. Beef and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, gravy
+2643. Beef steak with onions, Puerto Rican style
+2644. Cabbage with ham hocks
+2645. Ham or pork salad
+2646. Frankfurters or hot dogs and sauerkraut
+2647. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce
+2648. Greens with ham or pork
+2649. Pork, tofu, and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-base sauce
+2650. Pork and vegetables, Hawaiian style
+2651. Pork and watercress with soy-based sauce
+2652. Kung Pao pork
+2653. Moo Shu pork, without Chinese pancake
+2654. Pork and onions with soy-based sauce
+2655. Pork hash
+2656. Ham and vegetables including carrots broccoli, and/or dark- green leafy; no potatoes, no sauce
+2657. Ham and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce
+2658. Pork and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce
+2659. Pork, tofu, and vegetables, excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2660. Pork chow mein or chop suey, no noodles
+2661. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce
+2662. Pork and vegetables excluding  carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce
+2663. Sausage and vegetables including  carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce
+2664. Sausage and vegetables, excluding carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce
+2665. Sausage and peppers, no sauce
+2666. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2667. Pork and vegetables excluding carrots, broccoli, and dark- green leafy; no potatoes, soy-based sauce
+2668. Pork shish kabob with vegetables, excluding potatoes
+2669. Lamb shish kabob with vegetables, excluding potatoes
+2670. Chicken or turkey and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce
+2671. Chicken or turkey and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce
+2672. Chicken or turkey shish kabob with vegetables, excluding potatoes
+2673. Chicken or turkey creole, without rice
+2674. Chicken or turkey and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, gravy
+2675. Chicken or turkey and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, gravy
+2676. Chicken or turkey a la king with vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, cream, white, or soup-based sauce
+2677. Chicken or turkey a la king with vegetables excluding carrorts, broccoli, and dark-green leafy; no potatoes, cream, white, or soup-based sauce
+2678. Chicken or turkey divan
+2679. Chicken or turkey and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2680. Chicken or turkey and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce
+2681. Chicken or turkey and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce
+2682. Moo Goo Gai Pan
+2683. Almond chicken
+2684. Chicken or turkey chow mein or chop suey, no noodles
+2685. Chicken or turkey salad, made with mayonnaise
+2686. Chicken or turkey salad with nuts and/or fruits
+2687. Chicken or turkey salad with egg
+2688. Chicken or turkey salad, made with light mayonnaise
+2689. Chicken or turkey salad, made with mayonnaise-type salad dressing
+2690. Chicken or turkey salad, made with light mayonnaise-type salad dressing
+2691. Chicken or turkey salad, made with creamy dressing
+2692. Chicken or turkey salad, made with light creamy dressing
+2693. Chicken or turkey salad, made with Italian dressing
+2694. Chicken or turkey salad, made with light Italian dressing
+2695. Chicken or turkey salad, made with any type of fat free dressing
+2696. Chicken or turkey garden salad, chicken and/or turkey, tomato and/or carrots, other vegetables, no dressing
+2697. Chicken or turkey garden salad, chicken and/or turkey, other vegetables excluding tomato and carrots, no dressing
+2698. Chicken or turkey garden salad with bacon and cheese, chicken and/or turkey, bacon, cheese, lettuce and/or greens, tomato and/or carrots, other vegetables, no dressing
+2699. Chicken or turkey, breaded, fried, garden salad with bacon and cheese, chicken and/or turkey, bacon, cheese, lettuce and/or greens, tomato and/or carrots, other vegetables, no dressing
+2700. Chicken or turkey garden salad with cheese, chicken and/or turkey, cheese, lettuce and/or greens, tomato and/or carrots, other vegetables, no dressing
+2701. Chicken or turkey, breaded, fried, garden salad with cheese, chicken and/or turkey, cheese, lettuce and/or greens, tomato and/or carrots, other vegetables, no dressing
+2702. Asian chicken or turkey garden salad, chicken and/or turkey, lettuce, fruit, nuts, no dressing
+2703. Asian chicken or turkey garden salad with crispy noodles, chicken and/or turkey, lettuce, fruit, nuts, crispy noodles, no dressing
+2704. Chicken or turkey caesar garden salad, chicken and/or turkey, lettuce, tomato, cheese, no dressing
+2705. Chicken or turkey, breaded, fried, caesar garden salad, chicken and/or turkey, lettuce, tomatoes, cheese, no dressing
+2706. Chicken or turkey and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, cheese sauce
+2707. Chicken or turkey and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, cheese sauce
+2708. Chicken or turkey fricassee, with sauce, no potatoes, potatoes reported separately, Puerto Rican style
+2709. Chicken or turkey fricassee, no sauce, no potatoes, Puerto Rican style
+2710. Crab salad
+2711. Lobster salad
+2712. Salmon salad
+2713. Shrimp chow mein or chop suey, no noodles
+2714. Tuna salad, made with mayonnaise
+2715. Tuna salad, made with light mayonnaise
+2716. Tuna salad, made with mayonnaise-type salad dressing
+2717. Tuna salad, made with light mayonnaise-type salad dressing
+2718. Tuna salad, made with creamy dressing
+2719. Tuna salad, made with light creamy dressing
+2720. Tuna salad, made with Italian dressing
+2721. Tuna salad, made with light Italian dressing
+2722. Tuna salad, made with any type of fat free dressing
+2723. Shrimp salad
+2724. Seafood salad
+2725. Tuna salad with cheese
+2726. Tuna salad with egg
+2727. Shrimp garden salad, shrimp, lettuce, eggs, tomato and/or carrots, other vegetables, no dressing
+2728. Shrimp garden salad, shrimp, lettuce, eggs, vegetables excluding tomato and carrots, no dressing
+2729. Crab salad made with imitation crab
+2730. Fish, tofu, and vegetables, tempura
+2731. Seafood garden salad with seafood, lettuce, vegetables excluding tomato and carrots, no dressing
+2732. Seafood garden salad with seafood, lettuce, tomato and/or carrots, other vegetables, no dressing
+2733. Seafood garden salad with seafood, lettuce, eggs, vegetables excluding tomato and carrots, no dressing
+2734. Seafood garden salad with seafood, lettuce, eggs, tomato and/or carrots, other vegetables, no dressing
+2735. Oysters Rockefeller
+2736. Lomi salmon
+2737. Shrimp and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce
+2738. Shrimp and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce
+2739. Shrimp and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2740. Shrimp and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2741. Shrimp shish kabob with vegetables, excluding potatoes
+2742. Shrimp creole, no rice
+2743. Kung Pao shrimp
+2744. Tuna casserole with vegetables and mushroom sauce, no noodles
+2745. Shellfish mixture and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2746. Shellfish mixture and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2747. Shellfish mixture and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, mushroom sauce
+2748. Shellfish mixture and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, mushroom sauce
+2749. Fish and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce
+2750. Fish and vegetables excluding carrots, broccoli, and dark- green leafy; no potatoes, tomato-based sauce
+2751. Fish and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce
+2752. Fish and vegetables excluding  carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce
+2753. Fish shish kabob with vegetables, excluding potatoes
+2754. Fried fish with sauce, Puerto Rican style
+2755. Lobster with sauce, Puerto Rican style
+2756. Octopus salad, Puerto Rican style
+2757. Codfish salad, Puerto Rican style, Serenata
+2758. Chow mein or chop suey, NS as to type of meat, no noodles
+2759. Lau lau
+2760. Antipasto with ham, fish, cheese, vegetables
+2761. Livers, chicken, chopped, with eggs and onion
+2762. Liver, beef or calves, and onions
+2763. Stewed chitterlings, Puerto Rican style
+2764. Stewed gizzards, Puerto Rican style
+2765. Gumbo, no rice
+2766. Sandwich, NFS
+2767. Barbecue sandwich, NFS
+2768. Sloppy joe sandwich, on white bun
+2769. Sloppy joe sandwich, on wheat bun
+2770. Barbecue beef sandwich, on white bun
+2771. Barbecue beef sandwich, on wheat bun
+2772. Cheeseburger slider, from fast food
+2773. Cheeseburger, from fast food, 1 small patty
+2774. Cheeseburger (Burger King)
+2775. Whopper Jr with cheese (Burger King)
+2776. Cheeseburger, from school cafeteria
+2777. Cheeseburger slider
+2778. Cheeseburger, on white bun, 1 small patty
+2779. Cheeseburger, on wheat bun, 1 small patty
+2780. Cheeseburger, from fast food, 1 medium patty
+2781. Cheeseburger, on white bun, 1 medium patty
+2782. Cheeseburger, on wheat bun, 1 medium patty
+2783. Cheeseburger, on white bun, 1 large patty
+2784. Cheeseburger, on wheat bun, 1 large patty
+2785. Double cheeseburger, on white bun, 2 small patties
+2786. Double cheeseburger, on wheat bun, 2 small patties
+2787. Double cheeseburger, on white bun, 2 medium patties
+2788. Double cheeseburger, on wheat bun, 2 medium patties
+2789. Cheeseburger, from fast food, 1 large patty
+2790. Double cheeseburger, on white bun, 2 large patties
+2791. Double cheeseburger, on wheat bun, 2 large patties
+2792. Double cheeseburger, from fast food, 2 small patties
+2793. Double cheeseburger (Burger King)
+2794. Double cheeseburger, from fast food, 2 medium patties
+2795. Double cheeseburger, from fast food, 2 large patties
+2796. Hamburger slider, from fast food
+2797. Hamburger, from fast food, 1 small patty
+2798. Hamburger (Burger King)
+2799. Whopper Jr (Burger King)
+2800. Hamburger, from school cafeteria
+2801. Hamburger slider
+2802. Hamburger, on white bun, 1 small patty
+2803. Hamburger, on wheat bun, 1 small patty
+2804. Hamburger, from fast food, 1 medium patty
+2805. Hamburger, from fast food, 1 large patty
+2806. Hamburger, on white bun, 1 medium patty
+2807. Hamburger, on wheat bun, 1 medium patty
+2808. Hamburger, on white bun, 1 large patty
+2809. Hamburger, on wheat bun, 1 large patty
+2810. Double hamburger, on white bun, 2 small patties
+2811. Double hamburger, on wheat bun, 2 small patties
+2812. Double hamburger, on white bun, 2 medium patties
+2813. Double hamburger, on wheat bun, 2 medium patties
+2814. Double hamburger, on white bun, 2 large patties
+2815. Double hamburger, on wheat bun, 2 large patties
+2816. Double hamburger, from fast food, 2 small patties
+2817. Double hamburger, from fast food, 2 medium patties
+2818. Double hamburger, from fast food, 2 large patties
+2819. Meatball sandwich or sub
+2820. Meatloaf sandwich
+2821. Chiliburger, with or without cheese, on bun
+2822. Corned beef sandwich on white
+2823. Corned beef sandwich on white, with cheese
+2824. Corned beef sandwich on wheat
+2825. Corned beef sandwich on wheat, with cheese
+2826. Reuben sandwich
+2827. Roast beef sandwich on white
+2828. Roast beef sandwich on white, with cheese
+2829. Roast beef sandwich on wheat
+2830. Roast beef sandwich on wheat, with cheese
+2831. French dip sandwich
+2832. Steak sandwich or sub on white
+2833. Steak sandwich or sub on wheat
+2834. Cheese steak sandwich or sub on white
+2835. Cheese steak sandwich or sub on wheat
+2836. Gyro sandwich
+2837. Hamburger wrap sandwich, from fast food
+2838. Ham sandwich on white
+2839. Ham sandwich on white, with cheese
+2840. Ham sandwich on wheat
+2841. Ham sandwich on wheat, with cheese
+2842. Ham sandwich or sub, restaurant
+2843. Ham sandwich or sub, with cheese, restaurant
+2844. Ham sandwich wrap
+2845. Ham salad sandwich on white
+2846. Ham salad sandwich on wheat
+2847. Cuban sandwich
+2848. Barbecue rib sandwich
+2849. Barbecue pork sandwich, on white bun
+2850. Barbecue pork sandwich, on wheat bun
+2851. Pork sandwich
+2852. Pork sandwich, with cheese
+2853. Bacon, lettuce, tomato sandwich on white
+2854. Bacon, lettuce, tomato sandwich on wheat
+2855. Turkey sandwich on white
+2856. Turkey sandwich on white, with cheese
+2857. Turkey sandwich on wheat
+2858. Turkey sandwich on wheat, with cheese
+2859. Turkey sandwich or sub, restaurant
+2860. Turkey sandwich or sub, with cheese, restaurant
+2861. Turkey sandwich wrap
+2862. Chicken deli sandwich or sub, restaurant
+2863. Chicken deli sandwich or sub, with cheese, restaurant
+2864. Chicken salad sandwich on white
+2865. Chicken salad sandwich on wheat
+2866. Chicken salad sandwich wrap
+2867. Club sandwich on white
+2868. Club sandwich on white, with cheese
+2869. Club sandwich on wheat
+2870. Club sandwich on wheat, with cheese
+2871. Club sandwich or sub, restaurant
+2872. Barbecue chicken sandwich, on white bun
+2873. Barbecue chicken sandwich, on wheat bun
+2874. Chicken fillet sandwich, from school cafeteria
+2875. Chicken fillet biscuit, from fast food
+2876. Chicken fillet sandwich, fried, from fast food
+2877. Chicken fillet sandwich, fried, from fast food, with cheese
+2878. Chicken fillet sandwich, grilled, from fast food
+2879. Chicken fillet sandwich, grilled, from fast food, with cheese
+2880. Chicken fillet sandwich, NS as to fried or grilled, from fast food
+2881. Chicken fillet sandwich, fried, on white bun
+2882. Chicken fillet sandwich, fried, on white bun; with cheese
+2883. Chicken fillet sandwich, fried, on wheat bun
+2884. Chicken fillet sandwich, fried, on wheat bun, with cheese
+2885. Chicken fillet sandwich, grilled, on white bun
+2886. Chicken fillet sandwich, grilled, on white bun, with cheese
+2887. Chicken fillet sandwich, grilled, on wheat bun
+2888. Chicken fillet sandwich, grilled, on wheat bun, with cheese
+2889. Chicken fillet wrap sandwich, fried, from fast food
+2890. Chicken fillet wrap sandwich, grilled, from fast food
+2891. Turkey or chicken burger, on white bun
+2892. Turkey or chicken burger, on wheat bun
+2893. Fish sandwich, fried, from fast food
+2894. Fish sandwich, fried, from fast food, with cheese
+2895. Crab cake sandwich
+2896. Salmon cake sandwich
+2897. Fried seafood sandwich
+2898. Fish sandwich, from school cafeteria
+2899. Fish sandwich, fried, on white bun
+2900. Fish sandwich, fried, on white bun, with cheese
+2901. Fish sandwich, fried, on wheat bun
+2902. Fish sandwich, fried, on wheat bun, with cheese
+2903. Fish sandwich, grilled
+2904. Fish wrap sandwich
+2905. Sardine sandwich
+2906. Tuna salad sandwich on white
+2907. Tuna salad sandwich on white, with cheese
+2908. Tuna salad sandwich on wheat
+2909. Tuna salad sandwich on wheat, with cheese
+2910. Tuna salad sandwich wrap
+2911. Seafood salad sandwich
+2912. Bologna sandwich on white
+2913. Bologna sandwich on white, with cheese
+2914. Bologna sandwich on wheat
+2915. Bologna sandwich on wheat, with cheese
+2916. Pig in a blanket
+2917. Salami sandwich on white
+2918. Salami sandwich on white, with cheese
+2919. Salami sandwich on wheat
+2920. Salami sandwich on wheat, with cheese
+2921. Italian sandwich on white
+2922. Italian sandwich on wheat
+2923. Italian sandwich or sub, restaurant
+2924. Italian sausage sandwich on white
+2925. Italian sausage sandwich on wheat
+2926. Spam sandwich
+2927. Hot dog sandwich, NFS, on white bun
+2928. Hot dog sandwich, NFS, on wheat bun
+2929. Hot dog sandwich, NFS, on white bread
+2930. Hot dog sandwich, NFS, on wheat bread
+2931. Hot dog sandwich, beef, on white bun
+2932. Hot dog sandwich, beef, on wheat bun
+2933. Hot dog sandwich, beef, on white bread
+2934. Hot dog sandwich, beef, on wheat bread
+2935. Hot dog sandwich, meat and poultry, on white bun
+2936. Hot dog sandwich, meat and poultry, on wheat bun
+2937. Hot dog sandwich, meat and poultry, on white bread
+2938. Hot dog sandwich, meat and poultry, on wheat bread
+2939. Hot dog sandwich, turkey, on white bun
+2940. Hot dog sandwich, turkey, on wheat bun
+2941. Hot dog sandwich, turkey, on white bread
+2942. Hot dog sandwich, turkey, on wheat bread
+2943. Hot dog sandwich, reduced fat, on white bun
+2944. Hot dog sandwich, reduced fat, on wheat bun
+2945. Hot dog sandwich, reduced fat, on white bread
+2946. Hot dog sandwich, reduced fat, on wheat bread
+2947. Hot dog sandwich, vegetarian, on bun
+2948. Hot dog sandwich, vegetarian, on bread
+2949. Chili hot dog sandwich, on white bun
+2950. Chili hot dog sandwich, on wheat bun
+2951. Chili hot dog sandwich, on white bread
+2952. Chili hot dog sandwich, on wheat bread
+2953. Multiple meat sandwich on white
+2954. Multiple meat sandwich on white, with cheese
+2955. Multiple meat sandwich on wheat
+2956. Multiple meat sandwich on wheat, with cheese
+2957. Multiple meat sandwich or sub, restaurant
+2958. Multiple meat sandwich or sub, with cheese, restaurant
+2959. Multiple meat sandwich wrap
+2960. Turkey and ham sandwich on white
+2961. Turkey and ham sandwich on white, with cheese
+2962. Turkey and ham sandwich on wheat
+2963. Turkey and ham sandwich on wheat, with cheese
+2964. Turkey and ham sandwich or sub, restaurant
+2965. Turkey and ham sandwich or sub, with cheese, restaurant
+2966. Beef with vegetable, diet frozen meal
+2967. Salisbury steak with gravy, potatoes, vegetable, frozen meal
+2968. Salisbury steak with gravy, whipped potatoes, vegetable, dessert, frozen meal
+2969. Salisbury steak with gravy, macaroni and cheese, frozen meal
+2970. Beef, sliced, with gravy, potatoes, vegetable, frozen meal
+2971. Meatballs, Swedish, in gravy, with noodles, diet frozen meal
+2972. Beef with spaetzle or rice, vegetable, frozen meal
+2973. Chicken, fried, with potatoes, vegetable, frozen meal
+2974. Chicken patty, or nuggets, boneless, breaded, potatoes, vegetable, frozen meal
+2975. Chicken, fried, with potatoes, vegetable, dessert, frozen meal, large meat portion
+2976. Chicken with rice and vegetable, diet frozen meal
+2977. Chicken and vegetables au gratin with rice, diet frozen entree
+2978. Chicken and vegetable entree with rice, diet frozen meal
+2979. Chicken with noodles and cheese sauce, diet frozen meal
+2980. Chicken and vegetable entree with noodles, diet frozen meal
+2981. Chicken in soy-based sauce, rice and vegetables, frozen meal
+2982. Chicken and vegetable entree with noodles and cream sauce, frozen meal
+2983. Turkey with vegetable, stuffing, diet frozen meal
+2984. Fish in lemon-butter sauce with starch item, vegetable, frozen meal
+2985. Shrimp and vegetables in sauce with noodles, diet frozen meal
+2986. Meat loaf with potatoes, vegetable, frozen meal
+2987. Soup, meatball
+2988. Soup, pho, with meat
+2989. Soup, pho, no meat
+2990. Soup, pepperpot
+2991. Soup, beef, canned
+2992. Soup, sopa or caldo de res
+2993. Soup, pozole
+2994. Soup, Italian wedding
+2995. Soup, pork or ham
+2996. Soup, broth
+2997. Soup, chicken, canned
+2998. Soup, chicken
+2999. Soup, sopa or caldo de pollo
+3000. Soup, cream of chicken
+3001. Soup, Manhattan clam chowder
+3002. Soup, New England clam chowder
+3003. Soup, bisque
+3004. Lobster gumbo
+3005. Shrimp gumbo
+3006. Soup, fish or shrimp
+3007. Gravy, made with soy sauce
+3008. Mole sauce
+3009. Egg, whole, cooked, NS as to cooking method
+3010. Egg, whole, fried, NS as to fat
+3011. Egg, whole, fried no added fat
+3012. Egg, whole, fried with margarine
+3013. Egg, whole, fried with oil
+3014. Egg, whole, fried with butter
+3015. Egg, whole, fried with animal fat or meat drippings
+3016. Egg, whole, fried with cooking spray
+3017. Egg, whole, fried, NS as to fat type
+3018. Egg, whole, fried, from fast food / restaurant
+3019. Egg, whole, baked, NS as to fat
+3020. Egg, whole, baked, no added fat
+3021. Egg, whole, baked, fat added
+3022. Egg, whole, pickled
+3023. Egg, white, cooked, NS as to fat
+3024. Egg, white, cooked, no added fat
+3025. Egg, white, cooked, fat added
+3026. Egg, yolk only, cooked, NS as to fat
+3027. Egg, yolk only, cooked, no added fat
+3028. Egg, yolk only, cooked, fat added
+3029. Duck egg, cooked
+3030. Goose egg, cooked
+3031. Quail egg, canned
+3032. Egg, creamed
+3033. Egg, Benedict
+3034. Egg, deviled
+3035. Egg salad, made with mayonnaise
+3036. Egg salad, made with light mayonnaise
+3037. Egg salad, made with mayonnaise-type salad dressing
+3038. Egg salad, made with light mayonnaise-type salad dressing
+3039. Egg salad, made with creamy dressing
+3040. Egg salad, made with light creamy dressing
+3041. Egg salad, made with Italian dressing
+3042. Egg salad, made with light Italian dressing
+3043. Egg Salad, made with any type of fat free dressing
+3044. Huevos rancheros
+3045. Egg casserole with bread, cheese, milk and meat
+3046. Chicken egg foo yung
+3047. Pork egg foo yung
+3048. Shrimp egg foo yung
+3049. Beef egg foo yung
+3050. Egg omelet or scrambled egg, NS as to fat
+3051. Egg omelet or scrambled egg, made with margarine
+3052. Egg omelet or scrambled egg, made with oil
+3053. Egg omelet or scrambled egg, made with butter
+3054. Egg omelet or scrambled egg, made with animal fat or meat drippings
+3055. Egg omelet or scrambled egg, made with cooking spray
+3056. Egg omelet or scrambled egg, NS as to fat type
+3057. Egg omelet or scrambled egg, no added fat
+3058. Egg omelet or scrambled egg, from fast food / restaurant
+3059. Egg omelet or scrambled egg, with cheese, made with margarine
+3060. Egg omelet or scrambled egg, with cheese, made with oil
+3061. Egg omelet or scrambled egg, with cheese, made with butter
+3062. Egg omelet or scrambled egg, with cheese, made with animal fat or meat drippings
+3063. Egg omelet or scrambled egg, with cheese, made with cooking spray
+3064. Egg omelet or scrambled egg, with cheese, no added fat
+3065. Egg omelet or scrambled egg, with meat, NS as to fat
+3066. Egg omelet or scrambled egg, with meat, made with margarine
+3067. Egg omelet or scrambled egg, with meat, made with oil
+3068. Egg omelet or scrambled egg, with meat, made with butter
+3069. Egg omelet or scrambled egg, with meat, made with animal fat or meat drippings
+3070. Egg omelet or scrambled egg, with meat, made with cooking spray
+3071. Egg omelet or scrambled egg, with meat, NS as to fat type
+3072. Egg omelet or scrambled egg, with meat, no added fat
+3073. Egg omelet or scrambled egg, with cheese and meat, NS as to fat
+3074. Egg omelet or scrambled egg, with cheese and meat, made with margarine
+3075. Egg omelet or scrambled egg, with cheese and meat, made with oil
+3076. Egg omelet or scrambled egg, with cheese and meat, made with butter
+3077. Egg omelet or scrambled egg, with cheese and meat, made with animal fat or meat drippings
+3078. Egg omelet or scrambled egg, with cheese and meat, made with cooking spray
+3079. Egg omelet or scrambled egg, with cheese and meat, NS as to fat type
+3080. Egg omelet or scrambled egg, with cheese and meat, no added fat
+3081. Egg omelet or scrambled egg, with tomatoes, fat added
+3082. Egg omelet or scrambled egg, with tomatoes, no added fat
+3083. Egg omelet or scrambled egg, with tomatoes, NS as to fat
+3084. Egg omelet or scrambled egg, with dark-green vegetables, fat added
+3085. Egg omelet or scrambled egg, with dark-green vegetables, no added fat
+3086. Egg omelet or scrambled egg, with dark-green vegetables, NS as to fat
+3087. Egg omelet or scrambled egg, with tomatoes and dark-green vegetables, fat added
+3088. Egg omelet or scrambled egg, with tomatoes and dark-green vegetables, no fat added
+3089. Egg omelet or scrambled egg, with tomatoes and dark-green vegetables, NS as to fat
+3090. Egg omelet or scrambled egg, with vegetables other than dark green and/or tomatoes, fat added
+3091. Egg omelet or scrambled egg, with vegetables other than dark green and/or tomatoes, no added fat
+3092. Egg omelet or scrambled egg, with vegetables other than dark green and/or tomatoes, NS as to fat
+3093. Egg omelet or scrambled egg, with cheese and tomatoes, fat added
+3094. Egg omelet or scrambled egg, with cheese and tomatoes, no added fat
+3095. Egg omelet or scrambled egg, with cheese and tomatoes, NS as to fat
+3096. Egg omelet or scrambled egg, with cheese and dark-green vegetables, fat added
+3097. Egg omelet or scrambled egg, with cheese and dark-green vegetables, no added fat
+3098. Egg omelet or scrambled egg, with cheese and dark-green vegetables, NS as to fat
+3099. Egg omelet or scrambled egg, with cheese, tomatoes, and dark-green vegetables, fat added
+3100. Egg omelet or scrambled egg, with cheese, tomatoes, and dark-green vegetables, no added fat
+3101. Egg omelet or scrambled egg, with cheese, tomatoes, and dark-green vegetables, NS as to fat
+3102. Egg omelet or scrambled egg, with cheese and vegetables other than dark green and/or tomatoes, fat added
+3103. Egg omelet or scrambled egg, with cheese and vegetables other than dark green and/or tomatoes, no added fat
+3104. Egg omelet or scrambled egg, with cheese and vegetables other than dark green and/or tomatoes, NS as to fat
+3105. Egg omelet or scrambled egg, with meat and tomatoes, fat added
+3106. Egg omelet or scrambled egg, with meat and tomatoes, no added fat
+3107. Egg omelet or scrambled egg, with meat and tomatoes, NS as to fat
+3108. Egg omelet or scrambled egg, with meat and dark-green vegetables, fat added
+3109. Egg omelet or scrambled egg, with meat and dark-green vegetables, no added fat
+3110. Egg omelet or scrambled egg, with meat and dark-green vegetables, NS as to fat
+3111. Egg omelet or scrambled egg, with meat, tomatoes, and dark-green vegetables, fat added
+3112. Egg omelet or scrambled egg, with meat, tomatoes, and dark-green vegetables, no added fat
+3113. Egg omelet or scrambled egg, with meat, tomatoes, and dark-green vegetables, NS as to fat
+3114. Egg omelet or scrambled egg, with meat and vegetables other than dark-green and/or tomatoes, fat added
+3115. Egg omelet or scrambled egg, with meat and vegetables other than dark-green and/or tomatoes, no added fat
+3116. Egg omelet or scrambled egg, with meat and vegetables other than dark-green and/or tomatoes, NS as to fat
+3117. Egg omelet or scrambled egg, with cheese, meat, and tomatoes, fat added
+3118. Egg omelet or scrambled egg, with cheese, meat, and tomatoes, no added fat
+3119. Egg omelet or scrambled egg, with cheese, meat, and tomatoes, NS as to fat
+3120. Egg omelet or scrambled egg, with cheese, meat, and dark-green vegetables, fat added
+3121. Egg omelet or scrambled egg, with cheese, meat, and dark-green vegetables, no added fat
+3122. Egg omelet or scrambled egg, with cheese, meat, and dark-green vegetables, NS as to fat
+3123. Egg omelet or scrambled egg, with cheese, meat, tomatoes, and dark-green vegetables, fat added
+3124. Egg omelet or scrambled egg, with cheese, meat, tomatoes, and dark-green vegetables, no added fat
+3125. Egg omelet or scrambled egg, with cheese, meat, tomatoes, and dark-green vegetables, NS as to fat
+3126. Egg omelet or scrambled egg, with cheese, meat, and vegetables other than dark-green and/or tomatoes, fat added
+3127. Egg omelet or scrambled egg, with cheese, meat, and vegetables other than dark-green and/or tomatoes, no added fat
+3128. Egg omelet or scrambled egg, with cheese, meat, and vegetables other than dark-green and/or tomatoes, NS as to fat
+3129. Egg omelet or scrambled egg, with potatoes and/or onions, fat added
+3130. Egg omelet or scrambled egg, with potatoes and/or onions, no added fat
+3131. Egg omelet or scrambled egg, with potatoes and/or onions, NS as to fat
+3132. Egg salad sandwich on white
+3133. Egg salad sandwich on wheat
+3134. Egg white omelet, scrambled, or fried, NS as to fat
+3135. Egg white omelet, scrambled, or fried, made with margarine
+3136. Egg white omelet, scrambled, or fried, made with oil
+3137. Egg white omelet, scrambled, or fried, made with butter
+3138. Egg white omelet, scrambled, or fried, made with cooking spray
+3139. Egg white omelet, scrambled, or fried, NS as to fat type
+3140. Egg white omelet, scrambled, or fried, no added fat
+3141. Egg white, omelet, scrambled, or fried, with cheese
+3142. Egg white, omelet, scrambled, or fried, with meat
+3143. Egg white, omelet, scrambled, or fried, with vegetables
+3144. Egg white, omelet, scrambled, or fried, with cheese and meat
+3145. Egg white, omelet, scrambled, or fried, with cheese and vegetables
+3146. Egg white, omelet, scrambled, or fried, with meat and vegetables
+3147. Egg white, omelet, scrambled, or fried, with cheese, meat, and vegetables
+3148. Meringues
+3149. Egg substitute, omelet, scrambled, or fried, fat added
+3150. Egg substitute, omelet, scrambled, or fried, no added fat
+3151. Egg substitute, omelet, scrambled, or fried, with cheese
+3152. Egg substitute, omelet, scrambled, or fried, with meat
+3153. Egg substitute, omelet, scrambled, or fried, with vegetables
+3154. Egg substitute, omelet, scrambled, or fried, with cheese and meat
+3155. Egg substitute, omelet, scrambled, or fried, with cheese and vegetables
+3156. Egg substitute, omelet, scrambled, or fried, with meat and vegetables
+3157. Egg substitute, omelet, scrambled, or fried, with cheese, meat, and vegetables
+3158. Egg sandwich on white bread
+3159. Egg sandwich on white bread, with cheese
+3160. Egg sandwich on white bread, with meat
+3161. Egg sandwich on white bread, with meat and cheese
+3162. Egg sandwich on wheat bread
+3163. Egg sandwich on wheat bread, with cheese
+3164. Egg sandwich on wheat bread, with meat
+3165. Egg sandwich on wheat bread, with meat and cheese
+3166. Egg sandwich on English muffin
+3167. Egg sandwich on English muffin, with sausage
+3168. Egg sandwich on English muffin, with bacon
+3169. Egg sandwich on English muffin, with ham
+3170. Egg sandwich on croissant
+3171. Egg sandwich on croissant, with sausage
+3172. Egg sandwich on croissant, with bacon
+3173. Egg sandwich on croissant, with ham
+3174. Egg sandwich on biscuit
+3175. Egg sandwich on biscuit, with sausage
+3176. Egg sandwich on biscuit, with sausage and cheese
+3177. Egg sandwich on biscuit, with bacon
+3178. Egg sandwich on biscuit, with bacon and cheese
+3179. Egg sandwich on bagel
+3180. Egg sandwich on bagel, with sausage
+3181. Egg sandwich on bagel, with bacon
+3182. Egg sandwich on bagel, with ham
+3183. Egg sandwich on griddle/pancake
+3184. Egg sandwich on griddle/pancake, with meat
+3185. Egg white sandwich
+3186. Egg white sandwich, with cheese
+3187. Egg white sandwich, with meat
+3188. Bacon biscuit sandwich
+3189. Ham biscuit sandwich
+3190. Sausage biscuit sandwich
+3191. Sausage biscuit sandwich, with cheese
+3192. Sausage English muffin sandwich
+3193. Sausage griddle/pancake sandwich
+3194. Egg burrito
+3195. Egg burrito, with sausage
+3196. Egg burrito, with bacon
+3197. Egg burrito, with ham
+3198. Beans, NFS
+3199. Beans, from dried, NS as to type, fat added
+3200. Beans, from dried, NS as to type, no added fat
+3201. Beans, from canned, NS as to type, fat added
+3202. Beans, from canned, NS as to type, no added fat
+3203. Beans, from fast food / restaurant, NS as to type
+3204. White beans, from dried, fat added
+3205. White beans, from dried, no added fat
+3206. White beans, from canned, fat added
+3207. White beans, from canned, no added fat
+3208. White beans, from canned, reduced sodium
+3209. Black beans, from dried, fat added
+3210. Black beans, from dried, no added fat
+3211. Black beans, from canned, fat added
+3212. Black beans, from canned, no added fat
+3213. Black beans, from canned, reduced sodium
+3214. Black beans, from fast food / restaurant
+3215. Black beans with meat
+3216. Fava beans, cooked
+3217. Lima beans, from dried
+3218. Pink beans, cooked
+3219. Pinto beans, from dried, fat added
+3220. Pinto beans, from dried, no added fat
+3221. Pinto beans, from canned, fat added
+3222. Pinto beans, from canned, no added fat
+3223. Pinto beans, from canned, reduced sodium
+3224. Pinto beans, from fast food / restaurant
+3225. Pinto beans with meat
+3226. Kidney beans, from dried, fat added
+3227. Kidney beans, from dried, no added fat
+3228. Kidney beans, from canned, fat added
+3229. Kidney beans, from canned, no added fat
+3230. Kidney beans, from canned, reduced sodium
+3231. Kidney beans, from fast food / restaurant
+3232. Kidney beans with meat
+3233. Peruvian beans, from dried
+3234. Soybeans, cooked
+3235. Mung beans, cooked
+3236. Baked beans from fast food / restaurant
+3237. Beans and tomatoes, no added fat
+3238. Beans and tomatoes, fat added
+3239. Black bean salad
+3240. Refried beans, from fast food / restaurant
+3241. Refried beans with meat
+3242. Layer dip
+3243. Hummus, flavored
+3244. Black bean sauce
+3245. Beans and franks
+3246. Beans with meat, NS as to type
+3247. Falafel
+3248. Bean cake
+3249. Baked beans, reduced sodium
+3250. Chili, vegetarian
+3251. Blackeyed peas, from dried
+3252. Chickpeas, from dried, fat added
+3253. Chickpeas, from dried, no added fat
+3254. Chickpeas, from canned, fat added
+3255. Chickpeas, from canned, no added fat
+3256. Chickpeas, from canned, reduced sodium
+3257. Split peas, from dried, no added fat
+3258. Split peas, from dried, fat added
+3259. Lentils, from dried, fat added
+3260. Lentils, from dried, no added fat
+3261. Lentils, from canned
+3262. Dal
+3263. Bean chips
+3264. Sambar, vegetable stew
+3265. Lentil curry
+3266. Lentil curry with rice
+3267. Edamame, cooked
+3268. Miso sauce
+3269. Yogurt, soy
+3270. Soybean curd, breaded, fried
+3271. Vermicelli, made from soybeans
+3272. Frozen dessert, non-dairy
+3273. Soup, bean
+3274. Soup, bean, canned
+3275. Soup, miso or tofu
+3276. Soup, bean, canned, reduced sodium
+3277. Soup, bean, with meat
+3278. Soup, split pea, with meat
+3279. Soup, split pea
+3280. Soup, lentil, canned
+3281. Soup, lentil, canned, reduced sodium
+3282. Soup, lentil
+3283. Soup, lentil, with meat
+3284. Soup, mulligatawany
+3285. Swiss steak, with gravy, meatless
+3286. Pot pie, no meat
+3287. Tofu and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, with soy-based sauce
+3288. Tofu and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, with soy-based sauce
+3289. Vegetarian stew
+3290. Vegetarian stroganoff
+3291. Veggie burger, on bun
+3292. Veggie burger, on bun, with cheese
+3293. Falafel sandwich
+3294. Almonds, salted
+3295. Almonds, lightly salted
+3296. Almonds, unsalted
+3297. Almonds, flavored
+3298. Almonds, honey roasted
+3299. Cashews, salted
+3300. Cashews, lightly salted
+3301. Cashews, unsalted
+3302. Cashews, honey roasted
+3303. Mixed nuts, unroasted
+3304. Mixed nuts, with peanuts, salted
+3305. Mixed nuts, with peanuts, lightly salted
+3306. Mixed nuts, with peanuts, unsalted
+3307. Mixed nuts, without peanuts, salted
+3308. Mixed nuts, without peanuts, unsalted
+3309. Mixed nuts, honey roasted
+3310. Peanuts, dry roasted, lightly salted
+3311. Peanuts, honey roasted
+3312. Pecans, salted
+3313. Pecans, unsalted
+3314. Pecans, honey roasted
+3315. Pistachio nuts, salted
+3316. Pistachio nuts, lightly salted
+3317. Pistachio nuts, unsalted
+3318. Walnuts, honey roasted
+3319. Almond butter
+3320. Peanut butter, lower sodium and lower sugar
+3321. Peanut butter and jelly
+3322. Peanut butter and chocolate spread
+3323. Soy nut butter
+3324. Soup, peanut
+3325. Peanut butter sandwich, NFS
+3326. Peanut butter sandwich, with regular peanut butter, on white bread
+3327. Peanut butter sandwich, with regular peanut butter, on wheat bread
+3328. Peanut butter sandwich, with reduced fat peanut butter, on white bread
+3329. Peanut butter sandwich, with reduced fat peanut butter, on wheat bread
+3330. Peanut butter and jelly sandwich, NFS
+3331. Peanut butter and jelly sandwich, with regular peanut butter, regular jelly, on white bread
+3332. Peanut butter and jelly sandwich, with regular peanut butter, regular jelly, on wheat bread
+3333. Peanut butter and jelly sandwich, with reduced fat peanut butter, on white bread
+3334. Peanut butter and jelly sandwich, with reduced fat peanut butter, on wheat bread
+3335. Peanut butter and jelly sandwich, with regular peanut butter, reduced sugar jelly, on white bread
+3336. Peanut butter and jelly sandwich, with regular peanut butter, reduced sugar jelly, on wheat bread
+3337. Peanut butter and jelly sandwich, frozen commercial product without crusts
+3338. Almond butter sandwich, on white bread
+3339. Almond butter sandwich, on wheat bread
+3340. Almond butter and jelly sandwich, on white bread
+3341. Almond butter and jelly sandwich, on wheat bread
+3342. Nutella sandwich on white bread
+3343. Nutella sandwich on wheat bread
+3344. Yogurt, coconut milk
+3345. Yogurt, almond milk
+3346. Coconut water, sweetened
+3347. Trail mix with nuts
+3348. Trail mix with nuts and fruit
+3349. Trail mix with chocolate
+3350. Trail mix with pretzels, cereal, or granola
+3351. Pumpkin seeds, salted
+3352. Sunflower seeds, plain, salted
+3353. Sunflower seeds, flavored
+3354. Mixed seeds
+3355. Bread, white, made from home recipe or purchased at a bakery
+3356. Bread, white with whole wheat swirl
+3357. Bread, white with whole wheat swirl, toasted
+3358. Bread, native, water, Puerto Rican style
+3359. Bread, lard, Puerto Rican style
+3360. Bread, lard, toasted, Puerto Rican style
+3361. Bread, pita with fruit
+3362. Bread, cornmeal and molasses
+3363. Garlic bread, from fast food / restaurant
+3364. Garlic bread, with parmesan cheese, from fast food / restaurant
+3365. Garlic bread, with parmesan cheese, from frozen
+3366. Garlic bread, with melted cheese, from fast food / restaurant
+3367. Garlic bread, with melted cheese, from frozen
+3368. Bread, onion
+3369. Bread, reduced calorie and/or high fiber, white or NFS, with fruit and/or nuts
+3370. Bread, raisin
+3371. Bread, raisin, toasted
+3372. Bread, sweet potato
+3373. Bread, vegetable
+3374. Bruschetta
+3375. Bread, dough, fried
+3376. Roll, cheese
+3377. Roll, garlic
+3378. Pan dulce, NFS
+3379. Roll, sweet, with fruit, frosted
+3380. Roll, sweet, frosted
+3381. Pan Dulce, with sugar topping
+3382. Pan Dulce, with raisins and icing
+3383. Croissant, chocolate
+3384. Croissant, fruit
+3385. Brioche
+3386. Bread, Spanish coffee
+3387. Bagel, with raisins
+3388. Bagel, with fruit other than raisins
+3389. Bread stuffing
+3390. Bread stuffing made with egg
+3391. Breadsticks, hard, reduced sodium
+3392. Breadsticks, soft, fast food / restaurant
+3393. Breadsticks, soft, frozen
+3394. Breadsticks, soft, with parmesan cheese, fast food / restaurant
+3395. Breadsticks, soft, stuffed or topped with melted cheese
+3396. Muffin, English, with raisins
+3397. Muffin, English, cheese
+3398. Muffin, English, with fruit other than raisins
+3399. Pannetone
+3400. Bread, whole wheat, made from home recipe or purchased at bakery
+3401. Bread, puri
+3402. Bread, whole wheat, with raisins
+3403. Bread, wheat or cracked wheat, made from home recipe or purchased at bakery
+3404. Bread, wheat or cracked wheat, with raisins
+3405. Bread, wheat or cracked wheat, reduced calorie and/or high fiber
+3406. Bagel, wheat, with raisins
+3407. Bagel, whole wheat, with raisins
+3408. Bagel, wheat, with fruit and nuts
+3409. Muffin, English, wheat bran, with raisins
+3410. Muffin, English, wheat or cracked wheat, with raisins
+3411. Breadsticks, hard, whole wheat
+3412. Muffin, English, oat bran, with raisins
+3413. Bread, multigrain, with raisins
+3414. Bread, multigrain, reduced calorie and/or high fiber
+3415. Bagel, multigrain, with raisins
+3416. Bread, soy
+3417. Bread, sunflower meal
+3418. Injera, Ethiopian bread
+3419. Biscuit, home recipe
+3420. Biscuit, wheat
+3421. Biscuit, cheese
+3422. Biscuit with fruit
+3423. Scone
+3424. Scone, with fruit
+3425. Cornbread, made from home recipe
+3426. Cornbread muffin, stick, round, made from home recipe
+3427. Corn flour patty or tart, fried
+3428. Corn pone, baked
+3429. Corn pone, fried
+3430. Gordita/sope shell, plain, no filling
+3431. Johnnycake
+3432. Spoonbread
+3433. Tortilla, NFS
+3434. Taco shell, flour
+3435. Arepa Dominicana
+3436. Muffin, chocolate chip
+3437. Muffin, chocolate
+3438. Muffin, whole wheat
+3439. Muffin, wheat
+3440. Muffin, whole grain
+3441. Muffin, wheat bran
+3442. Muffin, bran with fruit, lowfat
+3443. Muffin, oatmeal
+3444. Muffin, plain
+3445. Muffin, cheese
+3446. Muffin, pumpkin
+3447. Muffin, zucchini
+3448. Muffin, carrot
+3449. Popover
+3450. Bread, nut
+3451. Bread, pumpkin
+3452. Bread, fruit
+3453. Bread, zucchini
+3454. Bread, Irish soda
+3455. Cake or cupcake, NFS
+3456. Cake or cupcake, apple
+3457. Cake or cupcake, banana
+3458. Cake or cupcake, Black Forest
+3459. Cake or cupcake, carrot
+3460. Cake or cupcake, coconut
+3461. Cheesecake, plain
+3462. Cheesecake, fruit
+3463. Cheesecake, chocolate
+3464. Cake or cupcake, chocolate with white icing, bakery
+3465. Cake or cupcake, chocolate with white icing, from mix
+3466. Cake or cupcake, chocolate with chocolate icing, bakery
+3467. Cake or cupcake, chocolate with chocolate icing, from mix
+3468. Cake or cupcake, chocolate, no icing
+3469. Cake or cupcake, German chocolate
+3470. Cake or cupcake, gluten free
+3471. Cake, chocolate, flourless
+3472. Cake, cream
+3473. Cake or cupcake, gingerbread
+3474. Ice cream cake
+3475. Cake, jelly roll
+3476. Cake or cupcake, lemon
+3477. Cake or cupcake, marble
+3478. Cake or cupcake, peanut butter
+3479. Cake or cupcake, pumpkin
+3480. Cake or cupcake, red velvet
+3481. Cake or cupcake, spice
+3482. Cake or cupcake, strawberry
+3483. Cake, torte
+3484. Cake, tres leche
+3485. Cake, pineapple, upside down
+3486. Cake or cupcake, white with white icing, bakery
+3487. Cake or cupcake, white with white icing, from mix
+3488. Cake or cupcake, white with chocolate icing, bakery
+3489. Cake or cupcake, white with chocolate icing, from mix
+3490. Cake or cupcake, white, no icing
+3491. Cake, strawberry shortcake
+3492. Cake or cupcake, zucchini
+3493. Cookie, batter or dough, raw
+3494. Cookie, biscotti
+3495. Cookie, brownie, with icing or filling
+3496. Cookie, chocolate chip, made from home recipe or purchased at a bakery
+3497. Cookie, graham cracker with chocolate and marshmallow
+3498. Cookie, lemon bar
+3499. Cookie, meringue
+3500. Cookie, oatmeal, with chocolate chips
+3501. Cookie, peanut butter, with chocolate
+3502. Cookie, shortbread, with icing or filling
+3503. Cookie, butter or sugar, with fruit and/or nuts
+3504. Cookie, butter or sugar, with icing or filling other than chocolate
+3505. Cookies, Puerto Rican style
+3506. Pie, apple
+3507. Pie, berry
+3508. Pie, blueberry
+3509. Pie, cherry
+3510. Pie, lemon
+3511. Pie, key lime
+3512. Pie, peach
+3513. Pie, strawberry
+3514. Pie, banana cream
+3515. Pie, chocolate cream
+3516. Pie, coconut cream
+3517. Dessert pizza
+3518. Pie, peanut butter cream
+3519. Pie, pineapple cream
+3520. Pie, pumpkin
+3521. Pie, sweet potato
+3522. Pie, vanilla cream
+3523. Pie, lemon meringue
+3524. Pie, pecan
+3525. Pie, oatmeal
+3526. Cobbler, apple
+3527. Cobbler, berry
+3528. Cobbler, cherry
+3529. Cobbler, peach
+3530. Crisp, apple
+3531. Fritter, plain
+3532. Fritter, fruit
+3533. Crisp, berry
+3534. Crisp, cherry
+3535. Crisp, peach
+3536. Cream puff, eclair, custard or cream filled, NS as to icing
+3537. Cream puff, eclair, custard or cream filled, not iced
+3538. Cream puff, eclair, custard or cream filled, iced, reduced fat
+3539. Sopaipilla, without syrup or honey
+3540. Sopaipilla with syrup or honey
+3541. Crepe, chocolate filled
+3542. Crepe, fruit filled
+3543. Tamale, sweet
+3544. Strudel, apple
+3545. Strudel, berry
+3546. Strudel, cherry
+3547. Strudel, cheese
+3548. Strudel, peach
+3549. Baklava
+3550. Basbousa
+3551. Pastry, fruit-filled
+3552. Pastry, made with bean or lotus seed paste filling, baked
+3553. Pastry, made with bean paste and salted egg yolk filling, baked
+3554. Pastry, Chinese, made with rice flour
+3555. Pastry, cookie type, fried
+3556. Pastry, Italian, with cheese
+3557. Pastry, puff, custard or cream filled, iced or not iced
+3558. Cheese pastry puffs
+3559. Pastry, mainly flour and water, fried
+3560. Empanada, fruit
+3561. Doughnut, NFS
+3562. Doughnut, chocolate
+3563. Doughnut, cake type, powdered sugar
+3564. Doughnut, cake type, with icing
+3565. Doughnut, cake type, chocolate icing
+3566. Doughnut, chocolate, with chocolate icing
+3567. Doughnut holes
+3568. Churros
+3569. Beignet
+3570. Doughnut, yeast type, with chocolate icing
+3571. Doughnut, jelly
+3572. Doughnut, custard-filled
+3573. Doughnut, custard-filled, with icing
+3574. Coffee cake, crumb or quick-bread type
+3575. Coffee cake, crumb or quick-bread type, with fruit
+3576. Coffee cake, crumb or quick-bread type, cheese-filled
+3577. Cereal or granola bar (KIND Fruit and Nut Bar)
+3578. Cereal or granola bar, fruit and nut
+3579. Nutrition bar or meal replacement bar, NFS
+3580. Baby Toddler snack, NFS
+3581. Baby Toddler cookie
+3582. Baby Toddler biscuit
+3583. Crackers, breakfast biscuit
+3584. Crackers, saltine, reduced sodium
+3585. Crackers, flatbread
+3586. Crackers, rice and nuts
+3587. Rice paper
+3588. Crackers, sandwich, peanut butter filled (Ritz)
+3589. Crackers, sandwich, cheese filled (Ritz)
+3590. Crackers, woven wheat
+3591. Crackers, woven wheat, plain (Triscuit)
+3592. Crackers, woven wheat, flavored (Triscuit)
+3593. Crackers, wheat
+3594. Crackers, wheat, plain (Wheat Thins)
+3595. Crackers, wheat, flavored (Wheat Thins)
+3596. Baby Toddler crunchies
+3597. Baby Toddler wheels
+3598. Corn chips, plain
+3599. Corn chips, flavored
+3600. Corn chips, flavored (Fritos)
+3601. Corn chips, reduced sodium
+3602. Tortilla chips, cool ranch flavor (Doritos)
+3603. Tortilla chips, reduced fat, plain
+3604. Tortilla chips, reduced fat, flavored
+3605. Tortilla chips, reduced sodium
+3606. Snack mix
+3607. Popcorn, movie theater, with added butter
+3608. Popcorn, movie theater, no butter added
+3609. Popcorn, air-popped, no butter added
+3610. Popcorn, air-popped, with added butter
+3611. Popcorn, popped in oil, no butter added
+3612. Popcorn, popped in oil, with added butter
+3613. Popcorn, microwave, plain
+3614. Popcorn, microwave, plain, light
+3615. Popcorn, microwave, low sodium
+3616. Popcorn, microwave, butter flavored
+3617. Popcorn, microwave, flavored, light
+3618. Popcorn, microwave, cheese flavored
+3619. Popcorn, microwave, kettle
+3620. Popcorn, ready-to-eat, plain
+3621. Popcorn, ready-to-eat, plain, light
+3622. Popcorn, ready-to-eat, low sodium
+3623. Popcorn, ready-to-eat, butter flavored
+3624. Popcorn, ready-to-eat, flavored, light
+3625. Popcorn, ready-to-eat, kettle
+3626. Popcorn, caramel coated
+3627. Popcorn, caramel coated, with nuts
+3628. Popcorn, chocolate coated
+3629. Popcorn chips, plain
+3630. Popcorn chips, other flavors
+3631. Popcorn chips, sweet flavors
+3632. Pretzels, hard, plain, lightly salted
+3633. Pretzels, hard, flavored
+3634. Pretzels, hard, multigrain
+3635. Pretzels, hard, flavored, gluten free
+3636. Pretzel chips, hard, plain
+3637. Pretzel chips, hard, flavored
+3638. Pretzel chips, hard, gluten free
+3639. Pretzels, hard, white chocolate coated
+3640. Pretzels, hard, yogurt coated
+3641. Pretzels, hard, coated, gluten free
+3642. Pretzels, hard, peanut butter filled
+3643. Pretzels, soft, ready-to-eat, salted, buttered
+3644. Pretzels, soft, ready-to-eat, unsalted, buttered
+3645. Pretzels, soft, ready-to-eat, salted, no butter
+3646. Pretzels, soft, ready-to-eat, cinnamon sugar coated
+3647. Pretzels, soft, ready-to-eat, coated or flavored
+3648. Pretzels, soft, ready-to-eat, topped with meat
+3649. Pretzels, soft, ready-to-eat, topped with cheese
+3650. Pretzels, soft, from frozen, salted
+3651. Pretzels, soft, from frozen, cinnamon sugar coated
+3652. Pretzels, soft, from frozen, coated or flavored
+3653. Pretzels, soft, from frozen, topped with meat
+3654. Pretzels, soft, from frozen, topped with cheese
+3655. Pretzels, soft, filled with cheese
+3656. Pretzels, soft, from school lunch
+3657. Pretzels, soft, multigrain
+3658. Pretzels, soft, gluten free
+3659. Pretzels, soft, gluten free, cinnamon sugar coated
+3660. Pretzels, soft, gluten free, coated or flavored
+3661. Snack mix, plain (Chex Mix)
+3662. Pancakes, fruit, frozen
+3663. Pancakes, chocolate, frozen
+3664. Pancakes, whole grain, frozen
+3665. Pancakes, plain, fast food / restaurant
+3666. Pancakes, fruit, fast food / restaurant
+3667. Pancakes, chocolate, fast food / restaurant
+3668. Pancakes, whole grain, fast food / restaurant
+3669. Pancakes, school
+3670. Pancakes, plain
+3671. Pancakes, plain, reduced fat
+3672. Pancakes, fruit
+3673. Pancakes, pumpkin
+3674. Pancakes, chocolate
+3675. Pancakes, whole grain
+3676. Pancakes, whole grain, reduced fat
+3677. Waffle, plain, reduced fat
+3678. Waffle, fruit, frozen
+3679. Waffle, chocolate, frozen
+3680. Waffle, whole grain, frozen
+3681. Waffle, whole grain, fruit, frozen
+3682. Waffle, plain, fast food / restaurant
+3683. Waffle, chocolate, fast food / restaurant
+3684. Waffle, fruit, fast food / restaurant
+3685. Waffle, whole grain, fast food / restaurant
+3686. Waffle, plain
+3687. Waffle, fruit
+3688. Waffle, chocolate
+3689. Waffle, cinnamon
+3690. Waffle, whole grain
+3691. French toast, frozen
+3692. French toast, fast food / restaurant
+3693. French toast, school
+3694. French toast, plain
+3695. French toast, whole grain
+3696. French toast, gluten free
+3697. French toast sticks
+3698. French toast sticks, school
+3699. Crepe, plain
+3700. Chinese pancake
+3701. Dumpling, no meat
+3702. Cake made with glutinous rice
+3703. Idli
+3704. Dosa, plain
+3705. Cake made with glutinous rice and dried beans
+3706. Funnel cake with sugar
+3707. Funnel cake with sugar and fruit
+3708. Pasta, vegetable, cooked
+3709. Noodles, cooked
+3710. Noodles, whole grain, cooked
+3711. Long rice noodles, made from mung beans, cooked
+3712. Rice noodles, cooked
+3713. Pasta, cooked
+3714. Pasta, whole grain, cooked
+3715. Barley
+3716. Buckwheat groats
+3717. Grits, NFS
+3718. Grits, regular or quick, made with water, NS as to fat
+3719. Grits, regular or quick, made with water, no added fat
+3720. Grits, regular or quick, made with water, fat added
+3721. Grits, with cheese, NS as to fat
+3722. Grits, with cheese, no added fat
+3723. Grits, with cheese, fat added
+3724. Grits, instant, made with water, no added fat
+3725. Grits, instant, made with water, fat added
+3726. Grits, instant, made with water, NS as to fat
+3727. Cornmeal mush, NS as to fat
+3728. Cornmeal mush, no added fat
+3729. Cornmeal mush, fat added
+3730. Masa harina, cooked
+3731. Millet
+3732. Oatmeal, fast food, plain
+3733. Oatmeal, fast food, flavored
+3734. Oatmeal, NFS
+3735. Oatmeal, regular or quick, made with water, no added fat
+3736. Oatmeal, regular or quick, made with water, fat added
+3737. Oatmeal, regular or quick, made with milk, no added fat
+3738. Oatmeal, regular or quick, made with milk, fat added
+3739. Oatmeal, regular or quick, made with non-dairy milk, no added fat
+3740. Oatmeal, regular or quick, made with non-dairy milk, fat added
+3741. Oatmeal, instant, plain, made with water, no added fat
+3742. Oatmeal, instant, plain, made with water, fat added
+3743. Oatmeal, instant, plain, made with milk, no added fat
+3744. Oatmeal, instant, plain, made with milk, fat added
+3745. Oatmeal, instant, plain, made with non-dairy milk, no added fat
+3746. Oatmeal, instant, plain, made with non-dairy milk, fat added
+3747. Oatmeal, instant, maple flavored, no added fat
+3748. Oatmeal, instant, maple flavored, fat added
+3749. Oatmeal, instant, fruit flavored, no added fat
+3750. Oatmeal, instant, fruit flavored, fat added
+3751. Oatmeal, reduced sugar
+3752. Oatmeal, multigrain
+3753. Quinoa, NS as to fat
+3754. Quinoa, no added fat
+3755. Quinoa, fat added
+3756. Rice, white, cooked, NS as to fat
+3757. Rice, white, cooked, made with oil
+3758. Rice, white, cooked, made with butter
+3759. Rice, white, cooked, made with margarine
+3760. Rice, white, cooked, fat added, NS as to fat type
+3761. Rice, white, cooked, no added fat
+3762. Rice, brown, cooked, NS as to fat
+3763. Rice, brown, cooked, fat added, made with oil
+3764. Rice, brown, cooked, made with butter
+3765. Rice, brown, cooked, made with margarine
+3766. Rice, brown, cooked, fat added, NS as to fat type
+3767. Rice, brown, cooked, no added fat
+3768. Cream of rice
+3769. Rice, cooked, with milk
+3770. Rice, sweet, cooked with honey
+3771. Congee
+3772. Yellow rice, cooked, NS as to fat
+3773. Yellow rice, cooked, no added fat
+3774. Yellow rice, cooked, fat added
+3775. Rice, white, cooked, glutinous
+3776. Rice, wild, 100%, cooked, NS as to fat
+3777. Rice, wild, 100%, cooked, no added fat
+3778. Rice, wild, 100%, cooked, fat added
+3779. Rice, white and wild, cooked, no added fat
+3780. Rice, brown and wild, cooked, no added fat
+3781. Rice, white and wild, cooked, fat added
+3782. Rice, white and wild, cooked, NS as to fat
+3783. Rice, brown and wild, cooked, fat added
+3784. Rice, brown and wild, cooked, NS as to fat
+3785. Rice, white, cooked with fat, Puerto Rican style
+3786. Cream of wheat, NFS
+3787. Cream of wheat, regular or quick, made with water, no added fat
+3788. Cream of wheat, regular or quick, made with water, fat added
+3789. Cream of wheat, instant, made with water, no added fat
+3790. Cream of wheat, instant, made with water, fat added
+3791. Bulgur, no added fat
+3792. Bulgur, fat added
+3793. Bulgur, NS as to fat
+3794. Couscous, plain, cooked
+3795. Whole wheat cereal, cooked
+3796. Wheat cereal, chocolate flavored, cooked
+3797. Oat bran cereal, cooked
+3798. Cereal, ready-to-eat, NFS
+3799. Cereal, O's, flavored
+3800. Cereal, crunch
+3801. Cereal, O's, plain
+3802. Cereal, chocolate puffs
+3803. Cereal, cinnamon toast
+3804. Cereal, chocolate crispy
+3805. Cereal, corn squares
+3806. Cereal, corn flakes, plain
+3807. Cereal, corn puffs
+3808. Cereal, rice crispy, plain
+3809. Cereal, bran flakes, plain
+3810. Cereal, shredded wheat, flavored
+3811. Cereal, rice crispy, flavored
+3812. Cereal, fruit rings
+3813. Cereal, fruit crispy
+3814. Cereal, granola
+3815. Cereal, oat bunches
+3816. Cereal, corn squares, flavored
+3817. Cereal, O's, honey nut
+3818. Cereal, multigrain
+3819. Cereal, oat squares
+3820. Cereal, frosted oats with marshmallows
+3821. Cereal, O's, multigrain
+3822. Cereal, bran flakes, flavored
+3823. Cereal, rice squares
+3824. Cereal, K's, plain
+3825. Cereal, K's, flavored
+3826. Cereal, flavored puffs
+3827. Cereal, corn flakes, flavored
+3828. Cereal, O's, NFS
+3829. Cereal, wheat squares
+3830. Cereal, plain puffs
+3831. Cereal, shredded wheat, plain
+3832. Cereal, wheat flakes
+3833. Cereal, other, NFS
+3834. Cereal, other, plain
+3835. Cereal, other, fruit flavored
+3836. Cereal, other, chocolate
+3837. Cereal, other, peanut butter
+3838. Cereal, other, honey
+3839. Cereal, reduced sugar
+3840. Cereal, oat bran, ready-to-eat
+3841. Baby Toddler cereal, rice with fruit, dry
+3842. Baby Toddler cereal, multigrain with fruit, dry
+3843. Baby Toddler cereal, oatmeal with fruit, dry
+3844. Baby Toddler cereal, rice, ready-to-eat
+3845. Baby Toddler cereal, oatmeal, ready-to-eat
+3846. Baby Toddler cereal, multigrain, ready-to-eat
+3847. Baby Toddler cereal, multigrain with fruit, ready-to-eat
+3848. Baby Toddler cereal, oatmeal with fruit, ready-to-eat
+3849. Baby Toddler cereal, rice with fruit, ready-to-eat
+3850. Chilaquiles
+3851. Frito pie
+3852. Taco or tostada salad with meat
+3853. Taco or tostada salad with chicken
+3854. Taco or tostada salad, meatless
+3855. Taco or tostada salad with meat and sour cream
+3856. Taco or tostada salad with chicken and sour cream
+3857. Taco or tostada salad, meatless with sour cream
+3858. Taco, NFS
+3859. Taco, corn tortilla, beef, cheese
+3860. Taco, corn tortilla, beef, with beans, cheese
+3861. Taco, corn tortilla, pork, cheese
+3862. Taco, corn tortilla, pork, with beans, cheese
+3863. Taco, corn tortilla, chicken, cheese
+3864. Taco, corn tortilla, chicken, with beans, cheese
+3865. Taco, corn tortilla, with beans, cheese
+3866. Taco, flour tortilla, beef, cheese
+3867. Taco, flour tortilla, beef, with beans, cheese
+3868. Taco, flour tortilla, pork, cheese
+3869. Taco, flour tortilla, pork, with beans, cheese
+3870. Taco, flour tortilla, chicken, cheese
+3871. Taco, flour tortilla, chicken, with beans, cheese
+3872. Taco, flour tortilla, with beans, cheese
+3873. Taco, fish
+3874. Taco, meat, no cheese
+3875. Taco, meat, with beans, no cheese
+3876. Taco, with beans, no cheese
+3877. Taco, cheese only
+3878. Burrito, beef, cheese
+3879. Burrito, beef, with rice, cheese
+3880. Burrito, beef, with beans, cheese
+3881. Burrito, beef, with beans and rice, cheese
+3882. Burrito, pork, cheese
+3883. Burrito, pork, with rice, cheese
+3884. Burrito, pork, with beans, cheese
+3885. Burrito, pork, with beans and rice, cheese
+3886. Burrito, chicken, cheese
+3887. Burrito, chicken, with rice, cheese
+3888. Burrito, chicken, with beans, cheese
+3889. Burrito, chicken, with beans and rice, cheese
+3890. Burrito, with beans, no cheese
+3891. Burrito, with beans, cheese
+3892. Burrito, with beans and rice, cheese
+3893. Burrito, meat, no cheese
+3894. Burrito, meat, with rice, no cheese
+3895. Burrito, meat, with beans, no cheese
+3896. Burrito, meat, with beans and rice, no cheese
+3897. Burrito, cheese only
+3898. Burrito bowl, beef or pork
+3899. Burrito bowl, beef or pork, with rice
+3900. Burrito bowl, beef or pork, with beans
+3901. Burrito bowl, beef or pork, with beans and rice
+3902. Burrito bowl, chicken
+3903. Burrito bowl, chicken, with rice
+3904. Burrito bowl, chicken, with beans
+3905. Burrito bowl, chicken, with beans and rice
+3906. Burrito bowl, with beans
+3907. Enchilada, beef
+3908. Enchilada, pork
+3909. Enchilada, chicken
+3910. Enchilada, no meat
+3911. Nachos, NFS
+3912. Nachos, cheese only
+3913. Nachos, beef or pork
+3914. Nachos, beef or pork, with beans
+3915. Nachos, chicken
+3916. Nachos, chicken, with beans
+3917. Nachos, with beans
+3918. Gordita, cheese only
+3919. Gordita, with beans
+3920. Gordita, meat
+3921. Gordita, meat, with beans
+3922. Chimichanga, meat
+3923. Chimichanga, with beans
+3924. Chimichanga, chicken
+3925. Quesadilla, cheese only
+3926. Quesadilla, beef or pork
+3927. Quesadilla, chicken
+3928. Quesadilla, with vegetables
+3929. Quesadilla, beef or pork, with vegetables
+3930. Quesadilla, chicken, with vegetables
+3931. Quesadilla, egg
+3932. Quesadilla, egg, with meat
+3933. Taquito, cheese only
+3934. Taquito, beef or pork
+3935. Taquito, chicken
+3936. Taquito, egg
+3937. Fajita, NFS
+3938. Fajita, chicken
+3939. Fajita, beef or pork
+3940. Fajita, shrimp
+3941. Fajita, vegetable
+3942. Pupusa, meat, with beans
+3943. Pizza, cheese, from school lunch, medium crust
+3944. Pizza, extra cheese, thin crust
+3945. Pizza, extra cheese, thick crust
+3946. Pizza, cheese, with vegetables, from frozen, thin crust
+3947. Pizza, cheese with vegetables, from frozen, thick crust
+3948. Pizza, cheese, with vegetables, from restaurant or fast food, thin crust
+3949. Pizza, cheese, with vegetables, from restaurant or fast food, medium crust
+3950. Pizza, cheese, with vegetables, from restaurant or fast food, thick crust
+3951. Pizza with cheese and extra vegetables, thin crust
+3952. Pizza with cheese and extra vegetables, medium crust
+3953. Pizza with cheese and extra vegetables, thick crust
+3954. Pizza, cheese, with fruit, thin crust
+3955. Pizza, cheese, with fruit, medium crust
+3956. Pizza, cheese, with fruit, thick crust
+3957. Pizza with pepperoni, from frozen, thin crust
+3958. Pizza with pepperoni, from frozen, medium crust
+3959. Pizza with pepperoni, from frozen, thick crust
+3960. Pizza with pepperoni, stuffed crust
+3961. Pizza, with pepperoni, from school lunch, medium crust
+3962. Pizza with meat other than pepperoni, from frozen, thin crust
+3963. Pizza with meat other than pepperoni, from frozen, medium crust
+3964. Pizza with meat other than pepperoni, from frozen, thick crust
+3965. Pizza, with meat other than pepperoni, stuffed crust
+3966. Pizza, with meat other than pepperoni, from school lunch, medium crust
+3967. Pizza with extra meat, thin crust
+3968. Pizza with extra meat, medium crust
+3969. Pizza with extra meat, thick crust
+3970. Pizza with meat and vegetables, from restaurant or fast food, thin crust
+3971. Pizza with meat and vegetables, from restaurant or fast food, medium crust
+3972. Pizza with meat and vegetables, from restaurant or fast food, thick crust
+3973. Pizza with extra meat and extra vegetables, thin crust
+3974. Pizza with extra meat and extra vegetables, thick crust
+3975. Pizza with extra meat and extra vegetables, medium crust
+3976. Pizza with meat and fruit, thin crust
+3977. Pizza with meat and fruit, medium crust
+3978. Pizza with meat and fruit, thick crust
+3979. Pizza with beans and vegetables, thin crust
+3980. Pizza with beans and vegetables, thick crust
+3981. Pizza, no cheese, thin crust
+3982. Pizza, no cheese, thick crust
+3983. White pizza, cheese, thin crust
+3984. White pizza, cheese, thick crust
+3985. White pizza, cheese, with vegetables, thin crust
+3986. White pizza, cheese, with vegetables, thick crust
+3987. White pizza, cheese, with meat, thin crust
+3988. White pizza, cheese, with meat, thick crust
+3989. White pizza, cheese, with meat and vegetables, thin crust
+3990. White pizza, cheese, with meat and vegetables, thick crust
+3991. Calzone, with cheese, meatless
+3992. Calzone, with meat and cheese
+3993. Pizza, cheese, whole wheat thin crust
+3994. Pizza, cheese, whole wheat thick crust
+3995. Pizza, with meat, whole wheat thin crust
+3996. Pizza, with meat, whole wheat thick crust
+3997. Pizza, cheese and vegetables, whole wheat thin crust
+3998. Pizza, cheese and vegetables, whole wheat thick crust
+3999. Pizza, cheese, gluten-free thin crust
+4000. Pizza, cheese, gluten-free thick crust
+4001. Pizza, with meat, gluten-free thin crust
+4002. Pizza, with meat, gluten-free thick crust
+4003. Pizza, cheese and vegetables, gluten-free thin crust
+4004. Pizza, cheese and vegetables, gluten-free thick crust
+4005. Breakfast pizza with egg
+4006. Egg roll, meatless
+4007. Egg roll, with shrimp
+4008. Egg roll, with beef and/or pork
+4009. Egg roll, with chicken or turkey
+4010. Roll with meat and/or shrimp, vegetables and rice paper, not fried
+4011. Wonton, dumpling or pot sticker, fried
+4012. Wonton, dumpling or pot sticker, fried, no meat
+4013. Puffs, fried, crab meat and cream cheese filled
+4014. Empanada, no meat
+4015. Empanada, beef
+4016. Empanada, beef, with vegetables
+4017. Empanada, chicken
+4018. Empanada, chicken, with vegetables
+4019. Cornmeal stick, Puerto Rican style
+4020. Kibby, Puerto Rican style
+4021. Bacalaitos fritos
+4022. Hayacas, Puerto Rican style
+4023. Crepe, with meat
+4024. Gnocchi, cheese
+4025. Gnocchi, potato
+4026. Knish
+4027. Bao bun
+4028. Bao bun, no meat
+4029. Pastry, cheese-filled
+4030. Pastry, egg and cheese filled
+4031. Pastry, meat / poultry-filled
+4032. Spanakopita
+4033. Samosa
+4034. Quiche with meat, poultry or fish
+4035. Spinach quiche, meatless
+4036. Cheese quiche, meatless
+4037. Turnover or hot pocket, meatless
+4038. Turnover or hot pocket, beef
+4039. Turnover or hot pocket, ham
+4040. Turnover or hot pocket, pizza pocket, meat
+4041. Turnover or hot pocket, pizza pocket
+4042. Turnover or hot pocket, chicken
+4043. Turnover, seafood
+4044. Turnover or lean pocket
+4045. Turnover or breakfast pocket, egg
+4046. Biscuit with gravy
+4047. Chicken cornbread
+4048. Cornmeal dressing with chicken or turkey and vegetables
+4049. Dressing with oysters
+4050. Dressing with chicken or turkey and vegetables
+4051. Dressing with meat and vegetables
+4052. Lasagna with meat, home recipe
+4053. Lasagna with meat and spinach
+4054. Lasagna with chicken or turkey
+4055. Lasagna, with chicken or turkey, and spinach
+4056. Lasagna, meatless, with vegetables
+4057. Ravioli, NS as to filling, no sauce
+4058. Ravioli, NS as to filling, with tomato sauce
+4059. Ravioli, NS as to filling, with cream sauce
+4060. Ravioli, meat-filled, no sauce
+4061. Ravioli, meat-filled, with tomato sauce or meat sauce
+4062. Ravioli, meat-filled, with cream sauce
+4063. Ravioli, cheese-filled, no sauce
+4064. Ravioli, cheese-filled, with meat sauce
+4065. Ravioli, cheese-filled, with cream sauce
+4066. Ravioli, cheese and spinach-filled, no sauce
+4067. Ravioli, cheese and spinach-filled, with cream sauce
+4068. Ravioli, cheese and spinach filled, with tomato sauce
+4069. Manicotti, cheese-filled, no sauce
+4070. Manicotti, cheese-filled, with tomato sauce, meatless
+4071. Manicotti, cheese-filled, with meat sauce
+4072. Manicotti, vegetable- and cheese-filled, with tomato sauce, meatless
+4073. Stuffed shells, cheese-filled, no sauce
+4074. Stuffed shells, cheese-filled, with tomato sauce, meatless
+4075. Stuffed shells, cheese-filled, with meat sauce
+4076. Stuffed shells, cheese- and spinach- filled, no sauce
+4077. Stuffed shells, with chicken, with tomato sauce
+4078. Stuffed shells, with fish and/or shellfish, with tomato sauce
+4079. Tortellini, meat-filled, with tomato sauce
+4080. Tortellini, meat-filled, with tomato sauce, canned
+4081. Tortellini, cheese-filled, meatless, with tomato sauce
+4082. Tortellini, cheese-filled, meatless, with tomato sauce, canned
+4083. Tortellini, cheese-filled, meatless, with vinaigrette dressing
+4084. Tortellini, meat-filled, no sauce
+4085. Tortellini, cheese-filled, with cream sauce
+4086. Tortellini, spinach-filled, with tomato sauce
+4087. Tortellini, spinach-filled, no sauce
+4088. Cannelloni, cheese- and spinach-filled, no sauce
+4089. Chow fun noodles with meat and vegetables
+4090. Chow fun noodles with vegetables, meatless
+4091. Lo mein, with shrimp
+4092. Lo mein, with pork
+4093. Lo mein, with beef
+4094. Lo mein, with chicken
+4095. Pad Thai, meatless
+4096. Pad Thai with chicken
+4097. Pad Thai with seafood
+4098. Pad Thai with meat
+4099. Adobo, with noodles
+4100. Macaroni with tuna, Puerto Rican style
+4101. Macaroni or noodles with cheese
+4102. Macaroni or noodles with cheese, made from packaged mix
+4103. Macaroni or noodles with cheese, Easy Mac type
+4104. Macaroni or noodles with cheese, made from reduced fat packaged mix
+4105. Macaroni or noodles with cheese and tuna
+4106. Macaroni or noodles with cheese and meat
+4107. Macaroni or noodles with cheese and meat, prepared from Hamburger Helper mix
+4108. Macaroni or noodles with cheese and tomato
+4109. Macaroni or noodles with cheese and frankfurters or hot dogs
+4110. Macaroni or noodles with cheese and egg
+4111. Macaroni or noodles with cheese and chicken or turkey
+4112. Macaroni or noodles with cheese, whole grain
+4113. Pasta with tomato-based sauce, cheese and meat
+4114. Pasta with tomato-based sauce and cheese
+4115. Pasta with vegetables, no sauce or dressing
+4116. Pasta with sauce, meatless, school lunch
+4117. Pasta with tomato-based sauce, restaurant
+4118. Pasta with tomato-based sauce, home recipe
+4119. Pasta with tomato-based sauce, ready-to-heat
+4120. Pasta with tomato-based sauce, and added vegetables, restaurant
+4121. Pasta with tomato-based sauce, and added vegetables, home recipe
+4122. Pasta with tomato-based sauce, and added vegetables, ready-to-heat
+4123. Pasta with sauce and meat, from school lunch
+4124. Pasta with tomato-based sauce and meat, restaurant
+4125. Pasta with tomato-based sauce and meat, home recipe
+4126. Pasta with tomato-based sauce and meat, ready-to-heat
+4127. Pasta with tomato-based sauce, meat, and added vegetables, restaurant
+4128. Pasta with tomato-based sauce, meat, and added vegetables, home recipe
+4129. Pasta with tomato-based sauce, meat, and added vegetables, ready-to-heat
+4130. Pasta with tomato-based sauce and poultry, restaurant
+4131. Pasta with tomato-based sauce and poultry, home recipe
+4132. Pasta with tomato-based sauce and poultry, ready-to-heat
+4133. Pasta with tomato-based sauce, poultry, and added vegetables, restaurant
+4134. Pasta with tomato-based sauce, poultry, and added vegetables, home recipe
+4135. Pasta with tomato-based sauce, poultry, and added vegetables, ready-to-heat
+4136. Pasta with tomato-based sauce and seafood, restaurant
+4137. Pasta with tomato-based sauce and seafood, home recipe
+4138. Pasta with tomato-based sauce and seafood, ready-to-heat
+4139. Pasta with tomato-based sauce, seafood, and added vegetables, restaurant
+4140. Pasta with tomato-based sauce, seafood, and added vegetables, home recipe
+4141. Pasta with tomato-based sauce, seafood, and added vegetables, ready-to-heat
+4142. Pasta with cream sauce, restaurant
+4143. Pasta with cream sauce, home recipe
+4144. Pasta with cream sauce, ready-to-heat
+4145. Pasta with cream sauce and added vegetables, restaurant
+4146. Pasta with cream sauce and added vegetables, from home recipe
+4147. Pasta with cream sauce and added vegetables, ready-to-heat
+4148. Pasta with cream sauce and meat, restaurant
+4149. Pasta with cream sauce and meat, home recipe
+4150. Pasta with cream sauce and meat, ready-to-heat
+4151. Pasta with cream sauce, meat, and added vegetables, restaurant
+4152. Pasta with cream sauce, meat, and added vegetables, home recipe
+4153. Pasta with cream sauce, meat, and added vegetables, ready-to-heat
+4154. Pasta with cream sauce and poultry, restaurant
+4155. Pasta with cream sauce and poultry, home recipe
+4156. Pasta with cream sauce and poultry, ready-to-heat
+4157. Pasta with cream sauce, poultry, and added vegetables, restaurant
+4158. Pasta with cream sauce, poultry, and added vegetables, home recipe
+4159. Pasta with cream sauce, poultry, and added vegetables, ready-to-heat
+4160. Pasta with cream sauce and seafood, restaurant
+4161. Pasta with cream sauce and seafood, home recipe
+4162. Pasta with cream sauce and seafood, ready-to-heat
+4163. Pasta with cream sauce, seafood, and added vegetables, restaurant
+4164. Pasta with cream sauce, seafood, and added vegetables, home recipe
+4165. Pasta with cream sauce, seafood, and added vegetables, ready-to-heat
+4166. Pasta, whole grain, with tomato-based sauce, restaurant
+4167. Pasta, whole grain, with tomato-based sauce, home recipe
+4168. Pasta, whole grain, with tomato-based sauce, ready-to-heat
+4169. Pasta, whole grain, with tomato-based sauce and added vegetables, restaurant
+4170. Pasta, whole grain, with tomato-based sauce and added vegetables, home recipe
+4171. Pasta, whole grain, with tomato-based sauce and added vegetables, ready-to-heat
+4172. Pasta, whole grain, with tomato-based sauce and meat, restaurant
+4173. Pasta, whole grain, with tomato-based sauce and meat, home recipe
+4174. Pasta, whole grain, with tomato-based sauce and meat, ready-to-heat
+4175. Pasta, whole grain, with tomato-based sauce, meat, and added vegetables, restaurant
+4176. Pasta, whole grain, with tomato-based sauce, meat, and added vegetables, home recipe
+4177. Pasta, whole grain, with tomato-based sauce, meat, and added vegetables, ready-to-heat
+4178. Pasta, whole grain, with tomato-based sauce and poultry, restaurant
+4179. Pasta, whole grain, with tomato-based sauce and poultry, home recipe
+4180. Pasta, whole grain, with tomato-based sauce and poultry, ready-to-heat
+4181. Pasta, whole grain, with tomato-based sauce, poultry, and added vegetables, restaurant
+4182. Pasta, whole grain, with tomato-based sauce, poultry, and added vegetables, home recipe
+4183. Pasta, whole grain, with tomato-based sauce, poultry, and added vegetables, ready-to-heat
+4184. Pasta, whole grain, with tomato-based sauce and seafood, restaurant
+4185. Pasta, whole grain, with tomato-based sauce and seafood, home recipe
+4186. Pasta, whole grain, with tomato-based sauce and seafood, ready-to-heat
+4187. Pasta, whole grain, with tomato-based sauce, seafood, and added vegetables, restaurant
+4188. Pasta, whole grain, with tomato-based sauce, seafood, and added vegetables, home recipe
+4189. Pasta, whole grain, with tomato-based sauce, seafood, and added vegetables, ready-to-heat
+4190. Pasta, whole grain, with cream sauce, restaurant
+4191. Pasta, whole grain, with cream sauce, home recipe
+4192. Pasta, whole grain, with cream sauce, ready-to-heat
+4193. Pasta, whole grain, with cream sauce, and added vegetables, restaurant
+4194. Pasta, whole grain, with cream sauce, and added vegetables, home recipe
+4195. Pasta, whole grain, with cream sauce, and added vegetables, ready-to-heat
+4196. Pasta, whole grain, with cream sauce and meat, restaurant
+4197. Pasta, whole grain, with cream sauce and meat, home recipe
+4198. Pasta, whole grain, with cream sauce and meat, ready-to-heat
+4199. Pasta, whole grain, with cream sauce, meat, and added vegetables, restaurant
+4200. Pasta, whole grain, with cream sauce, meat, and added vegetables, home recipe
+4201. Pasta, whole grain, with cream sauce, meat, and added vegetables, ready-to-heat
+4202. Pasta, whole grain, with cream sauce and poultry, restaurant
+4203. Pasta, whole grain, with cream sauce and poultry, home recipe
+4204. Pasta, whole grain, with cream sauce and poultry, ready-to-heat
+4205. Pasta, whole grain, with cream sauce, poultry, and added vegetables, restaurant
+4206. Pasta, whole grain, with cream sauce, poultry, and added vegetables, home recipe
+4207. Pasta, whole grain, with cream sauce, poultry, and added vegetables, ready-to-heat
+4208. Pasta, whole grain, with cream sauce and seafood, restaurant
+4209. Pasta, whole grain, with cream sauce and seafood, home recipe
+4210. Pasta, whole grain, with cream sauce and seafood, ready-to-heat
+4211. Pasta, whole grain, with cream sauce, seafood, and added vegetables, restaurant
+4212. Pasta, whole grain, with cream sauce, seafood, and added vegetables, home recipe
+4213. Pasta, whole grain, with cream sauce, seafood, and added vegetables, ready-to-heat
+4214. Pasta with tomato-based sauce and beans or lentils
+4215. Macaroni or noodles, creamed, with cheese
+4216. Macaroni or noodles, creamed, with cheese and tuna
+4217. Flavored pasta
+4218. Yat Ga Mein with meat, fish, or poultry
+4219. Macaroni or pasta salad, made with mayonnaise
+4220. Macaroni or pasta salad, made with light mayonnaise
+4221. Macaroni or pasta salad, made with mayonnaise-type salad dressing
+4222. Macaroni or pasta salad, made with light mayonnaise-type salad dressing
+4223. Macaroni or pasta salad, made with Italian dressing
+4224. Macaroni or pasta salad, made with light Italian dressing
+4225. Macaroni or pasta salad, made with creamy dressing
+4226. Macaroni or pasta salad, made with light creamy dressing
+4227. Macaroni or pasta salad, made with any type of fat free dressing
+4228. Macaroni or pasta salad with egg
+4229. Macaroni or pasta salad with tuna
+4230. Macaroni or pasta salad with crab meat
+4231. Macaroni or pasta salad with shrimp
+4232. Macaroni or pasta salad with tuna and egg
+4233. Macaroni or pasta salad with chicken
+4234. Macaroni or pasta salad with cheese
+4235. Macaroni or pasta salad with meat
+4236. Noodle pudding
+4237. Bibimbap, Korean
+4238. Rice, fried, with chicken
+4239. Rice, fried, with pork
+4240. Rice, fried, with beef
+4241. Rice, fried, with shrimp
+4242. Dukboki or Tteokbokki, Korean
+4243. Adobo, with rice
+4244. Sushi, NFS
+4245. Sushi roll, avocado
+4246. Sushi roll, California
+4247. Sushi roll, eel
+4248. Sushi roll, salmon
+4249. Sushi roll, shrimp
+4250. Sushi roll tuna
+4251. Sushi roll, vegetable
+4252. Sushi, topped with crab
+4253. Sushi, topped with eel
+4254. Sushi, topped with salmon
+4255. Sushi, topped with shrimp
+4256. Sushi, topped with tuna
+4257. Sushi, topped with egg
+4258. Seafood paella, Puerto Rican style
+4259. Soupy rice with chicken, Puerto Rican style
+4260. Soupy rice mixture with chicken and potatoes, Puerto Rican style
+4261. Stewed rice, Puerto Rican style
+4262. Rice with squid, Puerto Rican style
+4263. Rice with vienna sausage, Puerto Rican style
+4264. Rice with Spanish sausage, Puerto Rican style
+4265. Rice with stewed beans, Puerto Rican style
+4266. Congee, with meat, poultry, and/or seafood
+4267. Congee, with meat, poultry, and/or seafood, and vegetables
+4268. Congee, with vegetables
+4269. Congee, with egg
+4270. Biryani with vegetables
+4271. Beans and rice, from fast food / restaurant
+4272. Kidney beans and rice, from fast food / restaurant
+4273. Black beans and rice, from fast food / restaurant
+4274. Pinto beans and rice, from fast food / restaurant
+4275. Beans and white rice
+4276. Beans and rice, with tomatoes
+4277. Beans and rice, with meat
+4278. Kidney beans and white rice
+4279. Black beans and white rice
+4280. Pinto beans and white rice
+4281. Rice, white, with corn, NS as to fat
+4282. Rice, white, with corn, no added fat
+4283. Rice, white, with corn, fat added
+4284. Rice, white, with peas, NS as to fat
+4285. Rice, white, with peas, no added fat
+4286. Rice, white, with peas, fat added
+4287. Rice, white, with carrots, NS as to fat
+4288. Rice, white, with carrots, no added fat
+4289. Rice, white, with carrots, fat added
+4290. Rice, white, with peas and carrots, NS as to fat
+4291. Rice, white, with peas and carrots, no added fat
+4292. Rice, white, with peas and carrots, fat added
+4293. Rice, white, with tomatoes and/or tomato-based sauce, NS as to fat
+4294. Rice, white, with tomatoes and/or tomato-based sauce, no added fat
+4295. Rice, white, with tomatoes and/or tomato-based sauce, fat added
+4296. Rice, white, with dark green vegetables, NS as to fat
+4297. Rice, white, with dark green vegetables, no added fat
+4298. Rice, white, with dark green vegetables, fat added
+4299. Rice, white, with carrots and tomatoes and/or tomato-based sauce, NS as to fat
+4300. Rice, white, with carrots and tomatoes and/or tomato-based sauce, no added fat
+4301. Rice, white, with carrots and tomatoes and/or tomato-based sauce, fat added
+4302. Rice, white, with dark green vegetables and tomatoes and/or tomato-based sauce, NS as to fat
+4303. Rice, white, with dark green vegetables and tomatoes and/or tomato-based sauce, no added fat
+4304. Rice, white, with dark green vegetables and tomatoes and/or tomato-based sauce, fat added
+4305. Rice, white, with carrots and dark green vegetables, NS as to fat
+4306. Rice, white, with carrots and dark green vegetables, no added fat
+4307. Rice, white, with carrots and dark green vegetables, fat added
+4308. Rice, white, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, NS as to fat
+4309. Rice, white, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, no added fat
+4310. Rice, white, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, fat added
+4311. Rice, white, with other vegetables, no added fat
+4312. Rice, white, with other vegetables, fat added
+4313. Rice, white, with lentils, NS as to fat
+4314. Rice, white, with lentils, fat added
+4315. Rice, white, with lentils, no added fat
+4316. Rice, cooked with coconut milk
+4317. Beans and brown rice
+4318. Kidney beans and brown rice
+4319. Black beans and brown rice
+4320. Pinto beans and brown rice
+4321. Rice, brown, with corn, NS as to fat
+4322. Rice, brown, with corn, no added fat
+4323. Rice, brown, with corn, fat added
+4324. Rice, brown, with peas, NS as to fat
+4325. Rice, brown, with peas, no added fat
+4326. Rice, brown, with peas, fat added
+4327. Rice, brown, with carrots, NS as to fat
+4328. Rice, brown, with carrots, no added fat
+4329. Rice, brown, with carrots, fat added
+4330. Rice, brown, with peas and carrots, NS as to fat
+4331. Rice, brown, with peas and carrots, no added fat
+4332. Rice, brown, with peas and carrots, fat added
+4333. Rice, brown, with tomatoes and/or tomato based sauce, NS as to fat
+4334. Rice, brown, with tomatoes and/or tomato based sauce, no added fat
+4335. Rice, brown, with tomatoes and/or tomato based sauce, fat added
+4336. Rice, brown, with dark green vegetables, NS as to fat
+4337. Rice, brown, with dark green vegetables, no added fat
+4338. Rice, brown, with dark green vegetables, fat added
+4339. Rice, brown, with carrots and tomatoes and/or tomato-based sauce, NS as to fat
+4340. Rice, brown, with carrots and tomatoes and/or tomato-based sauce, no added fat
+4341. Rice, brown, with carrots and tomatoes and/or tomato-based sauce, fat added
+4342. Rice, brown, with dark green vegetables and tomatoes and/or tomato-based sauce, NS as to fat
+4343. Rice, brown, with dark green vegetables and tomatoes and/or tomato-based sauce, no added fat
+4344. Rice, brown, with dark green vegetables and tomatoes and/or tomato-based sauce, fat added
+4345. Rice, brown, with carrots and dark green vegetables, NS as to fat
+4346. Rice, brown, with carrots and dark green vegetables, no added fat
+4347. Rice, brown, with carrots and dark green vegetables, fat added
+4348. Grape leaves stuffed with rice
+4349. Rice, brown, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, NS as to fat
+4350. Rice, brown, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, no added fat
+4351. Rice, brown, with carrots, dark green vegetables, and tomatoes and/or tomato-based sauce, fat added
+4352. Rice, brown, with other vegetables, NS as to fat
+4353. Rice, brown, with other vegetables, no added fat
+4354. Rice, brown, with other vegetables, fat added
+4355. Rice croquette
+4356. Stuffed pepper, with meat
+4357. Stuffed pepper, with rice and meat
+4358. Stuffed pepper, with rice, meatless
+4359. Stuffed tomato, with rice and meat
+4360. Stuffed tomato, with rice, meatless
+4361. Rice pilaf
+4362. Dirty rice
+4363. Flavored rice mixture
+4364. Flavored rice mixture with cheese
+4365. Flavored rice, brown and wild
+4366. Flavored rice and pasta mixture
+4367. Flavored rice and pasta mixture, reduced sodium
+4368. Spanish rice, fat added
+4369. Spanish rice, no added fat
+4370. Spanish rice, NS as to fat
+4371. Spanish rice with ground beef
+4372. Rice dressing
+4373. Rice with raisins
+4374. Rice dessert or salad with fruit
+4375. Rice, white, with cheese and/or cream based sauce, NS as to fat
+4376. Rice, white, with cheese and/or cream based sauce, no added fat
+4377. Rice, white, with cheese and/or cream based sauce, fat added
+4378. Rice, white, with gravy, NS as to fat
+4379. Rice, white, with gravy, no added fat
+4380. Rice, white, with gravy, fat added
+4381. Rice, white, with soy-based sauce, NS as to fat
+4382. Rice, white, with soy-based sauce, no added fat
+4383. Rice, white, with soy-based sauce, fat added
+4384. Rice, brown, with cheese and/or cream based sauce, NS as to fat
+4385. Rice, brown, with cheese and/or cream based sauce, no added fat
+4386. Rice, brown, with cheese and/or cream based sauce, fat added
+4387. Rice, brown, with gravy, NS as to fat
+4388. Rice, brown, with gravy, no added fat
+4389. Rice, brown, with gravy, fat added
+4390. Rice, brown, with soy-based sauce, NS as to fat
+4391. Rice, brown, with soy-based sauce, no added fat
+4392. Rice, brown, with soy-based sauce, fat added
+4393. Rice, white, with vegetables, cheese and/or cream based sauce, NS as to fat
+4394. Rice, white, with vegetables, cheese and/or cream based sauce, no added fat
+4395. Rice, white, with vegetables, cheese and/or cream based sauce, fat added
+4396. Rice, white, with vegetables and gravy, NS as to fat
+4397. Rice, white, with vegetables and gravy, no added fat
+4398. Rice, white, with vegetables and gravy, fat added
+4399. Rice, white, with vegetables, soy-based sauce, NS as to fat
+4400. Rice, white, with vegetables, soy-based sauce, no added fat
+4401. Rice, white, with vegetables, soy-based sauce, fat added
+4402. Rice, brown, with vegetables, cheese and/or cream based sauce, NS as to fat
+4403. Rice, brown, with vegetables, cheese and/or cream based sauce, no added fat
+4404. Rice, brown, with vegetables, cheese and/or cream based sauce, fat added
+4405. Rice, brown, with vegetables and gravy, NS as to fat
+4406. Rice, brown, with vegetables and gravy, no added fat
+4407. Rice, brown, with vegetables and gravy, fat added
+4408. Rice, brown, with vegetables, soy-based sauce, NS as to fat
+4409. Rice, brown, with vegetables, soy-based sauce, no added fat
+4410. Rice, brown, with vegetables, soy-based sauce, fat added
+4411. Upma
+4412. Dosa, with filling
+4413. Vada
+4414. Tabbouleh
+4415. Vegetable sandwich on white
+4416. Vegetable sandwich on white, with cheese
+4417. Vegetable sandwich on wheat
+4418. Vegetable sandwich on wheat, with cheese
+4419. Vegetable sandwich wrap
+4420. Jelly sandwich, NFS
+4421. Jelly sandwich, on white bread
+4422. Jelly sandwich, on wheat bread
+4423. Noodles with vegetables in tomato-based sauce, diet frozen meal
+4424. Spaghetti and meatballs dinner, NFS, frozen meal
+4425. Pancakes and sausage, frozen meal
+4426. Soup, NFS
+4427. Soup, noodle, NFS
+4428. Soup, rice
+4429. Soup, barley
+4430. Soup, chicken noodle, canned
+4431. Soup, chicken noodle
+4432. Soup, chicken, canned, reduced sodium
+4433. Soup, Matzo ball
+4434. Soup, ramen noodles, water added
+4435. Ramen bowl with beef
+4436. Ramen bowl with chicken
+4437. Ramen bowl with fish
+4438. Ramen bowl, vegetarian
+4439. Ramen bowl with meat and egg
+4440. Ramen bowl, vegetarian with egg
+4441. Soup, wonton
+4442. Soup, sopa de fideo aguada
+4443. Soup, tortilla
+4444. Meat substitute, cereal- and vegetable protein-based, fried
+4445. Lemon pie filling
+4446. Orange, raw
+4447. Orange, canned, NFS
+4448. Orange, canned, in syrup
+4449. Grapefruit juice, 100%, canned, bottled or in a carton
+4450. Orange juice, 100%, NFS
+4451. Orange juice, 100%, canned, bottled or in a carton
+4452. Orange juice, 100%, with calcium added, canned, bottled or in a carton
+4453. Orange juice, 100%, frozen, reconstituted
+4454. Orange juice, 100%, with calcium added, frozen, reconstituted
+4455. Dried, fruit, NFS
+4456. Papaya, dried
+4457. Persimmon, dried
+4458. Pineapple, dried
+4459. Fruit, NFS
+4460. Fruit, pickled
+4461. Apple, raw
+4462. Applesauce, regular
+4463. Applesauce, flavored
+4464. Apple, baked
+4465. Apricot, canned
+4466. Banana, raw
+4467. Banana, baked
+4468. Melon, frozen
+4469. Cherry pie filling
+4470. Cherries, canned
+4471. Fig, canned
+4472. Grapes, raw
+4473. Mango, canned
+4474. Papaya, canned
+4475. Peach, canned, NFS
+4476. Peach, canned, in syrup
+4477. Peach, canned, juice pack
+4478. Pear, raw
+4479. Pear, canned, NFS
+4480. Pear, canned, in syrup
+4481. Pear, canned, juice pack
+4482. Pineapple, canned, NFS
+4483. Pineapple, canned, in syrup
+4484. Pineapple, canned, juice pack
+4485. Plum, canned
+4486. Rhubarb
+4487. Berries, NFS
+4488. Berries, frozen
+4489. Ambrosia
+4490. Fruit salad, fresh or raw, excluding citrus fruits, no dressing
+4491. Fruit salad, fresh or raw, including citrus fruits, no dressing
+4492. Fruit cocktail, canned, NFS
+4493. Fruit cocktail, canned, in syrup
+4494. Fruit cocktail, canned, juice pack
+4495. Fruit mixture, frozen
+4496. Apple salad with dressing
+4497. Apple, candied
+4498. Fruit, chocolate covered
+4499. Fruit salad, excluding citrus fruits, with salad dressing or mayonnaise
+4500. Fruit salad, excluding citrus fruits, with whipped cream
+4501. Fruit salad, excluding citrus fruits, with nondairy whipped topping
+4502. Fruit salad, excluding citrus fruits, with marshmallows
+4503. Fruit salad, including citrus fruits, with pudding
+4504. Fruit salad, excluding citrus fruits, with pudding
+4505. Fruit salad, including citrus fruits, with salad dressing or mayonnaise
+4506. Fruit salad, including citrus fruit, with whipped cream
+4507. Fruit salad, including citrus fruits, with nondairy whipped topping
+4508. Fruit salad, including citrus fruits, with marshmallows
+4509. Lime souffle
+4510. Guacamole, NFS
+4511. Guacamole with tomatoes
+4512. Chutney
+4513. Pineapple salad with dressing
+4514. Soup, fruit
+4515. Frozen fruit juice bar
+4516. Frozen fruit juice bar, no sugar added
+4517. Sorbet
+4518. Fruit juice, NFS
+4519. Cranberry juice blend, 100% juice
+4520. Apple juice, 100%
+4521. Blueberry juice
+4522. Grape juice, 100%
+4523. Strawberry juice, 100%
+4524. Fruit smoothie, with whole fruit, no dairy
+4525. Fruit smoothie, with whole fruit, no dairy, added protein
+4526. Fruit smoothie, with whole fruit, non-dairy
+4527. Fruit smoothie juice drink, no dairy
+4528. Fruit smoothie, light
+4529. Banana nectar
+4530. Cantaloupe nectar
+4531. Passion fruit nectar
+4532. Baby Toddler fruit, NFS
+4533. Baby Toddler fruit, with grain
+4534. Baby Toddler fruit, with yogurt
+4535. Baby Toddler fruit and vegetables, Stage 2
+4536. Baby Toddler fruit and vegetables, Stage 3
+4537. Baby Toddler fruit and vegetables, with grain
+4538. Baby Toddler fruit and vegetables, with yogurt
+4539. Baby Toddler fruit, vegetables, and meat
+4540. Baby Toddler fruit and meat
+4541. Baby Toddler juice, fruit and yogurt blend
+4542. Potato, baked, peel not eaten
+4543. Potato, boiled, ready-to-heat
+4544. Potato, boiled, from fresh, peel not eaten, NS as to fat
+4545. Potato, boiled, from fresh, peel not eaten, no added fat
+4546. Potato, boiled, from fresh, peel not eaten, fat added, NS as to fat type
+4547. Potato, boiled, from fresh, peel not eaten, made with oil
+4548. Potato, boiled, from fresh, peel not eaten, made with butter
+4549. Potato, boiled, from fresh, peel not eaten, made with margarine
+4550. Potato, boiled, from fresh, peel eaten, NS as to fat
+4551. Potato, boiled, from fresh, peel eaten, fat added, NS as to fat type
+4552. Potato, boiled, from fresh,  peel eaten, no added fat
+4553. Potato, boiled, from fresh, peel eaten, made with oil
+4554. Potato, boiled, from fresh, peel eaten, made with butter
+4555. Potato, boiled, from fresh, peel eaten, made with margarine
+4556. Potato, canned, NS as to fat
+4557. Potato, canned, fat added, NS as to fat type
+4558. Potato, canned, no added fat
+4559. Potato, roasted, from fresh, peel eaten, NS as to fat
+4560. Potato, roasted, from fresh, peel eaten, no added fat
+4561. Potato, roasted, from fresh, peel eaten, fat added, NS as to fat type
+4562. Potato, roasted, from fresh, peel eaten, made with oil
+4563. Potato, roasted, from fresh, peel eaten, made with butter
+4564. Potato, roasted, from fresh, peel eaten, made with margarine
+4565. Potato, roasted, from fresh, peel not eaten, NS as to fat
+4566. Potato, roasted, from fresh, peel not eaten, fat added, NS as to fat type
+4567. Potato, roasted, from fresh, peel not eaten, no added fat
+4568. Potato, roasted, from fresh, peel not eaten, made with oil
+4569. Potato, roasted, from fresh, peel not eaten, made with butter
+4570. Potato, roasted, from fresh, peel not eaten, made with margarine
+4571. Potato, roasted, ready-to-heat
+4572. Stewed potatoes, Puerto Rican style
+4573. Potato only from Puerto Rican mixed dishes, gravy and other components reported separately
+4574. Potato from Puerto Rican style stuffed pot roast, with gravy
+4575. Potato from Puerto Rican beef stew, with gravy
+4576. Potato from Puerto Rican chicken fricassee, with sauce
+4577. Potato chips, restructured, plain
+4578. Potato chips, restructured, flavored
+4579. Potato chips, baked, flavored
+4580. Potato chips, reduced fat
+4581. Potato chips, unsalted
+4582. Potato chips, lightly salted
+4583. Potato chips, restructured, lightly salted
+4584. Potato chips, popped, flavored
+4585. Potato sticks, flavored
+4586. Potato sticks, fry shaped
+4587. Vegetable chips
+4588. Potato, scalloped, from fast food or restaurant
+4589. Potato, scalloped, from fresh
+4590. Potato, scalloped, from fresh, with meat
+4591. Potato, scalloped, from dry mix
+4592. Potato, scalloped, from dry mix, with meat
+4593. Potato, scalloped, ready-to-heat
+4594. Potato, scalloped, ready-to-heat, with meat
+4595. Potato, french fries, from fresh, fried
+4596. Potato, french fries, from fresh, baked
+4597. Potato, french fries, from frozen, fried
+4598. Potato, french fries, school
+4599. Potato, french fries, with cheese, fast food / restaurant
+4600. Potato, french fries, with cheese, school
+4601. Potato, french fries, with chili, fast food / restaurant
+4602. Potato, french fries, with chili and cheese, fast food / restaurant
+4603. Potato, french fries, with cheese
+4604. Potato, french fries, with chili and cheese
+4605. Potato, french fries, with chili
+4606. Potato, home fries, from restaurant / fast food
+4607. Potato, home fries, from fresh
+4608. Potato, home fries, ready-to-heat
+4609. Potato, home fries, with vegetables
+4610. Potato, hash brown, from fast food, with cheese
+4611. Potato, hash brown, from restaurant, with cheese
+4612. Potato, hash brown, from school lunch
+4613. Potato, hash brown, from fresh
+4614. Potato, hash brown, from fresh, with cheese
+4615. Potato, hash brown, from dry mix
+4616. Potato, hash brown, ready-to-heat
+4617. Potato, hash brown, ready-to-heat, with cheese
+4618. Potato skins without topping
+4619. Potato skins, with cheese
+4620. Potato skins, with cheese and bacon
+4621. Potato, mashed, from fast food, with gravy
+4622. Potato, mashed, from fresh, made with milk
+4623. Potato, mashed, from fresh, made with milk, with cheese
+4624. Potato, mashed, from fresh, made with milk, with gravy
+4625. Potato, mashed, from restaurant
+4626. Potato, mashed, from restaurant, with gravy
+4627. Potato, mashed, from school lunch
+4628. Potato, mashed, from dry mix, NFS
+4629. Potato, mashed, from dry mix, made with milk
+4630. Potato, mashed, from dry mix, made with milk, with cheese
+4631. Potato, mashed, from dry mix, made with milk, with gravy
+4632. Potato, mashed, ready-to-heat, with cheese
+4633. Potato, mashed, ready-to-heat, with gravy
+4634. Potato patty
+4635. Potato tots, fast food / restaurant
+4636. Potato tots, school
+4637. Potato tots, from fresh, fried or baked
+4638. Potato tots, frozen, fried
+4639. Potato, baked, peel not eaten, with butter
+4640. Potato, baked, peel not eaten, with sour cream
+4641. Potato, baked, peel not eaten, with cheese
+4642. Potato, baked, peel not eaten, with meat
+4643. Potato, baked, peel not eaten, with chili
+4644. Potato, baked, peel not eaten, with vegetables
+4645. Potato, baked, peel eaten
+4646. Potato, baked, peel eaten, with butter
+4647. Potato, baked, peel eaten, with sour cream
+4648. Potato, baked, peel eaten, with cheese
+4649. Potato, baked, peel eaten, with meat
+4650. Potato, baked, peel eaten, with chili
+4651. Potato, baked, peel eaten, with vegetables
+4652. Potato salad with egg, from restaurant
+4653. Potato salad with egg, made with light mayonnaise
+4654. Potato salad with egg, made with mayonnaise-type salad dressing
+4655. Potato salad with egg, made with light mayonnaise-type salad dressing
+4656. Potato salad with egg, made with creamy dressing
+4657. Potato salad with egg, made with light creamy dressing
+4658. Potato salad with egg, made with Italian dressing
+4659. Potato salad with egg, made with light Italian dressing
+4660. Potato salad with egg, made with any type of fat free dressing
+4661. Potato salad, German style
+4662. Potato salad, from restaurant
+4663. Potato salad, made with mayonnaise
+4664. Potato salad, made with light mayonnaise
+4665. Potato salad, made with mayonnaise-type salad dressing
+4666. Potato salad, made with light mayonnaise-type salad dressing
+4667. Potato salad, made with creamy dressing
+4668. Potato salad, made with light creamy dressing
+4669. Potato salad, made with Italian dressing
+4670. Potato salad, made with light Italian dressing
+4671. Potato salad, made with any type of fat free dressing
+4672. Potato pancake
+4673. Lefse
+4674. Stewed potatoes
+4675. Stewed potatoes with tomatoes
+4676. Soup, potato
+4677. Soup, potato with meat
+4678. Plantain, cooked, no added fat
+4679. Plantain, cooked with oil
+4680. Plantain, cooked, fat added, NS as to fat type
+4681. Plantain, cooked with butter or margarine
+4682. Cassava, cooked
+4683. Yuca fries
+4684. Casabe, cassava bread
+4685. Taro, cooked
+4686. Fufu
+4687. Beet greens, cooked
+4688. Broccoli raab, cooked
+4689. Chard, cooked
+4690. Collards, fresh, cooked, no added fat
+4691. Collards, frozen, cooked, no added fat
+4692. Collards, fresh, cooked, fat added, NS as to fat type
+4693. Collards, frozen, cooked, fat added, NS as to fat type
+4694. Collards, fresh, cooked with oil
+4695. Collards, fresh, cooked with butter or margarine
+4696. Collards, frozen, cooked with oil
+4697. Collards, frozen, cooked with butter or margarine
+4698. Cress, cooked
+4699. Dandelion greens, cooked
+4700. Caesar salad, with romaine, no dressing
+4701. Escarole, cooked
+4702. Greens, fresh, cooked, no added fat
+4703. Greens, frozen, cooked, no added fat
+4704. Greens, fresh, cooked, fat added
+4705. Greens, frozen, cooked, fat added
+4706. Greens, canned, cooked
+4707. Kale, fresh, cooked, no added fat
+4708. Kale, frozen, cooked, no added fat
+4709. Kale, fresh, cooked, fat added
+4710. Kale, frozen, cooked, fat added
+4711. Lambsquarter, cooked
+4712. Mustard greens, fresh, cooked, no added fat
+4713. Mustard greens, frozen, cooked, no added fat
+4714. Mustard greens, fresh, cooked, fat added
+4715. Mustard greens, frozen, cooked, fat added
+4716. Poke greens, cooked
+4717. Spinach, fresh, cooked, no added fat
+4718. Spinach, frozen, cooked, no added fat
+4719. Spinach, fresh, cooked with oil
+4720. Spinach, fresh, cooked with butter or margarine
+4721. Spinach, fresh, cooked, fat added, NS as to fat type
+4722. Spinach, frozen, cooked, fat added, NS as to fat type
+4723. Spinach, canned, cooked, fat added, NS as to fat type
+4724. Spinach, frozen, cooked with oil
+4725. Spinach, frozen, cooked with butter or margarine
+4726. Spinach, canned, cooked with oil
+4727. Spinach, canned, cooked with butter or margarine
+4728. Spinach, creamed
+4729. Spinach souffle
+4730. Spinach and cheese casserole
+4731. Palak Paneer
+4732. Channa Saag
+4733. Taro leaves, cooked
+4734. Turnip greens, fresh, cooked, no added fat
+4735. Turnip greens, frozen, cooked, no added fat
+4736. Turnip greens, fresh, cooked, fat added
+4737. Turnip greens, frozen, cooked, fat added
+4738. Watercress, cooked
+4739. Bitter melon, horseradish, jute, or radish leaves, cooked
+4740. Sweet potato, squash, pumpkin, chrysanthemum, or bean leaves, cooked
+4741. Broccoli, cooked, from restaurant
+4742. Broccoli, fresh, cooked, no added fat
+4743. Broccoli, frozen, cooked, no added fat
+4744. Broccoli, fresh, cooked, fat added, NS as to fat type
+4745. Broccoli, frozen, cooked, fat added, NS as to fat type
+4746. Broccoli, fresh, cooked with oil
+4747. Broccoli, fresh, cooked with butter or margarine
+4748. Broccoli, frozen, cooked with oil
+4749. Broccoli, frozen, cooked with butter or margarine
+4750. Broccoli casserole with noodles
+4751. Broccoli casserole with rice
+4752. Fried broccoli
+4753. Broccoli, Chinese, cooked
+4754. Soup, broccoli cheese
+4755. Carrots, raw
+4756. Carrots, raw, salad
+4757. Carrots, raw, salad with apples
+4758. Carrots, cooked, from restaurant
+4759. Carrots, fresh, cooked, no added fat
+4760. Carrots, frozen, cooked, no added fat
+4761. Carrots, fresh, cooked with oil
+4762. Carrots, fresh, cooked with butter or margarine
+4763. Carrots, fresh, cooked, fat added, NS as to fat type
+4764. Carrots, frozen, cooked, fat added, NS as to fat type
+4765. Carrots, canned, cooked, fat added, NS as to fat type
+4766. Carrots, frozen, cooked with oil
+4767. Carrots, frozen, cooked with butter or margarine
+4768. Carrots, canned, cooked with oil
+4769. Carrots, canned, cooked with butter or margarine
+4770. Carrots, glazed, cooked
+4771. Carrots, canned, reduced sodium, cooked, fat added, NS as to fat type
+4772. Carrots, canned, reduced sodium, cooked with oil
+4773. Carrots, canned, reduced sodium, cooked with butter or margarine
+4774. Beet juice
+4775. Peas and carrots, fresh, cooked, no added fat
+4776. Peas and carrots, frozen, cooked, no added fat
+4777. Peas and carrots, canned, cooked, no added fat
+4778. Peas and carrots, fresh, cooked, fat added
+4779. Peas and carrots, frozen, cooked, fat added
+4780. Peas and carrots, canned, cooked, fat added
+4781. Pumpkin, canned, cooked
+4782. Pumpkin, cooked
+4783. Winter squash, cooked, no added fat
+4784. Winter squash, cooked, fat added
+4785. Squash, winter, souffle
+4786. Sweet potato, baked, NS as to fat
+4787. Sweet potato, baked, no added fat
+4788. Sweet potato, baked, fat added
+4789. Sweet potato, boiled, NS as to fat
+4790. Sweet potato, boiled, no added fat
+4791. Sweet potato, boiled, fat added
+4792. Sweet potato, candied
+4793. Sweet potato, canned, NS as to fat
+4794. Sweet potato, canned, no added fat
+4795. Sweet potato, canned, fat added
+4796. Sweet potato, casserole or mashed
+4797. Sweet potato chips
+4798. Sweet potato fries, from fresh
+4799. Sweet potato fries, fast food / restaurant
+4800. Sweet potato tots
+4801. Sweet potato tots, fast food / restaurant
+4802. Soup, pumpkin
+4803. Tomatoes, raw
+4804. Tomatoes, fresh, cooked
+4805. Tomatoes, canned, cooked
+4806. Tomatoes, scalloped
+4807. Tomatoes, canned, reduced sodium, cooked
+4808. Fried green tomatoes
+4809. Tomato, green, pickled
+4810. Ketchup
+4811. Salsa, pico de gallo
+4812. Taco sauce
+4813. Hot Thai sauce
+4814. Spaghetti sauce with added vegetables
+4815. Vodka sauce with tomatoes and cream
+4816. Buffalo sauce
+4817. Puerto Rican seasoning with ham
+4818. Puerto Rican seasoning without ham and tomato sauce
+4819. Tomato and cucumber salad made with tomato, cucumber, oil, and vinegar
+4820. Soup, tomato
+4821. Soup, cream of tomato
+4822. Soup, tomato, canned
+4823. Soup, tomato, canned / carton, reduced sodium
+4824. Tomato sandwich on white
+4825. Tomato sandwich on wheat
+4826. Raw vegetable, NFS
+4827. Lettuce, raw
+4828. Mixed salad greens, raw
+4829. Mushrooms, raw
+4830. Onions, raw
+4831. Peppers, hot, raw
+4832. Peppers, raw, NFS
+4833. Seaweed, raw
+4834. Mixed vegetable juice
+4835. Broccoli salad with cauliflower, cheese, bacon bits, and dressing
+4836. Broccoli slaw salad
+4837. Coleslaw
+4838. Cabbage salad, NFS
+4839. Coleslaw, with fruit
+4840. Cucumber and vegetable namasu
+4841. Cucumber salad, made with sour cream dressing
+4842. Cucumber salad, made with Italian dressing
+4843. Cucumber salad made with cucumber and vinegar
+4844. Lettuce, salad with assorted vegetables including tomatoes and/or carrots, no dressing
+4845. Lettuce, salad with assorted vegetables excluding tomatoes and carrots, no dressing
+4846. Lettuce, salad with avocado, tomato, and/or carrots, with or without other vegetables, no dressing
+4847. Lettuce, salad with cheese, tomato and/or carrots, with or without other vegetables, no dressing
+4848. Lettuce, salad with egg, tomato, and/or carrots, with or without other vegetables, no dressing
+4849. Lettuce, salad with egg, cheese, tomato, and/or carrots, with or without other vegetables, no dressing
+4850. Lettuce, wilted, with bacon dressing
+4851. Seven-layer salad, lettuce salad made with a combination of onion, celery, green pepper, peas, mayonnaise, cheese, eggs, and/or bacon
+4852. Greek Salad, no dressing
+4853. Spinach salad, no dressing
+4854. Cobb salad, no dressing
+4855. Asparagus, fresh, cooked, no added fat
+4856. Asparagus, frozen, cooked, no added fat
+4857. Asparagus, fresh, cooked, fat added, NS as to fat type
+4858. Asparagus, frozen, cooked, fat added, NS as to fat type
+4859. Asparagus, canned, cooked, fat added, NS as to fat type
+4860. Asparagus, fresh, cooked with oil
+4861. Asparagus, fresh, cooked with butter or margarine
+4862. Asparagus, frozen, cooked with oil
+4863. Asparagus, frozen, cooked with butter or margarine
+4864. Asparagus, canned, cooked with oil
+4865. Asparagus, canned, cooked with butter or margarine
+4866. Bamboo shoots, cooked
+4867. Lima beans, from frozen, no added fat
+4868. Lima beans, from frozen, fat added
+4869. Lima beans, from canned
+4870. Green beans, cooked, from restaurant
+4871. Green beans, fresh, cooked, no added fat
+4872. Green beans, frozen, cooked, no added fat
+4873. Green beans, NS as to form, cooked
+4874. Green beans, fresh, cooked, fat added, NS as to fat type
+4875. Green beans, frozen, cooked, fat added, NS as to fat type
+4876. Green beans, canned, cooked, fat added, NS as to fat type
+4877. Green beans, fresh, cooked with oil
+4878. Green beans, fresh, cooked with butter or margarine
+4879. Green beans, frozen, cooked with oil
+4880. Green beans, frozen, cooked with butter or margarine
+4881. Green beans, canned, cooked with oil
+4882. Green beans, canned, cooked with butter or margarine
+4883. Green beans, canned, reduced sodium, cooked, fat added, NS as to fat type
+4884. Green beans, canned, reduced sodium, cooked with oil
+4885. Green beans, canned, reduced sodium, cooked with butter or margarine
+4886. Fried green beans
+4887. Yellow string beans, cooked
+4888. Bean sprouts, cooked
+4889. Beets, fresh, cooked, no added fat
+4890. Beets, fresh, cooked, fat added
+4891. Beets, canned, cooked, fat added
+4892. Beets, canned, reduced sodium, cooked
+4893. Bitter melon, cooked
+4894. Breadfruit, cooked
+4895. Broccoflower, cooked
+4896. Brussels sprouts, fresh, cooked, no added fat
+4897. Brussels sprouts, frozen, cooked, no added fat
+4898. Brussels sprouts, fresh, cooked, fat added
+4899. Brussels sprouts, frozen, cooked, fat added
+4900. Burdock, cooked
+4901. Cabbage, Chinese, cooked, no added fat
+4902. Cabbage, Chinese, cooked, fat added
+4903. Cabbage, green, cooked, no added fat
+4904. Cabbage, green, cooked, fat added, NS as to fat type
+4905. Cabbage, green, cooked with oil
+4906. Cabbage, green, cooked with butter or margarine
+4907. Cabbage, red, cooked
+4908. Cabbage, savoy, cooked
+4909. Cactus, cooked, no added fat
+4910. Cactus, cooked, fat added
+4911. Cauliflower, fresh, cooked, no added fat
+4912. Cauliflower, frozen, cooked, no added fat
+4913. Cauliflower, fresh, cooked, fat added, NS as to fat type
+4914. Cauliflower, frozen, cooked, fat added, NS as to fat type
+4915. Cauliflower, fresh, cooked with oil
+4916. Cauliflower, fresh, cooked with butter or margarine
+4917. Cauliflower, frozen, cooked with oil
+4918. Cauliflower, frozen, cooked with butter or margarine
+4919. Celery, cooked
+4920. Fennel bulb, cooked
+4921. Christophine, cooked
+4922. Corn, cooked, from restaurant
+4923. Corn, fresh, cooked, no added fat
+4924. Corn, frozen, cooked, no added fat
+4925. Corn, fresh, cooked, fat added, NS as to fat type
+4926. Corn, frozen, cooked, fat added, NS as to fat type
+4927. Corn, canned, cooked, fat added, NS as to fat type
+4928. Corn, fresh, cooked with oil
+4929. Corn, fresh, cooked with butter or margarine
+4930. Corn, frozen, cooked with oil
+4931. Corn, frozen, cooked with butter or margarine
+4932. Corn, canned, cooked with oil
+4933. Corn, canned, cooked with butter or margarine
+4934. Corn, canned, reduced sodium, cooked, fat added, NS as to fat type
+4935. Corn, canned, reduced sodium, cooked with oil
+4936. Corn, canned, reduced sodium, cooked with butter or margarine
+4937. Cucumber, cooked
+4938. Eggplant, cooked, no added fat
+4939. Eggplant, cooked, fat added
+4940. Flowers or blossoms of sesbania, squash, or lily, cooked
+4941. Garlic, cooked
+4942. Hominy, cooked
+4943. Kohlrabi, cooked
+4944. Leeks
+4945. Lotus root, cooked
+4946. Mushrooms, fresh, cooked, no added fat
+4947. Mushrooms, fresh, cooked, fat added, NS as to fat type
+4948. Mushrooms, canned, cooked
+4949. Mushrooms, fresh, cooked with oil
+4950. Mushrooms, fresh, cooked with butter or margarine
+4951. Mushroom, Asian, cooked, from dried
+4952. Okra, fresh, cooked, no added fat
+4953. Okra, frozen, cooked, no added fat
+4954. Okra, fresh, cooked, fat added
+4955. Okra, frozen, cooked, fat added
+4956. Lettuce, cooked
+4957. Onions, cooked, no added fat
+4958. Onions, cooked, fat added
+4959. Onions, pearl, cooked
+4960. Onions, green, cooked
+4961. Palm hearts, cooked
+4962. Parsnips, cooked
+4963. Blackeyed peas, from frozen
+4964. Blackeyed peas, from canned
+4965. Green peas, cooked, from restaurant
+4966. Green peas, fresh, cooked, no added fat
+4967. Green peas, frozen, cooked, no added fat
+4968. Green peas, fresh, cooked, fat added, NS as to fat type
+4969. Green peas, frozen, cooked, fat added, NS as to fat type
+4970. Green peas, canned, cooked, fat added, NS as to fat type
+4971. Green peas, fresh, cooked with oil
+4972. Green peas, fresh, cooked with butter or margarine
+4973. Green peas, frozen, cooked with oil
+4974. Green peas, frozen, cooked with butter or margarine
+4975. Green peas, canned, cooked with oil
+4976. Green peas, canned, cooked with butter or margarine
+4977. Green peas, canned, reduced sodium, cooked, fat added, NS as to fat type
+4978. Green peas, canned, reduced sodium, cooked with oil
+4979. Green peas, canned, reduced sodium, cooked with butter or margarine
+4980. Peppers, green, cooked
+4981. Peppers, red, cooked
+4982. Peppers, hot, cooked
+4983. Rutabaga, cooked
+4984. Salsify, cooked
+4985. Sauerkraut
+4986. Snowpeas, fresh, cooked, no added fat
+4987. Snowpeas, frozen, cooked, no added fat
+4988. Snowpeas, fresh, cooked, fat added
+4989. Snowpeas, frozen, cooked, fat added
+4990. Seaweed, dried
+4991. Seaweed, cooked, no added fat
+4992. Seaweed, cooked, fat added
+4993. Summer squash, yellow or green, fresh, cooked, no added fat
+4994. Summer squash, yellow or green, frozen, cooked, no added fat
+4995. Summer squash, yellow or green, fresh, cooked, fat added, NS as to fat type
+4996. Summer squash, yellow or green, frozen, cooked, fat added, NS as to fat type
+4997. Summer squash, yellow or green, canned, cooked, fat added, NS as to fat type
+4998. Summer squash, yellow or green, fresh, cooked with oil
+4999. Summer squash, yellow or green, fresh, cooked with butter or margarine
+5000. Summer squash, yellow or green, frozen, cooked with oil
+5001. Summer squash, yellow or green, frozen, cooked with butter or margarine
+5002. Spaghetti squash, cooked
+5003. Turnip, cooked
+5004. Winter melon, cooked
+5005. Lima beans and corn, cooked, no added fat
+5006. Lima beans and corn, cooked, fat added
+5007. Bean salad, yellow and/or green string beans
+5008. Peppers and onions, cooked, no added fat
+5009. Peppers and onions, cooked, fat added
+5010. Classic mixed vegetables, cooked, from restaurant
+5011. Classic mixed vegetables, frozen, cooked, no added fat
+5012. Classic mixed vegetables, canned, cooked, no added fat
+5013. Classic mixed vegetables, frozen, cooked, fat added, NS as to fat type
+5014. Classic mixed vegetables, canned, cooked, fat added, NS as to fat type
+5015. Classic mixed vegetables, frozen, cooked with oil
+5016. Classic mixed vegetables, frozen, cooked with butter or margarine
+5017. Classic mixed vegetables, canned, cooked with oil
+5018. Classic mixed vegetables, canned, cooked with butter or margarine
+5019. Classic mixed vegetables, canned, reduced sodium, cooked, no added fat
+5020. Classic mixed vegetables, canned, reduced sodium, cooked, fat added, NS as to fat type
+5021. Classic mixed vegetables, canned, reduced sodium, cooked with oil
+5022. Classic mixed vegetables, canned, reduced sodium, cooked with butter or margarine
+5023. Peas and corn, cooked, no added fat
+5024. Peas and corn, cooked, fat added
+5025. Ratatouille
+5026. Vegetables, stew type, cooked, fat added
+5027. Vegetables, stew type, cooked, no added fat
+5028. Broccoli and cauliflower, cooked, no added fat
+5029. Broccoli and cauliflower, cooked, fat added
+5030. Broccoli, cauliflower and carrots, cooked, no added fat
+5031. Broccoli, cauliflower and carrots, cooked, fat added
+5032. Asian stir fry vegetables, cooked, no added fat
+5033. Asian stir fry vegetables, cooked, fat added
+5034. Jai, Monk's Food
+5035. Vegetable mixture, dried
+5036. Artichokes, stuffed
+5037. Green bean casserole
+5038. Green beans, cooked, Szechuan-style
+5039. Fried cauliflower
+5040. Chiles rellenos, cheese-filled
+5041. Chiles rellenos, filled with meat and cheese
+5042. Stuffed jalapeno pepper
+5043. Corn, scalloped or pudding
+5044. Fritter, corn
+5045. Fried eggplant
+5046. Eggplant dip
+5047. Eggplant parmesan casserole, regular
+5048. Eggplant with cheese and tomato sauce
+5049. Mushrooms, stuffed
+5050. Fried mushrooms
+5051. Fried okra
+5052. Fried onion rings
+5053. Pea salad
+5054. Pea salad with cheese
+5055. Fried summer squash, yellow or green
+5056. Squash, summer, casserole with tomato and cheese
+5057. Squash, summer, casserole, with rice and tomato sauce
+5058. Squash, summer, casserole, with cheese sauce
+5059. Squash, summer, souffle
+5060. Stew, vegetable
+5061. Vegetable tempura
+5062. Pakora
+5063. Vegetable curry
+5064. Vegetable curry with rice
+5065. Chow mein or chop suey, meatless, with noodles
+5066. Green beans, pickled
+5067. Celery, pickled
+5068. Relish, corn
+5069. Cauliflower, pickled
+5070. Cabbage, green, pickled
+5071. Cabbage, red, pickled
+5072. Eggplant, pickled
+5073. Mushrooms, pickled
+5074. Honey mustard dip
+5075. Okra, pickled
+5076. Olive tapenade
+5077. Peppers, sweet, pickled
+5078. Peppers, jalapenos
+5079. Pickles, fried
+5080. Radishes, pickled
+5081. Seaweed, pickled
+5082. Vegetables, pickled
+5083. Turnip, pickled
+5084. Zucchini, pickled
+5085. Soup, borscht
+5086. Soup, gazpacho
+5087. Soup, cream of mushroom
+5088. Soup, French onion
+5089. Soup, cream of vegetable
+5090. Soup, seaweed
+5091. Soup, vegetable, canned
+5092. Soup, vegetable, canned, reduced sodium
+5093. Soup, vegetable
+5094. Soup, minestrone
+5095. Soup, beef
+5096. Soup, vegetable, with meat
+5097. Baby Toddler vegetable, NFS
+5098. Baby Toddler vegetables, with grain
+5099. Baby Toddler vegetables and meat
+5100. Toddler meal, NFS
+5101. Toddler meal, meat and vegetables
+5102. Toddler meal, rice and vegetables
+5103. Toddler meal, pasta
+5104. Toddler meal, pasta and vegetables
+5105. Fried stuffed potatoes, Puerto Rican style
+5106. Green plantain with cracklings, Puerto Rican style
+5107. Ripe plantain meat pie, Puerto Rican style
+5108. Puerto Rican pasteles
+5109. Stuffed cabbage, with meat, Puerto Rican style
+5110. Stuffed cabbage, with meat and rice, Syrian dish, Puerto Rican style
+5111. Eggplant and meat casserole
+5112. Fruit and vegetable smoothie, with dairy
+5113. Fruit and vegetable smoothie, added protein
+5114. Fruit and vegetable smoothie, non-dairy
+5115. Fruit and vegetable smoothie, non-dairy, added protein
+5116. Fruit and vegetable smoothie, no dairy
+5117. Vegetable smoothie
+5118. Table fat, NFS
+5119. Margarine, NFS
+5120. Margarine, stick
+5121. Margarine, tub
+5122. Margarine, light
+5123. Oil or table fat, NFS
+5124. Animal fat or drippings
+5125. Garlic sauce
+5126. Lemon-butter sauce
+5127. Hollandaise sauce
+5128. Pesto sauce
+5129. Fry sauce
+5130. Sauce, NFS
+5131. Curry sauce
+5132. Honey butter
+5133. Vegetable oil, NFS
+5134. Olive oil
+5135. Salad dressing, NFS, for sandwiches
+5136. Creamy Italian dressing
+5137. Fruit dressing
+5138. Blue or roquefort cheese dressing, light
+5139. Creamy Italian dressing, light
+5140. Korean dressing or marinade
+5141. Creamy Italian dressing, fat free
+5142. Cream sauce, for use with vegetables
+5143. Cheese sauce, for use with vegetables
+5144. Gravy, for use with vegetables
+5145. Soy based sauce, for use with vegetables
+5146. Tomato sauce, for use with vegetables
+5147. Bacon, for use on a sandwich
+5148. Sugar, cinnamon
+5149. Sugar substitute and sugar blend
+5150. Sugar substitute, powder, NFS
+5151. Sugar substitute, saccharin, liquid
+5152. Simple syrup
+5153. Caramel dip, regular
+5154. Chocolate dip
+5155. Dessert dip
+5156. Dessert sauce
+5157. Jam or jelly, NFS
+5158. Guava paste
+5159. Sweet potato paste
+5160. Bean paste, sweetened
+5161. Gelatin dessert with fruit
+5162. Gelatin salad with vegetables
+5163. Gelatin dessert, sugar free, with fruit
+5164. Yokan
+5165. Haupia
+5166. Candy, NFS
+5167. Almonds, chocolate covered candy
+5168. Chocolate candy with nuts
+5169. Chocolate candy, cookie filled
+5170. Candy, sprinkles
+5171. Dark chocolate candy with nuts
+5172. Chocolate candy, fudge
+5173. Chocolate candy, caramel filled
+5174. Chocolate candy, caramel filled with nuts
+5175. Chocolate candy, coconut filled
+5176. Chocolate candy, nougat filled
+5177. Chocolate candy, nougat filled with nuts
+5178. Chocolate candy, peanut butter filled
+5179. Candy, non chocolate, other, NFS
+5180. Ladoo, round ball
+5181. Candy, caramel
+5182. Candy, nougat with nuts
+5183. Peanuts, chocolate covered candy
+5184. Candy, mint
+5185. Cough drops
+5186. Candy, fruit flavored pieces
+5187. Chocolate candy, candy shell with nuts
+5188. Candy, taffy
+5189. Coffee, brewed, blend of regular and decaffeinated
+5190. Coffee, Turkish
+5191. Coffee, Cuban
+5192. Coffee, macchiato
+5193. Coffee, macchiato, sweetened
+5194. Coffee, cafe con leche
+5195. Coffee, cafe con leche, decaffeinated
+5196. Coffee, Latte
+5197. Coffee, Latte, nonfat
+5198. Coffee, Latte, with non-dairy milk
+5199. Coffee, Latte, flavored
+5200. Coffee, Latte, nonfat, flavored
+5201. Coffee, Latte, with non-dairy milk, flavored
+5202. Coffee, Latte, decaffeinated
+5203. Coffee, Latte, decaffeinated, nonfat
+5204. Coffee, Latte, decaffeinated, with non-dairy milk
+5205. Coffee, Latte, decaffeinated, flavored
+5206. Coffee, Latte, decaffeinated, nonfat, flavored
+5207. Coffee, Latte, decaffeinated, with non-dairy milk, flavored
+5208. Frozen coffee drink
+5209. Frozen coffee drink, nonfat
+5210. Frozen coffee drink, with non-dairy milk
+5211. Frozen coffee drink, with whipped cream
+5212. Frozen coffee drink, nonfat, with whipped cream
+5213. Frozen coffee drink, with non-dairy milk and whipped cream
+5214. Frozen coffee drink, decaffeinated
+5215. Frozen coffee drink, decaffeinated, nonfat
+5216. Frozen coffee drink, decaffeinated, with non-dairy milk
+5217. Frozen coffee drink, decaffeinated, with whipped cream
+5218. Frozen coffee drink, decaffeinated, nonfat, with whipped cream
+5219. Frozen coffee drink, decaffeinated, with non-dairy milk and whipped cream
+5220. Coffee, Cafe Mocha
+5221. Coffee, Cafe Mocha, nonfat
+5222. Coffee, Cafe Mocha, with non-dairy milk
+5223. Coffee, Cafe Mocha, decaffeinated
+5224. Coffee, Cafe Mocha, decaffeinated, nonfat
+5225. Coffee, Cafe Mocha, decaffeinated, with non-dairy milk
+5226. Frozen mocha coffee drink
+5227. Frozen mocha coffee drink, nonfat
+5228. Frozen mocha coffee drink, with non-dairy milk
+5229. Frozen mocha coffee drink, with whipped cream
+5230. Frozen mocha coffee drink, nonfat, with whipped cream
+5231. Frozen mocha coffee drink, with non-dairy milk and whipped cream
+5232. Frozen mocha coffee drink, decaffeinated
+5233. Frozen mocha coffee drink, decaffeinated, nonfat
+5234. Frozen mocha coffee drink, decaffeinated, with non-dairy milk
+5235. Frozen mocha coffee drink, decaffeinated, with whipped cream
+5236. Frozen mocha coffee drink, decaffeinated, nonfat, with whipped cream
+5237. Frozen mocha coffee drink, decaffeinated, with non-dairy milk and whipped cream
+5238. Iced Coffee, brewed
+5239. Iced Coffee, brewed, decaffeinated
+5240. Iced Coffee, pre-lightened and pre-sweetened
+5241. Coffee, Iced Latte
+5242. Coffee, Iced Latte, nonfat
+5243. Coffee, Iced Latte, with non-dairy milk
+5244. Coffee, Iced Latte, flavored
+5245. Coffee, Iced Latte, nonfat, flavored
+5246. Coffee, Iced Latte, with non-dairy milk, flavored
+5247. Coffee, Iced Latte, decaffeinated
+5248. Coffee, Iced Latte, decaffeinated, nonfat
+5249. Coffee, Iced Latte, decaffeinated, with non-dairy milk
+5250. Coffee, Iced Latte, decaffeinated, flavored
+5251. Coffee, Iced Latte, decaffeinated, nonfat, flavored
+5252. Coffee, Iced Latte, decaffeinated, with non-dairy milk, flavored
+5253. Coffee, Iced Cafe Mocha
+5254. Coffee, Iced Cafe Mocha, nonfat
+5255. Coffee, Iced Cafe Mocha, with non-dairy milk
+5256. Coffee, Iced Cafe Mocha, decaffeinated
+5257. Coffee, Iced Cafe Mocha, decaffeinated, nonfat
+5258. Coffee, Iced Cafe Mocha, decaffeinated, with non-dairy milk
+5259. Coffee, instant, reconstituted
+5260. Coffee, instant, 50% less caffeine, reconstituted
+5261. Coffee, instant, decaffeinated, reconstituted
+5262. Coffee, instant, pre-lightened and pre-sweetened with sugar, reconstituted
+5263. Coffee, instant, decaffeinated, pre-lightened and pre-sweetened with sugar, reconsitituted
+5264. Coffee, instant, pre-sweetened with sugar, reconstituted
+5265. Coffee, mocha, instant, pre-lightened and pre-sweetened with low calorie sweetener, reconstituted
+5266. Coffee, instant, pre-lightened and pre-sweetened with low calorie sweetener, reconstituted
+5267. Coffee, instant, decaffeinated, pre-lightened and pre-sweetened with low calorie sweetener, reconstituted
+5268. Coffee, pre-lightened and pre-sweetened with sugar
+5269. Coffee, decaffeinated, pre-lightened and pre-sweetened with sugar
+5270. Coffee, pre-lightened and pre-sweetened with low calorie sweetener
+5271. Coffee, decaffeinated, pre-lightened and pre-sweetened with low calorie sweetener
+5272. Coffee, pre-lightened
+5273. Coffee, decaffeinated, pre-lightened
+5274. Coffee, pre-sweetened with sugar
+5275. Coffee, decaffeinated, pre-sweetened with sugar
+5276. Coffee, pre-sweetened with low calorie sweetener
+5277. Coffee, decaffeinated, pre-sweetened with low calorie sweetener
+5278. Coffee, Cappuccino
+5279. Coffee, Cappuccino, nonfat
+5280. Coffee, Cappuccino, with non-dairy milk
+5281. Coffee, Cappuccino, decaffeinated
+5282. Coffee, Cappuccino, decaffeinated, nonfat
+5283. Coffee, Cappuccino, decaffeinated, with non-dairy milk
+5284. Coffee, bottled/canned, light
+5285. Coffee, instant, pre-sweetened with sugar, not reconstituted
+5286. Coffee, instant, pre-lightened and pre-sweetened with sugar, not reconstituted
+5287. Coffee, instant, decaffeinated, pre-lightened and pre-sweetened with low calorie sweetener, not reconstituted
+5288. Chicory beverage
+5289. Tea, iced, instant, black, unsweetened
+5290. Tea, iced, instant, black, pre-sweetened with sugar
+5291. Tea, iced, instant, black, decaffeinated, pre-sweetened with sugar
+5292. Tea, iced, instant, black, decaffeinated, pre-sweetened with low calorie sweetener
+5293. Tea, iced, instant, black, decaffeinated, unsweetened
+5294. Corn beverage
+5295. Tea, hot, with milk
+5296. Tea, ginger
+5297. Tea, bubble
+5298. Tea, kombucha
+5299. Iced Tea / Lemonade juice drink
+5300. Iced Tea / Lemonade juice drink, light
+5301. Iced Tea / Lemonade juice drink, diet
+5302. Tea, iced, brewed, black, pre-sweetened with sugar
+5303. Tea, iced, brewed, black, pre-sweetened with low calorie sweetener
+5304. Tea, iced, brewed, black, decaffeinated, pre-sweetened with sugar
+5305. Tea, iced, brewed, black, decaffeinated, pre-sweetened with low calorie sweetener
+5306. Tea, iced, brewed, green, pre-sweetened with sugar
+5307. Tea, iced, brewed, green, pre-sweetened with low calorie sweetener
+5308. Tea, iced, brewed, green, decaffeinated, pre-sweetened with sugar
+5309. Tea, iced, brewed, green, decaffeinated, pre-sweetened with low calorie sweetener
+5310. Fruit juice drink, citrus, carbonated
+5311. Fruit juice drink, noncitrus, carbonated
+5312. Tamarind drink
+5313. Fruit punch, made with fruit juice and soda
+5314. Lemonade, fruit flavored drink
+5315. Pina Colada, nonalcoholic
+5316. Slush frozen drink
+5317. Slush frozen drink, no sugar added
+5318. Fruit flavored drink, powdered, reconstituted
+5319. Fruit flavored drink, with high vitamin C, powdered, reconstituted
+5320. Fruit juice drink, diet
+5321. Grape juice drink, light
+5322. Pomegranate juice beverage, 40-50% juice, light
+5323. Fruit flavored drink, with high vitamin C, diet
+5324. Fruit flavored drink, diet
+5325. Fruit flavored drink, with high vitamin C, powdered, reconstituted, diet
+5326. Fruit flavored drink, powdered, reconstituted, diet
+5327. Horchata, made with water
+5328. Horchata, made with milk
+5329. Frescavena
+5330. Atole de avena
+5331. Sugar cane beverage
+5332. Atole
+5333. Atole de chocolate
+5334. Shirley Temple
+5335. Hard seltzer
+5336. Liqueur
+5337. Liqueur, cream
+5338. Cocktail, NFS
+5339. Brandy Alexander
+5340. Bloody Mary
+5341. Cape Cod
+5342. Daiquiri
+5343. Gelatin shot, alcoholic
+5344. Gimlet
+5345. Gin and tonic
+5346. Greyhound
+5347. Jagerbomb
+5348. Kamikaze
+5349. Manhattan
+5350. Margarita
+5351. Martini
+5352. Martini, flavored
+5353. Michelada
+5354. Mimosa
+5355. Mint julep
+5356. Mojito
+5357. Moscow mule
+5358. Old fashioned
+5359. Orange Blossom
+5360. Rob Roy
+5361. Rusty Nail
+5362. Screwdriver
+5363. Seabreeze
+5364. Seven and Seven
+5365. Tom Collins
+5366. Whiskey sour
+5367. Whiskey and soda
+5368. Whiskey and water
+5369. Whiskey and cola
+5370. Whiskey and diet cola
+5371. Whiskey and ginger ale
+5372. Rum and cola
+5373. Rum and diet cola
+5374. Pina Colada
+5375. Brandy and cola
+5376. Vodka and soda
+5377. Vodka and lemonade
+5378. Vodka and cola
+5379. Vodka and diet cola
+5380. Vodka and energy drink
+5381. Vodka and water
+5382. Vodka and tonic
+5383. Sloe gin fizz
+5384. Black Russian
+5385. White Russian
+5386. Fruit punch, alcoholic
+5387. Champagne punch
+5388. Singapore Sling
+5389. Mai Tai
+5390. Tequila Sunrise
+5391. Long Island iced tea
+5392. Fuzzy Navel
+5393. Alcoholic coffee drink
+5394. Frozen daiquiri
+5395. Frozen margarita
+5396. Eggnog, alcoholic
+5397. Gin fizz
+5398. Rum, hot buttered
+5399. Wine, sparkling
+5400. Sangria, red
+5401. Sangria, white
+5402. Wine spritzer
+5403. Glug
+5404. Water, NFS
+5405. Nutritional drink or shake, ready-to-drink (Carnation Instant Breakfast)
+5406. Nutritional drink or shake, ready-to-drink, light (Muscle Milk)
+5407. Energy drink, sugar free
+5408. Fluid replacement, 5% glucose in water
+5409. Cheese as ingredient in sandwiches
+5410. Cheese and Queso as ingredient
+5411. Beef as ingredient in recipes
+5412. Breakfast meat as ingredient in omelet
+5413. Chicken as ingredient in recipes
+5414. Fish, cooked, as ingredient
+5415. Fish fillet, fried as ingredient in sandwiches
+5416. Breading or batter as ingredient in food
+5417. Wheat bread as ingredient in sandwiches
+5418. Wheat bun as ingredient in sandwiches
+5419. Rice, white, cooked, as ingredient
+5420. Rice, brown, cooked, as ingredient
+5421. Potato, cooked, as ingredient
+5422. Summer squash, cooked, as ingredient
+5423. Dark green vegetables as ingredient in omelet
+5424. Tomatoes as ingredient in omelet
+5425. Other vegetables as ingredient in omelet
+5426. Mirepoix, cooked, as ingredient
+5427. Vegetables as ingredient in curry
+5428. Vegetables as ingredient in soups
+5429. Vegetables as ingredient in stews
+5430. Sauce as ingredient in hamburgers
+5431. Industrial oil as ingredient in food

@@ -72,36 +72,103 @@ def load_preprocessed_data(filepath: str) -> List[Dict]:
 # プロンプト生成（シンプル版）
 # =================================
 
-def create_search_pattern_prompt(recent_results: List[Dict] = None) -> str:
+def create_search_pattern_prompt(recent_results: List[Dict] = None, upcoming_items: List[Dict] = None) -> str:
     """
     前処理済みデータ用の包括的プロンプト
     display_name、ai_descriptionなど全フィールドを生成
+    
+    Args:
+        recent_results: 最近処理した10件の結果（全フィールド情報を含む）
+        upcoming_items: 次に処理する10件のアイテム（descriptionのみ）
     """
 
-    # 文脈セクション
+    # 文脈セクション - 前10例（全フィールド表示）
     context_section = ""
     if recent_results and len(recent_results) > 0:
         context_section = "\n\n📝 RECENT EXAMPLES FOR CONSISTENCY:\n"
-        context_section += "Use these recent examples to maintain consistent formatting and classification:\n\n"
+        context_section += "Use these recent examples to maintain consistent formatting and classification.\n"
+        context_section += "Pay special attention to display_name + display_variant combinations to avoid duplicates.\n\n"
 
         for i, result in enumerate(recent_results[-10:], 1):  # 最新10件を使用
-            search_patterns = json.dumps(result['search_name'], ensure_ascii=False)
-            context_section += f"{i}. \"{result['description']}\"\n"
+            search_patterns = json.dumps(result.get('search_name', []), ensure_ascii=False)
+            context_section += f"{i}. \"{result.get('description', 'N/A')}\"\n"
+            
+            # 全フィールドを表示
+            context_section += f"   → display_name: \"{result.get('display_name', 'N/A')}\"\n"
+            context_section += f"   → display_variant: {json.dumps(result.get('display_variant'), ensure_ascii=False)}\n"
+            context_section += f"   → display_badges: {json.dumps(result.get('display_badges', []), ensure_ascii=False)}\n"
+            context_section += f"   → brand_name: {json.dumps(result.get('brand_name'), ensure_ascii=False)}\n"
+            context_section += f"   → item_type: \"{result.get('item_type', 'N/A')}\"\n"
+            context_section += f"   → ai_description: {json.dumps(result.get('ai_description'), ensure_ascii=False)}\n"
+            context_section += f"   → food_specific_emoji: {json.dumps(result.get('food_specific_emoji'), ensure_ascii=False)}\n"
+            context_section += f"   → consumption_frequency: \"{result.get('consumption_frequency', 'N/A')}\" (score: {result.get('frequency_score', 0)})\n"
             context_section += f"   → search_name: {search_patterns}\n"
-            if 'display_name' in result:
-                context_section += f"   → display_name: {result['display_name']}\n"
-            if 'consumption_frequency' in result:
-                context_section += f"   → frequency: {result['consumption_frequency']} (score: {result.get('frequency_score', 0)})\n"
             context_section += "\n"
 
-        context_section += "CONSISTENCY RULES:\n"
-        context_section += "- Similar foods should have similar search patterns and frequency classifications\n"
-        context_section += "- Maintain consistent capitalization for the same food categories\n"
-        context_section += "- If you see patterns in frequency (e.g., all chicken = common), follow them\n\n"
+    # 後10例セクション
+    upcoming_section = ""
+    if upcoming_items and len(upcoming_items) > 0:
+        upcoming_section = "\n\n🔮 UPCOMING ITEMS TO DIFFERENTIATE:\n"
+        upcoming_section += "The following items will be processed next. Make sure your current output creates a UNIQUE\n"
+        upcoming_section += "display_name + display_variant combination that won't conflict with these:\n\n"
+        
+        for i, item in enumerate(upcoming_items[:10], 1):  # 最大10件
+            description = item.get('description', 'N/A')
+            upcoming_section += f"{i}. \"{description}\"\n"
+        
+        upcoming_section += "\n"
+
+    # 重複防止ルールセクション
+    duplication_rules = """
+
+🚫 CRITICAL: DUPLICATE PREVENTION RULES
+
+The combination of display_name + display_variant MUST be completely unique!
+
+✅ DIFFERENTIATION STRATEGIES FOR SIMILAR FOODS:
+
+1. **Same Base Food (e.g., Chicken Nuggets, French Fries)**
+   → Use same display_name, differentiate with display_variant
+   
+   Examples:
+   - "Chicken nuggets, NFS" → display_name: "Chicken Nuggets", display_variant: null
+   - "Chicken nuggets, from fast food" → display_name: "Chicken Nuggets", display_variant: "Fast Food"
+   - "Chicken nuggets, from restaurant" → display_name: "Chicken Nuggets", display_variant: "Restaurant"
+   - "Chicken nuggets, from school lunch" → display_name: "Chicken Nuggets", display_variant: "School"
+
+2. **Branded Products**
+   → Include brand_name in display_name
+   
+   Examples:
+   - "Crackers, butter (Ritz)" → display_name: "Ritz Butter Crackers", brand_name: "Ritz"
+   - "Crackers, butter (Nabisco)" → display_name: "Nabisco Butter Crackers", brand_name: "Nabisco"
+
+3. **Different Cooking Methods or Preparations**
+   → Use display_variant to distinguish
+   
+   Examples:
+   - "Potato, mashed, NFS" → display_name: "Mashed Potatoes", display_variant: null
+   - "Potato, mashed, ready-to-heat" → display_name: "Mashed Potatoes", display_variant: "Ready-to-Heat"
+   - "Potato, mashed, from fast food" → display_name: "Mashed Potatoes", display_variant: "Fast Food"
+
+4. **Key Variants (sugar-free, low-fat, diet, organic)**
+   → MUST be reflected in display_name OR display_variant
+   
+   Examples:
+   - "Tea, iced, black, unsweetened" → display_name: "Unsweetened Iced Black Tea", display_variant: null
+   - "Tea, iced, black, pre-sweetened" → display_name: "Pre-Sweetened Iced Black Tea", display_variant: null
+   - "Tea, iced, black, pre-sweetened (diet)" → display_name: "Pre-Sweetened Iced Black Tea", display_variant: "Diet"
+
+⚠️ BEFORE FINALIZING YOUR OUTPUT:
+- Check recent examples above - does your display_name + display_variant combination already exist?
+- Check upcoming items - will your output conflict with likely outputs for those items?
+- If conflict is possible, adjust display_variant to make it unique
+
+"""
 
     return f"""You are a food search optimization AI. Return ONLY a valid JSON object with NO additional text.
 
-{context_section}
+{context_section}{upcoming_section}{duplication_rules}
 🎯 YOUR TASK:
 Transform food descriptions into search patterns optimized for autocomplete/predictive search systems.
 IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text before or after the JSON.
@@ -154,16 +221,49 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
    - Balance: too specific = hard to find; too generic = lost in results
 
 2️⃣ **display_name** (REQUIRED STRING)
-   - 15-30 characters for mobile app display
-   - User-friendly American English terms
-   - Clear and concise
-   - What users see in search results
+   - **PRIMARY GOAL: Uniqueness and Clarity**
+   - Display name must be unique enough to distinguish similar items
+   - Length: 15-40 characters (extended for brands/variants)
+
+   **CRITICAL RULES FOR UNIQUENESS**:
+
+   ⭐ **Rule 1: Brand Names are MANDATORY in display_name if present**
+      - If `brand_name` field is not null, INCLUDE it in display_name
+      - Examples:
+        * "Crackers, butter (Ritz)" → display_name: "Ritz Butter Crackers" (NOT just "Butter Crackers")
+        * "Energy drink (Monster)" → display_name: "Monster Energy Drink" (NOT just "Energy Drink")
+        * "Granola bar (Quaker Chewy)" → display_name: "Quaker Chewy Granola Bar" (NOT just "Granola Bar")
+
+   ⭐ **Rule 2: Key Variants MUST be included**
+      - Sugar-free, low-fat, diet, organic, etc. are distinguishing features
+      - Examples:
+        * "Energy drink, sugar-free (Monster)" → display_name: "Monster Sugar-Free Energy Drink"
+        * "Milk, reduced fat (2%)" → display_name: "2% Reduced Fat Milk"
+        * "Tea, iced, decaffeinated, diet" → display_name: "Diet Decaf Iced Tea"
+
+   ⭐ **Rule 3: Avoid Generic Names**
+      - NEVER use just "Granola Bar", "Energy Drink", "Crackers", "Pizza" alone
+      - ALWAYS add distinguishing features: brand, variant, or type
+      - Examples:
+        * BAD: "Granola Bar" (too generic, will create duplicates)
+        * GOOD: "Nature Valley Granola Bar", "Chewy Granola Bar", "Chocolate Granola Bar"
+
+   ⭐ **Rule 4: Check for Potential Duplicates**
+      - If the description has parenthetical info (brand/variant), it MUST appear in display_name
+      - If there are specific modifiers (sugar-free, diet, organic), they MUST appear in display_name
+      - Think: "Would this display_name distinguish it from similar products?"
+
+   **Format Priority**:
+   1. With Brand: "[Brand] [Key Variant] [Base Food]" (e.g., "Monster Sugar-Free Energy Drink")
+   2. With Variant: "[Key Variant] [Base Food]" (e.g., "Diet Iced Tea")
+   3. Generic: "[Specific Type] [Base Food]" (e.g., "Thin Crust Cheese Pizza")
 
 3️⃣ **display_variant** (OPTIONAL STRING or null)
    - 5-15 characters
-   - Only if there's a significant variant
-   - Examples: "No-Bake", "Thin Crust", "Toasted", "Skinless"
+   - Only if there's a significant variant NOT already in display_name
+   - Examples: "Fast Food", "Restaurant", "School", "No-Bake", "Thin Crust", "Toasted", "Skinless"
    - Set to null if not applicable
+   - **CRITICAL**: Use this field to differentiate similar items with same base display_name
 
 4️⃣ **display_badges** (OPTIONAL ARRAY)
    - Array of 0-3 short badges
@@ -335,10 +435,38 @@ IMPORTANT: Return ONLY the JSON object. Do not include any explanatory text befo
   "item_type": "prepared_dish"
 }}
 
+"Cereal or granola bar (General Mills Nature Valley Chewy Trail Mix)" (category emoji: 🍪)
+{{
+  "search_name": ["Nature Valley granola bar", "Nature Valley chewy", "Trail mix granola", "Granola bar trail mix", "Nature Valley trail mix"],
+  "display_name": "Nature Valley Chewy Granola Bar",
+  "display_variant": "Trail Mix",
+  "display_badges": [],
+  "ai_description": null,
+  "consumption_frequency": "common",
+  "frequency_score": 3,
+  "food_specific_emoji": null,
+  "brand_name": "Nature Valley",
+  "item_type": "processed_ingredient"
+}}
+
+"Energy drink, sugar-free (Monster)" (category emoji: 🥤)
+{{
+  "search_name": ["Monster energy drink", "Monster sugar free", "Sugar free energy drink", "Energy drink Monster", "Monster energy"],
+  "display_name": "Monster Sugar-Free Energy Drink",
+  "display_variant": "Sugar-Free",
+  "display_badges": ["Diet"],
+  "ai_description": null,
+  "consumption_frequency": "moderate",
+  "frequency_score": 2,
+  "food_specific_emoji": null,
+  "brand_name": "Monster",
+  "item_type": "processed_ingredient"
+}}
+
 "Crackers, butter (Ritz)" (category emoji: 🍘)
 {{
-  "search_name": ["Ritz crackers", "Butter crackers", "Crackers Ritz", "Ritz", "Butter cracker"],
-  "display_name": "Butter Crackers",
+  "search_name": ["Ritz crackers", "Butter crackers Ritz", "Crackers Ritz", "Ritz butter", "Ritz"],
+  "display_name": "Ritz Butter Crackers",
   "display_variant": null,
   "display_badges": [],
   "ai_description": null,
@@ -374,12 +502,13 @@ async def generate_search_patterns(
     client: AsyncOpenAI,
     category_emoji: str = "🍽️",
     recent_results: List[Dict] = None,
+    upcoming_items: List[Dict] = None,
     max_retries: int = 3
 ) -> Optional[Dict]:
     """
     食材説明から包括的な検索パターンと表示情報を生成
     """
-    prompt = create_search_pattern_prompt(recent_results)
+    prompt = create_search_pattern_prompt(recent_results, upcoming_items)
 
     # カテゴリ絵文字を含むユーザーメッセージを作成
     user_message = f"{description} (category emoji: {category_emoji})"
@@ -442,11 +571,11 @@ async def generate_search_patterns(
                 # デフォルト値を生成
                 parts = description.split(',')
                 if len(parts) >= 2:
-                    result['display_name'] = f"{parts[0].strip()} {parts[1].strip()}"[:30]
+                    result['display_name'] = f"{parts[0].strip()} {parts[1].strip()}"[:40]
                 else:
-                    result['display_name'] = parts[0].strip()[:30]
-            elif len(result['display_name']) > 30:
-                result['display_name'] = result['display_name'][:30]
+                    result['display_name'] = parts[0].strip()[:40]
+            elif len(result['display_name']) > 40:
+                result['display_name'] = result['display_name'][:40]
 
             # 3. display_variant (オプション)の検証
             if 'display_variant' not in result:
@@ -524,7 +653,7 @@ async def generate_search_patterns(
     base = description.split(',')[0].strip()
     return {
         "search_name": [base, description.strip()],
-        "display_name": base[:30],
+        "display_name": base[:40],
         "display_variant": None,
         "display_badges": [],
         "ai_description": None,
@@ -543,7 +672,8 @@ async def generate_search_patterns(
 async def process_batch(
     items: List[Dict],
     api_key: str,
-    recent_results: List[Dict] = None
+    recent_results: List[Dict] = None,
+    upcoming_items: List[Dict] = None
 ) -> List[Dict]:
     """バッチ単位で処理（全フィールド対応）"""
     client = AsyncOpenAI(api_key=api_key, base_url=DEEPINFRA_BASE_URL)
@@ -556,7 +686,8 @@ async def process_batch(
             api_key,
             client,
             item.get('category_emoji', '🍽️'),  # カテゴリ絵文字を渡す
-            recent_results
+            recent_results,
+            upcoming_items
         )
         tasks.append(task)
 
@@ -622,10 +753,15 @@ async def process_all_items(
 
         print(f"   📦 バッチ {batch_num}/{total_batches}: {len(batch)}件処理中...")
 
+        # 次のバッチから最大10件を取得（upcoming items）
+        next_batch_start = i + BATCH_SIZE
+        upcoming_items = remaining_items[next_batch_start:next_batch_start+10] if next_batch_start < len(remaining_items) else None
+
         batch_results = await process_batch(
             batch,
             api_key,
-            all_results[-10:] if all_results else None  # 最新10件を文脈として使用
+            all_results[-10:] if all_results else None,  # 最新10件を文脈として使用
+            upcoming_items  # 次に処理する10件
         )
 
         all_results.extend(batch_results)
@@ -683,10 +819,15 @@ async def test_mode_process(
 
         print(f"\n📦 バッチ {batch_num}/{total_batches}: {len(batch)}件処理中...")
 
+        # 次のバッチから最大10件を取得（upcoming items）
+        next_batch_start = i + batch_size
+        upcoming_items = sample_items[next_batch_start:next_batch_start+10] if next_batch_start < len(sample_items) else None
+
         batch_results = await process_batch(
             batch,
             api_key,
-            all_results[-5:] if all_results else None  # 最新5件を文脈として使用
+            all_results[-5:] if all_results else None,  # 最新5件を文脈として使用
+            upcoming_items  # 次に処理する10件
         )
 
         all_results.extend(batch_results)

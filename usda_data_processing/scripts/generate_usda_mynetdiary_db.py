@@ -160,7 +160,23 @@ def map_basic_fields(item: Dict, ingredient_type: str) -> Dict:
         "description": item['description'],
         "ai_description": item.get('ai_description'),
         
-        # LLMで生成された新しいフィールド
+        # LLMで生成された表示関連フィールド
+        "display_name": item.get('display_name'),  # 表示用の名前（例: "Ritz Butter Crackers"）
+        "display_variant": item.get('display_variant'),  # バリアント（例: "Sugar-Free", "Fresh"）
+        "display_badges": item.get('display_badges', []),  # バッジ（例: ["Diet", "Organic"]）
+        
+        # LLMで生成された絵文字フィールド
+        "category_emoji": item.get('category_emoji'),  # カテゴリの絵文字（例: "🍞"）
+        "food_specific_emoji": item.get('food_specific_emoji'),  # 食材固有の絵文字
+        
+        # LLMで生成された頻度情報
+        "consumption_frequency": item.get('consumption_frequency'),  # 消費頻度（common, moderate, rare）
+        "frequency_score": item.get('frequency_score'),  # 頻度スコア（1-3）
+        
+        # カテゴリ情報
+        "category": item.get('category'),  # 食材カテゴリ（例: "Yeast breads"）
+        
+        # LLMで生成された識別情報
         "brand_name": item.get('brand_name'),  # ブランド名（例: "Ritz", "McDonald's"）
         "item_type": item.get('item_type'),  # 食材タイプ（raw_ingredient, processed_ingredient, prepared_dish）
 

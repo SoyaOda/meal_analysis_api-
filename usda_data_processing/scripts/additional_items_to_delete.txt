@@ -1,0 +1,692 @@
+# カテゴリごとの追加削除対象（特殊ケース・レアな食事・不要な組み合わせ）
+
+【Pizza & Italian bases】
+Pizza rolls
+Tortellini, cheese-filled, no sauce
+
+【Sandwiches, burgers & wraps】
+Corn dog
+
+【Mexican & Latin】
+Pupusa, cheese only
+Mexican pizza
+
+【Asian mains & noodles】
+Chow mein or chop suey, meatless, no noodles
+Wonton, dumpling or pot sticker, steamed
+Yat Ga Mein with meat, fish, or poultry
+
+【Poultry】
+Turkey bacon, cooked
+
+【Beef, pork & processed meats】
+Ham, prosciutto
+Spam
+Corned beef hash
+Salisbury steak with gravy
+Bologna
+
+【Fish & seafood】
+Fish, stick
+Clams, steamed or boiled
+Oysters, steamed
+
+【Breakfast basics】
+Egg, whole, boiled or poached
+Oats, raw
+
+【Dairy】
+Pudding, chocolate, ready-to-eat
+
+【Breads, wraps & grains】
+Cornbread, prepared from mix
+
+【Vegetables — raw】
+Jicama, raw
+Relish, pickle
+
+【Cooked toppings — as ingredient】
+全体的に「as ingredient」は細かすぎるので多くを削除：
+Spinach, cooked, as ingredient
+Broccoli, cooked, as ingredient
+Carrots, cooked, as ingredient
+Sweet potato, cooked, as ingredient
+Tomatoes, cooked, as ingredient
+Onions, cooked, as ingredient
+Mushrooms, cooked, as ingredient
+Green pepper, cooked, as ingredient
+Red pepper, cooked, as ingredient
+Cabbage, cooked, as ingredient
+Cauliflower, cooked, as ingredient
+Eggplant, cooked, as ingredient
+Green beans, cooked, as ingredient
+Celery, cooked, as ingredient
+
+【Baked goods & cookies】
+Danish pastry, with cheese
+Breakfast pastry, NFS
+
+【Alcoholic beverages】
+Wine, rice
+Brandy
+Whiskey
+Scotch
+Gin
+Rum
+Vodka
+Tequila
+
+【Milks, Yogurts & Smoothies】
+Yogurt parfait, with fruit
+Fruit smoothie, with whole fruit and dairy
+
+【Ice Cream & Frozen Desserts】
+Ice cream bar, chocolate
+Ice cream sandwich, vanilla
+Ice cream cone, scooped, vanilla
+Ice cream cone, scooped, chocolate
+Ice cream cone, soft serve, vanilla
+Ice cream cone, soft serve, chocolate
+Ice cream soda, chocolate
+Ice cream soda, flavors other than chocolate
+Ice cream sundae, hot fudge topping
+Ice cream sundae, caramel topping
+Banana split
+Fudgesicle
+Frozen yogurt, soft serve, chocolate
+Frozen yogurt cone, vanilla
+Frozen yogurt cone, chocolate
+Ice cream cookie sandwich
+
+【Cheeses & Cheese/Sauce Anchors】
+Mozzarella cheese, tomato, and basil, with oil and vinegar dressing
+Cheese, paneer
+Cottage cheese, farmer's
+
+【Poultry — minimal cooking method set】
+（多くが調理法限定なので削除）
+Chicken breast, baked, broiled, or roasted, skin eaten, from raw
+Chicken breast, baked, broiled, or roasted, skin not eaten, from raw
+Chicken breast, grilled without sauce, skin eaten
+Chicken breast, grilled without sauce, skin not eaten
+Chicken breast, fried, coated, skin / coating eaten, from raw
+Chicken breast, baked, coated, skin / coating eaten
+Chicken leg, drumstick and thigh, baked or broiled, skin eaten
+Chicken leg, drumstick and thigh, fried, coated, skin / coating eaten
+Chicken thigh, baked, broiled, or roasted, skin eaten, from raw
+Chicken thigh, baked, broiled, or roasted, skin not eaten, from raw
+Chicken thigh, fried, coated, skin / coating eaten, from raw
+Chicken wing, baked, broiled, or roasted, from raw
+Chicken wing, grilled with sauce
+Chicken wing, fried, coated, from raw
+Turkey, light meat, roasted, skin eaten
+Turkey, light meat, roasted, skin not eaten
+Turkey, dark meat, roasted, skin eaten
+Turkey, dark meat, roasted, skin not eaten
+Duck, roasted, skin eaten
+Duck, roasted, skin not eaten
+Cornish game hen, roasted, skin eaten
+
+【Beef, Pork & Other Meats】
+Beef, pot roast
+Beef, brisket
+Beef, shortribs
+Pork, carnitas
+Pork, chop, NS as to fat eaten
+Pork, chop, coated, NS as to fat eaten
+Pork bacon, NS as to fresh, smoked or cured, cooked
+Lamb, NS as to cut
+Lamb, chop
+Veal, chop
+Goat
+Venison, steak
+Bison
+
+【Seafood & Fish】
+Fish, NS as to type, baked or broiled
+Fish, NS as to type, fried
+Fish, salmon, baked or broiled
+Fish, cod, baked or broiled
+Fish, haddock, baked or broiled
+Fish, trout, baked or broiled
+Fish, bass, baked or broiled
+Fish, tilapia, baked or broiled
+Fish, tilapia, fried
+Fish, white, mixed species, baked or broiled
+Clams, fried
+Oysters, fried
+Scallops, steamed or boiled
+Scallops, baked or broiled
+Shrimp, grilled
+Shrimp, steamed or boiled
+Shrimp, fried
+Calamari, fried
+Crab, soft shell
+Shrimp cocktail
+Ceviche
+
+【Mixed Dishes — Asian / Latin / Italian etc.】
+（多くが特殊な組み合わせなので削除）
+Beef with tomato-based sauce
+Beef burgundy
+Guisada, beef
+Steak teriyaki
+Beef curry with rice
+Barbecue beef, with sauce
+Beef stroganoff
+Swiss steak
+Pepper steak
+Beef and broccoli
+Kung Pao beef
+Beef chow mein or chop suey with noodles
+Stewed seasoned ground beef, Mexican style
+Sloppy joe, no bun
+Shepherd's pie
+Barbecue pork, with sauce
+Ham or pork with tomato-based sauce
+Pork chow mein or chop suey with noodles
+Moo Shu pork, without Chinese pancake
+Sweet and sour pork with rice
+Pork hash
+Chicken or turkey with teriyaki
+Chicken curry with rice
+Barbecue chicken
+Chicken with mole sauce
+Chicken kiev
+Chicken or turkey parmigiana
+Chicken or turkey cordon bleu
+Chicken or turkey tetrazzini
+Chicken or turkey with cheese sauce
+Chicken or turkey with mushroom sauce
+Chicken or turkey with cream sauce
+Moo Goo Gai Pan
+Almond chicken
+Chicken or turkey chow mein or chop suey, no noodles
+Chicken or turkey with dumplings
+Chicken or turkey with stuffing
+Paella with seafood
+Gumbo with rice
+Jambalaya with meat and rice
+Shrimp scampi
+Shrimp teriyaki
+Sweet and sour shrimp
+Shrimp creole, with rice
+Shrimp chow mein or chop suey with noodles
+Fish curry
+Seafood thermidor
+
+【Salads】（すでに多くが削除対象）
+Caesar salad, with romaine, no dressing
+Seafood salad
+Crab salad
+Shrimp salad
+Salmon salad
+
+【Sandwiches, Burgers & Hot Dogs】（すでに多くが削除対象）
+Barbecue sandwich, NFS
+Sloppy joe sandwich, on white bun
+Cheese steak sandwich or sub on white
+French dip sandwich
+Reuben sandwich
+Chicken salad sandwich on white
+Tuna salad sandwich on white
+Meatball sandwich or sub
+Barbecue pork sandwich, on white bun
+Pork sandwich
+Bacon, lettuce, tomato sandwich on white
+Fish sandwich, fried, on white bun
+Crab cake sandwich
+Salmon cake sandwich
+Gyro sandwich
+Cuban sandwich
+Italian sandwich on white
+Multiple meat sandwich on white
+Ham sandwich wrap
+Turkey sandwich wrap
+Chicken salad sandwich wrap
+Fish wrap sandwich
+
+【Soups & Stews】
+Soup, pho, with meat
+Soup, pho, no meat
+Soup, pozole
+Soup, Italian wedding
+Soup, Manhattan clam chowder
+Soup, New England clam chowder
+Shrimp gumbo
+Lobster gumbo
+Chili, white
+Soup, pepperpot
+
+【Sauces, Dips & Gravies】
+Mole sauce
+Chipotle dip, regular
+Onion dip, regular
+Ranch dip, regular
+Spinach dip, regular
+Vegetable dip, regular
+Tzatziki dip
+Seafood sauce
+
+【Eggs & Egg Dishes】（細かすぎる調理法を削除）
+Egg, whole, fried, NS as to fat
+Egg, whole, baked, no added fat
+Egg, whole, pickled
+Egg, white, cooked, no added fat
+Egg, yolk only, cooked, no added fat
+Egg, Benedict
+Egg salad, made with mayonnaise
+Egg omelet or scrambled egg, no added fat
+Egg white omelet, scrambled, or fried, no added fat
+Egg substitute, omelet, scrambled, or fried, no added fat
+
+【Breakfast Sandwiches & Burritos】（すでに多くが削除対象）
+Bacon biscuit sandwich
+
+【Beans, Legumes & Plant-based Mains】
+Black bean salad
+Refried beans with meat
+Hummus, flavored
+Beans with meat, NS as to type
+Falafel
+Dal
+Lentil curry
+Lentil curry with rice
+Vegetarian stroganoff
+Veggie burger, on bun
+Veggie burger, on bun, with cheese
+
+【Nuts, Nut Butters & Trail Mix】
+Trail mix with pretzels, cereal, or granola
+
+【Breads & Tortillas】
+Corn flour patty or tart, fried
+Gordita/sope shell, plain, no filling
+Popover
+Bread, nut
+
+【Pancakes/Waffles/French Toast】
+Pancakes, fruit
+Pancakes, chocolate
+Pancakes, whole grain
+Waffle, fruit
+Waffle, chocolate
+Waffle, whole grain
+French toast sticks
+Chinese pancake
+
+【Desserts & Sweet Pastries】
+Cake or cupcake, red velvet
+Cake or cupcake, lemon
+Cake or cupcake, white, no icing
+Cake, tres leche
+Cake, strawberry shortcake
+Pie, apple
+Pie, blueberry
+Pie, pumpkin
+Pie, pecan
+Pie, lemon meringue
+Cobbler, apple
+Crisp, apple
+Fritter, plain
+Crepe, chocolate filled
+Strudel, apple
+Baklava
+Pastry, puff, custard or cream filled, iced or not iced
+Doughnut holes
+Churros
+Beignet
+Coffee cake, crumb or quick-bread type
+Cereal or granola bar, fruit and nut
+Nutrition bar or meal replacement bar, NFS
+
+【Salty Snacks】（すでに多くが削除対象）
+Pretzel chips, hard, plain
+Pretzels, hard, yogurt coated
+Pretzels, hard, peanut butter filled
+Pretzels, soft, ready-to-eat, salted, buttered
+Pretzels, soft, ready-to-eat, topped with cheese
+
+【Grains, Rice & Porridge】
+Pasta, vegetable, cooked
+Long rice noodles, made from mung beans, cooked
+Cornmeal mush, no added fat
+Masa harina, cooked
+Rice, white, cooked, glutinous
+Rice, wild, 100%, cooked, no added fat
+Congee
+Couscous, plain, cooked
+Bulgur, no added fat
+Whole wheat cereal, cooked
+Oat bran cereal, cooked
+
+【Ready-to-eat Cereals】
+Cereal, fruit rings
+Cereal, chocolate puffs
+Cereal, cinnamon toast
+Cereal, frosted oats with marshmallows
+Cereal, oat squares
+Cereal, K's, plain
+Cereal, corn squares
+
+【Mexican / Tex‑Mex】（すでに多くが削除対象）
+Taco, fish
+Taco, meat, no cheese
+Taco, with beans, no cheese
+Taco, cheese only
+Burrito, with beans, no cheese
+Burrito, cheese only
+Burrito bowl, chicken
+Burrito bowl, with beans
+Enchilada, no meat
+Nachos, cheese only
+Nachos, beef or pork
+Nachos, chicken
+Gordita, cheese only
+Gordita, meat
+Quesadilla, cheese only
+Quesadilla, chicken
+Quesadilla, with vegetables
+Taquito, beef or pork
+Taquito, chicken
+Fajita, chicken
+Fajita, shrimp
+Fajita, vegetable
+Pupusa, meat, with beans
+
+【Pizza & Calzone】
+Pizza, no cheese, thin crust
+Pizza, no cheese, thick crust
+White pizza, cheese, thin crust
+White pizza, cheese, thick crust
+Calzone, with cheese, meatless
+Calzone, with meat and cheese
+Breakfast pizza with egg
+
+【Asian Dumplings & Savory Pastries】
+Egg roll, meatless
+Egg roll, with shrimp
+Wonton, dumpling or pot sticker, fried
+Bao bun
+Knish
+Pastry, cheese-filled
+Pastry, egg and cheese filled
+Spanakopita
+Samosa
+Quiche with meat, poultry or fish
+Spinach quiche, meatless
+Cheese quiche, meatless
+Turnover or hot pocket, meatless
+Turnover or hot pocket, beef
+Turnover or hot pocket, chicken
+
+【Italian Filled Pasta & Bakes】
+Ravioli, meat-filled, with tomato sauce or meat sauce
+Manicotti, cheese-filled, with tomato sauce, meatless
+Stuffed shells, cheese-filled, with tomato sauce, meatless
+Stuffed shells, with chicken, with tomato sauce
+Tortellini, meat-filled, with tomato sauce
+Tortellini, cheese-filled, meatless, with tomato sauce
+Tortellini, spinach-filled, with tomato sauce
+
+【Asian Noodles & Rice Dishes】
+Chow fun noodles with meat and vegetables
+Chow fun noodles with vegetables, meatless
+Lo mein, with shrimp
+Lo mein, with pork
+Lo mein, with beef
+Lo mein, with chicken
+Pad Thai, meatless
+Pad Thai with chicken
+Pad Thai with seafood
+Adobo, with noodles
+Bibimbap, Korean
+Dukboki or Tteokbokki, Korean
+Rice, fried, with chicken
+Rice, fried, with shrimp
+
+【Pasta, Mac & Cheese, Pasta Salads】（すでに多くが削除対象）
+Macaroni or noodles with cheese, made from packaged mix
+Macaroni or noodles, creamed, with cheese
+Pasta with vegetables, no sauce or dressing
+Pasta with tomato-based sauce and beans or lentils
+Macaroni or pasta salad, made with mayonnaise
+Macaroni or pasta salad with tuna
+Macaroni or pasta salad with chicken
+
+【Latin/Caribbean Rice Bowls】
+Adobo, with rice
+
+【Sushi / Congee / Ramen】
+Sushi roll, avocado
+Sushi roll, California
+Sushi roll, eel
+Sushi roll, salmon
+Sushi roll, shrimp
+Sushi roll tuna
+Sushi roll, vegetable
+Sushi, topped with crab
+Sushi, topped with eel
+Sushi, topped with salmon
+Sushi, topped with shrimp
+Sushi, topped with tuna
+Sushi, topped with egg
+Congee, with meat, poultry, and/or seafood
+Congee, with vegetables
+Congee, with egg
+Ramen bowl with beef
+Ramen bowl with chicken
+Ramen bowl, vegetarian
+Ramen bowl with meat and egg
+Ramen bowl, vegetarian with egg
+Soup, wonton
+Soup, tortilla
+
+【Rice & Beans / Rice Mains】
+Beans and white rice
+Beans and rice, with tomatoes
+Beans and rice, with meat
+Beans and brown rice
+Kidney beans and brown rice
+Black beans and brown rice
+Pinto beans and brown rice
+Rice pilaf
+Dirty rice
+Flavored rice mixture
+Flavored rice and pasta mixture
+Rice croquette
+Grape leaves stuffed with rice
+Stuffed pepper, with rice and meat
+Stuffed tomato, with rice and meat
+
+【Indian / South Asian Grains & Snacks】
+Biryani with vegetables
+Dosa, with filling
+
+【Sandwiches & Wraps】
+Vegetable sandwich on wheat
+Vegetable sandwich wrap
+Jelly sandwich, NFS
+Tomato sandwich on wheat
+
+【Soups – Core Set】
+Soup, noodle, NFS
+Soup, rice
+Soup, barley
+Soup, Matzo ball
+Soup, borscht
+Soup, gazpacho
+Soup, French onion
+Soup, cream of mushroom
+Soup, cream of vegetable
+Soup, minestrone
+Soup, cream of tomato
+Soup, seaweed
+Soup, broccoli cheese
+Soup, potato with meat
+
+【Fruits & Fruit‑based】
+Fruit, baked
+Guacamole with tomatoes
+Frozen fruit juice bar
+Sorbet
+
+【Potatoes & Starchy Roots】
+Potato, baked, peel not eaten
+Potato, baked, peel eaten
+Potato skins without topping
+Potato skins, with cheese
+Potato patty
+Potato pancake
+Stewed potatoes
+Plantain, cooked, no added fat
+Plantain, cooked with oil
+Cassava, cooked
+Yuca fries
+Taro, cooked
+Sweet potato, casserole or mashed
+Sweet potato tots
+
+【Leafy Greens & Salads】
+Greek Salad, no dressing
+Spinach salad, no dressing
+Cobb salad, no dressing
+Broccoli slaw salad
+Cabbage salad, NFS
+Cucumber salad made with cucumber and vinegar
+
+【Cooked Vegetables & Veg Entrées】
+Broccoli, fresh, cooked, no added fat
+Fried broccoli
+Broccoli casserole with rice
+Carrots, fresh, cooked, no added fat
+Carrots, glazed, cooked
+Peas and carrots, fresh, cooked, no added fat
+Pumpkin, cooked
+Winter squash, cooked, no added fat
+Cauliflower, fresh, cooked, no added fat
+Fried cauliflower
+Mushrooms, fresh, cooked, no added fat
+Fried mushrooms
+Eggplant, cooked, no added fat
+Eggplant parmesan casserole, regular
+Eggplant with cheese and tomato sauce
+Mushrooms, stuffed
+Fried okra
+Fried onion rings
+Green beans, cooked, Szechuan-style
+Ratatouille
+Vegetable tempura
+Pakora
+Vegetable curry with rice
+Chow mein or chop suey, meatless, with noodles
+
+【Pickled & Pickles】
+Vegetables, pickled
+Green beans, pickled
+Cauliflower, pickled
+Pickles, fried
+
+【Mixed Vegetable Medleys】
+Asian stir fry vegetables, cooked, no added fat
+Broccoli and cauliflower, cooked, no added fat
+Broccoli, cauliflower and carrots, cooked, no added fat
+Peas and corn, cooked, no added fat
+Lima beans and corn, cooked, no added fat
+Bean salad, yellow and/or green string beans
+
+【Stuffed / Fried Veg & Fritters】
+Artichokes, stuffed
+Chiles rellenos, cheese-filled
+Chiles rellenos, filled with meat and cheese
+Stuffed jalapeno pepper
+Fritter, corn
+
+【Non‑alcoholic Beverages】
+Coffee, brewed, blend of regular and decaffeinated
+Coffee, Latte
+Coffee, Cappuccino
+Coffee, Cafe Mocha
+Coffee, macchiato
+Coffee, instant, reconstituted
+Iced Coffee, brewed
+Tea, hot, with milk
+Tea, ginger
+Tea, bubble
+Tea, kombucha
+Tea, iced, instant, black, unsweetened
+Tea, iced, brewed, black, pre-sweetened with sugar
+Iced Tea / Lemonade juice drink
+Fruit punch, made with fruit juice and soda
+Slush frozen drink
+Horchata, made with water
+Horchata, made with milk
+Pina Colada, nonalcoholic
+Energy drink, sugar free
+Fruit smoothie, with whole fruit, no dairy
+Fruit and vegetable smoothie, with dairy
+Fruit and vegetable smoothie, non-dairy
+
+【Alcoholic Drinks】
+（特定のカクテルが多すぎる）
+Margarita
+Mojito
+Martini
+Bloody Mary
+Gin and tonic
+Old fashioned
+Whiskey sour
+Whiskey and cola
+Whiskey and soda
+Whiskey and ginger ale
+Vodka and soda
+Vodka and tonic
+Vodka and cola
+Moscow mule
+Tequila Sunrise
+Long Island iced tea
+Daiquiri
+Frozen margarita
+Frozen daiquiri
+Mai Tai
+Pina Colada
+Mimosa
+Manhattan
+Black Russian
+White Russian
+Sangria, red
+Sangria, white
+Wine spritzer
+Screwdriver
+Gin fizz
+
+【Sauces / Dressings / Oils】
+Salsa, pico de gallo
+Hot Thai sauce
+Garlic sauce
+Lemon-butter sauce
+Hollandaise sauce
+Pesto sauce
+Fry sauce
+Curry sauce
+Salad dressing, NFS, for sandwiches
+Creamy Italian dressing
+Korean dressing or marinade
+Olive tapenade
+Honey butter
+Caramel dip, regular
+Chocolate dip
+Dessert sauce
+
+【Sweets & Candy】
+Gelatin dessert with fruit
+Gelatin salad with vegetables
+Almonds, chocolate covered candy
+Chocolate candy with nuts
+Chocolate candy, caramel filled
+Chocolate candy, coconut filled
+Chocolate candy, nougat filled
+Candy, caramel
+Candy, mint
+Candy, fruit flavored pieces
+Peanuts, chocolate covered candy
