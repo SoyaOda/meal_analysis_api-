@@ -67,13 +67,6 @@
 
 ## Poultry — NS cuts & quick-serve
 
-* Chicken breast, NS as to cooking method, skin eaten
-* Chicken breast, NS as to cooking method, skin not eaten
-* Chicken drumstick, NS as to cooking method, skin eaten
-* Chicken drumstick, NS as to cooking method, skin not eaten
-* Chicken thigh, NS as to cooking method, skin eaten
-* Chicken thigh, NS as to cooking method, skin not eaten
-* Chicken wing, NS as to cooking method
 * Chicken nuggets, NFS
 * Chicken tenders or strips, NFS
 
@@ -110,6 +103,7 @@
 * Pork, tenderloin
 * Ham
 * Meat loaf, NS as to type of meat
+* Salisbury steak with gravy
 
 ## Seafood & Fish
 
@@ -121,7 +115,6 @@
 * Crab
 * Shellfish, NFS
 * Fish, white, mixed species, NFS
-* Fish, raw
 * Fish, NFS
 * Fish, salmon, raw
 * Clams, NFS
@@ -207,11 +200,11 @@
 * Sweet potato fries, NFS
 * Sweet potato, baked, no added fat
 * Potato, mashed, from fresh, made with milk
+* Potato, mashed, NFS
 
 ## Vegetables — Raw
 
 * Romaine lettuce, raw
-* Lettuce, Boston, raw
 * Spinach, raw
 * Kale, raw
 * Cabbage, green, raw
