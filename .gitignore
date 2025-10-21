@@ -96,4 +96,9 @@ db/
 elasticsearch-*/data/
 elasticsearch-*/logs/
 elasticsearch-8.10.4/
+dataset/
+
+# Large data files
+core_food_processing/data/*.parquet
+core_food_processing/data/*.owl
 

@@ -5,7 +5,7 @@ import base64
 import logging
 import json
 import hashlib
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union, Optional, Tuple
 
 from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 from ..config import get_settings
@@ -63,8 +63,9 @@ class DeepInfraService:
         prompt: str,
         max_tokens: int = 4096,
         temperature: float = 0.0,
-        seed: int = 123456
-    ) -> str:
+        seed: int = 123456,
+        return_usage: bool = False
+    ) -> Any:
         """
         画像とプロンプトをDeep Infraに送信し、分析結果をJSONとして受け取る。
 
@@ -75,9 +76,11 @@ class DeepInfraService:
             max_tokens: 生成される最大トークン数。
             temperature: 生成のランダム性を制御する値 (0に近いほど決定的)。
             seed: 再現性のためのシード値。
+            return_usage: Trueの場合、(content, usage)のタプルを返す。
 
         Returns:
-            モデルからのJSONレスポンス文字列。
+            return_usage=False: モデルからのJSONレスポンス文字列。
+            return_usage=True: (JSONレスポンス文字列, usage辞書)のタプル。
 
         Raises:
             ValueError: レスポンスが不正な場合に発生。
@@ -129,15 +132,28 @@ class DeepInfraService:
 
             # JSON文字列を取得
             raw_json_content = response.choices[0].message.content
-            logger.info(f"Successfully received JSON response from API. Usage: {response.usage}")
-            
+
+            # usage情報を辞書形式に変換
+            usage_dict = None
+            if response.usage:
+                usage_dict = {
+                    "prompt_tokens": response.usage.prompt_tokens if hasattr(response.usage, 'prompt_tokens') else 0,
+                    "completion_tokens": response.usage.completion_tokens if hasattr(response.usage, 'completion_tokens') else 0,
+                    "total_tokens": response.usage.total_tokens if hasattr(response.usage, 'total_tokens') else 0
+                }
+
+            logger.info(f"Successfully received JSON response from API. Usage: {usage_dict}")
+
             # JSONの妥当性を検証
             try:
                 json.loads(raw_json_content)
             except json.JSONDecodeError as e:
                 logger.error(f"Invalid JSON received from API: {e}")
                 raise ValueError(f"APIから無効なJSONが返されました: {e}")
-            
+
+            # return_usageがTrueの場合はusage情報も返す
+            if return_usage:
+                return raw_json_content, usage_dict
             return raw_json_content
 
         except (RateLimitError, APIConnectionError) as e:

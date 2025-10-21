@@ -1,0 +1,1294 @@
+## EXACT_FOOD_LIST (CORE) - spec3.md準拠
+
+Generated from FoodOn + Open Food Facts
+仕様: core_food_processing/spec/spec3.md
+
+特徴:
+- ファセット語（加工・包装・品質属性）を除去
+- 視覚アンカー重視（画像で区別できる名称のみ）
+- 同義語を代表語に縮約
+- OFF頻度でスコアリング
+
+Total Base Foods (Dishes): 317
+Total Ingredients: 900
+
+---
+
+# BASE FOODS (DISHES)
+
+## Breakfast
+
+* belgian waffle
+* pancake
+* pancake or waffle food product
+* potato waffle
+* waffle
+* waffle dough
+
+## Dairy Products
+
+* black cherry yogurt
+* commercial yogurt
+* fruit yogurt
+* greek yogurt
+* nut yogurt
+* orange yogurt
+* peach and yogurt
+* prune whip yogurt
+* strained yogurt
+* strawberry yogurt
+* vegetable yogurt
+* yogurt
+* yogurt derived product
+* yogurt food product
+* yogurt product
+* yogurt with fruit
+
+## Desserts
+
+* Christmas pudding
+* apple pie
+* banana cake
+* banana cream pie
+* bavarian pudding
+* beef pie
+* beef pot pie
+* blackberry pie
+* broad bean cake
+* butter cream pecan cake
+* butter pecan cake
+* butter pecan coffee cake
+* butter-flavored cake
+* butterscotch creme pudding
+* cake
+* cake aspartame
+* cake doughnut
+* cake yellow
+* cattle based pie food product
+* cheese pie
+* cherry pie
+* chicken pie
+* chicken pie food product
+* chicken pot pie
+* chocolate cream pie
+* chocolate creme pudding
+* chocolate pudding
+* coconut cream pie
+* coffee cake
+* coffee royal cake
+* cow milk pie food product
+* cream pie
+* cream pie made with synthetic topping or filling
+* cream-type pie
+* custard pie
+* daquiri cake
+* dietetic cake
+* eggnog pecan cake
+* fruit pie
+* fruit pie food product
+* fruit pot pie
+* griddle cake
+* honey cake
+* layer cake
+* lemon pie
+* meat pie
+* meat pie food product
+* mince pie
+* mince pie filling
+* peach pie
+* pecan cake
+* pecan pie
+* pecan pie filling
+* pie
+* pie dough
+* pie food product
+* pierogie
+* pine nut pudding
+* pineapple pie
+* pistachio pudding
+* poppy-seed cake
+* pot pie
+* pudding
+* pudding food product
+* pudding tapioca
+* pudding with fruit topping
+* pudding-filled pie
+* pumpkin pie
+* rum pudding
+* shepherd's pie
+* shepherd's pie filling
+* shortbread cake small
+* shortcake biscuit
+* squash pie
+* steak and kidney pudding
+* strawberry pie
+* strawberry pie filling
+* tartar sauce
+* tarte tropézienne
+* tartiflette
+* tuna pot pie
+* turkey pie
+* turkey pie food product
+* turkey pot pie
+* vanilla creme pudding
+* vanilla pudding
+* vegetable pie
+* wheat based cake food product
+* whiskey sour cake
+* wiesbadner tartlet
+* yellow cake
+
+## Mexican
+
+* cheese enchilada
+* enchilada
+* taco shell
+
+## Other Dishes
+
+* butter and egg roll
+* butter pecan roll
+* butter roll
+* butter-flavored roll
+* cannelloni roll with meat in sauce
+* cinnamon roll
+* danish roll
+* egg roll
+* egg roll or bun
+* hard roll
+* jelly roll
+* pecan roll
+* potato roll
+* roll
+* roll or bun
+* roll or bun food product
+* shrimp egg roll
+* spring roll
+* spring roll pastry case
+* wheat roll or bun
+* white roll
+
+## Pizza & Pasta
+
+* beef noodle soup
+* beef stroganoff with noodles
+* beef-flavored noodle soup
+* cheese ravioli with cheese sauce
+* chicken and noodles
+* chicken and noodles with vegetables
+* chicken noodle soup
+* chicken ravioli
+* chicken shrimp soup with noodles
+* chicken vegetable noodle soup
+* chicken-flavored noodle soup
+* chicken-flavored vegetable noodle soup
+* gnocchi
+* lasagna casserole
+* macaroni or noodle food product
+* multi-component durum wheat pasta dish
+* multi-component pasta product
+* multi-component wheat pasta dish
+* noodle based soup
+* noodle soup
+* noodles and cheese
+* pasta primavera
+* pepperoni pizza spread
+* pizza sauce
+* spinach pasta
+* wheat and corn macaroni or noodle
+
+## Rice & Asian
+
+* brown rice miso
+* chicken and dumplings
+* chicken and dumplings with vegetables
+* chicken dumpling
+* chicken with rice soup
+* chicken-flavored rice and macaroni
+* curry
+* curry paste
+* dumpling
+* dumpling soup
+* italian-style rice
+* licorice-type candy
+* multi-component rice food product
+* mutton curry
+* potato dumpling
+* potato dumpling dough
+* rice
+* rice and peas
+* rice beer
+* rice bread
+* rice pudding
+* rice wine
+* rice wine vinegar
+* seafood sushi
+* shrimp rice
+* sushi
+
+## Salads
+
+* barbecue bean salad
+* buttermilk ranch salad dressing
+* cheese salad dressing
+* creamy salad dressing
+* fruit salad
+* fruit salad dressing
+* fruit salad food product
+* gelatin fruit salad
+* imitation salad dressing
+* macaroni salad
+* plant based salad food product
+* potato salad
+* potato salad dressing
+* potato salad food product
+* salad cream
+* salad dressing
+* salad sauce
+* seafood salad
+* tuna salad
+* vegetable salad
+* vegetable salad food product
+* vinegar and spice salad dressing
+
+## Sandwiches & Burgers
+
+* beef hamburger
+* cheese cracker sandwich
+* chicken burger
+* cracker sandwich
+* hamburger bun
+* imitation cheese-flavored cracker sandwich
+* imitation chicken salad sandwich spread
+* italian sandwich roll
+* pudding substitute
+* sandwich spread
+* vegetarian burger
+* vegetarian sandwich
+
+## Snacks
+
+* popcorn
+* popcorn food product
+* popcorn with peanuts
+
+## Soups & Stews
+
+* animal soup food product
+* asparagus soup
+* badufsuki stew
+* bean soup
+* beef barley soup
+* beef soup
+* beef soup stix
+* beef stew
+* carrot soup
+* cattle soup food product
+* cauliflower soup
+* cheese soup
+* chicken egg drop soup
+* chicken gumbo soup
+* chicken soup
+* chicken soup a la reine
+* chicken soup and with chicken fat
+* chicken soup and with chicken meat
+* chicken soup food product
+* chicken soup stix
+* chicken soup with matzo balls
+* chicken vegetable soup
+* chicken-flavored soup
+* clam bisque soup
+* cream of asparagus soup
+* cream of broccoli soup
+* cream of carrot soup
+* cream of cauliflower soup
+* cream of celery soup
+* cream of chicken soup
+* cream of lobster soup
+* cream of mushroom soup
+* cream of potato soup
+* cream of toheroa soup
+* cream of tomato soup
+* cream soup
+* egg drop soup
+* egg soup
+* eru soup
+* fish soup
+* fruit soup
+* game soup
+* golden onion soup
+* green pea soup with pork
+* green pea with ham soup
+* ham soup stix
+* imitation chicken soup
+* imitation stew beef
+* kangaroo tail soup
+* langostino cream soup
+* langostino soup
+* lentil soup
+* lobster soup
+* lobsterette soup
+* meat-based soup
+* minestrone soup
+* minestrone soup with meat
+* minestrone soup with poultry
+* mushroom soup
+* mushroom soup food product
+* onion soup
+* onion soup food product
+* oxtail soup
+* oyster soup
+* pea and ham soup
+* pea soup
+* pea soup food product
+* pepper pot soup with meat
+* plant soup food product
+* potato soup
+* potato soup food product
+* poultry-based soup
+* red kidney bean soup food product
+* rock lobster soup
+* scampi soup
+* scottish lobster soup
+* sea animal soup
+* soup
+* soup animal component
+* soup food product
+* split green pea soup with pork
+* spring soup
+* stew peas
+* tender mushroom soup
+* tomato soup
+* tomato soup food product
+* tortellini with meat soup
+* veal stew
+* vegetable beef soup
+* vegetable soup
+* vegetable soup food product
+
+# INGREDIENTS
+
+## Condiments
+
+* aloe honey
+* clover honey
+* honey
+* honey spread
+* sauce
+* wild honey
+
+## Dairy & Eggs
+
+* Bleu de Bresse cheese
+* Bondon cheese food product
+* Brie cheese food product
+* Limburger cheese
+* Monterey Jack cheese product
+* acid whey
+* acidified cow milk dairy product
+* acidophilus cow milk
+* acidophilus lowfat milk
+* american cheese
+* american cheese food product
+* anfrom cheese
+* animal milk
+* asadero cheese
+* asiago cheese
+* avian egg food product
+* añejo cheese
+* baker's cheese
+* bavarian cream
+* beaufort cheese
+* bel paese cheese
+* bitter cheese food product
+* blue cheese
+* blue cheese food product
+* blue cheese-flavored dip
+* blue-veined cow milk cheese
+* boerenkass cheese
+* bovine cheese food product
+* bovine milk beverage
+* brazilian cheese
+* brick cheese
+* brie cheese
+* buffalo milk
+* buffalo milk beverage
+* buffalo milk curd
+* butter
+* butter and sugar
+* butter granule or flake
+* butter oil
+* butter pecan ice cream
+* butter product
+* butter sole
+* butter with garlic
+* butterfat
+* butterfly mackerel
+* butterfly mackerel food product
+* buttermilk food product
+* caciocavallo siciliano cheese
+* caerphilly cheese
+* cambozola cheese
+* camel milk
+* camel milk beverage
+* camelid milk beverage
+* camembert cheese
+* camembert cheese food product
+* canastrato cheese
+* candy crunch ice cream
+* caprine cheese food product
+* caprine milk beverage
+* caraway cheese
+* carob and vanilla ice cream
+* cervid milk beverage
+* cheddar cheese
+* cheddar cheese food product
+* cheddar cheese-flavored spread
+* cheddar-flavored cheese
+* cheese
+* cheese amsterdam
+* cheese asiago fresh
+* cheese asiago medium
+* cheese curd
+* cheese dip
+* cheese filling
+* cheese food
+* cheese preparation
+* cheese spread
+* cheese whey
+* cheshire cheese
+* chocolate ice cream
+* chocolate milk
+* clarified butter
+* clotted cream
+* coffee creamer
+* coffee ice cream
+* colby cheese
+* condensed milk
+* cotija cheese
+* cottage cheese
+* cow milk cheese
+* cream
+* cream cheese
+* cream cheese spread
+* cream dessert
+* danbo cheese
+* derby cheese
+* devonshire cream
+* edam cheese
+* egg salad
+* eggnog
+* emmenthal cheese
+* evaporated milk
+* evaporated skim milk
+* farmer cheese
+* farmhouse cheese
+* feta cheese
+* french vanilla ice cream
+* full cream
+* full cream milk
+* gloucester cheese
+* goat cheese sauce
+* goat milk
+* goat milk butter
+* goat milk cheese
+* gouda cheese
+* granular cheese
+* gruyere cheese
+* hard cheese
+* hard grating cheese
+* head cheese
+* heavy cream
+* ice cream
+* ice cream cone
+* ice milk
+* impastata cheese
+* italian cheese
+* jarlsburg cheese
+* lancashire cheese
+* leicester cheese
+* longhorn cheddar cheese
+* lowfat milk
+* manchego cheese
+* milk
+* milk fat
+* milk pudding
+* milkshake
+* minas cheese
+* mozzarella cheese
+* muenster cheese
+* neufchatel cheese spread
+* oaxaca cheese
+* parmesan cheese
+* pecorino cheese
+* provola cheese
+* ricotta cheese
+* romano cheese
+* sardo cheese
+* semisoft cheese
+* semisoft part skim cheese
+* skim milk
+* skim milk cheese
+* sour cream
+* stilton cheese
+* stracchino cheese
+* strawberry ice cream
+* swiss cheese
+* taleggio cheese
+* unripened cheese
+* vanilla ice cream
+* water buffalo milk
+* wensleydale cheese
+* whey
+* whey butter
+* whey cheese
+* whey product
+* whipped cream
+* whipping cream
+
+## Fruits
+
+* apple snail
+* fruit jelly
+* orange roughy
+* orange sherbet
+* red raspberry preserves
+
+## Grains
+
+* rice pudding
+* sorghum flour
+
+## Meat & Poultry
+
+* alligator meat
+* andouille sausage
+* animal product sausage
+* arctic crabmeat
+* armadillo meat
+* beef
+* beef 7-bone chuck steak
+* beef T-bone steak
+* beef and pork sausage
+* beef bacon
+* beef ball in sauce
+* beef blade chuck steak
+* beef bologna
+* beef bone
+* beef bone marrow extract for flavoring
+* beef bottom round steak
+* beef bourguignon
+* beef brisket
+* beef casing
+* beef chuck
+* beef chuck arm steak
+* beef chuck eye steak
+* beef chuck steak
+* beef chuck tender steak
+* beef cowboy steak
+* beef culotte steak
+* beef curry
+* beef cut
+* beef denver steak
+* beef dog food
+* beef drippings
+* beef external fat
+* beef extract
+* beef eye of round steak
+* beef eye round
+* beef fat
+* beef fatty tissue
+* beef flank steak
+* beef flat iron steak
+* beef flavor
+* beef frankfurter
+* beef ground round
+* beef ham
+* beef hanger steak
+* beef infant food
+* beef inside skirt steak
+* beef jerky
+* beef kidney
+* beef liver
+* beef loin
+* beef lung
+* beef outside skirt steak
+* beef oyster blade
+* beef patty with mushroom
+* beef petite sirloin steak
+* beef porterhouse steak
+* beef prime rib roast
+* beef product based flavoring or
+* beef ranch steak
+* beef rib
+* beef rib steak
+* beef ribeye cap steak
+* beef ribeye fillet
+* beef ribeye steak
+* beef round roast
+* beef round steak
+* beef salami
+* beef sausage
+* beef seam fat
+* beef short rib
+* beef shoulder steak
+* beef sierra steak
+* beef sirloin bavette steak
+* beef sirloin steak
+* beef sirloin tip center steak
+* beef sirloin tip side steak
+* beef sirloin tip steak
+* beef sloppy joe filling
+* beef steak
+* beef stock
+* beef strip steak
+* beef suet
+* beef sweetbread
+* beef tallow
+* beef tenderloin
+* beef tenderloin steak
+* beef tomahawk steak
+* beef tongue
+* beef top blade steak
+* beef top loin steak
+* beef top round roast
+* beef top round steak
+* beef top sirloin steak
+* beef tri-tip steak
+* beef trim
+* beef tripe
+* beef with barbecue sauce
+* beef with gravy
+* beefalo food product
+* bison meat
+* blood sausage
+* blue crabmeat
+* bombay duck wafer
+* brazilian duckbill
+* breakfast sausage
+* broiler chicken meat food product
+* brown chicken egg
+* buffalo meat
+* burger meat
+* butchery cut of lamb
+* butchery cut of pork
+* cape spiny lobster meat
+* chicken
+* chicken blood
+* chicken bone
+* chicken breast
+* chicken carcass
+* chicken egg
+* chicken egg white
+* chicken egg yolk
+* chicken fat
+* chicken leg
+* chicken meat
+* chicken neck
+* chicken salad
+* chicken stock
+* chicken strip
+* chicken thigh
+* chicken wing
+* chipped beef
+* corned beef
+* country ham
+* crabmeat
+* duck
+* duck egg
+* duck egg white
+* duck fat
+* emu meat
+* fish meat
+* ground beef
+* ham
+* ham fat
+* ham salad
+* ham steak
+* italian pork sausage
+* italian sausage
+* kangaroo meat
+* king crabmeat
+* lamb
+* lamb brain
+* lamb breast
+* lamb chop
+* lamb fat
+* lamb heart
+* lamb leg
+* lamb liver
+* lamb lung
+* lamb meat
+* lamb neck
+* lamb rib
+* lamb rib chop
+* lamb sausage
+* lamb shoulder
+* lamb spleen
+* lamb steak
+* lamb sweetbread
+* leg of lamb
+* lobster meat
+* luncheon meat
+* meat
+* meat in tomato sauce
+* meat product
+* meat sausage
+* meatball
+* meatloaf
+* pork
+* pork backfat
+* pork belly
+* pork brain
+* pork chitterlings
+* pork ear
+* pork fat
+* pork fatty tissue
+* pork ham
+* pork heart
+* pork hock
+* pork jowl
+* pork kidney
+* pork leg
+* pork liver
+* pork loin
+* pork loin back ribs
+* pork lung
+* pork meat
+* pork product
+* pork ribs
+* pork rind
+* pork roast
+* pork salami
+* pork sausage
+* pork sausage link
+* pork sausage patty
+* pork shoulder
+* pork spareribs
+* pork steak
+* pork tenderloin
+* pork tongue
+* poultry
+* poultry fat
+* poultry meat
+* rabbit meat
+* red meat
+* reindeer meat
+* roast beef
+* sausage
+* sausage meat
+* serrano ham
+* smoked meat
+* turkey
+* turkey bacon
+* turkey breast
+* turkey fat
+* turkey liver
+* turkey meat
+* turkey salami
+* turkey thigh
+* wild boar meat
+
+## Other Ingredients
+
+* Aequipecten opercularis
+* Argopecten gibbus
+* Argopecten irradians
+* Biltong
+* Buffalo wing
+* Burgundy fondue
+* Canadian bacon
+* Cantareus apertus
+* Chionoecetes opilio
+* Kielbasa
+* Masago
+* Ostrea edulis
+* Pleoticus muelleri
+* abalone
+* abalone food product
+* african freshwater cichlid
+* african pompano
+* agave worm
+* alaska pollock
+* alaskan sea lion
+* albacore
+* albacore food product
+* alewife
+* alewife food product
+* amberjack
+* american sardine in oil
+* amphibian food product
+* anchovy
+* anchovy fillet
+* anchovy fillet in oil
+* anchovy food product
+* anchovy in brine
+* anchovy in olive oil
+* anchovy paste
+* angel shark
+* animal blood
+* animal blubber
+* animal derived beverage
+* animal external fat
+* animal fat
+* animal fat or oil
+* animal fat or oil refined food product
+* animal food product
+* animal protein
+* animal seafood product
+* animal seam fat
+* animal shortening
+* animal tissue
+* animal-derived flavor
+* animal-derived food
+* antelope food product
+* arctic pike
+* argentine grouper
+* argentine hake
+* argentine sea bass
+* arrowtooth flounder
+* aspic
+* aspic jelly
+* atlantic cod
+* atlantic croaker
+* atlantic halibut
+* atlantic halibut fillet
+* atlantic herring
+* atlantic mackerel
+* atlantic menhaden
+* atlantic pollock
+* atlantic round herring
+* atlantic sardine
+* atlantic saury
+* atlantic skipjack
+* atlantic sole
+* atlantic steelhead
+* atlantic thread herring
+* australian cod
+* australian herring
+* australian scallop
+* australian sea bream
+* bacalao
+* back bacon
+* bacon
+* bacon fat
+* bacon food product
+* bacon side
+* baking fat
+* baltic herring fillet
+* balut
+* bar jack
+* barnacle
+* barracuda
+* barramundi fillet
+* barramundi food product
+* bass food product
+* bavarian mousse
+* bear food product
+* bearded seal oil
+* beaver food product
+* bee food product
+* bee pollen
+* beeswax
+* belitong snail
+* beluga oil
+* beverage
+* big scale mackerel
+* bison food product
+* black cod
+* black crappie
+* black pudding
+* blackfin snapper
+* blood cockle
+* blood food product
+* blood meal
+* blood snapper
+* blue pike
+* blue runner
+* blue runner fillet
+* blue warehou
+* blueback herring
+* bluefin searobin
+* bob veal
+* bockwurst
+* bologna
+* bologna genoa
+* bone meal wafer
+* bonita mackerel
+* bonito
+* bonito dried
+* bonito fillet extract
+* bonito food product
+* bowhead whale oil
+* brain food product
+* bratwurst
+* braunschweiger
+* brazilian corvina
+* brazilian pompano
+* breakfast beverage
+* bream
+* breath-freshener product
+* brook trout
+* brown trout
+* buffalo burger
+* buffalo food product
+* buffalo jerky
+* bullfrog
+* bullhead
+* burbot
+* butilarra fresca
+* cabezon
+* calabrese salami
+* calf liver
+* calf's foot gelatin
+* calico scallop
+* california corbina
+* california halibut
+* california pilchard
+* california sea bass
+* california yellowtail
+* cambridge beverage
+* canadian bass
+* canadian sardine
+* cape hake
+* cape hake fillet
+* capelin
+* capon carcass
+* capon food product
+* carp
+* carp food product
+* carp smoked
+* carribean red snapper
+* cassidula
+* caviar
+* caviar semi-preserved
+* cephalopod
+* cephalopod food product
+* chinchard
+* chocolate custard
+* chorizo
+* cod
+* cod fillet
+* cod liver
+* cod liver oil
+* cod roe
+* common sole
+* conch
+* corvina
+* cricket
+* croaker
+* crustacean
+* cusk
+* custard
+* dab
+* dairy based dessert
+* dairy dessert
+* dip
+* dover sole
+* drum
+* edible collagen casing
+* eel
+* european pilchard
+* flan
+* flounder
+* flounder fillet
+* food
+* frankfurter
+* frigate mackerel
+* gelatin
+* gelato
+* genoa salami
+* ghee
+* goose fat
+* goose liver
+* grana padano
+* gravlax
+* great scallop
+* ground chuck
+* ground sirloin
+* grouper
+* grunt
+* haddock
+* haddock fillet
+* hake
+* hake fillet
+* half and half
+* half-and-half
+* halibut
+* heart
+* herring
+* herring fillet
+* herring oil
+* herring roe
+* hoki
+* horse mackerel
+* hot dog
+* illipe nut
+* infant food
+* jack
+* jack mackerel
+* john dory
+* kamaboko
+* kernel paste
+* khoa
+* kidney
+* king mackerel
+* krill
+* kulfi
+* langostino
+* lard
+* leberkase
+* lime sherbet
+* ling
+* liver
+* lung
+* macaroon
+* mackerel
+* mackerel fillet
+* mahi mahi
+* marlin
+* marrow
+* mascarpone
+* menhaden
+* menhaden oil
+* meringue
+* mollusc
+* mortadella
+* mountain water
+* mousse
+* mullet
+* mutton
+* nile perch
+* north pacific sole
+* nut coating
+* ocean perch
+* octopus
+* omelette
+* ova
+* pacific cod
+* pacific halibut
+* pacific herring
+* pacific saury
+* pacific whiting
+* pancetta
+* paneer
+* partridge
+* pate
+* perch
+* pike
+* pike perch
+* pike quenelles
+* pizza topping
+* pollock fillet
+* prosciutto
+* pudding
+* queso blanco
+* queso fresco
+* quiche
+* rabbit
+* rabbit liver
+* rainbow trout
+* reindeer steak
+* rote grutze
+* royal jelly
+* ryecorn
+* sago
+* salami
+* sansho
+* sardine
+* sardine oil
+* sashimi
+* saury
+* scallop
+* scampi
+* sea bass
+* sea bass fillet
+* sea bream
+* sea trout
+* seafood
+* seed
+* sei
+* shark
+* sherbet
+* shoulder
+* sild
+* silverside
+* smelt
+* smetana
+* snack
+* snail
+* snapper
+* sole
+* southern blue whiting
+* spanish mackerel
+* squid
+* stout
+* striped bass
+* sturgeon roe
+* sucker
+* suet
+* tallow
+* tilapia
+* topping
+* tripe
+* trout
+* trout fillet
+* turbot
+* veal
+* veal fat
+* venison
+* wahoo
+* walleye
+* white bass
+* white croaker
+* whiting
+* wurstel
+* yellowtail
+* yellowtail flounder
+
+## Seafood
+
+* Australian mussel
+* Blue mussel
+* african mudfish
+* akee and saltfish
+* alaska snow crab
+* alaska white salmon
+* alaskan shrimp
+* american lobster
+* american razor clam
+* andes salmon
+* angas' mussel
+* antarctic centolla crab
+* arctic white salmon
+* argentine fish fillet
+* atlantic queen crab
+* atlantic salmon and trout food product
+* atlantic salmon fillet
+* atlantic wolffish
+* bank rockfish
+* bear claw lobster
+* bear crab
+* belon oyster
+* big-eyed tuna
+* black rockfish
+* blackfin tuna
+* blow fish
+* blue catfish
+* blue crab
+* blue king crab
+* blue rockfish
+* blue swimmer crab
+* bluefin tuna
+* bluefin tuna food product
+* bluefish
+* bluefish fillet
+* bluefish food product
+* bluff oyster
+* bocaccio rockfish
+* bonito tuna
+* bony fish food product
+* brazilian catfish
+* buffalofish
+* buffalofish fillet
+* buffalofish food product
+* burger's spiny lobster
+* butchery cut of atlantic salmon
+* butchery cut of catfish
+* butter clam
+* butterball fish
+* butterfish
+* butterfly shrimp
+* calico clam
+* canadian lobster
+* canadian sockeye salmon
+* canadian whitefish
+* canary rockfish
+* cape lobster
+* cape spiny lobster
+* cape spiny lobster food product
+* catfish
+* catfish fillet
+* catfish stick
+* channel catfish
+* channel catfish food product
+* chum salmon
+* clam
+* clam broth
+* clam sauce
+* coho salmon
+* crab
+* crab cake
+* crab roe
+* crab salad
+* crayfish
+* cuttlefish
+* dungeness crab
+* european lobster
+* fish
+* fish and chips
+* fish ball
+* fish cake
+* fish curry
+* fish flesh
+* fish meal
+* fish oil
+* fish paste
+* fish pate
+* fish patty
+* fish portion
+* fish product
+* fish protein
+* fish roe
+* fish salad
+* fish skin
+* fish stick
+* flying fish
+* garfish
+* gefilte fish
+* king crab
+* king salmon
+* lobster
+* lobster tail
+* lobster tomalley
+* lumpfish roe
+* milkfish
+* moonfish
+* mussel
+* northern lobster
+* oyster
+* pacific oyster
+* pacific salmon
+* paddlefish roe
+* pink salmon
+* razor clam
+* rock crab
+* rock lobster tail
+* rock shrimp
+* sablefish
+* salmon
+* salmon oil
+* salmon roe
+* salmon trout
+* shellfish
+* shrimp
+* shrimp meal
+* shrimp scampi
+* skipjack tuna
+* snow crab
+* sockeye salmon
+* spider crab
+* spiny lobster
+* swordfish
+* swordfish steak
+* tuna
+* tuna fillet
+* tuna steak
+* unicorn filefish
+* yellowfin tuna
+
+## Vegetables
+
+* herring in tomato sauce
+* pepperoni
+

@@ -153,6 +153,7 @@
 * Roll, white, hot dog bun
 * Tortilla, corn
 * Tortilla, flour
+* Tortilla, whole wheat
 * Taco shell, corn
 * Garlic bread, NFS
 * Biscuit, NFS
@@ -215,7 +216,7 @@
 * Peppers, sweet, green, raw
 * Peppers, sweet, red, raw
 * Peppers, banana, raw
-* Onions, green, raw
+* Onions, raw
 * Tomatoes, raw
 * Avocado, raw
 * Corn, raw
@@ -227,10 +228,9 @@
 * Pickles, dill
 * Raw vegetable, NFS
 * Lettuce, raw
+* Lettuce, iceberg, raw
 * Mixed salad greens, raw
 * Coleslaw
-* Lettuce, salad with assorted vegetables including tomatoes and/or carrots, no dressing
-
 ## Vegetables — Cooked
 
 * Broccoli, NS as to form, cooked
@@ -243,6 +243,7 @@
 * Cauliflower, NS as to form, cooked
 * Classic mixed vegetables, NS as to form, cooked
 * Asparagus, NS as to form, cooked
+* Bamboo shoots, cooked
 * Brussels sprouts, NS as to form, cooked
 * Beets, NS as to form, cooked
 * Summer squash, yellow or green, NS as to form, cooked
@@ -322,6 +323,7 @@
 
 * Mustard
 * Mayonnaise, regular
+* Tartar sauce
 * Barbecue sauce
 * Ranch dressing
 * Caesar dressing
@@ -329,6 +331,7 @@
 * Honey mustard dressing
 * Blue or roquefort cheese dressing
 * Soy sauce
+* Wasabi
 * Fish sauce
 * Teriyaki sauce
 * Hoisin sauce
@@ -455,6 +458,7 @@
 * Coffee, espresso
 * Coffee, brewed, flavored
 * Tea, iced, brewed, black, unsweetened
+* Tea, iced, brewed, black, pre-sweetened with sugar
 * Tea, hot, leaf, green
 * Tea, hot, herbal
 * Soft drink, NFS
@@ -503,8 +507,11 @@
 
 ## Dairy — Cheeses & Fats
 
+* Cheese, American
 * Cheese, Cheddar
+* Cheese, Feta
 * Cheese, Mozzarella, NFS
+* Cheese, Provolone
 * Cheese, Swiss
 * Cheese, cottage, NFS
 * Cream cheese, regular, plain
