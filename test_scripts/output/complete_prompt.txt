@@ -14,11 +14,14 @@ Your primary goal is to **identify every visually separate food item** (each is 
 
 ## Method Choice (use this priority to reduce over-decomposition)
 
+**CRITICAL RULE**: Prefer pre-composed bases from the sections 'Pasta/Mac & Cheese', 'Mixed Vegetables', 'Rice pilaf', 'Meat loaf' etc. Use DECOMPOSE only when no suitable base exists.
+
 1) **USE_AS_IS** — Standard single item or standard dish with no visible customization.
    - Output: `base_food.item_name` = exact match from EXACT_FOOD_LIST; `ingredients` = `[]`.
 
 2) **HYBRID_DECOMPOSITION** — A standard base plus **visible add-ons** (toppings/extras).
    - Output: `base_food.item_name` = base from EXACT_FOOD_LIST; `ingredients` = **only extras**.
+   - **Switch rule**: If you are about to add anything to ingredients, you MUST NOT use USE_AS_IS. Switch to HYBRID_DECOMPOSITION (for base+toppings) or DECOMPOSE_TO_INGREDIENTS (for fully custom).
 
 3) **DECOMPOSE_TO_INGREDIENTS** — Fully custom assembly; all constituents are visible; no suitable standard base.
    - Output: `base_food.item_name = null`, `base_food.weight_g = 0`; list **all** visible parts.
@@ -31,15 +34,26 @@ Your primary goal is to **identify every visually separate food item** (each is 
 
 When you pick a HYBRID base (e.g., `"Pasta with tomato-based sauce and cheese"`), **do not** add ingredients that the base already implies (e.g., `"Cheese, ..."` / `"Tomatoes, ..."`), **unless** there are clearly visible **extra** toppings beyond the base.
 
+**Sauce attachment rule**: Never output sauces/dressings as a standalone dish unless they are served in a separate cup/bottle. If the sauce is on a protein/starch, attach it as a HYBRID ingredient to that dish.
+
+---
+
+## Salad Handling Rules
+
+- If a salad contains more than leafy greens (e.g., greens + ≥1 visible add-on), always use DECOMPOSE_TO_INGREDIENTS. Do NOT use "Mixed salad greens, raw" as a USE_AS_IS base.
+- If a dressing is visible but its type is unclear, use "Sauce, NFS" (one item) rather than guessing a specific dressing.
+
+---
+
+## Poultry Identification
+
+If you cannot clearly distinguish breast vs thigh vs wing, use "Chicken, NS as to part and cooking method, skin eaten" or "Chicken, NS as to part and cooking method, skin not eaten" from the minimal set, based on visible skin.
+
 ---
 
 ## Multiple Identical Units
 
-If the **same** item appears multiple times (e.g., two tacos), you may **either**:
-- output separate dishes, **or**
-- output **one** dish with an **optional** field `"unit_count": <integer>` and make `weight_g` the **total** across units.
-
-Keep the approach consistent within one image.
+For multiple identical items (e.g., 2 tacos, 3 wings), output a single dish with `unit_count` = total count and `weight_g` = total weight. Do not duplicate identical dishes.
 
 ---
 
@@ -52,8 +66,7 @@ Keep the approach consistent within one image.
 
 ## Name Validation (must pass before output)
 
-For every `base_food.item_name` and `ingredients[].ingredient_name`, **verify** the string exists **verbatim** in the EXACT_FOOD_LIST you received in this run.
-If not found, **replace** it with the nearest valid **NFS/NS** fallback from the list or **omit** it. **Never** invent new names.
+Before returning, cross-check every `item_name` and `ingredient_name` against EXACT_FOOD_LIST (CORE). If a chosen string is not found verbatim, replace it with the closest valid NFS/NS fallback from the list. Returning any out-of-list name is a hard error.
 
 ---
 
@@ -299,6 +312,7 @@ You will receive a **CORE** list (below). Prefer CORE items. If an adequate matc
 * Quinoa, no added fat
 * Rice, white, cooked, no added fat
 * Rice, brown, cooked, no added fat
+* Rice pilaf
 
 ## Ready-to-eat Cereals
 
@@ -323,6 +337,7 @@ You will receive a **CORE** list (below). Prefer CORE items. If an adequate matc
 * Sweet potato, NFS
 * Sweet potato fries, NFS
 * Sweet potato, baked, no added fat
+* Potato, mashed, from fresh, made with milk
 
 ## Vegetables — Raw
 
@@ -352,6 +367,7 @@ You will receive a **CORE** list (below). Prefer CORE items. If an adequate matc
 * Lettuce, raw
 * Mixed salad greens, raw
 * Coleslaw
+* Lettuce, salad with assorted vegetables including tomatoes and/or carrots, no dressing
 
 ## Vegetables — Cooked
 
