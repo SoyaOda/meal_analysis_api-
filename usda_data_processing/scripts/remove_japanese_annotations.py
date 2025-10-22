@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 selected_food_list.txtから（）で囲まれた日本語の注釈を削除
 """

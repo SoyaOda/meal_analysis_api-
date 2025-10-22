@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 FDCデータセットの単位・表記パターン網羅的調査スクリプト
 """

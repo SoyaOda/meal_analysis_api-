@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 オートコンプリート検索のシミュレーションテスト
 実際のユーザー入力パターンでsearch_nameの品質を検証

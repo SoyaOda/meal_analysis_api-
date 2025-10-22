@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 selected_food_list.txtから重複項目を削除
 """

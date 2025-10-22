@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 飲料関連のカテゴリを整理し、重複を削除するスクリプト
 """

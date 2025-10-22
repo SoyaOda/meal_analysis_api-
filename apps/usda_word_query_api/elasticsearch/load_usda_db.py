@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 USDA Unified Database Loader for Elasticsearch
 usda_unified_db.jsonをElasticsearchにインデックス化するスクリプト

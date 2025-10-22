@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 surveyDownload.jsonから食品名を元データの順番で抽出してMDファイルに保存
 

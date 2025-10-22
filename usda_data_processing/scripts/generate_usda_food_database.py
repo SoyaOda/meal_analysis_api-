@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 usda_database/surveyDownload.jsonから食品データベースを生成（全データ版）
 

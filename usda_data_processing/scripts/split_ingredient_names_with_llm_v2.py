@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 USDA食材名分割処理 v2 - 前処理済みデータ版
 

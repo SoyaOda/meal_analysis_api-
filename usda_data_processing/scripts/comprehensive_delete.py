@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 selected_food_list.txtから特殊ケース・レアな食事・不要な組み合わせを包括的に削除
 """

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 selected_food_list.txtの食品名がoriginal_name_single_ingredients.txtと
 original_name.txtから正確に抽出されているか検証

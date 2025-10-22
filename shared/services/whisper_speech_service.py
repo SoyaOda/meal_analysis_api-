@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 OpenAI Whisper API + Local Whisperを使用した音声認識サービス
 """

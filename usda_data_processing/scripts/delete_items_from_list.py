@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 selected_food_list.txtから特殊パターンや限定的な食品を削除するスクリプト
 """
