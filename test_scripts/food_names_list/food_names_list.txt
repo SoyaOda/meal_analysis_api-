@@ -228,7 +228,7 @@
 * Parsley, raw
 * Olives, black
 * Pickles, dill
-* Carrots, shredded
+* Carrots, raw
 * Raw vegetable, NFS
 * Lettuce, raw
 * Lettuce, iceberg, raw
@@ -243,7 +243,6 @@
 * Corn, frozen, cooked, no added fat
 * Green peas, NS as to form, cooked
 * Green peas, frozen, cooked, no added fat
-* Mixed vegetables, cooked
 * Mushrooms, NS as to form, cooked
 * Spinach, NS as to form, cooked
 * Tomatoes, NS as to form, cooked

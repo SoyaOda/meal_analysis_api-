@@ -1,0 +1,2215 @@
+{
+  "ice_cream_light": {
+    "display_name": "Light ice cream",
+    "category": "desserts_sweets",
+    "spec2_rule": "分割（栄養差大）",
+    "spec2_reason": "通常アイスと脂質・カロリー差が大きく、視覚的に区別しづらいが栄養上は分ける必要があるため独立カテゴリとする",
+    "default_usda": {
+      "name": "Light ice cream, NFS",
+      "database": "survey_fndds",
+      "reason": "ライトアイスの汎用代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Light ice cream, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Light ice cream, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream, vanilla",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream bar, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream bar, vanilla",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream bar, vanilla, chocolate coated",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream cone, chocolate, prepackaged",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream cone, vanilla, prepackaged",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream sandwich, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Light ice cream sandwich, vanilla",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "light ice cream",
+      "low fat ice cream"
+    ],
+    "visual_hints": [
+      "frozen",
+      "cone",
+      "bar",
+      "sandwich"
+    ],
+    "pattern_rules": [
+      "^Light ice cream",
+      "^Light ice cream (bar|cone|sandwich)"
+    ]
+  },
+  "milkshake": {
+    "display_name": "Milkshake",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "味や製法の差は見た目で判別困難、栄養も同程度レンジのためミルクシェイクとして統合",
+    "default_usda": {
+      "name": "Milk shake, fast food, chocolate",
+      "database": "survey_fndds",
+      "reason": "写真出現頻度が高い代表的なファストフードのチョコシェイク"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Milk shake, fast food, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, fast food, flavors other than chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, bottled, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, bottled, flavors other than chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, home recipe, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, home recipe, chocolate, light",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk shake, home recipe, flavors other than chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "shake",
+      "chocolate shake",
+      "vanilla shake"
+    ],
+    "visual_hints": [
+      "tall cup",
+      "straw",
+      "thick",
+      "whipped cream"
+    ],
+    "pattern_rules": [
+      "^Milk shake",
+      "shake"
+    ]
+  },
+  "smoothie_licuado": {
+    "display_name": "Smoothie (licuado/batido)",
+    "category": "beverages",
+    "spec2_rule": "追加",
+    "spec2_reason": "果物＋乳/水ベースのブレンド飲料。ミルクセーキと異なり果実感が強い",
+    "default_usda": {
+      "name": "Licuado or Batido",
+      "database": "survey_fndds",
+      "reason": "中南米系スムージーの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Licuado or Batido",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "licuado",
+      "batido",
+      "smoothie"
+    ],
+    "visual_hints": [
+      "blended",
+      "fruit pieces",
+      "straw"
+    ]
+  },
+  "beans": {
+    "display_name": "Cooked beans",
+    "category": "legumes",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "豆の品種差は画像で判断しにくく、加熱豆の栄養差は比較的近いレンジのため統合（※甘味/油脂添加は別料理で扱う）",
+    "default_usda": {
+      "name": "Pinto beans, NFS",
+      "database": "survey_fndds",
+      "reason": "最頻出のピント豆の汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Lima beans, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Lima beans and corn, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pink beans, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peruvian beans, from dried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pinto beans, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pinto beans, from canned, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beans",
+      "stewed beans",
+      "boiled beans"
+    ],
+    "visual_hints": [
+      "bowl",
+      "simmered",
+      "brown or beige beans"
+    ],
+    "pattern_rules": [
+      "^.* beans(,|$)",
+      "beans and corn",
+      "pink beans",
+      "pinto beans",
+      "Peruvian beans"
+    ]
+  },
+  "beans_and_rice": {
+    "display_name": "Beans & rice",
+    "category": "legumes",
+    "spec2_rule": "追加（料理として独立）",
+    "spec2_reason": "豆と米が同一皿で混在する料理は視覚的に一塊として認識されやすく、栄養も和集合として扱うのが実用的",
+    "default_usda": {
+      "name": "Pinto beans and white rice",
+      "database": "survey_fndds",
+      "reason": "代表的な組合せ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pinto beans and white rice",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pinto beans and brown rice",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pinto beans and rice, from fast food / restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "rice and beans",
+      "beans with rice"
+    ],
+    "visual_hints": [
+      "white rice + brown beans on plate"
+    ],
+    "pattern_rules": [
+      "beans and (white|brown) rice"
+    ]
+  },
+  "liqueur": {
+    "display_name": "Liqueur",
+    "category": "beverages_alcohol",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "リキュールは銘柄やフレーバー差が大きいが見た目は似ており、単独で写る場合は量換算が主目的のため統合",
+    "default_usda": {
+      "name": "Liqueur",
+      "database": "survey_fndds",
+      "reason": "リキュールの汎用代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Liqueur",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Liqueur, coffee flavored",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Liqueur, cream",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "cordial",
+      "liqueur"
+    ],
+    "visual_hints": [
+      "small glass",
+      "amber/cream liquid"
+    ]
+  },
+  "liver": {
+    "display_name": "Liver (cooked/paté)",
+    "category": "meat_dishes",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "部位や畜種差は画像で判別困難。ステーキ状/炒めとパテ状で外観が異なるため両系統を含むが同一カテゴリで扱う",
+    "default_usda": {
+      "name": "Liver, beef",
+      "database": "survey_fndds",
+      "reason": "代表的な牛レバー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Liver, beef",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Liver, chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Liver, paste or pate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Liver, beef or calves, and onions",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Livers, chicken, chopped, with eggs and onion",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Liverwurst",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "liver",
+      "liver steak",
+      "liver pate"
+    ],
+    "visual_hints": [
+      "dark brown slices",
+      "spreadable pate"
+    ]
+  },
+  "fried_noodles_lo_chow_mein": {
+    "display_name": "Fried noodles (lo/chow mein)",
+    "category": "pasta_noodles",
+    "spec2_rule": "名称統一",
+    "spec2_reason": "ローメン/チャオメンは見た目が近く、具材差より麺の炒め調理でまとまる",
+    "default_usda": {
+      "name": "Lo mein, NFS",
+      "database": "survey_fndds",
+      "reason": "ローメンの汎用代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Lo mein, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Lo mein, meatless",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lo mein, with chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lo mein, with beef",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lo mein, with pork",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lo mein, with shrimp",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Noodles, chow mein",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "lo mein",
+      "chow mein",
+      "fried noodles"
+    ],
+    "visual_hints": [
+      "wok-fried",
+      "glossy noodles",
+      "mixed vegetables"
+    ],
+    "pattern_rules": [
+      "^Lo mein",
+      "chow mein"
+    ]
+  },
+  "lobster": {
+    "display_name": "Lobster",
+    "category": "seafood",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ロブスターの調理差は視覚差が小さいため一括。サラダ等の混合料理は含めるが、スープ状は別料理で扱うことも",
+    "default_usda": {
+      "name": "Lobster",
+      "database": "survey_fndds",
+      "reason": "ロブスター一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Lobster",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Lobster salad",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lobster with bread stuffing, baked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lobster gumbo",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "lobster tail",
+      "lobster meat"
+    ],
+    "visual_hints": [
+      "red shell",
+      "claws",
+      "white flesh"
+    ]
+  },
+  "glass_noodles": {
+    "display_name": "Glass noodles",
+    "category": "pasta_noodles",
+    "spec2_rule": "追加",
+    "spec2_reason": "春雨（緑豆はるさめ）は透過性が高く他麺と外観が明確に異なるため独立",
+    "default_usda": {
+      "name": "Long rice noodles, made from mung beans, cooked",
+      "database": "survey_fndds",
+      "reason": "緑豆はるさめの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Long rice noodles, made from mung beans, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "cellophane noodles",
+      "harusame",
+      "bean thread"
+    ],
+    "visual_hints": [
+      "translucent",
+      "thin noodles"
+    ]
+  },
+  "luncheon_meat": {
+    "display_name": "Luncheon meat (Spam-type)",
+    "category": "processed_meat",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "スパム等の成形ハムは見た目が近く、栄養レンジも類似",
+    "default_usda": {
+      "name": "Luncheon meat, NFS",
+      "database": "survey_fndds",
+      "reason": "成形肉の汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Luncheon meat, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Luncheon meat, loaf type",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Luncheon slice, meatless-beef, chicken, salami or turkey",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "spam",
+      "luncheon meat"
+    ],
+    "visual_hints": [
+      "rectangular slices",
+      "pink processed meat"
+    ]
+  },
+  "nuts": {
+    "display_name": "Nuts",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ナッツ各種は器上の見た目が類似し栄養も同レンジで扱えるため一括（塩分や味付け差は内部で吸収）",
+    "default_usda": {
+      "name": "Mixed nuts, NFS",
+      "database": "survey_fndds",
+      "reason": "ミックスナッツの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mixed nuts, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Mixed nuts, with peanuts, salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macadamia nuts",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pistachio nuts, salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pecans, salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pine nuts",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peanuts, dry roasted, salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "nuts",
+      "mixed nuts"
+    ],
+    "visual_hints": [
+      "bowl of nuts",
+      "assorted shapes"
+    ]
+  },
+  "mac_and_cheese": {
+    "display_name": "Mac and cheese",
+    "category": "pasta_noodles",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "具材の少量追加（ツナ・ホットドッグ等）は画像上ほぼ同類で、栄養も主にパスタ＋チーズで決まる",
+    "default_usda": {
+      "name": "Macaroni or noodles with cheese",
+      "database": "survey_fndds",
+      "reason": "マカロニ&チーズの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Macaroni or noodles with cheese",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Macaroni or noodles with cheese, made from packaged mix",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or noodles with cheese, canned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or noodles with cheese, Easy Mac type",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or noodles with cheese and tuna",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or noodles with cheese and frankfurters or hot dogs",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "mac and cheese",
+      "mac 'n cheese"
+    ],
+    "visual_hints": [
+      "elbow pasta",
+      "yellow cheese sauce"
+    ]
+  },
+  "pasta_salad": {
+    "display_name": "Pasta salad",
+    "category": "salads",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "具材やドレッシング差は見た目連続で分類不安定のため一括",
+    "default_usda": {
+      "name": "Macaroni or pasta salad, made with mayonnaise",
+      "database": "survey_fndds",
+      "reason": "最頻出のクリーミー系"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Macaroni or pasta salad, made with mayonnaise",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or pasta salad, made with creamy dressing",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or pasta salad, made with Italian dressing",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or pasta salad with tuna",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Macaroni or pasta salad with chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pasta salad",
+      "macaroni salad"
+    ],
+    "visual_hints": [
+      "short pasta",
+      "mixed veggies",
+      "dressing-coated"
+    ]
+  },
+  "mango": {
+    "display_name": "Mango",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "マンゴーは形・色が明確で単独認識しやすい",
+    "default_usda": {
+      "name": "Mango, raw",
+      "database": "survey_fndds",
+      "reason": "生のマンゴー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mango, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mango, canned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mango, dried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mango, frozen",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mango nectar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "mango"
+    ],
+    "visual_hints": [
+      "orange flesh",
+      "green/yellow skin",
+      "cheek slices"
+    ]
+  },
+  "pineapple": {
+    "display_name": "Pineapple",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "パイナップルは外観が特徴的で判別容易",
+    "default_usda": {
+      "name": "Pineapple, raw",
+      "database": "survey_fndds",
+      "reason": "生パイナップル"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pineapple, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pineapple, canned, juice pack",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pineapple, canned, in syrup",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pineapple, dried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pineapple juice, 100%",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pineapple",
+      "pineapple chunks"
+    ],
+    "visual_hints": [
+      "spiky skin",
+      "rings or chunks",
+      "yellow flesh"
+    ]
+  },
+  "papaya": {
+    "display_name": "Papaya",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "外観特徴が強い熱帯果物のため独立",
+    "default_usda": {
+      "name": "Papaya, raw",
+      "database": "survey_fndds",
+      "reason": "生パパイヤ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Papaya, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Papaya, canned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Papaya juice, 100%",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Papaya nectar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "papaya"
+    ],
+    "visual_hints": [
+      "orange flesh",
+      "black seeds"
+    ]
+  },
+  "stone_fruit": {
+    "display_name": "Stone fruit (peach/nectarine/plum)",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "もも・ネクタリン・プラムは写真での判別が難しいケースがあり、栄養も近いため一括",
+    "default_usda": {
+      "name": "Peach, raw",
+      "database": "survey_fndds",
+      "reason": "代表的な生のもも"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Peach, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peach, canned, juice pack",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nectarine, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Plum, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Plum, canned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "peach",
+      "nectarine",
+      "plum"
+    ],
+    "visual_hints": [
+      "round stone fruit",
+      "yellow/orange/red skin"
+    ]
+  },
+  "pear": {
+    "display_name": "Pear",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "西洋なしは外観が明確",
+    "default_usda": {
+      "name": "Pear, raw",
+      "database": "survey_fndds",
+      "reason": "生の洋なし"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pear, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pear, canned, juice pack",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pear nectar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pear"
+    ],
+    "visual_hints": [
+      "pear shape",
+      "green/yellow skin"
+    ]
+  },
+  "lychee": {
+    "display_name": "Lychee",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "ライチは外観が独特で判別容易",
+    "default_usda": {
+      "name": "Lychee",
+      "database": "survey_fndds",
+      "reason": "ライチ一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Lychee",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "lychee",
+      "litchi"
+    ],
+    "visual_hints": [
+      "red bumpy skin",
+      "white translucent flesh"
+    ]
+  },
+  "pomegranate": {
+    "display_name": "Pomegranate",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "果実とジュースで見た目が大きく異なるが、果実は独自性高い",
+    "default_usda": {
+      "name": "Pomegranate, raw",
+      "database": "survey_fndds",
+      "reason": "生のザクロ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pomegranate, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pomegranate juice, 100%",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pomegranate juice beverage, 40-50% juice, light",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pomegranate"
+    ],
+    "visual_hints": [
+      "red arils",
+      "pomegranate half"
+    ]
+  },
+  "cocktail_mixed_drink": {
+    "display_name": "Cocktail (mixed drink)",
+    "category": "beverages_alcohol",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "銘柄別の視覚識別は不安定かつ栄養差大。混成飲料は一括し、量で計算（※強い甘味系は実測糖分のばらつきに注意）",
+    "default_usda": {
+      "name": "Margarita",
+      "database": "survey_fndds",
+      "reason": "甘味とアルコールを含む一般的カクテルの代表として"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Margarita",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Martini",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Long Island iced tea",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mojito",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Old fashioned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mimosa",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Moscow mule",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange Blossom",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Michelada",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pina Colada",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "cocktail",
+      "mixed drink"
+    ],
+    "visual_hints": [
+      "cocktail glass",
+      "garnish",
+      "ice"
+    ],
+    "pattern_rules": [
+      "margarita",
+      "martini",
+      "mojito",
+      "mule",
+      "old fashioned",
+      "Long Island",
+      "pina colada",
+      "michelada",
+      "orange blossom"
+    ]
+  },
+  "nutrition_bar": {
+    "display_name": "Nutrition/energy bar",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ブランド差は栄養レンジ近く視覚も同様。名称は代表に統一し銘柄はall_mappingsへ",
+    "default_usda": {
+      "name": "Nutrition bar or meal replacement bar, NFS",
+      "database": "survey_fndds",
+      "reason": "栄養/代替食バーの汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Nutrition bar or meal replacement bar, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Nutrition bar (Clif Bar)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutrition bar (PowerBar)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutrition bar (Zone Perfect Classic Crunch)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk 'n Cereal bar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "protein bar",
+      "energy bar",
+      "meal bar"
+    ],
+    "visual_hints": [
+      "wrapped bar",
+      "rectangular bar"
+    ]
+  },
+  "nutritional_drink": {
+    "display_name": "Nutritional drink/shake (RTD)",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "銘柄別の差はあるが視覚差が小さく、飲用量ベースでの算出に統合が実用的",
+    "default_usda": {
+      "name": "Nutritional drink or shake, ready-to-drink, NFS",
+      "database": "survey_fndds",
+      "reason": "RTD栄養飲料の汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Nutritional drink or shake, ready-to-drink, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Nutritional drink or shake, ready-to-drink (Ensure)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutritional drink or shake, ready-to-drink (Boost)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutritional drink or shake, ready-to-drink (Slim Fast)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutritional drink or shake, high protein, ready-to-drink, NFS",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutritional drink or shake, ready-to-drink (Muscle Milk)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nutritional drink or shake, ready-to-drink, light (Muscle Milk)",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "protein shake",
+      "nutrition shake",
+      "RTD shake"
+    ],
+    "visual_hints": [
+      "small bottle",
+      "tetra pak",
+      "straw"
+    ]
+  },
+  "plant_milk": {
+    "display_name": "Plant milk",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "オート/アーモンド等は外観が同様で画像区別困難。乳糖フリー牛乳は別カテゴリ（Milk）で扱う",
+    "default_usda": {
+      "name": "Oat milk",
+      "database": "survey_fndds",
+      "reason": "普及度の高いオートミルクを代表に"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Non-dairy milk, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Oat milk",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "plant milk",
+      "non-dairy milk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "carton labeled plant milk"
+    ]
+  },
+  "oatmeal": {
+    "display_name": "Oatmeal",
+    "category": "bread_grains",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "トッピングや液種の違いは外観で安定判別しづらい",
+    "default_usda": {
+      "name": "Oatmeal, regular or quick, made with water, no added fat",
+      "database": "survey_fndds",
+      "reason": "最も標準的な調理法"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Oatmeal, regular or quick, made with water, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oatmeal, instant, plain, made with water, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oat bran cereal, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oatmeal, fast food, plain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oatmeal, instant, fruit flavored, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "oatmeal",
+      "porridge"
+    ],
+    "visual_hints": [
+      "porridge bowl",
+      "spoon",
+      "creamy oats"
+    ],
+    "pattern_rules": [
+      "^Oatmeal",
+      "oat bran cereal"
+    ]
+  },
+  "orange_juice_and_drinks": {
+    "display_name": "Orange juice / drink",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "100%/飲料(40–50%)は見た目近似。濃度差は栄養で吸収し、可能なら100%優先で解釈",
+    "default_usda": {
+      "name": "Orange juice, 100%, NFS",
+      "database": "survey_fndds",
+      "reason": "オレンジジュースの汎用代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Orange juice, 100%, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Orange juice, 100%, canned, bottled or in a carton",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange juice, 100%,  freshly squeezed",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange juice beverage, 40-50% juice, light",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "OJ",
+      "orange juice"
+    ],
+    "visual_hints": [
+      "orange liquid",
+      "glass",
+      "pulp"
+    ]
+  },
+  "orange": {
+    "display_name": "Orange",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "オレンジ果実は独自性が高い",
+    "default_usda": {
+      "name": "Orange, raw",
+      "database": "survey_fndds",
+      "reason": "生のオレンジ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Orange, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange, canned, juice pack",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange, canned, in syrup",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "orange",
+      "tangerine (近縁)"
+    ],
+    "visual_hints": [
+      "orange segments",
+      "whole orange"
+    ]
+  },
+  "onion_ring_snack": {
+    "display_name": "Onion ring snack (chips)",
+    "category": "snacks",
+    "spec2_rule": "追加",
+    "spec2_reason": "衣付きの生オニオンリングと異なるスナック菓子（例: Funyuns）を区別",
+    "default_usda": {
+      "name": "Onion flavored rings",
+      "database": "survey_fndds",
+      "reason": "代表的なスナック形態"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Onion flavored rings",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "onion rings snack",
+      "onion chips"
+    ],
+    "visual_hints": [
+      "thin hollow rings",
+      "bagged snack"
+    ]
+  },
+  "olives": {
+    "display_name": "Olives",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "黒・緑・詰め物有無は見た目差小で栄養近似",
+    "default_usda": {
+      "name": "Olives, black",
+      "database": "survey_fndds",
+      "reason": "一般的な黒オリーブ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Olives, black",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Olives, green",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Olives, stuffed",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Olives, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "olives"
+    ],
+    "visual_hints": [
+      "small oval",
+      "black/green",
+      "in brine"
+    ]
+  },
+  "orange_chicken": {
+    "display_name": "Orange chicken",
+    "category": "world_chinese_american",
+    "spec2_rule": "維持",
+    "spec2_reason": "衣とオレンジソースの見た目が独特で認識容易",
+    "default_usda": {
+      "name": "Orange chicken",
+      "database": "survey_fndds",
+      "reason": "料理固有"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Orange chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "orange chicken"
+    ],
+    "visual_hints": [
+      "glazed battered chicken",
+      "orange sauce"
+    ]
+  },
+  "oysters": {
+    "display_name": "Oysters",
+    "category": "seafood",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "生/焼き/揚げで外観の幅はあるが貝殻・身の見た目で識別可能、栄養は近似",
+    "default_usda": {
+      "name": "Oysters, raw",
+      "database": "survey_fndds",
+      "reason": "生ガキ代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Oysters, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oysters, baked or broiled",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oysters, fried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oysters Rockefeller",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "oysters"
+    ],
+    "visual_hints": [
+      "shell on ice",
+      "oyster meat"
+    ]
+  },
+  "pad_thai": {
+    "display_name": "Pad Thai",
+    "category": "world_thai",
+    "spec2_rule": "維持",
+    "spec2_reason": "ピーナッツ・ライム・もやし等の視覚手掛かりがあるため独立",
+    "default_usda": {
+      "name": "Pad Thai, NFS",
+      "database": "survey_fndds",
+      "reason": "パッタイ一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pad Thai, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pad Thai with chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pad Thai with seafood",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pad thai"
+    ],
+    "visual_hints": [
+      "flat rice noodles",
+      "peanuts",
+      "lime wedge"
+    ]
+  },
+  "paella": {
+    "display_name": "Paella",
+    "category": "world_spanish",
+    "spec2_rule": "維持",
+    "spec2_reason": "黄色いサフラン米＋魚介で視覚的に特徴が強い",
+    "default_usda": {
+      "name": "Paella, NFS",
+      "database": "survey_fndds",
+      "reason": "パエリア一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Paella, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Paella with seafood",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "paella"
+    ],
+    "visual_hints": [
+      "yellow rice",
+      "seafood mix",
+      "large pan"
+    ]
+  },
+  "pakora": {
+    "display_name": "Pakora",
+    "category": "world_indian",
+    "spec2_rule": "維持",
+    "spec2_reason": "衣の粗い揚げ物で視覚的特徴が強い",
+    "default_usda": {
+      "name": "Pakora",
+      "database": "survey_fndds",
+      "reason": "パコラ一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pakora",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pakora",
+      "bhaji"
+    ],
+    "visual_hints": [
+      "fritters",
+      "irregular shapes"
+    ]
+  },
+  "palak_paneer": {
+    "display_name": "Palak Paneer",
+    "category": "world_indian",
+    "spec2_rule": "維持",
+    "spec2_reason": "緑色のホウレン草ソース＋白いチーズで視覚的に区別可能",
+    "default_usda": {
+      "name": "Palak Paneer",
+      "database": "survey_fndds",
+      "reason": "料理固有"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Palak Paneer",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "saag paneer (近縁)"
+    ],
+    "visual_hints": [
+      "green spinach sauce",
+      "cheese cubes"
+    ]
+  },
+  "pan_dulce": {
+    "display_name": "Pan dulce (Mexican sweet bread)",
+    "category": "desserts_sweets",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "表面トッピングやレーズン有無の差は連続的で分類不安定",
+    "default_usda": {
+      "name": "Pan dulce, NFS",
+      "database": "survey_fndds",
+      "reason": "パン・ドゥルセの汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pan dulce, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pan Dulce, with sugar topping",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pan Dulce, with raisins and icing",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "concha",
+      "mexican sweet bread"
+    ],
+    "visual_hints": [
+      "sweet bun",
+      "topping pattern"
+    ]
+  },
+  "pancakes": {
+    "display_name": "Pancakes",
+    "category": "bread_grains",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "穀類/全粒/トッピング差は視覚連続で主栄養は生地量に依存",
+    "default_usda": {
+      "name": "Pancakes, plain",
+      "database": "survey_fndds",
+      "reason": "プレーン代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pancakes, plain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pancakes, whole grain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pancakes, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pancakes, fruit",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pancakes",
+      "hotcakes"
+    ],
+    "visual_hints": [
+      "stacked round cakes",
+      "syrup",
+      "butter"
+    ]
+  },
+  "pasta_white_sauce": {
+    "display_name": "Pasta (cream/white sauce)",
+    "category": "pasta_noodles",
+    "spec2_rule": "分割（視覚差大）",
+    "spec2_reason": "白ソース系は赤ソースと色が明確に異なり区別容易。栄養も脂質が上がりやすい",
+    "default_usda": {
+      "name": "Pasta with cream sauce, restaurant",
+      "database": "survey_fndds",
+      "reason": "外食の代表的白ソース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pasta with cream sauce, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with cream sauce and meat, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with cream sauce and poultry, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with cream sauce and seafood, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "fettuccine alfredo (近縁)",
+      "cream pasta"
+    ],
+    "visual_hints": [
+      "white sauce",
+      "creamy coating"
+    ]
+  },
+  "pasta_tomato_sauce": {
+    "display_name": "Pasta (tomato/red sauce)",
+    "category": "pasta_noodles",
+    "spec2_rule": "分割（視覚差大）",
+    "spec2_reason": "赤ソースは視覚的に白ソースと明確に区別可能",
+    "default_usda": {
+      "name": "Pasta with tomato-based sauce, restaurant",
+      "database": "survey_fndds",
+      "reason": "外食の代表的赤ソース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pasta with tomato-based sauce, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with tomato-based sauce and meat, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with tomato-based sauce and seafood, restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta with tomato-based sauce and beans or lentils",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "red sauce pasta",
+      "marinara pasta"
+    ],
+    "visual_hints": [
+      "red sauce",
+      "grated cheese"
+    ]
+  },
+  "pasta_plain": {
+    "display_name": "Plain pasta/noodles",
+    "category": "pasta_noodles",
+    "spec2_rule": "維持",
+    "spec2_reason": "ソース無しの白い麺は別計上が実用的",
+    "default_usda": {
+      "name": "Pasta, cooked",
+      "database": "survey_fndds",
+      "reason": "ソース無しの基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pasta, cooked",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Noodles, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pasta, whole grain, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "plain pasta",
+      "noodles (no sauce)"
+    ],
+    "visual_hints": [
+      "pale pasta",
+      "no visible sauce"
+    ]
+  },
+  "pea_salad": {
+    "display_name": "Pea salad",
+    "category": "salads",
+    "spec2_rule": "維持",
+    "spec2_reason": "豆粒の見た目が明確で他サラダと区別容易",
+    "default_usda": {
+      "name": "Pea salad",
+      "database": "survey_fndds",
+      "reason": "料理固有"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pea salad",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pea salad with cheese",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pea salad"
+    ],
+    "visual_hints": [
+      "green peas",
+      "creamy dressing"
+    ]
+  },
+  "peanut_butter": {
+    "display_name": "Peanut butter",
+    "category": "spreads_condiments",
+    "spec2_rule": "維持",
+    "spec2_reason": "単体で撮影される頻度があり、塗布量の栄養寄与が大きい",
+    "default_usda": {
+      "name": "Peanut butter",
+      "database": "survey_fndds",
+      "reason": "ピーナッツバター一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Peanut butter",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peanut butter, reduced fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peanut butter, lower sugar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "peanut butter",
+      "PB"
+    ],
+    "visual_hints": [
+      "brown spread",
+      "jar",
+      "spoonful"
+    ]
+  },
+  "pickles": {
+    "display_name": "Pickles",
+    "category": "spreads_condiments",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ディル/スイートなど味付け差は視覚判断困難",
+    "default_usda": {
+      "name": "Pickles, dill",
+      "database": "survey_fndds",
+      "reason": "代表的なディルピクルス"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pickles, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pickles, dill",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pickles, sweet",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pickles, fried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pickles",
+      "pickle"
+    ],
+    "visual_hints": [
+      "green spears or slices",
+      "jar"
+    ]
+  },
+  "pie": {
+    "display_name": "Pie",
+    "category": "desserts_sweets",
+    "spec2_rule": "統合（汎化）＋代表保持",
+    "spec2_reason": "フィリング別は見落としが多く、代表的な果実/クリームパイで包括",
+    "default_usda": {
+      "name": "Pie, apple",
+      "database": "survey_fndds",
+      "reason": "最頻出のアップルパイを代表に"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pie, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pie, apple",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pie, blueberry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pie, cherry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pie, pumpkin",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pie, lemon meringue",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pie",
+      "slice of pie"
+    ],
+    "visual_hints": [
+      "wedge slice",
+      "crust",
+      "filling color"
+    ]
+  },
+  "pierogi": {
+    "display_name": "Pierogi (dumpling)",
+    "category": "world_eastern_europe",
+    "spec2_rule": "維持",
+    "spec2_reason": "水餃子や小籠包等と混在する可能性はあるが、形状が近い餃子系として代表化",
+    "default_usda": {
+      "name": "Pierogi",
+      "database": "survey_fndds",
+      "reason": "ピエロギ固有"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pierogi",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pierogi"
+    ],
+    "visual_hints": [
+      "half-moon dumplings",
+      "pan-fried or boiled"
+    ]
+  },
+  "pizza": {
+    "display_name": "Pizza",
+    "category": "pizza",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "トッピング差は画像での取りこぼしが多く、まずはピザ一般で吸収（※ペパロニは別クラスで保持）",
+    "default_usda": {
+      "name": "Pizza, cheese, from restaurant or fast food, medium crust",
+      "database": "survey_fndds",
+      "reason": "最も一般的なピザ代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pizza, cheese, from restaurant or fast food, medium crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza, cheese, from restaurant or fast food, thin crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza, cheese, from restaurant or fast food, thick crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza, cheese, from frozen, thin crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza with meat and vegetables, from restaurant or fast food, medium crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pizza",
+      "cheese pizza"
+    ],
+    "visual_hints": [
+      "round pie",
+      "cheese melt",
+      "triangular slice"
+    ],
+    "pattern_rules": [
+      "^Pizza, cheese",
+      "^Pizza with (meat|vegetables|beans|fruit)"
+    ]
+  },
+  "pizza_pepperoni": {
+    "display_name": "Pizza (pepperoni)",
+    "category": "pizza",
+    "spec2_rule": "維持（代表的サブタイプ）",
+    "spec2_reason": "ペパロニは視覚的特徴が強く独立価値が高い",
+    "default_usda": {
+      "name": "Pizza with pepperoni, from restaurant or fast food,  medium crust",
+      "database": "survey_fndds",
+      "reason": "外食の代表的ペパロニ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pizza with pepperoni, from restaurant or fast food,  medium crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza with pepperoni, from restaurant or fast food, thin crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pizza with pepperoni, from frozen, thin crust",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pepperoni pizza"
+    ],
+    "visual_hints": [
+      "red pepperoni discs"
+    ],
+    "pattern_rules": [
+      "^Pizza with pepperoni"
+    ]
+  },
+  "pizza_rolls": {
+    "display_name": "Pizza rolls",
+    "category": "snacks",
+    "spec2_rule": "維持",
+    "spec2_reason": "小型ロール形状でピザと明確に異なる",
+    "default_usda": {
+      "name": "Pizza rolls",
+      "database": "survey_fndds",
+      "reason": "スナック形状の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pizza rolls",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pizza bites"
+    ],
+    "visual_hints": [
+      "small stuffed bites"
+    ]
+  },
+  "plantain_chips": {
+    "display_name": "Plantain chips",
+    "category": "snacks",
+    "spec2_rule": "維持",
+    "spec2_reason": "薄切り揚げの見た目で他のプランテン調理と区別可能",
+    "default_usda": {
+      "name": "Plantain chips",
+      "database": "survey_fndds",
+      "reason": "チップス形態"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Plantain chips",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "fried plantain chips"
+    ],
+    "visual_hints": [
+      "thin yellow slices",
+      "bagged"
+    ]
+  },
+  "plantain_cooked": {
+    "display_name": "Plantain (cooked)",
+    "category": "vegetables",
+    "spec2_rule": "維持",
+    "spec2_reason": "炒め/焼き等のプランテンはチップスと区別",
+    "default_usda": {
+      "name": "Plantain, cooked, no added fat",
+      "database": "survey_fndds",
+      "reason": "素の加熱代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Plantain, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Plantain, cooked with oil",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Plantain, cooked with butter or margarine",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "fried plantain",
+      "baked plantain"
+    ],
+    "visual_hints": [
+      "thick slices",
+      "golden brown"
+    ]
+  },
+  "pocky": {
+    "display_name": "Pocky (biscuit sticks)",
+    "category": "snacks",
+    "spec2_rule": "追加",
+    "spec2_reason": "棒状チョコ菓子で視覚的に固有",
+    "default_usda": {
+      "name": "Pocky",
+      "database": "survey_fndds",
+      "reason": "商品系菓子の代表として"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pocky",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "biscuit sticks"
+    ],
+    "visual_hints": [
+      "thin sticks",
+      "chocolate coated"
+    ]
+  },
+  "popcorn": {
+    "display_name": "Popcorn",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "製法差（エア/油/電子レンジ/キャラメル等）は見た目に幅があるが、写真認識上はポップコーンで一括が安定",
+    "default_usda": {
+      "name": "Popcorn, ready-to-eat, NFS",
+      "database": "survey_fndds",
+      "reason": "食べる準備ができた汎用形態"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Popcorn, ready-to-eat, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Popcorn, microwave, butter flavored",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Popcorn, ready-to-eat, kettle",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Popcorn, caramel coated",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Popcorn, movie theater, with added butter",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "popcorn"
+    ],
+    "visual_hints": [
+      "popped corn",
+      "bucket or bag"
+    ],
+    "pattern_rules": [
+      "^Popcorn"
+    ]
+  },
+  "popsicle": {
+    "display_name": "Popsicle (ice pop)",
+    "category": "desserts_sweets",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "砂糖不使用等は視覚で識別不能なため一括",
+    "default_usda": {
+      "name": "Popsicle, NFS",
+      "database": "survey_fndds",
+      "reason": "アイスポップの汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Popsicle, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Popsicle, no sugar added",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "ice pop",
+      "ice lolly"
+    ],
+    "visual_hints": [
+      "on a stick",
+      "bright colored"
+    ]
+  },
+  "oysters_note": {
+    "display_name": "[NOTE] Cocktail等の高ばらつき",
+    "category": "meta",
+    "spec2_rule": "注意喚起",
+    "spec2_reason": "カクテル・RTDは糖分/アルコール度数で栄養ブレが大きい。可能であれば容量（mL）入力優先。"
+  }
+}

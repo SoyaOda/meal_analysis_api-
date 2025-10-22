@@ -1,0 +1,1974 @@
+{
+  "shellfish_other": {
+    "display_name": "Shellfish (mollusk)",
+    "category": "seafood",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "アワビ単体は出現頻度が低く、他の貝類と視覚的に近い。貝類として包括。",
+    "default_usda": {
+      "name": "Abalone",
+      "database": "survey_fndds",
+      "reason": "提示リスト中の代表的な貝類"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Abalone",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "abalone",
+      "mollusk",
+      "shellfish"
+    ],
+    "visual_hints": [
+      "sliced white flesh",
+      "brown edge",
+      "seafood plating"
+    ]
+  },
+  "adobo_with_rice": {
+    "display_name": "Adobo with rice",
+    "category": "world_filipino",
+    "spec2_rule": "区別（維持）",
+    "spec2_reason": "ご飯と麺は視覚的に明確に区別可能で栄養影響も大きい。",
+    "default_usda": {
+      "name": "Adobo, with rice",
+      "database": "survey_fndds",
+      "reason": "主食が米であることを明記した基準値"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Adobo, with rice",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "adobo rice bowl",
+      "adobo over rice"
+    ],
+    "visual_hints": [
+      "white rice bed",
+      "brown soy-vinegar sauce",
+      "stewed meat chunks"
+    ]
+  },
+  "adobo_with_noodles": {
+    "display_name": "Adobo with noodles",
+    "category": "world_filipino",
+    "spec2_rule": "区別（維持）",
+    "spec2_reason": "麺は米と外観が異なるため区別維持。",
+    "default_usda": {
+      "name": "Adobo, with noodles",
+      "database": "survey_fndds",
+      "reason": "主食が麺であることを明記した基準値"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Adobo, with noodles",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "adobo noodles",
+      "adobo over noodles"
+    ],
+    "visual_hints": [
+      "noodles bed",
+      "brown stew sauce",
+      "meat pieces"
+    ]
+  },
+  "liquid_sweetener": {
+    "display_name": "Liquid sweetener (honey/agave/maple)",
+    "category": "condiments_sauces",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ボトル・粘度・色が類似し、画像から種類特定が困難。用途・糖質は近似。",
+    "default_usda": {
+      "name": "Agave liquid sweetener",
+      "database": "survey_fndds",
+      "reason": "提示リストの代表液状甘味料"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Agave liquid sweetener",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "agave syrup",
+      "liquid sweetener",
+      "syrup"
+    ],
+    "visual_hints": [
+      "squeeze bottle",
+      "amber/clear syrup",
+      "glossy viscous"
+    ]
+  },
+  "alcoholic_malt_beverage": {
+    "display_name": "Alcoholic malt beverage",
+    "category": "beverages_alcohol",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "加糖の有無やブランドは容器依存で視覚判別が難しいため統合。",
+    "default_usda": {
+      "name": "Alcoholic malt beverage",
+      "database": "survey_fndds",
+      "reason": "基準となるマルト飲料"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Alcoholic malt beverage",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Alcoholic malt beverage, sweetened",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "hard malt",
+      "alcopop",
+      "malt beverage"
+    ],
+    "visual_hints": [
+      "bottle/can",
+      "carbonation",
+      "colored clear liquid"
+    ]
+  },
+  "sprouts": {
+    "display_name": "Sprouts",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "アルファルファ/もやしは外観的に近く、用途・低栄養密度も似る。",
+    "default_usda": {
+      "name": "Alfalfa sprouts, raw",
+      "database": "survey_fndds",
+      "reason": "生スプラウトの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Alfalfa sprouts, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bean sprouts, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bean sprouts, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "sprouts",
+      "bean sprouts",
+      "alfalfa"
+    ],
+    "visual_hints": [
+      "thin white shoots",
+      "tangled",
+      "moist",
+      "pile"
+    ]
+  },
+  "alfredo_pasta": {
+    "display_name": "Pasta (Alfredo/white sauce)",
+    "category": "pasta_noodles",
+    "spec2_rule": "名称統一＋統合",
+    "spec2_reason": "ソース単体の具材（肉/野菜/海鮮）は写真では埋もれやすく判別が不安定。白いクリーム系として統合。",
+    "default_usda": {
+      "name": "Alfredo sauce",
+      "database": "survey_fndds",
+      "reason": "白ソースの代表（※パスタ量は別検出の“Pasta”で加算）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Alfredo sauce",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Alfredo sauce with added vegetables",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with meat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with meat and added vegetables",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with poultry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with poultry and added vegetables",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with seafood",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Alfredo sauce with seafood and added vegetables",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "fettuccine alfredo",
+      "white sauce pasta",
+      "cream pasta"
+    ],
+    "visual_hints": [
+      "white creamy sauce",
+      "pasta strands",
+      "parmesan sprinkle"
+    ]
+  },
+  "almond_butter": {
+    "display_name": "Almond butter",
+    "category": "spreads",
+    "spec2_rule": "維持（種類特定）",
+    "spec2_reason": "ピーナッツバターと外観が似るが、栄養は類似。用途上“Nut butter”統合でも良いが表示名は“Almond butter”で提示。",
+    "default_usda": {
+      "name": "Almond butter",
+      "database": "survey_fndds",
+      "reason": "素直な代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almond butter",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond butter, lower sodium",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "nut butter",
+      "almond spread"
+    ],
+    "visual_hints": [
+      "tan-brown paste",
+      "jar",
+      "spread on bread"
+    ]
+  },
+  "nut_butter_sandwich": {
+    "display_name": "Nut butter sandwich (incl. AB&J)",
+    "category": "fast_food_sandwiches",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "パンの種類（白/全粒）やジャム有無は外観変動が大きく、栄養差も限定的。",
+    "default_usda": {
+      "name": "Almond butter and jelly sandwich, on wheat bread",
+      "database": "survey_fndds",
+      "reason": "AB&Jを代表に統合"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almond butter and jelly sandwich, on wheat bread",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond butter and jelly sandwich, on white bread",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond butter sandwich, on wheat bread",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond butter sandwich, on white bread",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "nut butter sandwich",
+      "AB&J",
+      "almond butter sandwich"
+    ],
+    "visual_hints": [
+      "sandwich cross-section",
+      "brown spread",
+      "possible red jam"
+    ]
+  },
+  "almond_milk": {
+    "display_name": "Almond milk",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "甘味/無糖/チョコは見た目で不明。プラントミルクとして統合。",
+    "default_usda": {
+      "name": "Almond milk, NFS",
+      "database": "survey_fndds",
+      "reason": "種類未特定の汎用アーモンドミルク"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almond milk, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Almond milk, chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond milk, sweetened",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almond milk, unsweetened",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "plant milk",
+      "almond beverage"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "carton or glass",
+      "plant-based label"
+    ]
+  },
+  "cooking_oil": {
+    "display_name": "Cooking oil",
+    "category": "condiments_sauces",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "油種別は容器依存で視覚判別困難。エネルギー密度は9kcal/gで共通。",
+    "default_usda": {
+      "name": "Canola oil",
+      "database": "survey_fndds",
+      "reason": "代表的な植物油"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almond oil",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Canola oil",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "vegetable oil",
+      "cooking oil",
+      "bottle of oil"
+    ],
+    "visual_hints": [
+      "clear yellow liquid",
+      "oil bottle",
+      "shiny surface"
+    ]
+  },
+  "almonds": {
+    "display_name": "Almonds",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "味付・塩分・焙煎は外観で不安定。アーモンドとして統合。",
+    "default_usda": {
+      "name": "Almonds, NFS",
+      "database": "survey_fndds",
+      "reason": "味付不問の汎用アーモンド"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almonds, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Almonds, flavored",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almonds, honey roasted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almonds, lightly salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almonds, salted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almonds, unsalted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Almonds, unroasted",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "almonds",
+      "nuts"
+    ],
+    "visual_hints": [
+      "brown teardrop nuts",
+      "bowl or handful"
+    ]
+  },
+  "chocolate_nut_candy": {
+    "display_name": "Chocolate-covered nuts",
+    "category": "desserts_sweets",
+    "spec2_rule": "区別（維持）",
+    "spec2_reason": "見た目がチョコ菓子で、素のナッツと栄養が大きく異なる。",
+    "default_usda": {
+      "name": "Almonds, chocolate covered candy",
+      "database": "survey_fndds",
+      "reason": "チョココーティングの標準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almonds, chocolate covered candy",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "chocolate almonds",
+      "chocolate nuts"
+    ],
+    "visual_hints": [
+      "small glossy brown pieces",
+      "candy-like",
+      "coated"
+    ]
+  },
+  "aloe_juice_drink": {
+    "display_name": "Aloe juice drink",
+    "category": "beverages",
+    "spec2_rule": "維持",
+    "spec2_reason": "アロエ飲料は見た目・パッケージで識別されやすい。",
+    "default_usda": {
+      "name": "Aloe vera juice drink",
+      "database": "survey_fndds",
+      "reason": "該当飲料の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Aloe vera juice drink",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "aloe drink",
+      "aloe beverage"
+    ],
+    "visual_hints": [
+      "green/clear bottle",
+      "aloe leaf imagery",
+      "suspended pulp"
+    ]
+  },
+  "antipasto": {
+    "display_name": "Antipasto (platter)",
+    "category": "world_italian",
+    "spec2_rule": "維持",
+    "spec2_reason": "ハム/チーズ/野菜が盛合せで視覚的に特徴的（シャルキュトリー類）。",
+    "default_usda": {
+      "name": "Antipasto with ham, fish, cheese, vegetables",
+      "database": "survey_fndds",
+      "reason": "構成要素を含む代表表記"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Antipasto with ham, fish, cheese, vegetables",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "antipasti",
+      "charcuterie",
+      "platter"
+    ],
+    "visual_hints": [
+      "assorted meats",
+      "cheese wedges",
+      "olives",
+      "pickled veg"
+    ]
+  },
+  "apple": {
+    "display_name": "Apple",
+    "category": "fruits",
+    "spec2_rule": "維持（主要形態のみ同一クラス）",
+    "spec2_reason": "生/焼き/乾燥は視覚で判別できるが、果物としての代表性を優先し統合（※ドライは別クラスでも可）。",
+    "default_usda": {
+      "name": "Apple, raw",
+      "database": "survey_fndds",
+      "reason": "最頻出の生のリンゴ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apple, raw",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Apple, baked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apple, dried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apple, candied",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "apple (red/green)"
+    ],
+    "visual_hints": [
+      "round fruit",
+      "red/green peel",
+      "stem"
+    ]
+  },
+  "applesauce": {
+    "display_name": "Applesauce",
+    "category": "fruits",
+    "spec2_rule": "区別（維持）",
+    "spec2_reason": "固形のリンゴと外観・栄養が大きく異なるため独立。",
+    "default_usda": {
+      "name": "Applesauce, unsweetened",
+      "database": "survey_fndds",
+      "reason": "砂糖不使用の基準値"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Applesauce, unsweetened",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Applesauce, regular",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Applesauce, flavored",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "apple sauce",
+      "pureed apple"
+    ],
+    "visual_hints": [
+      "pale puree",
+      "cup/jar",
+      "spoon indent"
+    ]
+  },
+  "apple_juice": {
+    "display_name": "Apple juice / cider",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "果汁％やカルシウム添加は視覚不可。色調・容器は共通。",
+    "default_usda": {
+      "name": "Apple juice, 100%",
+      "database": "survey_fndds",
+      "reason": "最も一般的な100%果汁"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apple cider",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apple juice, 100%",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apple juice, 100%, with calcium added",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apple juice beverage, 40-50% juice, light",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "apple juice",
+      "apple cider"
+    ],
+    "visual_hints": [
+      "amber liquid",
+      "glass/carton",
+      "no bubbles"
+    ]
+  },
+  "apricot": {
+    "display_name": "Apricot",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "生/缶/乾燥は外観差があるが、果物カテゴリとして統合（乾燥は必要なら別クラス化）。",
+    "default_usda": {
+      "name": "Apricot, raw",
+      "database": "survey_fndds",
+      "reason": "生のアプリコットを基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apricot, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apricot, canned",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apricot, dried",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apricot nectar",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "apricot",
+      "dried apricot"
+    ],
+    "visual_hints": [
+      "orange small fruit",
+      "halves with pit cavity"
+    ]
+  },
+  "arepa": {
+    "display_name": "Arepa",
+    "category": "bread_grains",
+    "spec2_rule": "維持",
+    "spec2_reason": "厚みのある円形コーンブレッドは視覚的に特徴的。",
+    "default_usda": {
+      "name": "Arepa Dominicana",
+      "database": "survey_fndds",
+      "reason": "代表的な表記"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Arepa Dominicana",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "arepa",
+      "corn cake"
+    ],
+    "visual_hints": [
+      "thick round patty",
+      "split and stuffed possible"
+    ]
+  },
+  "artichoke": {
+    "display_name": "Artichoke",
+    "category": "vegetables",
+    "spec2_rule": "維持",
+    "spec2_reason": "アーティチョークは形状が独特で視覚判別が容易。",
+    "default_usda": {
+      "name": "Artichoke",
+      "database": "survey_fndds",
+      "reason": "素の野菜を代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Artichoke",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Artichokes, stuffed",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "artichoke hearts"
+    ],
+    "visual_hints": [
+      "leafy thistle bud",
+      "pale green",
+      "halved hearts"
+    ]
+  },
+  "artichoke_dip": {
+    "display_name": "Artichoke dip",
+    "category": "condiments_sauces",
+    "spec2_rule": "維持",
+    "spec2_reason": "クリーミーなディップで外観が他ソースと区別可能（チップ添えなど）。",
+    "default_usda": {
+      "name": "Artichoke dip",
+      "database": "survey_fndds",
+      "reason": "該当ディップの代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Artichoke dip",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "spinach artichoke dip"
+    ],
+    "visual_hints": [
+      "creamy dip",
+      "green flecks",
+      "served with chips"
+    ]
+  },
+  "stirfry_vegetables": {
+    "display_name": "Stir-fry vegetables",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "油有無や細かな具は判別困難。炒め野菜として一括。",
+    "default_usda": {
+      "name": "Asian stir fry vegetables, cooked, no added fat",
+      "database": "survey_fndds",
+      "reason": "脂質条件を吸収し代表化"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Asian stir fry vegetables, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Asian stir fry vegetables, cooked, fat added",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "stir fry veg",
+      "stir-fried vegetables"
+    ],
+    "visual_hints": [
+      "mixed colorful veg",
+      "wok sheen",
+      "sliced shapes"
+    ]
+  },
+  "asparagus_cooked": {
+    "display_name": "Asparagus (cooked)",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "冷凍/缶・脂質条件の差は画像で不安定なため統合。",
+    "default_usda": {
+      "name": "Asparagus, NS as to form, cooked",
+      "database": "survey_fndds",
+      "reason": "調理済みの汎用表現"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Asparagus, NS as to form, cooked",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Asparagus, fresh, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Asparagus, canned, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Asparagus, frozen, cooked, no added fat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "asparagus",
+      "cooked asparagus"
+    ],
+    "visual_hints": [
+      "green spears",
+      "gloss from cooking",
+      "bundled"
+    ]
+  },
+  "asparagus_raw": {
+    "display_name": "Asparagus (raw)",
+    "category": "vegetables",
+    "spec2_rule": "維持",
+    "spec2_reason": "生は色艶・硬さが異なるため別扱い。",
+    "default_usda": {
+      "name": "Asparagus, raw",
+      "database": "survey_fndds",
+      "reason": "生のアスパラガス"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Asparagus, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "raw asparagus"
+    ],
+    "visual_hints": [
+      "firm spears",
+      "dry surface",
+      "bundle bands"
+    ]
+  },
+  "atole": {
+    "display_name": "Atole (hot cereal drink)",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "オーツ/チョコなどの違いは色以外の差が小さいため統合。",
+    "default_usda": {
+      "name": "Atole",
+      "database": "survey_fndds",
+      "reason": "基本形を代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Atole",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Atole de avena",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Atole de chocolate",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "atole drink",
+      "hot maize drink"
+    ],
+    "visual_hints": [
+      "opaque warm drink",
+      "mug",
+      "steam"
+    ]
+  },
+  "avocado": {
+    "display_name": "Avocado",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "単品・スライス・ペースト（トースト）は視覚的に特徴的。",
+    "default_usda": {
+      "name": "Avocado, raw",
+      "database": "survey_fndds",
+      "reason": "生アボカドを代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Avocado, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Avocado, for use on a sandwich",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Avocado dressing",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "avocado slices",
+      "avocado topping"
+    ],
+    "visual_hints": [
+      "green flesh",
+      "pit cavity",
+      "spread on toast"
+    ]
+  },
+  "baby_puree_fruit": {
+    "display_name": "Baby food – fruit purée",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "Stageや果物の細別は容器依存で視覚判別が困難。",
+    "default_usda": {
+      "name": "Baby Toddler fruit, NFS",
+      "database": "survey_fndds",
+      "reason": "果物ピュレの汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler apples, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler apples, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler bananas, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler bananas, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler mangoes",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "baby fruit puree",
+      "baby apples",
+      "baby bananas"
+    ],
+    "visual_hints": [
+      "small pouch/jar",
+      "fruit imagery",
+      "smooth puree"
+    ]
+  },
+  "baby_puree_vegetable": {
+    "display_name": "Baby food – vegetable purée",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "Stageや減塩等は視覚不可。野菜ピュレとして統合。",
+    "default_usda": {
+      "name": "Baby Toddler vegetable, NFS",
+      "database": "survey_fndds",
+      "reason": "野菜ピュレの汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler carrots, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler carrots, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler green beans, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler green beans, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler peas, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler peas, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler squash, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler squash, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler sweet potatoes, Stage 1",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler sweet potatoes, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler vegetable, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "baby veg puree",
+      "baby vegetables"
+    ],
+    "visual_hints": [
+      "green/orange puree",
+      "pouch/jar",
+      "vegetable icons"
+    ]
+  },
+  "baby_puree_mixed": {
+    "display_name": "Baby food – mixed (fruit/veg/grain/yogurt/meat)",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "多品目ミックスはラベル依存で視覚的判別は困難。",
+    "default_usda": {
+      "name": "Baby Toddler food, NFS",
+      "database": "survey_fndds",
+      "reason": "混合ピュレの汎用項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler fruit and vegetables, Stage 2",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit and vegetables, Stage 3",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit and vegetables, with grain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit and vegetables, with yogurt",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit and meat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler fruit, vegetables, and meat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler food, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "baby mixed puree",
+      "baby combo puree"
+    ],
+    "visual_hints": [
+      "pouch with mixed icons",
+      "assorted colors puree"
+    ]
+  },
+  "baby_snacks": {
+    "display_name": "Baby snacks (puffs/wheels/crunchies)",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "形や味は多様だが見た目は大差なく、用途も同じ。",
+    "default_usda": {
+      "name": "Baby Toddler snack, NFS",
+      "database": "survey_fndds",
+      "reason": "ベビースナックの汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler puffs, fruit",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler puffs, vegetable",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler wheels",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler crunchies",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler snack, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "baby puffs",
+      "toddler snacks"
+    ],
+    "visual_hints": [
+      "small airy pieces",
+      "pastel packaging",
+      "toddler branding"
+    ]
+  },
+  "baby_cereal": {
+    "display_name": "Baby cereal (dry/ready-to-eat)",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "穀物種や果物混合は視覚から判別困難。",
+    "default_usda": {
+      "name": "Baby Toddler cereal, NFS",
+      "database": "survey_fndds",
+      "reason": "ベビーシリアル汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler cereal, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Baby Toddler cereal, oatmeal, dry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler cereal, oatmeal, ready-to-eat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler cereal, rice, dry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler cereal, rice, ready-to-eat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler cereal, multigrain, dry",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler cereal, multigrain, ready-to-eat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "baby cereal",
+      "infant cereal"
+    ],
+    "visual_hints": [
+      "small box/tub",
+      "fine flakes or thin porridge"
+    ]
+  },
+  "baby_yogurt": {
+    "display_name": "Baby yogurt & melts",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ヨーグルト/ヨーグルトメルツは同用途スナック/乳製品として包括。",
+    "default_usda": {
+      "name": "Baby Toddler yogurt, plain",
+      "database": "survey_fndds",
+      "reason": "ヨーグルト系の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler yogurt, plain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler yogurt, with fruit",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler yogurt melts",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "toddler yogurt",
+      "yogurt melts"
+    ],
+    "visual_hints": [
+      "small cup or pouch",
+      "tiny disc snacks"
+    ]
+  },
+  "baby_juice": {
+    "display_name": "Baby juice / juice blends",
+    "category": "baby_food",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "果汁％・ブレンド種類は視覚不可のため統合。",
+    "default_usda": {
+      "name": "Baby Toddler juice, NFS",
+      "database": "survey_fndds",
+      "reason": "ベビージュース汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baby Toddler juice, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Baby Toddler juice, apple",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler juice, grape",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler juice, pear",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler juice, mixed fruit",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler juice, fruit and vegetable",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baby Toddler juice, fruit and yogurt blend",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "baby juice",
+      "toddler juice"
+    ],
+    "visual_hints": [
+      "small box/pouch",
+      "sip spout",
+      "fruit icons"
+    ]
+  },
+  "bacon": {
+    "display_name": "Bacon",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "減塩・用途指定（サンドイッチ用/野菜用）は見た目で不明。",
+    "default_usda": {
+      "name": "Bacon, NS as to type of meat, cooked",
+      "database": "survey_fndds",
+      "reason": "種類未特定のベーコンを代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Bacon, NS as to type of meat, cooked",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Bacon, NS as to type of meat, reduced sodium, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bacon or side pork, fresh, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bacon bits",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "bacon strips",
+      "crispy bacon"
+    ],
+    "visual_hints": [
+      "striped red-brown",
+      "crispy fat",
+      "wavy"
+    ]
+  },
+  "bagel": {
+    "display_name": "Bagel",
+    "category": "bread_grains",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "穀物・レーズン等の細別は視覚誤差が大きい。ベーグル形状で包括。",
+    "default_usda": {
+      "name": "Bagel",
+      "database": "survey_fndds",
+      "reason": "基本ベーグルを代表（NFS同等）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Bagel",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Bagel, multigrain",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bagel, oat bran",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bagel, whole wheat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "bagel",
+      "bagel with raisins"
+    ],
+    "visual_hints": [
+      "ring bread",
+      "dense crumb",
+      "shiny crust"
+    ]
+  },
+  "baked_beans": {
+    "display_name": "Baked beans",
+    "category": "vegetables_legumes",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "減塩/外食/ベジタリアンの差は視覚不可。見た目はソース豆でほぼ同じ。",
+    "default_usda": {
+      "name": "Baked beans",
+      "database": "survey_fndds",
+      "reason": "基本の焼き豆（缶含む）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baked beans",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Baked beans, vegetarian",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baked beans from fast food / restaurant",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Baked beans, reduced sodium",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beans in sauce",
+      "boston beans"
+    ],
+    "visual_hints": [
+      "brown/red sauce",
+      "navy beans",
+      "glossy"
+    ]
+  },
+  "baklava": {
+    "display_name": "Baklava",
+    "category": "desserts_sweets",
+    "spec2_rule": "維持",
+    "spec2_reason": "層状パイ生地とナッツ・シロップの外観が特徴的。",
+    "default_usda": {
+      "name": "Baklava",
+      "database": "survey_fndds",
+      "reason": "代表菓子"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Baklava",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "baklawa"
+    ],
+    "visual_hints": [
+      "layered pastry",
+      "nuts",
+      "honey sheen"
+    ]
+  },
+  "banana": {
+    "display_name": "Banana",
+    "category": "fruits",
+    "spec2_rule": "維持",
+    "spec2_reason": "非常に視覚的に特徴的で誤認が少ない。",
+    "default_usda": {
+      "name": "Banana, raw",
+      "database": "survey_fndds",
+      "reason": "生バナナ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Banana, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Banana, baked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "banana"
+    ],
+    "visual_hints": [
+      "yellow curved",
+      "peel",
+      "bunch"
+    ]
+  },
+  "banana_chips": {
+    "display_name": "Banana chips",
+    "category": "snacks",
+    "spec2_rule": "維持",
+    "spec2_reason": "スナック菓子として外観も栄養も生果と異なるため別扱い。",
+    "default_usda": {
+      "name": "Banana chips",
+      "database": "survey_fndds",
+      "reason": "代表的ドライスナック"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Banana chips",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "banana crisps"
+    ],
+    "visual_hints": [
+      "thin round slices",
+      "golden",
+      "bowl/bag"
+    ]
+  },
+  "bao": {
+    "display_name": "Bao (steamed bun)",
+    "category": "world_chinese",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "具の有無は外観から判断困難（内部）。",
+    "default_usda": {
+      "name": "Bao bun",
+      "database": "survey_fndds",
+      "reason": "包子の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Bao bun",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Bao bun, no meat",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "bao",
+      "steamed bun"
+    ],
+    "visual_hints": [
+      "white fluffy bun",
+      "pleated top",
+      "steam"
+    ]
+  },
+  "bbq_meat": {
+    "display_name": "Barbecue meat (sauced/unsauced)",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "肉種（牛/豚/鶏）やソース有無は角度や切り方で不安定。BBQ肉として包括。",
+    "default_usda": {
+      "name": "Barbecue meat, NFS",
+      "database": "survey_fndds",
+      "reason": "汎用BBQ肉"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Barbecue meat, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Barbecue beef, with sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Barbecue pork, with sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Barbecue chicken",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "BBQ",
+      "barbecue platter"
+    ],
+    "visual_hints": [
+      "reddish glaze",
+      "charred edges",
+      "served with sides"
+    ]
+  },
+  "beer": {
+    "display_name": "Beer",
+    "category": "beverages_alcohol",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ライト/高アル/ノンアルは容器やラベル依存で視覚不安定。",
+    "default_usda": {
+      "name": "Beer",
+      "database": "survey_fndds",
+      "reason": "ビール一般"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beer",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beer, light",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beer, higher alcohol",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beer, nonalcoholic",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beer glass",
+      "beer bottle",
+      "lager/ale"
+    ],
+    "visual_hints": [
+      "foamy head",
+      "amber/yellow",
+      "pint glass"
+    ]
+  },
+  "beef_broccoli": {
+    "display_name": "Beef and broccoli",
+    "category": "world_chinese",
+    "spec2_rule": "維持",
+    "spec2_reason": "ブロッコリと牛薄切り・茶色ソースの組合せが視覚的に明瞭。",
+    "default_usda": {
+      "name": "Beef and broccoli",
+      "database": "survey_fndds",
+      "reason": "該当料理の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef and broccoli",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beef broccoli stir-fry"
+    ],
+    "visual_hints": [
+      "green florets",
+      "sliced beef",
+      "brown glossy sauce"
+    ]
+  },
+  "beef_noodles": {
+    "display_name": "Beef with noodles (with/without sauce)",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "白/マッシュルーム/トマト/醤油などソース色差はあるが組合せ爆発を抑制。",
+    "default_usda": {
+      "name": "Beef and noodles, no sauce",
+      "database": "survey_fndds",
+      "reason": "ソース有無の双方を吸収"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef and noodles, no sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and noodles with cream or white sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and noodles with mushroom sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and noodles with tomato-based sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and noodles with soy-based sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and noodles with gravy",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beef noodle",
+      "beef pasta"
+    ],
+    "visual_hints": [
+      "noodles with beef strips",
+      "sauce-coated"
+    ]
+  },
+  "beef_rice": {
+    "display_name": "Beef with rice (with/without sauce)",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ソース色・種類は多岐。主食が米である点を統一。",
+    "default_usda": {
+      "name": "Beef and rice, no sauce",
+      "database": "survey_fndds",
+      "reason": "ソース条件を包含"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef and rice, no sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and rice with mushroom sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and rice with tomato-based sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and rice with soy-based sauce",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef and rice with gravy",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef curry with rice",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beef rice bowl",
+      "beef over rice"
+    ],
+    "visual_hints": [
+      "white rice base",
+      "beef pieces",
+      "sauce tint"
+    ]
+  },
+  "beef_steak": {
+    "display_name": "Beef steak",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "Tボーン/リブアイ/サーロイン等の部位・脂身食べ分けは画像で不安定。",
+    "default_usda": {
+      "name": "Beef, steak, NFS",
+      "database": "survey_fndds",
+      "reason": "部位未特定のステーキ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef, steak, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beef, steak, ribeye, NS as to fat eaten",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, steak, sirloin, NS as to fat eaten",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, steak, T-bone, NS as to fat eaten",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "steak",
+      "beef steak"
+    ],
+    "visual_hints": [
+      "grill marks",
+      "brown sear",
+      "juices"
+    ]
+  },
+  "beef_stew": {
+    "display_name": "Beef stew",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "プエルトリコ風/ポテト有無などは視覚ばらつきが大きく統合が妥当。",
+    "default_usda": {
+      "name": "Beef, stew meat",
+      "database": "survey_fndds",
+      "reason": "シチュー用の代表項目"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef, stew meat",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beef stew with potatoes, Puerto Rican style",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beef stew",
+      "beef curry-like stew"
+    ],
+    "visual_hints": [
+      "brown thick sauce",
+      "beef chunks",
+      "potato/carrots"
+    ]
+  },
+  "beef_jerky": {
+    "display_name": "Beef jerky",
+    "category": "snacks",
+    "spec2_rule": "維持",
+    "spec2_reason": "細長い乾燥肉片は視覚的に特徴的。",
+    "default_usda": {
+      "name": "Beef jerky",
+      "database": "survey_fndds",
+      "reason": "ジャーキー代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef jerky",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "jerky"
+    ],
+    "visual_hints": [
+      "dry strips",
+      "dark red-brown",
+      "packaged snack"
+    ]
+  },
+  "beets": {
+    "display_name": "Beets (raw/cooked/pickled)",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "缶/新鮮/ピクルスや減塩は画像で不安定。ビーツ全般で統合。",
+    "default_usda": {
+      "name": "Beets, NS as to form, cooked",
+      "database": "survey_fndds",
+      "reason": "調理ビーツの汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beets, NS as to form, cooked",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beets, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beets, pickled",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beet greens, cooked",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beets",
+      "pickled beets"
+    ],
+    "visual_hints": [
+      "deep red slices/cubes",
+      "stained plate"
+    ]
+  },
+  "berries": {
+    "display_name": "Berries (mixed)",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "苺/ブルーベリー/ラズベリー等は混在しやすく、写真での品種特定は不要。",
+    "default_usda": {
+      "name": "Berries, NFS",
+      "database": "survey_fndds",
+      "reason": "ベリー類汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Berries, NFS",
+        "database": "survey_fndds",
+        "specificity": "generic"
+      },
+      {
+        "name": "Blueberries, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Raspberries, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      },
+      {
+        "name": "Blackberries, raw",
+        "database": "survey_fndds",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "mixed berries",
+      "berry mix"
+    ],
+    "visual_hints": [
+      "small round berries",
+      "red/blue/purple",
+      "gloss"
+    ]
+  }
+}

@@ -13,7 +13,11 @@ import json
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Optional
-import ijson  # ストリーミングJSON処理用
+
+try:
+    import ijson  # ストリーミングJSON処理用
+except ImportError:
+    ijson = None  # type: ignore
 
 # プロジェクトルート
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -184,7 +188,12 @@ def process_file(
     print(f"ファイルサイズ: {file_size_mb:.1f} MB")
 
     # 食品名を抽出
-    if config.get("use_streaming", False):
+    use_streaming = config.get("use_streaming", False) and ijson is not None
+
+    if config.get("use_streaming", False) and ijson is None:
+        print("  ⚠️  ijsonが利用できないため通常読み込みを使用します")
+
+    if use_streaming:
         food_names = extract_names_streaming(
             json_file,
             config["json_key"],
@@ -209,8 +218,8 @@ def process_file(
     # テキストファイルに保存
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
-            for name in unique_names:
-                f.write(f"{name}\n")
+            for idx, name in enumerate(unique_names, 1):
+                f.write(f"{idx}. {name}\n")
 
         print(f"\n✅ 保存完了: {output_file}")
         print(f"   総件数: {len(unique_names):,} 件")
@@ -275,9 +284,7 @@ def main():
 
 if __name__ == "__main__":
     # ijsonがインストールされているか確認
-    try:
-        import ijson
-    except ImportError:
+    if ijson is None:
         print("⚠️  警告: ijsonがインストールされていません")
         print("大きなファイルの処理にはijsonのインストールを推奨します:")
         print("  pip install ijson")

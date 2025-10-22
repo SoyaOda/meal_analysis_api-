@@ -223,6 +223,11 @@ async def main():
         default=None,
         help="画像ファイルを読み込むディレクトリ (相対パスはプロジェクトルート基準)"
     )
+    parser.add_argument(
+        "--freeform",
+        action="store_true",
+        help="freeformプロンプト（食品リスト不要版）を使用する"
+    )
     args = parser.parse_args()
     print(f"\n{'#'*80}")
     print(f"# VLM全画像テストスクリプト")
@@ -272,21 +277,33 @@ async def main():
     )
     print(f"モデル: {deepinfra_service.model_id}")
     
-    # USDA用のプロンプトを生成（exclude_uncooked=False）
+    # プロンプトを生成
     print(f"\nプロンプトを生成中...")
-    # food_names_list.txtを読み込み
-    food_names_list_path = project_root / "test_scripts" / "food_names_list" / "food_names_list.txt"
     
-    if not food_names_list_path.exists():
-        print(f"❌ エラー: {food_names_list_path} が存在しません")
-        sys.exit(1)
+    if args.freeform:
+        # Freeform版（食品リスト不要）
+        print(f"モード: Freeform（食品リストなし）")
+        # generate_freeform_promptをインポート
+        from generate_freeform_prompt import generate_vlm_prompt as generate_freeform
+        prompt = generate_freeform()
+        prompt_type = "freeform"
+    else:
+        # Complete版（食品リスト必要）
+        print(f"モード: Complete（食品リスト使用）")
+        # food_names_list.txtを読み込み
+        food_names_list_path = project_root / "test_scripts" / "food_names_list" / "food_names_list.txt"
+        
+        if not food_names_list_path.exists():
+            print(f"❌ エラー: {food_names_list_path} が存在しません")
+            sys.exit(1)
+        
+        with open(food_names_list_path, 'r', encoding='utf-8') as f:
+            food_names_list = f.read()
+        
+        print(f"食品名リスト読み込み完了: {len(food_names_list):,} 文字")
+        prompt = generate_vlm_prompt(food_names_list)
+        prompt_type = "complete"
     
-    with open(food_names_list_path, 'r', encoding='utf-8') as f:
-        food_names_list = f.read()
-    
-    print(f"食品名リスト読み込み完了: {len(food_names_list):,} 文字")
-    
-    prompt = generate_vlm_prompt(food_names_list)
     print(f"プロンプト長: {len(prompt):,} 文字")
 
     # 料金情報を読み込み
@@ -322,9 +339,9 @@ async def main():
     output_dir = project_root / "test_scripts" / "output"
     output_dir.mkdir(exist_ok=True)
     
-    # モデル名をファイル名に含める（スラッシュやコロンを_に置換）
+    # モデル名とプロンプトタイプをファイル名に含める
     model_name_safe = deepinfra_service.model_id.replace("/", "_").replace(":", "_")
-    output_file = output_dir / f"vlm_test_results_{model_name_safe}_{timestamp}.json"
+    output_file = output_dir / f"vlm_test_results_{model_name_safe}_{prompt_type}_{timestamp}.json"
     
     print(f"\n{'='*80}")
     print(f"結果を保存中...")
@@ -337,6 +354,7 @@ async def main():
             "successful": sum(1 for r in results if r["success"]),
             "failed": sum(1 for r in results if not r["success"]),
             "model_id": deepinfra_service.model_id,
+            "prompt_type": prompt_type,
             "temperature": 0.0,
             "seed": 123456,
             "prompt_length": len(prompt),
@@ -352,6 +370,7 @@ async def main():
     print(f"\n✅ 結果を保存しました: {output_file}")
     print(f"\n{'='*80}")
     print(f"サマリー:")
+    print(f"  プロンプトタイプ: {prompt_type}")
     print(f"  総画像数: {summary['test_metadata']['total_images']}")
     print(f"  成功: {summary['test_metadata']['successful']}")
     print(f"  失敗: {summary['test_metadata']['failed']}")

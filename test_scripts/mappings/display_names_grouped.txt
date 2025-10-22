@@ -1,0 +1,566 @@
+# Display Names Grouped by First Letter
+# Total: 487 items
+# ==================================================
+
+
+## A (19 items)
+------------------------------
+  • Adobo with noodles
+  • Adobo with rice
+  • Alcoholic malt beverage
+  • Almond butter
+  • Almond milk
+  • Almonds
+  • Aloe juice drink
+  • Antipasto (platter)
+  • Apple
+  • Apple juice
+  • Applesauce (unsweetened)
+  • Apricot
+  • Arepa
+  • Artichoke
+  • Artichoke dip
+  • Asparagus (cooked)
+  • Asparagus (raw)
+  • Atole (hot cereal drink)
+  • Avocado
+
+## B (44 items)
+------------------------------
+  • Baby cereal (dry/ready-to-eat)
+  • Baby food – fruit purée
+  • Baby food – mixed (fruit/veg/grain/yogurt/meat)
+  • Baby food – vegetable purée
+  • Baby juice / juice blends
+  • Baby snacks (puffs/wheels/crunchies)
+  • Baby yogurt & melts
+  • Bacon
+  • Bagel
+  • Baked beans
+  • Baked potato
+  • Baklava
+  • Banana
+  • Banana chips
+  • Bao (steamed bun)
+  • Barbecue meat (sauced/unsauced)
+  • Beans & rice
+  • Beans (cooked/canned, drained)
+  • Beans (dry, uncooked)
+  • Beef
+  • Beef and broccoli
+  • Beef jerky
+  • Beef steak
+  • Beef stew
+  • Beef tongue
+  • Beef with noodles (with/without sauce)
+  • Beef with rice (with/without sauce)
+  • Beer
+  • Beet
+  • Beets (raw/cooked/pickled)
+  • Bell pepper (all colors)
+  • Berries
+  • Blended iced coffee
+  • Boiled potato
+  • Bok choy
+  • Bread
+  • Breakfast burrito (egg)
+  • Breakfast sandwich (egg)
+  • Broccoli
+  • Brussels sprouts
+  • Bubble tea
+  • Burger (Whopper family)
+  • Butter
+  • Buttermilk
+
+## C (61 items)
+------------------------------
+  • Cabbage (green/red)
+  • Cantaloupe
+  • Carrot
+  • Cauliflower
+  • Celery
+  • Cheese
+  • Cherry
+  • Chicken
+  • Chicken (or turkey) salad
+  • Chicken breast (breaded/fried or baked)
+  • Chicken breast (grilled/roasted, no coating)
+  • Chicken curry
+  • Chicken nuggets / tenders (breaded)
+  • Chicken sandwich (fried)
+  • Chicken sandwich (grilled)
+  • Chicken teriyaki
+  • Chicken wings (bone-in)
+  • Chicken wings (boneless)
+  • Chicken wrap
+  • Chilaquiles
+  • Chile relleno
+  • Chili
+  • Chili hot dog
+  • Chimichanga
+  • Chinese pancake (scallion pancake)
+  • Chocolate candy
+  • Chocolate milk
+  • Chocolate spread/syrup
+  • Chocolate-covered nuts
+  • Chow fun (wide rice noodles)
+  • Chow mein / Chop suey
+  • Churros
+  • Clams (fried)
+  • Clams (in shell, steamed/boiled/raw/baked)
+  • Cocktail (mixed drink)
+  • Coconut milk (culinary)
+  • Coconut water
+  • Coffee
+  • Coffee creamer
+  • Collard greens (cooked)
+  • Congee (rice porridge)
+  • Cooked beans
+  • Cooked greens
+  • Cookie
+  • Cooking oil
+  • Corn (kernels, cooked)
+  • Corn chips
+  • Corn dog
+  • Cornbread
+  • Cottage cheese
+  • Crab (lump)
+  • Crab cake
+  • Crab salad (incl. imitation)
+  • Crackers
+  • Cranberry juice
+  • Cream cheese
+  • Croissant
+  • Cucumber
+  • Cucumber (raw)
+  • Cucumber salad
+  • Custard / Crème brûlée
+
+## D (9 items)
+------------------------------
+  • Dal (lentil curry)
+  • Dessert pizza
+  • Dessert topping
+  • Deviled egg
+  • Dirty rice
+  • Donut
+  • Dosa
+  • Dried vegetable mix
+  • Dumplings (no meat specified)
+
+## E (19 items)
+------------------------------
+  • Edamame
+  • Egg (boiled/poached)
+  • Egg (fried)
+  • Egg (omelet/scramble)
+  • Egg (raw)
+  • Egg casserole
+  • Egg foo young
+  • Egg roll
+  • Egg salad
+  • Eggnog
+  • Eggplant (cooked)
+  • Eggplant Parmesan
+  • Eggplant dip
+  • Eggs Benedict
+  • Empanada
+  • Enchilada
+  • Energy drink
+  • Energy drink (sugar-free/low-cal)
+  • Escargot
+
+## F (25 items)
+------------------------------
+  • Fajitas
+  • Falafel
+  • Falafel sandwich
+  • Fava beans
+  • Fennel (bulb)
+  • Fig (dried)
+  • Fig (fresh)
+  • Flan
+  • Flavored pasta / Rice-pasta mix
+  • Flavored rice (mix)
+  • Flax (seeds/oil)
+  • Focaccia
+  • French fries
+  • French toast
+  • Fried chicken (bone-in)
+  • Fried noodles (lo/chow mein)
+  • Fried rice (no meat)
+  • Fried vegetables (assorted)
+  • Fritter
+  • Frozen dessert (non-dairy)
+  • Frozen juice bar / Freezer pop
+  • Frozen meal
+  • Frozen yogurt
+  • Fruit salad
+  • Fruit turnover
+
+## G (18 items)
+------------------------------
+  • Garlic
+  • Garlic bread
+  • Gefilte fish
+  • Gelatin dessert
+  • Glass noodles
+  • Grape juice
+  • Grape products (juices)
+  • Grapefruit juice
+  • Grapes
+  • Greek salad
+  • Green beans
+  • Green onion (scallion)
+  • Green peas
+  • Ground red meat (beef/bison/lamb)
+  • Ground turkey
+  • Ground veal
+  • Guacamole
+  • Gyro sandwich
+
+## H (13 items)
+------------------------------
+  • Ham (cooked/deli)
+  • Ham (sliced)
+  • Ham sandwich
+  • Hamburger
+  • Hard cider
+  • Hard seltzer
+  • Hash brown
+  • Honeydew
+  • Hot cereal (cream of wheat/rice)
+  • Hot dog (beef)
+  • Hot pocket / savory turnover
+  • Hot wheat cereal
+  • Hummus
+
+## I (9 items)
+------------------------------
+  • Ice cream
+  • Ice cream bar/sandwich
+  • Iced coffee
+  • Iced tea / Lemonade blend
+  • Idli
+  • Imitation crab
+  • Infant formula
+  • Italian dressing
+  • Italian ice
+
+## J (2 items)
+------------------------------
+  • Jam/Jelly
+  • Jambalaya
+
+## K (7 items)
+------------------------------
+  • Kefir
+  • Ketchup
+  • Kidney beans (cooked)
+  • Kimchi
+  • Kiwi
+  • Kiwifruit
+  • Kombucha
+
+## L (9 items)
+------------------------------
+  • Leafy greens (raw)
+  • Leek
+  • Light ice cream
+  • Liqueur
+  • Liquid sweetener (honey/agave/maple)
+  • Liver (cooked/paté)
+  • Lobster
+  • Luncheon meat (Spam-type)
+  • Lychee
+
+## M (19 items)
+------------------------------
+  • Mac and cheese
+  • Mandarin
+  • Mango
+  • Mashed potato
+  • Mayonnaise (vegan)
+  • Milk
+  • Milkshake
+  • Mushroom (beech)
+  • Mushroom (crimini)
+  • Mushroom (enoki)
+  • Mushroom (king oyster)
+  • Mushroom (lion's mane)
+  • Mushroom (maitake)
+  • Mushroom (oyster)
+  • Mushroom (pioppini)
+  • Mushroom (portabella)
+  • Mushroom (shiitake)
+  • Mushroom (white button)
+  • Mustard (yellow)
+
+## N (6 items)
+------------------------------
+  • Napa cabbage
+  • Nut butter sandwich (incl. AB&J)
+  • Nut/seed butter (smooth)
+  • Nutrition/energy bar
+  • Nutritional drink/shake (RTD)
+  • Nuts (mixed)
+
+## O (12 items)
+------------------------------
+  • Oat milk
+  • Oatmeal (cooked)
+  • Olives
+  • Olives (green, stuffed)
+  • Onion (bulb)
+  • Onion ring snack (chips)
+  • Onion rings
+  • Orange
+  • Orange chicken
+  • Orange juice
+  • Orange juice / drink
+  • Oysters
+
+## P (55 items)
+------------------------------
+  • Pad Thai
+  • Paella
+  • Pakora
+  • Palak Paneer
+  • Pan dulce (Mexican sweet bread)
+  • Pancakes
+  • Papaya
+  • Pasta (Alfredo/white sauce)
+  • Pasta (cream/white sauce)
+  • Pasta (tomato/red sauce)
+  • Pasta salad
+  • Pasta sauce
+  • Pasta sauce (marinara)
+  • Pea salad
+  • Peach/Nectarine
+  • Peanut butter
+  • Pear
+  • Pediatric shake
+  • Pickled vegetables
+  • Pickles (cucumber)
+  • Pie
+  • Pierogi (dumpling)
+  • Pineapple
+  • Pizza
+  • Pizza (pepperoni)
+  • Pizza (white sauce)
+  • Pizza rolls
+  • Pizza topping (derived portion)
+  • Plain pasta/noodles
+  • Plant milk
+  • Plant-based fillet
+  • Plantain (cooked)
+  • Plantain (raw)
+  • Plantain chips
+  • Plum
+  • Pocky (biscuit sticks)
+  • Pomegranate
+  • Pomegranate juice
+  • Popcorn
+  • Popsicle (ice pop)
+  • Pork
+  • Potato (raw/cooked generic)
+  • Potato chips
+  • Potato pancake
+  • Potato salad
+  • Potato skins
+  • Potato tots
+  • Poultry nuggets
+  • Pretzel (soft)
+  • Pretzels (hard)
+  • Prune juice
+  • Pudding
+  • Pumpkin seeds
+  • Pupusa
+  • Pupusa (bean)
+
+## Q (3 items)
+------------------------------
+  • Quesadilla
+  • Quiche
+  • Quinoa
+
+## R (10 items)
+------------------------------
+  • Ramen
+  • Ravioli
+  • Refried beans
+  • Rice (cooked)
+  • Rice cake
+  • Rice milk
+  • Roasted potato
+  • Roasted/Grilled chicken (bone-in)
+  • Root fries (yuca/potato-like)
+  • Rotisserie chicken
+
+## S (43 items)
+------------------------------
+  • Salad dressing (creamy)
+  • Salmon (raw/cooked)
+  • Salsa
+  • Sausage
+  • Sausage (Thuringer/cured deli)
+  • Scallops
+  • Scone
+  • Seaweed
+  • Seeds
+  • Sesame dressing
+  • Shallot
+  • Shellfish (mollusk)
+  • Shrimp
+  • Smoothie (fruit/veg)
+  • Smoothie (licuado/batido)
+  • Snack bar
+  • Snack cake
+  • Snack mix
+  • Snow cone (shaved ice)
+  • Soda
+  • Sour cream
+  • Soy milk
+  • Soy sauce
+  • Soybean vermicelli (glass noodles)
+  • Spaghetti Bolognese
+  • Spaghetti squash
+  • Spirit with clear mixer
+  • Spirit with cola
+  • Spirit with energy drink
+  • Spirit with lemonade
+  • Sports drink
+  • Sprouts
+  • Stir-fry vegetables
+  • Stone fruit (peach/nectarine/plum)
+  • Strudel
+  • Sunflower seeds
+  • Sushi (nigiri)
+  • Sushi (roll)
+  • Sweet and sour pork
+  • Sweet potato
+  • Sweet potato (baked/boiled)
+  • Sweet potato fries
+  • Sweet potato tots
+
+## T (42 items)
+------------------------------
+  • Taco salad
+  • Tamale
+  • Tamale (pork)
+  • Taquito
+  • Tart cherry juice
+  • Tea
+  • Teriyaki chicken
+  • Teriyaki sauce
+  • Tiramisu
+  • Toddler formula
+  • Toddler meal (tray)
+  • Tofu
+  • Tofu stir-fry (soy sauce)
+  • Tom Collins
+  • Tomatillo
+  • Tomato
+  • Tomato & cucumber salad
+  • Tomato & vegetable juice
+  • Tomato (fresh)
+  • Tomato juice
+  • Tomato-based sauce (condiment)
+  • Tortellini
+  • Tortilla
+  • Tortilla chips
+  • Trail mix
+  • Trifle
+  • Tripe (stomach)
+  • Tteokbokki (Korean spicy rice cakes)
+  • Tuna (canned in water, drained)
+  • Tuna casserole
+  • Tuna patty
+  • Tuna salad
+  • Tuna sandwich
+  • Turkey (cooked)
+  • Turkey bacon
+  • Turkey ham (deli)
+  • Turkey sandwich
+  • Turkey with gravy
+  • Turkey/chicken sausage
+  • Turnip
+  • Turnip greens (cooked)
+  • Tzatziki
+
+## U (1 items)
+------------------------------
+  • Upma
+
+## V (22 items)
+------------------------------
+  • Vada
+  • Veal chop
+  • Veal cutlet (sauced/breaded)
+  • Vegetable & fruit juice drink
+  • Vegetable chips
+  • Vegetable curry
+  • Vegetable curry with rice
+  • Vegetable dip
+  • Vegetable oil (cooking)
+  • Vegetable sandwich
+  • Vegetable smoothie
+  • Vegetable stew
+  • Vegetable tempura
+  • Vegetarian stroganoff
+  • Veggie burger
+  • Veggie burger patty
+  • Venison (plain/steak/sausage/jerky)
+  • Venison (with sauce/noodles/potatoes)
+  • Vienna sausage (canned)
+  • Vinegar
+  • Vodka (neat/on the rocks)
+  • Vodka tomato cream sauce
+
+## W (31 items)
+------------------------------
+  • Waffle
+  • Walnut oil
+  • Walnuts
+  • Wasabi paste
+  • Wasabi peas
+  • Water / flavored water
+  • Water chestnut
+  • Watercress
+  • Watermelon
+  • Welsh rarebit
+  • Wheat bran
+  • Wheat germ
+  • Wheat germ oil
+  • Whey powder (sweet)
+  • Whipped topping
+  • Whiskey (neat/on the rocks)
+  • Whiskey sour
+  • White Russian
+  • White beans (cooked)
+  • White chocolate candy
+  • White fish (cod/haddock/pollock/tilapia/catfish)
+  • White sauce / gravy
+  • Wild boar (wild pig)
+  • Wine (dessert / nonalcoholic)
+  • Wine (red)
+  • Wine (rosé)
+  • Wine (sparkling)
+  • Wine (white)
+  • Winter melon (cooked)
+  • Winter squash (cooked)
+  • Worcestershire sauce
+
+## Y (7 items)
+------------------------------
+  • Yat Ga Mein (noodle soup)
+  • Yeast (ingredient)
+  • Yeast extract spread
+  • Yellow rice (cooked)
+  • Yellow string beans (cooked)
+  • Yogurt
+  • Yogurt parfait (with fruit)
+
+## Z (1 items)
+------------------------------
+  • Zwieback (rusk toast)

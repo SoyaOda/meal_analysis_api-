@@ -1,0 +1,3490 @@
+{
+  "almond_milk": {
+    "display_name": "Almond milk",
+    "category": "plant_milks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "冷蔵/常温やメーカーの違いは外観差がほぼ無く、無糖の方が代表的。",
+    "default_usda": {
+      "name": "Almond milk, unsweetened, plain, refrigerated",
+      "database": "foundation",
+      "reason": "最も一般的な無糖プレーン（飲用）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Almond milk, unsweetened, plain, refrigerated",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Almond milk, unsweetened, plain, shelf stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "almond milk",
+      "almondmilk",
+      "plant milk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "carton",
+      "glass"
+    ]
+  },
+  "oat_milk": {
+    "display_name": "Oat milk",
+    "category": "plant_milks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "無糖・プレーン・冷蔵に統一。甘味の有無は視覚で判別困難。",
+    "default_usda": {
+      "name": "Oat milk, unsweetened, plain, refrigerated",
+      "database": "foundation",
+      "reason": "最も汎用的なオートミルク無糖"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Oat milk, unsweetened, plain, refrigerated",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "oat milk",
+      "oat beverage",
+      "plant milk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "carton"
+    ]
+  },
+  "soy_milk": {
+    "display_name": "Soy milk",
+    "category": "plant_milks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "見た目は同等。無糖/加糖・冷蔵/常温は統合し、デフォルトは無糖。",
+    "default_usda": {
+      "name": "Soy milk, unsweetened, plain, shelf stable",
+      "database": "foundation",
+      "reason": "豆乳は無糖が栄養推定の基準として安定"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Soy milk, unsweetened, plain, shelf stable",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Soy milk, sweetened, plain, refrigerated",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "soy milk",
+      "soymilk",
+      "plant milk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "carton"
+    ]
+  },
+  "milk": {
+    "display_name": "Milk",
+    "category": "dairy",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "脂肪分（無脂肪/1%/2%/全乳）は写真で判別困難。",
+    "default_usda": {
+      "name": "Milk, NFS",
+      "database": "foundation",
+      "reason": "脂肪分未特定の汎用ミルク"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Milk, nonfat, fluid, with added vitamin A and vitamin D (fat free or skim)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk, lowfat, fluid, 1% milkfat, with added vitamin A and vitamin D",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk, reduced fat, fluid, 2% milkfat, with added vitamin A and vitamin D",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Milk, whole, 3.25% milkfat, with added vitamin D",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "milk",
+      "cow milk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "glass",
+      "carton"
+    ]
+  },
+  "buttermilk": {
+    "display_name": "Buttermilk",
+    "category": "dairy",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "牛乳と見た目は近いが、栄養がやや異なる発酵乳。誤差回避のため独立。",
+    "default_usda": {
+      "name": "Buttermilk, low fat",
+      "database": "foundation",
+      "reason": "一般的な低脂肪バターミルク"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Buttermilk, low fat",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "buttermilk"
+    ],
+    "visual_hints": [
+      "white liquid",
+      "jug",
+      "glass"
+    ]
+  },
+  "yogurt": {
+    "display_name": "Yogurt",
+    "category": "dairy",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ギリシャ/通常・脂肪分・フレーバーは外観だけでは安定判別不可。",
+    "default_usda": {
+      "name": "Yogurt, NFS",
+      "database": "foundation",
+      "reason": "種類未特定の汎用ヨーグルト"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Yogurt, Greek, plain, nonfat",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Yogurt, Greek, plain, whole milk",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Yogurt, Greek, strawberry, nonfat",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Yogurt, plain, nonfat",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Yogurt, plain, whole milk",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "yogurt",
+      "yoghurt",
+      "greek yogurt"
+    ],
+    "visual_hints": [
+      "creamy",
+      "cup",
+      "spoon"
+    ]
+  },
+  "cheese": {
+    "display_name": "Cheese",
+    "category": "dairy",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "種類差は視覚で安定判別しづらい。粉/固形/スライスは一括。",
+    "default_usda": {
+      "name": "Cheese, NFS",
+      "database": "foundation",
+      "reason": "汎用チーズ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cheese, American, restaurant",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, cheddar",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, monterey jack, solid",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, mozzarella, low moisture, part-skim",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, swiss",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, provolone, sliced",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, parmesan, grated",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, parmesan, grated, refrigerated",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, pasteurized process cheese food or product, American, singles",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, pasteurized process, American, vitamin D fortified",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, queso fresco, solid",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, cotija, solid",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, dry white, queso seco",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, feta, whole milk, crumbled",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Cheese, oaxaca, solid",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "cheese",
+      "shredded cheese",
+      "grated cheese",
+      "cheese slice"
+    ],
+    "visual_hints": [
+      "block",
+      "slice",
+      "shredded",
+      "grated"
+    ]
+  },
+  "cottage_cheese": {
+    "display_name": "Cottage cheese",
+    "category": "dairy",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観（粒状）と栄養（高たんぱく）が他のチーズと大きく異なる。",
+    "default_usda": {
+      "name": "Cottage cheese, full fat, large or small curd",
+      "database": "foundation",
+      "reason": "代表的なフルファットのカッテージチーズ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cottage cheese, full fat, large or small curd",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cottage cheese",
+      "curd cheese"
+    ],
+    "visual_hints": [
+      "curds",
+      "white",
+      "bowl"
+    ]
+  },
+  "cream_cheese": {
+    "display_name": "Cream cheese",
+    "category": "dairy",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ペースト状で他チーズと質感が明確に異なる。",
+    "default_usda": {
+      "name": "Cream cheese, full fat, block",
+      "database": "foundation",
+      "reason": "代表的なクリームチーズ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cream cheese, full fat, block",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cream cheese"
+    ],
+    "visual_hints": [
+      "spread",
+      "white block"
+    ]
+  },
+  "butter": {
+    "display_name": "Butter",
+    "category": "dairy",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "有塩/無塩は外観同一で栄養差は微小（ナトリウム）。",
+    "default_usda": {
+      "name": "Butter, stick, unsalted",
+      "database": "foundation",
+      "reason": "調理基準として無塩を既定"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Butter, stick, unsalted",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Butter, stick, salted",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "butter"
+    ],
+    "visual_hints": [
+      "pale yellow block",
+      "stick",
+      "foil"
+    ]
+  },
+  "sour_cream": {
+    "display_name": "Sour cream",
+    "category": "dairy",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が独特（白いディップ状）。トッピング用途で頻出。",
+    "default_usda": {
+      "name": "Cream, sour, full fat",
+      "database": "foundation",
+      "reason": "代表的なサワークリーム"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cream, sour, full fat",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "sour cream"
+    ],
+    "visual_hints": [
+      "white dollop",
+      "cup"
+    ]
+  },
+  "nut_seed_butter": {
+    "display_name": "Nut/seed butter (smooth)",
+    "category": "spreads",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "見た目が極めて類似し栄養も近似（高脂質・スプレッド）。",
+    "default_usda": {
+      "name": "Peanut butter, creamy",
+      "database": "foundation",
+      "reason": "最頻出の基準スプレッド"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Peanut butter, creamy",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Almond butter, creamy",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Sesame butter, creamy",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "nut butter",
+      "seed butter",
+      "peanut butter",
+      "almond butter",
+      "tahini"
+    ],
+    "visual_hints": [
+      "brown paste",
+      "jar",
+      "spread"
+    ]
+  },
+  "apple": {
+    "display_name": "Apple",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "品種は外観差が小さく栄養差も僅少。",
+    "default_usda": {
+      "name": "Apples, with skin, raw",
+      "database": "foundation",
+      "reason": "生食の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apples, fuji, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apples, gala, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apples, granny smith, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apples, honeycrisp, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Apples, red delicious, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "apple",
+      "red apple",
+      "green apple"
+    ],
+    "visual_hints": [
+      "round",
+      "red/green skin",
+      "stem"
+    ]
+  },
+  "applesauce": {
+    "display_name": "Applesauce (unsweetened)",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が果実と大きく異なるピュレ状。",
+    "default_usda": {
+      "name": "Applesauce, unsweetened, with added vitamin C",
+      "database": "foundation",
+      "reason": "無糖・ビタミンC添加の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Applesauce, unsweetened, with added vitamin C",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "applesauce",
+      "apple puree"
+    ],
+    "visual_hints": [
+      "puree",
+      "cup",
+      "spoonable"
+    ]
+  },
+  "apricot": {
+    "display_name": "Apricot",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Apricot, with skin, raw",
+      "database": "foundation",
+      "reason": "生のアプリコット"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apricot, with skin, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "apricot"
+    ],
+    "visual_hints": [
+      "small orange fruit",
+      "pit"
+    ]
+  },
+  "avocado": {
+    "display_name": "Avocado",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観・栄養特性が独特（高脂質）。",
+    "default_usda": {
+      "name": "Avocado, Hass, peeled, raw",
+      "database": "foundation",
+      "reason": "一般的なハス種"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Avocado, Hass, peeled, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "avocado"
+    ],
+    "visual_hints": [
+      "green flesh",
+      "seed cavity",
+      "slices"
+    ]
+  },
+  "banana": {
+    "display_name": "Banana",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "熟度差は見た目が連続的で判別難。栄養差は小さめ。",
+    "default_usda": {
+      "name": "Bananas, ripe, raw",
+      "database": "foundation",
+      "reason": "実食に近い成熟度を基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Bananas, ripe and slightly ripe, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Bananas, overripe, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "banana"
+    ],
+    "visual_hints": [
+      "yellow peel",
+      "curved"
+    ]
+  },
+  "plantain": {
+    "display_name": "Plantain (raw)",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "熟度差の視覚判別は難しく、栄養差も限定的（生状態）。",
+    "default_usda": {
+      "name": "Plantains, ripe, raw",
+      "database": "foundation",
+      "reason": "標準的な熟度"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Plantains, underripe, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Plantains, ripe, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Plantains, overripe, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "plantain"
+    ],
+    "visual_hints": [
+      "large banana-like",
+      "green/yellow/black peel"
+    ]
+  },
+  "berries": {
+    "display_name": "Berries",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "粒の形や色以外は近く栄養も類似。",
+    "default_usda": {
+      "name": "Berries, NFS",
+      "database": "foundation",
+      "reason": "ベリー類汎用"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Blackberries, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Blueberries, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Raspberries, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Strawberries, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "berries",
+      "mixed berries"
+    ],
+    "visual_hints": [
+      "small",
+      "red/blue/black",
+      "clustered"
+    ]
+  },
+  "cherries": {
+    "display_name": "Cherry",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Cherries, sweet, dark red, raw",
+      "database": "foundation",
+      "reason": "代表的な生チェリー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cherries, sweet, dark red, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cherry",
+      "cherries"
+    ],
+    "visual_hints": [
+      "red spheres",
+      "stems"
+    ]
+  },
+  "grapes": {
+    "display_name": "Grapes",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "赤/緑シードレスは見た目以外の差が小さい。",
+    "default_usda": {
+      "name": "Grapes, seedless, raw",
+      "database": "foundation",
+      "reason": "生のシードレスぶどう"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Grapes, red, seedless, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Grapes, green, seedless, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "grapes",
+      "grape"
+    ],
+    "visual_hints": [
+      "clusters",
+      "green/red spheres"
+    ]
+  },
+  "kiwifruit": {
+    "display_name": "Kiwifruit",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "皮むき有無の差のみ。",
+    "default_usda": {
+      "name": "Kiwifruit, green, raw",
+      "database": "foundation",
+      "reason": "一般的なグリーンキウイ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Kiwifruit (kiwi), green, peeled, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Kiwifruit, green, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "kiwi",
+      "kiwifruit"
+    ],
+    "visual_hints": [
+      "green flesh",
+      "black seeds",
+      "oval"
+    ]
+  },
+  "mango": {
+    "display_name": "Mango",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "品種差は栄養近似で外観差も限定。",
+    "default_usda": {
+      "name": "Mango, peeled, raw",
+      "database": "foundation",
+      "reason": "生のマンゴー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mango, Ataulfo, peeled, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Mango, Tommy Atkins, peeled, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "mango"
+    ],
+    "visual_hints": [
+      "orange flesh",
+      "slices",
+      "seed"
+    ]
+  },
+  "melons_cantaloupe": {
+    "display_name": "Cantaloupe",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観がハネデュウと明確に異なる。",
+    "default_usda": {
+      "name": "Melons, cantaloupe, raw",
+      "database": "foundation",
+      "reason": "生カンタロープ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Melons, cantaloupe, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cantaloupe",
+      "melon (cantaloupe)"
+    ],
+    "visual_hints": [
+      "orange flesh",
+      "netted rind"
+    ]
+  },
+  "melons_honeydew": {
+    "display_name": "Honeydew",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観がカンタロープと明確に異なる。",
+    "default_usda": {
+      "name": "Melons, honeydew, raw",
+      "database": "foundation",
+      "reason": "生ハネデュウ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Melons, honeydew, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "honeydew",
+      "melon (honeydew)"
+    ],
+    "visual_hints": [
+      "pale green flesh",
+      "smooth rind"
+    ]
+  },
+  "mandarin": {
+    "display_name": "Mandarin",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "オレンジと形状・サイズ・皮むけ状態が異なることが多い。",
+    "default_usda": {
+      "name": "Mandarin, seedless, peeled, raw",
+      "database": "foundation",
+      "reason": "一般的なミカン（皮むき）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mandarin, seedless, peeled, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "mandarin",
+      "tangerine"
+    ],
+    "visual_hints": [
+      "segments",
+      "small orange citrus"
+    ]
+  },
+  "orange": {
+    "display_name": "Orange",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "柑橘として代表的で外観明確。",
+    "default_usda": {
+      "name": "Oranges, raw, navels",
+      "database": "foundation",
+      "reason": "代表的なネーブル"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Oranges, raw, navels",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "orange"
+    ],
+    "visual_hints": [
+      "orange sphere",
+      "segments"
+    ]
+  },
+  "peach": {
+    "display_name": "Peach/Nectarine",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "外観が近く栄養が類似する核果。",
+    "default_usda": {
+      "name": "Peaches, yellow, raw",
+      "database": "foundation",
+      "reason": "代表的な黄桃"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Peaches, yellow, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nectarines, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "peach",
+      "nectarine"
+    ],
+    "visual_hints": [
+      "orange/yellow flesh",
+      "stone fruit"
+    ]
+  },
+  "pear": {
+    "display_name": "Pear",
+    "category": "fruits",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "品種差は栄養差が小さい。",
+    "default_usda": {
+      "name": "Pears, raw",
+      "database": "foundation",
+      "reason": "生の洋梨"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pear, Anjou, green, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pears, raw, bartlett",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pear"
+    ],
+    "visual_hints": [
+      "pear shape",
+      "green/yellow skin"
+    ]
+  },
+  "pineapple": {
+    "display_name": "Pineapple",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Pineapple, raw",
+      "database": "foundation",
+      "reason": "生のパイナップル"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pineapple, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "pineapple"
+    ],
+    "visual_hints": [
+      "yellow flesh",
+      "rings",
+      "chunks"
+    ]
+  },
+  "plum": {
+    "display_name": "Plum",
+    "category": "fruits",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Plum, black, with skin, raw",
+      "database": "foundation",
+      "reason": "黒プラム"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Plum, black, with skin, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "plum"
+    ],
+    "visual_hints": [
+      "purple skin",
+      "stone fruit"
+    ]
+  },
+  "orange_juice": {
+    "display_name": "Orange juice",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "パルプ有無・濃縮/非は視覚判別困難。",
+    "default_usda": {
+      "name": "Orange juice, no pulp, not fortified, refrigerated",
+      "database": "foundation",
+      "reason": "代表的スタイル"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Orange juice, no pulp, not fortified, from concentrate, refrigerated",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Orange juice, no pulp, not fortified, not from concentrate, refrigerated",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "oj",
+      "orange juice"
+    ],
+    "visual_hints": [
+      "orange liquid",
+      "glass",
+      "carton"
+    ]
+  },
+  "apple_juice": {
+    "display_name": "Apple juice",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ビタミン添加・濃縮は視覚で判断困難。",
+    "default_usda": {
+      "name": "Apple juice, with added vitamin C, from concentrate, shelf stable",
+      "database": "foundation",
+      "reason": "代表的な常温りんごジュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Apple juice, with added vitamin C, from concentrate, shelf stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "apple juice"
+    ],
+    "visual_hints": [
+      "amber liquid",
+      "glass",
+      "bottle"
+    ]
+  },
+  "grape_juice": {
+    "display_name": "Grape juice",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "白/紫の違いは色のみで栄養は近似。",
+    "default_usda": {
+      "name": "Grape juice, purple, with added vitamin C, from concentrate, shelf stable",
+      "database": "foundation",
+      "reason": "代表的な紫ぶどうジュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Grape juice, purple, with added vitamin C, from concentrate, shelf stable",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Grape juice, white, with added vitamin C, from concentrate, shelf stable",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "grape juice"
+    ],
+    "visual_hints": [
+      "purple/amber liquid",
+      "glass"
+    ]
+  },
+  "grapefruit_juice": {
+    "display_name": "Grapefruit juice",
+    "category": "beverages",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "赤/白は色差のみ。",
+    "default_usda": {
+      "name": "Grapefruit juice, red, not fortified, not from concentrate, refrigerated",
+      "database": "foundation",
+      "reason": "赤の代表的スタイル"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Grapefruit juice, red, not fortified, not from concentrate, refrigerated",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Grapefruit juice, white, canned or bottled, unsweetened",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "grapefruit juice"
+    ],
+    "visual_hints": [
+      "pink/clear citrus juice"
+    ]
+  },
+  "cranberry_juice": {
+    "display_name": "Cranberry juice",
+    "category": "beverages",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色が特徴的で単独で写りやすい。",
+    "default_usda": {
+      "name": "Cranberry juice, not fortified, from concentrate, shelf stable",
+      "database": "foundation",
+      "reason": "一般的なクランベリージュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cranberry juice, not fortified, from concentrate, shelf stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cranberry juice"
+    ],
+    "visual_hints": [
+      "deep red juice"
+    ]
+  },
+  "pomegranate_juice": {
+    "display_name": "Pomegranate juice",
+    "category": "beverages",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色が濃く判別容易。",
+    "default_usda": {
+      "name": "Juice, pomegranate, from concentrate, shelf-stable",
+      "database": "foundation",
+      "reason": "代表的なザクロジュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Juice, pomegranate, from concentrate, shelf-stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "pomegranate juice"
+    ],
+    "visual_hints": [
+      "dark red juice",
+      "bottle"
+    ]
+  },
+  "prune_juice": {
+    "display_name": "Prune juice",
+    "category": "beverages",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色調が特徴的。",
+    "default_usda": {
+      "name": "Juice, prune, shelf-stable",
+      "database": "foundation",
+      "reason": "一般的なプルーンジュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Juice, prune, shelf-stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "prune juice"
+    ],
+    "visual_hints": [
+      "dark brown juice"
+    ]
+  },
+  "tart_cherry_juice": {
+    "display_name": "Tart cherry juice",
+    "category": "beverages",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "濃赤色で特徴的。",
+    "default_usda": {
+      "name": "Juice, tart cherry, from concentrate, shelf-stable",
+      "database": "foundation",
+      "reason": "代表的なタルトチェリー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Juice, tart cherry, from concentrate, shelf-stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "tart cherry juice"
+    ],
+    "visual_hints": [
+      "deep red juice"
+    ]
+  },
+  "tomato_juice": {
+    "display_name": "Tomato juice",
+    "category": "beverages",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色・粘性が特徴的。",
+    "default_usda": {
+      "name": "Tomato juice, with added ingredients, from concentrate, shelf stable",
+      "database": "foundation",
+      "reason": "一般的な市販トマトジュース"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Tomato juice, with added ingredients, from concentrate, shelf stable",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "tomato juice"
+    ],
+    "visual_hints": [
+      "red juice"
+    ]
+  },
+  "leafy_greens": {
+    "display_name": "Leafy greens (raw)",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "単葉状態では種別判別が難しい。栄養も近い。",
+    "default_usda": {
+      "name": "Lettuce, leaf, green, raw",
+      "database": "foundation",
+      "reason": "代表的な葉物"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Arugula, baby, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Spinach, baby",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Spinach, mature",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Kale, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lettuce, leaf, green, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Lettuce, romaine, green, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lettuce, iceberg, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Collards, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "leafy greens",
+      "lettuce",
+      "spinach",
+      "kale"
+    ],
+    "visual_hints": [
+      "green leaves",
+      "salad bowl",
+      "loose leaves"
+    ]
+  },
+  "cabbage": {
+    "display_name": "Cabbage (green/red)",
+    "category": "vegetables",
+    "spec2_rule": "統合（色統合）",
+    "spec2_reason": "玉の形状は同一で栄養も近い（色差は残る）。",
+    "default_usda": {
+      "name": "Cabbage, green, raw",
+      "database": "foundation",
+      "reason": "最も一般的"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cabbage, green, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Cabbage, red, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "cabbage"
+    ],
+    "visual_hints": [
+      "round head",
+      "leaves"
+    ]
+  },
+  "bok_choy": {
+    "display_name": "Bok choy",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が白菜・キャベツと明確に異なる。",
+    "default_usda": {
+      "name": "Cabbage, bok choy, raw",
+      "database": "foundation",
+      "reason": "青梗菜"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cabbage, bok choy, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "bok choy",
+      "pak choi"
+    ],
+    "visual_hints": [
+      "white stems",
+      "green leaves",
+      "bunch"
+    ]
+  },
+  "napa_cabbage": {
+    "display_name": "Napa cabbage",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "白菜は外観が独特。",
+    "default_usda": {
+      "name": "Cabbage, napa, leaf, destemmed, raw",
+      "database": "foundation",
+      "reason": "白菜（菜心取り除き）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cabbage, napa, leaf, destemmed, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "napa cabbage",
+      "chinese cabbage"
+    ],
+    "visual_hints": [
+      "elongated head",
+      "pale green leaves"
+    ]
+  },
+  "broccoli": {
+    "display_name": "Broccoli",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "房形が特徴的。",
+    "default_usda": {
+      "name": "Broccoli, raw",
+      "database": "foundation",
+      "reason": "生ブロッコリー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Broccoli, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "broccoli"
+    ],
+    "visual_hints": [
+      "green florets"
+    ]
+  },
+  "cauliflower": {
+    "display_name": "Cauliflower",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "白い花蕾で判別容易。",
+    "default_usda": {
+      "name": "Cauliflower, raw",
+      "database": "foundation",
+      "reason": "生カリフラワー"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cauliflower, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cauliflower"
+    ],
+    "visual_hints": [
+      "white florets"
+    ]
+  },
+  "brussels_sprouts": {
+    "display_name": "Brussels sprouts",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "球状で独特。",
+    "default_usda": {
+      "name": "Brussels sprouts, raw",
+      "database": "foundation",
+      "reason": "芽キャベツ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Brussels sprouts, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "brussels sprouts"
+    ],
+    "visual_hints": [
+      "small green sprouts"
+    ]
+  },
+  "green_beans": {
+    "display_name": "Green beans",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "生/缶詰（固形）で外観が近い。",
+    "default_usda": {
+      "name": "Beans, snap, green, raw",
+      "database": "foundation",
+      "reason": "生いんげん"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beans, snap, green, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beans, snap, green, canned, regular pack, drained solids",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "green beans",
+      "snap beans"
+    ],
+    "visual_hints": [
+      "green pods"
+    ]
+  },
+  "carrot": {
+    "display_name": "Carrot",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ベビー/成熟/冷凍（未調理）は見た目が似る。",
+    "default_usda": {
+      "name": "Carrots, mature, raw",
+      "database": "foundation",
+      "reason": "基準として成熟・生"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Carrots, mature, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Carrots, baby, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Carrots, frozen, unprepared",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "carrot",
+      "baby carrots"
+    ],
+    "visual_hints": [
+      "orange sticks",
+      "round slices"
+    ]
+  },
+  "celery": {
+    "display_name": "Celery",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Celery, raw",
+      "database": "foundation",
+      "reason": "セロリ生"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Celery, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "celery"
+    ],
+    "visual_hints": [
+      "green stalks",
+      "ribs"
+    ]
+  },
+  "cucumber": {
+    "display_name": "Cucumber",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が明確。",
+    "default_usda": {
+      "name": "Cucumber, with peel, raw",
+      "database": "foundation",
+      "reason": "皮付き生"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Cucumber, with peel, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "cucumber"
+    ],
+    "visual_hints": [
+      "green skin",
+      "slices"
+    ]
+  },
+  "tomato_fresh": {
+    "display_name": "Tomato (fresh)",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "ローマ/グレープの差は外観近似で栄養差小。",
+    "default_usda": {
+      "name": "Tomatoes, raw",
+      "database": "foundation",
+      "reason": "生トマト"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Tomato, roma",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomatoes, grape, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "tomato",
+      "fresh tomato"
+    ],
+    "visual_hints": [
+      "red slices",
+      "cherry/grape shapes"
+    ]
+  },
+  "tomatillo": {
+    "display_name": "Tomatillo",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が独特（緑・薄皮）。",
+    "default_usda": {
+      "name": "Tomatillos, dehusked, raw",
+      "database": "foundation",
+      "reason": "薄皮除去済み生"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Tomatillos, dehusked, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "tomatillo"
+    ],
+    "visual_hints": [
+      "green, small, smooth"
+    ]
+  },
+  "bell_pepper": {
+    "display_name": "Bell pepper (all colors)",
+    "category": "vegetables",
+    "spec2_rule": "統合（色統合）",
+    "spec2_reason": "色は違うが形状は同じで栄養差は小さい。",
+    "default_usda": {
+      "name": "Peppers, bell, red, raw",
+      "database": "foundation",
+      "reason": "用途頻度の高い赤を基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Peppers, bell, green, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peppers, bell, red, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Peppers, bell, yellow, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peppers, bell, orange, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "bell pepper",
+      "capsicum"
+    ],
+    "visual_hints": [
+      "hollow pepper",
+      "strips",
+      "rings"
+    ]
+  },
+  "onion": {
+    "display_name": "Onion (bulb)",
+    "category": "vegetables",
+    "spec2_rule": "統合（色統合）",
+    "spec2_reason": "赤/白/黄は球形で外観差が限定的。",
+    "default_usda": {
+      "name": "Onions, yellow, raw",
+      "database": "foundation",
+      "reason": "代表的（黄）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Onions, red, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Onions, white, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Onions, yellow, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "onion"
+    ],
+    "visual_hints": [
+      "rings",
+      "bulb",
+      "slices"
+    ]
+  },
+  "green_onion": {
+    "display_name": "Green onion (scallion)",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "形状が玉ねぎと大きく異なる。",
+    "default_usda": {
+      "name": "Green onion (scallion), bulb and greens, root removed, raw",
+      "database": "foundation",
+      "reason": "根除去のねぎ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Green onion, (scallion), bulb and greens, root removed, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "green onion",
+      "scallion"
+    ],
+    "visual_hints": [
+      "long green stalks",
+      "white base"
+    ]
+  },
+  "leek": {
+    "display_name": "Leek",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "長く太い白緑の層で判別容易。",
+    "default_usda": {
+      "name": "Leeks, bulb and greens, root removed, raw",
+      "database": "foundation",
+      "reason": "リーキ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Leeks, bulb and greens, root removed, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "leek"
+    ],
+    "visual_hints": [
+      "thick stalks"
+    ]
+  },
+  "shallot": {
+    "display_name": "Shallot",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "小型の紫茶色鱗茎で外観が異なる。",
+    "default_usda": {
+      "name": "Shallots, bulb, peeled, root removed, raw",
+      "database": "foundation",
+      "reason": "エシャロット"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Shallots, bulb, peeled, root removed, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "shallot"
+    ],
+    "visual_hints": [
+      "small elongated bulb"
+    ]
+  },
+  "garlic": {
+    "display_name": "Garlic",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が独特。",
+    "default_usda": {
+      "name": "Garlic, raw",
+      "database": "foundation",
+      "reason": "生にんにく"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Garlic, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "garlic"
+    ],
+    "visual_hints": [
+      "cloves",
+      "bulb"
+    ]
+  },
+  "beet": {
+    "display_name": "Beet",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色が濃く特徴的。",
+    "default_usda": {
+      "name": "Beets, raw",
+      "database": "foundation",
+      "reason": "生ビーツ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beets, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "beet",
+      "beetroot"
+    ],
+    "visual_hints": [
+      "deep red root",
+      "slices"
+    ]
+  },
+  "potato": {
+    "display_name": "Potato (raw/cooked generic)",
+    "category": "vegetables",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "品種差は外観近似・栄養差小。写真では調理状態の影響が大。",
+    "default_usda": {
+      "name": "Potato, baked, NFS",
+      "database": "foundation",
+      "reason": "実食に近い加熱基準を既定"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Potatoes, gold, without skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Potatoes, red, without skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Potatoes, russet, without skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Sweet potatoes, orange flesh, without skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "potato",
+      "potatoes"
+    ],
+    "visual_hints": [
+      "tubers",
+      "wedges",
+      "mash"
+    ]
+  },
+  "sweet_potato": {
+    "display_name": "Sweet potato",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色と用途が一般じゃがいもと異なる。",
+    "default_usda": {
+      "name": "Sweet potatoes, orange flesh, without skin, raw",
+      "database": "foundation",
+      "reason": "オレンジ果肉の代表"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Sweet potatoes, orange flesh, without skin, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "sweet potato",
+      "yam (US)"
+    ],
+    "visual_hints": [
+      "orange flesh",
+      "mash"
+    ]
+  },
+  "olives_green": {
+    "display_name": "Olives (green, stuffed)",
+    "category": "vegetables",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が特徴的（詰め物）。",
+    "default_usda": {
+      "name": "Olives, green, Manzanilla, stuffed with pimiento",
+      "database": "foundation",
+      "reason": "最頻出の詰めオリーブ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Olives, green, Manzanilla, stuffed with pimiento",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "green olives",
+      "stuffed olives"
+    ],
+    "visual_hints": [
+      "green, pimiento stuffed"
+    ]
+  },
+  "pickles": {
+    "display_name": "Pickles (cucumber)",
+    "category": "condiments",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "形状・色で判別容易、付け合わせで頻出。",
+    "default_usda": {
+      "name": "Pickles, cucumber, dill or kosher dill",
+      "database": "foundation",
+      "reason": "一般的なディルピクルス"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pickles, cucumber, dill or kosher dill",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "pickles",
+      "dill pickles"
+    ],
+    "visual_hints": [
+      "green spears",
+      "slices",
+      "jar"
+    ]
+  },
+  "mushroom_enoki": {
+    "display_name": "Mushroom (enoki)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "外観が非常に特徴的（白い細茎）。",
+    "default_usda": {
+      "name": "Mushroom, enoki",
+      "database": "foundation",
+      "reason": "えのき"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, enoki",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "enoki"
+    ],
+    "visual_hints": [
+      "thin white clusters"
+    ]
+  },
+  "mushroom_king_oyster": {
+    "display_name": "Mushroom (king oyster)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "極太の柄で判別容易。",
+    "default_usda": {
+      "name": "Mushroom, king oyster",
+      "database": "foundation",
+      "reason": "エリンギ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, king oyster",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "king oyster",
+      "eringi"
+    ],
+    "visual_hints": [
+      "thick stems",
+      "brown caps"
+    ]
+  },
+  "mushroom_shiitake": {
+    "display_name": "Mushroom (shiitake)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "傘の模様が特徴的。",
+    "default_usda": {
+      "name": "Mushrooms, shiitake",
+      "database": "foundation",
+      "reason": "しいたけ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushrooms, shiitake",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "shiitake"
+    ],
+    "visual_hints": [
+      "brown umbrella caps"
+    ]
+  },
+  "mushroom_portabella": {
+    "display_name": "Mushroom (portabella)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "大型傘で明確。",
+    "default_usda": {
+      "name": "Mushroom, portabella",
+      "database": "foundation",
+      "reason": "ポルタベラ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, portabella",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "portabella"
+    ],
+    "visual_hints": [
+      "large brown caps",
+      "gills visible"
+    ]
+  },
+  "mushroom_oyster": {
+    "display_name": "Mushroom (oyster)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "貝状で特徴的。",
+    "default_usda": {
+      "name": "Mushroom, oyster",
+      "database": "foundation",
+      "reason": "ヒラタケ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, oyster",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "oyster mushroom"
+    ],
+    "visual_hints": [
+      "fan-shaped clusters"
+    ]
+  },
+  "mushroom_button": {
+    "display_name": "Mushroom (white button)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "最頻出のホワイト。",
+    "default_usda": {
+      "name": "Mushrooms, white button",
+      "database": "foundation",
+      "reason": "マッシュルーム"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushrooms, white button",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "button mushroom"
+    ],
+    "visual_hints": [
+      "white caps",
+      "slices"
+    ]
+  },
+  "mushroom_crimini": {
+    "display_name": "Mushroom (crimini)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ブラウン色でボタンと区別可。",
+    "default_usda": {
+      "name": "Mushroom, crimini",
+      "database": "foundation",
+      "reason": "クレミニ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, crimini",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "crimini",
+      "baby bella"
+    ],
+    "visual_hints": [
+      "brown small caps"
+    ]
+  },
+  "mushroom_beech": {
+    "display_name": "Mushroom (beech)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "細かい房で特異。",
+    "default_usda": {
+      "name": "Mushroom, beech",
+      "database": "foundation",
+      "reason": "ブナシメジ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, beech",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "beech mushroom",
+      "shimeji"
+    ],
+    "visual_hints": [
+      "small clustered caps"
+    ]
+  },
+  "mushroom_maitake": {
+    "display_name": "Mushroom (maitake)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "房状で判別容易。",
+    "default_usda": {
+      "name": "Mushroom, maitake",
+      "database": "foundation",
+      "reason": "舞茸"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, maitake",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "maitake"
+    ],
+    "visual_hints": [
+      "ruffled clusters"
+    ]
+  },
+  "mushroom_lions_mane": {
+    "display_name": "Mushroom (lion's mane)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "白い房状で極めて特徴的。",
+    "default_usda": {
+      "name": "Mushroom, lion's mane",
+      "database": "foundation",
+      "reason": "ヤマブシタケ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, lion's mane",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "lion's mane"
+    ],
+    "visual_hints": [
+      "white shaggy pom"
+    ]
+  },
+  "mushroom_pioppini": {
+    "display_name": "Mushroom (pioppini)",
+    "category": "mushrooms",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "小さな茶色傘の房。",
+    "default_usda": {
+      "name": "Mushroom, pioppini",
+      "database": "foundation",
+      "reason": "たもぎ茸/ヤナギマツタケ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mushroom, pioppini",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "pioppini"
+    ],
+    "visual_hints": [
+      "clusters of small brown caps"
+    ]
+  },
+  "beans_cooked": {
+    "display_name": "Beans (cooked/canned, drained)",
+    "category": "legumes",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "種類差は外観近似・栄養差小。撮影では区別困難。",
+    "default_usda": {
+      "name": "Beans, pinto, canned, sodium added, drained and rinsed",
+      "database": "foundation",
+      "reason": "代表的な缶詰豆（水切り）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beans, black, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, cannellini, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, great northern, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, kidney, dark red, canned, sodium added, sugar added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, kidney, light red, canned, sodium added, sugar added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, navy, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, pinto, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Chickpeas (garbanzo beans, bengal gram), canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Blackeye pea, canned, sodium added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peas, green, sweet, canned, sodium added, sugar added, drained and rinsed",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beans",
+      "cooked beans",
+      "canned beans"
+    ],
+    "visual_hints": [
+      "shiny beans",
+      "bowl",
+      "drained"
+    ]
+  },
+  "beans_dry": {
+    "display_name": "Beans (dry, uncooked)",
+    "category": "pantry_ingredients",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "乾物は外観差が小さく、そのまま食べない。栄養は乾物基準。",
+    "default_usda": {
+      "name": "Beans, Dry, Pinto (0% moisture)",
+      "database": "foundation",
+      "reason": "代表的な乾燥豆"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beans, Dry, Black (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Brown (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Carioca (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Cranberry (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Dark Red Kidney (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Flor de Mayo (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Great Northern (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Light Red Kidney (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Light Tan (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Medium Red (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Navy (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Pink (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Pinto (0% moisture)",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Beans, Dry, Red (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Small Red (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Small White (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, Dry, Tan (0% moisture)",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chickpeas, (garbanzo beans, bengal gram), dry",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Blackeye pea, dry",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lentils, dry",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beans, cannellini, dry",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "dry beans",
+      "uncooked beans"
+    ],
+    "visual_hints": [
+      "bags of beans",
+      "hard dry seeds"
+    ]
+  },
+  "nuts": {
+    "display_name": "Nuts (mixed)",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "種別は外観近似で栄養も大枠一致（高脂質）。",
+    "default_usda": {
+      "name": "Nuts, mixed, NFS",
+      "database": "foundation",
+      "reason": "混合ナッツを基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Nuts, almonds, whole, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, almonds, dry roasted, with salt added",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, cashew nuts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, hazelnuts or filberts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, macadamia nuts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, pecans, halves, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, pine nuts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, pistachio nuts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Nuts, walnuts, English, halves, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Peanuts, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "nuts",
+      "mixed nuts"
+    ],
+    "visual_hints": [
+      "assorted nuts",
+      "bowl",
+      "trail mix"
+    ]
+  },
+  "seeds": {
+    "display_name": "Seeds",
+    "category": "snacks",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "小粒で外観差が小さいが栄養は高脂質で近い。",
+    "default_usda": {
+      "name": "Seeds, mixed, NFS",
+      "database": "foundation",
+      "reason": "種子類を汎用化"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Chia seeds, dry, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Flaxseed, ground",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Seeds, pumpkin seeds (pepitas), raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Seeds, sunflower seed, kernel, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Seeds, sunflower seed kernels, dry roasted, with salt added",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "seeds",
+      "pepitas",
+      "sunflower seeds"
+    ],
+    "visual_hints": [
+      "small seeds",
+      "bowl"
+    ]
+  },
+  "hummus": {
+    "display_name": "Hummus",
+    "category": "legumes",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ペースト状で外観明確。栄養も豆と油由来で特徴的。",
+    "default_usda": {
+      "name": "Hummus, commercial",
+      "database": "foundation",
+      "reason": "市販フムス"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Hummus, commercial",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "hummus"
+    ],
+    "visual_hints": [
+      "beige paste",
+      "dips"
+    ]
+  },
+  "bread": {
+    "display_name": "Bread",
+    "category": "bread_grains",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "白/全粒は見た目差が小さく栄養差も限定。",
+    "default_usda": {
+      "name": "Bread, white, commercially prepared",
+      "database": "foundation",
+      "reason": "最頻出の食パン"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Bread, white, commercially prepared",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Bread, whole-wheat, commercially prepared",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "bread",
+      "toast"
+    ],
+    "visual_hints": [
+      "slices",
+      "loaf"
+    ]
+  },
+  "rice": {
+    "display_name": "Rice (cooked)",
+    "category": "bread_grains",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "盛り付け写真では加熱白飯が既定。色つき米は外観差小。",
+    "default_usda": {
+      "name": "Rice, white, cooked, no added fat",
+      "database": "foundation",
+      "reason": "最も一般的な白飯"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Rice, white, long grain, unenriched, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Rice, brown, long grain, unenriched, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Rice, red, unenriched, dry, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Rice, black, unenriched, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Wild rice, dry, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "rice",
+      "steamed rice"
+    ],
+    "visual_hints": [
+      "white grains",
+      "bowl"
+    ]
+  },
+  "oatmeal": {
+    "display_name": "Oatmeal (cooked)",
+    "category": "bread_grains",
+    "spec2_rule": "名称統一",
+    "spec2_reason": "ロールド/スティールカットは見た目近似。食事写真では粥状が既定。",
+    "default_usda": {
+      "name": "Oatmeal, cooked, NFS",
+      "database": "foundation",
+      "reason": "調理済みの汎用表現"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Oats, whole grain, rolled, old fashioned",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Oats, whole grain, steel cut",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "oatmeal",
+      "porridge"
+    ],
+    "visual_hints": [
+      "porridge bowl"
+    ]
+  },
+  "fried_rice": {
+    "display_name": "Fried rice (no meat)",
+    "category": "world_cuisine",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "混炒めの外観が白飯と異なる。メニュー名で期待一致。",
+    "default_usda": {
+      "name": "Restaurant, Chinese, fried rice, without meat",
+      "database": "foundation",
+      "reason": "中華のチャーハン（肉なし）"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Restaurant, Chinese, fried rice, without meat",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "fried rice",
+      "chahan"
+    ],
+    "visual_hints": [
+      "mixed rice",
+      "peas and carrots",
+      "wok-fried look"
+    ]
+  },
+  "salsa": {
+    "display_name": "Salsa",
+    "category": "condiments",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "色と粒状で特徴的。付け合わせとしてカロリー寄与は軽微。",
+    "default_usda": {
+      "name": "Sauce, salsa, ready-to-serve",
+      "database": "foundation",
+      "reason": "市販サルサ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Sauce, salsa, ready-to-serve",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "salsa",
+      "pico de gallo"
+    ],
+    "visual_hints": [
+      "red chunky sauce"
+    ]
+  },
+  "pasta_sauce_marinara": {
+    "display_name": "Pasta sauce (marinara)",
+    "category": "condiments",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ソース単体としての使用頻度が高い。",
+    "default_usda": {
+      "name": "Sauce, pasta, spaghetti/marinara, ready-to-serve",
+      "database": "foundation",
+      "reason": "市販マリナーラ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Sauce, pasta, spaghetti/marinara, ready-to-serve",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Tomato, sauce, canned, with salt added",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomato, puree, canned",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomato, paste, canned, without salt added",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomatoes, crushed, canned",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomatoes, canned, red, ripe, diced",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Tomatoes, whole, canned, solids and liquids, with salt added",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "marinara",
+      "pasta sauce",
+      "spaghetti sauce"
+    ],
+    "visual_hints": [
+      "red sauce",
+      "jar"
+    ]
+  },
+  "ketchup": {
+    "display_name": "Ketchup",
+    "category": "condiments",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "鮮赤色の粘性で判別容易。",
+    "default_usda": {
+      "name": "Ketchup, restaurant",
+      "database": "foundation",
+      "reason": "外食向けケチャップ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Ketchup, restaurant",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "ketchup"
+    ],
+    "visual_hints": [
+      "red dollop",
+      "squeeze bottle"
+    ]
+  },
+  "mustard": {
+    "display_name": "Mustard (yellow)",
+    "category": "condiments",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "鮮黄で判別容易。低カロリー。",
+    "default_usda": {
+      "name": "Mustard, prepared, yellow",
+      "database": "foundation",
+      "reason": "イエローマスタード"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Mustard, prepared, yellow",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "mustard"
+    ],
+    "visual_hints": [
+      "yellow zigzag",
+      "squeeze bottle"
+    ]
+  },
+  "onion_rings": {
+    "display_name": "Onion rings",
+    "category": "snacks",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "衣の輪形で判別容易。栄養差も揚げ物として特徴的。",
+    "default_usda": {
+      "name": "Onion rings, breaded, par fried, frozen, prepared, heated in oven",
+      "database": "foundation",
+      "reason": "一般的なオーブン調理品を基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Onion rings, breaded, par fried, frozen, prepared, heated in oven",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "onion rings"
+    ],
+    "visual_hints": [
+      "fried rings",
+      "golden brown"
+    ]
+  },
+  "chicken": {
+    "display_name": "Chicken",
+    "category": "poultry",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "部位/皮の有無/加熱は画像で安定判別困難。栄養差は後段で補正可。",
+    "default_usda": {
+      "name": "Chicken, NS as to part and cooking method, skin not eaten",
+      "database": "foundation",
+      "reason": "皮なし基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Chicken, breast, boneless, skinless, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, thigh, boneless, skinless, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, drumstick, meat and skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, wing, meat and skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, ground, with additives, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, broiler or fryers, breast, skinless, boneless, meat only, cooked, braised",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Chicken, broilers or fryers, drumstick, meat only, cooked, braised",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "chicken"
+    ],
+    "visual_hints": [
+      "white meat",
+      "grill marks",
+      "brown crust"
+    ]
+  },
+  "beef": {
+    "display_name": "Beef",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "部位や等級の視覚判定は難しいが栄養は大枠近い。",
+    "default_usda": {
+      "name": "Beef, NFS",
+      "database": "foundation",
+      "reason": "汎用牛肉"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef, chuck, roast, boneless, choice, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, flank, steak, boneless, choice, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, loin, top loin steak, boneless, lip-on, separable lean only, trimmed to 1/8\" fat, choice, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, ribeye, steak, boneless, choice, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, round, eye of round roast, boneless, separable lean only, trimmed to 0\" fat, select, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, round, top round roast, boneless, separable lean only, trimmed to 0\" fat, select, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, short loin (NY strip steak), raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, short loin, porterhouse steak, separable lean only, trimmed to 1/8\" fat, select, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, short loin, t-bone steak, bone-in, separable lean only, trimmed to 1/8\" fat, choice, cooked, grilled",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, top sirloin steak, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, tenderloin steak, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "beef",
+      "steak"
+    ],
+    "visual_hints": [
+      "red/brown meat",
+      "steak cuts"
+    ]
+  },
+  "ground_red_meat": {
+    "display_name": "Ground red meat (beef/bison/lamb)",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "挽肉は種別判別が困難で栄養も近い（脂質%差のみ）。",
+    "default_usda": {
+      "name": "Beef, ground, 90% lean meat / 10% fat, raw",
+      "database": "foundation",
+      "reason": "標準的な赤身比率"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Beef, ground, 80% lean meat / 20% fat, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Beef, ground, 90% lean meat / 10% fat, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Bison, ground, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Lamb, ground, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "ground meat",
+      "minced beef",
+      "ground bison",
+      "ground lamb"
+    ],
+    "visual_hints": [
+      "crumbles",
+      "patties"
+    ]
+  },
+  "pork": {
+    "display_name": "Pork",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "部位差は画像判別困難。",
+    "default_usda": {
+      "name": "Pork, loin, boneless, raw",
+      "database": "foundation",
+      "reason": "代表的なロイン"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pork, belly, with skin, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pork, chop, center cut, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pork, ground, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Pork, loin, boneless, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Pork, loin, tenderloin, boneless, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "pork"
+    ],
+    "visual_hints": [
+      "pink meat",
+      "chops",
+      "roast"
+    ]
+  },
+  "bacon": {
+    "display_name": "Bacon",
+    "category": "beef_pork",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "薄切りストリップで外観が明確。",
+    "default_usda": {
+      "name": "Pork, cured, bacon, cooked, restaurant",
+      "database": "foundation",
+      "reason": "外食ベーコン"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Pork, cured, bacon, cooked, restaurant",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "bacon"
+    ],
+    "visual_hints": [
+      "crispy strips"
+    ]
+  },
+  "ham_sliced": {
+    "display_name": "Ham (sliced)",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "外観が似る（薄切り円盤）。",
+    "default_usda": {
+      "name": "Ham, sliced, pre-packaged, deli meat (96%fat free, water added)",
+      "database": "foundation",
+      "reason": "パック済みハムを基準"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Ham, sliced, pre-packaged, deli meat (96%fat free, water added)",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Ham, sliced, restaurant",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "ham"
+    ],
+    "visual_hints": [
+      "pink slices"
+    ]
+  },
+  "sausage": {
+    "display_name": "Sausage",
+    "category": "beef_pork",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "種類（イタリアン/チョリソ等）の外観差が小さい。",
+    "default_usda": {
+      "name": "Sausage, Italian, pork, mild, cooked, pan-fried",
+      "database": "foundation",
+      "reason": "代表的なイタリアン"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Sausage, Italian, pork, mild, cooked, pan-fried",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Sausage, breakfast sausage, beef, pre-cooked, unprepared",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Sausage, pork, chorizo, link or ground, cooked, pan-fried",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Sausage, turkey, breakfast links, mild, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "sausage",
+      "link sausage"
+    ],
+    "visual_hints": [
+      "links",
+      "sliced rounds"
+    ]
+  },
+  "turkey_ground": {
+    "display_name": "Ground turkey",
+    "category": "poultry",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "鶏挽肉と色調が異なり用法も特有。",
+    "default_usda": {
+      "name": "Turkey, ground, 93% lean/ 7% fat, raw",
+      "database": "foundation",
+      "reason": "代表的な赤身比率"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Turkey, ground, 93% lean/ 7% fat, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Turkey, ground, 93% lean, 7% fat, pan-broiled crumbles",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "ground turkey"
+    ],
+    "visual_hints": [
+      "pale mince",
+      "crumbles"
+    ]
+  },
+  "hot_dog": {
+    "display_name": "Hot dog (beef)",
+    "category": "fast_food_sandwiches",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "形状が特徴的。",
+    "default_usda": {
+      "name": "Frankfurter, beef, unheated",
+      "database": "foundation",
+      "reason": "ビーフホットドッグ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Frankfurter, beef, unheated",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "hot dog",
+      "frankfurter"
+    ],
+    "visual_hints": [
+      "sausage in bun"
+    ]
+  },
+  "salmon": {
+    "display_name": "Salmon (raw/cooked)",
+    "category": "seafood",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "サーモンは色で判別容易。",
+    "default_usda": {
+      "name": "Fish, salmon, Atlantic, farm raised, raw",
+      "database": "foundation",
+      "reason": "一般的なアトランティック"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Fish, salmon, Atlantic, farm raised, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Fish, salmon, sockeye, wild caught, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "salmon"
+    ],
+    "visual_hints": [
+      "orange-pink fillet"
+    ]
+  },
+  "white_fish": {
+    "display_name": "White fish (cod/haddock/pollock/tilapia/catfish)",
+    "category": "seafood",
+    "spec2_rule": "統合（汎化）",
+    "spec2_reason": "白身魚は外観が非常に類似し栄養差小。",
+    "default_usda": {
+      "name": "Fish, cod, Atlantic, wild caught, raw",
+      "database": "foundation",
+      "reason": "代表魚としてタラ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Fish, cod, Atlantic, wild caught, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      },
+      {
+        "name": "Fish, haddock, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Fish, pollock, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Fish, tilapia, farm raised, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      },
+      {
+        "name": "Fish, catfish, farm raised, raw",
+        "database": "foundation",
+        "specificity": "specific"
+      }
+    ],
+    "aliases": [
+      "white fish",
+      "cod",
+      "tilapia"
+    ],
+    "visual_hints": [
+      "white flaky fillet"
+    ]
+  },
+  "tuna_canned": {
+    "display_name": "Tuna (canned in water, drained)",
+    "category": "seafood",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ほぐし身で判別容易。栄養も固有。",
+    "default_usda": {
+      "name": "Fish, tuna, light, canned in water, drained solids",
+      "database": "foundation",
+      "reason": "一般的なライトツナ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Fish, tuna, light, canned in water, drained solids",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "canned tuna"
+    ],
+    "visual_hints": [
+      "flakes in bowl",
+      "can"
+    ]
+  },
+  "shrimp": {
+    "display_name": "Shrimp",
+    "category": "seafood",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "形と色で判別容易。",
+    "default_usda": {
+      "name": "Crustaceans, shrimp, farm raised, raw",
+      "database": "foundation",
+      "reason": "代表的なエビ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Crustaceans, shrimp, farm raised, raw",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "shrimp",
+      "prawns"
+    ],
+    "visual_hints": [
+      "curved pink shrimp"
+    ]
+  },
+  "crab": {
+    "display_name": "Crab (lump)",
+    "category": "seafood",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "ほぐし塊で判別容易。",
+    "default_usda": {
+      "name": "Crustaceans, crab, blue swimming, lump, pasteurized, refrigerated",
+      "database": "foundation",
+      "reason": "クラブランプ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Crustaceans, crab, blue swimming, lump, pasteurized, refrigerated",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "crab",
+      "lump crab"
+    ],
+    "visual_hints": [
+      "white lumps"
+    ]
+  },
+  "grapes_products": {
+    "display_name": "Grape products (juices)",
+    "category": "beverages",
+    "spec2_rule": "参照用（冗長防止）",
+    "spec2_reason": "ぶどうジュース各種は上記 grape_juice に包括。",
+    "default_usda": {
+      "name": "Grape juice, purple, with added vitamin C, from concentrate, shelf stable",
+      "database": "foundation",
+      "reason": "代表項目（重複回避）"
+    },
+    "all_usda_mappings": [],
+    "aliases": [],
+    "visual_hints": []
+  },
+  "latin_pupusa": {
+    "display_name": "Pupusa (bean)",
+    "category": "world_cuisine",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "厚手の円盤形生地で外観明確。",
+    "default_usda": {
+      "name": "Restaurant, Latino, pupusas con frijoles (pupusas, bean)",
+      "database": "foundation",
+      "reason": "豆ププサ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Restaurant, Latino, pupusas con frijoles (pupusas, bean)",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "pupusa"
+    ],
+    "visual_hints": [
+      "thick griddle cake",
+      "stuffed"
+    ]
+  },
+  "latin_tamale": {
+    "display_name": "Tamale (pork)",
+    "category": "world_cuisine",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "皮で包んだ形状が特徴的。",
+    "default_usda": {
+      "name": "Restaurant, Latino, tamale, pork",
+      "database": "foundation",
+      "reason": "豚タマーレ"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Restaurant, Latino, tamale, pork",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "tamale"
+    ],
+    "visual_hints": [
+      "wrapped masa",
+      "husks"
+    ]
+  },
+  "sweet_sour_pork": {
+    "display_name": "Sweet and sour pork",
+    "category": "world_cuisine",
+    "spec2_rule": "維持（独立）",
+    "spec2_reason": "鮮赤ソースと衣で判別容易。",
+    "default_usda": {
+      "name": "Restaurant, Chinese, sweet and sour pork",
+      "database": "foundation",
+      "reason": "酢豚"
+    },
+    "all_usda_mappings": [
+      {
+        "name": "Restaurant, Chinese, sweet and sour pork",
+        "database": "foundation",
+        "specificity": "generic"
+      }
+    ],
+    "aliases": [
+      "sweet and sour pork"
+    ],
+    "visual_hints": [
+      "red glossy sauce",
+      "battered pieces"
+    ]
+  }
+}
