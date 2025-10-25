@@ -39,6 +39,79 @@ def normalize_text(text: str) -> str:
     return text
 
 
+def normalize_compound_words(text: str) -> str:
+    """
+    正規化: 複合語や表記ゆれを統一
+    
+    Args:
+        text: 入力テキスト
+    
+    Returns:
+        正規化されたテキスト
+    
+    Examples:
+        >>> normalize_compound_words("cherry tomatoes")
+        'tomatoes cherry'
+        >>> normalize_compound_words("green onion")
+        'scallion'
+    """
+    # 小文字化
+    text_lower = text.lower().strip()
+    
+    # 複合語マッピング（検索精度向上のため）
+    compound_mappings = {
+        # Vegetables
+        "cherry tomatoes": "tomatoes cherry",
+        "cherry tomato": "tomatoes cherry",
+        "grape tomatoes": "tomatoes cherry",
+        "green onion": "scallion",
+        "green onions": "scallion",
+        "spring onion": "scallion",
+        "spring onions": "scallion",
+        "yellow squash": "squash summer yellow",
+        "zucchini squash": "squash summer",
+        
+        # Meats
+        "beef steak": "steak beef",
+        "pork chop": "chop pork",
+        "chicken breast": "breast chicken",
+        "chicken thigh": "thigh chicken",
+        
+        # Grains
+        "brown rice": "rice brown",
+        "white rice": "rice white",
+        "wild rice": "rice wild",
+        
+        # Dairy
+        "greek yogurt": "yogurt greek",
+        "sour cream": "cream sour",
+        
+        # Others
+        "sweet potato": "potato sweet",
+        "sweet potatoes": "potato sweet",
+        "red wine": "wine red",
+        "white wine": "wine white",
+    }
+    
+    # マッピング適用
+    normalized = compound_mappings.get(text_lower, text_lower)
+    
+    # 複数形を単数形に（基本的な変換のみ）
+    # より高度な複数形処理が必要な場合はinflectライブラリを使用
+    if normalized.endswith('ies'):
+        normalized = normalized[:-3] + 'y'
+    elif normalized.endswith('es') and not normalized.endswith(('ches', 'shes', 'sses', 'xes')):
+        normalized = normalized[:-2]
+    elif normalized.endswith('s') and not normalized.endswith('ss'):
+        # 単純なs除去（過度な変換を避けるため慎重に）
+        # asparagus, broccoli などは変換しない
+        singular_exceptions = ['asparagus', 'broccoli', 'lettuce', 'cabbage', 'spinach']
+        if not any(normalized.endswith(exc) for exc in singular_exceptions):
+            normalized = normalized[:-1]
+    
+    return normalized
+
+
 def parse_usda_name(usda_name: str) -> Tuple[str, str]:
     """
     USDA名から search_name と description を抽出
@@ -118,3 +191,95 @@ def build_usda_text(usda_item: dict) -> str:
     search_name, description = parse_usda_name(usda_name)
 
     return build_query_text(search_name, description)
+
+
+# =============================================================================
+# spec3.md方針: 二系統テキスト生成（Stage1用）
+# =============================================================================
+
+def build_main_only_text(main_name: str) -> str:
+    """
+    主食材名のみのテキストを生成（Stage1のmain_only埋め込み用）
+
+    目的: 主名の取り違え防止（"fried rice" vs "fried chicken"）
+    Phase 1改善: 複合語の正規化を適用
+
+    Args:
+        main_name: 主食材名
+
+    Returns:
+        主食材名のみ（複合語正規化済み）
+
+    Examples:
+        >>> build_main_only_text("cherry tomatoes")
+        'tomatoes cherry'
+        >>> build_main_only_text("Chicken")
+        'chicken'
+    """
+    # 複合語の正規化を適用
+    normalized = normalize_compound_words(main_name)
+    return normalized
+
+
+def build_full_text(main_name: str, descriptors: str = "") -> str:
+    """
+    主食材名 + セパレータ + 修飾語のテキストを生成（Stage1のfull埋め込み用）
+
+    目的: 意味的な近傍を考慮しつつ、主名と修飾を明示的に区切る
+    セパレータ ';' で主名と修飾を区別
+    Phase 1改善: 複合語の正規化を適用
+
+    Args:
+        main_name: 主食材名
+        descriptors: 修飾語（調理法、状態等）
+
+    Returns:
+        "main_name ; descriptors" 形式のテキスト（複合語正規化済み）
+
+    Examples:
+        >>> build_full_text("cherry tomatoes", "raw")
+        'tomatoes cherry ; raw'
+        >>> build_full_text("Chicken", "broilers, breast, cooked, roasted")
+        'chicken ; broilers breast cooked roasted'
+    """
+    # 複合語の正規化を適用
+    normalized_main = normalize_compound_words(main_name)
+    
+    if descriptors:
+        # カンマを削除してスペース区切りに
+        desc_clean = descriptors.replace(',', ' ')
+        desc_clean = re.sub(r'\s+', ' ', desc_clean).strip()
+        return f"{normalized_main} ; {desc_clean}"
+    return normalized_main
+
+
+# =============================================================================
+# spec3.md方針: フィールド明示テンプレート（Stage2用）
+# =============================================================================
+
+def build_rerank_text(main_name: str, descriptors: str = "", is_query: bool = True) -> str:
+    """
+    再ランキング用のフィールド明示テキストを生成（Stage2用）
+
+    目的: BGE-rerankerにフィールドラベルで主名を明示的に強調
+
+    Args:
+        main_name: 主食材名
+        descriptors: 修飾語（調理法、状態等）
+        is_query: クエリ側かどうか（True: query, False: candidate）
+
+    Returns:
+        "name: ...\ndescription: ..." 形式のテキスト
+
+    Examples:
+        >>> build_rerank_text("chicken breast", "grilled", is_query=True)
+        'name: chicken breast\\ndescription: grilled'
+        >>> build_rerank_text("Chicken", "broilers, cooked, roasted", is_query=False)
+        'name: Chicken\\ndescription: broilers, cooked, roasted'
+        >>> build_rerank_text("rice", "", is_query=True)
+        'name: rice\\ndescription: N/A'
+    """
+    name_field = main_name.strip() if main_name else "N/A"
+    desc_field = descriptors.strip() if descriptors else "N/A"
+
+    return f"name: {name_field}\ndescription: {desc_field}"

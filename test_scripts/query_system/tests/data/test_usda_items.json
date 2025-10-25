@@ -1,0 +1,1402 @@
+[
+  {
+    "id": "adobo_plate",
+    "usda_name": "3. Adobo, with rice",
+    "display_name": "Adobo",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "adobo",
+      "chicken adobo",
+      "pork adobo",
+      "adobo with rice",
+      "adobo noodles"
+    ]
+  },
+  {
+    "id": "agave_syrup",
+    "usda_name": "4. Agave liquid sweetener",
+    "display_name": "Agave syrup",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "agave nectar",
+      "agave syrup",
+      "blue agave",
+      "agave sweetener",
+      "agave"
+    ]
+  },
+  {
+    "id": "alcoholic_coffee_drink",
+    "usda_name": "5. Alcoholic coffee drink",
+    "display_name": "Alcoholic coffee drink",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "irish coffee",
+      "coffee cocktail",
+      "spiked coffee",
+      "coffee liqueur drink",
+      "boozy coffee"
+    ]
+  },
+  {
+    "id": "alcoholic_malt_beverage",
+    "usda_name": "6. Alcoholic malt beverage",
+    "display_name": "Malt beverage (alcoholic)",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "malt liquor",
+      "flavored malt beverage",
+      "hard malt drink",
+      "alcopop",
+      "FMB"
+    ]
+  },
+  {
+    "id": "alfalfa_sprouts",
+    "usda_name": "8. Alfalfa sprouts, raw",
+    "display_name": "Alfalfa sprouts",
+    "category": "vegetables",
+    "role": "ingredient_only",
+    "aliases": [
+      "sprouts",
+      "alfalfa",
+      "sprouted alfalfa",
+      "sprout mix",
+      "raw sprouts"
+    ]
+  },
+  {
+    "id": "alfredo_sauce",
+    "usda_name": "9. Alfredo sauce",
+    "display_name": "Alfredo sauce",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "alfredo",
+      "white pasta sauce",
+      "cream sauce",
+      "parmesan cream sauce",
+      "fettuccine alfredo sauce"
+    ]
+  },
+  {
+    "id": "almond_butter",
+    "usda_name": "17. Almond butter",
+    "display_name": "Almond butter",
+    "category": "spreads",
+    "role": "ingredient_only",
+    "aliases": [
+      "almond spread",
+      "nut butter (almond)",
+      "almond butter spread",
+      "ground almond butter",
+      "almond paste spread"
+    ]
+  },
+  {
+    "id": "abj_sandwich",
+    "usda_name": "18. Almond butter and jelly sandwich, on wheat bread",
+    "display_name": "Almond butter & jelly sandwich",
+    "category": "sandwiches",
+    "role": "is_base",
+    "aliases": [
+      "AB&J sandwich",
+      "almond butter jelly sandwich",
+      "almond and jelly sandwich",
+      "almond PBJ",
+      "nut butter jelly sandwich"
+    ]
+  },
+  {
+    "id": "almond_butter_sandwich",
+    "usda_name": "20. Almond butter sandwich, on wheat bread",
+    "display_name": "Almond butter sandwich",
+    "category": "sandwiches",
+    "role": "is_base",
+    "aliases": [
+      "almond butter on bread",
+      "almond butter toast sandwich",
+      "almond sandwich",
+      "almond butter sando",
+      "nut butter sandwich"
+    ]
+  },
+  {
+    "id": "almond_chicken",
+    "usda_name": "23. Almond chicken",
+    "display_name": "Almond chicken",
+    "category": "poultry",
+    "role": "either",
+    "aliases": [
+      "chicken with almonds",
+      "almond fried chicken",
+      "almond chicken stir fry",
+      "chinese almond chicken",
+      "almond chicken entree"
+    ]
+  },
+  {
+    "id": "almond_milk",
+    "usda_name": "24. Almond milk, NFS",
+    "display_name": "Almond milk",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "almond drink",
+      "almond beverage",
+      "almond non-dairy milk",
+      "almond chocolate milk",
+      "almond milk unsweetened"
+    ]
+  },
+  {
+    "id": "almond_paste",
+    "usda_name": "29. Almond paste",
+    "display_name": "Almond paste",
+    "category": "desserts",
+    "role": "ingredient_only",
+    "aliases": [
+      "almond filling",
+      "almond pastry paste",
+      "almond sweet paste",
+      "almond cake paste",
+      "almond confection paste"
+    ]
+  },
+  {
+    "id": "almonds",
+    "usda_name": "30. Almonds, NFS",
+    "display_name": "Almonds",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "almonds",
+      "roasted almonds",
+      "salted almonds",
+      "unsalted almonds",
+      "honey roasted almonds"
+    ]
+  },
+  {
+    "id": "choc_almonds",
+    "usda_name": "31. Almonds, chocolate covered candy",
+    "display_name": "Chocolate-covered almonds",
+    "category": "desserts",
+    "role": "either",
+    "aliases": [
+      "chocolate almonds",
+      "choco almonds",
+      "candied almonds (chocolate)",
+      "chocolate coated almonds",
+      "almonds in chocolate"
+    ]
+  },
+  {
+    "id": "aloe_drink",
+    "usda_name": "38. Aloe vera juice drink",
+    "display_name": "Aloe vera juice drink",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "aloe drink",
+      "aloe juice",
+      "aloe beverage",
+      "aloe vera beverage",
+      "aloe vera drink"
+    ]
+  },
+  {
+    "id": "ambrosia",
+    "usda_name": "39. Ambrosia",
+    "display_name": "Ambrosia",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "ambrosia salad",
+      "fruit ambrosia",
+      "coconut ambrosia",
+      "southern ambrosia",
+      "creamy fruit salad"
+    ]
+  },
+  {
+    "id": "anisette_toast",
+    "usda_name": "41. Anisette toast",
+    "display_name": "Anisette toast",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "anise biscotti",
+      "anise toast",
+      "anise cookie",
+      "anisette cookie",
+      "anise rusk"
+    ]
+  },
+  {
+    "id": "antipasto_platter",
+    "usda_name": "42. Antipasto with ham, fish, cheese, vegetables",
+    "display_name": "Antipasto platter",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "antipasto",
+      "antipasto salad",
+      "antipasto plate",
+      "italian antipasto",
+      "antipasti"
+    ]
+  },
+  {
+    "id": "apple_cider",
+    "usda_name": "43. Apple cider",
+    "display_name": "Apple cider",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "cider",
+      "apple cider drink",
+      "nonalcoholic cider",
+      "fresh cider",
+      "cold cider"
+    ]
+  },
+  {
+    "id": "apple_juice",
+    "usda_name": "45. Apple juice, 100%",
+    "display_name": "Apple juice",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "100% apple juice",
+      "light apple juice",
+      "apple juice drink",
+      "calcium-fortified apple juice",
+      "apple beverage"
+    ]
+  },
+  {
+    "id": "apple_pie_filling",
+    "usda_name": "47. Apple pie filling",
+    "display_name": "Apple pie filling",
+    "category": "desserts",
+    "role": "ingredient_only",
+    "aliases": [
+      "pie apple filling",
+      "apple filling",
+      "apple pie mix",
+      "canned apple filling",
+      "apple compote (pie)"
+    ]
+  },
+  {
+    "id": "apple_salad",
+    "usda_name": "48. Apple salad with dressing",
+    "display_name": "Apple salad",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "apple fruit salad",
+      "apple salad with mayo",
+      "apple Waldorf",
+      "dressed apple salad",
+      "apple salad bowl"
+    ]
+  },
+  {
+    "id": "baked_apple",
+    "usda_name": "49. Apple, baked",
+    "display_name": "Baked apple",
+    "category": "desserts",
+    "role": "either",
+    "aliases": [
+      "baked apples",
+      "roasted apple",
+      "stuffed apple",
+      "baked cinnamon apple",
+      "baked fruit (apple)"
+    ]
+  },
+  {
+    "id": "candied_apple",
+    "usda_name": "50. Apple, candied",
+    "display_name": "Candied apple",
+    "category": "desserts",
+    "role": "either",
+    "aliases": [
+      "candy apple",
+      "toffee apple",
+      "caramel apple",
+      "red candy apple",
+      "glazed apple"
+    ]
+  },
+  {
+    "id": "dried_apple",
+    "usda_name": "51. Apple, dried",
+    "display_name": "Dried apple",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "dried apples",
+      "apple chips",
+      "dehydrated apple",
+      "apple slices dried",
+      "dried fruit apple"
+    ]
+  },
+  {
+    "id": "apple_raw",
+    "usda_name": "52. Apple, raw",
+    "display_name": "Apple",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "fresh apple",
+      "whole apple",
+      "sliced apple",
+      "raw apple",
+      "green apple"
+    ]
+  },
+  {
+    "id": "applesauce",
+    "usda_name": "54. Applesauce, regular",
+    "display_name": "Applesauce",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "apple sauce",
+      "sweetened applesauce",
+      "unsweetened applesauce",
+      "flavored applesauce",
+      "apple puree"
+    ]
+  },
+  {
+    "id": "apricot_nectar",
+    "usda_name": "56. Apricot nectar",
+    "display_name": "Apricot nectar",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "apricot drink",
+      "apricot beverage",
+      "nectar de apricot",
+      "apricot juice drink",
+      "apricot nectar drink"
+    ]
+  },
+  {
+    "id": "apricot_canned",
+    "usda_name": "57. Apricot, canned",
+    "display_name": "Apricot (canned)",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "canned apricots",
+      "apricot in syrup",
+      "tinned apricot",
+      "apricots canned",
+      "apricot halves (canned)"
+    ]
+  },
+  {
+    "id": "apricot_dried",
+    "usda_name": "58. Apricot, dried",
+    "display_name": "Dried apricot",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "dried apricot",
+      "apricot dried",
+      "dehydrated apricot",
+      "apricot pieces dried",
+      "dried fruit apricot"
+    ]
+  },
+  {
+    "id": "apricot_raw",
+    "usda_name": "59. Apricot, raw",
+    "display_name": "Apricot",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "fresh apricot",
+      "whole apricot",
+      "raw apricot",
+      "apricot fruit",
+      "apricots"
+    ]
+  },
+  {
+    "id": "arepa_dominicana",
+    "usda_name": "60. Arepa Dominicana",
+    "display_name": "Arepa Dominicana",
+    "category": "snacks",
+    "role": "is_base",
+    "aliases": [
+      "dominican arepa",
+      "arepa de maíz",
+      "arepa",
+      "corn arepa",
+      "arepa dominicana cake"
+    ]
+  },
+  {
+    "id": "artichoke",
+    "usda_name": "62. Artichoke",
+    "display_name": "Artichoke",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "globe artichoke",
+      "whole artichoke",
+      "artichoke vegetable",
+      "artichoke hearts (whole)",
+      "fresh artichoke"
+    ]
+  },
+  {
+    "id": "artichoke_dip",
+    "usda_name": "63. Artichoke dip",
+    "display_name": "Artichoke dip",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "creamy artichoke dip",
+      "artichoke spread",
+      "hot artichoke dip",
+      "artichoke appetizer dip",
+      "spinach artichoke dip"
+    ]
+  },
+  {
+    "id": "stuffed_artichokes",
+    "usda_name": "64. Artichokes, stuffed",
+    "display_name": "Stuffed artichokes",
+    "category": "vegetables",
+    "role": "is_base",
+    "aliases": [
+      "stuffed artichoke",
+      "breaded artichoke",
+      "baked stuffed artichokes",
+      "italian stuffed artichoke",
+      "stuffed artichoke halves"
+    ]
+  },
+  {
+    "id": "asian_chicken_salad_crispy_noodles",
+    "usda_name": "65. Asian chicken or turkey garden salad with crispy noodles, chicken and/or turkey, lettuce, fruit, nuts, crispy noodles, no dressing",
+    "display_name": "Asian chicken salad (crispy noodles)",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "chinese chicken salad",
+      "asian chicken salad",
+      "crispy noodle salad",
+      "sesame chicken salad",
+      "chicken salad asian"
+    ]
+  },
+  {
+    "id": "asian_chicken_salad",
+    "usda_name": "66. Asian chicken or turkey garden salad, chicken and/or turkey, lettuce, fruit, nuts, no dressing",
+    "display_name": "Asian chicken/turkey salad",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "asian turkey salad",
+      "asian garden salad",
+      "asian chicken salad no dressing",
+      "asian salad with chicken",
+      "chicken salad with fruit and nuts"
+    ]
+  },
+  {
+    "id": "stir_fry_vegetables",
+    "usda_name": "67. Asian stir fry vegetables, cooked, fat added",
+    "display_name": "Stir-fry vegetables",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "vegetable stir fry",
+      "stir fried veggies",
+      "mixed stir fry vegetables",
+      "sautéed vegetables (asian)",
+      "wok vegetables"
+    ]
+  },
+  {
+    "id": "asparagus_cooked",
+    "usda_name": "69. Asparagus, NS as to form, cooked",
+    "display_name": "Asparagus (cooked)",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "cooked asparagus",
+      "steamed asparagus",
+      "sautéed asparagus",
+      "canned asparagus",
+      "frozen asparagus (cooked)"
+    ]
+  },
+  {
+    "id": "asparagus_raw",
+    "usda_name": "82. Asparagus, raw",
+    "display_name": "Asparagus",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "raw asparagus",
+      "fresh asparagus",
+      "asparagus spears",
+      "uncooked asparagus",
+      "asparagus stalks"
+    ]
+  },
+  {
+    "id": "atole",
+    "usda_name": "83. Atole",
+    "display_name": "Atole",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "atol",
+      "hot corn drink",
+      "masa drink",
+      "atole de chocolate",
+      "atole de avena"
+    ]
+  },
+  {
+    "id": "avocado_dressing",
+    "usda_name": "86. Avocado dressing",
+    "display_name": "Avocado dressing",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "avocado sauce",
+      "avocado crema",
+      "avocado ranch",
+      "green goddess avocado",
+      "avocado dressing sauce"
+    ]
+  },
+  {
+    "id": "avocado",
+    "usda_name": "88. Avocado, raw",
+    "display_name": "Avocado",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "fresh avocado",
+      "avocado slices",
+      "avocado on sandwich",
+      "avocado fruit",
+      "avocado halves"
+    ]
+  },
+  {
+    "id": "bacalaitos_fritos",
+    "usda_name": "167. Bacalaitos fritos",
+    "display_name": "Bacalaitos fritos",
+    "category": "seafood",
+    "role": "either",
+    "aliases": [
+      "codfish fritters",
+      "bacalaitos",
+      "salt cod fritter",
+      "Puerto Rican fritters",
+      "bacalao fritters"
+    ]
+  },
+  {
+    "id": "bacon_tomato_dressing",
+    "usda_name": "168. Bacon and tomato dressing",
+    "display_name": "Bacon & tomato dressing",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "bacon tomato dressing",
+      "bacon-tomato dressing",
+      "bacon vinaigrette",
+      "warm bacon dressing",
+      "bacon sauce"
+    ]
+  },
+  {
+    "id": "bacon_biscuit_sandwich",
+    "usda_name": "169. Bacon biscuit sandwich",
+    "display_name": "Bacon biscuit sandwich",
+    "category": "sandwiches",
+    "role": "is_base",
+    "aliases": [
+      "bacon biscuit",
+      "bacon breakfast biscuit",
+      "biscuit sandwich (bacon)",
+      "bacon biscuit sando",
+      "bacon biscuit slider"
+    ]
+  },
+  {
+    "id": "bacon_bits",
+    "usda_name": "170. Bacon bits",
+    "display_name": "Bacon bits",
+    "category": "meat_dishes",
+    "role": "ingredient_only",
+    "aliases": [
+      "bacon crumbles",
+      "bacon sprinkles",
+      "bacon topping",
+      "crispy bacon bits",
+      "bacon pieces"
+    ]
+  },
+  {
+    "id": "bacon_strip_meatless",
+    "usda_name": "172. Bacon strip, meatless",
+    "display_name": "Meatless bacon strips",
+    "category": "meat_dishes",
+    "role": "ingredient_only",
+    "aliases": [
+      "veggie bacon",
+      "meatless bacon",
+      "plant-based bacon",
+      "soy bacon strips",
+      "vegetarian bacon"
+    ]
+  },
+  {
+    "id": "bacon_cooked",
+    "usda_name": "171. Bacon or side pork, fresh, cooked",
+    "display_name": "Bacon (cooked)",
+    "category": "meat_dishes",
+    "role": "either",
+    "aliases": [
+      "bacon",
+      "cooked bacon",
+      "crispy bacon",
+      "bacon slices",
+      "side pork"
+    ]
+  },
+  {
+    "id": "blt_sandwich",
+    "usda_name": "177. Bacon, lettuce, tomato sandwich on wheat",
+    "display_name": "BLT sandwich",
+    "category": "sandwiches",
+    "role": "is_base",
+    "aliases": [
+      "BLT",
+      "bacon lettuce tomato",
+      "BLT on wheat",
+      "BLT on white",
+      "BLT sando"
+    ]
+  },
+  {
+    "id": "bagel",
+    "usda_name": "179. Bagel",
+    "display_name": "Bagel",
+    "category": "breakfast",
+    "role": "either",
+    "aliases": [
+      "plain bagel",
+      "wheat bagel",
+      "multigrain bagel",
+      "raisin bagel",
+      "pumpernickel bagel"
+    ]
+  },
+  {
+    "id": "bagel_chips",
+    "usda_name": "180. Bagel chips",
+    "display_name": "Bagel chips",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "bagel crisps",
+      "bagel crackers",
+      "bagel toast chips",
+      "bagel slices",
+      "bagel thins chips"
+    ]
+  },
+  {
+    "id": "baked_beans",
+    "usda_name": "194. Baked beans",
+    "display_name": "Baked beans",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "beans in sauce",
+      "canned baked beans",
+      "vegetarian baked beans",
+      "BBQ baked beans",
+      "baked beans side"
+    ]
+  },
+  {
+    "id": "baklava",
+    "usda_name": "198. Baklava",
+    "display_name": "Baklava",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "baklawa",
+      "phyllo nut pastry",
+      "honey nut pastry",
+      "Turkish baklava",
+      "Greek baklava"
+    ]
+  },
+  {
+    "id": "bamboo_shoots_cooked",
+    "usda_name": "199. Bamboo shoots, cooked",
+    "display_name": "Bamboo shoots (cooked)",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "cooked bamboo shoots",
+      "bamboo shoot",
+      "bamboo slices",
+      "bamboo tips",
+      "bamboo side"
+    ]
+  },
+  {
+    "id": "banana_chips",
+    "usda_name": "200. Banana chips",
+    "display_name": "Banana chips",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "dried banana chips",
+      "fried banana chips",
+      "banana crisps",
+      "sweet banana chips",
+      "banana snack chips"
+    ]
+  },
+  {
+    "id": "banana_nectar",
+    "usda_name": "201. Banana nectar",
+    "display_name": "Banana nectar",
+    "category": "beverages",
+    "role": "either",
+    "aliases": [
+      "banana drink",
+      "banana beverage",
+      "nectar de banana",
+      "banana juice drink",
+      "banana nectar drink"
+    ]
+  },
+  {
+    "id": "banana_pudding",
+    "usda_name": "202. Banana pudding",
+    "display_name": "Banana pudding",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "banana custard",
+      "banana dessert pudding",
+      "vanilla wafer pudding",
+      "banana cream pudding",
+      "banana parfait"
+    ]
+  },
+  {
+    "id": "banana_split",
+    "usda_name": "203. Banana split",
+    "display_name": "Banana split",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "ice cream banana split",
+      "classic banana split",
+      "banana sundae",
+      "banana boat dessert",
+      "banana split dessert"
+    ]
+  },
+  {
+    "id": "banana_baked",
+    "usda_name": "204. Banana, baked",
+    "display_name": "Baked banana",
+    "category": "desserts",
+    "role": "either",
+    "aliases": [
+      "roasted banana",
+      "baked plantain (banana)",
+      "caramelized banana",
+      "oven-baked banana",
+      "baked banana dessert"
+    ]
+  },
+  {
+    "id": "banana_raw",
+    "usda_name": "205. Banana, raw",
+    "display_name": "Banana",
+    "category": "fruits",
+    "role": "either",
+    "aliases": [
+      "fresh banana",
+      "whole banana",
+      "banana fruit",
+      "peeled banana",
+      "banana snack"
+    ]
+  },
+  {
+    "id": "bao_bun",
+    "usda_name": "206. Bao bun",
+    "display_name": "Bao bun",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "bao",
+      "steamed bun",
+      "baozi",
+      "mantou with filling",
+      "chinese bun"
+    ]
+  },
+  {
+    "id": "barbecue_sandwich",
+    "usda_name": "221. Barbecue sandwich, NFS",
+    "display_name": "Barbecue sandwich",
+    "category": "sandwiches",
+    "role": "is_base",
+    "aliases": [
+      "bbq sandwich",
+      "pulled pork sandwich",
+      "bbq beef sandwich",
+      "rib sandwich",
+      "barbecue bun"
+    ]
+  },
+  {
+    "id": "barbecue_meat",
+    "usda_name": "215. Barbecue meat, NFS",
+    "display_name": "Barbecue meat",
+    "category": "meat_dishes",
+    "role": "either",
+    "aliases": [
+      "bbq meat",
+      "barbecue pork",
+      "barbecue beef",
+      "barbecue chicken",
+      "smoked meat (bbq)"
+    ]
+  },
+  {
+    "id": "barbecue_sauce",
+    "usda_name": "222. Barbecue sauce",
+    "display_name": "Barbecue sauce",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "bbq sauce",
+      "barbeque sauce",
+      "barbecue glaze",
+      "smoky sauce",
+      "bbq dipping sauce"
+    ]
+  },
+  {
+    "id": "barfi_burfi",
+    "usda_name": "223. Barfi or Burfi, Indian dessert",
+    "display_name": "Barfi/Burfi",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "barfi",
+      "burfi",
+      "milk fudge (barfi)",
+      "indian barfi",
+      "kaju barfi"
+    ]
+  },
+  {
+    "id": "barley",
+    "usda_name": "224. Barley",
+    "display_name": "Barley",
+    "category": "rice_dishes",
+    "role": "either",
+    "aliases": [
+      "pearled barley",
+      "cooked barley",
+      "barley grain",
+      "hulled barley",
+      "barley cereal"
+    ]
+  },
+  {
+    "id": "basbousa",
+    "usda_name": "225. Basbousa",
+    "display_name": "Basbousa",
+    "category": "desserts",
+    "role": "is_base",
+    "aliases": [
+      "harissa cake",
+      "semolina cake",
+      "revani (variant)",
+      "namoura",
+      "basbousa cake"
+    ]
+  },
+  {
+    "id": "basil_raw",
+    "usda_name": "226. Basil, raw",
+    "display_name": "Basil",
+    "category": "vegetables",
+    "role": "ingredient_only",
+    "aliases": [
+      "fresh basil",
+      "basil leaves",
+      "basil garnish",
+      "sweet basil",
+      "basil herb"
+    ]
+  },
+  {
+    "id": "bean_cake",
+    "usda_name": "227. Bean cake",
+    "display_name": "Bean cake",
+    "category": "snacks",
+    "role": "is_base",
+    "aliases": [
+      "bean fritter",
+      "bean patty",
+      "bean cutlet",
+      "fried bean cake",
+      "steamed bean cake"
+    ]
+  },
+  {
+    "id": "bean_chips",
+    "usda_name": "228. Bean chips",
+    "display_name": "Bean chips",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "bean crisps",
+      "lentil chips",
+      "chickpea chips",
+      "protein chips",
+      "legume chips"
+    ]
+  },
+  {
+    "id": "bean_dip_refried",
+    "usda_name": "229. Bean dip, made with refried beans",
+    "display_name": "Refried bean dip",
+    "category": "sauces",
+    "role": "sauce_only",
+    "aliases": [
+      "bean dip",
+      "refried beans dip",
+      "frijoles dip",
+      "mexican bean dip",
+      "creamy bean dip"
+    ]
+  },
+  {
+    "id": "bean_paste_sweetened",
+    "usda_name": "230. Bean paste, sweetened",
+    "display_name": "Sweetened bean paste",
+    "category": "desserts",
+    "role": "ingredient_only",
+    "aliases": [
+      "anko",
+      "red bean paste",
+      "sweet bean paste",
+      "adzuki paste",
+      "sweetened bean filling"
+    ]
+  },
+  {
+    "id": "bean_salad",
+    "usda_name": "231. Bean salad, yellow and/or green string beans",
+    "display_name": "Bean salad (string beans)",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "string bean salad",
+      "green/yellow bean salad",
+      "three-bean salad variant",
+      "marinated bean salad",
+      "bean salad bowl"
+    ]
+  },
+  {
+    "id": "bean_sprouts_cooked",
+    "usda_name": "232. Bean sprouts, cooked",
+    "display_name": "Bean sprouts (cooked)",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "cooked bean sprouts",
+      "stir-fried sprouts",
+      "sautéed bean sprouts",
+      "hot bean sprouts",
+      "sprout side"
+    ]
+  },
+  {
+    "id": "bean_sprouts_raw",
+    "usda_name": "233. Bean sprouts, raw",
+    "display_name": "Bean sprouts (raw)",
+    "category": "vegetables",
+    "role": "ingredient_only",
+    "aliases": [
+      "raw bean sprouts",
+      "fresh bean sprouts",
+      "sprouts (raw)",
+      "sprout garnish",
+      "uncooked sprouts"
+    ]
+  },
+  {
+    "id": "beans_and_rice",
+    "usda_name": "241. Beans and white rice",
+    "display_name": "Beans and rice",
+    "category": "rice_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beans & rice",
+      "rice and beans",
+      "beans with rice",
+      "mixed beans and rice",
+      "plate of beans and rice"
+    ]
+  },
+  {
+    "id": "beans_and_franks",
+    "usda_name": "235. Beans and franks",
+    "display_name": "Beans and franks",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beans and hot dogs",
+      "beanie weenies",
+      "franks and beans",
+      "beans & franks bowl",
+      "sausage beans"
+    ]
+  },
+  {
+    "id": "beans_and_tomatoes",
+    "usda_name": "240. Beans and tomatoes, no added fat",
+    "display_name": "Beans and tomatoes",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "beans with tomatoes",
+      "tomato beans",
+      "beans in tomato",
+      "beans & tomato side",
+      "beans stewed with tomato"
+    ]
+  },
+  {
+    "id": "beans_with_meat_ns",
+    "usda_name": "242. Beans with meat, NS as to type",
+    "display_name": "Beans with meat (NS type)",
+    "category": "meat_dishes",
+    "role": "either",
+    "aliases": [
+      "beans with meat",
+      "meaty beans",
+      "mixed beans and meat",
+      "bean stew with meat",
+      "beans meat mix"
+    ]
+  },
+  {
+    "id": "beans_ns_cooked",
+    "usda_name": "243. Beans, NFS",
+    "display_name": "Beans (NS type, cooked)",
+    "category": "vegetables",
+    "role": "either",
+    "aliases": [
+      "cooked beans",
+      "canned beans",
+      "dried beans cooked",
+      "beans side",
+      "restaurant beans"
+    ]
+  },
+  {
+    "id": "beef_and_broccoli",
+    "usda_name": "251. Beef and broccoli",
+    "display_name": "Beef and broccoli",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef with broccoli",
+      "broccoli beef",
+      "stir-fry beef broccoli",
+      "beef & broccoli",
+      "beef broccoli entree"
+    ]
+  },
+  {
+    "id": "beef_and_noodles",
+    "usda_name": "258. Beef and noodles, no sauce",
+    "display_name": "Beef and noodles",
+    "category": "pasta_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef noodle plate",
+      "beef with noodles",
+      "noodle beef dish",
+      "beef pasta",
+      "beef lo mein style"
+    ]
+  },
+  {
+    "id": "beef_and_potatoes",
+    "usda_name": "261. Beef and potatoes, no sauce",
+    "display_name": "Beef and potatoes",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef potato plate",
+      "beef & potatoes",
+      "meat and potatoes",
+      "beef spuds",
+      "beef potato dish"
+    ]
+  },
+  {
+    "id": "beef_and_rice",
+    "usda_name": "268. Beef and rice, no sauce",
+    "display_name": "Beef and rice",
+    "category": "rice_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef rice plate",
+      "beef over rice",
+      "beef rice bowl",
+      "beef & rice",
+      "beef rice dish"
+    ]
+  },
+  {
+    "id": "beef_and_vegetables",
+    "usda_name": "273. Beef and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce",
+    "display_name": "Beef and vegetables",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef vegetable plate",
+      "beef & veggies",
+      "stir-fry beef and vegetables",
+      "beef mixed vegetables",
+      "beef veggie entree"
+    ]
+  },
+  {
+    "id": "beef_hawaiian",
+    "usda_name": "275. Beef and vegetables, Hawaiian style",
+    "display_name": "Beef with vegetables, Hawaiian style",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "hawaiian beef",
+      "beef pineapple style",
+      "hawaiian style beef",
+      "tropical beef",
+      "beef hawaiian entree"
+    ]
+  },
+  {
+    "id": "beef_as_ingredient",
+    "usda_name": "276. Beef as ingredient in recipes",
+    "display_name": "Beef (as ingredient)",
+    "category": "meat_dishes",
+    "role": "ingredient_only",
+    "aliases": [
+      "beef ingredient",
+      "beef for recipe",
+      "beef component",
+      "beef for cooking",
+      "recipe beef"
+    ]
+  },
+  {
+    "id": "beef_burgundy",
+    "usda_name": "277. Beef burgundy",
+    "display_name": "Beef burgundy",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "boeuf bourguignon",
+      "beef burgundy stew",
+      "red wine beef stew",
+      "bourguignon",
+      "wine-braised beef"
+    ]
+  },
+  {
+    "id": "beef_chow_mein",
+    "usda_name": "279. Beef chow mein or chop suey, no noodles",
+    "display_name": "Beef chow mein/chop suey",
+    "category": "pasta_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef chow mein",
+      "beef chop suey",
+      "beef stir-fry noodles",
+      "beef crispy noodles",
+      "beef chow mein plate"
+    ]
+  },
+  {
+    "id": "beef_curry",
+    "usda_name": "280. Beef curry",
+    "display_name": "Beef curry",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef curry rice",
+      "Japanese beef curry",
+      "beef curry bowl",
+      "curried beef",
+      "beef curry plate"
+    ]
+  },
+  {
+    "id": "beef_frozen_meal",
+    "usda_name": "282. Beef dinner, NFS, frozen meal",
+    "display_name": "Beef frozen meal",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "frozen beef dinner",
+      "beef TV dinner",
+      "beef frozen entree",
+      "diet beef meal",
+      "ready meal (beef)"
+    ]
+  },
+  {
+    "id": "beef_egg_foo_yung",
+    "usda_name": "283. Beef egg foo yung",
+    "display_name": "Beef egg foo yung",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "egg foo young (beef)",
+      "beef egg omelet",
+      "chinese omelet beef",
+      "egg foo yung beef",
+      "beef egg dish"
+    ]
+  },
+  {
+    "id": "beef_jerky",
+    "usda_name": "284. Beef jerky",
+    "display_name": "Beef jerky",
+    "category": "snacks",
+    "role": "either",
+    "aliases": [
+      "jerky",
+      "dried beef jerky",
+      "smoked beef jerky",
+      "beef snack jerky",
+      "meat jerky"
+    ]
+  },
+  {
+    "id": "beef_rolls",
+    "usda_name": "285. Beef rolls, stuffed with vegetables or meat mixture, tomato-based sauce",
+    "display_name": "Beef rolls (stuffed)",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "rouladen",
+      "stuffed beef rolls",
+      "beef roll-ups",
+      "beef rolls in sauce",
+      "beef roulade"
+    ]
+  },
+  {
+    "id": "beef_salad",
+    "usda_name": "286. Beef salad",
+    "display_name": "Beef salad",
+    "category": "salads",
+    "role": "is_base",
+    "aliases": [
+      "beef salad bowl",
+      "thai beef salad",
+      "cold beef salad",
+      "beef lettuce salad",
+      "beef salad plate"
+    ]
+  },
+  {
+    "id": "beef_sausage",
+    "usda_name": "287. Beef sausage",
+    "display_name": "Beef sausage",
+    "category": "meat_dishes",
+    "role": "either",
+    "aliases": [
+      "beef sausage link",
+      "sausage (beef)",
+      "cheese beef sausage",
+      "smoked beef sausage",
+      "beef sausage slices"
+    ]
+  },
+  {
+    "id": "beef_shish_kabob",
+    "usda_name": "289. Beef shish kabob with vegetables, excluding potatoes",
+    "display_name": "Beef shish kabob",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "beef kebab",
+      "beef kabob",
+      "beef skewer",
+      "shish kebab (beef)",
+      "grilled beef skewers"
+    ]
+  },
+  {
+    "id": "beef_steak_onions_pr",
+    "usda_name": "290. Beef steak with onions, Puerto Rican style",
+    "display_name": "Beef steak with onions (PR style)",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "bistec encebollado",
+      "onion steak",
+      "Puerto Rican steak",
+      "beef steak onions",
+      "PR style beef steak"
+    ]
+  },
+  {
+    "id": "beef_stew_pr",
+    "usda_name": "291. Beef stew with potatoes, Puerto Rican style",
+    "display_name": "Beef stew with potatoes (PR style)",
+    "category": "meat_dishes",
+    "role": "is_base",
+    "aliases": [
+      "carne guisada",
+      "Puerto Rican beef stew",
+      "beef potato stew",
+      "PR beef stew",
+      "stewed beef PR"
+    ]
+  }
+]

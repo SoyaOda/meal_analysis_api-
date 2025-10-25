@@ -1,0 +1,142 @@
+[
+  {
+    "search_name": "mixed greens",
+    "description": "raw",
+    "weight_g": 45,
+    "confidence": 0.85,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "cherry tomatoes",
+    "description": "raw",
+    "weight_g": 35,
+    "confidence": 0.85,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "carrots",
+    "description": "raw, sliced",
+    "weight_g": 25,
+    "confidence": 0.85,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 25,
+    "confidence": 0.85,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "beef steak",
+    "description": "grilled, sliced",
+    "weight_g": 190,
+    "confidence": 0.95,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "yellow squash",
+    "description": "cooked, sliced",
+    "weight_g": 90,
+    "confidence": 0.9,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 130,
+    "confidence": 0.9,
+    "image_file": "test_food1.jpg"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food2.jpg"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, boneless, skinless",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food2.jpg"
+  },
+  {
+    "search_name": "red wine",
+    "description": "ready-to-serve",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food2.jpg"
+  },
+  {
+    "search_name": "beef sirloin",
+    "description": "cooked, roasted",
+    "weight_g": 180,
+    "confidence": 0.9,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "caramelized onion relish",
+    "description": "cooked",
+    "weight_g": 40,
+    "confidence": 0.8,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "green onion",
+    "description": "raw",
+    "weight_g": 10,
+    "confidence": 0.9,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "potatoes",
+    "description": "roasted",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "asparagus",
+    "description": "roasted",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "creamer",
+    "description": "with herbs",
+    "weight_g": 30,
+    "confidence": 0.8,
+    "image_file": "test_food3.jpg"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "fresh",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg"
+  },
+  {
+    "search_name": "tomato",
+    "description": "fresh",
+    "weight_g": 45,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg"
+  },
+  {
+    "search_name": "onion",
+    "description": "fresh",
+    "weight_g": 25,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg"
+  },
+  {
+    "search_name": "carrot",
+    "description": "shredded, fresh",
+    "weight_g": 20,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg"
+  }
+]

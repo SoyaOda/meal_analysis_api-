@@ -79,24 +79,27 @@
 
 ---
 
-## 3. データソースと前処理
+## 3. データソースと前処理（spec3.md方針に基づく）
 
 ### 3.1 対象データベース
 
 **ファイル**: `test_scripts/mappings/mappings_final/usda_food_mappings_unified.json`
 
-**インデックス対象**:
+**データ構造**:
 - `default_usda.name`から"Num. "を除いた部分
-- 形式: `"search_name, description1, description2"`
+- 形式: `"main_name, descriptor1, descriptor2, ..."`
   - 例: `"Chicken, broilers or fryers, breast, meat only, cooked, roasted"`
+  - `main_name`: "Chicken" (主食材、栄養集合の核)
+  - `descriptors`: "broilers or fryers, breast, meat only, cooked, roasted" (調理法・状態)
 
-**追加情報の活用**:
+**追加情報**:
 - `display_name`: ユーザー表示用
-- `role`: 食品カテゴリ情報（埋め込みに含めるか検討）
+- `role`: 食品カテゴリ（is_base, sauce_only等）
+- `aliases`: 同義語リスト
 
 ### 3.2 テキスト正規化
 
-**方針**: 既存の `test_vlm_usda_matching_full.py` の実装を参考
+**方針**: spec3.mdに基づく2段階設計
 
 ```python
 def normalize_text(text: str) -> str:
@@ -107,43 +110,176 @@ def normalize_text(text: str) -> str:
     return text
 
 def parse_usda_name(usda_name: str) -> Tuple[str, str]:
-    """USDA名から search_name と description を抽出"""
+    """USDA名から main_name と descriptors を抽出"""
     # "Num. " を除去
     if '. ' in usda_name:
         name_part = usda_name.split('. ', 1)[1]
     else:
         name_part = usda_name
 
-    # コンマで分割
+    # カンマで分割
     components = [c.strip() for c in name_part.split(',')]
-    search_name = components[0]
-    description = ', '.join(components[1:])
+    main_name = components[0]  # 主食材名
+    descriptors = ', '.join(components[1:])  # 調理法・状態等
 
-    return search_name, description
+    return main_name, descriptors
 ```
 
-### 3.3 埋め込みテキストの構成
+### 3.3 埋め込みテキストの構成（二系統）
 
-**方式**: `search_name + " " + description`
+**方針**: **Stage1では主名優先、Stage2では合算+フィールド明示**
 
-例:
-- USDA: `"Chicken broiled"` (search_name) + `"skinless"` (description) → `"Chicken broiled skinless"`
-- VLM: `"chicken breast"` (search_name) + `"grilled"` (description) → `"chicken breast grilled"`
+#### Stage 1用（候補生成）
 
-**代替案**（精度向上が必要な場合）:
-- `role`（カテゴリ）を含める: `"Chicken broiled skinless (category: meat)"`
+**二系統の埋め込みを生成**:
+
+1. **main_only**: 主食材名のみ
+   - 目的: 主名の取り違え防止（"fried rice" vs "fried chicken"）
+   - 例: `"chicken"`, `"beef"`
+
+2. **full**: 主食材名 + セパレータ + 修飾語
+   - 目的: 意味的な近傍を考慮
+   - 例: `"chicken ; broilers breast cooked roasted"`
+   - セパレータ `;` で主名と修飾を明示的に区切る
+
+**重み付け合成**:
+```python
+S_emb = 0.7 * cosine(Q_main, E_main) + 0.3 * cosine(Q_full, E_full)
+```
+
+#### Stage 2用（再ランキング）
+
+**フィールド明示テンプレート**:
+
+```python
+# Query
+query_text = f"name: {search_name}\ndescription: {description or 'N/A'}"
+
+# Candidate
+candidate_text = f"name: {main_name}\ndescription: {descriptors or 'N/A'}"
+```
+
+**根拠**:
+- BGE-rerankerはクロスエンコーダで全トークン相互作用を利用
+- フィールドラベル（`name:`, `description:`）で主名を明示的に強調
+- 調理法・皮/脂有無・NFS/NS等の微差を精密判定
+
+### 3.4 データ保持形式
+
+**インデックス時に事前計算**:
+- `E_main`: main_nameのみの埋め込み (384次元)
+- `E_full`: main_name + " ; " + descriptorsの埋め込み (384次元)
+- メタデータ: `{id, main_name, descriptors, display_name, role}`
 
 ---
 
-## 4. 評価方法
+## 4. アーキテクチャ詳細（spec3.md設計）
 
-### 4.1 評価データ
+### 4.1 全体フロー
+
+```
+VLMクエリ
+  ↓ parse → (main_name, descriptors)
+  ↓
+[Stage 1: 候補生成]
+  ├─ Q_main埋め込み → FAISS検索 (E_main) → Score_main
+  ├─ Q_full埋め込み → FAISS検索 (E_full) → Score_full
+  ├─ 重み付け合成: S_emb = 0.7*Score_main + 0.3*Score_full
+  └─ Top-K候補取得 (K=5)
+  ↓
+[Stage 2: 再ランキング]
+  ├─ フィールド明示テンプレート生成
+  ├─ BGE-reranker でペアスコアリング
+  ├─ 最終スコア: S_final = 0.7*S_rerank + 0.3*S_emb
+  └─ Best候補決定
+```
+
+### 4.2 Stage 1詳細（候補生成）
+
+**目的**: 正解をTop-Kに必ず入れる（高リコール）
+
+**アルゴリズム**:
+```python
+# 1. クエリ処理
+main_name, descriptors = parse_usda_name(query)
+Q_main = normalize_text(main_name)
+Q_full = normalize_text(f"{main_name} ; {descriptors}")
+
+# 2. 埋め込み生成
+q_main_emb = embedding_model.encode(Q_main)
+q_full_emb = embedding_model.encode(Q_full)
+
+# 3. FAISS検索（二系統）
+scores_main = faiss_index_main.search(q_main_emb, k=K)
+scores_full = faiss_index_full.search(q_full_emb, k=K)
+
+# 4. 重み付け合成
+alpha = 0.7  # main重視
+S_emb = alpha * scores_main + (1 - alpha) * scores_full
+
+# 5. Top-K取得
+top_k_indices = argsort(S_emb)[-K:]
+```
+
+**パラメータ**:
+- `alpha`: 0.7（main重視度、0.6〜0.8推奨）
+- `K`: 5（再ランカーのレイテンシ次第で5〜10）
+
+### 4.3 Stage 2詳細（再ランキング）
+
+**目的**: 微差の精密判定（調理法、皮/脂有無、NFS/NS等）
+
+**アルゴリズム**:
+```python
+# 1. フィールド明示テンプレート生成
+def make_rerank_pair(query_main, query_desc, cand_main, cand_desc):
+    query = f"name: {query_main}\ndescription: {query_desc or 'N/A'}"
+    candidate = f"name: {cand_main}\ndescription: {cand_desc or 'N/A'}"
+    return (query, candidate)
+
+# 2. ペア生成
+pairs = [make_rerank_pair(Q_main, Q_desc, c.main, c.desc)
+         for c in top_k_candidates]
+
+# 3. BGE-rerankerスコアリング
+rerank_scores = bge_reranker.predict(pairs)
+
+# 4. 最終スコア合成
+beta = 0.7  # reranker重視度
+S_final = beta * rerank_scores + (1 - beta) * S_emb[top_k_indices]
+
+# 5. Best選択
+best_idx = argmax(S_final)
+```
+
+**パラメータ**:
+- `beta`: 0.7（reranker重視度、0.6〜0.8推奨）
+- テンプレート: `name:` / `description:` フィールド明示
+
+### 4.4 将来的な拡張（Phase 3以降）
+
+1. **BM25Fとの融合**（語一致の補強）
+   ```python
+   S_stage1 = 0.6 * S_emb + 0.4 * BM25F_norm
+   ```
+
+2. **整合性ペナルティ**（調理法齟齬検出）
+   ```python
+   pen = penalty_raw_cooked(q, c) + penalty_skin(q, c)
+   S_final = 0.7*S_rerank + 0.3*S_emb + 0.1*pen
+   ```
+
+---
+
+## 5. 評価方法
+
+### 5.1 評価データ
 
 **テストデータ**: `test_scripts/output/vlm_test_results_Qwen_Qwen3-VL-235B-A22B-Thinking_freeform_usda_20251025_110445.json`
 - 50画像、約300食品アイテム
 - 既存のマッチングテスト: 96%成功率（threshold=60）
 
-### 4.2 評価指標
+### 5.2 評価指標
 
 **主要指標**:
 1. **Top-1 Accuracy**: 最上位候補が正解である割合
@@ -155,7 +291,7 @@ def parse_usda_name(usda_name: str) -> Tuple[str, str]:
 - 既存実装（`test_vlm_usda_matching_full.py`）との精度比較
 - Stage 1のみ vs Stage 1+2の精度向上幅
 
-### 4.3 評価プロセス
+### 5.3 評価プロセス
 
 1. **自動評価**: 全50画像（300アイテム）で指標計測
 2. **人手検証**: 失敗ケース20件をマニュアルレビュー
@@ -164,7 +300,7 @@ def parse_usda_name(usda_name: str) -> Tuple[str, str]:
 
 ---
 
-## 5. プロジェクト構造
+## 6. プロジェクト構造
 
 ```
 test_scripts/query_system/
@@ -204,7 +340,7 @@ test_scripts/query_system/
 
 ---
 
-## 6. 実装フェーズ
+## 7. 実装フェーズ
 
 ### Phase 1: 基本モジュール実装（1-2日）
 - [ ] `models/embedding.py`: SentenceTransformer埋め込み
@@ -233,7 +369,7 @@ test_scripts/query_system/
 
 ---
 
-## 7. 依存ライブラリ
+## 8. 依存ライブラリ
 
 ```txt
 sentence-transformers>=2.2.0
@@ -245,7 +381,7 @@ numpy>=1.24.0
 
 ---
 
-## 8. 設定パラメータ
+## 9. 設定パラメータ
 
 ```python
 # config.py の初期設定
@@ -262,7 +398,7 @@ CONFIG = {
 
 ---
 
-## 9. 成功基準
+## 10. 成功基準
 
 ### 精度
 - Top-1 Accuracy ≥ 90%（既存96%をベースライン）
@@ -279,7 +415,7 @@ CONFIG = {
 
 ---
 
-## 10. リスクと対策
+## 11. リスクと対策
 
 | リスク | 影響 | 対策 |
 |--------|------|------|
@@ -290,7 +426,7 @@ CONFIG = {
 
 ---
 
-## 11. 次のステップ
+## 12. 次のステップ
 
 1. **今すぐ**: プロジェクト構造の作成
 2. **Phase 1開始**: 基本モジュールから順次実装

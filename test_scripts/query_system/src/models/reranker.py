@@ -14,94 +14,101 @@ from sentence_transformers import CrossEncoder
 
 class RerankerModel:
     """
-    Reranking model using BGE CrossEncoder
-
-    Uses BAAI/bge-reranker-base which is based on XLM-RoBERTa and does not
-    depend on SDPA (Scaled Dot-Product Attention), avoiding NaN score issues
-    on macOS with PyTorch 2.7.1.
-
-    Scores query-candidate pairs to rerank search results.
+    BGE LLM-based Reranker with custom food-matching prompts (Phase 2)
+    
+    Uses bge-reranker-v2.5-gemma2-lightweight (9B parameters, BEIR 63.67)
+    with domain-specific task instructions for improved accuracy.
     """
-
+    
     def __init__(
         self,
-        model_name: str = "BAAI/bge-reranker-base",
+        model_name: str = "BAAI/bge-reranker-v2.5-gemma2-lightweight",
+        use_fp16: bool = True,
         device: str = "cpu"
     ):
         """
+        Initialize FlagLLMReranker with custom food-matching prompt
+        
         Args:
-            model_name: BGE reranker model name (default: BAAI/bge-reranker-base)
-            device: Device to use ("cpu" or "cuda")
+            model_name: LLM-based reranker model name
+            use_fp16: Whether to use FP16 precision (default: True for speed)
+            device: Device for model ("cpu" or "cuda")
         """
-        self.model_name = model_name
-        self.device = device
-
         print(f"Loading reranker model: {model_name}...")
-        self.model = CrossEncoder(model_name, device=device)
-        print(f"Reranker model loaded successfully.")
+        
+        from FlagEmbedding import FlagLLMReranker
+        import os
+        
+        # Custom task instruction for food matching
+        # Priority: Exact food identity > Cooking method > Preparation details
+        self.task_prompt = """You are matching user food descriptions to entries in the USDA nutrition database for accurate calorie calculation.
 
+Priority for matching (most important first):
+1. **Food Identity**: The main food name must match exactly (e.g., "tomatoes" must match "tomatoes", NOT "cherries" even if "cherry tomatoes" was mentioned)
+2. **Cooking Method**: Raw vs cooked matters significantly for nutrition values
+   - If query specifies a cooking method (e.g., "grilled", "roasted", "fried"), prefer exact matches
+   - If query only says "cooked" without specifics, accept any cooked form
+   - If database entry says "NS as to cooking method", it's acceptable for ambiguous queries
+3. **Preparation Details**: Additional descriptors like "boneless", "skinless", "sliced" are helpful but less critical
+
+Examples:
+- Query "cherry tomatoes, raw" → Match "Tomatoes, raw" (food identity "tomatoes" is correct)
+- Query "chicken breast, cooked" → Match "Chicken breast, NS as to cooking method" (acceptable for ambiguous "cooked")
+- Query "beef steak, grilled" → Match "Beef, steak, grilled" (exact cooking method match preferred)
+
+Given a user query and a database entry, determine if they match well for nutrition calculation."""
+        
+        # Set cache directory for model downloads
+        cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
+        
+        # Initialize FlagLLMReranker with custom instruction
+        self.model = FlagLLMReranker(
+            model_name,
+            use_fp16=use_fp16,
+            query_instruction_for_rerank=self.task_prompt,
+            cache_dir=cache_dir,
+            trust_remote_code=True  # Required for custom model code
+        )
+        
+        print("Reranker model loaded successfully.")
+    
     def rerank(
         self,
         query: str,
         candidates: List[str],
         return_scores: bool = True
-    ) -> Union[int, Tuple[int, np.ndarray]]:
+    ):
         """
-        Rerank candidates based on query relevance
-
+        Rerank candidates using FlagLLMReranker with custom prompt
+        
         Args:
-            query: Query text
-            candidates: List of candidate texts
-            return_scores: Whether to return scores
-
+            query: Query text (field-labeled format from text_normalizer)
+            candidates: List of candidate texts (field-labeled format)
+            return_scores: Whether to return all scores (default: True)
+        
         Returns:
-            If return_scores=False: Best candidate index
             If return_scores=True: (best_index, scores_array)
+            If return_scores=False: best_index
         """
-        if not candidates:
-            raise ValueError("Candidates list is empty")
-
-        # Create query-candidate pairs
+        # Build query-passage pairs with custom task instruction
         pairs = [[query, candidate] for candidate in candidates]
-
-        # Score all pairs
-        scores = self.model.predict(
+        
+        # Compute scores using FlagLLMReranker
+        # Note: FlagLLMReranker uses the task prompt internally via query_instruction
+        scores = self.model.compute_score(
             pairs,
-            convert_to_numpy=True,
-            show_progress_bar=False
+            use_dataloader=True,
+            batch_size=8,
+            normalize=True
         )
-
-        # Get best candidate index
+        
+        # Convert to numpy array
+        import numpy as np
+        scores = np.array(scores)
+        
+        # Find best match
         best_idx = int(np.argmax(scores))
-
+        
         if return_scores:
             return best_idx, scores
         return best_idx
-
-    def score_pairs(
-        self,
-        pairs: List[Tuple[str, str]]
-    ) -> np.ndarray:
-        """
-        Score a list of text pairs
-
-        Args:
-            pairs: List of (query, candidate) tuples
-
-        Returns:
-            Array of scores for each pair
-        """
-        if not pairs:
-            raise ValueError("Pairs list is empty")
-
-        # Score all pairs
-        scores = self.model.predict(
-            pairs,
-            convert_to_numpy=True,
-            show_progress_bar=False
-        )
-
-        return scores
-
-    def __repr__(self) -> str:
-        return f"RerankerModel(model={self.model_name}, device={self.device})"
