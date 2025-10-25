@@ -95,9 +95,10 @@ Given a user query and a database entry, determine if they match well for nutrit
         
         # Compute scores using FlagLLMReranker
         # Note: FlagLLMReranker uses the task prompt internally via query_instruction
+        # use_dataloader=False to avoid macOS multiprocessing issues
         scores = self.model.compute_score(
             pairs,
-            use_dataloader=True,
+            use_dataloader=False,
             batch_size=8,
             normalize=True
         )
