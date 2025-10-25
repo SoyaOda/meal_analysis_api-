@@ -1,0 +1,308 @@
+# 除外食品リスト
+# 生成日: 2025-10-23
+# 総除外数: 287個
+# 元の食品リスト総数: 476個
+# マッピング生成数（キー数）: 61個
+
+## 写真認識不可（23個）
+- 4474. Sauce as ingredient in hamburgers - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4537. Shortening, NS as to vegetable or animal - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4577. Simple syrup - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4770. Sports drink, dry concentrate, not reconstituted - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4822. Strawberry beverage powder, dry mix, not reconstituted - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4823. Strawberry drink syrup - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4856. Sugar substitute and sugar blend - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4857. Sugar substitute, aspartame, powder - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4858. Sugar substitute, liquid, NFS - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4859. Sugar substitute, monk fruit, powder - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4860. Sugar substitute, powder, NFS - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4861. Sugar substitute, saccharin, liquid - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4862. Sugar substitute, saccharin, powder - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4863. Sugar substitute, stevia, liquid - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4864. Sugar substitute, stevia, powder - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4865. Sugar substitute, sucralose, powder - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4866. Sugar, NFS - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4867. Sugar, brown - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4868. Sugar, cinnamon - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4869. Sugar, white, confectioner's, powdered - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4870. Sugar, white, granulated or lump - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4871. Summer squash, cooked, as ingredient - 理由: 写真に直接現れにくい/粉末・液状添加
+- 4933. Sweet potato, cooked, as ingredient - 理由: 写真に直接現れにくい/粉末・液状添加
+
+## 稀少食品（5個）
+- 4780. Squirrel - 理由: 極めて稀少・地域限定
+- 4800. Stewed chitterlings, Puerto Rican style - 理由: 極めて稀少・地域限定
+- 4804. Stewed pig's feet, Puerto Rican style - 理由: 極めて稀少・地域限定
+- 4809. Stewed rabbit, Puerto Rican style, - 理由: 極めて稀少・地域限定
+- 4814. Stewed tripe, with potatoes, Puerto Rican style - 理由: 極めて稀少・地域限定
+
+## 学校給食/WIC等（0個）
+
+## 統合済み（0個）
+- ※本セクションは all_usda_mappings に含まれるため除外対象には数えません。
+
+## その他（259個）
+- 4465. Salsify, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4466. Sambar, vegetable stew - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4467. Samosa - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4468. Sandwich spread - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4473. Sardine sandwich - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4475. Sauce, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4476. Sauerkraut - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4478. Sausage and noodles with cream or white sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4479. Sausage and peppers, no sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4480. Sausage and rice with cheese sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4481. Sausage and rice with mushroom sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4482. Sausage and rice with tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4483. Sausage and vegetables including  carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4484. Sausage and vegetables, excluding carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4487. Sausage gravy - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4489. Sausage with tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4490. Sausage, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4491. Sausage, noodles, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4492. Sausage, noodles, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4493. Sausage, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4494. Sausage, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4501. Scotch - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4502. Scrapple, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4503. Screwdriver - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4504. Seabreeze - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4505. Seafood dip - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4510. Seafood paella, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4512. Seafood salad sandwich - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4513. Seafood sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4514. Seafood souffle - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4515. Seafood thermidor - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4521. Sesame chicken - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4526. Seven and Seven - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4527. Seven-layer salad, lettuce salad made with a combination of onion, celery, green pepper, peas, mayonnaise, cheese, eggs, and/or bacon - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4528. Shellfish and noodles with tomato-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4529. Shellfish mixture and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, mushroom sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4530. Shellfish mixture and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4531. Shellfish mixture and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, mushroom sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4532. Shellfish mixture and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4533. Shellfish, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4534. Shepherd's pie - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4535. Sherbet, all flavors - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4536. Shirley Temple - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4538. Shrimp and noodles with cheese sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4539. Shrimp and noodles with cream or white sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4540. Shrimp and noodles with gravy - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4541. Shrimp and noodles with mushroom sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4542. Shrimp and noodles with soy-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4543. Shrimp and noodles with tomato sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4544. Shrimp and noodles, no sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4545. Shrimp and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4546. Shrimp and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4547. Shrimp and vegetables in sauce with noodles, diet frozen meal - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4548. Shrimp and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4549. Shrimp and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4550. Shrimp chips - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4551. Shrimp chow mein or chop suey with noodles - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4552. Shrimp chow mein or chop suey, no noodles - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4553. Shrimp cocktail - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4554. Shrimp creole, no rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4555. Shrimp creole, with rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4556. Shrimp egg foo yung - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4557. Shrimp garden salad, shrimp, lettuce, eggs, tomato and/or carrots, other vegetables, no dressing - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4558. Shrimp garden salad, shrimp, lettuce, eggs, vegetables excluding tomato and carrots, no dressing - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4559. Shrimp gumbo - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4560. Shrimp in garlic sauce, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4561. Shrimp salad - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4562. Shrimp scampi - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4563. Shrimp shish kabob with vegetables, excluding potatoes - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4564. Shrimp teriyaki - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4565. Shrimp toast - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4566. Shrimp with crab stuffing - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4567. Shrimp with lobster sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4568. Shrimp, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4569. Shrimp, baked or broiled - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4570. Shrimp, baked or broiled, coated - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4571. Shrimp, cake or patty - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4572. Shrimp, canned - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4573. Shrimp, dried - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4574. Shrimp, fried - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4575. Shrimp, grilled - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4576. Shrimp, steamed or boiled - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4578. Singapore Sling - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4579. Sloe gin fizz - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4580. Sloppy joe sandwich, on wheat bun - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4581. Sloppy joe sandwich, on white bun - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4582. Sloppy joe, no bun - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4583. Slush frozen drink - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4584. Slush frozen drink, no sugar added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4585. Snack bar, oatmeal - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4586. Snack cake, chocolate - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4587. Snack cake, white - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4588. Snack mix - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4589. Snack mix, plain (Chex Mix) - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4590. Snow cone - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4591. Snow cone, no sugar added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4592. Snowpeas, NS as to form, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4593. Snowpeas, fresh, cooked, fat added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4594. Snowpeas, fresh, cooked, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4595. Snowpeas, frozen, cooked, fat added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4596. Snowpeas, frozen, cooked, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4597. Snowpeas, raw - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4628. Soup, French onion - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4629. Soup, Italian wedding - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4631. Soup, Matzo ball - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4632. Soup, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4634. Soup, barley - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4635. Soup, bean - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4636. Soup, bean, canned - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4637. Soup, bean, canned, reduced sodium - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4638. Soup, bean, with meat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4639. Soup, beef - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4640. Soup, beef, canned - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4641. Soup, bisque - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4642. Soup, borscht - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4643. Soup, bouillabaisse - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4644. Soup, broccoli cheese - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4645. Soup, broth - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4652. Soup, cream of mushroom - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4653. Soup, cream of tomato - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4654. Soup, cream of vegetable - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4656. Soup, fish or shrimp - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4657. Soup, fruit - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4658. Soup, gazpacho - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4664. Soup, meatball - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4665. Soup, minestrone - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4667. Soup, mulligatawany - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4668. Soup, noodle, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4669. Soup, peanut - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4670. Soup, pepperpot - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4673. Soup, pork or ham - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4674. Soup, potato - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4675. Soup, potato with meat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4676. Soup, pozole - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4677. Soup, pumpkin - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4679. Soup, rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4680. Soup, seaweed - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4681. Soup, sopa de fideo aguada - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4682. Soup, sopa or caldo de pollo - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4683. Soup, sopa or caldo de res - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4684. Soup, split pea - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4685. Soup, split pea, with meat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4689. Soup, tortilla - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4694. Soup, wonton - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4695. Soupy rice mixture with chicken and potatoes, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4696. Soupy rice with chicken, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4701. Soursop, nectar - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4702. Soy based sauce, for use with vegetables - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4703. Soy chips - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4707. Soy nut butter - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4708. Soy nuts - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4712. Soybean curd cheese - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4715. Soybean oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4716. Soybeans, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4717. Spaghetti and meatballs dinner, NFS, frozen meal - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4728. Spaghetti squash, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4729. Spaghetti with meat sauce, diet frozen meal - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4734. Spanish rice with ground beef - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4735. Spanish rice, NS as to fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4736. Spanish rice, fat added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4737. Spanish rice, from restaurant - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4738. Spanish rice, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4739. Spinach and artichoke dip - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4740. Spinach and cheese casserole - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4744. Spinach quiche, meatless - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4745. Spinach salad, no dressing - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4746. Spinach souffle - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4748. Spinach, canned, cooked with butter or margarine - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4749. Spinach, canned, cooked with oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4750. Spinach, canned, cooked, fat added, NS as to fat type - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4753. Spinach, creamed - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4757. Spinach, fresh, cooked, fat added, NS as to fat type - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4759. Spinach, frozen, cooked with butter or margarine - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4760. Spinach, frozen, cooked with oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4764. Split peas, from dried, fat added - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4765. Split peas, from dried, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4766. Spoonbread - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4774. Sprouts, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4775. Squash, summer, casserole with tomato and cheese - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4776. Squash, summer, casserole, with cheese sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4777. Squash, summer, casserole, with rice and tomato sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4778. Squash, summer, souffle - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4779. Squash, winter, souffle - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4781. Starfruit, raw - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4782. Steak sandwich or sub on wheat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4783. Steak sandwich or sub on white - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4784. Steak sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4785. Steak tartare - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4786. Steak teriyaki - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4787. Steak, NS as to type of meat, NS as to fat eaten - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4788. Stew, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4789. Stew, beef - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4790. Stew, beef, canned - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4791. Stew, beef, with pasta - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4792. Stew, chicken - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4793. Stew, chicken, with pasta - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4794. Stew, fish - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4795. Stew, lamb - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4796. Stew, pork - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4797. Stew, pork, with pasta - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4798. Stew, vegetable - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4799. Stewed chicken with tomato-based sauce, Mexican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4801. Stewed dried beef, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4802. Stewed gizzards, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4803. Stewed goat, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4805. Stewed pork, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4806. Stewed potatoes - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4807. Stewed potatoes with tomatoes - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4808. Stewed potatoes, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4810. Stewed rice, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4811. Stewed salmon, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4812. Stewed seasoned ground beef, Mexican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4813. Stewed seasoned ground beef, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4815. Stewed, seasoned, ground beef and pork with potatoes, Mexican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4816. Stewed, seasoned, ground beef and pork, Mexican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4817. Stewed, seasoned, ground beef with potatoes, Mexican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4818. Stir fried beef and vegetables in soy sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4824. Strawberry juice, 100% - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4831. Strudel, apple - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4832. Strudel, berry - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4833. Strudel, cheese - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4834. Strudel, cherry - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4835. Strudel, peach - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4836. Stuffed cabbage rolls with beef and rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4837. Stuffed cabbage, with meat and rice, Syrian dish, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4838. Stuffed cabbage, with meat, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4839. Stuffed chicken, drumstick or breast, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4840. Stuffed grape leaves with beef and rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4841. Stuffed grape leaves with lamb and rice - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4842. Stuffed green pepper, Puerto Rican style - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4843. Stuffed jalapeno pepper - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4853. Stuffed tomato, with rice and meat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4854. Stuffed tomato, with rice, meatless - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4855. Sugar cane beverage - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4872. Summer squash, green, raw - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4873. Summer squash, yellow or green, NS as to form, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4874. Summer squash, yellow or green, canned, cooked, fat added, NS as to fat type - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4875. Summer squash, yellow or green, fresh, cooked with butter or margarine - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4876. Summer squash, yellow or green, fresh, cooked with oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4877. Summer squash, yellow or green, fresh, cooked, fat added, NS as to fat type - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4878. Summer squash, yellow or green, fresh, cooked, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4879. Summer squash, yellow or green, frozen, cooked with butter or margarine - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4880. Summer squash, yellow or green, frozen, cooked with oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4881. Summer squash, yellow or green, frozen, cooked, fat added, NS as to fat type - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4882. Summer squash, yellow or green, frozen, cooked, no added fat - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4883. Summer squash, yellow, raw - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4884. Sun-dried tomatoes - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4885. Sunflower oil - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4886. Sunflower seeds, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4887. Sunflower seeds, flavored - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4888. Sunflower seeds, plain, salted - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4889. Sunflower seeds, plain, unsalted - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4904. Swedish meatballs with cream or white sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4909. Sweet and sour sauce - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4911. Sweet potato chips - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4917. Sweet potato paste - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4921. Sweet potato, NFS - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4934. Sweet potato, squash, pumpkin, chrysanthemum, or bean leaves, cooked - 理由: 今回バッチでは未マッピング（将来対応候補）
+- 4935. Sweetbreads - 理由: 今回バッチでは未マッピング（将来対応候補）
+
+# 検証
+# unique mapped count: 189
+# excluded count: 287
+# check: 189 + 287 = 476 == 476

@@ -1,0 +1,19 @@
+# 除外食品リスト
+# 生成日: 2025-10-23
+# 総除外数: 6個
+# 元の食品リスト総数: 489個
+# マッピング生成数: 483個
+
+## 写真認識不可/用途のみ（2個）
+- 1040. Chicken as ingredient in recipes - 理由: 用途項目（写真認識不可）
+- 1344. Chicken, for use with vegetables - 理由: 用途項目（写真認識不可）
+
+## 学校給食/WIC/専用（4個）
+- 1005. Cheeseburger, from school cafeteria - 理由: 学校給食専用品（除外方針）
+- 1114. Chicken fillet sandwich, from school cafeteria - 理由: 学校給食専用品（除外方針）
+- 1151. Chicken nuggets, from school lunch - 理由: 学校給食専用品（除外方針）
+- 1269. Chicken tenders or strips, breaded, from school lunch - 理由: 学校給食専用品（除外方針）
+
+## 稀少/曖昧・未分類（0個）
+
+# 恒等式チェック: 489 = 483 + 6 -> OK

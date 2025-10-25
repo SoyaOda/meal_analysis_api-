@@ -1,0 +1,90 @@
+# 除外食品リスト
+# 生成日: 2025-10-23
+# 総除外数: 72個
+# 元の食品リスト総数: 526個
+# マッピング生成数: 133個
+
+## NFS/NSで曖昧（汎用）（7個）
+- 483. Bread, NS as to major flour - 理由: NFS/NSで曖昧（汎用）
+- 484. Bread, NS as to major flour, toasted - 理由: NFS/NSで曖昧（汎用）
+- 506. Bread, made from home recipe or purchased at a bakery, NS as to major flour - 理由: NFS/NSで曖昧（汎用）
+- 507. Bread, made from home recipe or purchased at a bakery, toasted, NS as to major flour - 理由: NFS/NSで曖昧（汎用）
+- 683. Cabbage salad, NFS - 理由: NFS/NSで曖昧（汎用）
+- 710. Cake or cupcake, NFS - 理由: NFS/NSで曖昧（汎用）
+- 967. Cheese, NFS - 理由: NFS/NSで曖昧（汎用）
+
+## “材料として”のみの用途で写真では判別困難（4個）
+- 585. Breading or batter as ingredient in food - 理由: “材料として”のみの用途で写真では判別困難
+- 600. Breakfast meat as ingredient in omelet - 理由: “材料として”のみの用途で写真では判別困難
+- 688. Cabbage, cooked, as ingredient - 理由: “材料として”のみの用途で写真では判別困難
+- 908. Cheese and Queso as ingredient - 理由: “材料として”のみの用途で写真では判別困難
+
+## 今回スコープ外/低優先度（56個）
+- 473. Bread, Boston Brown - 理由: 今回スコープ外/低優先度
+- 474. Bread, Cuban - 理由: 今回スコープ外/低優先度
+- 475. Bread, Cuban, toasted - 理由: 今回スコープ外/低優先度
+- 476. Bread, French or Vienna - 理由: 今回スコープ外/低優先度
+- 477. Bread, French or Vienna, toasted - 理由: 今回スコープ外/低優先度
+- 478. Bread, French or Vienna, whole wheat - 理由: 今回スコープ外/低優先度
+- 479. Bread, French or Vienna, whole wheat, toasted - 理由: 今回スコープ外/低優先度
+- 480. Bread, Irish soda - 理由: 今回スコープ外/低優先度
+- 481. Bread, Italian, Grecian, Armenian - 理由: 今回スコープ外/低優先度
+- 482. Bread, Italian, Grecian, Armenian, toasted - 理由: 今回スコープ外/低優先度
+- 485. Bread, Spanish coffee - 理由: 今回スコープ外/低優先度
+- 493. Bread, cinnamon - 理由: 今回スコープ外/低優先度
+- 494. Bread, cinnamon, toasted - 理由: 今回スコープ外/低優先度
+- 495. Bread, cornmeal and molasses - 理由: 今回スコープ外/低優先度
+- 496. Bread, cornmeal and molasses, toasted - 理由: 今回スコープ外/低優先度
+- 497. Bread, dough, fried - 理由: 今回スコープ外/低優先度
+- 498. Bread, egg, Challah - 理由: 今回スコープ外/低優先度
+- 499. Bread, egg, Challah, toasted - 理由: 今回スコープ外/低優先度
+- 503. Bread, high protein, toasted - 理由: 今回スコープ外/低優先度
+- 504. Bread, lard, Puerto Rican style - 理由: 今回スコープ外/低優先度
+- 505. Bread, lard, toasted, Puerto Rican style - 理由: 今回スコープ外/低優先度
+- 517. Bread, native, water, Puerto Rican style - 理由: 今回スコープ外/低優先度
+- 518. Bread, native, water, toasted, Puerto Rican style - 理由: 今回スコープ外/低優先度
+- 520. Bread, oat bran - 理由: 今回スコープ外/低優先度
+- 521. Bread, oat bran, toasted - 理由: 今回スコープ外/低優先度
+- 522. Bread, oatmeal - 理由: 今回スコープ外/低優先度
+- 523. Bread, oatmeal, toasted - 理由: 今回スコープ外/低優先度
+- 537. Bread, raisin - 理由: 今回スコープ外/低優先度
+- 538. Bread, raisin, toasted - 理由: 今回スコープ外/低優先度
+- 581. Bread, whole wheat, with raisins - 理由: 今回スコープ外/低優先度
+- 582. Bread, whole wheat, with raisins, toasted - 理由: 今回スコープ外/低優先度
+- 599. Breakfast link, pattie, or slice, meatless - 理由: 今回スコープ外/低優先度
+- 610. Broccoli casserole with noodles - 理由: 今回スコープ外/低優先度
+- 611. Broccoli casserole with rice - 理由: 今回スコープ外/低優先度
+- 612. Broccoli raab, cooked - 理由: 今回スコープ外/低優先度
+- 613. Broccoli raab, raw - 理由: 今回スコープ外/低優先度
+- 684. Cabbage with ham hocks - 理由: 今回スコープ外/低優先度
+- 698. Cabbage, savoy, cooked - 理由: 今回スコープ外/低優先度
+- 706. Cake made with glutinous rice - 理由: 今回スコープ外/低優先度
+- 707. Cake made with glutinous rice and dried beans - 理由: 今回スコープ外/低優先度
+- 754. Candy, cotton - 理由: 今回スコープ外/低優先度
+- 755. Candy, fruit flavored pieces - 理由: 今回スコープ外/低優先度
+- 776. Caramel dip, regular - 理由: 今回スコープ外/低優先度
+- 823. Caviar - 理由: 今回スコープ外/低優先度
+- 859. Cereal, K's, flavored - 理由: 今回スコープ外/低優先度
+- 860. Cereal, K's, plain - 理由: 今回スコープ外/低優先度
+- 870. Cereal, cinnamon toast - 理由: 今回スコープ外/低優先度
+- 877. Cereal, crunch - 理由: 今回スコープ外/低優先度
+- 888. Cereal, other, chocolate - 理由: 今回スコープ外/低優先度
+- 889. Cereal, other, fruit flavored - 理由: 今回スコープ外/低優先度
+- 890. Cereal, other, honey - 理由: 今回スコープ外/低優先度
+- 891. Cereal, other, peanut butter - 理由: 今回スコープ外/低優先度
+- 901. Cereal, wheat flakes - 理由: 今回スコープ外/低優先度
+- 917. Cheese pastry puffs - 理由: 今回スコープ外/低優先度
+- 943. Cheese, Brick - 理由: 今回スコープ外/低優先度
+- 972. Cheese, Port du Salut - 理由: 今回スコープ外/低優先度
+
+## 学校給食/WIC専用（1個）
+- 909. Cheese as ingredient in sandwiches - 理由: 学校給食/WIC専用
+
+## 栄養調整の細分化（視覚判別困難）（3個）
+- 608. Broccoli and cauliflower, cooked, fat added - 理由: 栄養調整の細分化（視覚判別困難）
+- 609. Broccoli and cauliflower, cooked, no added fat - 理由: 栄養調整の細分化（視覚判別困難）
+- 775. Caramel dip, light - 理由: 栄養調整の細分化（視覚判別困難）
+
+## 稀少食材（地域限定）（1個）
+- 777. Caribou - 理由: 稀少食材（地域限定）
+

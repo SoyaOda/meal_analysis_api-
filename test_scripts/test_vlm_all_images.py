@@ -6,14 +6,19 @@ test_imagesディレクトリ内の全ての画像に対してVLM（Vision Langu
 結果をJSON形式で保存するテストスクリプト。
 
 Usage:
+    # 逐次処理（従来通り）
     PYTHONPATH=/Users/odasoya/meal_analysis_api_2 python test_scripts/test_vlm_all_images.py [--model MODEL_ID] [--images-dir IMAGES_DIR]
-    
+
+    # 並列処理（5画像ずつ並列処理、50画像なら最大5倍高速化）
+    PYTHONPATH=/Users/odasoya/meal_analysis_api_2 python test_scripts/test_vlm_all_images.py --parallel [--batch-size 5]
+
 Arguments:
     --model MODEL_ID  VLMモデルID (デフォルト: 設定ファイルから取得)
     --images-dir IMAGES_DIR  画像ファイルのディレクトリ (デフォルト: test_images)
+    --parallel  並列処理モードを有効化（デフォルト: 5画像ずつ並列処理）
+    --batch-size N  並列処理時のバッチサイズ（デフォルト: 5）
 """
 
-import os
 import sys
 import json
 import asyncio
@@ -107,7 +112,9 @@ async def process_single_image(
     prompt: str,
     pricing_data: Dict[str, Any],
     temperature: float = 0.0,
-    seed: int = 123456
+    seed: int = 123456,
+    max_tokens: int = 4096,
+    thinking_budget: Optional[int] = None
 ) -> dict:
     """
     単一の画像を処理し、VLMの結果を返す
@@ -118,6 +125,8 @@ async def process_single_image(
         prompt: VLMに送信するプロンプト
         temperature: AI推論のランダム性制御 (0.0-1.0)
         seed: 再現性のためのシード値
+        max_tokens: 最大出力トークン数
+        thinking_budget: Thinkingモデルの推論トークン数の上限（Noneで自動設定）
     
     Returns:
         dict: 処理結果（画像ファイル名、VLMレスポンス、エラー情報など）
@@ -150,7 +159,9 @@ async def process_single_image(
         
         print(f"画像サイズ: {len(image_bytes):,} bytes")
         print(f"MIMEタイプ: {mime_type}")
-        print(f"Temperature: {temperature}, Seed: {seed}")
+        print(f"Temperature: {temperature}, Seed: {seed}, Max tokens: {max_tokens}")
+        if thinking_budget is not None:
+            print(f"Thinking budget: {thinking_budget}")
         
         # VLMを呼び出し (usage情報も取得)
         print(f"\nVLM呼び出し中...")
@@ -158,9 +169,11 @@ async def process_single_image(
             image_bytes=image_bytes,
             image_mime_type=mime_type,
             prompt=prompt,
+            max_tokens=max_tokens,
             temperature=temperature,
             seed=seed,
-            return_usage=True
+            return_usage=True,
+            thinking_budget=thinking_budget
         )
 
         # JSONパース
@@ -189,13 +202,17 @@ async def process_single_image(
         if "dishes" in vlm_response:
             dishes_count = len(vlm_response["dishes"])
             print(f"検出された料理数: {dishes_count}")
+
+            # JSONの簡潔な表示（形式に依存しない汎用的な表示）
             for idx, dish in enumerate(vlm_response["dishes"], 1):
-                dish_name = dish.get("dish_name", "N/A")
-                confidence = dish.get("confidence", 0)
-                ingredients_count = len(dish.get("ingredients", []))
-                analysis_method = dish.get("analysis_method", "N/A")
-                print(f"  {idx}. {dish_name} (confidence: {confidence:.2f}, "
-                      f"ingredients: {ingredients_count}, method: {analysis_method})")
+                # 各dishを簡潔に表示（形式を問わない）
+                dish_str = json.dumps(dish, ensure_ascii=False)
+                # 長すぎる場合は省略
+                if len(dish_str) > 150:
+                    dish_preview = dish_str[:150] + "..."
+                else:
+                    dish_preview = dish_str
+                print(f"  {idx}. {dish_preview}")
         
     except Exception as e:
         result["error"] = str(e)
@@ -228,6 +245,57 @@ async def main():
         action="store_true",
         help="freeformプロンプト（食品リスト不要版）を使用する"
     )
+    parser.add_argument(
+        "--freeform-usda",
+        action="store_true",
+        help="freeform USDA形式プロンプト（main_food/extras構造）を使用する"
+    )
+    parser.add_argument(
+        "--mapping",
+        action="store_true",
+        help="mappingプロンプト（統合マッピング1,398個のdisplay_name使用）を使用する"
+    )
+    parser.add_argument(
+        "--mapping-version",
+        type=str,
+        default="v1",
+        choices=["v1", "v2", "v3"],
+        help="mappingプロンプトのバージョン (デフォルト: v1)"
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="処理する画像数の上限 (例: --limit 20 で最初の20枚のみ処理)"
+    )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=4096,
+        help="最大出力トークン数 (デフォルト: 4096, Thinkingモデルには8192推奨)"
+    )
+    parser.add_argument(
+        "--no-think",
+        action="store_true",
+        help="Thinkingモデルでthinkingを無効化（/no_thinkをプロンプトに追加）"
+    )
+    parser.add_argument(
+        "--thinking-budget",
+        type=int,
+        default=None,
+        help="Thinkingモデルの推論トークン数の上限 (Noneで自動設定: mapping=2048, freeform=1024)"
+    )
+    parser.add_argument(
+        "--parallel",
+        action="store_true",
+        help="並列処理モードを有効化（デフォルト: 5画像ずつ並列処理）"
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=5,
+        help="並列処理時のバッチサイズ (デフォルト: 5)"
+    )
     args = parser.parse_args()
     print(f"\n{'#'*80}")
     print(f"# VLM全画像テストスクリプト")
@@ -253,15 +321,27 @@ async def main():
         image_files.extend(test_images_dir.glob(f"*{ext}"))
         image_files.extend(test_images_dir.glob(f"*{ext.upper()}"))
     
-    # ファイル名でソート
-    image_files = sorted(set(image_files))
-    
+    # ファイル名でソート（数値順）
+    import re
+    def natural_sort_key(path):
+        """ファイル名の数値部分を考慮した自然順ソートキー"""
+        parts = re.split(r'(\d+)', path.stem)
+        return [int(part) if part.isdigit() else part.lower() for part in parts]
+
+    image_files = sorted(set(image_files), key=natural_sort_key)
+
     if not image_files:
         print(f"⚠️  警告: {test_images_dir} に画像ファイルが見つかりませんでした")
         print(f"サポートされている拡張子: {', '.join(SUPPORTED_IMAGE_EXTENSIONS)}")
         sys.exit(0)
-    
-    print(f"検出された画像ファイル: {len(image_files)}件")
+
+    # 画像数の制限を適用
+    total_images_found = len(image_files)
+    if args.limit and args.limit > 0:
+        image_files = image_files[:args.limit]
+        print(f"検出された画像ファイル: {total_images_found}件 (制限により{len(image_files)}件を処理)")
+    else:
+        print(f"検出された画像ファイル: {len(image_files)}件")
     for idx, img_file in enumerate(image_files, 1):
         print(f"  {idx}. {img_file.name}")
     
@@ -279,32 +359,89 @@ async def main():
     
     # プロンプトを生成
     print(f"\nプロンプトを生成中...")
-    
+
+    # モード排他チェック
+    mode_flags = [args.freeform, args.freeform_usda, args.mapping]
+    if sum(mode_flags) > 1:
+        print(f"❌ エラー: --freeform, --freeform-usda, --mappingは同時に指定できません")
+        sys.exit(1)
+
     if args.freeform:
         # Freeform版（食品リスト不要）
         print(f"モード: Freeform（食品リストなし）")
-        # generate_freeform_promptをインポート
-        from generate_freeform_prompt import generate_vlm_prompt as generate_freeform
-        prompt = generate_freeform()
+        # prompt_base/freeform_prompt.txtを読み込み
+        freeform_prompt_path = project_root / "test_scripts" / "prompt_base" / "freeform_prompt.txt"
+
+        if not freeform_prompt_path.exists():
+            print(f"❌ エラー: {freeform_prompt_path} が存在しません")
+            sys.exit(1)
+
+        with open(freeform_prompt_path, 'r', encoding='utf-8') as f:
+            prompt = f.read()
         prompt_type = "freeform"
+    elif args.freeform_usda:
+        # Freeform USDA形式版（main_food/extras構造）
+        print(f"モード: Freeform USDA形式（main_food/extras構造）")
+        # prompt_base/freeform_prompt_usda_format_ver.txtを読み込み
+        freeform_usda_prompt_path = project_root / "test_scripts" / "prompt_base" / "freeform_prompt_usda_format_ver.txt"
+
+        if not freeform_usda_prompt_path.exists():
+            print(f"❌ エラー: {freeform_usda_prompt_path} が存在しません")
+            sys.exit(1)
+
+        with open(freeform_usda_prompt_path, 'r', encoding='utf-8') as f:
+            prompt = f.read()
+        prompt_type = "freeform_usda"
+    elif args.mapping:
+        # Mapping版（統合マッピングのdisplay_name使用、Role別セクション分割）
+        print(f"モード: Mapping（統合マッピング1,398個のdisplay_name使用、Role別セクション分割）")
+        print(f"プロンプトバージョン: {args.mapping_version}")
+        # generate_mapping_promptをインポート
+        from generate_mapping_prompt import load_mapping_display_names_by_role, generate_food_list_by_role, generate_vlm_prompt as generate_mapping
+
+        try:
+            by_role = load_mapping_display_names_by_role()
+            total_items = sum(len(items) for items in by_role.values())
+            print(f"マッピングdisplay_name読み込み完了: {total_items}個")
+            print(f"  - IS_BASE: {len(by_role['is_base'])}個")
+            print(f"  - INGREDIENT_ONLY: {len(by_role['ingredient_only'])}個")
+            print(f"  - SAUCE_ONLY: {len(by_role['sauce_only'])}個")
+            print(f"  - EITHER: {len(by_role['either'])}個")
+
+            mapping_display_names = generate_food_list_by_role(by_role)
+            prompt = generate_mapping(mapping_display_names, prompt_version=args.mapping_version)
+            prompt_type = f"mapping_{args.mapping_version}"
+        except FileNotFoundError as e:
+            print(f"❌ エラー: {e}")
+            sys.exit(1)
     else:
         # Complete版（食品リスト必要）
         print(f"モード: Complete（食品リスト使用）")
         # food_names_list.txtを読み込み
         food_names_list_path = project_root / "test_scripts" / "food_names_list" / "food_names_list.txt"
-        
+
         if not food_names_list_path.exists():
             print(f"❌ エラー: {food_names_list_path} が存在しません")
             sys.exit(1)
-        
+
         with open(food_names_list_path, 'r', encoding='utf-8') as f:
             food_names_list = f.read()
-        
+
         print(f"食品名リスト読み込み完了: {len(food_names_list):,} 文字")
         prompt = generate_vlm_prompt(food_names_list)
         prompt_type = "complete"
-    
+
+    # --no-thinkフラグが指定されている場合、プロンプトの先頭に/no_thinkを追加
+    if args.no_think:
+        prompt = "/no_think\n\n" + prompt
+        print(f"⚠️  /no_think追加: Thinkingモードを無効化")
+
     print(f"プロンプト長: {len(prompt):,} 文字")
+    print(f"最大トークン数: {args.max_tokens}")
+    if args.thinking_budget is not None:
+        print(f"Thinking budget: {args.thinking_budget} (手動設定)")
+    else:
+        print(f"Thinking budget: 自動設定 (mapping=2048, freeform=1024)")
 
     # 料金情報を読み込み
     print(f"\n料金情報を読み込み中...")
@@ -315,24 +452,77 @@ async def main():
     total_cost = 0.0
     total_tokens = {"input": 0, "output": 0, "total": 0}
 
-    for idx, image_path in enumerate(image_files, 1):
-        print(f"\n進捗: {idx}/{len(image_files)}")
-        result = await process_single_image(
-            image_path=image_path,
-            deepinfra_service=deepinfra_service,
-            prompt=prompt,
-            pricing_data=pricing_data,
-            temperature=0.0,
-            seed=123456
-        )
-        results.append(result)
+    if args.parallel:
+        # 並列処理モード
+        print(f"\n🚀 並列処理モード: バッチサイズ={args.batch_size}")
+        print(f"{'='*80}")
 
-        # 料金とトークン数の集計
-        if result.get("cost"):
-            total_cost += result["cost"]["total_cost_usd"]
-            total_tokens["input"] += result["cost"]["input_tokens"]
-            total_tokens["output"] += result["cost"]["output_tokens"]
-            total_tokens["total"] += result["cost"]["total_tokens"]
+        # 画像をバッチに分割
+        batches = []
+        for i in range(0, len(image_files), args.batch_size):
+            batches.append(image_files[i:i + args.batch_size])
+
+        print(f"バッチ数: {len(batches)}")
+
+        # バッチごとに並列処理
+        for batch_idx, batch in enumerate(batches, 1):
+            print(f"\n{'='*80}")
+            print(f"📦 バッチ {batch_idx}/{len(batches)} ({len(batch)}画像)")
+            print(f"{'='*80}")
+
+            # バッチ内の画像を並列処理
+            batch_tasks = []
+            for image_path in batch:
+                task = process_single_image(
+                    image_path=image_path,
+                    deepinfra_service=deepinfra_service,
+                    prompt=prompt,
+                    pricing_data=pricing_data,
+                    temperature=0.0,
+                    seed=123456,
+                    max_tokens=args.max_tokens,
+                    thinking_budget=args.thinking_budget
+                )
+                batch_tasks.append(task)
+
+            # バッチ内のタスクを並列実行
+            batch_results = await asyncio.gather(*batch_tasks)
+
+            # 結果を元の順序で追加
+            results.extend(batch_results)
+
+            # 料金とトークン数の集計
+            for result in batch_results:
+                if result.get("cost"):
+                    total_cost += result["cost"]["total_cost_usd"]
+                    total_tokens["input"] += result["cost"]["input_tokens"]
+                    total_tokens["output"] += result["cost"]["output_tokens"]
+                    total_tokens["total"] += result["cost"]["total_tokens"]
+
+            print(f"\n✅ バッチ {batch_idx}/{len(batches)} 完了")
+    else:
+        # 逐次処理モード（従来通り）
+        print(f"\n⏳ 逐次処理モード")
+        for idx, image_path in enumerate(image_files, 1):
+            print(f"\n進捗: {idx}/{len(image_files)}")
+            result = await process_single_image(
+                image_path=image_path,
+                deepinfra_service=deepinfra_service,
+                prompt=prompt,
+                pricing_data=pricing_data,
+                temperature=0.0,
+                seed=123456,
+                max_tokens=args.max_tokens,
+                thinking_budget=args.thinking_budget
+            )
+            results.append(result)
+
+            # 料金とトークン数の集計
+            if result.get("cost"):
+                total_cost += result["cost"]["total_cost_usd"]
+                total_tokens["input"] += result["cost"]["input_tokens"]
+                total_tokens["output"] += result["cost"]["output_tokens"]
+                total_tokens["total"] += result["cost"]["total_tokens"]
     
     # 結果を保存
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

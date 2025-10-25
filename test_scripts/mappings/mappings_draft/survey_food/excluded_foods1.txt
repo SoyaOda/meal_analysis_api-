@@ -1,0 +1,103 @@
+# 除外食品リスト
+# 生成日: 2025-10-23
+# 総除外数: 87個
+# 元の食品リスト総数: 470個
+# マッピング生成数（all_usda_mappingsの重複なし合計）: 383個
+
+## 写真認識不可（透明/微量/脂など）（2個）
+- 28. Almond oil - 理由: 油種の判別が困難（ボトル外観や料理写真から特定不可）
+- 40. Animal fat or drippings - 理由: 料理写真に明確な形で写らない脂（脂種の特定不可）
+
+## 稀少食品（出現頻度が極めて低い）（6個）
+- 1. Abalone - 理由: 地域限定/稀少な食材・部位
+- 61. Armadillo - 理由: 地域限定/稀少な食材・部位
+- 249. Bear - 理由: 地域限定/稀少な食材・部位
+- 250. Beaver - 理由: 地域限定/稀少な食材・部位
+- 313. Beef, cow head - 理由: 地域限定/稀少な食材・部位
+- 464. Brains - 理由: 地域限定/稀少な食材・部位
+
+## Baby/学校給食/WIC専用（78個）
+- 89. Baby Toddler apples, Stage 1 - 理由: Baby/Toddler food
+- 90. Baby Toddler apples, Stage 2 - 理由: Baby/Toddler food
+- 91. Baby Toddler bananas, Stage 1 - 理由: Baby/Toddler food
+- 92. Baby Toddler bananas, Stage 2 - 理由: Baby/Toddler food
+- 93. Baby Toddler bar - 理由: Baby/Toddler food
+- 94. Baby Toddler beef - 理由: Baby/Toddler food
+- 95. Baby Toddler beets - 理由: Baby/Toddler food
+- 96. Baby Toddler biscuit - 理由: Baby/Toddler food
+- 97. Baby Toddler carrots, Stage 1 - 理由: Baby/Toddler food
+- 98. Baby Toddler carrots, Stage 2 - 理由: Baby/Toddler food
+- 99. Baby Toddler cereal, NFS - 理由: Baby/Toddler food
+- 100. Baby Toddler cereal, barley, dry - 理由: Baby/Toddler food
+- 101. Baby Toddler cereal, multigrain with fruit, dry - 理由: Baby/Toddler food
+- 102. Baby Toddler cereal, multigrain with fruit, ready-to-eat - 理由: Baby/Toddler food
+- 103. Baby Toddler cereal, multigrain, dry - 理由: Baby/Toddler food
+- 104. Baby Toddler cereal, multigrain, ready-to-eat - 理由: Baby/Toddler food
+- 105. Baby Toddler cereal, oatmeal with fruit, dry - 理由: Baby/Toddler food
+- 106. Baby Toddler cereal, oatmeal with fruit, ready-to-eat - 理由: Baby/Toddler food
+- 107. Baby Toddler cereal, oatmeal, dry - 理由: Baby/Toddler food
+- 108. Baby Toddler cereal, oatmeal, ready-to-eat - 理由: Baby/Toddler food
+- 109. Baby Toddler cereal, rice with fruit, dry - 理由: Baby/Toddler food
+- 110. Baby Toddler cereal, rice with fruit, ready-to-eat - 理由: Baby/Toddler food
+- 111. Baby Toddler cereal, rice, dry - 理由: Baby/Toddler food
+- 112. Baby Toddler cereal, rice, ready-to-eat - 理由: Baby/Toddler food
+- 113. Baby Toddler chicken - 理由: Baby/Toddler food
+- 114. Baby Toddler cookie - 理由: Baby/Toddler food
+- 115. Baby Toddler crackers - 理由: Baby/Toddler food
+- 116. Baby Toddler crunchies - 理由: Baby/Toddler food
+- 117. Baby Toddler food, NFS - 理由: Baby/Toddler food
+- 118. Baby Toddler fruit and meat - 理由: Baby/Toddler food
+- 119. Baby Toddler fruit and vegetables, Stage 2 - 理由: Baby/Toddler food
+- 120. Baby Toddler fruit and vegetables, Stage 3 - 理由: Baby/Toddler food
+- 121. Baby Toddler fruit and vegetables, with grain - 理由: Baby/Toddler food
+- 122. Baby Toddler fruit and vegetables, with yogurt - 理由: Baby/Toddler food
+- 123. Baby Toddler fruit, NFS - 理由: Baby/Toddler food
+- 124. Baby Toddler fruit, vegetables, and meat - 理由: Baby/Toddler food
+- 125. Baby Toddler fruit, with grain - 理由: Baby/Toddler food
+- 126. Baby Toddler fruit, with yogurt - 理由: Baby/Toddler food
+- 127. Baby Toddler green beans, Stage 1 - 理由: Baby/Toddler food
+- 128. Baby Toddler green beans, Stage 2 - 理由: Baby/Toddler food
+- 129. Baby Toddler ham - 理由: Baby/Toddler food
+- 130. Baby Toddler juice, NFS - 理由: Baby/Toddler food
+- 131. Baby Toddler juice, apple - 理由: Baby/Toddler food
+- 132. Baby Toddler juice, fruit and vegetable - 理由: Baby/Toddler food
+- 133. Baby Toddler juice, fruit and yogurt blend - 理由: Baby/Toddler food
+- 134. Baby Toddler juice, grape - 理由: Baby/Toddler food
+- 135. Baby Toddler juice, mixed fruit - 理由: Baby/Toddler food
+- 136. Baby Toddler juice, pear - 理由: Baby/Toddler food
+- 137. Baby Toddler mangoes - 理由: Baby/Toddler food
+- 138. Baby Toddler meat stick - 理由: Baby/Toddler food
+- 139. Baby Toddler meat, NFS - 理由: Baby/Toddler food
+- 140. Baby Toddler multiple fruit, Stage 2 - 理由: Baby/Toddler food
+- 141. Baby Toddler multiple fruit, Stage 3 - 理由: Baby/Toddler food
+- 142. Baby Toddler multiple vegetables, Stage 2 - 理由: Baby/Toddler food
+- 143. Baby Toddler multiple vegetables, Stage 3 - 理由: Baby/Toddler food
+- 144. Baby Toddler peaches, Stage 1 - 理由: Baby/Toddler food
+- 145. Baby Toddler peaches, Stage 2 - 理由: Baby/Toddler food
+- 146. Baby Toddler pears, Stage 1 - 理由: Baby/Toddler food
+- 147. Baby Toddler pears, Stage 2 - 理由: Baby/Toddler food
+- 148. Baby Toddler peas, Stage 1 - 理由: Baby/Toddler food
+- 149. Baby Toddler peas, Stage 2 - 理由: Baby/Toddler food
+- 150. Baby Toddler prunes - 理由: Baby/Toddler food
+- 151. Baby Toddler pudding - 理由: Baby/Toddler food
+- 152. Baby Toddler puffs, fruit - 理由: Baby/Toddler food
+- 153. Baby Toddler puffs, vegetable - 理由: Baby/Toddler food
+- 154. Baby Toddler snack, NFS - 理由: Baby/Toddler food
+- 155. Baby Toddler squash, Stage 1 - 理由: Baby/Toddler food
+- 156. Baby Toddler squash, Stage 2 - 理由: Baby/Toddler food
+- 157. Baby Toddler sweet potatoes, Stage 1 - 理由: Baby/Toddler food
+- 158. Baby Toddler sweet potatoes, Stage 2 - 理由: Baby/Toddler food
+- 159. Baby Toddler turkey - 理由: Baby/Toddler food
+- 160. Baby Toddler vegetable, NFS - 理由: Baby/Toddler food
+- 161. Baby Toddler vegetables and meat - 理由: Baby/Toddler food
+- 162. Baby Toddler vegetables, with grain - 理由: Baby/Toddler food
+- 163. Baby Toddler wheels - 理由: Baby/Toddler food
+- 164. Baby Toddler yogurt melts - 理由: Baby/Toddler food
+- 165. Baby Toddler yogurt, plain - 理由: Baby/Toddler food
+- 166. Baby Toddler yogurt, with fruit - 理由: Baby/Toddler food
+
+## その他（今回スコープ外・既存マッピングで実運用上カバー可能）（1個）
+- 323. Beef, neck bones - 理由: 視覚差が小さい/優先度低のため本マッピングでは非採用
+
+# 検証
+# 470 = 383 + 87

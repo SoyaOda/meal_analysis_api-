@@ -64,7 +64,8 @@ class DeepInfraService:
         max_tokens: int = 4096,
         temperature: float = 0.0,
         seed: int = 123456,
-        return_usage: bool = False
+        return_usage: bool = False,
+        thinking_budget: Optional[int] = None
     ) -> Any:
         """
         画像とプロンプトをDeep Infraに送信し、分析結果をJSONとして受け取る。
@@ -77,6 +78,8 @@ class DeepInfraService:
             temperature: 生成のランダム性を制御する値 (0に近いほど決定的)。
             seed: 再現性のためのシード値。
             return_usage: Trueの場合、(content, usage)のタプルを返す。
+            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、
+                           mappingタスクでは2048、それ以外では制限なし。
 
         Returns:
             return_usage=False: モデルからのJSONレスポンス文字列。
@@ -114,17 +117,78 @@ class DeepInfraService:
             }
         ]
 
+        # Thinkingモデル検出（モデル名に"Thinking"が含まれる場合）
+        is_thinking_model = "thinking" in self.model_id.lower()
+
+        if is_thinking_model:
+            logger.info(f"Detected Thinking model: {self.model_id}. Disabling response_format to allow thinking tags.")
+
+            # Thinkingモデルの推奨設定: temperature=0.6 (greedy decodingは性能低下を引き起こす)
+            if temperature == 0.0:
+                logger.warning(f"Thinking model with temperature=0.0 detected. Overriding to recommended value 0.6 to prevent performance degradation.")
+                temperature = 0.6
+
         try:
-            response = await self.client.chat.completions.create(
-                model=self.model_id,
-                messages=messages,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                seed=seed,
-                top_p=1.0,
-                # JSONモードを有効化し、構造化された出力を強制する
-                response_format={"type": "json_object"},
-            )
+            # API呼び出しパラメータを構築
+            api_params = {
+                "model": self.model_id,
+                "messages": messages,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "seed": seed,
+            }
+
+            # Thinkingモデルの場合、推奨パラメータを設定
+            if is_thinking_model:
+                api_params["top_p"] = 0.95
+                logger.info(f"Using recommended Thinking model parameters: temperature={temperature}, top_p=0.95, top_k=20")
+            else:
+                api_params["top_p"] = 1.0
+
+            # Thinkingモデルの場合、thinking_budgetを設定
+            if is_thinking_model:
+                # thinking_budgetが指定されていない場合、デフォルト値を設定
+                # プロンプト長から推論の複雑さを推測
+                if thinking_budget is None:
+                    prompt_length = len(prompt)
+                    # 長いプロンプト（mappingモード等）は複雑なので2048トークン
+                    # 短いプロンプト（freeformモード等）は1024トークン
+                    default_thinking_budget = 2048 if prompt_length > 20000 else 1024
+                    thinking_budget = default_thinking_budget
+                    logger.info(f"Setting default thinking_budget={thinking_budget} based on prompt length ({prompt_length} chars)")
+
+                # extra_bodyでthinking_budget、enable_thinking、top_kを渡す
+                api_params["extra_body"] = {
+                    "enable_thinking": True,
+                    "thinking_budget": thinking_budget,
+                    "top_k": 20
+                }
+                logger.info(f"Thinking model: thinking_budget={thinking_budget}, max_tokens={max_tokens}")
+                logger.info(f"API params extra_body: {api_params.get('extra_body')}")
+            else:
+                # Thinkingモデルでない場合のみJSON強制モードを有効化
+                api_params["response_format"] = {"type": "json_object"}
+            
+            response = await self.client.chat.completions.create(**api_params)
+
+            # レスポンスの詳細をログ出力
+            logger.info(f"API Response received. Choices count: {len(response.choices) if response.choices else 0}")
+            if response.choices and len(response.choices) > 0:
+                logger.info(f"First choice finish_reason: {response.choices[0].finish_reason}")
+
+                # Thinkingモデルの場合、reasoning_contentをチェック
+                if is_thinking_model:
+                    reasoning_content = getattr(response.choices[0].message, 'reasoning_content', None)
+                    if reasoning_content:
+                        logger.info(f"Reasoning content length: {len(reasoning_content)}")
+
+                content = response.choices[0].message.content
+                logger.info(f"Content length: {len(content) if content else 0}")
+
+                if response.choices[0].finish_reason == 'length':
+                    logger.warning(f"⚠️ Response was cut off due to max_tokens limit. Consider increasing max_tokens.")
+                    if is_thinking_model and not content:
+                        raise ValueError(f"Thinkingモデルが推論に全トークンを使い果たしました。max_tokensを増やしてください。現在: {max_tokens}")
 
             if not response.choices or not response.choices[0].message.content:
                 logger.error("API response is empty or invalid.")
@@ -144,12 +208,76 @@ class DeepInfraService:
 
             logger.info(f"Successfully received JSON response from API. Usage: {usage_dict}")
 
-            # JSONの妥当性を検証
+            # Thinkingモデルの場合、<think>...</think>ブロックを除去
+            if is_thinking_model:
+                import re
+                # <think>タグとその中身を削除
+                cleaned_content = re.sub(r'<think>.*?</think>', '', raw_json_content, flags=re.DOTALL)
+                cleaned_content = cleaned_content.strip()
+                
+                # タグ削除後の内容をログ出力
+                logger.info(f"Removed <think> tags from Thinking model output. Original length: {len(raw_json_content)}, Cleaned length: {len(cleaned_content)}")
+                
+                raw_json_content = cleaned_content
+
+            # JSONの妥当性を検証（JSONクリーニング処理を追加）
             try:
-                json.loads(raw_json_content)
+                # まず元のJSONをパース試行
+                parsed_json = json.loads(raw_json_content)
             except json.JSONDecodeError as e:
-                logger.error(f"Invalid JSON received from API: {e}")
-                raise ValueError(f"APIから無効なJSONが返されました: {e}")
+                logger.warning(f"Initial JSON parsing failed: {e}")
+                
+                # エラー箇所の周辺を表示
+                error_pos = e.pos if hasattr(e, 'pos') else 0
+                context_start = max(0, error_pos - 100)
+                context_end = min(len(raw_json_content), error_pos + 100)
+                logger.warning(f"Error context: ...{raw_json_content[context_start:context_end]}...")
+                
+                # JSONクリーニング処理
+                cleaned_content = raw_json_content
+                
+                # 1. Markdown コードブロックの除去
+                if cleaned_content.startswith("```json"):
+                    cleaned_content = cleaned_content[7:]
+                if cleaned_content.startswith("```"):
+                    cleaned_content = cleaned_content[3:]
+                if cleaned_content.endswith("```"):
+                    cleaned_content = cleaned_content[:-3]
+                cleaned_content = cleaned_content.strip()
+                
+                # 2. trailing commaの除去（JSON仕様違反）
+                import re
+                # オブジェクトや配列の末尾のカンマを削除
+                cleaned_content = re.sub(r',(\s*[}\]])', r'\1', cleaned_content)
+                
+                # 3. 再パース試行
+                try:
+                    parsed_json = json.loads(cleaned_content)
+                    raw_json_content = cleaned_content  # クリーニング成功
+                    logger.info("JSON cleaning successful")
+                except json.JSONDecodeError as e2:
+                    # さらに詳細なエラー情報を出力
+                    logger.error(f"JSON cleaning failed after all attempts: {e2}")
+                    logger.error(f"Error line: {e2.lineno if hasattr(e2, 'lineno') else 'unknown'}")
+                    logger.error(f"Error column: {e2.colno if hasattr(e2, 'colno') else 'unknown'}")
+                    
+                    # エラー行の内容を表示
+                    lines = cleaned_content.split('\n')
+                    if hasattr(e2, 'lineno') and e2.lineno <= len(lines):
+                        error_line_idx = e2.lineno - 1
+                        logger.error(f"Error line content: {lines[error_line_idx]}")
+                        if error_line_idx > 0:
+                            logger.error(f"Previous line: {lines[error_line_idx - 1]}")
+                        if error_line_idx < len(lines) - 1:
+                            logger.error(f"Next line: {lines[error_line_idx + 1]}")
+                    
+                    # 完全なJSONをファイルに保存（デバッグ用）
+                    debug_file = f"/tmp/debug_json_error_{image_hash[:8]}.txt"
+                    with open(debug_file, 'w', encoding='utf-8') as f:
+                        f.write(cleaned_content)
+                    logger.error(f"Full JSON content saved to: {debug_file}")
+                    
+                    raise ValueError(f"APIから無効なJSONが返されました: {e2}")
 
             # return_usageがTrueの場合はusage情報も返す
             if return_usage:

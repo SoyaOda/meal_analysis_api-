@@ -1,0 +1,136 @@
+# 除外食品リスト
+# 生成日: 2025-10-23
+# 総除外数: 123個
+# 元の食品リスト総数: 495個
+# マッピング生成数(重複なしIDカバレッジ): 372個
+
+## 1. 写真認識不可（1個）
+- 3608. Peanut oil - 理由: 透明/液状で単独視認が困難
+
+## 2. 稀少食品（4個）
+- 3661. Peruvian beans, from dried - 理由: 稀少食品
+- 3663. Pheasant, cooked - 理由: 稀少食品
+- 3664. Pickled sausage - 理由: 稀少食品
+- 3810. Poke greens, cooked - 理由: 稀少食品
+
+## 3. Baby/学校給食/WIC専用（11個）
+- 3481. Pasta with sauce and meat, from school lunch - 理由: 学校給食専用
+- 3483. Pasta with sauce, meatless, school lunch - 理由: 学校給食専用
+- 3759. Pizza with pepperoni, from school lunch, thick crust - 理由: 学校給食専用
+- 3760. Pizza with pepperoni, from school lunch, thin crust - 理由: 学校給食専用
+- 3773. Pizza, cheese, from school lunch, medium crust - 理由: 学校給食専用
+- 3774. Pizza, cheese, from school lunch, thick crust - 理由: 学校給食専用
+- 3775. Pizza, cheese, from school lunch, thin crust - 理由: 学校給食専用
+- 3792. Pizza, with meat other than pepperoni, from school lunch, medium crust - 理由: 学校給食専用
+- 3793. Pizza, with meat other than pepperoni, from school lunch, thick crust - 理由: 学校給食専用
+- 3794. Pizza, with meat other than pepperoni, from school lunch, thin crust - 理由: 学校給食専用
+- 3800. Pizza, with pepperoni, from school lunch, medium crust - 理由: 学校給食専用
+
+## 4. その他（107個）
+- 3482. Pasta with sauce, NFS - 理由: 本バッチでは未カバー
+- 3627. Peas and carrots, canned, cooked, fat added - 理由: 本バッチでは未カバー
+- 3628. Peas and carrots, canned, cooked, no added fat - 理由: 本バッチでは未カバー
+- 3629. Peas and carrots, cooked, NS as to form - 理由: 本バッチでは未カバー
+- 3630. Peas and carrots, fresh, cooked, fat added - 理由: 本バッチでは未カバー
+- 3631. Peas and carrots, fresh, cooked, no added fat - 理由: 本バッチでは未カバー
+- 3632. Peas and carrots, frozen, cooked, fat added - 理由: 本バッチでは未カバー
+- 3633. Peas and carrots, frozen, cooked, no added fat - 理由: 本バッチでは未カバー
+- 3634. Peas and corn, cooked, fat added - 理由: 本バッチでは未カバー
+- 3635. Peas and corn, cooked, no added fat - 理由: 本バッチでは未カバー
+- 3642. Pepper, for use on a sandwich - 理由: 本バッチでは未カバー
+- 3646. Peppers and onions, cooked, fat added - 理由: 本バッチでは未カバー
+- 3647. Peppers and onions, cooked, no added fat - 理由: 本バッチでは未カバー
+- 3648. Peppers, banana, raw - 理由: 本バッチでは未カバー
+- 3649. Peppers, green, cooked - 理由: 本バッチでは未カバー
+- 3650. Peppers, hot, cooked - 理由: 本バッチでは未カバー
+- 3651. Peppers, hot, pickled - 理由: 本バッチでは未カバー
+- 3652. Peppers, hot, raw - 理由: 本バッチでは未カバー
+- 3653. Peppers, jalapenos - 理由: 本バッチでは未カバー
+- 3654. Peppers, raw, NFS - 理由: 本バッチでは未カバー
+- 3655. Peppers, red, cooked - 理由: 本バッチでは未カバー
+- 3656. Peppers, sweet, green, raw - 理由: 本バッチでは未カバー
+- 3657. Peppers, sweet, pickled - 理由: 本バッチでは未カバー
+- 3658. Peppers, sweet, red, raw - 理由: 本バッチでは未カバー
+- 3659. Persimmon, dried - 理由: 本バッチでは未カバー
+- 3660. Persimmon, raw - 理由: 本バッチでは未カバー
+- 3696. Pina Colada - 理由: 本バッチでは未カバー
+- 3697. Pina Colada, nonalcoholic - 理由: 本バッチでは未カバー
+- 3733. Pizza with extra meat, medium crust - 理由: 本バッチでは未カバー
+- 3734. Pizza with extra meat, thick crust - 理由: 本バッチでは未カバー
+- 3735. Pizza with extra meat, thin crust - 理由: 本バッチでは未カバー
+- 3807. Plum, canned - 理由: 本バッチでは未カバー
+- 3808. Plum, raw - 理由: 本バッチでは未カバー
+- 3811. Polish sausage - 理由: 本バッチでは未カバー
+- 3850. Porcupine balls with mushroom sauce - 理由: 本バッチでは未カバー
+- 3851. Porcupine balls with tomato-based sauce - 理由: 本バッチでは未カバー
+- 3852. Pork and beans - 理由: 本バッチでは未カバー
+- 3853. Pork and beef sausage - 理由: 本バッチでは未カバー
+- 3854. Pork and onions with soy-based sauce - 理由: 本バッチでは未カバー
+- 3855. Pork and rice with tomato-based sauce - 理由: 本バッチでは未カバー
+- 3856. Pork and vegetables excluding  carrots, broccoli, and dark-green leafy; no potatoes, tomato-based sauce - 理由: 本バッチでは未カバー
+- 3857. Pork and vegetables excluding carrots, broccoli, and dark- green leafy; no potatoes, soy-based sauce - 理由: 本バッチでは未カバー
+- 3858. Pork and vegetables excluding carrots, broccoli, and dark-green leafy; no potatoes, no sauce - 理由: 本バッチでは未カバー
+- 3859. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, no sauce - 理由: 本バッチでは未カバー
+- 3860. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-based sauce - 理由: 本バッチでは未カバー
+- 3861. Pork and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, tomato-based sauce - 理由: 本バッチでは未カバー
+- 3862. Pork and vegetables, Hawaiian style - 理由: 本バッチでは未カバー
+- 3863. Pork and watercress with soy-based sauce - 理由: 本バッチでは未カバー
+- 3864. Pork bacon, NS as to fresh, smoked or cured, cooked - 理由: 本バッチでは未カバー
+- 3865. Pork bacon, NS as to fresh, smoked or cured, reduced sodium, cooked - 理由: 本バッチでは未カバー
+- 3866. Pork bacon, smoked or cured, cooked - 理由: 本バッチでは未カバー
+- 3867. Pork bacon, smoked or cured, reduced sodium, cooked - 理由: 本バッチでは未カバー
+- 3868. Pork chow mein or chop suey with noodles - 理由: 本バッチでは未カバー
+- 3869. Pork chow mein or chop suey, no noodles - 理由: 本バッチでは未カバー
+- 3870. Pork egg foo yung - 理由: 本バッチでは未カバー
+- 3871. Pork hash - 理由: 本バッチでは未カバー
+- 3872. Pork jerky - 理由: 本バッチでは未カバー
+- 3873. Pork or ham with soy-based sauce - 理由: 本バッチでは未カバー
+- 3874. Pork sandwich - 理由: 本バッチでは未カバー
+- 3875. Pork sandwich, with cheese - 理由: 本バッチでは未カバー
+- 3876. Pork sausage - 理由: 本バッチでは未カバー
+- 3877. Pork sausage, reduced fat - 理由: 本バッチでは未カバー
+- 3878. Pork sausage, reduced sodium - 理由: 本バッチでは未カバー
+- 3879. Pork shish kabob with vegetables, excluding potatoes - 理由: 本バッチでは未カバー
+- 3880. Pork skin rinds - 理由: 本バッチでは未カバー
+- 3881. Pork with chili and tomatoes - 理由: 本バッチでは未カバー
+- 3882. Pork, NFS - 理由: 本バッチでは未カバー
+- 3883. Pork, belly - 理由: 本バッチでは未カバー
+- 3884. Pork, bones - 理由: 本バッチでは未カバー
+- 3885. Pork, carnitas - 理由: 本バッチでは未カバー
+- 3886. Pork, chop, NS as to fat eaten - 理由: 本バッチでは未カバー
+- 3887. Pork, chop, coated, NS as to fat eaten - 理由: 本バッチでは未カバー
+- 3888. Pork, chop, coated, lean and fat eaten - 理由: 本バッチでは未カバー
+- 3889. Pork, chop, coated, lean only eaten - 理由: 本バッチでは未カバー
+- 3890. Pork, chop, lean and fat eaten - 理由: 本バッチでは未カバー
+- 3891. Pork, chop, lean only eaten - 理由: 本バッチでは未カバー
+- 3892. Pork, chop, stuffed - 理由: 本バッチでは未カバー
+- 3893. Pork, cracklings - 理由: 本バッチでは未カバー
+- 3894. Pork, ears - 理由: 本バッチでは未カバー
+- 3895. Pork, ground - 理由: 本バッチでは未カバー
+- 3896. Pork, ham hocks - 理由: 本バッチでは未カバー
+- 3897. Pork, pig's feet - 理由: 本バッチでは未カバー
+- 3898. Pork, pig's feet, pickled - 理由: 本バッチでは未カバー
+- 3899. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; gravy - 理由: 本バッチでは未カバー
+- 3900. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; no sauce - 理由: 本バッチでは未カバー
+- 3901. Pork, potatoes, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce - 理由: 本バッチでは未カバー
+- 3902. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; gravy - 理由: 本バッチでは未カバー
+- 3903. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; no sauce - 理由: 本バッチでは未カバー
+- 3904. Pork, potatoes, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce - 理由: 本バッチでは未カバー
+- 3905. Pork, ribs - 理由: 本バッチでは未カバー
+- 3906. Pork, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; soy-based sauce - 理由: 本バッチでは未カバー
+- 3907. Pork, rice, and vegetables excluding carrots, broccoli, and dark-green leafy; tomato-based sauce - 理由: 本バッチでは未カバー
+- 3908. Pork, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; soy-based sauce - 理由: 本バッチでは未カバー
+- 3909. Pork, rice, and vegetables including carrots, broccoli, and/or dark-green leafy; tomato-based sauce - 理由: 本バッチでは未カバー
+- 3910. Pork, roast - 理由: 本バッチでは未カバー
+- 3911. Pork, roll - 理由: 本バッチでは未カバー
+- 3912. Pork, steak, NS as to fat eaten - 理由: 本バッチでは未カバー
+- 3913. Pork, steak, coated - 理由: 本バッチでは未カバー
+- 3914. Pork, steak, lean and fat eaten - 理由: 本バッチでは未カバー
+- 3915. Pork, steak, lean only eaten - 理由: 本バッチでは未カバー
+- 3916. Pork, tenderloin - 理由: 本バッチでは未カバー
+- 3917. Pork, tofu, and vegetables including carrots, broccoli, and/or dark-green leafy; no potatoes, soy-base sauce - 理由: 本バッチでは未カバー
+- 3918. Pork, tofu, and vegetables, excluding carrots, broccoli, and dark-green leafy; no potatoes, soy-based sauce - 理由: 本バッチでは未カバー
+- 3946. Potato from Puerto Rican beef stew, with gravy - 理由: 本バッチでは未カバー
+- 3947. Potato from Puerto Rican chicken fricassee, with sauce - 理由: 本バッチでは未カバー
+- 3948. Potato from Puerto Rican style stuffed pot roast, with gravy - 理由: 本バッチでは未カバー
+- 3949. Potato only from Puerto Rican mixed dishes, gravy and other components reported separately - 理由: 本バッチでは未カバー
