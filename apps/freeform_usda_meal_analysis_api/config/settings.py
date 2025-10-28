@@ -59,24 +59,27 @@ class Settings:
             raise ValueError("DEEPINFRA_API_KEY environment variable is required")
 
         # ========== USDA検索設定 ==========
+        # データディレクトリ（自己完結型）
+        self.DATA_DIR = Path(__file__).parent.parent / "data"
+
         # FAISSインデックスディレクトリ（Fullインデックスのみ）
         self.USDA_INDEX_DIR = os.getenv(
             "USDA_INDEX_DIR",
-            str(self.PROJECT_ROOT / "test_scripts" / "query_system" / "data")
+            str(self.DATA_DIR / "faiss")
         )
 
         # USDAデータファイル
         self.USDA_SURVEY_FILE = os.getenv(
             "USDA_SURVEY_FILE",
-            str(self.PROJECT_ROOT / "MyNetDiary_json_builder" / "output" / "usda_survey_foods.json")
+            str(self.DATA_DIR / "usda_json" / "usda_prepared_ingredients_preprocessed.json")
         )
         self.USDA_FOUNDATION_FILE = os.getenv(
             "USDA_FOUNDATION_FILE",
-            str(self.PROJECT_ROOT / "MyNetDiary_json_builder" / "output" / "usda_foundation_foods.json")
+            str(self.DATA_DIR / "usda_json" / "usda_raw_ingredients_preprocessed.json")
         )
         self.USDA_SR_LEGACY_FILE = os.getenv(
             "USDA_SR_LEGACY_FILE",
-            str(self.PROJECT_ROOT / "MyNetDiary_json_builder" / "output" / "usda_sr_legacy_foods.json")
+            str(self.DATA_DIR / "usda_json" / "usda_raw_ingredients_preprocessed.json")
         )
 
         # 検索設定デフォルト値（Fullインデックスのみ）

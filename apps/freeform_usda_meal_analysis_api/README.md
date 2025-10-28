@@ -94,10 +94,13 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 ## ローカル起動
 
 ```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 \
+# アプリケーションディレクトリに移動
+cd apps/freeform_usda_meal_analysis_api
+
+# APIを起動（環境変数設定）
 GOOGLE_CLOUD_PROJECT=new-snap-calorie \
 PORT=8006 \
-python -m apps.freeform_usda_meal_analysis_api.main
+python -m main
 ```
 
 起動後、以下のURLでアクセス可能:

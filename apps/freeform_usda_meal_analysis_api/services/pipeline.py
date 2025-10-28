@@ -255,7 +255,7 @@ class MealAnalysisPipeline:
             original_model_id = self.vlm_service.model_id
             self.vlm_service.model_id = model_config_override.model_id
             # DeepInfraサービスも更新
-            from shared.services.deepinfra_service import DeepInfraService
+            from .deepinfra_service import DeepInfraService
             self.vlm_service.deepinfra_service = DeepInfraService(
                 model_id=model_config_override.model_id
             )
@@ -382,7 +382,7 @@ class MealAnalysisPipeline:
             # モデルIDを元に戻す
             if original_model_id is not None:
                 self.vlm_service.model_id = original_model_id
-                from shared.services.deepinfra_service import DeepInfraService
+                from .deepinfra_service import DeepInfraService
                 self.vlm_service.deepinfra_service = DeepInfraService(
                     model_id=original_model_id
                 )

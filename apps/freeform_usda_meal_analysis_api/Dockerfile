@@ -1,4 +1,6 @@
-# Freeform USDA Meal Analysis API - Dockerfile (Full Index Only)
+# Freeform USDA Meal Analysis API - Self-Contained Dockerfile
+# 完全自己完結型：shared/への依存なし、データも全て内包
+
 FROM python:3.10-slim
 
 WORKDIR /app
@@ -9,28 +11,18 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Pythonパッケージのインストール
-COPY apps/freeform_usda_meal_analysis_api/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# アプリケーションコードをコピー
-COPY apps/freeform_usda_meal_analysis_api /app/apps/freeform_usda_meal_analysis_api
-COPY shared /app/shared
-COPY MyNetDiary_json_builder/output /app/MyNetDiary_json_builder/output
-
-# FAISSインデックスとメタデータをコピー（Fullインデックスのみ）
-COPY test_scripts/query_system/data/usda_index_full.faiss /app/test_scripts/query_system/data/usda_index_full.faiss
-COPY test_scripts/query_system/data/usda_metadata.json /app/test_scripts/query_system/data/usda_metadata.json
-
-# query_systemソースコード（embedding, rerankerモデル用）
-COPY test_scripts/query_system/src /app/test_scripts/query_system/src
+# アプリケーション全体をコピー（自己完結型）
+COPY . .
 
 # ポート8006を公開
 EXPOSE 8006
 
 # 環境変数のデフォルト設定
 ENV PORT=8006
-ENV PYTHONPATH=/app
 ENV LOG_LEVEL=INFO
 
-# アプリケーション起動
-CMD ["python", "-m", "apps.freeform_usda_meal_analysis_api.main"]
+# アプリケーション起動（PYTHONPATHは不要）
+CMD ["python", "-m", "main"]

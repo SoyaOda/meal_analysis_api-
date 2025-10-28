@@ -30,8 +30,8 @@ fi
 echo "✅ DEEPINFRA_API_KEY is set"
 echo ""
 
-# プロジェクトルートに移動
-cd "$(dirname "$0")/../.."
+# アプリケーションディレクトリに移動（自己完結型）
+cd "$(dirname "$0")"
 
 # 1. Docker イメージのビルドとプッシュ
 echo "📦 Building and pushing Docker image..."
@@ -39,7 +39,6 @@ gcloud builds submit \
   --tag "${IMAGE_TAG}" \
   --timeout=900 \
   --project="${PROJECT_ID}" \
-  -f apps/freeform_usda_meal_analysis_api/Dockerfile \
   .
 
 echo "✅ Docker image built and pushed"

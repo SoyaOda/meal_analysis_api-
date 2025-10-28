@@ -80,13 +80,13 @@ class SimplifiedUSDASearcher:
 
     def _load_embedding_model(self):
         """埋め込みモデルをロード（DeepInfra API使用）"""
-        from shared.services.deepinfra_service import DeepInfraService
+        from .deepinfra_service import DeepInfraService
         self.embedding_service = DeepInfraService(model_id="Qwen/Qwen3-Embedding-8B")
         logger.info(f"✅ Embedding model initialized (DeepInfra API)")
 
     def _load_reranker(self):
         """リランカーをロード（DeepInfra API使用）"""
-        from shared.services.deepinfra_service import DeepInfraService
+        from .deepinfra_service import DeepInfraService
         self.reranker_service = DeepInfraService(model_id="Qwen/Qwen3-Reranker-8B")
         logger.info(f"✅ Reranker model initialized (DeepInfra API)")
 

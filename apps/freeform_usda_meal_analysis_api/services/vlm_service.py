@@ -12,8 +12,8 @@ from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 import mimetypes
 
-from shared.services.deepinfra_service import DeepInfraService
-from shared.config import get_settings
+from .deepinfra_service import DeepInfraService
+from ..config import get_settings
 
 logger = logging.getLogger(__name__)
 
