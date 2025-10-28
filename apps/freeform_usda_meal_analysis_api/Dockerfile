@@ -25,6 +25,7 @@ ENV PORT=8006
 ENV LOG_LEVEL=INFO
 ENV USDA_INDEX_DIR=/app/data/faiss
 ENV USDA_METADATA_FILE=/app/data/faiss/usda_metadata.json
+ENV PYTHONPATH=/app
 
-# アプリケーション起動: uvicornで直接起動
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8006"]
+# アプリケーション起動: python -m でモジュールとして実行
+CMD ["python", "-m", "main"]
