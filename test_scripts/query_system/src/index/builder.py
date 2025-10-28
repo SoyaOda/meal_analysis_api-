@@ -50,14 +50,18 @@ class IndexBuilder:
     def load_usda_data(
         self,
         survey_path: str,
-        foundation_path: str
+        foundation_path: str,
+        sr_legacy_path: Optional[str] = None,
+        max_items: Optional[int] = None
     ) -> List[Dict]:
         """
-        Load USDA data from Survey and Foundation JSON files
+        Load USDA data from Survey, Foundation, and optionally SR Legacy JSON files
 
         Args:
             survey_path: Path to surveyDownload.json (FNDDS)
             foundation_path: Path to Foundation Foods JSON
+            sr_legacy_path: Path to SR Legacy Foods JSON (optional)
+            max_items: Maximum number of items to load (for testing, default: None = all)
 
         Returns:
             List of parsed food items
@@ -71,6 +75,9 @@ class IndexBuilder:
             survey_foods = survey_data.get('SurveyFoods', [])
 
             for item in survey_foods:
+                if max_items and len(items) >= max_items:
+                    break
+
                 description = item.get('description', '')
                 if not description:
                     continue
@@ -90,32 +97,68 @@ class IndexBuilder:
 
         print(f"✅ Loaded {len(items)} Survey Foods")
 
-        # Load Foundation Foods
-        print(f"Loading Foundation Foods from {foundation_path}...")
-        foundation_start = len(items)
-        with open(foundation_path, 'r', encoding='utf-8') as f:
-            foundation_data = json.load(f)
-            foundation_foods = foundation_data.get('FoundationFoods', [])
+        # Load Foundation Foods (only if not yet reached max_items)
+        if not max_items or len(items) < max_items:
+            print(f"Loading Foundation Foods from {foundation_path}...")
+            foundation_start = len(items)
+            with open(foundation_path, 'r', encoding='utf-8') as f:
+                foundation_data = json.load(f)
+                foundation_foods = foundation_data.get('FoundationFoods', [])
 
-            for item in foundation_foods:
-                description = item.get('description', '')
-                if not description:
-                    continue
+                for item in foundation_foods:
+                    if max_items and len(items) >= max_items:
+                        break
 
-                # Parse main_name and descriptors
-                main_name, descriptors = parse_usda_name(description)
+                    description = item.get('description', '')
+                    if not description:
+                        continue
 
-                items.append({
-                    'id': f"foundation_{item.get('fdcId', 'unknown')}",
-                    'source': 'foundation',
-                    'fdc_id': item.get('fdcId'),
-                    'ndb_number': item.get('ndbNumber'),
-                    'description': description,
-                    'main_name': main_name,
-                    'descriptors': descriptors
-                })
+                    # Parse main_name and descriptors
+                    main_name, descriptors = parse_usda_name(description)
 
-        print(f"✅ Loaded {len(items) - foundation_start} Foundation Foods")
+                    items.append({
+                        'id': f"foundation_{item.get('fdcId', 'unknown')}",
+                        'source': 'foundation',
+                        'fdc_id': item.get('fdcId'),
+                        'ndb_number': item.get('ndbNumber'),
+                        'description': description,
+                        'main_name': main_name,
+                        'descriptors': descriptors
+                    })
+
+            print(f"✅ Loaded {len(items) - foundation_start} Foundation Foods")
+
+        # Load SR Legacy Foods (only if provided and not yet reached max_items)
+        if sr_legacy_path and (not max_items or len(items) < max_items):
+            print(f"Loading SR Legacy Foods from {sr_legacy_path}...")
+            sr_legacy_start = len(items)
+            with open(sr_legacy_path, 'r', encoding='utf-8') as f:
+                sr_legacy_data = json.load(f)
+                sr_legacy_foods = sr_legacy_data.get('SRLegacyFoods', [])
+
+                for item in sr_legacy_foods:
+                    if max_items and len(items) >= max_items:
+                        break
+
+                    description = item.get('description', '')
+                    if not description:
+                        continue
+
+                    # Parse main_name and descriptors
+                    main_name, descriptors = parse_usda_name(description)
+
+                    items.append({
+                        'id': f"sr_legacy_{item.get('fdcId', 'unknown')}",
+                        'source': 'sr_legacy',
+                        'fdc_id': item.get('fdcId'),
+                        'ndb_number': item.get('ndbNumber'),
+                        'description': description,
+                        'main_name': main_name,
+                        'descriptors': descriptors
+                    })
+
+            print(f"✅ Loaded {len(items) - sr_legacy_start} SR Legacy Foods")
+
         print(f"📊 Total: {len(items)} food items")
 
         self.items = items
@@ -266,6 +309,7 @@ class IndexBuilder:
         survey_path: str,
         foundation_path: str,
         output_dir: str,
+        sr_legacy_path: Optional[str] = None,
         batch_size: int = 32,
         show_progress: bool = True
     ):
@@ -276,6 +320,7 @@ class IndexBuilder:
             survey_path: Path to surveyDownload.json
             foundation_path: Path to Foundation Foods JSON
             output_dir: Output directory
+            sr_legacy_path: Path to SR Legacy Foods JSON (optional)
             batch_size: Batch size for encoding
             show_progress: Show progress bar
         """
@@ -284,7 +329,7 @@ class IndexBuilder:
         print("=" * 60)
 
         # Step 1: Load data
-        self.load_usda_data(survey_path, foundation_path)
+        self.load_usda_data(survey_path, foundation_path, sr_legacy_path)
 
         # Step 2: Build embeddings
         embeddings_main, embeddings_full = self.build_embeddings(
@@ -320,6 +365,7 @@ def main():
 
     survey_json = usda_db_path / "surveyDownload.json"
     foundation_json = usda_db_path / "FoodData_Central_foundation_food_json_2025-04-24 2.json"
+    sr_legacy_json = usda_db_path / "FoodData_Central_sr_legacy_food_json_2018-04 2.json"
 
     # Check files exist
     if not survey_json.exists():
@@ -328,12 +374,16 @@ def main():
     if not foundation_json.exists():
         print(f"❌ Foundation file not found: {foundation_json}")
         sys.exit(1)
+    if not sr_legacy_json.exists():
+        print(f"⚠️  SR Legacy file not found: {sr_legacy_json} (skipping)")
+        sr_legacy_json = None
 
     # Build index
     builder = IndexBuilder(device="cpu")
     builder.build_all(
         survey_path=str(survey_json),
         foundation_path=str(foundation_json),
+        sr_legacy_path=str(sr_legacy_json) if sr_legacy_json else None,
         output_dir=str(output_path),
         batch_size=32,
         show_progress=True

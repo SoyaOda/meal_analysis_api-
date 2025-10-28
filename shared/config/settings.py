@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
@@ -10,8 +10,15 @@ class Settings(BaseSettings):
     """
     # Deep Infra設定
     DEEPINFRA_API_KEY: Optional[str] = None  # Deep Infra APIキー
-    DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子（デフォルト）
+    DEEPINFRA_MODEL_ID: str = "google/gemma-3-27b-it"  # Deep Infraモデル識別子（デフォルト、レガシー）
     DEEPINFRA_BASE_URL: str = "https://api.deepinfra.com/v1/openai"  # OpenAI互換エンドポイント
+
+    # VLM（Vision Language Model）設定
+    VLM_MODEL_ID: str = "Qwen/Qwen3-VL-235B-A22B-Thinking"  # VLMモデルID
+    VLM_MAX_TOKENS: int = 12000  # VLM最大出力トークン数（v6プロンプト用に増加）
+    VLM_THINKING_BUDGET: int = 2048  # Thinkingモデルの推論トークン数上限
+    VLM_TEMPERATURE: float = 0.0  # VLM temperature（Thinkingモデルは自動で0.6に調整）
+    VLM_SEED: int = 123456  # VLM再現性のためのシード値
 
     # Google Cloud設定（音声認識用）
     GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None  # Google Cloud認証情報ファイルパス

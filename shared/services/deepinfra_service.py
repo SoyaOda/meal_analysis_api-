@@ -61,9 +61,9 @@ class DeepInfraService:
         image_bytes: bytes,
         image_mime_type: str,
         prompt: str,
-        max_tokens: int = 4096,
-        temperature: float = 0.0,
-        seed: int = 123456,
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None,
         return_usage: bool = False,
         thinking_budget: Optional[int] = None
     ) -> Any:
@@ -74,12 +74,11 @@ class DeepInfraService:
             image_bytes: 分析対象の画像のバイトデータ。
             image_mime_type: 画像のMIMEタイプ (例: 'image/jpeg')。
             prompt: モデルに与える指示プロンプト。
-            max_tokens: 生成される最大トークン数。
-            temperature: 生成のランダム性を制御する値 (0に近いほど決定的)。
-            seed: 再現性のためのシード値。
+            max_tokens: 生成される最大トークン数。Noneの場合、config設定値を使用。
+            temperature: 生成のランダム性を制御する値。Noneの場合、config設定値を使用。
+            seed: 再現性のためのシード値。Noneの場合、config設定値を使用。
             return_usage: Trueの場合、(content, usage)のタプルを返す。
-            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、
-                           mappingタスクでは2048、それ以外では制限なし。
+            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、config設定値を使用。
 
         Returns:
             return_usage=False: モデルからのJSONレスポンス文字列。
@@ -89,6 +88,17 @@ class DeepInfraService:
             ValueError: レスポンスが不正な場合に発生。
             Exception: Deep Infra APIとの通信でエラーが発生した場合に発生。
         """
+        # config からデフォルト値を取得
+        settings = get_settings()
+        if max_tokens is None:
+            max_tokens = settings.VLM_MAX_TOKENS
+        if temperature is None:
+            temperature = settings.VLM_TEMPERATURE
+        if seed is None:
+            seed = settings.VLM_SEED
+        if thinking_budget is None:
+            thinking_budget = settings.VLM_THINKING_BUDGET
+
         logger.info(f"Starting image analysis with model {self.model_id}.")
 
         # 入力完全一致の検証ハッシュをログ出力
@@ -147,16 +157,6 @@ class DeepInfraService:
 
             # Thinkingモデルの場合、thinking_budgetを設定
             if is_thinking_model:
-                # thinking_budgetが指定されていない場合、デフォルト値を設定
-                # プロンプト長から推論の複雑さを推測
-                if thinking_budget is None:
-                    prompt_length = len(prompt)
-                    # 長いプロンプト（mappingモード等）は複雑なので2048トークン
-                    # 短いプロンプト（freeformモード等）は1024トークン
-                    default_thinking_budget = 2048 if prompt_length > 20000 else 1024
-                    thinking_budget = default_thinking_budget
-                    logger.info(f"Setting default thinking_budget={thinking_budget} based on prompt length ({prompt_length} chars)")
-
                 # extra_bodyでthinking_budget、enable_thinking、top_kを渡す
                 api_params["extra_body"] = {
                     "enable_thinking": True,

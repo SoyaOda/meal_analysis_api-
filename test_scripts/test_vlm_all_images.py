@@ -113,7 +113,7 @@ async def process_single_image(
     pricing_data: Dict[str, Any],
     temperature: float = 0.0,
     seed: int = 123456,
-    max_tokens: int = 4096,
+    max_tokens: int = 8192,
     thinking_budget: Optional[int] = None
 ) -> dict:
     """
@@ -271,8 +271,8 @@ async def main():
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=4096,
-        help="最大出力トークン数 (デフォルト: 4096, Thinkingモデルには8192推奨)"
+        default=8192,
+        help="最大出力トークン数 (デフォルト: 8192, Thinkingモデル推奨値)"
     )
     parser.add_argument(
         "--no-think",

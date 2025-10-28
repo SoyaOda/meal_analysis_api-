@@ -29,7 +29,7 @@ class FoodSearchPipeline:
         weight_main: float = 0.6,
         weight_full: float = 0.4,
         stage1_top_k: int = 40,
-        reranker_model: str = "BAAI/bge-reranker-v2.5-gemma2-lightweight"
+        reranker_model: str = "Qwen/Qwen3-Reranker-8B"
     ):
         """
         Args:
@@ -38,7 +38,7 @@ class FoodSearchPipeline:
             weight_main: Weight for main_only score in Stage 1 (default: 0.6, Phase 1 improved)
             weight_full: Weight for full score in Stage 1 (default: 0.4, Phase 1 improved)
             stage1_top_k: Number of candidates to retrieve in Stage 1 (default: 40, Phase 1 improved)
-            reranker_model: Reranker model name (default: BAAI/bge-reranker-v2.5-gemma2-lightweight, Phase 2)
+            reranker_model: DeepInfra reranker model name (default: Qwen/Qwen3-Reranker-8B, Phase 2)
         """
         self.index_dir = Path(index_dir)
         self.device = device
@@ -53,8 +53,8 @@ class FoodSearchPipeline:
             weight_full=weight_full
         )
 
-        # Initialize Stage 2: Reranker (Phase 2: LLM-based with custom prompts)
-        print("\nInitializing Stage 2: BGE LLM-reranker...")
+        # Initialize Stage 2: DeepInfra API Reranker (Phase 2: No local model download)
+        print("\nInitializing Stage 2: DeepInfra API reranker...")
         self.reranker = RerankerModel(model_name=reranker_model, device=device)
 
         print("\nPipeline initialized successfully!")
@@ -178,6 +178,67 @@ class FoodSearchPipeline:
             )
             results.append(result)
         return results
+
+    def get_usage_stats(self) -> dict:
+        """
+        API使用統計を取得
+
+        Returns:
+            使用統計辞書 {
+                "embedding": {...},
+                "reranker": {...},
+                "total_cost_usd": float
+            }
+        """
+        embedding_stats = self.searcher.embedding_model.get_usage_stats()
+        reranker_stats = self.reranker.get_usage_stats()
+
+        total_cost = embedding_stats['cost_usd'] + reranker_stats['cost_usd']
+
+        return {
+            "embedding": embedding_stats,
+            "reranker": reranker_stats,
+            "total_cost_usd": total_cost
+        }
+
+    def print_usage_stats(self):
+        """API使用統計を表示"""
+        stats = self.get_usage_stats()
+
+        print("\n" + "="*80)
+        print("API USAGE STATISTICS")
+        print("="*80)
+
+        print("\n📊 Embedding API (Qwen3-Embedding-8B)")
+        print(f"   Tokens: {stats['embedding']['total_tokens']:,}")
+        print(f"   API Calls: {stats['embedding']['api_calls']}")
+        print(f"   Cost: ${stats['embedding']['cost_usd']:.6f}")
+
+        print("\n📊 Reranker API (Qwen3-Reranker-8B)")
+        print(f"   Tokens: {stats['reranker']['total_tokens']:,}")
+        print(f"   API Calls: {stats['reranker']['api_calls']}")
+        print(f"   Cost: ${stats['reranker']['cost_usd']:.6f}")
+
+        # Retry information
+        if stats['reranker'].get('total_retries', 0) > 0 or stats['reranker'].get('failed_requests', 0) > 0:
+            print(f"\n🔄 Retry Information:")
+            print(f"   Total Retries: {stats['reranker'].get('total_retries', 0)}")
+            print(f"   Failed Requests: {stats['reranker'].get('failed_requests', 0)}")
+
+            retry_history = stats['reranker'].get('retry_history', [])
+            if retry_history:
+                successful_retries = [h for h in retry_history if h['success']]
+                failed_retries = [h for h in retry_history if not h['success']]
+                print(f"   Successful after retry: {len(successful_retries)}")
+                print(f"   Failed after all retries: {len(failed_retries)}")
+
+        print("\n💰 Total Cost: ${:.6f}".format(stats['total_cost_usd']))
+        print("="*80)
+
+    def reset_usage_stats(self):
+        """API使用統計をリセット"""
+        self.searcher.embedding_model.reset_usage_stats()
+        self.reranker.reset_usage_stats()
 
     def __repr__(self) -> str:
         return (

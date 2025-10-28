@@ -4,139 +4,2874 @@
     "description": "raw",
     "weight_g": 45,
     "confidence": 0.85,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
   },
   {
     "search_name": "cherry tomatoes",
     "description": "raw",
     "weight_g": 35,
     "confidence": 0.85,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
   },
   {
     "search_name": "carrots",
     "description": "raw, sliced",
     "weight_g": 25,
     "confidence": 0.85,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
   },
   {
     "search_name": "cucumber",
     "description": "raw, sliced",
     "weight_g": 25,
     "confidence": 0.85,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
   },
   {
     "search_name": "beef steak",
     "description": "grilled, sliced",
     "weight_g": 190,
     "confidence": 0.95,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
   },
   {
     "search_name": "yellow squash",
     "description": "cooked, sliced",
     "weight_g": 90,
     "confidence": 0.9,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food1.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
   },
   {
     "search_name": "macaroni and cheese",
     "description": "cooked",
     "weight_g": 130,
     "confidence": 0.9,
-    "image_file": "test_food1.jpg"
+    "image_file": "test_food1.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food2.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
   },
   {
     "search_name": "broccoli",
     "description": "cooked",
     "weight_g": 100,
     "confidence": 0.95,
-    "image_file": "test_food2.jpg"
+    "image_file": "test_food2.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "yellow squash",
+    "description": "cooked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food2.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
   },
   {
     "search_name": "chicken breast",
     "description": "cooked, boneless, skinless",
     "weight_g": 150,
     "confidence": 0.95,
-    "image_file": "test_food2.jpg"
+    "image_file": "test_food2.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
   },
   {
     "search_name": "red wine",
     "description": "ready-to-serve",
     "weight_g": 150,
     "confidence": 0.95,
-    "image_file": "test_food2.jpg"
+    "image_file": "test_food2.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
   },
   {
     "search_name": "beef sirloin",
     "description": "cooked, roasted",
     "weight_g": 180,
     "confidence": 0.9,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
   },
   {
     "search_name": "caramelized onion relish",
     "description": "cooked",
     "weight_g": 40,
     "confidence": 0.8,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
   },
   {
     "search_name": "green onion",
     "description": "raw",
     "weight_g": 10,
     "confidence": 0.9,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
   },
   {
     "search_name": "potatoes",
     "description": "roasted",
     "weight_g": 150,
     "confidence": 0.95,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
   },
   {
     "search_name": "asparagus",
     "description": "roasted",
     "weight_g": 100,
     "confidence": 0.95,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
   },
   {
     "search_name": "creamer",
     "description": "with herbs",
     "weight_g": 30,
     "confidence": 0.8,
-    "image_file": "test_food3.jpg"
+    "image_file": "test_food3.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
   },
   {
     "search_name": "lettuce",
     "description": "fresh",
     "weight_g": 50,
     "confidence": 0.85,
-    "image_file": "test_food4.jpg"
+    "image_file": "test_food4.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
   },
   {
     "search_name": "tomato",
     "description": "fresh",
     "weight_g": 45,
     "confidence": 0.85,
-    "image_file": "test_food4.jpg"
+    "image_file": "test_food4.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "fresh",
+    "weight_g": 35,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
   },
   {
     "search_name": "onion",
     "description": "fresh",
     "weight_g": 25,
     "confidence": 0.85,
-    "image_file": "test_food4.jpg"
+    "image_file": "test_food4.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
   },
   {
     "search_name": "carrot",
     "description": "shredded, fresh",
     "weight_g": 20,
     "confidence": 0.85,
-    "image_file": "test_food4.jpg"
+    "image_file": "test_food4.jpg",
+    "dish_index": 0,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 190,
+    "confidence": 0.95,
+    "image_file": "test_food4.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "pork loin",
+    "description": "cooked, grilled, boneless",
+    "weight_g": 160,
+    "confidence": 0.85,
+    "image_file": "test_food4.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, grilled",
+    "weight_g": 170,
+    "confidence": 0.95,
+    "image_file": "test_food5.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "garlic bread",
+    "description": "cooked, toasted, with herbs",
+    "weight_g": 70,
+    "confidence": 0.95,
+    "image_file": "test_food5.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "asparagus",
+    "description": "cooked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food5.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken stew",
+    "description": "cooked, with vegetables",
+    "weight_g": 380,
+    "confidence": 0.9,
+    "image_file": "test_food6.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "dinner roll",
+    "description": "baked",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food6.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef sirloin",
+    "description": "cooked, grilled, boneless",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food7.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked, steamed",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food7.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mashed potatoes",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food7.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "fish fillet",
+    "description": "baked",
+    "weight_g": 160,
+    "confidence": 0.85,
+    "image_file": "test_food8.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "lemon",
+    "description": "wedge, fresh",
+    "weight_g": 25,
+    "confidence": 0.95,
+    "image_file": "test_food8.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food8.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "carrots",
+    "description": "roasted",
+    "weight_g": 90,
+    "confidence": 0.95,
+    "image_file": "test_food8.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "couscous",
+    "description": "cooked",
+    "weight_g": 170,
+    "confidence": 0.95,
+    "image_file": "test_food8.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "corn on the cob",
+    "description": "cooked",
+    "weight_g": 160,
+    "confidence": 0.95,
+    "image_file": "test_food9.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "pork ribs",
+    "description": "cooked, barbecued",
+    "weight_g": 260,
+    "confidence": 0.9,
+    "image_file": "test_food9.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "salad greens",
+    "description": "fresh",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food9.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "figs",
+    "description": "sliced, fresh",
+    "weight_g": 45,
+    "confidence": 0.9,
+    "image_file": "test_food9.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "prosciutto",
+    "description": "sliced",
+    "weight_g": 35,
+    "confidence": 0.85,
+    "image_file": "test_food9.jpg",
+    "dish_index": 2,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food10.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food10.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef sirloin",
+    "description": "grilled, cooked",
+    "weight_g": 225,
+    "confidence": 0.95,
+    "image_file": "test_food10.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "lettuce salad mix",
+    "description": "raw, with vegetables",
+    "weight_g": 60,
+    "confidence": 0.85,
+    "image_file": "test_food10.jpg",
+    "dish_index": 3,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 40,
+    "confidence": 0.9,
+    "image_file": "test_food10.jpg",
+    "dish_index": 3,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "raw, sliced",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food10.jpg",
+    "dish_index": 3,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "raw, sliced",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food10.jpg",
+    "dish_index": 3,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lasagna",
+    "description": "baked",
+    "weight_g": 275,
+    "confidence": 0.95,
+    "image_file": "test_food11.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "raw",
+    "weight_g": 85,
+    "confidence": 0.95,
+    "image_file": "test_food11.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 55,
+    "confidence": 0.95,
+    "image_file": "test_food11.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "avocado",
+    "description": "raw, cubed",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food11.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "fig",
+    "description": "raw, sliced",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food11.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "omelet",
+    "description": "cooked",
+    "weight_g": 175,
+    "confidence": 0.95,
+    "image_file": "test_food12.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "salsa",
+    "description": "cooked",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food12.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "raw, fresh",
+    "weight_g": 65,
+    "confidence": 0.9,
+    "image_file": "test_food12.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cherry tomatoes",
+    "description": "raw, fresh",
+    "weight_g": 25,
+    "confidence": 0.95,
+    "image_file": "test_food12.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 75,
+    "confidence": 0.9,
+    "image_file": "test_food12.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "corn",
+    "description": "cooked",
+    "weight_g": 35,
+    "confidence": 0.9,
+    "image_file": "test_food12.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": "plain",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food12.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "taco",
+    "description": "cooked",
+    "weight_g": 275,
+    "confidence": 0.9,
+    "image_file": "test_food13.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "corn on the cob",
+    "description": "cooked",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food13.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "red grapes",
+    "description": "fresh",
+    "weight_g": 125,
+    "confidence": 0.95,
+    "image_file": "test_food13.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food14.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 50,
+    "confidence": 0.95,
+    "image_file": "test_food14.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sweet potatoes, mashed",
+    "description": "cooked",
+    "weight_g": 175,
+    "confidence": 0.85,
+    "image_file": "test_food14.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "white rice",
+    "description": "cooked",
+    "weight_g": 175,
+    "confidence": 0.95,
+    "image_file": "test_food14.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, skinless",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food14.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "frittata",
+    "description": "baked",
+    "weight_g": 300,
+    "confidence": 0.9,
+    "image_file": "test_food15.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food15.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "meat sauce",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.85,
+    "image_file": "test_food15.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 190,
+    "confidence": 0.95,
+    "image_file": "test_food16.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "fresh, sliced",
+    "weight_g": 60,
+    "confidence": 0.9,
+    "image_file": "test_food16.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cabbage",
+    "description": "shredded, fresh",
+    "weight_g": 40,
+    "confidence": 0.9,
+    "image_file": "test_food16.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 70,
+    "confidence": 0.95,
+    "image_file": "test_food16.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "carrots",
+    "description": "cooked, sliced",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food16.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "pork cutlet",
+    "description": "breaded, pan-fried",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food16.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "vegetable fried rice",
+    "description": "cooked",
+    "weight_g": 260,
+    "confidence": 0.85,
+    "image_file": "test_food17.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "fried egg",
+    "description": "cooked",
+    "weight_g": 65,
+    "confidence": 0.95,
+    "image_file": "test_food17.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 110,
+    "confidence": 0.9,
+    "image_file": "test_food17.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "tomato",
+    "description": "fresh, sliced",
+    "weight_g": 75,
+    "confidence": 0.95,
+    "image_file": "test_food17.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "potato",
+    "description": "cooked",
+    "weight_g": 85,
+    "confidence": 0.85,
+    "image_file": "test_food17.jpg",
+    "dish_index": 4,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "cooked",
+    "weight_g": 65,
+    "confidence": 0.85,
+    "image_file": "test_food17.jpg",
+    "dish_index": 4,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mushroom",
+    "description": "cooked",
+    "weight_g": 45,
+    "confidence": 0.8,
+    "image_file": "test_food17.jpg",
+    "dish_index": 4,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": "plain",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food17.jpg",
+    "dish_index": 5,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "baked, breaded",
+    "weight_g": 140,
+    "confidence": 0.85,
+    "image_file": "test_food18.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "carrots",
+    "description": "cooked",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food18.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 105,
+    "confidence": 0.95,
+    "image_file": "test_food18.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "couscous",
+    "description": "cooked",
+    "weight_g": 155,
+    "confidence": 0.9,
+    "image_file": "test_food18.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "pork tenderloin",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.85,
+    "image_file": "test_food19.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "creamy sauce",
+    "description": null,
+    "weight_g": 50,
+    "confidence": 0.8,
+    "image_file": "test_food19.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "couscous",
+    "description": "cooked",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food19.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "green beans",
+    "description": "cooked, with butter",
+    "weight_g": 100,
+    "confidence": 0.9,
+    "image_file": "test_food19.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "raspberries",
+    "description": "fresh",
+    "weight_g": 80,
+    "confidence": 0.95,
+    "image_file": "test_food19.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "milk",
+    "description": "ready-to-serve",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food19.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef stew",
+    "description": "cooked",
+    "weight_g": 400,
+    "confidence": 0.9,
+    "image_file": "test_food20.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "sour cream",
+    "description": "plain",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food20.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "dried herbs",
+    "description": "ns as to cooking",
+    "weight_g": 5,
+    "confidence": 0.8,
+    "image_file": "test_food20.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food20.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "sliced, fresh",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food20.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "figs",
+    "description": "sliced, fresh",
+    "weight_g": 50,
+    "confidence": 0.95,
+    "image_file": "test_food20.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "prosciutto",
+    "description": "sliced",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food20.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "flour tortilla",
+    "description": "cooked",
+    "weight_g": 90,
+    "confidence": 0.95,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "ground beef",
+    "description": "cooked, lean 85%",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cheese",
+    "description": "shredded",
+    "weight_g": 60,
+    "confidence": 0.85,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "shredded, fresh",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomatoes",
+    "description": "diced, fresh",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sour cream",
+    "description": "plain",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 5,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cilantro",
+    "description": "fresh",
+    "weight_g": 10,
+    "confidence": 0.8,
+    "image_file": "test_food21.jpg",
+    "dish_index": 0,
+    "extra_index": 6,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "spaghetti",
+    "description": "cooked",
+    "weight_g": 250,
+    "confidence": 0.95,
+    "image_file": "test_food22.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "shrimp",
+    "description": "cooked",
+    "weight_g": 90,
+    "confidence": 0.9,
+    "image_file": "test_food22.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food22.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "raw",
+    "weight_g": 120,
+    "confidence": 0.9,
+    "image_file": "test_food22.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrots",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food22.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red bell peppers",
+    "description": "raw",
+    "weight_g": 40,
+    "confidence": 0.85,
+    "image_file": "test_food22.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cabbage",
+    "description": "raw",
+    "weight_g": 40,
+    "confidence": 0.8,
+    "image_file": "test_food22.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": "plain",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food22.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "rice, fried, with beef",
+    "description": "cooked",
+    "weight_g": 275,
+    "confidence": 0.95,
+    "image_file": "test_food23.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "fried egg",
+    "description": null,
+    "weight_g": 55,
+    "confidence": 0.95,
+    "image_file": "test_food23.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food23.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "raw",
+    "weight_g": 100,
+    "confidence": 0.85,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 40,
+    "confidence": 0.85,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "raw",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "onion",
+    "description": "raw, red",
+    "weight_g": 15,
+    "confidence": 0.85,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "raw, sliced",
+    "weight_g": 10,
+    "confidence": 0.85,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mushroom",
+    "description": "cooked",
+    "weight_g": 5,
+    "confidence": 0.75,
+    "image_file": "test_food23.jpg",
+    "dish_index": 3,
+    "extra_index": 5,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "salad dressing",
+    "description": "creamy",
+    "weight_g": 15,
+    "confidence": 0.9,
+    "image_file": "test_food23.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "raw, sliced",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red onion",
+    "description": "raw, sliced",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 40,
+    "confidence": 0.9,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, shredded",
+    "weight_g": 100,
+    "confidence": 0.85,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "egg",
+    "description": "soft-boiled",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 5,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sesame seeds",
+    "description": "raw",
+    "weight_g": 5,
+    "confidence": 0.9,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 6,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cranberries",
+    "description": "dried",
+    "weight_g": 15,
+    "confidence": 0.7,
+    "image_file": "test_food24.jpg",
+    "dish_index": 0,
+    "extra_index": 7,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "chili dog",
+    "description": null,
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food25.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "cheese",
+    "description": null,
+    "weight_g": 20,
+    "confidence": 0.9,
+    "image_file": "test_food25.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "potato chips",
+    "description": "deep-fried",
+    "weight_g": 40,
+    "confidence": 0.95,
+    "image_file": "test_food25.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "spaghetti with tomato sauce",
+    "description": "cooked, with vegetables",
+    "weight_g": 340,
+    "confidence": 0.95,
+    "image_file": "test_food26.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "sausage slices",
+    "description": "cooked",
+    "weight_g": 60,
+    "confidence": 0.85,
+    "image_file": "test_food26.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "shredded cheese",
+    "description": null,
+    "weight_g": 25,
+    "confidence": 0.95,
+    "image_file": "test_food26.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cherry tomatoes",
+    "description": "cooked",
+    "weight_g": 45,
+    "confidence": 0.95,
+    "image_file": "test_food26.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "bell peppers",
+    "description": "cooked",
+    "weight_g": 55,
+    "confidence": 0.9,
+    "image_file": "test_food26.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "onions",
+    "description": "cooked",
+    "weight_g": 35,
+    "confidence": 0.9,
+    "image_file": "test_food26.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrots",
+    "description": "cooked",
+    "weight_g": 20,
+    "confidence": 0.85,
+    "image_file": "test_food26.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sparkling water",
+    "description": "canned",
+    "weight_g": 355,
+    "confidence": 0.95,
+    "image_file": "test_food26.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "water",
+    "description": "plain",
+    "weight_g": 240,
+    "confidence": 0.95,
+    "image_file": "test_food26.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "shredded chicken",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.85,
+    "image_file": "test_food27.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "salad dressing",
+    "description": "with dressing",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food27.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "beef",
+    "description": "cooked, stir-fried",
+    "weight_g": 70,
+    "confidence": 0.9,
+    "image_file": "test_food27.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "green bell peppers",
+    "description": "cooked, stir-fried",
+    "weight_g": 60,
+    "confidence": 0.9,
+    "image_file": "test_food27.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "bamboo shoots",
+    "description": "cooked",
+    "weight_g": 70,
+    "confidence": 0.9,
+    "image_file": "test_food27.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "white rice",
+    "description": "cooked",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food27.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef",
+    "description": "cooked, stir-fried",
+    "weight_g": 40,
+    "confidence": 0.85,
+    "image_file": "test_food27.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cabbage",
+    "description": "cooked, stir-fried",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food27.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red bell peppers",
+    "description": "cooked, stir-fried",
+    "weight_g": 10,
+    "confidence": 0.85,
+    "image_file": "test_food27.jpg",
+    "dish_index": 2,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "wonton",
+    "description": "cooked",
+    "weight_g": 20,
+    "confidence": 0.75,
+    "image_file": "test_food27.jpg",
+    "dish_index": 2,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 100,
+    "confidence": 0.9,
+    "image_file": "test_food28.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "sliced, fresh",
+    "weight_g": 35,
+    "confidence": 0.9,
+    "image_file": "test_food28.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "wedges, fresh",
+    "weight_g": 45,
+    "confidence": 0.9,
+    "image_file": "test_food28.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "slice of pizza",
+    "description": "baked, with vegetables, with meat",
+    "weight_g": 360,
+    "confidence": 0.95,
+    "image_file": "test_food28.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "spaghetti",
+    "description": "cooked",
+    "weight_g": 175,
+    "confidence": 0.9,
+    "image_file": "test_food29.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "grilled, boneless, skinless",
+    "weight_g": 105,
+    "confidence": 0.9,
+    "image_file": "test_food29.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "zucchini",
+    "description": "cooked",
+    "weight_g": 55,
+    "confidence": 0.85,
+    "image_file": "test_food29.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cheese",
+    "description": "shredded",
+    "weight_g": 15,
+    "confidence": 0.8,
+    "image_file": "test_food29.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "raw, mixed greens",
+    "weight_g": 55,
+    "confidence": 0.9,
+    "image_file": "test_food29.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "raw, sliced",
+    "weight_g": 65,
+    "confidence": 0.9,
+    "image_file": "test_food29.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw, sliced",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food29.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": null,
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food29.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 80,
+    "confidence": 0.95,
+    "image_file": "test_food30.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cherry tomatoes",
+    "description": "sliced, fresh",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food30.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "sliced, fresh",
+    "weight_g": 40,
+    "confidence": 0.95,
+    "image_file": "test_food30.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "orecchiette pasta",
+    "description": "cooked, with pesto",
+    "weight_g": 120,
+    "confidence": 0.9,
+    "image_file": "test_food30.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.85,
+    "image_file": "test_food30.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "dijon cream sauce",
+    "description": "prepared",
+    "weight_g": 50,
+    "confidence": 0.8,
+    "image_file": "test_food30.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 70,
+    "confidence": 0.9,
+    "image_file": "test_food31.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "strawberries",
+    "description": "fresh",
+    "weight_g": 50,
+    "confidence": 0.95,
+    "image_file": "test_food31.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "fresh",
+    "weight_g": 30,
+    "confidence": 0.95,
+    "image_file": "test_food31.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "pecans",
+    "description": "raw",
+    "weight_g": 15,
+    "confidence": 0.85,
+    "image_file": "test_food31.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "salad dressing",
+    "description": null,
+    "weight_g": 10,
+    "confidence": 0.8,
+    "image_file": "test_food31.jpg",
+    "dish_index": 0,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sweet potato",
+    "description": "roasted",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food31.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "fish fillet",
+    "description": "cooked, pan-fried",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food31.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "lemon",
+    "description": "wedge, fresh",
+    "weight_g": 15,
+    "confidence": 0.95,
+    "image_file": "test_food31.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "beef stroganoff",
+    "description": "cooked",
+    "weight_g": 250,
+    "confidence": 0.85,
+    "image_file": "test_food32.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "white rice",
+    "description": "cooked",
+    "weight_g": 160,
+    "confidence": 0.95,
+    "image_file": "test_food32.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.95,
+    "image_file": "test_food32.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 30,
+    "confidence": 0.95,
+    "image_file": "test_food32.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red bell pepper",
+    "description": "raw",
+    "weight_g": 20,
+    "confidence": 0.95,
+    "image_file": "test_food32.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "chicken thigh",
+    "description": "cooked, with skin, bone-in, roasted",
+    "weight_g": 175,
+    "confidence": 0.92,
+    "image_file": "test_food33.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "almond",
+    "description": "sliced, roasted",
+    "weight_g": 15,
+    "confidence": 0.85,
+    "image_file": "test_food33.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "cooked, roasted",
+    "weight_g": 55,
+    "confidence": 0.9,
+    "image_file": "test_food33.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "bell pepper",
+    "description": "cooked, roasted",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food33.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "zucchini",
+    "description": "cooked, roasted",
+    "weight_g": 35,
+    "confidence": 0.85,
+    "image_file": "test_food33.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "onion",
+    "description": "cooked, roasted",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food33.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "couscous",
+    "description": "cooked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food33.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "roasted potatoes",
+    "description": "roasted",
+    "weight_g": 160,
+    "confidence": 0.95,
+    "image_file": "test_food34.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken thigh",
+    "description": "cooked, with skin",
+    "weight_g": 190,
+    "confidence": 0.95,
+    "image_file": "test_food34.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "fresh",
+    "weight_g": 90,
+    "confidence": 0.9,
+    "image_file": "test_food34.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomatoes",
+    "description": "fresh",
+    "weight_g": 60,
+    "confidence": 0.9,
+    "image_file": "test_food34.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrots",
+    "description": "shredded, fresh",
+    "weight_g": 35,
+    "confidence": 0.9,
+    "image_file": "test_food34.jpg",
+    "dish_index": 2,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "fresh",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food35.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomatoes",
+    "description": "fresh",
+    "weight_g": 40,
+    "confidence": 0.9,
+    "image_file": "test_food35.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "fresh",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food35.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cheese",
+    "description": "grilled",
+    "weight_g": 30,
+    "confidence": 0.75,
+    "image_file": "test_food35.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "rice, Mexican",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food35.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 80,
+    "confidence": 0.95,
+    "image_file": "test_food35.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "potato wedges",
+    "description": "baked",
+    "weight_g": 120,
+    "confidence": 0.9,
+    "image_file": "test_food35.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef steak",
+    "description": "grilled",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food35.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "raw",
+    "weight_g": 80,
+    "confidence": 0.85,
+    "image_file": "test_food36.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red bell pepper",
+    "description": "raw",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food36.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 25,
+    "confidence": 0.85,
+    "image_file": "test_food36.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "salad dressing",
+    "description": "with oil",
+    "weight_g": 15,
+    "confidence": 0.8,
+    "image_file": "test_food36.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "steamed",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food36.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken",
+    "description": "cooked, boneless, skinless",
+    "weight_g": 150,
+    "confidence": 0.9,
+    "image_file": "test_food36.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "couscous",
+    "description": "cooked",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food36.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "tomato",
+    "description": "fresh, sliced",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food37.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, boneless, with garlic",
+    "weight_g": 155,
+    "confidence": 0.9,
+    "image_file": "test_food37.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "shredded cheese",
+    "description": "fresh",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food37.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "nuts",
+    "description": "chopped",
+    "weight_g": 20,
+    "confidence": 0.85,
+    "image_file": "test_food37.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "penne pasta",
+    "description": "cooked, with pesto",
+    "weight_g": 140,
+    "confidence": 0.9,
+    "image_file": "test_food37.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "water",
+    "description": "plain",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food38.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef",
+    "description": "cooked, boneless",
+    "weight_g": 100,
+    "confidence": 0.9,
+    "image_file": "test_food38.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "potatoes",
+    "description": "cooked",
+    "weight_g": 80,
+    "confidence": 0.85,
+    "image_file": "test_food38.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "beef broth",
+    "description": "ready-to-serve",
+    "weight_g": 180,
+    "confidence": 0.85,
+    "image_file": "test_food38.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sour cream",
+    "description": "plain",
+    "weight_g": 40,
+    "confidence": 0.8,
+    "image_file": "test_food38.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "spinach",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food38.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 70,
+    "confidence": 0.9,
+    "image_file": "test_food38.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "raw",
+    "weight_g": 80,
+    "confidence": 0.9,
+    "image_file": "test_food38.jpg",
+    "dish_index": 2,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "avocado",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food38.jpg",
+    "dish_index": 2,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "spaghetti",
+    "description": "cooked",
+    "weight_g": 250,
+    "confidence": 0.85,
+    "image_file": "test_food39.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "asparagus",
+    "description": "cooked",
+    "weight_g": 75,
+    "confidence": 0.85,
+    "image_file": "test_food39.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "pork bacon",
+    "description": "cooked",
+    "weight_g": 50,
+    "confidence": 0.8,
+    "image_file": "test_food39.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "salad greens",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.8,
+    "image_file": "test_food39.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "avocado",
+    "description": "raw",
+    "weight_g": 60,
+    "confidence": 0.85,
+    "image_file": "test_food39.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red bell pepper",
+    "description": "raw",
+    "weight_g": 40,
+    "confidence": 0.85,
+    "image_file": "test_food39.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 50,
+    "confidence": 0.85,
+    "image_file": "test_food39.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": null,
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food39.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "slice of prosciutto pizza",
+    "description": "thin crust, with meat, with vegetables",
+    "weight_g": 300,
+    "confidence": 0.95,
+    "image_file": "test_food40.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "fresh",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food40.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "sliced, fresh",
+    "weight_g": 30,
+    "confidence": 0.9,
+    "image_file": "test_food40.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "avocado",
+    "description": "cubed, fresh",
+    "weight_g": 40,
+    "confidence": 0.9,
+    "image_file": "test_food40.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "tomato",
+    "description": "cubed, fresh",
+    "weight_g": 20,
+    "confidence": 0.9,
+    "image_file": "test_food40.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "shredded, fresh",
+    "weight_g": 10,
+    "confidence": 0.9,
+    "image_file": "test_food40.jpg",
+    "dish_index": 1,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water",
+    "description": "plain, ready-to-serve",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food40.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "macaroni",
+    "description": "cooked",
+    "weight_g": 100,
+    "confidence": 0.9,
+    "image_file": "test_food41.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "mayonnaise",
+    "description": "with dressing",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food41.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrot",
+    "description": "cooked",
+    "weight_g": 20,
+    "confidence": 0.85,
+    "image_file": "test_food41.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "red onion",
+    "description": "raw",
+    "weight_g": 15,
+    "confidence": 0.85,
+    "image_file": "test_food41.jpg",
+    "dish_index": 0,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "raw",
+    "weight_g": 5,
+    "confidence": 0.75,
+    "image_file": "test_food41.jpg",
+    "dish_index": 0,
+    "extra_index": 4,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food41.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken thigh",
+    "description": "cooked, boneless, pan-fried",
+    "weight_g": 180,
+    "confidence": 0.9,
+    "image_file": "test_food41.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "green bean casserole",
+    "description": "cooked",
+    "weight_g": 150,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "carrots",
+    "description": "cooked, sliced",
+    "weight_g": 100,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "cornbread",
+    "description": "baked",
+    "weight_g": 120,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mashed potatoes",
+    "description": "cooked",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "gravy",
+    "description": "cooked",
+    "weight_g": 50,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 3,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "turkey",
+    "description": "roasted, breast, boneless",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food42.jpg",
+    "dish_index": 4,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "mixed greens",
+    "description": "raw",
+    "weight_g": 45,
+    "confidence": 0.95,
+    "image_file": "test_food43.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "carrots",
+    "description": "raw, shredded",
+    "weight_g": 25,
+    "confidence": 0.95,
+    "image_file": "test_food43.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "macaroni and cheese",
+    "description": "cooked",
+    "weight_g": 140,
+    "confidence": 0.95,
+    "image_file": "test_food43.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "zucchini",
+    "description": "cooked, grilled",
+    "weight_g": 95,
+    "confidence": 0.9,
+    "image_file": "test_food43.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "chicken breast",
+    "description": "cooked, grilled, skinless",
+    "weight_g": 115,
+    "confidence": 0.95,
+    "image_file": "test_food43.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "pasta, penne",
+    "description": "cooked, baked",
+    "weight_g": 250,
+    "confidence": 0.9,
+    "image_file": "test_food44.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cheese, cheddar",
+    "description": "melted, baked",
+    "weight_g": 100,
+    "confidence": 0.85,
+    "image_file": "test_food44.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "broccoli",
+    "description": "cooked",
+    "weight_g": 50,
+    "confidence": 0.8,
+    "image_file": "test_food44.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cabbage",
+    "description": "shredded, raw",
+    "weight_g": 100,
+    "confidence": 0.9,
+    "image_file": "test_food44.jpg",
+    "dish_index": 1,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber",
+    "description": "sliced, raw",
+    "weight_g": 80,
+    "confidence": 0.9,
+    "image_file": "test_food44.jpg",
+    "dish_index": 1,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "onion, red",
+    "description": "sliced, raw",
+    "weight_g": 50,
+    "confidence": 0.9,
+    "image_file": "test_food44.jpg",
+    "dish_index": 1,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "corn",
+    "description": "canned, drained, kernels",
+    "weight_g": 30,
+    "confidence": 0.85,
+    "image_file": "test_food44.jpg",
+    "dish_index": 1,
+    "extra_index": 3,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "water, tap",
+    "description": "plain",
+    "weight_g": 200,
+    "confidence": 0.95,
+    "image_file": "test_food44.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "ham sandwich",
+    "description": null,
+    "weight_g": 190,
+    "confidence": 0.95,
+    "image_file": "test_food45.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "potato chips",
+    "description": "deep-fried",
+    "weight_g": 60,
+    "confidence": 0.95,
+    "image_file": "test_food45.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "green beans",
+    "description": "cooked, steamed",
+    "weight_g": 110,
+    "confidence": 0.95,
+    "image_file": "test_food46.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "carrots",
+    "description": "cooked, steamed",
+    "weight_g": 85,
+    "confidence": 0.95,
+    "image_file": "test_food46.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "baked potato",
+    "description": "cooked",
+    "weight_g": 160,
+    "confidence": 0.9,
+    "image_file": "test_food46.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "sour cream",
+    "description": "plain",
+    "weight_g": 35,
+    "confidence": 0.92,
+    "image_file": "test_food46.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "green onions",
+    "description": "fresh",
+    "weight_g": 12,
+    "confidence": 0.95,
+    "image_file": "test_food46.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "salisbury steak",
+    "description": "cooked",
+    "weight_g": 145,
+    "confidence": 0.85,
+    "image_file": "test_food46.jpg",
+    "dish_index": 3,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "beef gravy",
+    "description": "ready-to-serve",
+    "weight_g": 55,
+    "confidence": 0.88,
+    "image_file": "test_food46.jpg",
+    "dish_index": 3,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "ketchup",
+    "description": null,
+    "weight_g": 20,
+    "confidence": 0.7,
+    "image_file": "test_food46.jpg",
+    "dish_index": 3,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cheeseburger",
+    "description": null,
+    "weight_g": 210,
+    "confidence": 0.95,
+    "image_file": "test_food47.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "tomato",
+    "description": "sliced, fresh",
+    "weight_g": 25,
+    "confidence": 0.9,
+    "image_file": "test_food47.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "onion",
+    "description": "sliced, fresh",
+    "weight_g": 15,
+    "confidence": 0.85,
+    "image_file": "test_food47.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "potato wedges",
+    "description": "roasted",
+    "weight_g": 160,
+    "confidence": 0.95,
+    "image_file": "test_food47.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "white rice",
+    "description": "cooked",
+    "weight_g": 180,
+    "confidence": 0.95,
+    "image_file": "test_food48.jpg",
+    "dish_index": 0,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "curry sauce",
+    "description": "with meat",
+    "weight_g": 200,
+    "confidence": 0.9,
+    "image_file": "test_food48.jpg",
+    "dish_index": 0,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "dried seaweed",
+    "description": "dried",
+    "weight_g": 2,
+    "confidence": 0.85,
+    "image_file": "test_food48.jpg",
+    "dish_index": 0,
+    "extra_index": 2,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "cucumber salad",
+    "description": "with vinegar",
+    "weight_g": 100,
+    "confidence": 0.85,
+    "image_file": "test_food48.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "water",
+    "description": null,
+    "weight_g": 240,
+    "confidence": 0.99,
+    "image_file": "test_food48.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "vegetable pizza",
+    "description": "thin crust",
+    "weight_g": 160,
+    "confidence": 0.95,
+    "image_file": "test_food49.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "water",
+    "description": null,
+    "weight_g": 225,
+    "confidence": 0.95,
+    "image_file": "test_food49.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "sparkling water",
+    "description": "canned, unsweetened",
+    "weight_g": 355,
+    "confidence": 0.95,
+    "image_file": "test_food49.jpg",
+    "dish_index": 2,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "blt sandwich",
+    "description": "toasted, refined",
+    "weight_g": 240,
+    "confidence": 0.9,
+    "image_file": "test_food50.jpg",
+    "dish_index": 0,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "butternut squash soup",
+    "description": "ready-to-serve",
+    "weight_g": 210,
+    "confidence": 0.85,
+    "image_file": "test_food50.jpg",
+    "dish_index": 1,
+    "food_type": "main_food"
+  },
+  {
+    "search_name": "avocado",
+    "description": "fresh",
+    "weight_g": 65,
+    "confidence": 0.95,
+    "image_file": "test_food50.jpg",
+    "dish_index": 2,
+    "extra_index": 0,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "lettuce",
+    "description": "fresh",
+    "weight_g": 35,
+    "confidence": 0.95,
+    "image_file": "test_food50.jpg",
+    "dish_index": 2,
+    "extra_index": 1,
+    "food_type": "extra"
+  },
+  {
+    "search_name": "sesame seeds",
+    "description": null,
+    "weight_g": 3,
+    "confidence": 0.8,
+    "image_file": "test_food50.jpg",
+    "dish_index": 2,
+    "extra_index": 2,
+    "food_type": "extra"
   }
 ]

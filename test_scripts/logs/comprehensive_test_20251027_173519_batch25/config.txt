@@ -1,0 +1,12 @@
+Test Configuration
+==================
+Batch Size: 25
+Number of Images: 50
+Number of Runs: 5
+Model ID: Default (Qwen/Qwen3-VL-235B-A22B-Thinking)
+Start Time: Mon Oct 27 17:35:19 JST 2025
+Prompts: v6_corrected, v6_balanced, v7_experimental, v5_streamlined, v7_production, v6_enhanced
+
+End Time: Mon Oct 27 18:33:48 JST 2025
+Total Duration: 58 minutes
+Files Generated:        5 JSON files

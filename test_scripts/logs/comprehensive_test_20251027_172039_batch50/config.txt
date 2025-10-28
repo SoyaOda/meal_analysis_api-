@@ -1,0 +1,7 @@
+Test Configuration
+==================
+Batch Size: 50
+Number of Images: 50
+Number of Runs: 5
+Start Time: Mon Oct 27 17:20:39 JST 2025
+Prompts: v6_corrected, v6_balanced, v7_experimental, v5_streamlined, v7_production, v6_enhanced

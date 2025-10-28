@@ -1,0 +1,618 @@
+================================================================================
+30%以上の栄養誤差がある画像の詳細分析
+================================================================================
+
+📊 30%以上の誤差がある画像: 12枚 / 50枚
+
+================================================================================
+
+================================================================================
+[1/12] test_food44.jpg - 誤差 105.6%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   518         1066         +547     105.6%
+タンパク質 (g)                    21.9         42.1        +20.2      92.2%
+脂質 (g)                       17.8         47.7        +29.9     168.0%
+炭水化物 (g)                     75.2        117.6        +42.4      56.4%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  baked pasta with cheese                         250g      475   20.0   17.5   65.0
+extra      cabbage                                          80g       20    1.0    0.1    4.8
+extra      cucumber                                         30g        4    0.2    0.0    1.1
+extra      red onion                                        15g        6    0.2    0.0    1.4
+extra      corn                                             15g       13    0.5    0.2    2.9
+           TOTAL                                                    518   21.9   17.8   75.2
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       baked pasta with cheese and         450g Macaroni or noodles with cheese           0.118     1004   39.1   47.2  104.0
+                                                         Source: survey                                                               
+    1 extra      shredded cabbage                    120g Cabbage, raw                              0.985       30    1.6    0.1    7.0
+                                                         Source: sr_legacy                                                            
+    1 extra      cucumber                             30g Cucumber, raw                             0.999        5    0.2    0.1    0.9
+                                                         Source: survey                                                               
+    1 extra      red onion                            20g Onions, red, raw                          1.000        9    0.2    0.0    2.0
+                                                         Source: foundation                                                           
+    1 extra      corn kernels                         15g Corn, sweet, yellow, canned, whole ker    0.999       10    0.3    0.2    2.1
+                                                         Source: sr_legacy                                                            
+    1 extra      broccoli florets                     25g Broccoli, raw                             1.000        8    0.7    0.1    1.6
+                                                         Source: sr_legacy                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                  1066   42.1   47.7  117.6
+
+【問題分析】
+
+❌ カロリー誤差が非常に大きい（105.6%）
+⚠️  タンパク質の誤差が大きい（92.2%）
+⚠️  脂質の誤差が大きい（168.0%）
+⚠️  炭水化物の誤差が大きい（56.4%）
+⚠️  低スコアのマッチングが存在:
+  - main_food 'baked pasta with cheese and broccoli': スコア 0.118
+⚠️  総重量の差が大きい（Label: 390g vs Pipeline: 660g, 69.2%差）
+⚠️  VLMが認識しなかった食材: cabbage, baked pasta with cheese, corn
+⚠️  VLMが余分に認識した食材: baked pasta with cheese and broccoli, corn kernels, broccoli florets, shredded cabbage
+
+【原因サマリー】
+
+💡 カロリーが547kcal過大評価されています
+💡 脂質の誤差が最も大きい（168.0%）
+
+
+================================================================================
+[2/12] test_food6.jpg - 誤差 77.5%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   504          895         +391      77.5%
+タンパク質 (g)                    25.2         31.9         +6.7      26.6%
+脂質 (g)                       17.6         39.5        +21.9     124.4%
+炭水化物 (g)                     65.6        105.1        +39.5      60.2%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  cream of chicken soup with vegetables           400g      280   18.0   14.0   24.0
+main_food  dinner roll                                      80g      224    7.2    3.6   41.6
+           TOTAL                                                    504   25.2   17.6   65.6
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       chicken stew with vegetables        450g Chicken or turkey, potatoes, and veget    0.999      567   21.6   31.9   49.9
+                                                         Source: survey                                                               
+    1 main       dinner roll                         120g Rolls, dinner, wheat                      0.986      328   10.3    7.6   55.2
+                                                         Source: sr_legacy                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   895   31.9   39.5  105.1
+
+【問題分析】
+
+❌ カロリー誤差が非常に大きい（77.5%）
+⚠️  脂質の誤差が大きい（124.4%）
+⚠️  炭水化物の誤差が大きい（60.2%）
+⚠️  VLMが認識しなかった食材: cream of chicken soup with vegetables
+⚠️  VLMが余分に認識した食材: chicken stew with vegetables and cream sauce
+
+【原因サマリー】
+
+💡 カロリーが391kcal過大評価されています
+💡 脂質の誤差が最も大きい（124.4%）
+
+
+================================================================================
+[3/12] test_food43.jpg - 誤差 46.0%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   566          826         +260      46.0%
+タンパク質 (g)                    54.4         76.3        +21.9      40.3%
+脂質 (g)                       20.7         32.4        +11.7      56.5%
+炭水化物 (g)                     41.6         60.6        +19.0      45.7%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  chicken breast                                  130g      214   40.3    4.7    0.0
+main_food  macaroni and cheese                             160g      264   11.2   11.2   32.0
+main_food  mixed salad greens                               60g       12    1.2    0.2    2.2
+extra      carrot                                           30g       12    0.3    0.1    2.9
+main_food  zucchini                                         90g       63    1.4    4.5    4.5
+           TOTAL                                                    566   54.4   20.7   41.6
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       chicken breast                      180g Chicken, broiler or fryers, breast, sk    0.998      272   54.9    5.8    0.0
+                                                         Source: sr_legacy                                                            
+    0 extra      macaroni and cheese                 220g Macaroni or noodles with cheese           0.962      491   19.1   23.1   50.8
+                                                         Source: survey                                                               
+    0 extra      zucchini                            100g Summer squash, yellow or green, NS as     0.947       47    1.3    3.3    4.0
+                                                         Source: survey                                                               
+    0 extra      lettuce                              50g Lettuce, leaf, green, raw                 0.995        0    0.6    0.1    2.0
+                                                         Source: foundation                                                           
+    0 extra      carrot                               40g Carrots, raw                              0.998       16    0.4    0.1    3.8
+                                                         Source: sr_legacy                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   826   76.3   32.4   60.6
+
+【問題分析】
+
+⚠️  脂質の誤差が大きい（56.5%）
+⚠️  VLMが認識しなかった食材: mixed salad greens
+⚠️  VLMが余分に認識した食材: lettuce
+
+【原因サマリー】
+
+💡 カロリーが260kcal過大評価されています
+💡 脂質の誤差が最も大きい（56.5%）
+
+
+================================================================================
+[4/12] test_food21.jpg - 誤差 41.5%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   725         1026         +301      41.5%
+タンパク質 (g)                    46.5         57.2        +10.7      23.0%
+脂質 (g)                       41.7         55.3        +13.6      32.6%
+炭水化物 (g)                     43.0         75.6        +32.6      75.8%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+extra      flour tortilla                                   80g      240    6.4    6.4   39.2
+extra      ground beef                                     120g      305   31.2   20.4    0.0
+extra      cheddar cheese                                   30g      121    7.5    9.9    0.4
+extra      sour cream                                       25g       48    0.6    4.8    0.9
+extra      lettuce                                          30g        4    0.4    0.1    0.9
+extra      tomato                                           40g        7    0.4    0.1    1.6
+           TOTAL                                                    725   46.5   41.7   43.0
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       taco with ground beef and le        380g ON THE BORDER, soft taco with ground b    0.995      870   50.2   41.8   73.3
+                                                         Source: sr_legacy                                                            
+    0 extra      sour cream                           30g Cream, sour, cultured                     0.985       59    0.7    5.8    1.4
+                                                         Source: sr_legacy                                                            
+    0 extra      shredded cheese                      25g Cheese, monterey                          0.710       93    6.1    7.6    0.2
+                                                         Source: sr_legacy                                                            
+    0 extra      diced tomato                         20g Tomatoes, canned, red, ripe, diced        0.845        4    0.2    0.1    0.7
+                                                         Source: foundation                                                           
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                  1026   57.2   55.3   75.6
+
+【問題分析】
+
+⚠️  炭水化物の誤差が大きい（75.8%）
+⚠️  総重量の差が大きい（Label: 325g vs Pipeline: 455g, 40.0%差）
+⚠️  VLMが認識しなかった食材: lettuce, ground beef, flour tortilla, tomato, cheddar cheese
+⚠️  VLMが余分に認識した食材: shredded cheese, diced tomato, taco with ground beef and lettuce
+
+【原因サマリー】
+
+💡 カロリーが301kcal過大評価されています
+💡 炭水化物の誤差が最も大きい（75.8%）
+
+
+================================================================================
+[5/12] test_food48.jpg - 誤差 40.2%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   546          766         +220      40.2%
+タンパク質 (g)                    22.8         29.3         +6.5      28.5%
+脂質 (g)                       17.0         35.0        +18.0     105.9%
+炭水化物 (g)                     71.8         80.5         +8.7      12.1%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  beef stew                                       200g      240   16.0   12.0   16.0
+main_food  white rice                                      180g      234    4.3    0.5   50.4
+main_food  cucumber salad                                   90g       72    2.5    4.5    5.4
+           TOTAL                                                    546   22.8   17.0   71.8
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       beef with gravy and onions o        450g Beef and rice with gravy                  0.990      616   28.3   22.9   72.0
+                                                         Source: survey                                                               
+    0 extra      dill herb seasoning                   2g Spices, dill weed, dried                  0.985        5    0.4    0.1    1.1
+                                                         Source: sr_legacy                                                            
+    1 main       cucumber salad                      120g Cucumber salad, made with Italian dres    0.970      144    0.6   12.0    7.4
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   766   29.3   35.0   80.5
+
+【問題分析】
+
+⚠️  脂質の誤差が大きい（105.9%）
+⚠️  VLMが認識しなかった食材: white rice, beef stew
+⚠️  VLMが余分に認識した食材: dill herb seasoning, beef with gravy and onions over rice
+
+【原因サマリー】
+
+💡 カロリーが220kcal過大評価されています
+💡 脂質の誤差が最も大きい（105.9%）
+
+
+================================================================================
+[6/12] test_food30.jpg - 誤差 38.8%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   714          990         +277      38.8%
+タンパク質 (g)                    41.5         60.1        +18.6      44.8%
+脂質 (g)                       39.3         65.4        +26.1      66.4%
+炭水化物 (g)                     56.2         35.7        -20.5      36.5%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  chicken with cream sauce                        140g      280   28.0   16.8    5.6
+main_food  pasta shells with pesto                         150g      330   10.5   15.0   42.0
+extra      mixed salad greens                              120g       20    2.2    0.4    3.6
+extra      tomato                                           40g        7    0.4    0.1    1.6
+extra      cucumber                                         40g        6    0.3    0.0    1.4
+extra      vinaigrette dressing                             25g       70    0.1    7.0    2.0
+           TOTAL                                                    714   41.5   39.3   56.2
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       chicken breast with sauce           180g Chicken breast, grilled with sauce, sk    0.995      320   43.7    8.8   13.1
+                                                         Source: survey                                                               
+    0 extra      shell pasta with pesto              150g Sauce, pesto, BUITONI, pesto with basi    0.599      627   14.7   56.4   15.1
+                                                         Source: sr_legacy                                                            
+    0 extra      mixed green salad                   120g Mixed salad greens, raw                   0.785       25    1.6    0.2    4.1
+                                                         Source: survey                                                               
+    0 extra      balsamic vinaigrette                 20g Vinegar, balsamic                         0.893       18    0.1    0.0    3.4
+                                                         Source: sr_legacy                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   990   60.1   65.4   35.7
+
+【問題分析】
+
+⚠️  脂質の誤差が大きい（66.4%）
+⚠️  VLMが認識しなかった食材: mixed salad greens, vinaigrette dressing, chicken with cream sauce, cucumber, tomato, pasta shells with pesto
+⚠️  VLMが余分に認識した食材: shell pasta with pesto, mixed green salad, balsamic vinaigrette, chicken breast with sauce
+
+【原因サマリー】
+
+💡 カロリーが277kcal過大評価されています
+💡 脂質の誤差が最も大きい（66.4%）
+
+
+================================================================================
+[7/12] test_food27.jpg - 誤差 35.9%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                  1069          686         -384      35.9%
+タンパク質 (g)                    50.8         50.7         -0.1       0.2%
+脂質 (g)                       54.3         22.5        -31.8      58.6%
+炭水化物 (g)                     85.5         70.6        -14.9      17.4%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  white rice                                      200g      260    5.4    0.6   56.0
+main_food  beef with peppers and onions                    150g      270   21.0   15.0    9.0
+main_food  pork with cabbage                               170g      289   20.4   18.7    8.5
+main_food  mayonnaise salad                                100g      250    4.0   20.0   12.0
+           TOTAL                                                   1069   50.8   54.3   85.5
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       shredded chicken with sauce         120g Chicken or turkey with cream sauce        0.950      188   23.8    9.0    3.4
+                                                         Source: survey                                                               
+    1 main       beef stir-fry with vegetable        180g Stir fried beef and vegetables in soy     0.955      184   19.3    8.6    7.9
+                                                         Source: survey                                                               
+    2 main       white rice                          200g Rice, white, cooked, no added fat         0.991      258    5.4    0.6   56.0
+                                                         Source: survey                                                               
+    3 main       pork and cabbage stir-fry           150g Cabbage, Chinese, cooked, fat added       0.481       56    2.2    4.3    3.3
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   686   50.7   22.5   70.6
+
+【問題分析】
+
+⚠️  脂質の誤差が大きい（58.6%）
+⚠️  低スコアのマッチングが存在:
+  - main_food 'pork and cabbage stir-fry': スコア 0.481
+⚠️  VLMが認識しなかった食材: beef with peppers and onions, pork with cabbage, mayonnaise salad
+⚠️  VLMが余分に認識した食材: shredded chicken with sauce, beef stir-fry with vegetables, pork and cabbage stir-fry
+
+【原因サマリー】
+
+💡 カロリーが384kcal過小評価されています
+💡 脂質の誤差が最も大きい（58.6%）
+
+
+================================================================================
+[8/12] test_food41.jpg - 誤差 34.0%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   682          914         +232      34.0%
+タンパク質 (g)                    50.2         57.8         +7.6      15.1%
+脂質 (g)                       33.8         47.6        +13.8      40.8%
+炭水化物 (g)                     43.9         63.4        +19.5      44.4%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  chicken thigh                                   160g      334   41.6   17.6    0.0
+main_food  broccoli                                        140g       49    3.4    0.6   10.1
+main_food  macaroni salad                                  130g      299    5.2   15.6   33.8
+           TOTAL                                                    682   50.2   33.8   43.9
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       grilled chicken thigh               180g Chicken thigh, grilled without sauce,     0.992      346   43.4   17.8    0.0
+                                                         Source: survey                                                               
+    1 main       macaroni salad                      220g Macaroni or pasta salad, made with may    0.991      486    9.9   25.3   54.1
+                                                         Source: survey                                                               
+    2 main       broccoli florets                    150g Broccoflower, cooked                      0.997       82    4.5    4.5    9.3
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   914   57.8   47.6   63.4
+
+【問題分析】
+
+⚠️  VLMが認識しなかった食材: broccoli, chicken thigh
+⚠️  VLMが余分に認識した食材: grilled chicken thigh, broccoli florets
+
+【原因サマリー】
+
+💡 カロリーが232kcal過大評価されています
+💡 炭水化物の誤差が最も大きい（44.4%）
+
+
+================================================================================
+[9/12] test_food29.jpg - 誤差 31.2%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   769          529         -240      31.2%
+タンパク質 (g)                    62.7         29.2        -33.5      53.4%
+脂質 (g)                       28.3         10.5        -17.8      62.9%
+炭水化物 (g)                     70.2         77.8         +7.6      10.8%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  linguine with creamy sauce                      220g      418   13.2   15.4   61.6
+extra      chicken breast                                  150g      248   46.5    5.4    0.0
+extra      mixed salad greens                              120g       20    2.2    0.4    3.6
+extra      tomato                                           40g        7    0.4    0.1    1.6
+extra      cucumber                                         40g        6    0.3    0.0    1.4
+extra      vinaigrette dressing                             25g       70    0.1    7.0    2.0
+           TOTAL                                                    769   62.7   28.3   70.2
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       pasta with chicken and zucch        380g Pasta with tomato-based sauce, poultry    0.855      441   23.2    6.1   71.8
+                                                         Source: survey                                                               
+    0 extra      mixed salad                         120g Mixed salad greens, raw                   0.840       25    1.6    0.2    4.1
+                                                         Source: survey                                                               
+    0 extra      grated cheese                        15g Cheese, parmesan, grated                  0.921       63    4.4    4.2    1.9
+                                                         Source: foundation                                                           
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   529   29.2   10.5   77.8
+
+【問題分析】
+
+⚠️  タンパク質の誤差が大きい（53.4%）
+⚠️  脂質の誤差が大きい（62.9%）
+⚠️  VLMが認識しなかった食材: mixed salad greens, chicken breast, vinaigrette dressing, cucumber, tomato, linguine with creamy sauce
+⚠️  VLMが余分に認識した食材: pasta with chicken and zucchini, grated cheese, mixed salad
+
+【原因サマリー】
+
+💡 カロリーが240kcal過小評価されています
+💡 脂質の誤差が最も大きい（62.9%）
+
+
+================================================================================
+[10/12] test_food20.jpg - 誤差 30.2%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   519          676         +157      30.2%
+タンパク質 (g)                    32.6         32.6         +0.0       0.0%
+脂質 (g)                       24.8         34.3         +9.5      38.3%
+炭水化物 (g)                     45.0         61.9        +16.9      37.6%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  beef stew                                       350g      350   24.5   17.5   24.5
+extra      sour cream                                       20g       39    0.5    4.0    0.7
+extra      mixed salad greens                               70g       14    1.4    0.2    2.8
+extra      cucumber                                         50g        8    0.4    0.1    1.8
+extra      figs                                             80g       59    0.6    0.2   15.2
+extra      prosciutto                                       20g       49    5.2    2.8    0.0
+           TOTAL                                                    519   32.6   24.8   45.0
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       beef stew with potatoes and         450g Beef, potatoes, and vegetables includi    0.903      572   23.8   31.9   49.9
+                                                         Source: survey                                                               
+    1 extra      mixed greens salad                  120g Mixed salad greens, raw                   0.879       25    1.6    0.2    4.1
+                                                         Source: survey                                                               
+    1 extra      figs                                 40g Fig, canned                               0.612       30    0.2    0.1    7.8
+                                                         Source: survey                                                               
+    1 extra      prosciutto                           25g Ham, prosciutto                           0.977       49    7.0    2.1    0.1
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   676   32.6   34.3   61.9
+
+【問題分析】
+
+⚠️  VLMが認識しなかった食材: cucumber, sour cream, beef stew, mixed salad greens
+⚠️  VLMが余分に認識した食材: beef stew with potatoes and carrots, mixed greens salad
+
+【原因サマリー】
+
+💡 カロリーが157kcal過大評価されています
+💡 脂質の誤差が最も大きい（38.3%）
+
+
+================================================================================
+[11/12] test_food49.jpg - 誤差 30.1%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   602          784         +182      30.1%
+タンパク質 (g)                    24.3         31.0         +6.7      27.6%
+脂質 (g)                       23.6         30.1         +6.5      27.5%
+炭水化物 (g)                     73.5         97.3        +23.8      32.4%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  cheese pizza                                    220g      585   24.2   22.0   72.6
+extra      black olives                                     15g       17    0.1    1.6    0.9
+           TOTAL                                                    602   24.3   23.6   73.5
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       pizza with tomato sauce, moz        320g Pizza, cheese, with vegetables, from r    0.884      784   31.0   30.1   97.3
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   784   31.0   30.1   97.3
+
+【問題分析】
+
+⚠️  総重量の差が大きい（Label: 235g vs Pipeline: 320g, 36.2%差）
+⚠️  VLMが認識しなかった食材: black olives, cheese pizza
+⚠️  VLMが余分に認識した食材: pizza with tomato sauce, mozzarella cheese, black olives, and spinach
+
+【原因サマリー】
+
+💡 カロリーが182kcal過大評価されています
+💡 炭水化物の誤差が最も大きい（32.4%）
+
+
+================================================================================
+[12/12] test_food31.jpg - 誤差 30.0%
+================================================================================
+
+【栄養素比較】
+
+                            Label     Pipeline           差分        誤差%
+----------------------------------------------------------------------
+カロリー (kcal)                   609          426         -183      30.0%
+タンパク質 (g)                    40.9         59.1        +18.2      44.5%
+脂質 (g)                       29.9          6.7        -23.2      77.6%
+炭水化物 (g)                     46.0         33.0        -13.0      28.3%
+
+【Label（正解）の内訳】
+
+Type       Food Name                                    Weight      Cal      P      F      C
+------------------------------------------------------------------------------------------
+main_food  cod fillet                                      150g      225   34.5    9.0    0.0
+main_food  sweet potatoes                                  160g      184    3.2    4.8   33.6
+extra      mixed salad greens                               50g       10    1.0    0.1    2.0
+extra      strawberries                                     70g       22    0.5    0.2    5.4
+extra      cucumber                                         35g        5    0.2    0.0    1.3
+extra      pecans                                           15g      108    1.4   10.8    2.1
+extra      vinaigrette dressing                             20g       54    0.1    5.0    1.6
+           TOTAL                                                    609   40.9   29.9   46.0
+
+【Pipeline（予測）の内訳】
+
+Dish  Type       VLM出力                            Weight USDA Match                                Score      Cal      P      F      C
+------------------------------------------------------------------------------------------------------------------------------------------------------
+    0 main       chicken breast                      180g Chicken, broiler or fryers, breast, sk    0.998      272   54.9    5.8    0.0
+                                                         Source: sr_legacy                                                            
+    0 extra      sweet potato                        150g Sweet potato, cooked, as ingredient       0.927      123    2.4    0.6   27.0
+                                                         Source: survey                                                               
+    0 extra      mixed greens salad                  120g Mixed salad greens, raw                   0.958       25    1.6    0.2    4.1
+                                                         Source: survey                                                               
+    0 extra      lemon                                20g Lemon, raw                                0.972        6    0.2    0.1    1.9
+                                                         Source: survey                                                               
+------------------------------------------------------------------------------------------------------------------------------------------------------
+      TOTAL                                                                                                   426   59.1    6.7   33.0
+
+【問題分析】
+
+⚠️  脂質の誤差が大きい（77.6%）
+⚠️  VLMが認識しなかった食材: sweet potatoes, cod fillet, vinaigrette dressing, strawberries, cucumber, mixed salad greens, pecans
+⚠️  VLMが余分に認識した食材: chicken breast, sweet potato, lemon, mixed greens salad
+
+【原因サマリー】
+
+💡 カロリーが183kcal過小評価されています
+💡 脂質の誤差が最も大きい（77.6%）
+
+
+================================================================================
+分析完了
+================================================================================

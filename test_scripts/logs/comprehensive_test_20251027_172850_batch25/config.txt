@@ -1,0 +1,12 @@
+Test Configuration
+==================
+Batch Size: 25
+Number of Images: 50
+Number of Runs: 5
+Model ID: Qwen/Qwen3-VL-30B-A3B-Thinking
+Start Time: Mon Oct 27 17:28:50 JST 2025
+Prompts: v6_corrected, v6_balanced, v7_experimental, v5_streamlined, v7_production, v6_enhanced
+
+End Time: Mon Oct 27 18:19:16 JST 2025
+Total Duration: 50 minutes
+Files Generated:        5 JSON files

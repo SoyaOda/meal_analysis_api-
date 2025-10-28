@@ -102,3 +102,7 @@ dataset/
 core_food_processing/data/*.parquet
 core_food_processing/data/*.owl
 
+# FAISS index files (too large for GitHub)
+*.faiss
+test_scripts/query_system/data/*.faiss
+
