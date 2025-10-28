@@ -32,7 +32,8 @@ class MealAnalysisPipeline:
         index_dir: str = None,
         usda_metadata_file: str = None,
         stage1_top_k: int = 40,
-        device: str = "cpu"
+        device: str = "cpu",
+        hybrid_engine=None
     ):
         """
         Args:
@@ -42,6 +43,7 @@ class MealAnalysisPipeline:
             usda_metadata_file: USDA Metadataファイルのパス (栄養素データを含む)
             stage1_top_k: Stage1で取得する候補数
             device: 計算デバイス
+            hybrid_engine: HybridSearchEngineインスタンス（オプション）
         """
         logger.info("Initializing Meal Analysis Pipeline (Full Index Only)...")
 
@@ -58,7 +60,8 @@ class MealAnalysisPipeline:
         self.food_search_service = USDAFoodSearchService(
             index_dir=index_dir,
             stage1_top_k=stage1_top_k,
-            device=device
+            device=device,
+            hybrid_engine=hybrid_engine
         )
 
         # 栄養素サービス初期化

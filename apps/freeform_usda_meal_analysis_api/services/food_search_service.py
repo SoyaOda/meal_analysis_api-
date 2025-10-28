@@ -32,13 +32,15 @@ class USDAFoodSearchService:
         self,
         index_dir: str,
         stage1_top_k: int = 40,
-        device: str = "cpu"
+        device: str = "cpu",
+        hybrid_engine=None
     ):
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス
             stage1_top_k: Stage1で取得する候補数
-            device: 計算デバイス（'cpu' or 'cuda'）
+            device: 計算デバイス('cpu' or 'cuda')
+            hybrid_engine: HybridSearchEngineインスタンス（オプション）
         """
         self.index_dir = Path(index_dir)
 
@@ -59,21 +61,28 @@ class USDAFoodSearchService:
             device=device
         )
 
+        # HybridSearchEngineを保持
+        self.hybrid_engine = hybrid_engine
+        if hybrid_engine:
+            logger.info(f"✅ Hybrid search engine attached")
+
         logger.info(f"✅ USDA Food Search Service initialized successfully")
 
     def search(
         self,
         search_name: str,
         description: str = "",
-        top_k: int = 1
+        top_k: int = 1,
+        mode: str = "accurate"
     ) -> Optional[Dict[str, Any]]:
         """
         単一クエリで検索を実行
 
         Args:
-            search_name: 食材の主名称（例: "chicken"）
-            description: 食材の説明（例: "grilled"）
-            top_k: 上位何件返すか（デフォルト: 1）
+            search_name: 食材の主名称(例: "chicken")
+            description: 食材の説明(例: "grilled")
+            top_k: 上位何件返すか(デフォルト: 1)
+            mode: 検索モード - "accurate" (FAISS + Rerank), "hybrid" (BM25 + FAISS), "fast" (FAISSのみ)
 
         Returns:
             マッチ結果: {
@@ -86,10 +95,48 @@ class USDAFoodSearchService:
             }
             マッチしなかった場合はNone
         """
-        logger.info(f"🔍 Searching for: '{search_name}' | '{description}'")
+        logger.info(f"🔍 Searching for: '{search_name}' | '{description}' (mode={mode})")
 
         try:
-            # 検索実行
+            # Hybridモードの処理
+            if mode == "hybrid" and self.hybrid_engine:
+                import asyncio
+                # クエリの結合
+                query = f"{search_name} {description}".strip()
+                
+                # Hybridサーチを実行
+                candidates = asyncio.run(
+                    self.hybrid_engine.search_hybrid(
+                        query=query,
+                        faiss_index=self.searcher.index_full,
+                        embedding_service=self.searcher.embedding_service,
+                        items=self.searcher.items,
+                        top_k=top_k,
+                        stage1_top_k=100
+                    )
+                )
+                
+                if not candidates:
+                    logger.warning(f"No matches found for: {search_name} | {description}")
+                    return None
+                
+                # 最上位の結果を取得
+                best_match = candidates[0]
+                matched_result = {
+                    "fdc_id": best_match['fdc_id'],
+                    "matched_name": best_match['main_name'],
+                    "matched_description": best_match['descriptors'],
+                    "matched_full_description": best_match['description'],
+                    "rerank_score": best_match['hybrid_score'],  # Hybrid scoreを使用
+                    "stage1_score": best_match['component_scores']['vector'],  # Vector scoreをstage1として使用
+                    "source": best_match.get('source', 'unknown'),
+                    "search_mode": "hybrid"
+                }
+                
+                logger.info(f"✅ Hybrid match found: {matched_result['matched_full_description']} (FDC: {matched_result['fdc_id']}, Score: {matched_result['rerank_score']:.4f})")
+                return matched_result
+            
+            # Accurate/Fastモードの処理（既存のSimplifiedUSDASearcherを使用）
             result = self.searcher.search(
                 query_main=search_name,
                 query_descriptors=description,
@@ -111,7 +158,8 @@ class USDAFoodSearchService:
                 "matched_full_description": best_match['description'],
                 "rerank_score": best_match['rerank_score'],
                 "stage1_score": best_match['stage1_score'],
-                "source": best_match.get('source', 'unknown')
+                "source": best_match.get('source', 'unknown'),
+                "search_mode": mode
             }
 
             logger.info(f"✅ Match found: {matched_result['matched_full_description']} (FDC: {matched_result['fdc_id']}, Score: {matched_result['rerank_score']:.4f})")
