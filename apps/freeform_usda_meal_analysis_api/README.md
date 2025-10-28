@@ -62,6 +62,7 @@ apps/freeform_usda_meal_analysis_api/
 │   ├── __init__.py
 │   ├── analysis.py            # 分析エンドポイント
 │   ├── retrieval.py           # 検索エンドポイント（Hybrid/Accurate/Fast）
+│   ├── metadata.py            # メタデータ配信エンドポイント（全13,564食材）
 │   └── health.py              # ヘルスチェック
 ├── data/                      # データディレクトリ（self-contained）
 │   └── faiss/                 # FAISS インデックスと栄養データ
@@ -364,6 +365,294 @@ Portions情報がない食材の例:
 - `top_k` (オプション): 返却する結果数（1-50、デフォルト: 10）
 - `include_nutrition` (オプション): 栄養情報を含めるか（true/false、デフォルト: true）
 - `debug` (オプション): デバッグ情報を含めるか（true/false、デフォルト: false）
+
+## USDAメタデータAPI（Metadata Endpoint）
+
+フロントエンドアプリケーション向けに、全13,564食材のメタデータを配信するAPIエンドポイント。食材選択UI、栄養表示、単位変換機能の実装に使用します。
+
+### 概要
+
+**主な特徴:**
+- **全件取得**: 13,564食材の完全なメタデータ（栄養情報 + portions情報）
+- **効率的な配信**: gzip圧縮により 8.4MB → 0.67MB（92%削減）
+- **キャッシュ対応**: 24時間のCache-Controlヘッダー
+- **高いportionsカバレッジ**: 96.2%（13,046/13,564）の食材に単位変換情報あり
+- **フロントエンド最適化**: ローカルストレージへのキャッシュ推奨
+
+**データソース内訳:**
+- Survey Foods: 5,431 食材
+- Foundation Foods: 340 食材
+- SR Legacy Foods: 7,793 食材
+
+### エンドポイント一覧
+
+#### 1. 全メタデータ取得（推奨）
+
+```bash
+# gzip圧縮版（推奨、8.4MB → 0.67MB）
+curl -X GET "http://localhost:8006/api/v1/metadata?compressed=true" \
+  -H "Accept-Encoding: gzip"
+
+# 非圧縮版（開発時のみ、8.4MB）
+curl -X GET "http://localhost:8006/api/v1/metadata?compressed=false"
+```
+
+**レスポンス構造:**
+```json
+[
+  {
+    "fdc_id": 746774,
+    "description": "Chicken, breast, grilled",
+    "main_name": "Chicken, breast",
+    "descriptors": "grilled",
+    "source": "survey",
+    "nutrition": {
+      "calories": 165.0,
+      "protein": 31.0,
+      "fat": 3.6,
+      "carbs": 0.0
+    },
+    "portions": [
+      {
+        "description": "1 breast, bone and skin removed",
+        "gram_weight": 86.0
+      },
+      {
+        "description": "1 cup, chopped or diced",
+        "gram_weight": 140.0
+      }
+    ]
+  }
+]
+```
+
+**フロントエンド実装例（JavaScript）:**
+```javascript
+// 初回ロード時にメタデータ取得
+async function loadUSDAMetadata() {
+  const cacheKey = 'usda_metadata';
+  const cacheTimestamp = localStorage.getItem('usda_metadata_timestamp');
+  const now = Date.now();
+
+  // 24時間以内のキャッシュがあれば使用
+  if (cacheTimestamp && (now - parseInt(cacheTimestamp)) < 86400000) {
+    return JSON.parse(localStorage.getItem(cacheKey));
+  }
+
+  // APIから取得（gzip圧縮版）
+  const response = await fetch('http://localhost:8006/api/v1/metadata?compressed=true');
+  const metadata = await response.json();
+
+  // ローカルストレージにキャッシュ
+  localStorage.setItem(cacheKey, JSON.stringify(metadata));
+  localStorage.setItem('usda_metadata_timestamp', now.toString());
+
+  return metadata;
+}
+
+// 食材検索UIの実装
+function searchFoods(query, metadata) {
+  return metadata.filter(item =>
+    item.description.toLowerCase().includes(query.toLowerCase()) ||
+    item.main_name.toLowerCase().includes(query.toLowerCase())
+  );
+}
+
+// 単位変換機能の実装
+function convertToGrams(fdc_id, portionDescription, metadata) {
+  const food = metadata.find(item => item.fdc_id === fdc_id);
+  if (!food || !food.portions) return null;
+
+  const portion = food.portions.find(p =>
+    p.description.toLowerCase() === portionDescription.toLowerCase()
+  );
+
+  return portion ? portion.gram_weight : null;
+}
+```
+
+#### 2. メタデータ情報取得
+
+```bash
+curl -X GET "http://localhost:8006/api/v1/metadata/info"
+```
+
+**レスポンス例:**
+```json
+{
+  "total_items": 13564,
+  "file_size_mb": 8.36,
+  "compressed_size_mb": 0.67,
+  "compression_ratio": 0.08,
+  "sources": {
+    "survey": 5431,
+    "foundation": 340,
+    "sr_legacy": 7793
+  },
+  "portions_coverage_percent": 96.2,
+  "items_with_portions": 13046
+}
+```
+
+#### 3. メタデータ検索（軽量版）
+
+```bash
+# 基本検索
+curl -X GET "http://localhost:8006/api/v1/metadata/search?q=chicken&limit=20"
+
+# ソースフィルター付き
+curl -X GET "http://localhost:8006/api/v1/metadata/search?q=beef&source=survey&limit=10"
+
+# ページネーション
+curl -X GET "http://localhost:8006/api/v1/metadata/search?q=rice&limit=20&offset=20"
+```
+
+**レスポンス例:**
+```json
+{
+  "query": "chicken",
+  "results": [
+    {
+      "fdc_id": 746774,
+      "description": "Chicken, breast, grilled",
+      "main_name": "Chicken, breast",
+      "descriptors": "grilled",
+      "source": "survey",
+      "nutrition": {...},
+      "portions": [...]
+    }
+  ],
+  "total": 156,
+  "limit": 20,
+  "offset": 0,
+  "has_more": true
+}
+```
+
+**パラメータ:**
+- `q` (必須): 検索クエリ
+- `limit` (オプション): 返却件数（1-100、デフォルト: 20）
+- `offset` (オプション): オフセット（ページネーション用、デフォルト: 0）
+- `source` (オプション): データソースフィルター（survey/foundation/sr_legacy）
+
+**注意:** この検索はシンプルな部分一致検索です。高度なセマンティック検索が必要な場合は `/api/v1/retrieve` エンドポイント（Hybrid Mode）を使用してください。
+
+#### 4. FDC ID指定取得
+
+```bash
+curl -X GET "http://localhost:8006/api/v1/metadata/746774"
+```
+
+**レスポンス例:**
+```json
+{
+  "fdc_id": 746774,
+  "description": "Chicken, breast, grilled",
+  "main_name": "Chicken, breast",
+  "descriptors": "grilled",
+  "source": "survey",
+  "nutrition": {
+    "calories": 165.0,
+    "protein": 31.0,
+    "fat": 3.6,
+    "carbs": 0.0
+  },
+  "portions": [
+    {
+      "description": "1 breast, bone and skin removed",
+      "gram_weight": 86.0
+    }
+  ]
+}
+```
+
+### Portions（単位変換情報）の活用
+
+**カバレッジ:**
+- 13,564食材中 13,046食材（96.2%）にportions情報あり
+- 518食材（3.8%）は `"portions": null`
+
+**一般的な単位の例:**
+- 体積: `1 cup`, `1 tablespoon`, `1 teaspoon`, `1 fluid ounce`
+- 数量: `1 slice`, `1 piece`, `1 item`, `1 serving`
+- 重量: `1 oz`, `1 lb`（既にグラム換算されている）
+
+**実装例（単位変換機能）:**
+```javascript
+// "2 cups of rice" → グラム換算
+function parseAndConvertToGrams(userInput, metadata) {
+  const match = userInput.match(/(\d+\.?\d*)\s*(cup|tablespoon|teaspoon|slice)s?\s+of\s+(.+)/i);
+  if (!match) return null;
+
+  const [, quantity, unit, foodName] = match;
+
+  // 食材を検索
+  const food = metadata.find(item =>
+    item.description.toLowerCase().includes(foodName.toLowerCase())
+  );
+  if (!food || !food.portions) return null;
+
+  // 単位を検索
+  const portion = food.portions.find(p =>
+    p.description.toLowerCase().includes(unit.toLowerCase())
+  );
+  if (!portion) return null;
+
+  // グラム換算
+  const grams = parseFloat(quantity) * portion.gram_weight;
+
+  return {
+    food: food.description,
+    fdc_id: food.fdc_id,
+    original_input: userInput,
+    quantity: parseFloat(quantity),
+    unit: unit,
+    grams: grams,
+    nutrition: calculateNutrition(food.nutrition, grams)
+  };
+}
+
+// 実際の栄養計算
+function calculateNutrition(nutrition_per_100g, grams) {
+  const factor = grams / 100.0;
+  return {
+    calories: nutrition_per_100g.calories * factor,
+    protein: nutrition_per_100g.protein * factor,
+    fat: nutrition_per_100g.fat * factor,
+    carbs: nutrition_per_100g.carbs * factor
+  };
+}
+```
+
+### デプロイ後のアクセス
+
+デプロイ後は以下のURLでアクセス可能：
+```
+https://your-service-url.run.app/api/v1/metadata
+https://your-service-url.run.app/api/v1/metadata/info
+https://your-service-url.run.app/api/v1/metadata/search?q=chicken
+https://your-service-url.run.app/api/v1/metadata/746774
+```
+
+### パフォーマンスとキャッシュ戦略
+
+**推奨実装:**
+1. **初回ロード時**: `/api/v1/metadata?compressed=true` で全データ取得
+2. **ローカルストレージ**: 24時間キャッシュ（localStorage推奨）
+3. **検索**: キャッシュされたデータをクライアント側でフィルタリング
+4. **リアルタイム検索**: 高度な検索が必要な場合のみ `/api/v1/retrieve` 使用
+
+**データサイズ:**
+- 非圧縮: 8.4MB（8,767,812 bytes）
+- gzip圧縮: 0.67MB（702,565 bytes）
+- 圧縮率: 8%（92%削減）
+
+**レスポンスヘッダー:**
+- `Content-Type: application/json`
+- `Content-Encoding: gzip`（compressed=trueの場合）
+- `Cache-Control: public, max-age=86400`（24時間）
+- `X-Original-Size: 8767812`
+- `X-Compressed-Size: 702565`
 
 ## デプロイ（Cloud Run）
 

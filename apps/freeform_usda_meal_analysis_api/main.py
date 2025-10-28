@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routers import health, analysis, retrieval
+from .routers import health, analysis, retrieval, metadata
 
 # ロギング設定
 logging.basicConfig(
@@ -46,6 +46,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(analysis.router)
 app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
+app.include_router(metadata.router, tags=["Metadata"])
 
 
 @app.on_event("startup")
