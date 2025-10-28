@@ -23,24 +23,20 @@ logger = logging.getLogger(__name__)
 
 class USDAFoodSearchService:
     """
-    USDA食材検索サービス
+    USDA食材検索サービス（Fullインデックスのみ使用）
 
-    FAISSインデックスを使用して、クエリに最も適した食材を検索する。
+    FAISSのfullインデックスのみを使用して、クエリに最も適した食材を検索する。
     """
 
     def __init__(
         self,
         index_dir: str,
-        weight_main: float = 0.0,
-        weight_full: float = 1.0,
         stage1_top_k: int = 40,
         device: str = "cpu"
     ):
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス
-            weight_main: Main検索の重み（0.0-1.0）
-            weight_full: Full検索の重み（0.0-1.0）
             stage1_top_k: Stage1で取得する候補数
             device: 計算デバイス（'cpu' or 'cuda'）
         """
@@ -49,20 +45,21 @@ class USDAFoodSearchService:
         if not self.index_dir.exists():
             raise FileNotFoundError(f"Index directory not found: {index_dir}")
 
-        # FoodSearchPipelineを初期化
+        # SimplifiedUSDASearcherを初期化
         logger.info(f"Initializing USDA Food Search Service...")
         logger.info(f"Index directory: {index_dir}")
-        logger.info(f"Weights: main={weight_main}, full={weight_full}")
+        logger.info(f"Mode: Full index only")
 
-        self.pipeline = FoodSearchPipeline(
+        # Import SimplifiedUSDASearcher
+        from .usda_search import SimplifiedUSDASearcher
+
+        self.searcher = SimplifiedUSDASearcher(
             index_dir=str(self.index_dir),
-            device=device,
-            weight_main=weight_main,
-            weight_full=weight_full,
-            stage1_top_k=stage1_top_k
+            stage1_top_k=stage1_top_k,
+            device=device
         )
 
-        logger.info(f"USDA Food Search Service initialized successfully")
+        logger.info(f"✅ USDA Food Search Service initialized successfully")
 
     def search(
         self,
@@ -89,11 +86,11 @@ class USDAFoodSearchService:
             }
             マッチしなかった場合はNone
         """
-        logger.info(f"Searching for: '{search_name}' | '{description}'")
+        logger.info(f"🔍 Searching for: '{search_name}' | '{description}'")
 
         try:
-            # パイプライン実行
-            result = self.pipeline.search(
+            # 検索実行
+            result = self.searcher.search(
                 query_main=search_name,
                 query_descriptors=description,
                 return_top_k=top_k
@@ -117,12 +114,12 @@ class USDAFoodSearchService:
                 "source": best_match.get('source', 'unknown')
             }
 
-            logger.info(f"Match found: {matched_result['matched_full_description']} (FDC: {matched_result['fdc_id']}, Score: {matched_result['rerank_score']:.4f})")
+            logger.info(f"✅ Match found: {matched_result['matched_full_description']} (FDC: {matched_result['fdc_id']}, Score: {matched_result['rerank_score']:.4f})")
 
             return matched_result
 
         except Exception as e:
-            logger.error(f"Search error for '{search_name}': {e}")
+            logger.error(f"❌ Search error for '{search_name}': {e}")
             return None
 
     def search_batch(

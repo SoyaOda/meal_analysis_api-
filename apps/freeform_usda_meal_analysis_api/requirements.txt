@@ -1,0 +1,31 @@
+# Freeform USDA Meal Analysis API - Requirements
+
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Data Validation
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# HTTP Client
+requests==2.31.0
+httpx==0.26.0
+
+# DeepInfra & AI
+google-cloud-aiplatform==1.38.1
+google-cloud-speech==2.24.0
+
+# FAISS & ML
+faiss-cpu==1.7.4
+sentence-transformers==2.3.1
+torch==2.1.2
+numpy==1.24.3
+
+# FlagEmbedding (for BGE models)
+FlagEmbedding==1.2.10
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1

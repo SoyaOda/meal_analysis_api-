@@ -294,3 +294,93 @@ class DeepInfraService:
         except Exception as e:
             logger.error(f"An unexpected error occurred during API call: {e}", exc_info=True)
             raise ValueError(f"予期せぬエラーが発生しました: {e}") from e 
+
+    async def generate_embeddings(
+        self,
+        texts: List[str],
+        model: str = "Qwen/Qwen3-Embedding-8B"
+    ) -> List[List[float]]:
+        """
+        テキストのembeddingを生成（DeepInfra API使用）
+
+        Args:
+            texts: embedding生成対象のテキストリスト
+            model: 使用するembeddingモデル
+
+        Returns:
+            embedding vector のリスト
+        """
+        try:
+            response = await self.client.embeddings.create(
+                input=texts,
+                model=model,
+                encoding_format="float"  # DeepInfra requires 'float'
+            )
+
+            # embeddingを抽出
+            embeddings = [item.embedding for item in response.data]
+            return embeddings
+
+        except Exception as e:
+            logger.error(f"Embedding generation failed: {e}")
+            raise
+
+    async def rerank(
+        self,
+        query: str,
+        documents: List[str],
+        model: str = "Qwen/Qwen3-Reranker-8B",
+        top_n: Optional[int] = None
+    ) -> Tuple[int, List[float]]:
+        """
+        文書をリランキング（DeepInfra API使用）
+
+        Args:
+            query: クエリテキスト
+            documents: リランキング対象の文書リスト
+            model: 使用するrerankerモデル
+            top_n: 上位何件を返すか（Noneの場合は全件）
+
+        Returns:
+            (best_index, scores)のタプル
+            - best_index: 最高スコアのインデックス
+            - scores: 全文書のスコアリスト
+        """
+        try:
+            # DeepInfra Reranker API エンドポイント
+            import httpx
+
+            api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
+            url = f"https://api.deepinfra.com/v1/inference/{model}"
+
+            async with httpx.AsyncClient() as client:
+                # 正しいフォーマット: queries は list
+                payload = {
+                    "queries": [query],  # list形式
+                    "documents": documents
+                }
+                if top_n is not None:
+                    payload["top_n"] = top_n
+
+                headers = {
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                }
+
+                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
+                response.raise_for_status()
+                result = response.json()
+
+                # Extract scores (scoresフィールドから直接取得)
+                scores = result.get("scores", [])
+                if not scores:
+                    logger.warning(f"No scores returned from reranker API. Response: {result}")
+                    scores = [0.0] * len(documents)
+
+                best_idx = scores.index(max(scores)) if scores else 0
+
+                return best_idx, scores
+
+        except Exception as e:
+            logger.error(f"Reranking failed: {e}")
+            raise

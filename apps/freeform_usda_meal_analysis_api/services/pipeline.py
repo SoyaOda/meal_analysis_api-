@@ -33,8 +33,6 @@ class MealAnalysisPipeline:
         usda_survey_file: str = None,
         usda_foundation_file: str = None,
         usda_sr_legacy_file: Optional[str] = None,
-        weight_main: float = 0.0,
-        weight_full: float = 1.0,
         stage1_top_k: int = 40,
         device: str = "cpu"
     ):
@@ -46,12 +44,10 @@ class MealAnalysisPipeline:
             usda_survey_file: USDA Survey JSONファイルのパス
             usda_foundation_file: USDA Foundation JSONファイルのパス
             usda_sr_legacy_file: USDA SR Legacy JSONファイルのパス（オプション）
-            weight_main: Main検索の重み
-            weight_full: Full検索の重み
             stage1_top_k: Stage1で取得する候補数
             device: 計算デバイス
         """
-        logger.info("Initializing Meal Analysis Pipeline...")
+        logger.info("Initializing Meal Analysis Pipeline (Full Index Only)...")
 
         # VLMサービス初期化
         self.vlm_service = VLMService(
@@ -62,11 +58,9 @@ class MealAnalysisPipeline:
         # クエリ抽出サービス初期化
         self.query_extraction = QueryExtractionService()
 
-        # USDA検索サービス初期化
+        # USDA検索サービス初期化（Fullインデックスのみ使用）
         self.food_search_service = USDAFoodSearchService(
             index_dir=index_dir,
-            weight_main=weight_main,
-            weight_full=weight_full,
             stage1_top_k=stage1_top_k,
             device=device
         )
@@ -216,6 +210,182 @@ class MealAnalysisPipeline:
                 "end_time": end_time
             }
         }
+
+    async def analyze_meal_from_image(
+        self,
+        image_bytes: bytes,
+        user_context: Optional[str] = None,
+        model_config_override: Optional[Any] = None,
+        search_config_override: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """
+        API用の画像分析エンドポイント（パラメータオーバーライド対応）
+
+        Args:
+            image_bytes: 画像データ
+            user_context: ユーザーコンテキスト
+            model_config_override: モデル設定のオーバーライド（ModelConfigオブジェクト）
+            search_config_override: 検索設定のオーバーライド（SearchConfigオブジェクト）
+
+        Returns:
+            API用にフォーマットされた分析結果
+        """
+        # モデル設定の適用
+        vlm_kwargs = {}
+        if model_config_override:
+            if model_config_override.temperature is not None:
+                vlm_kwargs["vlm_temperature"] = model_config_override.temperature
+            if model_config_override.max_tokens is not None:
+                vlm_kwargs["vlm_max_tokens"] = model_config_override.max_tokens
+            if model_config_override.thinking_budget is not None:
+                vlm_kwargs["vlm_thinking_budget"] = model_config_override.thinking_budget
+
+        # プロンプトのオーバーライド（一時的に変更）
+        original_prompt = None
+        if model_config_override and model_config_override.prompt_path:
+            from ..config import get_settings
+            settings = get_settings()
+            prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
+            original_prompt = self.vlm_service.prompt
+            self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
+
+        # モデルIDのオーバーライド（一時的に変更）
+        original_model_id = None
+        if model_config_override and model_config_override.model_id:
+            original_model_id = self.vlm_service.model_id
+            self.vlm_service.model_id = model_config_override.model_id
+            # DeepInfraサービスも更新
+            from shared.services.deepinfra_service import DeepInfraService
+            self.vlm_service.deepinfra_service = DeepInfraService(
+                model_id=model_config_override.model_id
+            )
+
+        try:
+            # 分析実行
+            result = await self.analyze_image(
+                image_bytes=image_bytes,
+                image_mime_type="image/jpeg",
+                **vlm_kwargs
+            )
+
+            # API用のレスポンス形式に変換
+            from ..models.response_models import (
+                IngredientDetail, DishDetail, NutritionInfo
+            )
+
+            api_dishes = []
+            for dish in result["dishes"]:
+                # メインフードを処理
+                main_food = dish.get("main_food", {})
+                usda_match = main_food.get("usda_match", {})
+                nutrition = main_food.get("nutrition", {})
+
+                ingredients = [
+                    IngredientDetail(
+                        ingredient_name=main_food.get("matched_description", main_food.get("search_name", "Unknown")),
+                        weight_g=main_food.get("weight_g", 0.0),
+                        nutrition_per_100g=NutritionInfo(
+                            calories=usda_match.get("calories_per_100g", 0.0),
+                            protein=usda_match.get("protein_per_100g", 0.0),
+                            fat=usda_match.get("fat_per_100g", 0.0),
+                            carbs=usda_match.get("carbs_per_100g", 0.0),
+                        ),
+                        calculated_nutrition=NutritionInfo(
+                            calories=nutrition.get("calories", 0.0),
+                            protein=nutrition.get("protein_g", 0.0),
+                            fat=nutrition.get("fat_g", 0.0),
+                            carbs=nutrition.get("carbs_g", 0.0),
+                        ),
+                        source_db="usda_fndds",
+                        fdc_id=str(usda_match.get("fdc_id", "")),
+                        calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"]
+                    )
+                ]
+
+                # Extrasを追加
+                for extra in dish.get("extras", []):
+                    extra_nutrition = extra.get("nutrition", {})
+                    extra_usda = extra.get("usda_match", {})
+                    ingredients.append(
+                        IngredientDetail(
+                            ingredient_name=extra.get("matched_description", extra.get("search_name", "Unknown")),
+                            weight_g=extra.get("weight_g", 0.0),
+                            nutrition_per_100g=NutritionInfo(
+                                calories=extra_usda.get("calories_per_100g", 0.0),
+                                protein=extra_usda.get("protein_per_100g", 0.0),
+                                fat=extra_usda.get("fat_per_100g", 0.0),
+                                carbs=extra_usda.get("carbs_per_100g", 0.0),
+                            ),
+                            calculated_nutrition=NutritionInfo(
+                                calories=extra_nutrition.get("calories", 0.0),
+                                protein=extra_nutrition.get("protein_g", 0.0),
+                                fat=extra_nutrition.get("fat_g", 0.0),
+                                carbs=extra_nutrition.get("carbs_g", 0.0),
+                            ),
+                            source_db="usda_fndds",
+                            fdc_id=str(extra_usda.get("fdc_id", "")),
+                            calculation_notes=[f"Weight: {extra.get('weight_g', 0)}g"]
+                        )
+                    )
+
+                # 料理の総栄養を計算
+                dish_nutrition = NutritionInfo(
+                    calories=sum(ing.calculated_nutrition.calories for ing in ingredients),
+                    protein=sum(ing.calculated_nutrition.protein for ing in ingredients),
+                    fat=sum(ing.calculated_nutrition.fat for ing in ingredients),
+                    carbs=sum(ing.calculated_nutrition.carbs for ing in ingredients),
+                )
+
+                api_dishes.append(
+                    DishDetail(
+                        dish_name=main_food.get("description", "Unknown Dish"),
+                        confidence=main_food.get("confidence", 0.0),
+                        ingredients=ingredients,
+                        total_nutrition=dish_nutrition,
+                        calculation_metadata={
+                            "ingredient_count": len(ingredients),
+                            "total_weight_g": sum(ing.weight_g for ing in ingredients),
+                        }
+                    )
+                )
+
+            # 全体の栄養
+            total_nutrition = NutritionInfo(
+                calories=result["total_nutrition"]["calories"],
+                protein=result["total_nutrition"]["protein_g"],
+                fat=result["total_nutrition"]["fat_g"],
+                carbs=result["total_nutrition"]["carbs_g"],
+            )
+
+            # モデル情報
+            ai_model_used = model_config_override.model_id if model_config_override and model_config_override.model_id else self.vlm_service.model_id
+            prompt_file_used = model_config_override.prompt_path if model_config_override and model_config_override.prompt_path else "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+
+            # マッチ率計算
+            total_queries = len(api_dishes)
+            matched_queries = sum(1 for dish in api_dishes if len(dish.ingredients) > 0)
+            match_rate = (matched_queries / total_queries * 100) if total_queries > 0 else 0.0
+
+            return {
+                "dishes": api_dishes,
+                "total_nutrition": total_nutrition,
+                "ai_model_used": ai_model_used,
+                "prompt_file_used": prompt_file_used,
+                "match_rate_percent": match_rate,
+                "warnings": [],
+            }
+
+        finally:
+            # プロンプトを元に戻す
+            if original_prompt is not None:
+                self.vlm_service.prompt = original_prompt
+            # モデルIDを元に戻す
+            if original_model_id is not None:
+                self.vlm_service.model_id = original_model_id
+                from shared.services.deepinfra_service import DeepInfraService
+                self.vlm_service.deepinfra_service = DeepInfraService(
+                    model_id=original_model_id
+                )
 
     async def _parallel_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を並列実行"""
