@@ -30,9 +30,7 @@ class MealAnalysisPipeline:
         vlm_model_id: Optional[str] = None,
         vlm_prompt_file: Optional[str] = None,
         index_dir: str = None,
-        usda_survey_file: str = None,
-        usda_foundation_file: str = None,
-        usda_sr_legacy_file: Optional[str] = None,
+        usda_metadata_file: str = None,
         stage1_top_k: int = 40,
         device: str = "cpu"
     ):
@@ -41,9 +39,7 @@ class MealAnalysisPipeline:
             vlm_model_id: DeepInfra VLMモデルID（Noneの場合はconfig設定値を使用）
             vlm_prompt_file: VLMプロンプトファイルのパス
             index_dir: FAISSインデックスディレクトリのパス
-            usda_survey_file: USDA Survey JSONファイルのパス
-            usda_foundation_file: USDA Foundation JSONファイルのパス
-            usda_sr_legacy_file: USDA SR Legacy JSONファイルのパス（オプション）
+            usda_metadata_file: USDA Metadataファイルのパス (栄養素データを含む)
             stage1_top_k: Stage1で取得する候補数
             device: 計算デバイス
         """
@@ -67,12 +63,14 @@ class MealAnalysisPipeline:
 
         # 栄養素サービス初期化
         self.nutrition_service = LocalUSDANutritionService(
-            survey_file=usda_survey_file,
-            foundation_file=usda_foundation_file,
-            sr_legacy_file=usda_sr_legacy_file
+            metadata_file=usda_metadata_file
         )
 
         self.nutrition_calculator = NutritionCalculator(self.nutrition_service)
+
+        # コスト計算サービス初期化
+        from .cost_calculator import CostCalculator
+        self.cost_calculator = CostCalculator()
 
         logger.info("✅ Meal Analysis Pipeline initialized successfully")
 
@@ -219,13 +217,13 @@ class MealAnalysisPipeline:
         search_config_override: Optional[Any] = None,
     ) -> Dict[str, Any]:
         """
-        API用の画像分析エンドポイント（パラメータオーバーライド対応）
+        API用の画像分析エンドポイント(パラメータオーバーライド対応)
 
         Args:
             image_bytes: 画像データ
             user_context: ユーザーコンテキスト
-            model_config_override: モデル設定のオーバーライド（ModelConfigオブジェクト）
-            search_config_override: 検索設定のオーバーライド（SearchConfigオブジェクト）
+            model_config_override: モデル設定のオーバーライド(ModelConfigオブジェクト)
+            search_config_override: 検索設定のオーバーライド(SearchConfigオブジェクト)
 
         Returns:
             API用にフォーマットされた分析結果
@@ -240,7 +238,7 @@ class MealAnalysisPipeline:
             if model_config_override.thinking_budget is not None:
                 vlm_kwargs["vlm_thinking_budget"] = model_config_override.thinking_budget
 
-        # プロンプトのオーバーライド（一時的に変更）
+        # プロンプトのオーバーライド(一時的に変更)
         original_prompt = None
         if model_config_override and model_config_override.prompt_path:
             from ..config import get_settings
@@ -249,7 +247,7 @@ class MealAnalysisPipeline:
             original_prompt = self.vlm_service.prompt
             self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
 
-        # モデルIDのオーバーライド（一時的に変更）
+        # モデルIDのオーバーライド(一時的に変更)
         original_model_id = None
         if model_config_override and model_config_override.model_id:
             original_model_id = self.vlm_service.model_id
@@ -280,21 +278,25 @@ class MealAnalysisPipeline:
                 usda_match = main_food.get("usda_match", {})
                 nutrition = main_food.get("nutrition", {})
 
+                # fdc_idから100gあたりの栄養素を取得
+                main_fdc_id = usda_match.get("fdc_id")
+                main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
+
                 ingredients = [
                     IngredientDetail(
                         ingredient_name=main_food.get("matched_description", main_food.get("search_name", "Unknown")),
                         weight_g=main_food.get("weight_g", 0.0),
                         nutrition_per_100g=NutritionInfo(
-                            calories=usda_match.get("calories_per_100g", 0.0),
-                            protein=usda_match.get("protein_per_100g", 0.0),
-                            fat=usda_match.get("fat_per_100g", 0.0),
-                            carbs=usda_match.get("carbs_per_100g", 0.0),
+                            calories=main_nutrition_per_100g.get("calories", 0.0) if main_nutrition_per_100g else 0.0,
+                            protein=main_nutrition_per_100g.get("protein_g", 0.0) if main_nutrition_per_100g else 0.0,
+                            fat=main_nutrition_per_100g.get("fat_g", 0.0) if main_nutrition_per_100g else 0.0,
+                            carbs=main_nutrition_per_100g.get("carbs_g", 0.0) if main_nutrition_per_100g else 0.0,
                         ),
                         calculated_nutrition=NutritionInfo(
-                            calories=nutrition.get("calories", 0.0),
-                            protein=nutrition.get("protein_g", 0.0),
-                            fat=nutrition.get("fat_g", 0.0),
-                            carbs=nutrition.get("carbs_g", 0.0),
+                            calories=nutrition.get("calories", 0.0) if nutrition else 0.0,
+                            protein=nutrition.get("protein_g", 0.0) if nutrition else 0.0,
+                            fat=nutrition.get("fat_g", 0.0) if nutrition else 0.0,
+                            carbs=nutrition.get("carbs_g", 0.0) if nutrition else 0.0,
                         ),
                         source_db="usda_fndds",
                         fdc_id=str(usda_match.get("fdc_id", "")),
@@ -306,21 +308,26 @@ class MealAnalysisPipeline:
                 for extra in dish.get("extras", []):
                     extra_nutrition = extra.get("nutrition", {})
                     extra_usda = extra.get("usda_match", {})
+
+                    # fdc_idから100gあたりの栄養素を取得
+                    extra_fdc_id = extra_usda.get("fdc_id")
+                    extra_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(extra_fdc_id) if extra_fdc_id else None
+
                     ingredients.append(
                         IngredientDetail(
                             ingredient_name=extra.get("matched_description", extra.get("search_name", "Unknown")),
                             weight_g=extra.get("weight_g", 0.0),
                             nutrition_per_100g=NutritionInfo(
-                                calories=extra_usda.get("calories_per_100g", 0.0),
-                                protein=extra_usda.get("protein_per_100g", 0.0),
-                                fat=extra_usda.get("fat_per_100g", 0.0),
-                                carbs=extra_usda.get("carbs_per_100g", 0.0),
+                                calories=extra_nutrition_per_100g.get("calories", 0.0) if extra_nutrition_per_100g else 0.0,
+                                protein=extra_nutrition_per_100g.get("protein_g", 0.0) if extra_nutrition_per_100g else 0.0,
+                                fat=extra_nutrition_per_100g.get("fat_g", 0.0) if extra_nutrition_per_100g else 0.0,
+                                carbs=extra_nutrition_per_100g.get("carbs_g", 0.0) if extra_nutrition_per_100g else 0.0,
                             ),
                             calculated_nutrition=NutritionInfo(
-                                calories=extra_nutrition.get("calories", 0.0),
-                                protein=extra_nutrition.get("protein_g", 0.0),
-                                fat=extra_nutrition.get("fat_g", 0.0),
-                                carbs=extra_nutrition.get("carbs_g", 0.0),
+                                calories=extra_nutrition.get("calories", 0.0) if extra_nutrition else 0.0,
+                                protein=extra_nutrition.get("protein_g", 0.0) if extra_nutrition else 0.0,
+                                fat=extra_nutrition.get("fat_g", 0.0) if extra_nutrition else 0.0,
+                                carbs=extra_nutrition.get("carbs_g", 0.0) if extra_nutrition else 0.0,
                             ),
                             source_db="usda_fndds",
                             fdc_id=str(extra_usda.get("fdc_id", "")),
@@ -336,9 +343,10 @@ class MealAnalysisPipeline:
                     carbs=sum(ing.calculated_nutrition.carbs for ing in ingredients),
                 )
 
+                # dish_nameをユーザーフレンドリーな名前に変更(matched_descriptionまたはsearch_nameを使用)
                 api_dishes.append(
                     DishDetail(
-                        dish_name=main_food.get("description", "Unknown Dish"),
+                        dish_name=main_food.get("matched_description", main_food.get("search_name", "Unknown Dish")),
                         confidence=main_food.get("confidence", 0.0),
                         ingredients=ingredients,
                         total_nutrition=dish_nutrition,
@@ -366,12 +374,31 @@ class MealAnalysisPipeline:
             matched_queries = sum(1 for dish in api_dishes if len(dish.ingredients) > 0)
             match_rate = (matched_queries / total_queries * 100) if total_queries > 0 else 0.0
 
+            # Usage情報とコスト計算
+            from ..models.response_models import UsageInfo
+            usage_info = None
+            if result.get("usage"):
+                usage_data = result["usage"]
+                cost_data = self.cost_calculator.calculate_cost(
+                    model_id=ai_model_used,
+                    prompt_tokens=usage_data.get("prompt_tokens", 0),
+                    completion_tokens=usage_data.get("completion_tokens", 0)
+                )
+                usage_info = UsageInfo(
+                    prompt_tokens=cost_data["prompt_tokens"],
+                    completion_tokens=cost_data["completion_tokens"],
+                    total_tokens=cost_data["total_tokens"],
+                    estimated_cost_usd=cost_data["estimated_cost_usd"],
+                    model_pricing=cost_data["model_pricing"]
+                )
+
             return {
                 "dishes": api_dishes,
                 "total_nutrition": total_nutrition,
                 "ai_model_used": ai_model_used,
                 "prompt_file_used": prompt_file_used,
                 "match_rate_percent": match_rate,
+                "usage": usage_info,
                 "warnings": [],
             }
 

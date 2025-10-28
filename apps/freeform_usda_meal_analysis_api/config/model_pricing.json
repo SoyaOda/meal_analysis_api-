@@ -1,0 +1,66 @@
+{
+  "_note": "DeepInfra Vision/Multimodal Model Pricing (per 1M tokens) - Verified from official sources",
+  "_updated": "2025-01-21",
+  "_currency": "USD",
+  "_source": "Web search of DeepInfra pricing and third-party verification sites",
+  "models": {
+    "google/gemma-3-27b-it": {
+      "name": "Google Gemma 3 27B IT",
+      "input_price_per_million": 0.09,
+      "output_price_per_million": 0.16,
+      "vision_supported": true,
+      "source": "DeepInfra official model page (verified 2025-01-21)"
+    },
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8": {
+      "name": "Llama 4 Maverick 17B 128E Instruct FP8",
+      "input_price_per_million": 0.15,
+      "output_price_per_million": 0.60,
+      "vision_supported": true,
+      "source": "LangDB and Helicone pricing databases"
+    },
+    "mistralai/Mistral-Small-3.2-24B-Instruct-2506": {
+      "name": "Mistral Small 3.2 24B Instruct",
+      "input_price_per_million": 0.075,
+      "output_price_per_million": 0.20,
+      "vision_supported": true,
+      "source": "DeepInfra and OpenRouter"
+    },
+    "Qwen/Qwen3-VL-235B-A22B-Thinking": {
+      "name": "Qwen3 VL 235B A22B Thinking",
+      "input_price_per_million": 0.45,
+      "output_price_per_million": 3.49,
+      "vision_supported": true,
+      "source": "DeepInfra official model page (verified 2025-01-21)"
+    },
+    "Qwen/Qwen3-VL-235B-A22B-Instruct": {
+      "name": "Qwen3 VL 235B A22B Instruct",
+      "input_price_per_million": 0.30,
+      "output_price_per_million": 1.49,
+      "vision_supported": true,
+      "source": "DeepInfra official model page (verified 2025-01-21)"
+    },
+    "Qwen/Qwen3-VL-30B-A3B-Thinking": {
+      "name": "Qwen3 VL 30B A3B Thinking",
+      "input_price_per_million": 0.29,
+      "output_price_per_million": 0.99,
+      "vision_supported": true,
+      "source": "User provided (2025-01-24)",
+      "_note": "More cost-effective Thinking model compared to 235B variant"
+    },
+    "Qwen/Qwen3-VL-8B-Thinking": {
+      "name": "Qwen3 VL 8B Thinking",
+      "input_price_per_million": 0.18,
+      "output_price_per_million": 2.09,
+      "vision_supported": true,
+      "source": "User provided (2025-01-24)",
+      "_note": "More cost-effective Thinking model compared to 235B variant"
+    }
+  },
+  "default": {
+    "name": "Unknown Model",
+    "input_price_per_million": 0.50,
+    "output_price_per_million": 0.50,
+    "vision_supported": true,
+    "_note": "Default pricing for models not in the list"
+  }
+}

@@ -42,9 +42,7 @@ def initialize_pipeline():
             vlm_model_id=settings.DEFAULT_VLM_MODEL_ID,
             vlm_prompt_file=settings.get_prompt_path(),
             index_dir=settings.USDA_INDEX_DIR,
-            usda_survey_file=settings.USDA_SURVEY_FILE,
-            usda_foundation_file=settings.USDA_FOUNDATION_FILE,
-            usda_sr_legacy_file=settings.USDA_SR_LEGACY_FILE,
+            usda_metadata_file=settings.USDA_METADATA_FILE,
             stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,
             device=settings.DEFAULT_DEVICE,
         )
@@ -60,29 +58,29 @@ async def analyze_meal_from_image(
     user_context: Optional[str] = Form(None, description="ユーザーコンテキスト"),
     # Model config overrides
     model_id: Optional[str] = Form(None, description="VLMモデルID"),
-    prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス（prompts/以下）"),
-    thinking_budget: Optional[int] = Form(None, description="思考トークン数（QVQモデル用）"),
+    prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
+    thinking_budget: Optional[int] = Form(None, description="思考トークン数(QVQモデル用)"),
     temperature: Optional[float] = Form(None, description="生成温度"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
     # Search config overrides
     stage1_top_k: Optional[int] = Form(None, description="Stage1候補数"),
 ):
     """
-    画像から食事を分析して栄養価を計算（Fullインデックスのみ使用）
+    画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)
 
     ## リクエストパラメータ
-    - **image**: 食事画像ファイル（必須）
-    - **user_context**: 食事の説明やコンテキスト（オプション）
+    - **image**: 食事画像ファイル(必須)
+    - **user_context**: 食事の説明やコンテキスト(オプション)
 
-    ## モデル設定（オプション、指定しない場合はデフォルト値を使用）
+    ## モデル設定(オプション、指定しない場合はデフォルト値を使用)
     - **model_id**: DeepInfra VLMモデルID
-    - **prompt_path**: プロンプトファイル名（例: "freeform_prompt_usda_format_ver_v7_production_20251027.txt"）
-    - **thinking_budget**: 思考トークン数（QVQモデル使用時）
-    - **temperature**: 生成温度（0.0-2.0）
+    - **prompt_path**: プロンプトファイル名(例: "freeform_prompt_usda_format_ver_v7_production_20251027.txt")
+    - **thinking_budget**: 思考トークン数(QVQモデル使用時)
+    - **temperature**: 生成温度(0.0-2.0)
     - **max_tokens**: 最大トークン数
 
-    ## 検索設定（オプション）
-    - **stage1_top_k**: Stage1で取得する候補数（デフォルト: 40）
+    ## 検索設定(オプション)
+    - **stage1_top_k**: Stage1で取得する候補数(デフォルト: 40)
 
     ## レスポンス
     - 検出された料理と食材の詳細
@@ -132,13 +130,14 @@ async def analyze_meal_from_image(
             analysis_id=analysis_id,
             input_type="image",
             total_dishes=len(result["dishes"]),
-            total_ingredients=sum(len(d["ingredients"]) for d in result["dishes"]),
+            total_ingredients=sum(len(d.ingredients) for d in result["dishes"]),
             processing_time_seconds=processing_time,
             dishes=result["dishes"],
             total_nutrition=result["total_nutrition"],
             ai_model_used=result["ai_model_used"],
             prompt_file_used=result["prompt_file_used"],
             match_rate_percent=result["match_rate_percent"],
+            usage=result.get("usage"),  # ✅ Added: Usage情報を取得
             warnings=result.get("warnings", []),
         )
 

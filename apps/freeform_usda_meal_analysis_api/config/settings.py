@@ -68,18 +68,10 @@ class Settings:
             str(self.DATA_DIR / "faiss")
         )
 
-        # USDAデータファイル
-        self.USDA_SURVEY_FILE = os.getenv(
-            "USDA_SURVEY_FILE",
-            str(self.DATA_DIR / "usda_json" / "usda_prepared_ingredients_preprocessed.json")
-        )
-        self.USDA_FOUNDATION_FILE = os.getenv(
-            "USDA_FOUNDATION_FILE",
-            str(self.DATA_DIR / "usda_json" / "usda_raw_ingredients_preprocessed.json")
-        )
-        self.USDA_SR_LEGACY_FILE = os.getenv(
-            "USDA_SR_LEGACY_FILE",
-            str(self.DATA_DIR / "usda_json" / "usda_raw_ingredients_preprocessed.json")
+        # USDA Metadata ファイル (栄養素データを含む)
+        self.USDA_METADATA_FILE = os.getenv(
+            "USDA_METADATA_FILE",
+            str(Path(self.USDA_INDEX_DIR) / "usda_metadata.json")
         )
 
         # 検索設定デフォルト値（Fullインデックスのみ）

@@ -3,7 +3,7 @@
 """
 USDA栄養素データサービス
 
-ローカルUSDA JSONファイル（Survey + Foundation）から栄養素データを読み込み、
+metadata.json（栄養素データを含む）から栄養素データを読み込み、
 100gあたりの栄養素から実重量の栄養素を計算する。
 """
 
@@ -17,126 +17,44 @@ logger = logging.getLogger(__name__)
 
 class LocalUSDANutritionService:
     """
-    ローカルUSDA JSONファイルから栄養素データを読み込むサービス
+    metadata.jsonから栄養素データを読み込むサービス
 
-    起動時に1回だけSurvey + Foundationの全データをメモリにロード。
+    起動時に1回だけmetadata.jsonの全データをメモリにロード。
     各食材のFDC IDに対して、calories, protein_g, fat_g, carbs_g を返す。
     """
 
-    # USDA栄養素ID → 内部キー名のマッピング
-    NUTRIENT_IDS = {
-        1008: "calories",      # Energy (kcal)
-        1003: "protein_g",     # Protein (g)
-        1004: "fat_g",         # Total lipid (fat) (g)
-        1005: "carbs_g"        # Carbohydrate, by difference (g)
-    }
-
     def __init__(
         self,
-        survey_file: str,
-        foundation_file: str,
-        sr_legacy_file: Optional[str] = None
+        metadata_file: str
     ):
         """
         Args:
-            survey_file: surveyDownload.json のパス
-            foundation_file: FoodData_Central_foundation_food_json_*.json のパス
-            sr_legacy_file: FoodData_Central_sr_legacy_food_json_*.json のパス（オプション）
+            metadata_file: usda_metadata.json のパス (栄養素データを含む)
         """
-        self.survey_file = Path(survey_file)
-        self.foundation_file = Path(foundation_file)
-        self.sr_legacy_file = Path(sr_legacy_file) if sr_legacy_file else None
+        self.metadata_file = Path(metadata_file)
 
         # FDC ID → {calories, protein_g, fat_g, carbs_g} のマップ
         self.nutrition_db: Dict[int, Dict[str, float]] = {}
 
         # ロード実行
-        self._load_databases()
+        self._load_from_metadata()
 
-    def _load_databases(self):
-        """Survey + Foundation + SR Legacy (optional) の全てをロード"""
-        logger.info(f"📂 Loading USDA Survey foods from: {self.survey_file}")
-        survey_count = self._load_survey_foods()
-        logger.info(f"✅ Loaded {survey_count} Survey foods")
-
-        logger.info(f"📂 Loading USDA Foundation foods from: {self.foundation_file}")
-        foundation_count = self._load_foundation_foods()
-        logger.info(f"✅ Loaded {foundation_count} Foundation foods")
-
-        # SR Legacy (optional)
-        sr_legacy_count = 0
-        if self.sr_legacy_file and self.sr_legacy_file.exists():
-            logger.info(f"📂 Loading USDA SR Legacy foods from: {self.sr_legacy_file}")
-            sr_legacy_count = self._load_sr_legacy_foods()
-            logger.info(f"✅ Loaded {sr_legacy_count} SR Legacy foods")
-        elif self.sr_legacy_file:
-            logger.warning(f"⚠️  SR Legacy file not found: {self.sr_legacy_file}")
-
-        logger.info(f"✅ Total USDA foods loaded: {len(self.nutrition_db)} "
-                   f"(Survey: {survey_count}, Foundation: {foundation_count}, SR Legacy: {sr_legacy_count})")
-
-    def _load_survey_foods(self) -> int:
-        """Survey foods をロード"""
-        with open(self.survey_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        survey_foods = data.get('SurveyFoods', [])
-        self._index_foods(survey_foods, source='survey')
-
-        return len(survey_foods)
-
-    def _load_foundation_foods(self) -> int:
-        """Foundation foods をロード"""
-        with open(self.foundation_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        foundation_foods = data.get('FoundationFoods', [])
-        self._index_foods(foundation_foods, source='foundation')
-
-        return len(foundation_foods)
-
-    def _load_sr_legacy_foods(self) -> int:
-        """SR Legacy foods をロード"""
-        with open(self.sr_legacy_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        sr_legacy_foods = data.get('SRLegacyFoods', [])
-        self._index_foods(sr_legacy_foods, source='sr_legacy')
-
-        return len(sr_legacy_foods)
-
-    def _index_foods(self, foods: List[Dict], source: str):
-        """
-        食材リストから栄養素を抽出してインデックス化
-
-        Args:
-            foods: 食材リスト（各要素は fdcId, foodNutrients を持つ）
-            source: データソース名（'survey' or 'foundation'）
-        """
-        for food in foods:
-            fdc_id = food.get('fdcId')
-            if not fdc_id:
-                continue
-
-            # 栄養素を抽出
-            nutrients = {}
-            for food_nutrient in food.get('foodNutrients', []):
-                nutrient = food_nutrient.get('nutrient', {})
-                nutrient_id = nutrient.get('id')
-
-                if nutrient_id in self.NUTRIENT_IDS:
-                    amount = food_nutrient.get('amount', 0.0)
-                    key = self.NUTRIENT_IDS[nutrient_id]
-                    nutrients[key] = round(float(amount), 1)
-
-            # 4つの栄養素が全て揃っていない場合は0で補完
-            for key in self.NUTRIENT_IDS.values():
-                if key not in nutrients:
-                    nutrients[key] = 0.0
-
-            # メモリDBに格納
-            if nutrients:
-                self.nutrition_db[fdc_id] = nutrients
+    def _load_from_metadata(self):
+        """metadata.jsonから栄養素データをロード"""
+        logger.info(f"📂 Loading USDA nutrition data from metadata: {self.metadata_file}")
+        
+        with open(self.metadata_file, 'r', encoding='utf-8') as f:
+            metadata = json.load(f)
+        
+        # FDC ID → nutrition のマップを作成
+        for item in metadata:
+            fdc_id = item.get('fdc_id')
+            nutrition = item.get('nutrition')
+            
+            if fdc_id and nutrition:
+                self.nutrition_db[fdc_id] = nutrition
+        
+        logger.info(f"✅ Loaded {len(self.nutrition_db)} foods with nutrition data")
 
     def get_nutrition_per_100g(self, fdc_id: int) -> Optional[Dict[str, float]]:
         """

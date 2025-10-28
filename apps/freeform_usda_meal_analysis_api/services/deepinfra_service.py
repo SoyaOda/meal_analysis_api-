@@ -87,15 +87,16 @@ class DeepInfraService:
         """
         # デフォルト値を設定
         if max_tokens is None:
-            max_tokens = 4096
+            max_tokens = 16384  # Thinkingモデル対応のため大幅増量
         if temperature is None:
             temperature = 0.7
         if seed is None:
             seed = 123456
         if thinking_budget is None:
-            thinking_budget = 2048
+            thinking_budget = 8192  # Thinkingモデル用の推論予算（max_tokensの約半分）
 
-        logger.info(f"Starting image analysis with model {self.model_id}.")
+        logger.info(f"🔍 Starting image analysis with model {self.model_id}")
+        logger.info(f"📊 Parameters: max_tokens={max_tokens}, thinking_budget={thinking_budget}, temperature={temperature}, seed={seed}")
 
         # 入力完全一致の検証ハッシュをログ出力
         image_hash = hashlib.sha256(image_bytes).hexdigest()
@@ -127,7 +128,7 @@ class DeepInfraService:
         is_thinking_model = "thinking" in self.model_id.lower()
 
         if is_thinking_model:
-            logger.info(f"Detected Thinking model: {self.model_id}. Disabling response_format to allow thinking tags.")
+            logger.info(f"💭 Detected Thinking model: {self.model_id}")
 
             # Thinkingモデルの推奨設定: temperature=0.6 (greedy decodingは性能低下を引き起こす)
             if temperature == 0.0:
@@ -159,7 +160,7 @@ class DeepInfraService:
                     "thinking_budget": thinking_budget,
                     "top_k": 20
                 }
-                logger.info(f"Thinking model: thinking_budget={thinking_budget}, max_tokens={max_tokens}")
+                logger.info(f"💡 Thinking budget: {thinking_budget}, max_tokens: {max_tokens}")
                 logger.info(f"API params extra_body: {api_params.get('extra_body')}")
             else:
                 # Thinkingモデルでない場合のみJSON強制モードを有効化
@@ -168,18 +169,21 @@ class DeepInfraService:
             response = await self.client.chat.completions.create(**api_params)
 
             # レスポンスの詳細をログ出力
-            logger.info(f"API Response received. Choices count: {len(response.choices) if response.choices else 0}")
+            logger.info(f"DEBUG: response.choices length: {len(response.choices) if response.choices else 0}")
             if response.choices and len(response.choices) > 0:
-                logger.info(f"First choice finish_reason: {response.choices[0].finish_reason}")
+                logger.info(f"DEBUG: finish_reason: {response.choices[0].finish_reason}")
+                
+                # message.contentのデバッグ情報
+                content = response.choices[0].message.content
+                logger.info(f"DEBUG: message.content type: {type(content)}")
+                logger.info(f"DEBUG: message.content length: {len(content) if content else 0}")
+                logger.info(f"DEBUG: message.content preview: {content[:200] if content else None}")
 
                 # Thinkingモデルの場合、reasoning_contentをチェック
                 if is_thinking_model:
                     reasoning_content = getattr(response.choices[0].message, 'reasoning_content', None)
                     if reasoning_content:
-                        logger.info(f"Reasoning content length: {len(reasoning_content)}")
-
-                content = response.choices[0].message.content
-                logger.info(f"Content length: {len(content) if content else 0}")
+                        logger.info(f"💭 Reasoning content length: {len(reasoning_content)}")
 
                 if response.choices[0].finish_reason == 'length':
                     logger.warning(f"⚠️ Response was cut off due to max_tokens limit. Consider increasing max_tokens.")
@@ -187,7 +191,7 @@ class DeepInfraService:
                         raise ValueError(f"Thinkingモデルが推論に全トークンを使い果たしました。max_tokensを増やしてください。現在: {max_tokens}")
 
             if not response.choices or not response.choices[0].message.content:
-                logger.error("API response is empty or invalid.")
+                logger.error("❌ API response is empty or invalid.")
                 raise ValueError("APIからのレスポンスが空です。")
 
             # JSON文字列を取得
@@ -202,7 +206,7 @@ class DeepInfraService:
                     "total_tokens": response.usage.total_tokens if hasattr(response.usage, 'total_tokens') else 0
                 }
 
-            logger.info(f"Successfully received JSON response from API. Usage: {usage_dict}")
+            logger.info(f"✅ Successfully received JSON response. Usage: {usage_dict}")
 
             # Thinkingモデルの場合、<think>...</think>ブロックを除去
             if is_thinking_model:
@@ -212,7 +216,7 @@ class DeepInfraService:
                 cleaned_content = cleaned_content.strip()
                 
                 # タグ削除後の内容をログ出力
-                logger.info(f"Removed <think> tags from Thinking model output. Original length: {len(raw_json_content)}, Cleaned length: {len(cleaned_content)}")
+                logger.info(f"🧹 Removed <think> tags. Original: {len(raw_json_content)}, Cleaned: {len(cleaned_content)}")
                 
                 raw_json_content = cleaned_content
 
@@ -288,7 +292,7 @@ class DeepInfraService:
             logger.error(f"A non-retriable API error occurred: {e}", exc_info=True)
             raise Exception(f"APIエラーが発生しました: {e}") from e
         except Exception as e:
-            logger.error(f"An unexpected error occurred during API call: {e}", exc_info=True)
+            logger.error(f"予期せぬエラー: {e}", exc_info=True)
             raise ValueError(f"予期せぬエラーが発生しました: {e}") from e 
 
     async def generate_embeddings(

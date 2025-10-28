@@ -64,6 +64,25 @@ class DishDetail(BaseModel):
     )
 
 
+
+class UsageInfo(BaseModel):
+    """Token使用量とコスト情報"""
+    model_config = {"protected_namespaces": ()}
+
+    prompt_tokens: int = Field(..., description="入力トークン数", example=1250)
+    completion_tokens: int = Field(..., description="出力トークン数", example=450)
+    total_tokens: int = Field(..., description="合計トークン数", example=1700)
+    estimated_cost_usd: float = Field(..., description="推定コスト（USD）", example=0.00125)
+    model_pricing: Dict[str, Any] = Field(
+        ...,
+        description="使用したモデルの価格情報",
+        example={
+            "input_price_per_million": 0.29,
+            "output_price_per_million": 0.99
+        }
+    )
+
+
 class AnalysisResponse(BaseModel):
     """分析レスポンス"""
     model_config = {"protected_namespaces": ()}
@@ -100,6 +119,9 @@ class AnalysisResponse(BaseModel):
         le=100.0,
         example=100.0
     )
+
+    # Token使用量とコスト情報
+    usage: Optional[UsageInfo] = Field(None, description="Token使用量とコスト情報")
 
     # 音声入力特有
     transcript: Optional[str] = Field(None, description="音声認識テキスト（音声入力時のみ）")
