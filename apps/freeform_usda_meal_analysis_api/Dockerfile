@@ -23,6 +23,8 @@ EXPOSE 8006
 # 環境変数のデフォルト設定
 ENV PORT=8006
 ENV LOG_LEVEL=INFO
+ENV USDA_INDEX_DIR=/app/data/faiss
+ENV USDA_METADATA_FILE=/app/data/faiss/usda_metadata.json
 
 # アプリケーション起動（PYTHONPATHは不要）
 CMD ["python", "-m", "main"]
