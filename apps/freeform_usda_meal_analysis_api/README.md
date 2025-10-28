@@ -8,10 +8,12 @@ VLM (Vision Language Model) による画像解析から、USDA FoodData Central�
 
 **完全な栄養計算**: USDA FoodData Central の3つのデータソース（Survey, Foundation, SR Legacy）から13,564食材の栄養データを使用。
 
+**単位変換サポート**: 食材ごとの利用可能な単位（カップ、スプーン、枚など）と重量変換情報を提供（96.2%カバレッジ）。
+
 ## アーキテクチャ
 
 ```
-画像入力 → VLM解析 → クエリ抽出 → USDA検索（Full Index） → 栄養素計算 → 結果出力
+画像入力 → VLM解析 → クエリ抽出 → USDA検索（Hybrid/Accurate/Fast） → 栄養素計算 → 結果出力
 ```
 
 ### 主要コンポーネント
@@ -27,12 +29,17 @@ VLM (Vision Language Model) による画像解析から、USDA FoodData Central�
 4. **SimplifiedUSDASearcher**: FAISS Full Index を使用した軽量な食材検索
    - 2段階検索: FAISS embedding search → Qwen3 reranking
    - 13,565 ベクトルのインデックス
-5. **LocalUSDANutritionService**: `usda_metadata.json` から栄養素データをロード（自己完結型）
+5. **HybridSearchEngine**: BM25 + Vector Hybrid Search (2025年ベストプラクティス準拠)
+   - BM25 (キーワードマッチング) + Vector (セマンティック) の融合
+   - RRF (Reciprocal Rank Fusion) で結果を統合
+   - 重み付け: BM25=0.4, Vector=0.6, RRF k=60
+6. **LocalUSDANutritionService**: `usda_metadata.json` から栄養素データをロード（自己完結型）
    - Survey Foods: 5,431 食材
    - Foundation Foods: 340 食材
    - SR Legacy Foods: 7,793 食材
    - **合計: 13,564 食材**（栄養素データ内蔵、270MBの外部JSONファイル不要）
-6. **NutritionCalculator**: 100g あたりの栄養素から実重量の栄養素を計算
+   - **Portions情報**: 13,046食材（96.2%）に単位変換情報あり
+7. **NutritionCalculator**: 100g あたりの栄養素から実重量の栄養素を計算
 
 ## ディレクトリ構成
 
@@ -54,11 +61,13 @@ apps/freeform_usda_meal_analysis_api/
 ├── routers/
 │   ├── __init__.py
 │   ├── analysis.py            # 分析エンドポイント
+│   ├── retrieval.py           # 検索エンドポイント（Hybrid/Accurate/Fast）
 │   └── health.py              # ヘルスチェック
 ├── data/                      # データディレクトリ（self-contained）
 │   └── faiss/                 # FAISS インデックスと栄養データ
 │       ├── usda_index_full.faiss        # ベクトル検索インデックス（13,564 vectors）
-│       └── usda_metadata.json           # 栄養素データ統合版（5.0MB、13,564 foods）
+│       ├── usda_bm25_index/             # BM25インデックス（Hybrid Search用）
+│       └── usda_metadata.json           # 栄養素データ統合版（5.0MB、13,564 foods、portions情報含む）
 ├── scripts/                   # データ生成スクリプト
 │   └── build_index_with_nutrition.py    # FAISSインデックス + 栄養データ統合生成
 ├── prompts/
@@ -72,6 +81,7 @@ apps/freeform_usda_meal_analysis_api/
 │   ├── query_extraction.py    # クエリ抽出
 │   ├── usda_search.py         # Simplified USDA Searcher
 │   ├── food_search_service.py # USDA検索サービス
+│   ├── hybrid_search.py       # Hybrid Search Engine (BM25 + Vector)
 │   ├── nutrition_service.py   # 栄養素計算
 │   └── pipeline.py            # End-to-End統合
 └── test_result_food1.json     # テスト結果サンプル
@@ -138,12 +148,15 @@ python -m apps.freeform_usda_meal_analysis_api.main
 ```
 ✅ Loaded 13564 foods with nutrition data
 ✅ Loaded full index: 13564 vectors
+✅ Hybrid search engine initialized
 ✅ Pipeline initialized successfully
 Uvicorn running on http://0.0.0.0:8006
 ```
 
 起動後、以下の URL でアクセス可能:
-- **Swagger UI**: http://localhost:8006/docs
+- **Swagger UI**: http://localhost:8006/docs (フロントエンドエンジニア向けAPI仕様書)
+- **ReDoc**: http://localhost:8006/redoc (読みやすいAPI仕様書)
+- **OpenAPI JSON**: http://localhost:8006/openapi.json
 - **Health Check**: http://localhost:8006/health
 - **API Root**: http://localhost:8006/
 
@@ -240,6 +253,118 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 
 完全なレスポンスは `test_result_food1.json` を参照してください。
 
+## USDA食材検索API（Retrieve Endpoint）
+
+食材データベースから直接検索を行うAPIエンドポイント。3つの検索モードをサポートします。
+
+### Fast Mode (FAISS検索のみ、高速)
+
+```bash
+curl -X GET "http://localhost:8006/api/v1/retrieve?q=chicken&mode=fast&top_k=5"
+```
+
+### Accurate Mode (FAISS + Reranking、高精度)
+
+```bash
+curl -X GET "http://localhost:8006/api/v1/retrieve?q=beef&mode=accurate&top_k=5"
+```
+
+### Hybrid Mode (BM25 + FAISS、最高精度、デフォルト)
+
+```bash
+curl -X GET "http://localhost:8006/api/v1/retrieve?q=rice&mode=hybrid&top_k=5&debug=true"
+```
+
+### レスポンス例（Hybrid Mode）
+
+**✨ 新機能: Portions（単位変換情報）** を含むレスポンス:
+
+```json
+{
+  "query": "chicken",
+  "mode": "hybrid",
+  "results": [
+    {
+      "fdc_id": 2706085,
+      "name": "Chicken feet",
+      "main_name": "Chicken feet",
+      "descriptors": "",
+      "source": "survey",
+      "score": 0.9159824474180568,
+      "score_type": "hybrid_score",
+      "component_scores": {
+        "bm25": 0.9056922034159449,
+        "vector": 0.8694238066673279,
+        "rrf": 0.03205128205128205
+      },
+      "nutrition_per_100g": {
+        "calories": 215.0,
+        "protein": 19.4,
+        "fat": 14.6,
+        "carbs": 0.2
+      },
+      "portions": [
+        {
+          "description": "1 cup",
+          "gram_weight": 240.0
+        },
+        {
+          "description": "1 tablespoon",
+          "gram_weight": 15.0
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "total_results": 5,
+    "search_time_ms": 376,
+    "index_type": "FAISS",
+    "algorithm": "BM25+Vector_RRF"
+  },
+  "status": {
+    "success": true,
+    "message": "Search completed successfully"
+  }
+}
+```
+
+**Portions（単位変換情報）について:**
+- **カバレッジ**: 13,564食材中13,046食材（96.2%）にportions情報あり
+- **NULL値**: 518食材（3.8%）は `"portions": null` を返す
+- **構造**: 各portionは `description`（単位の説明）と `gram_weight`（グラム変換値）を含む
+- **用途**: ユーザーが「1カップ」「大さじ1」などの単位で入力した場合に、自動でグラム換算できる
+
+**Portionsの例:**
+```json
+"portions": [
+  {"description": "1 cup", "gram_weight": 240.0},
+  {"description": "1 tablespoon", "gram_weight": 15.0},
+  {"description": "1 teaspoon", "gram_weight": 5.0},
+  {"description": "1 slice", "gram_weight": 28.0}
+]
+```
+
+Portions情報がない食材の例:
+```json
+"portions": null
+```
+
+### 検索モード比較
+
+| モード | アルゴリズム | 速度 | 精度 | 用途 |
+|--------|--------------|------|------|------|
+| **fast** | FAISS Vector検索のみ | 最速 | 標準 | プロトタイプ、リアルタイム検索 |
+| **accurate** | FAISS + Qwen3-Reranker | 中速 | 高精度 | 本番環境、高精度重視 |
+| **hybrid** | BM25 + Vector + RRF | 中速 | 最高精度 | 本番環境、最高品質（デフォルト） |
+
+### パラメータ
+
+- `q` (必須): 検索クエリ（例: "chicken breast grilled"）
+- `mode` (オプション): 検索モード（fast/accurate/hybrid、デフォルト: hybrid）
+- `top_k` (オプション): 返却する結果数（1-50、デフォルト: 10）
+- `include_nutrition` (オプション): 栄養情報を含めるか（true/false、デフォルト: true）
+- `debug` (オプション): デバッグ情報を含めるか（true/false、デフォルト: false）
+
 ## デプロイ（Cloud Run）
 
 ### 前提条件
@@ -288,9 +413,9 @@ gcloud run deploy freeform-usda-meal-analysis-api \
 #### 前提条件
 
 1. **USDA JSONファイルの配置**:
-   - `data/usda_json/surveyDownload.json` (Survey Foods)
-   - `data/usda_json/FoodData_Central_foundation_food_json_2025-04-24 2.json` (Foundation Foods)
-   - `data/usda_json/FoodData_Central_sr_legacy_food_json_2018-04 2.json` (SR Legacy Foods)
+   - `usda_database/surveyDownload.json` (Survey Foods)
+   - `usda_database/FoodData_Central_foundation_food_json_2025-04-24 2.json` (Foundation Foods)
+   - `usda_database/FoodData_Central_sr_legacy_food_json_2018-04 2.json` (SR Legacy Foods)
 
 2. **DeepInfra API Key**: 環境変数に設定
    ```bash
@@ -300,27 +425,61 @@ gcloud run deploy freeform-usda-meal-analysis-api \
 #### ビルドスクリプト実行
 
 ```bash
-cd apps/freeform_usda_meal_analysis_api
+cd /path/to/meal_analysis_api_2
 
-# インデックスと栄養データを生成
-PYTHONPATH=/path/to/meal_analysis_api_2 python scripts/build_index_with_nutrition.py
+# 完全ビルド（FAISSインデックス + 栄養データ + Portions情報）
+PYTHONPATH=/path/to/meal_analysis_api_2 \
+python apps/freeform_usda_meal_analysis_api/scripts/build_index_with_nutrition.py
+
+# メタデータのみ更新（Portions情報を追加、FAISSインデックスは再構築しない）
+PYTHONPATH=/path/to/meal_analysis_api_2 \
+python apps/freeform_usda_meal_analysis_api/scripts/build_index_with_nutrition.py --metadata-only
 ```
 
 #### 生成される出力
 
-実行が成功すると、`data/faiss/` ディレクトリに以下のファイルが生成されます:
+実行が成功すると、`apps/freeform_usda_meal_analysis_api/data/faiss/` ディレクトリに以下のファイルが生成されます:
 
 1. **usda_index_full.faiss** (約212MB)
    - 13,564個の食材のベクトルインデックス
    - Qwen3-Embedding-8B (4096次元) を使用
 
-2. **usda_metadata.json** (約5.0MB)
-   - 13,564個の食材の栄養素データを含むメタデータ
+2. **usda_bm25_index/** (約30MB)
+   - BM25キーワード検索インデックス（Hybrid Search用）
+   - 13,564ドキュメント
+
+3. **usda_metadata.json** (約5.0MB)
+   - 13,564個の食材の栄養素データとportions情報を含むメタデータ
    - 各食材に以下を格納:
      - `fdc_id`: USDA Food Data Central ID
      - `description`: 食材名
      - `nutrition`: 100gあたりの栄養素（calories, protein_g, fat_g, carbs_g）
      - `source`: データソース（survey/foundation/sr_legacy）
+     - **`portions`**: 単位変換情報（96.2%の食材で利用可能、ない場合はnull）
+
+**Portions情報の例:**
+```json
+{
+  "fdc_id": 2705704,
+  "description": "Cheese, NFS",
+  "nutrition": {
+    "calories": 402.0,
+    "protein_g": 24.9,
+    "fat_g": 33.1,
+    "carbs_g": 1.3
+  },
+  "portions": [
+    {
+      "description": "1 cracker-size slice",
+      "gram_weight": 9.0
+    },
+    {
+      "description": "1 cubic inch",
+      "gram_weight": 17.3
+    }
+  ]
+}
+```
 
 #### ビルドプロセスの詳細
 
@@ -330,22 +489,48 @@ PYTHONPATH=/path/to/meal_analysis_api_2 python scripts/build_index_with_nutritio
 2. **栄養素データの抽出**
    - 4つの主要栄養素: calories (1008), protein (1003), fat (1004), carbs (1005)
    - 栄養素が空配列の食材は自動除外（例: "Milk, human"）
-3. **埋め込みベクトル生成** (DeepInfra API使用)
+3. **Portions情報の抽出** (新機能)
+   - Survey: `portionDescription` + `gramWeight`
+   - Foundation: `measureUnit.name` + `value` + `gramWeight`
+   - SR Legacy: `modifier` + `amount` + `gramWeight`
+   - カバレッジ: 13,046/13,564食材（96.2%）
+4. **埋め込みベクトル生成** (DeepInfra API使用)
    - バッチサイズ: 1024アイテム/リクエスト
    - 全13,564アイテムを14バッチで処理
-4. **FAISSインデックス構築**
+5. **BM25インデックス構築** (Hybrid Search用)
+   - bm25s ライブラリ使用（500倍高速）
+   - ステミング: English Stemmer
+6. **FAISSインデックス構築**
    - IndexFlatIP (Inner Product) を使用
    - 正規化済みベクトル（コサイン類似度計算用）
-5. **データ保存**
+7. **データ保存**
    - `usda_index_full.faiss`: ベクトルインデックス
-   - `usda_metadata.json`: 栄養素統合メタデータ
+   - `usda_bm25_index/`: BM25インデックス
+   - `usda_metadata.json`: 栄養素 + portions統合メタデータ
+
+#### メタデータのみ更新モード（--metadata-only）
+
+既存のFAISSインデックスを維持したまま、portions情報だけを追加・更新する場合:
+
+```bash
+cd /path/to/meal_analysis_api_2
+
+# メタデータのみ更新（約3秒で完了）
+PYTHONPATH=/path/to/meal_analysis_api_2 \
+python apps/freeform_usda_meal_analysis_api/scripts/build_index_with_nutrition.py --metadata-only
+```
+
+**メリット:**
+- **高速**: 3秒で完了（完全ビルドは5-10分）
+- **APIコスト不要**: DeepInfra APIを呼ばない
+- **FAISSインデックス不変**: 既存のベクトルインデックスをそのまま使用
 
 #### 生成後のクリーンアップ
 
 生成が完了したら、元のUSDA JSONファイル（270MB）は不要になり、削除できます:
 
 ```bash
-rm -rf data/usda_json
+rm -rf usda_database
 ```
 
 これにより約303MBのディスク容量を節約できます。
@@ -379,15 +564,22 @@ rm -rf data/usda_json
 - **FastAPI**: Python Web フレームワーク
 - **FAISS**: Facebook AI Similarity Search
   - Full Index: 13,564 vectors
+- **BM25S**: 高速BM25実装（Hybrid Search用）
+  - 500x faster than rank-bm25
+  - インデックスサイズ: 約 13,564 documents
 - **DeepInfra API**: VLM ホスティング
   - **Qwen3-VL-30B-A3B-Thinking** (デフォルト、画像解析)
   - Qwen3-Embedding-8B (埋め込み生成)
   - Qwen3-Reranker-8B (リランキング)
+- **Hybrid Search**: BM25 + Vector Semantic Search (2025年ベストプラクティス)
+  - RRF (Reciprocal Rank Fusion) による結果統合
+  - 重み付け: BM25=0.4, Vector=0.6, RRF k=60
 - **USDA FoodData Central**: 栄養素データベース（metadata.json統合版）
   - Survey Foods: 5,431 食材（調理済み・加工食品）
   - Foundation Foods: 340 食材（生鮮食品）
   - SR Legacy Foods: 7,793 食材（レガシーデータ）
   - **合計: 13,564 食材**（栄養素データ内蔵、270MB外部ファイル不要）
+  - **Portions情報**: 13,046食材（96.2%）に単位変換データあり
 
 ### Self-contained アーキテクチャ
 
@@ -396,6 +588,9 @@ rm -rf data/usda_json
 - **栄養データ統合**: FAISS metadata.json に栄養素データを内蔵（5.0MB）
   - 従来の270MB外部JSONファイル依存を削除
   - 303MBのディスク容量削減
+- **Portions情報統合**: 単位変換データもmetadata.jsonに統合
+  - 96.2%の食材でカップ、スプーン、枚などの単位変換が可能
+  - 外部API不要でグラム換算が完結
 - **単一ディレクトリデプロイ**: `apps/freeform_usda_meal_analysis_api/` だけでデプロイ可能
 
 ### Thinking Model について
@@ -410,3 +605,20 @@ Thinking model は推論プロセス（`<think>...</think>`）を含むため、
 - **2段階検索**: FAISS embedding search → Qwen3-Reranker-8B reranking
 - **高精度マッチング**: 13,565 食材から最適な候補を検索
 - **柔軟な設定**: `stage1_top_k` パラメータで候補数を調整可能
+
+### 単位変換機能（Portions）
+
+**新機能:** 食材ごとの利用可能な単位と重量変換情報を提供
+
+- **カバレッジ**: 96.2%の食材（13,046/13,564）
+- **利用可能な単位例**:
+  - 体積: カップ (cup), 大さじ (tablespoon), 小さじ (teaspoon)
+  - 個数: 枚 (slice), 個 (piece), 本 (stick)
+  - その他: serving, portion, ounce等
+- **自動グラム換算**: APIレスポンスの `gram_weight` で変換
+- **NULL処理**: 単位情報がない食材は `"portions": null` を返却
+
+**活用例:**
+1. ユーザーが「チーズ 1枚」と入力
+2. APIが該当食材を検索し、portionsから「1 slice = 28g」を取得
+3. 28gの栄養価を自動計算

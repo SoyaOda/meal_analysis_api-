@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routers import health, analysis
+from .routers import health, analysis, retrieval
 
 # ロギング設定
 logging.basicConfig(
@@ -45,6 +45,7 @@ app.add_middleware(
 # ルーター登録
 app.include_router(health.router)
 app.include_router(analysis.router)
+app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
 
 
 @app.on_event("startup")
@@ -58,12 +59,37 @@ async def startup_event():
     logger.info(f"USDA Index Directory: {settings.USDA_INDEX_DIR}")
     logger.info("=" * 60)
 
-    # パイプライン初期化
+    # ハイブリッドサーチエンジンの初期化（パイプラインより先に初期化）
+    hybrid_engine = None
     try:
-        analysis.initialize_pipeline()
+        from .services.hybrid_search import HybridSearchEngine
+        hybrid_engine = HybridSearchEngine(
+            index_dir=settings.USDA_INDEX_DIR,
+            bm25_weight=0.4,   # 2025年ベストプラクティス
+            vector_weight=0.6, # 2025年ベストプラクティス
+            rrf_k=60          # 2025年ベストプラクティス
+        )
+        logger.info("✅ Hybrid search engine initialized")
+    except Exception as e:
+        logger.warning(f"⚠️ Hybrid search engine initialization failed: {e}")
+        logger.warning("   Hybrid mode will not be available")
+
+    # パイプライン初期化（hybrid_engineを渡す）
+    try:
+        analysis.initialize_pipeline(hybrid_engine=hybrid_engine)
     except Exception as e:
         logger.error(f"Failed to initialize pipeline during startup: {e}")
         raise
+
+    # Retrieval router に search_service を設定
+    from .routers import retrieval
+    retrieval.set_search_service(analysis._pipeline.food_search_service)
+    logger.info("✅ Retrieval router initialized with search service")
+
+    # Retrieval routerにhybrid_engineも設定
+    if hybrid_engine:
+        retrieval.set_hybrid_search_engine(hybrid_engine)
+        logger.info("✅ Retrieval router initialized with hybrid search engine")
 
 
 @app.on_event("shutdown")
@@ -92,6 +118,7 @@ async def root():
         "endpoints": {
             "health": "/health",
             "analysis": "/api/v1/meal-analyses",
+            "retrieval": "/api/v1/retrieve",
         },
         "default_config": {
             "model": settings.DEFAULT_VLM_MODEL_ID,

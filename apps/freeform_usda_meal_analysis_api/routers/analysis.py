@@ -31,7 +31,7 @@ def get_pipeline() -> MealAnalysisPipeline:
     return _pipeline
 
 
-def initialize_pipeline():
+def initialize_pipeline(hybrid_engine=None):
     """パイプラインを初期化（アプリ起動時に呼び出す）"""
     global _pipeline
     settings = get_settings()
@@ -45,10 +45,11 @@ def initialize_pipeline():
             usda_metadata_file=settings.USDA_METADATA_FILE,
             stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,
             device=settings.DEFAULT_DEVICE,
+            hybrid_engine=hybrid_engine
         )
         logger.info("✅ Pipeline initialized successfully")
     except Exception as e:
-        logger.error(f"Failed to initialize pipeline: {e}")
+        logger.error(f"Pipeline initialization failed: {e}", exc_info=True)
         raise
 
 
