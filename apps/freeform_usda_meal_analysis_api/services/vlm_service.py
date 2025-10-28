@@ -97,17 +97,26 @@ class VLMService:
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
         logger.info(f"Parameters: temperature={temperature}, seed={seed}, max_tokens={max_tokens}")
 
+        # API呼び出しパラメータ構築（Noneは渡さない）
+        api_params = {
+            "image_bytes": image_bytes,
+            "image_mime_type": image_mime_type,
+            "prompt": self.prompt,
+            "return_usage": True,
+        }
+        
+        # Optional パラメータは None でない場合のみ追加
+        if max_tokens is not None:
+            api_params["max_tokens"] = max_tokens
+        if temperature is not None:
+            api_params["temperature"] = temperature
+        if seed is not None:
+            api_params["seed"] = seed
+        if thinking_budget is not None:
+            api_params["thinking_budget"] = thinking_budget
+
         # VLM呼び出し
-        raw_response, usage = await self.deepinfra_service.analyze_image(
-            image_bytes=image_bytes,
-            image_mime_type=image_mime_type,
-            prompt=self.prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            seed=seed,
-            return_usage=True,
-            thinking_budget=thinking_budget
-        )
+        raw_response, usage = await self.deepinfra_service.analyze_image(**api_params)
 
         # JSONパース
         try:
