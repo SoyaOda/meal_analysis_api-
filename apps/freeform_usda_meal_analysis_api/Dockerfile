@@ -17,9 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # アプリケーション全体をコピー（自己完結型）
 COPY . .
 
-# ポート8006を公開
-EXPOSE 8006
-
 # 環境変数のデフォルト設定
 ENV LOG_LEVEL=INFO
 ENV USDA_INDEX_DIR=/app/data/faiss
