@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-API Food Search Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* API選択セクション */
+        .api-selector-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .api-selector-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .api-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .api-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .api-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .api-option-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .api-option-details {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .api-option.selected .api-option-details {
+            opacity: 0.9;
+        }
+
+        /* FAISS モード選択 */
+        .faiss-mode-selector {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #667eea;
+        }
+
+        .faiss-mode-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .mode-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mode-button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .mode-button:hover {
+            background: #f0f3ff;
+        }
+
+        .mode-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* API状態表示 */
+        .api-status {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .status-ok {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #2c5f2d;
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #8b2c2c;
+        }
+
+        .api-info {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .api-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .api-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .api-info-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .api-info-value {
+            color: #333;
+            text-align: right;
+        }
+
+        /* 検索ボックス */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            font-size: 1.1rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #667eea;
+            pointer-events: none;
+        }
+
+        /* スケルトンローディング */
+        .skeleton-container {
+            display: none;
+        }
+
+        .skeleton-item {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            padding: 20px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .skeleton-line {
+            height: 16px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        /* 検索結果 */
+        .suggestions-container {
+            display: none;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            background: white;
+        }
+
+        .suggestion-item {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.keyboard-selected {
+            background: linear-gradient(135deg, #f0f3ff 0%, #e8edff 100%);
+        }
+
+        .suggestion-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #ffd900 0%, #ffaa00 100%);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .suggestion-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .meta-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-match {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #2c5f2d;
+        }
+
+        .badge-score {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            color: #8b6914;
+        }
+
+        .badge-source {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+        }
+
+        .nutrition-preview {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .nutrition-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nutrition-icon {
+            font-size: 1.2rem;
+        }
+
+        .nutrition-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .nutrition-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .api-options {
+                grid-template-columns: 1fr;
+            }
+
+            .mode-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Multi-API Food Search</h1>
+        <p class="subtitle">3つのAPIを比較してUSDA食材検索を体験</p>
+
+        <!-- API選択セクション -->
+        <div class="api-selector-section">
+            <div class="api-selector-title">
+                ⚙️ API選択
+            </div>
+            <div class="api-options">
+                <div class="api-option" data-api="word_query">
+                    <div class="api-option-name">Word Query API</div>
+                    <div class="api-option-details">
+                        Port 8002<br>
+                        Elasticsearch + MyNetDiary
+                    </div>
+                </div>
+                <div class="api-option" data-api="usda_word_query">
+                    <div class="api-option-name">USDA Word Query API</div>
+                    <div class="api-option-details">
+                        Port 8004<br>
+                        Elasticsearch + USDA FNDDS
+                    </div>
+                </div>
+                <div class="api-option" data-api="faiss_retrieval">
+                    <div class="api-option-name">FAISS Retrieval API</div>
+                    <div class="api-option-details">
+                        Port 8006<br>
+                        FAISS + USDA FNDDS
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAISS モード選択 (FAISS APIが選択されている場合のみ表示) -->
+            <div class="faiss-mode-selector" id="faissModeSelector" style="display: none;">
+                <div class="faiss-mode-title">🚀 FAISS モード選択</div>
+                <div class="mode-buttons">
+                    <button class="mode-button active" data-mode="fast">
+                        ⚡ Fast Mode<br>
+                        <small>FAISS検索のみ (高速)</small>
+                    </button>
+                    <button class="mode-button" data-mode="accurate">
+                        🎯 Accurate Mode<br>
+                        <small>FAISS + Reranking (高精度)</small>
+                    </button>
+                    <button class="mode-button" data-mode="hybrid">
+                        🔀 Hybrid Mode<br>
+                        <small>BM25 + FAISS (最高精度)</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API状態表示 -->
+        <div class="api-status" id="apiStatus">
+            ⏳ API接続確認中...
+        </div>
+
+        <!-- API情報表示 -->
+        <div class="api-info" id="apiInfo">
+            <div class="api-info-row">
+                <span class="api-info-label">データソース:</span>
+                <span class="api-info-value" id="infoDataSource">-</span>
+            </div>
+            <div class="api-info-row">
+                <span class="api-info-label">検索アルゴリズム:</span>
+                <span class="api-info-value" id="infoAlgorithm">-</span>
+            </div>
+            <div class="api-info-row">
+                <span class="api-info-label">エンドポイント:</span>
+                <span class="api-info-value" id="infoEndpoint">-</span>
+            </div>
+        </div>
+
+        <!-- 検索ボックス -->
+        <div class="search-wrapper">
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="食材を検索... (例: chicken breast, rice, tomato)"
+                autocomplete="off"
+                aria-label="食材検索"
+                aria-expanded="false"
+                aria-controls="suggestions"
+            >
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- スケルトンローディング -->
+        <div class="skeleton-container" id="skeleton">
+            <div class="skeleton-item">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="skeleton-item">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="skeleton-item">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+        </div>
+
+        <!-- 検索結果 -->
+        <div class="suggestions-container" id="suggestions" role="listbox">
+        </div>
+    </div>
+
+    <script>
+        // ========== API設定 ==========
+        const API_CONFIGS = {
+            'word_query': {
+                name: 'Word Query API (MyNetDiary)',
+                baseUrl: 'http://localhost:8002',
+                port: 8002,
+                type: 'elasticsearch',
+                endpoint: '/api/v1/nutrition/suggest',
+                params: {
+                    limit: 10,
+                    search_context: 'word_search'
+                },
+                dataSource: 'MyNetDiary',
+                algorithm: 'Elasticsearch (7-layer Tier + Porter Stemmer)'
+            },
+            'usda_word_query': {
+                name: 'USDA Word Query API',
+                baseUrl: 'http://localhost:8004',
+                port: 8004,
+                type: 'elasticsearch',
+                endpoint: '/api/v1/usda/suggest',
+                params: {
+                    limit: 10
+                },
+                dataSource: 'USDA FNDDS (1,542 items)',
+                algorithm: 'Elasticsearch (7-layer Tier + Porter Stemmer)'
+            },
+            'faiss_retrieval': {
+                name: 'FAISS Retrieval API',
+                baseUrl: 'http://localhost:8006',
+                port: 8006,
+                type: 'faiss',
+                endpoint: '/api/v1/retrieve',
+                params: {
+                    top_k: 40,
+                    include_nutrition: true,
+                    debug: false
+                },
+                dataSource: 'USDA (Survey + Foundation + Legacy, 13,564 items)',
+                algorithm: 'FAISS + BGE Embeddings',
+                modes: ['fast', 'accurate', 'hybrid']
+            }
+        };
+
+        // 現在選択されているAPI設定
+        let currentApiKey = 'word_query';
+        let currentApiConfig = API_CONFIGS[currentApiKey];
+        let currentFaissMode = 'fast';
+
+        // DOM要素
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('suggestions');
+        const skeletonContainer = document.getElementById('skeleton');
+        const apiStatus = document.getElementById('apiStatus');
+        const faissModeSelector = document.getElementById('faissModeSelector');
+        const infoDataSource = document.getElementById('infoDataSource');
+        const infoAlgorithm = document.getElementById('infoAlgorithm');
+        const infoEndpoint = document.getElementById('infoEndpoint');
+
+        let debounceTimer;
+        let currentQuery = '';
+        let selectedIndex = -1;
+        let currentSuggestions = [];
+
+        // ========== 初期化 ==========
+        function init() {
+            // API選択ボタンのイベントリスナー
+            document.querySelectorAll('.api-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    selectApi(option.dataset.api);
+                });
+            });
+
+            // FAISSモード選択ボタンのイベントリスナー
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectFaissMode(button.dataset.mode);
+                });
+            });
+
+            // 検索入力のイベントリスナー
+            searchInput.addEventListener('input', handleSearchInput);
+            searchInput.addEventListener('keydown', handleKeyDown);
+            searchInput.addEventListener('blur', () => {
+                setTimeout(hideSuggestions, 200);
+            });
+
+            // 初期APIを選択
+            selectApi('word_query');
+        }
+
+        // ========== API選択 ==========
+        function selectApi(apiKey) {
+            currentApiKey = apiKey;
+            currentApiConfig = API_CONFIGS[apiKey];
+
+            // UI更新
+            document.querySelectorAll('.api-option').forEach(option => {
+                option.classList.toggle('selected', option.dataset.api === apiKey);
+            });
+
+            // FAISS API の場合はモード選択を表示
+            if (apiKey === 'faiss_retrieval') {
+                faissModeSelector.style.display = 'block';
+            } else {
+                faissModeSelector.style.display = 'none';
+            }
+
+            // API情報を更新
+            updateApiInfo();
+
+            // API接続確認
+            checkApiStatus();
+
+            // 検索結果をクリア
+            hideSuggestions();
+            hideSkeleton();
+            searchInput.value = '';
+            currentQuery = '';
+        }
+
+        // ========== FAISSモード選択 ==========
+        function selectFaissMode(mode) {
+            currentFaissMode = mode;
+
+            document.querySelectorAll('.mode-button').forEach(button => {
+                button.classList.toggle('active', button.dataset.mode === mode);
+            });
+
+            // 現在検索中の場合は再検索
+            if (currentQuery) {
+                performSearch(currentQuery);
+            }
+        }
+
+        // ========== API情報更新 ==========
+        function updateApiInfo() {
+            const config = currentApiConfig;
+            infoDataSource.textContent = config.dataSource;
+
+            let algorithm = config.algorithm;
+            if (config.type === 'faiss') {
+                if (currentFaissMode === 'fast') {
+                    algorithm += ' (Stage1のみ - Vector検索)';
+                } else if (currentFaissMode === 'accurate') {
+                    algorithm += ' (Stage1+Stage2 Rerank)';
+                } else if (currentFaissMode === 'hybrid') {
+                    algorithm += ' (BM25 + Vector + RRF融合)';
+                }
+            }
+            infoAlgorithm.textContent = algorithm;
+
+            const fullEndpoint = `${config.baseUrl}${config.endpoint}`;
+            infoEndpoint.textContent = fullEndpoint;
+        }
+
+        // ========== API接続チェック ==========
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(`${currentApiConfig.baseUrl}/health`, {
+                    timeout: 5000
+                });
+
+                if (response.ok) {
+                    apiStatus.className = 'api-status status-ok fade-in';
+                    apiStatus.textContent = `✅ ${currentApiConfig.name} (localhost:${currentApiConfig.port}) 接続完了 - 準備OK`;
+                } else {
+                    throw new Error('API応答エラー');
+                }
+            } catch (error) {
+                apiStatus.className = 'api-status status-error fade-in';
+                apiStatus.textContent = `❌ ${currentApiConfig.name}に接続できません。APIが起動しているか確認してください。`;
+            }
+        }
+
+        // ========== 検索入力処理 ==========
+        function handleSearchInput(e) {
+            const query = e.target.value.trim();
+
+            clearTimeout(debounceTimer);
+
+            if (query.length === 0) {
+                hideSuggestions();
+                hideSkeleton();
+                currentQuery = '';
+                return;
+            }
+
+            currentQuery = query;
+            showSkeleton();
+
+            debounceTimer = setTimeout(() => {
+                performSearch(query);
+            }, 200);
+        }
+
+        // ========== 検索実行 ==========
+        async function performSearch(query) {
+            try {
+                const config = currentApiConfig;
+                let url = `${config.baseUrl}${config.endpoint}?q=${encodeURIComponent(query)}`;
+
+                // パラメータ追加
+                if (config.type === 'elasticsearch') {
+                    url += `&limit=${config.params.limit}`;
+                    if (config.params.search_context) {
+                        url += `&search_context=${config.params.search_context}`;
+                    }
+                } else if (config.type === 'faiss') {
+                    url += `&mode=${currentFaissMode}`;
+                    url += `&top_k=${config.params.top_k}`;
+                    url += `&include_nutrition=${config.params.include_nutrition}`;
+                }
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                hideSkeleton();
+
+                // レスポンスタイプに応じて処理
+                if (config.type === 'elasticsearch') {
+                    displayElasticsearchResults(data.suggestions || [], query);
+                } else if (config.type === 'faiss') {
+                    displayFaissResults(data.results || [], query);
+                }
+
+            } catch (error) {
+                console.error('Search error:', error);
+                hideSkeleton();
+                displayError('検索中にエラーが発生しました');
+            }
+        }
+
+        // ========== Elasticsearch結果表示 ==========
+        function displayElasticsearchResults(suggestions, query) {
+            currentSuggestions = suggestions;
+            selectedIndex = -1;
+
+            if (suggestions.length === 0) {
+                displayNoResults();
+                return;
+            }
+
+            const suggestionsHtml = suggestions.map((suggestion, index) => {
+                const nutrition = suggestion.nutrition_preview || {};
+                // suggestion.suggestion が名前（APIレスポンスの構造）
+                const displayName = suggestion.suggestion || suggestion.name || '';
+                const highlightedName = highlightSearchTerm(displayName, query);
+
+                const matchType = suggestion.match_type || 'unknown';
+                const matchBadgeText = matchType.replace(/_/g, ' ').toUpperCase();
+
+                return `
+                    <div class="suggestion-item fade-in" data-index="${index}" role="option">
+                        <div class="suggestion-name">${highlightedName}</div>
+                        <div class="suggestion-meta">
+                            <span class="meta-badge badge-match">${matchBadgeText}</span>
+                            ${suggestion.fdc_id ? `<span class="meta-badge badge-source">FDC: ${suggestion.fdc_id}</span>` : ''}
+                        </div>
+                        <div class="nutrition-preview">
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🔥</span>
+                                <span class="nutrition-label">Calories:</span>
+                                <span class="nutrition-value">${nutrition.calories || 0} kcal</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🥩</span>
+                                <span class="nutrition-label">Protein:</span>
+                                <span class="nutrition-value">${nutrition.protein_g || 0}g</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🌾</span>
+                                <span class="nutrition-label">Carbs:</span>
+                                <span class="nutrition-value">${nutrition.carbs_g || 0}g</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🧈</span>
+                                <span class="nutrition-label">Fat:</span>
+                                <span class="nutrition-value">${nutrition.fat_g || 0}g</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            suggestionsContainer.innerHTML = suggestionsHtml;
+            showSuggestions();
+
+            // クリックイベント
+            document.querySelectorAll('.suggestion-item').forEach((item, index) => {
+                item.addEventListener('click', () => selectSuggestion(index));
+            });
+        }
+
+        // ========== FAISS結果表示 ==========
+        function displayFaissResults(results, query) {
+            currentSuggestions = results;
+            selectedIndex = -1;
+
+            if (results.length === 0) {
+                displayNoResults();
+                return;
+            }
+
+            const resultsHtml = results.map((result, index) => {
+                const highlightedName = highlightSearchTerm(result.name || '', query);
+                const nutrition = result.nutrition_per_100g || {};
+
+                // スコア表示（hybridモードの場合はコンポーネントスコアも表示）
+                let scoreHtml = '';
+                if (result.score_type === 'hybrid_score' && result.component_scores) {
+                    const comp = result.component_scores;
+                    const mainScore = (result.score * 100).toFixed(1);
+                    scoreHtml = `
+                        <span class="meta-badge badge-score">Hybrid: ${mainScore}%</span>
+                        <span class="meta-badge badge-match">BM25: ${(comp.bm25 * 100).toFixed(1)}%</span>
+                        <span class="meta-badge badge-match">Vector: ${(comp.vector * 100).toFixed(1)}%</span>
+                    `;
+                } else {
+                    const scoreLabel = result.score_type === 'cosine_similarity' ? 'Similarity' :
+                                     result.score_type === 'rerank_score' ? 'Rerank Score' : 'Score';
+                    const scoreValue = (result.score * 100).toFixed(1);
+                    scoreHtml = `<span class="meta-badge badge-score">${scoreLabel}: ${scoreValue}%</span>`;
+                }
+
+                return `
+                    <div class="suggestion-item fade-in" data-index="${index}" role="option">
+                        <div class="suggestion-name">${highlightedName}</div>
+                        <div class="suggestion-meta">
+                            ${scoreHtml}
+                            <span class="meta-badge badge-source">${result.source || 'unknown'}</span>
+                            ${result.fdc_id ? `<span class="meta-badge badge-source">FDC: ${result.fdc_id}</span>` : ''}
+                        </div>
+                        <div class="nutrition-preview">
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🔥</span>
+                                <span class="nutrition-label">Calories:</span>
+                                <span class="nutrition-value">${nutrition.calories || 0} kcal</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🥩</span>
+                                <span class="nutrition-label">Protein:</span>
+                                <span class="nutrition-value">${nutrition.protein || 0}g</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🌾</span>
+                                <span class="nutrition-label">Carbs:</span>
+                                <span class="nutrition-value">${nutrition.carbs || 0}g</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-icon">🧈</span>
+                                <span class="nutrition-label">Fat:</span>
+                                <span class="nutrition-value">${nutrition.fat || 0}g</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            suggestionsContainer.innerHTML = resultsHtml;
+            showSuggestions();
+
+            // クリックイベント
+            document.querySelectorAll('.suggestion-item').forEach((item, index) => {
+                item.addEventListener('click', () => selectSuggestion(index));
+            });
+        }
+
+        // ========== 結果なし表示 ==========
+        function displayNoResults() {
+            suggestionsContainer.innerHTML = '<div class="no-results fade-in">検索結果が見つかりませんでした</div>';
+            showSuggestions();
+        }
+
+        // ========== エラー表示 ==========
+        function displayError(message) {
+            suggestionsContainer.innerHTML = `<div class="no-results fade-in">⚠️ ${message}</div>`;
+            showSuggestions();
+        }
+
+        // ========== ハイライト ==========
+        function highlightSearchTerm(text, query) {
+            if (!query.trim()) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // ========== キーボード操作 ==========
+        function handleKeyDown(e) {
+            if (!currentSuggestions.length) return;
+
+            const items = document.querySelectorAll('.suggestion-item');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                updateSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0) {
+                    selectSuggestion(selectedIndex);
+                }
+            } else if (e.key === 'Escape') {
+                hideSuggestions();
+                searchInput.blur();
+            }
+        }
+
+        function updateSelection(items) {
+            items.forEach((item, index) => {
+                item.classList.toggle('keyboard-selected', index === selectedIndex);
+            });
+
+            if (selectedIndex >= 0) {
+                items[selectedIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        function selectSuggestion(index) {
+            const suggestion = currentSuggestions[index];
+            if (suggestion) {
+                searchInput.value = suggestion.name || '';
+                hideSuggestions();
+                console.log('Selected:', suggestion);
+            }
+        }
+
+        // ========== UI表示/非表示 ==========
+        function showSkeleton() {
+            hideSuggestions();
+            skeletonContainer.style.display = 'block';
+            searchInput.setAttribute('aria-expanded', 'true');
+        }
+
+        function hideSkeleton() {
+            skeletonContainer.style.display = 'none';
+        }
+
+        function showSuggestions() {
+            hideSkeleton();
+            suggestionsContainer.style.display = 'block';
+            searchInput.setAttribute('aria-expanded', 'true');
+        }
+
+        function hideSuggestions() {
+            suggestionsContainer.style.display = 'none';
+            searchInput.setAttribute('aria-expanded', 'false');
+        }
+
+        // ========== ページ読み込み時に初期化 ==========
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

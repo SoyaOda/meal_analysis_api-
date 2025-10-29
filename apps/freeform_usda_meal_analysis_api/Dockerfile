@@ -11,18 +11,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Pythonパッケージのインストール
-COPY requirements.txt .
+COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# アプリケーション全体をコピー（自己完結型）
-COPY . .
+# アプリケーション全体をfreeform_usda_meal_analysis_apiパッケージとしてコピー
+# これにより、相対インポートが正しく機能する
+COPY . ./freeform_usda_meal_analysis_api
 
 # 環境変数のデフォルト設定
 ENV LOG_LEVEL=INFO
-ENV USDA_INDEX_DIR=/app/data/faiss
-ENV USDA_METADATA_FILE=/app/data/faiss/usda_metadata.json
-
-# アプリケーション起動: Cloud RunのPORT環境変数を正しく処理
-# run.pyをエントリーポイントとして使用（相対インポート対応）
+ENV USDA_INDEX_DIR=/app/freeform_usda_meal_analysis_api/data/faiss
+ENV USDA_METADATA_FILE=/app/freeform_usda_meal_analysis_api/data/faiss/usda_metadata.json
 ENV PYTHONPATH=/app
-CMD ["python", "run.py"]
+
+# python -m でモジュールとして起動
+# main.pyの__main__ブロックがPORT環境変数を処理してuvicornを起動
+CMD ["python", "-m", "freeform_usda_meal_analysis_api.main"]
