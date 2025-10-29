@@ -10,13 +10,6 @@ import json
 import logging
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-import sys
-
-# Add query_system to path
-query_system_path = Path(__file__).parent.parent.parent.parent / "test_scripts" / "query_system"
-sys.path.insert(0, str(query_system_path))
-
-from src.pipeline import FoodSearchPipeline
 
 logger = logging.getLogger(__name__)
 
