@@ -23,8 +23,6 @@ ENV USDA_INDEX_DIR=/app/data/faiss
 ENV USDA_METADATA_FILE=/app/data/faiss/usda_metadata.json
 
 # アプリケーション起動: Cloud RunのPORT環境変数を正しく処理
-# モジュール形式で起動（相対インポート対応）
-# main.py が from .config をしているため python -m が必須
-WORKDIR /
-ENV PYTHONPATH=/
-CMD python -m app.main
+# Pythonコードで直接起動（相対インポートを解決）
+ENV PYTHONPATH=/app
+CMD ["sh", "-c", "python -c 'import os; import uvicorn; from main import app; uvicorn.run(app, host=\"0.0.0.0\", port=int(os.getenv(\"PORT\", 8080)))'"]
