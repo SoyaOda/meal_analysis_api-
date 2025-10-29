@@ -14,6 +14,7 @@ requests==2.31.0
 httpx==0.26.0
 
 # DeepInfra & AI
+openai==1.12.0
 google-cloud-aiplatform==1.38.1
 google-cloud-speech==2.24.0
 
@@ -25,6 +26,10 @@ numpy==1.24.3
 
 # FlagEmbedding (for BGE models)
 FlagEmbedding==1.2.10
+
+# BM25 Search (for hybrid search)
+bm25s==0.1.9
+PyStemmer==2.2.0.1
 
 # Utilities
 python-dotenv==1.0.0
