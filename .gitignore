@@ -106,3 +106,10 @@ core_food_processing/data/*.owl
 *.faiss
 test_scripts/query_system/data/*.faiss
 
+
+# Large zip files
+*.zip
+apps.zip
+shared.zip
+test_images.zip
+test_scripts.zip
