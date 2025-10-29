@@ -10,8 +10,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .config import get_settings
-from .routers import health, analysis, retrieval, metadata
+from config import get_settings
+from routers import health, analysis, retrieval, metadata
 
 # ロギング設定
 logging.basicConfig(
@@ -63,7 +63,7 @@ async def startup_event():
     # ハイブリッドサーチエンジンの初期化（パイプラインより先に初期化）
     hybrid_engine = None
     try:
-        from .services.hybrid_search import HybridSearchEngine
+        from services.hybrid_search import HybridSearchEngine
         hybrid_engine = HybridSearchEngine(
             index_dir=settings.USDA_INDEX_DIR,
             bm25_weight=0.4,   # 2025年ベストプラクティス
@@ -83,7 +83,7 @@ async def startup_event():
         raise
 
     # Retrieval router に search_service を設定
-    from .routers import retrieval
+    from routers import retrieval
     retrieval.set_search_service(analysis._pipeline.food_search_service)
     logger.info("✅ Retrieval router initialized with search service")
 
