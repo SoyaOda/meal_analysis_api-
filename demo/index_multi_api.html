@@ -419,7 +419,7 @@
 <body>
     <div class="container">
         <h1>🔍 Multi-API Food Search</h1>
-        <p class="subtitle">3つのAPIを比較してUSDA食材検索を体験</p>
+        <p class="subtitle">4つのAPI（ローカル3つ + Cloud Run 1つ）を比較してUSDA食材検索を体験</p>
 
         <!-- API選択セクション -->
         <div class="api-selector-section">
@@ -442,9 +442,16 @@
                     </div>
                 </div>
                 <div class="api-option" data-api="faiss_retrieval">
-                    <div class="api-option-name">FAISS Retrieval API</div>
+                    <div class="api-option-name">FAISS Retrieval API (Local)</div>
                     <div class="api-option-details">
                         Port 8006<br>
+                        FAISS + USDA FNDDS
+                    </div>
+                </div>
+                <div class="api-option" data-api="cloud_faiss_retrieval">
+                    <div class="api-option-name">FAISS Retrieval API (Cloud Run) ☁️</div>
+                    <div class="api-option-details">
+                        Cloud Run<br>
                         FAISS + USDA FNDDS
                     </div>
                 </div>
@@ -556,7 +563,7 @@
                 algorithm: 'Elasticsearch (7-layer Tier + Porter Stemmer)'
             },
             'faiss_retrieval': {
-                name: 'FAISS Retrieval API',
+                name: 'FAISS Retrieval API (Local)',
                 baseUrl: 'http://localhost:8006',
                 port: 8006,
                 type: 'faiss',
@@ -568,6 +575,21 @@
                 },
                 dataSource: 'USDA (Survey + Foundation + Legacy, 13,564 items)',
                 algorithm: 'FAISS + BGE Embeddings',
+                modes: ['fast', 'accurate', 'hybrid']
+            },
+            'cloud_faiss_retrieval': {
+                name: 'FAISS Retrieval API (Cloud Run)',
+                baseUrl: 'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app',
+                port: null,
+                type: 'faiss',
+                endpoint: '/api/v1/retrieve',
+                params: {
+                    top_k: 40,
+                    include_nutrition: true,
+                    debug: false
+                },
+                dataSource: 'USDA (Survey + Foundation + Legacy, 13,564 items) - Cloud',
+                algorithm: 'FAISS + BGE Embeddings (Cloud Run)',
                 modes: ['fast', 'accurate', 'hybrid']
             }
         };
@@ -630,7 +652,7 @@
             });
 
             // FAISS API の場合はモード選択を表示
-            if (apiKey === 'faiss_retrieval') {
+            if (currentApiConfig.type === 'faiss') {
                 faissModeSelector.style.display = 'block';
             } else {
                 faissModeSelector.style.display = 'none';

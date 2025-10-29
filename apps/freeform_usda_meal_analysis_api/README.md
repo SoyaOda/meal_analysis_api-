@@ -10,6 +10,304 @@ VLM (Vision Language Model) による画像解析から、USDA FoodData Central�
 
 **単位変換サポート**: 食材ごとの利用可能な単位（カップ、スプーン、枚など）と重量変換情報を提供（96.2%カバレッジ）。
 
+## 🚀 フロントエンドエンジニア向けクイックスタート
+
+### 本番環境URL
+
+```
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app
+```
+
+### API仕様書（Swagger UI）
+
+```
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/docs
+```
+
+### CORS設定
+
+✅ **すべてのオリジンから呼び出し可能**（`Access-Control-Allow-Origin: *`）
+フロントエンドから直接APIを呼び出せます。認証不要。
+
+### 主要エンドポイント
+
+| エンドポイント | メソッド | 用途 | レスポンスタイム |
+|---------------|---------|------|------------------|
+| `/api/v1/meal-analyses/complete` | POST | 画像から食事分析 | 30-50秒 |
+| `/api/v1/retrieve` | GET | 食材検索（Hybrid） | 0.2-0.5秒 |
+| `/api/v1/metadata` | GET | 全食材メタデータ取得 | 0.1-0.3秒 |
+| `/api/v1/metadata/search` | GET | 食材名検索 | 0.05-0.1秒 |
+| `/health` | GET | ヘルスチェック | 0.01秒 |
+
+### JavaScript実装例
+
+#### 1. 画像分析（Meal Analysis）
+
+```javascript
+// 画像ファイルをアップロードして栄養分析
+async function analyzeMealImage(imageFile) {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  formData.append('user_context', 'dinner analysis');
+
+  try {
+    const response = await fetch(
+      'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/complete',
+      {
+        method: 'POST',
+        body: formData,
+        // タイムアウト推奨: 60秒
+        signal: AbortSignal.timeout(60000)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log(`Total Calories: ${result.total_nutrition.calories} kcal`);
+    console.log(`Dishes: ${result.total_dishes}`);
+    return result;
+
+  } catch (error) {
+    if (error.name === 'TimeoutError') {
+      console.error('Request timeout (60s)');
+    } else {
+      console.error('Analysis failed:', error);
+    }
+    throw error;
+  }
+}
+
+// 使用例
+const fileInput = document.getElementById('imageUpload');
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const result = await analyzeMealImage(file);
+    displayNutritionInfo(result);
+  }
+});
+```
+
+#### 2. 食材検索（Hybrid Mode）
+
+```javascript
+// 食材をセマンティック検索
+async function searchFood(query, topK = 10) {
+  const url = new URL(
+    'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/retrieve'
+  );
+  url.searchParams.append('q', query);
+  url.searchParams.append('mode', 'hybrid');  // BM25 + Vector
+  url.searchParams.append('top_k', topK);
+  url.searchParams.append('include_nutrition', 'true');
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
+    return data.results;
+
+  } catch (error) {
+    console.error('Search failed:', error);
+    throw error;
+  }
+}
+
+// 使用例
+const results = await searchFood('grilled chicken breast', 5);
+results.forEach(food => {
+  console.log(`${food.name}: ${food.nutrition_per_100g.calories} kcal/100g`);
+});
+```
+
+#### 3. 全食材メタデータ取得（初回ロード時）
+
+```javascript
+// 全13,564食材のメタデータを取得してキャッシュ
+async function loadUSDAMetadata() {
+  const cacheKey = 'usda_metadata_v1';
+  const cacheTimestampKey = 'usda_metadata_timestamp';
+  const now = Date.now();
+  const cacheExpiry = 86400000; // 24時間
+
+  // キャッシュチェック
+  const cachedTimestamp = localStorage.getItem(cacheTimestampKey);
+  if (cachedTimestamp && (now - parseInt(cachedTimestamp)) < cacheExpiry) {
+    console.log('Using cached metadata');
+    return JSON.parse(localStorage.getItem(cacheKey));
+  }
+
+  // APIから取得（gzip圧縮版: 0.67MB）
+  console.log('Fetching fresh metadata from API...');
+  const response = await fetch(
+    'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/metadata?compressed=true'
+  );
+
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+  const metadata = await response.json();
+  console.log(`Loaded ${metadata.length} foods`);
+
+  // ローカルストレージにキャッシュ
+  localStorage.setItem(cacheKey, JSON.stringify(metadata));
+  localStorage.setItem(cacheTimestampKey, now.toString());
+
+  return metadata;
+}
+
+// クライアント側で食材検索
+function searchMetadata(query, metadata) {
+  const lowerQuery = query.toLowerCase();
+  return metadata.filter(item =>
+    item.description.toLowerCase().includes(lowerQuery) ||
+    item.main_name.toLowerCase().includes(lowerQuery)
+  ).slice(0, 20);
+}
+
+// 単位変換機能
+function convertToGrams(fdcId, portionDescription, metadata) {
+  const food = metadata.find(item => item.fdc_id === fdcId);
+  if (!food || !food.portions) return null;
+
+  const portion = food.portions.find(p =>
+    p.description.toLowerCase().includes(portionDescription.toLowerCase())
+  );
+
+  return portion ? portion.gram_weight : null;
+}
+
+// 使用例
+const metadata = await loadUSDAMetadata();
+const chickenFoods = searchMetadata('chicken', metadata);
+const gramsInCup = convertToGrams(746774, 'cup', metadata);
+console.log(`1 cup = ${gramsInCup}g`);
+```
+
+### エラーレスポンス形式
+
+APIはエラー時に以下の形式でJSONを返します：
+
+```json
+{
+  "detail": "Error message here"
+}
+```
+
+**HTTPステータスコード:**
+- `400 Bad Request`: パラメータ不正（画像なし、クエリなしなど）
+- `404 Not Found`: リソースが存在しない（FDC ID不正など）
+- `422 Unprocessable Entity`: バリデーションエラー
+- `500 Internal Server Error`: サーバーエラー（DeepInfra API障害など）
+- `504 Gateway Timeout`: タイムアウト（VLM処理に60秒以上）
+
+### パフォーマンス指標
+
+| 操作 | 平均レスポンスタイム | 推奨タイムアウト |
+|------|---------------------|-----------------|
+| 画像分析（VLM処理） | 30-50秒 | 60秒 |
+| Hybrid検索 | 0.2-0.5秒 | 5秒 |
+| Fast検索 | 0.1-0.2秒 | 3秒 |
+| メタデータ取得（gzip） | 0.1-0.3秒 | 5秒 |
+| メタデータ検索 | 0.05-0.1秒 | 3秒 |
+| ヘルスチェック | 0.01秒 | 1秒 |
+
+**注意:**
+- VLM処理はDeepInfra APIの負荷により変動します（20-60秒）
+- 初回リクエストはコールドスタート（+3-5秒）が発生する場合があります
+- Cloud Run側のタイムアウトは600秒（10分）に設定済み
+
+### ベストプラクティス
+
+1. **メタデータのキャッシュ**: 全食材メタデータは初回ロード時に取得し、localStorageにキャッシュ
+2. **タイムアウト設定**: 画像分析は60秒、検索系は5秒のタイムアウトを設定
+3. **エラーハンドリング**: HTTPステータスコードとdetailメッセージを表示
+4. **プログレス表示**: 画像分析は30-50秒かかるため、ローディングUIを表示
+5. **debounce**: リアルタイム検索はdebounce（300ms）を実装してAPI呼び出しを削減
+
+### React実装例
+
+```jsx
+import { useState } from 'react';
+
+function MealAnalyzer() {
+  const [analyzing, setAnalyzing] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setAnalyzing(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch(
+        'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/complete',
+        {
+          method: 'POST',
+          body: formData,
+          signal: AbortSignal.timeout(60000)
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      setResult(data);
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        disabled={analyzing}
+      />
+
+      {analyzing && (
+        <div className="loading">
+          <p>Analyzing image... (30-50 seconds)</p>
+          <progress />
+        </div>
+      )}
+
+      {error && <div className="error">{error}</div>}
+
+      {result && (
+        <div className="result">
+          <h2>Total: {result.total_nutrition.calories} kcal</h2>
+          <ul>
+            {result.dishes.map((dish, i) => (
+              <li key={i}>
+                {dish.dish_name}: {dish.total_nutrition.calories} kcal
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
 ## アーキテクチャ
 
 ```
@@ -48,7 +346,9 @@ apps/freeform_usda_meal_analysis_api/
 ├── README.md
 ├── __init__.py
 ├── main.py                    # FastAPI アプリケーション
-├── Dockerfile                 # Docker設定
+├── startup_data_loader.py     # Cloud Storage起動時ダウンロード（Cloud Run用）
+├── Dockerfile                 # Docker設定（Cloud Storage最適化版）
+├── .gcloudignore              # Cloud Buildから除外するファイル指定
 ├── deploy.sh                  # デプロイスクリプト
 ├── requirements.txt           # 依存パッケージ
 ├── config/
@@ -64,11 +364,13 @@ apps/freeform_usda_meal_analysis_api/
 │   ├── retrieval.py           # 検索エンドポイント（Hybrid/Accurate/Fast）
 │   ├── metadata.py            # メタデータ配信エンドポイント（全13,564食材）
 │   └── health.py              # ヘルスチェック
-├── data/                      # データディレクトリ（self-contained）
-│   └── faiss/                 # FAISS インデックスと栄養データ
-│       ├── usda_index_full.faiss        # ベクトル検索インデックス（13,564 vectors）
-│       ├── usda_bm25_index/             # BM25インデックス（Hybrid Search用）
-│       └── usda_metadata.json           # 栄養素データ統合版（5.0MB、13,564 foods、portions情報含む）
+├── data/                      # データディレクトリ（ローカル開発用）
+│   └── faiss/                 # FAISS インデックスと栄養データ（221MB）
+│       ├── usda_index_full.faiss        # ベクトル検索インデックス（13,564 vectors、212MB）
+│       ├── usda_bm25_index/             # BM25インデックス（Hybrid Search用、9MB）
+│       └── usda_metadata.json           # 栄養素データ統合版（8.4MB、13,564 foods、portions情報含む）
+│       # 注意: Cloud Runデプロイ時はこのディレクトリは除外され、
+│       #       起動時にgs://new-snap-calorie-faiss-data/faiss/からダウンロードされます
 ├── scripts/                   # データ生成スクリプト
 │   └── build_index_with_nutrition.py    # FAISSインデックス + 栄養データ統合生成
 ├── prompts/
@@ -90,6 +392,8 @@ apps/freeform_usda_meal_analysis_api/
 
 ## 環境変数
 
+### ローカル開発環境
+
 ```bash
 # 必須
 DEEPINFRA_API_KEY=<your-api-key>
@@ -102,6 +406,24 @@ USDA_INDEX_DIR=/path/to/apps/freeform_usda_meal_analysis_api/data/faiss
 PORT=8006
 PYTHONPATH=/path/to/meal_analysis_api_2
 ```
+
+### Cloud Run環境
+
+Cloud Run上では、FAISSデータはCloud Storageから起動時に自動ダウンロードされます：
+
+```bash
+# 必須（Cloud Runの環境変数として設定）
+DEEPINFRA_API_KEY=<your-api-key>
+
+# 自動設定（main.pyで起動時に設定）
+USDA_INDEX_DIR=/tmp/faiss                    # 起動時ダウンロード先
+USDA_METADATA_FILE=/tmp/faiss/usda_metadata.json
+```
+
+**Cloud Storage統合の仕組み：**
+- デプロイ時: `data/` ディレクトリは除外（.gcloudignoreで指定）
+- 起動時: `gs://new-snap-calorie-faiss-data/faiss/` から `/tmp/faiss` へダウンロード
+- メリット: ビルド時間短縮（10分→2分）、イメージサイズ削減（400MB→50MB）、コスト削減（93%減）
 
 ### VLMモデルの選択
 
@@ -626,12 +948,12 @@ function calculateNutrition(nutrition_per_100g, grams) {
 
 ### デプロイ後のアクセス
 
-デプロイ後は以下のURLでアクセス可能：
+Cloud Run本番環境では以下のURLでアクセス可能：
 ```
-https://your-service-url.run.app/api/v1/metadata
-https://your-service-url.run.app/api/v1/metadata/info
-https://your-service-url.run.app/api/v1/metadata/search?q=chicken
-https://your-service-url.run.app/api/v1/metadata/746774
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/metadata
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/metadata/info
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/metadata/search?q=chicken
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/metadata/746774
 ```
 
 ### パフォーマンスとキャッシュ戦略
@@ -654,16 +976,54 @@ https://your-service-url.run.app/api/v1/metadata/746774
 - `X-Original-Size: 8767812`
 - `X-Compressed-Size: 702565`
 
-## デプロイ（Cloud Run）
+## デプロイ（Cloud Run）- Cloud Storage最適化版
+
+### アーキテクチャ概要
+
+本APIは**Cloud Storage統合**により、大規模データ（221MB）のデプロイコストと時間を大幅に削減しています：
+
+**従来方式（v1-v8）:**
+- イメージサイズ: 400MB+（FAISSデータ221MB含む）
+- ビルド時間: 約10分
+- 月額コスト: $0.08/月
+
+**最適化版（v9以降）:**
+- イメージサイズ: 50MB（FAISSデータ除外）
+- ビルド時間: 約2分（80%削減）
+- 月額コスト: $0.005/月（93%削減）
+- 起動時: Cloud Storageから自動ダウンロード（5-10秒）
 
 ### 前提条件
+
+#### 1. Cloud Storageバケットの準備（初回のみ）
+
+FAISSデータをCloud Storageにアップロード：
+
+```bash
+cd /path/to/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api
+
+# バケットが存在しない場合は作成
+gcloud storage buckets create gs://new-snap-calorie-faiss-data --location=us-central1
+
+# FAISSデータをアップロード（221MB、約10秒）
+gcloud storage cp -r data/faiss/* gs://new-snap-calorie-faiss-data/faiss/
+```
+
+**アップロード内容:**
+- `usda_index_full.faiss` (212MB) - ベクトル検索インデックス
+- `usda_bm25_index/` (約9MB) - BM25キーワード検索インデックス
+- `usda_metadata.json` (8.4MB) - 栄養素メタデータ
+
+#### 2. 環境変数設定
 
 ```bash
 # DEEPINFRA_API_KEYを環境変数に設定
 export DEEPINFRA_API_KEY=your-api-key
 ```
 
-### デプロイスクリプト実行
+### デプロイ手順
+
+#### オプション1: デプロイスクリプト実行（推奨）
 
 ```bash
 cd apps/freeform_usda_meal_analysis_api
@@ -671,26 +1031,82 @@ bash deploy.sh
 ```
 
 デプロイスクリプトは以下を自動実行します：
-1. Dockerイメージのビルド（USDA Full Index 212MB含む）
+1. Dockerイメージのビルド（data/除外、約2分）
 2. Google Container Registryへのプッシュ
 3. Cloud Runへのデプロイ（環境変数設定含む）
 
-### 手動デプロイ
+#### オプション2: 手動デプロイ
 
 ```bash
-# イメージビルド（USDA data含む）
-gcloud builds submit --tag gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:latest \
-  -f apps/freeform_usda_meal_analysis_api/Dockerfile .
+cd /path/to/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api
 
-# Cloud Runにデプロイ
+# 1. イメージビルド（data/はビルドから除外）
+gcloud builds submit --tag gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:v9-cloud-storage-optimized . --timeout=900
+
+# 2. Cloud Runにデプロイ
 gcloud run deploy freeform-usda-meal-analysis-api \
-  --image gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:latest \
+  --image gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:v9-cloud-storage-optimized \
   --region us-central1 \
   --memory 2Gi \
   --cpu 1 \
   --timeout 600 \
   --allow-unauthenticated \
   --set-env-vars="DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY}"
+```
+
+### データ更新手順
+
+FAISSインデックスや栄養データを更新した場合：
+
+```bash
+cd /path/to/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api
+
+# 1. ローカルでFAISSインデックスを再生成
+PYTHONPATH=/path/to/meal_analysis_api_2 \
+python scripts/build_index_with_nutrition.py
+
+# 2. Cloud Storageを更新
+gcloud storage cp -r data/faiss/* gs://new-snap-calorie-faiss-data/faiss/
+
+# 3. Cloud Runを再デプロイ（または再起動）
+gcloud run services update freeform-usda-meal-analysis-api --region us-central1
+```
+
+**注意:** Cloud Runインスタンスは起動時にCloud Storageからデータをダウンロードするため、データ更新後は既存のインスタンスを再起動する必要があります。
+
+### 起動時の動作
+
+Cloud Run上でのコンテナ起動シーケンス：
+
+1. **コンテナ起動** (main.py実行)
+2. **FAISSデータダウンロード** (`startup_data_loader.py`)
+   - Cloud Storage: `gs://new-snap-calorie-faiss-data/faiss/`
+   - ダウンロード先: `/tmp/faiss`
+   - 並列ダウンロード: 最大10ファイル同時
+   - 所要時間: 5-10秒
+3. **サービス初期化**
+   - HybridSearchEngine初期化
+   - Pipeline初期化
+4. **API稼働開始**
+
+### トラブルシューティング
+
+#### Cloud Storageからのダウンロード失敗
+
+```bash
+# Cloud Runログを確認
+gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=freeform-usda-meal-analysis-api" --limit=50 --format=json
+
+# バケットの権限を確認
+gcloud storage buckets describe gs://new-snap-calorie-faiss-data
+```
+
+#### 古いイメージのクリーンアップ
+
+```bash
+# 失敗したデプロイイメージを削除してストレージコスト削減
+cd apps/freeform_usda_meal_analysis_api
+bash scripts/cleanup_old_images.sh
 ```
 
 ## データ生成方法

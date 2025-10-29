@@ -58,3 +58,6 @@ scripts/test_*.py
 # Jupyter
 *.ipynb
 .ipynb_checkpoints/
+
+# Data files (220MB+ - stored in Cloud Storage instead)
+data/

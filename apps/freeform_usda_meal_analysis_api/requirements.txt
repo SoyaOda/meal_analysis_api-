@@ -28,8 +28,9 @@ numpy==1.24.3
 FlagEmbedding==1.2.10
 
 # BM25 Search (for hybrid search)
-bm25s==0.1.9
+bm25s==0.2.5
 PyStemmer==2.2.0.1
+numba==0.60.0
 
 # Utilities
 python-dotenv==1.0.0
