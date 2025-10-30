@@ -12,6 +12,9 @@ from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 # ロガーの設定
 logger = logging.getLogger(__name__)
 
+# Config
+from ..config import get_settings
+
 class DeepInfraService:
     """
     Deep Infraのオープンai互換APIと通信するためのサービス。
@@ -27,6 +30,10 @@ class DeepInfraService:
             model_id: 使用するモデルID。Noneの場合はデフォルトを使用。
             model_version: モデルのバージョンID。指定された場合MODEL:VERSION形式でpin。
         """
+        # 設定を読み込み
+        from ..config import get_settings
+        self.settings = get_settings()
+
         # API keyの取得（環境変数から）
         api_key = os.getenv("DEEPINFRA_API_KEY")
         if not api_key:
@@ -56,169 +63,110 @@ class DeepInfraService:
     async def analyze_image(
         self,
         image_bytes: bytes,
-        image_mime_type: str,
-        prompt: str,
+        image_mime_type: str = "image/jpeg",
+        prompt: str = "Describe what you see in this image.",
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        return_usage: bool = False,
-        thinking_budget: Optional[int] = None
-    ) -> Any:
+        thinking_budget: Optional[int] = None,
+        return_usage: bool = False
+    ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
-        画像とプロンプトをDeep Infraに送信し、分析結果をJSONとして受け取る。
+        画像を分析してJSON形式で結果を返す
 
         Args:
-            image_bytes: 分析対象の画像のバイトデータ。
-            image_mime_type: 画像のMIMEタイプ (例: 'image/jpeg')。
-            prompt: モデルに与える指示プロンプト。
-            max_tokens: 生成される最大トークン数。Noneの場合、config設定値を使用。
-            temperature: 生成のランダム性を制御する値。Noneの場合、config設定値を使用。
-            seed: 再現性のためのシード値。Noneの場合、config設定値を使用。
-            return_usage: Trueの場合、(content, usage)のタプルを返す。
-            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、config設定値を使用。
+            image_bytes: 画像データ（バイト列）
+            image_mime_type: 画像のMIMEタイプ（例: "image/jpeg", "image/png"）
+            prompt: VLMへのプロンプト
+            max_tokens: 最大出力トークン数（Noneの場合は config から取得）
+            temperature: ランダム性制御（Noneの場合は config から取得）
+            seed: 再現性のためのシード値（Noneの場合は config から取得）
+            thinking_budget: Thinkingモデルの推論トークン数の上限（Noneの場合は config から取得）
+            return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:
-            return_usage=False: モデルからのJSONレスポンス文字列。
-            return_usage=True: (JSONレスポンス文字列, usage辞書)のタプル。
-
-        Raises:
-            ValueError: レスポンスが不正な場合に発生。
-            Exception: Deep Infra APIとの通信でエラーが発生した場合に発生。
+            VLMの応答JSON文字列（return_usage=Falseの場合）
+            または (response, usage_dict) のタプル（return_usage=Trueの場合）
         """
-        # デフォルト値を設定
+        # config から設定を取得
+        settings = get_settings()
+
+        # パラメータのデフォルト値を設定
         if max_tokens is None:
-            max_tokens = 16384  # Thinkingモデル対応のため大幅増量
+            max_tokens = settings.DEFAULT_MAX_TOKENS
         if temperature is None:
-            temperature = 0.7
+            temperature = settings.DEFAULT_TEMPERATURE
         if seed is None:
-            seed = 123456
+            seed = settings.DEFAULT_SEED
         if thinking_budget is None:
-            thinking_budget = 8192  # Thinkingモデル用の推論予算（max_tokensの約半分）
+            thinking_budget = settings.DEFAULT_THINKING_BUDGET
 
-        logger.info(f"🔍 Starting image analysis with model {self.model_id}")
-        logger.info(f"📊 Parameters: max_tokens={max_tokens}, thinking_budget={thinking_budget}, temperature={temperature}, seed={seed}")
+        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}, thinking_budget={thinking_budget}")
 
-        # 入力完全一致の検証ハッシュをログ出力
+        # Base64エンコード
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+        # 画像のハッシュ値を計算（キャッシュキー用）
         image_hash = hashlib.sha256(image_bytes).hexdigest()
-        prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
-        logger.info(f"[input_digest] model={self.model_id} image_sha256={image_hash} prompt_sha256={prompt_hash} temp={temperature} seed={seed}")
-
-        base64_image_url = self._encode_image_to_base64(image_bytes, image_mime_type)
-
-        # OpenAI互換のマルチモーダルメッセージペイロードを構築
-        messages: List[Dict[str, Any]] = [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": base64_image_url
-                        }
-                    }
-                ]
-            }
-        ]
-
-        # Thinkingモデル検出（モデル名に"Thinking"が含まれる場合）
-        is_thinking_model = "thinking" in self.model_id.lower()
-
-        if is_thinking_model:
-            logger.info(f"💭 Detected Thinking model: {self.model_id}")
-
-            # Thinkingモデルの推奨設定: temperature=0.6 (greedy decodingは性能低下を引き起こす)
-            if temperature == 0.0:
-                logger.warning(f"Thinking model with temperature=0.0 detected. Overriding to recommended value 0.6 to prevent performance degradation.")
-                temperature = 0.6
 
         try:
-            # API呼び出しパラメータを構築
-            api_params = {
-                "model": self.model_id,
-                "messages": messages,
-                "max_tokens": max_tokens,
-                "temperature": temperature,
-                "seed": seed,
-            }
+            logger.info(f"🖼️  Analyzing image with DeepInfra VLM (model: {self.model_id})")
+            logger.info(f"   Prompt length: {len(prompt)} chars")
+            logger.info(f"   Image size: {len(image_bytes)} bytes")
+            logger.info(f"   Image hash: {image_hash[:16]}...")
 
-            # Thinkingモデルの場合、推奨パラメータを設定
-            if is_thinking_model:
-                api_params["top_p"] = 0.95
-                logger.info(f"Using recommended Thinking model parameters: temperature={temperature}, top_p=0.95, top_k=20")
-            else:
-                api_params["top_p"] = 1.0
-
-            # Thinkingモデルの場合、thinking_budgetを設定
-            if is_thinking_model:
-                # extra_bodyでthinking_budget、enable_thinking、top_kを渡す
-                api_params["extra_body"] = {
-                    "enable_thinking": True,
-                    "thinking_budget": thinking_budget,
-                    "top_k": 20
+            # メッセージ構築
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:{image_mime_type};base64,{image_base64}"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
                 }
-                logger.info(f"💡 Thinking budget: {thinking_budget}, max_tokens: {max_tokens}")
-                logger.info(f"API params extra_body: {api_params.get('extra_body')}")
-            else:
-                # Thinkingモデルでない場合のみJSON強制モードを有効化
-                api_params["response_format"] = {"type": "json_object"}
-            
-            response = await self.client.chat.completions.create(**api_params)
+            ]
 
-            # レスポンスの詳細をログ出力
-            logger.info(f"DEBUG: response.choices length: {len(response.choices) if response.choices else 0}")
-            if response.choices and len(response.choices) > 0:
-                logger.info(f"DEBUG: finish_reason: {response.choices[0].finish_reason}")
-                
-                # message.contentのデバッグ情報
-                content = response.choices[0].message.content
-                logger.info(f"DEBUG: message.content type: {type(content)}")
-                logger.info(f"DEBUG: message.content length: {len(content) if content else 0}")
-                logger.info(f"DEBUG: message.content preview: {content[:200] if content else None}")
+            # API呼び出し
+            response = await self.client.chat.completions.create(
+                model=self.model_id,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                seed=seed,
+                extra_body={"thinking_budget": thinking_budget} if thinking_budget else {}
+            )
 
-                # Thinkingモデルの場合、reasoning_contentをチェック
-                if is_thinking_model:
-                    reasoning_content = getattr(response.choices[0].message, 'reasoning_content', None)
-                    if reasoning_content:
-                        logger.info(f"💭 Reasoning content length: {len(reasoning_content)}")
-
-                if response.choices[0].finish_reason == 'length':
-                    logger.warning(f"⚠️ Response was cut off due to max_tokens limit. Consider increasing max_tokens.")
-                    if is_thinking_model and not content:
-                        raise ValueError(f"Thinkingモデルが推論に全トークンを使い果たしました。max_tokensを増やしてください。現在: {max_tokens}")
-
+            # 応答が空でないかチェック
             if not response.choices or not response.choices[0].message.content:
                 logger.error("❌ API response is empty or invalid.")
-                raise ValueError("APIからのレスポンスが空です。")
+                logger.error(f"Response object: {response}")
+                raise ValueError(f"[DeepInfra Service] Empty or invalid API response. Response: {response}")
 
-            # JSON文字列を取得
-            raw_json_content = response.choices[0].message.content
+            # 応答内容を取得
+            raw_json_content = response.choices[0].message.content.strip()
 
-            # usage情報を辞書形式に変換
-            usage_dict = None
+            logger.info(f"✅ VLM response received ({len(raw_json_content)} chars)")
+            logger.debug(f"Raw response preview: {raw_json_content[:200]}...")
+
+            # usage情報を取得
+            usage_dict = {}
             if response.usage:
                 usage_dict = {
-                    "prompt_tokens": response.usage.prompt_tokens if hasattr(response.usage, 'prompt_tokens') else 0,
-                    "completion_tokens": response.usage.completion_tokens if hasattr(response.usage, 'completion_tokens') else 0,
-                    "total_tokens": response.usage.total_tokens if hasattr(response.usage, 'total_tokens') else 0
+                    "prompt_tokens": response.usage.prompt_tokens,
+                    "completion_tokens": response.usage.completion_tokens,
+                    "total_tokens": response.usage.total_tokens,
                 }
-
-            logger.info(f"✅ Successfully received JSON response. Usage: {usage_dict}")
-
-            # Thinkingモデルの場合、<think>...</think>ブロックを除去
-            if is_thinking_model:
-                import re
-                # <think>タグとその中身を削除
-                cleaned_content = re.sub(r'<think>.*?</think>', '', raw_json_content, flags=re.DOTALL)
-                cleaned_content = cleaned_content.strip()
-                
-                # タグ削除後の内容をログ出力
-                logger.info(f"🧹 Removed <think> tags. Original: {len(raw_json_content)}, Cleaned: {len(cleaned_content)}")
-                
-                raw_json_content = cleaned_content
+                logger.info(f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
+                          f"completion={usage_dict['completion_tokens']}, "
+                          f"total={usage_dict['total_tokens']}")
 
             # JSONの妥当性を検証（JSONクリーニング処理を追加）
             try:
@@ -276,8 +224,12 @@ class DeepInfraService:
                     with open(debug_file, 'w', encoding='utf-8') as f:
                         f.write(cleaned_content)
                     logger.error(f"Full JSON content saved to: {debug_file}")
-                    
-                    raise ValueError(f"APIから無効なJSONが返されました: {e2}")
+
+                    # JSONパース失敗時は例外を発生させる
+                    raise ValueError(
+                        f"[DeepInfra Service] Failed to parse JSON response after cleaning attempts. "
+                        f"Error: {e2}. Debug file saved to: {debug_file}"
+                    ) from e2
 
             # return_usageがTrueの場合はusage情報も返す
             if return_usage:
@@ -292,8 +244,8 @@ class DeepInfraService:
             logger.error(f"A non-retriable API error occurred: {e}", exc_info=True)
             raise Exception(f"APIエラーが発生しました: {e}") from e
         except Exception as e:
-            logger.error(f"予期せぬエラー: {e}", exc_info=True)
-            raise ValueError(f"予期せぬエラーが発生しました: {e}") from e 
+            logger.error(f"Unexpected error during image analysis: {e}", exc_info=True)
+            raise 
 
     async def generate_embeddings(
         self,
@@ -338,7 +290,7 @@ class DeepInfraService:
         Args:
             query: クエリテキスト
             documents: リランキング対象の文書リスト
-            model: 使用するrerankerモデル
+            model: 使用するrerankingモデル
             top_n: 上位何件を返すか（Noneの場合は全件）
 
         Returns:
@@ -374,8 +326,8 @@ class DeepInfraService:
                 # Extract scores (scoresフィールドから直接取得)
                 scores = result.get("scores", [])
                 if not scores:
-                    logger.warning(f"No scores returned from reranker API. Response: {result}")
-                    scores = [0.0] * len(documents)
+                    logger.error(f"No scores returned from reranker API. Response: {result}")
+                    raise ValueError(f"[DeepInfra Service] Reranker API returned no scores. Response: {result}")
 
                 best_idx = scores.index(max(scores)) if scores else 0
 

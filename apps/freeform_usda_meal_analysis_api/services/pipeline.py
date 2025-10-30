@@ -11,6 +11,7 @@ import time
 from typing import Dict, List, Any, Optional
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
+from fastapi import HTTPException
 
 from .vlm_service import VLMService
 from .query_extraction import QueryExtractionService
@@ -31,7 +32,7 @@ class MealAnalysisPipeline:
         vlm_prompt_file: Optional[str] = None,
         index_dir: str = None,
         usda_metadata_file: str = None,
-        stage1_top_k: int = 40,
+        stage1_top_k: int = None,
         device: str = "cpu",
         hybrid_engine=None
     ):
@@ -41,11 +42,19 @@ class MealAnalysisPipeline:
             vlm_prompt_file: VLMプロンプトファイルのパス
             index_dir: FAISSインデックスディレクトリのパス
             usda_metadata_file: USDA Metadataファイルのパス (栄養素データを含む)
-            stage1_top_k: Stage1で取得する候補数
+            stage1_top_k: Stage1で取得する候補数（Noneの場合はsettingsから取得）
             device: 計算デバイス
             hybrid_engine: HybridSearchEngineインスタンス（オプション）
         """
         logger.info("Initializing Meal Analysis Pipeline (Full Index Only)...")
+
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        # stage1_top_kが指定されていない場合は設定から取得
+        if stage1_top_k is None:
+            stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
 
         # VLMサービス初期化
         self.vlm_service = VLMService(
@@ -143,14 +152,23 @@ class MealAnalysisPipeline:
 
         # Step 1: VLM解析
         logger.info("\n🔄 Step 1/4: VLM Image Analysis")
-        vlm_response, usage = await self.vlm_service.analyze_image(
-            image_bytes=image_bytes,
-            image_mime_type=image_mime_type,
-            temperature=vlm_temperature,
-            seed=vlm_seed,
-            max_tokens=vlm_max_tokens,
-            thinking_budget=vlm_thinking_budget
-        )
+        try:
+            vlm_response, usage = await self.vlm_service.analyze_image(
+                image_bytes=image_bytes,
+                image_mime_type=image_mime_type,
+                temperature=vlm_temperature,
+                seed=vlm_seed,
+                max_tokens=vlm_max_tokens,
+                thinking_budget=vlm_thinking_budget
+            )
+        except Exception as e:
+            logger.error(f"VLM analysis failed: {e}")
+            raise RuntimeError(f"[Pipeline] VLM image analysis failed: {e}") from e
+
+        # vlm_responseのNullチェック
+        if vlm_response is None:
+            logger.error("VLM returned None response")
+            raise ValueError("[Pipeline] VLM returned None response")
 
         dishes = vlm_response.get("dishes", [])
         logger.info(f"✅ VLM analysis complete: {len(dishes)} dishes found")
@@ -278,12 +296,28 @@ class MealAnalysisPipeline:
             for dish in result["dishes"]:
                 # メインフードを処理
                 main_food = dish.get("main_food", {})
-                usda_match = main_food.get("usda_match", {})
-                nutrition = main_food.get("nutrition", {})
+                usda_match = main_food.get("usda_match") or {}
+                nutrition = main_food.get("nutrition") or {}
+
+                # USDA検索が失敗した場合は500エラーを返す
+                if not usda_match:
+                    search_name = main_food.get("search_name", "Unknown")
+                    logger.error(f"❌ USDA search failed completely for '{search_name}' after all retries")
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"USDA food database search failed for ingredient: '{search_name}'. Please try again later."
+                    )
 
                 # fdc_idから100gあたりの栄養素を取得
                 main_fdc_id = usda_match.get("fdc_id")
                 main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
+
+                # デバッグ情報を抽出
+                debug_info = {
+                    "retriever_candidates": usda_match.get("retriever_candidates", []),
+                    "reranker_results": usda_match.get("reranker_results", []),
+                    "retry_count": usda_match.get("retry_count", 0)
+                }
 
                 ingredients = [
                     IngredientDetail(
@@ -303,7 +337,8 @@ class MealAnalysisPipeline:
                         ),
                         source_db="usda_fndds",
                         fdc_id=str(usda_match.get("fdc_id", "")),
-                        calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"]
+                        calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"],
+                        debug_info=debug_info
                     )
                 ]
 
@@ -315,6 +350,13 @@ class MealAnalysisPipeline:
                     # fdc_idから100gあたりの栄養素を取得
                     extra_fdc_id = extra_usda.get("fdc_id")
                     extra_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(extra_fdc_id) if extra_fdc_id else None
+
+                    # extraのデバッグ情報を抽出
+                    extra_debug_info = {
+                        "retriever_candidates": extra_usda.get("retriever_candidates", []),
+                        "reranker_results": extra_usda.get("reranker_results", []),
+                        "retry_count": extra_usda.get("retry_count", 0)
+                    }
 
                     ingredients.append(
                         IngredientDetail(
@@ -334,7 +376,8 @@ class MealAnalysisPipeline:
                             ),
                             source_db="usda_fndds",
                             fdc_id=str(extra_usda.get("fdc_id", "")),
-                            calculation_notes=[f"Weight: {extra.get('weight_g', 0)}g"]
+                            calculation_notes=[f"Weight: {extra.get('weight_g', 0)}g"],
+                            debug_info=extra_debug_info
                         )
                     )
 
@@ -392,7 +435,8 @@ class MealAnalysisPipeline:
                     completion_tokens=cost_data["completion_tokens"],
                     total_tokens=cost_data["total_tokens"],
                     estimated_cost_usd=cost_data["estimated_cost_usd"],
-                    model_pricing=cost_data["model_pricing"]
+                    model_pricing=cost_data["model_pricing"],
+                    raw_vlm_output=usage_data.get("raw_vlm_output")
                 )
 
             return {

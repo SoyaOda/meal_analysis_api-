@@ -28,15 +28,23 @@ class SimplifiedUSDASearcher:
     def __init__(
         self,
         index_dir: str,
-        stage1_top_k: int = 40,
+        stage1_top_k: int = None,
         device: str = "cpu"
     ):
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス
-            stage1_top_k: Stage1で取得する候補数
+            stage1_top_k: Stage1で取得する候補数（Noneの場合はsettingsから取得）
             device: 計算デバイス（'cpu' or 'cuda'）
         """
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+        
+        # stage1_top_kが指定されていない場合は設定から取得
+        if stage1_top_k is None:
+            stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+            
         self.index_dir = Path(index_dir)
         self.stage1_top_k = stage1_top_k
         self.device = device
@@ -47,6 +55,7 @@ class SimplifiedUSDASearcher:
         logger.info(f"Initializing Simplified USDA Searcher...")
         logger.info(f"Index directory: {index_dir}")
         logger.info(f"Mode: Full index only (no main index)")
+        logger.info(f"Stage1 top_k: {stage1_top_k}")
 
         # FAISSインデックスとメタデータをロード
         self._load_full_index()

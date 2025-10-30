@@ -132,18 +132,36 @@ class QueryExtractionService:
                     "nuts": 15,
                     "bacon": 10,
                 }
-                
-                weight_g = 10  # デフォルト
+
+                # typical weightsから検索
+                found_weight = None
                 for key, typical_weight in typical_weights.items():
                     if key in search_name.lower():
-                        weight_g = typical_weight
+                        found_weight = typical_weight
                         break
-                
-                logger.info(f"Using typical weight for direct estimation: {weight_g}g for '{search_name}'")
+
+                if found_weight is not None:
+                    weight_g = found_weight
+                    logger.info(f"Using typical weight for direct estimation: {weight_g}g for '{search_name}'")
+                else:
+                    # typical weightsに該当しない場合はエラー
+                    logger.error(f"No typical weight found for '{search_name}' in direct estimation mode")
+                    raise ValueError(
+                        f"[Query Extractor] No typical weight found for '{search_name}' "
+                        f"in direct estimation mode. VLM should provide weight_g or use volume-based estimation."
+                    )
             else:
-                # フォールバック: デフォルト重量
-                weight_g = 50 if is_main_food else 10
-                logger.warning(f"No weight info for '{search_name}', using default {weight_g}g")
+                # VLMが重量情報を提供していない場合はエラー
+                logger.error(
+                    f"VLM did not provide weight info for '{search_name}'. "
+                    f"volume_cm3={volume_cm3}, density_category={density_category}, "
+                    f"estimation_method={estimation_method}, is_main_food={is_main_food}"
+                )
+                raise ValueError(
+                    f"[Query Extractor] VLM did not provide sufficient weight information for '{search_name}'. "
+                    f"VLM must provide either weight_g or (volume_cm3 + density_category) for main foods, "
+                    f"or use estimation_method='direct' with recognizable ingredient names for extras."
+                )
         
         return {
             "search_name": search_name,

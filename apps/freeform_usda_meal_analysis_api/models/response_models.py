@@ -43,6 +43,15 @@ class IngredientDetail(BaseModel):
         description="計算に関する注記",
         example=["Scaled from 100g base data using factor 1.000"]
     )
+    debug_info: Optional[Dict[str, Any]] = Field(
+        None,
+        description="デバッグ情報（USDA検索の詳細）",
+        example={
+            "retriever_candidates": [],  # FAISS検索の候補
+            "reranker_results": [],      # リランク結果
+            "retry_count": 0              # リトライ回数
+        }
+    )
 
 
 class DishDetail(BaseModel):
@@ -80,6 +89,11 @@ class UsageInfo(BaseModel):
             "input_price_per_million": 0.29,
             "output_price_per_million": 0.99
         }
+    )
+    raw_vlm_output: Optional[str] = Field(
+        None,
+        description="VLMの生出力（デバッグ用）",
+        example="<think>...</think>\n{\"dishes\": ...}"
     )
 
 

@@ -116,20 +116,34 @@ class VLMService:
             api_params["thinking_budget"] = thinking_budget
 
         # VLM呼び出し
-        raw_response, usage = await self.deepinfra_service.analyze_image(**api_params)
+        try:
+            raw_response, usage = await self.deepinfra_service.analyze_image(**api_params)
+        except Exception as e:
+            logger.error(f"VLM API call failed: {e}")
+            raise RuntimeError(f"[VLM Service] API call failed: {e}") from e
+
+        # raw_responseのNullチェック
+        if raw_response is None:
+            logger.error("VLM returned None response")
+            raise ValueError("[VLM Service] VLM returned None response")
 
         # JSONパース
         try:
             vlm_response = json.loads(raw_response)
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse VLM response as JSON: {e}")
-            logger.error(f"Raw response: {raw_response}")
-            raise ValueError(f"VLM response is not valid JSON: {e}")
+            logger.error(f"Raw response: {raw_response[:500] if raw_response else 'None'}")
+            raise ValueError(f"[VLM Service] Failed to parse VLM response as JSON: {e}") from e
 
         # dishes配列の存在チェック
         if "dishes" not in vlm_response:
-            logger.warning("VLM response does not contain 'dishes' field")
-            vlm_response = {"dishes": []}
+            logger.error("VLM response does not contain 'dishes' field")
+            raise ValueError(f"[VLM Service] VLM response does not contain 'dishes' field. Response keys: {list(vlm_response.keys())}")
+
+        # vlm_responseがNoneの場合の追加チェック（念のため）
+        if vlm_response is None:
+            logger.error("VLM response is None after parsing")
+            raise ValueError("[VLM Service] VLM response is None after parsing")
 
         logger.info(f"VLM analysis complete: {len(vlm_response.get('dishes', []))} dishes found")
 
@@ -168,7 +182,8 @@ class VLMService:
         # MIMEタイプ取得
         mime_type, _ = mimetypes.guess_type(str(image_file))
         if not mime_type:
-            mime_type = "image/jpeg"  # デフォルト
+            logger.error(f"Failed to guess MIME type for file: {image_file}")
+            raise ValueError(f"[VLM Service] Cannot determine MIME type for image file: {image_file}")
 
         logger.info(f"Analyzing image file: {image_file.name}")
 

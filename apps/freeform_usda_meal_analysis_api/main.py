@@ -56,22 +56,7 @@ async def startup_event():
     logger.info(f"{settings.API_TITLE} v{settings.API_VERSION}")
     logger.info("=" * 60)
 
-    # Cloud Storageから起動時にFAISSデータをダウンロード
-    from .startup_data_loader import load_faiss_data
-    try:
-        data_dir = await load_faiss_data(
-            bucket_name="new-snap-calorie-faiss-data",
-            gcs_prefix="faiss/",
-            local_dir="/tmp/faiss"
-        )
-        # ダウンロードしたディレクトリを使用
-        settings.USDA_INDEX_DIR = str(data_dir)
-        settings.USDA_METADATA_FILE = str(data_dir / "usda_metadata.json")
-        logger.info(f"✅ FAISS data loaded from Cloud Storage")
-    except Exception as e:
-        logger.warning(f"⚠️ Failed to load FAISS data from Cloud Storage: {e}")
-        logger.warning(f"   Using default path: {settings.USDA_INDEX_DIR}")
-
+    # FAISSデータはDockerイメージに含まれている（ローカル環境と同じ）
     logger.info(f"Default VLM Model: {settings.DEFAULT_VLM_MODEL_ID}")
     logger.info(f"Default Prompt: {settings.DEFAULT_PROMPT_FILE}")
     logger.info(f"USDA Index Directory: {settings.USDA_INDEX_DIR}")
@@ -83,9 +68,9 @@ async def startup_event():
         from .services.hybrid_search import HybridSearchEngine
         hybrid_engine = HybridSearchEngine(
             index_dir=settings.USDA_INDEX_DIR,
-            bm25_weight=0.4,   # 2025年ベストプラクティス
-            vector_weight=0.6, # 2025年ベストプラクティス
-            rrf_k=60          # 2025年ベストプラクティス
+            bm25_weight=settings.DEFAULT_BM25_WEIGHT,
+            vector_weight=settings.DEFAULT_VECTOR_WEIGHT,
+            rrf_k=settings.DEFAULT_RRF_K
         )
         logger.info("✅ Hybrid search engine initialized")
     except Exception as e:

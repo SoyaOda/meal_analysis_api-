@@ -1255,13 +1255,13 @@ rm -rf usda_database
   - デフォルト: `freeform_prompt_usda_format_ver_v7_experimental_20251027.txt`
 - `thinking_budget`: 思考トークン数（QVQモデル用、1-32768）
 - `temperature`: 生成温度（0.0-2.0）
-  - デフォルト: 0.7
+  - デフォルト: 0.6（Qwen公式推奨値）
 - `max_tokens`: 最大トークン数（1-32768）
   - デフォルト: 4096
 
 ### 検索設定
 - `stage1_top_k`: Stage1で取得する候補数（1-200）
-  - デフォルト: 40
+  - デフォルト: 50
   - Fullインデックスのみを使用（軽量化）
 
 ## 技術スタック

@@ -49,9 +49,15 @@ class Settings:
         self.PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
         # VLMトークン設定
-        self.DEFAULT_THINKING_BUDGET: Optional[int] = None  # QVQモデル用
-        self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.7"))
-        self.DEFAULT_MAX_TOKENS = int(os.getenv("VLM_MAX_TOKENS", "4096"))
+        # Qwen3-VL-30B-A3B-Thinking推奨設定
+        # - コンテキストウィンドウ: 256K (最大1Mまで拡張可能)
+        # - 出力トークン数: 16384 (実際の上限はDeepInfra APIにより動的に制限される)
+        # - Thinking Budget: 8192 (max_tokensの約半分を推論に使用)
+        # - Temperature: 0.6 (Qwen公式推奨値。0.0は性能劣化と無限ループの原因となるため非推奨)
+        self.DEFAULT_MAX_TOKENS = int(os.getenv("VLM_MAX_TOKENS", "16384"))
+        self.DEFAULT_THINKING_BUDGET = int(os.getenv("VLM_THINKING_BUDGET", "8192"))  # max_tokensの約半分
+        self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.6"))  # Qwen公式推奨値
+        self.DEFAULT_SEED = int(os.getenv("VLM_SEED", "123456"))
 
         # ========== DeepInfra API設定 ==========
         self.DEEPINFRA_API_KEY = os.getenv("DEEPINFRA_API_KEY")
@@ -75,8 +81,36 @@ class Settings:
         )
 
         # 検索設定デフォルト値（Fullインデックスのみ）
-        self.DEFAULT_STAGE1_TOP_K = int(os.getenv("STAGE1_TOP_K", "40"))
+        # Stage1 FAISS検索で取得する候補数
+        self.DEFAULT_STAGE1_TOP_K = int(os.getenv("STAGE1_TOP_K", "50"))
+
+        # デバッグ情報として返す候補数（search()メソッドのtop_kパラメータ）
+        self.DEFAULT_DEBUG_TOP_K = int(os.getenv("DEBUG_TOP_K", "50"))
+
+        # コネクションエラー時のリトライ回数
+        self.DEFAULT_MAX_RETRIES = int(os.getenv("MAX_RETRIES", "5"))
+
+        # 計算デバイス設定
         self.DEFAULT_DEVICE = os.getenv("DEVICE", "cpu")
+
+        # ========== ハイブリッド検索設定 ==========
+        # BM25 + Vector検索の重み設定
+        self.DEFAULT_BM25_WEIGHT = float(os.getenv("BM25_WEIGHT", "0.4"))
+        self.DEFAULT_VECTOR_WEIGHT = float(os.getenv("VECTOR_WEIGHT", "0.6"))
+        self.DEFAULT_RRF_K = int(os.getenv("RRF_K", "60"))
+
+        # 検索結果数の設定
+        self.DEFAULT_SEARCH_TOP_K = int(os.getenv("SEARCH_TOP_K", "100"))
+        self.DEFAULT_SEARCH_STAGE1_TOP_K = int(os.getenv("SEARCH_STAGE1_TOP_K", "100"))
+
+        # ========== Thinkingモデル推奨設定 ==========
+        # Thinkingモデル使用時の推奨パラメータ
+        self.THINKING_RECOMMENDED_TEMPERATURE = float(os.getenv("THINKING_RECOMMENDED_TEMP", "0.6"))
+        self.THINKING_TOP_P = float(os.getenv("THINKING_TOP_P", "0.95"))
+        self.THINKING_TOP_K = int(os.getenv("THINKING_TOP_K", "20"))
+
+        # 通常モデル使用時のパラメータ
+        self.NORMAL_MODEL_TOP_P = float(os.getenv("NORMAL_MODEL_TOP_P", "1.0"))
 
         # ========== Google Cloud設定 ==========
         self.GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -110,7 +144,6 @@ class Settings:
             )
 
         return str(prompt_path)
-
 
 @lru_cache()
 def get_settings() -> Settings:

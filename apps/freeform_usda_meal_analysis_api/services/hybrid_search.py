@@ -29,17 +29,29 @@ class HybridSearchEngine:
     def __init__(
         self,
         index_dir: str,
-        bm25_weight: float = 0.4,
-        vector_weight: float = 0.6,
-        rrf_k: int = 60
+        bm25_weight: float = None,
+        vector_weight: float = None,
+        rrf_k: int = None
     ):
         """
         Args:
             index_dir: インデックスディレクトリ
-            bm25_weight: BM25スコアの重み（デフォルト: 0.4）
-            vector_weight: Vectorスコアの重み（デフォルト: 0.6）
-            rrf_k: RRFのkパラメータ（デフォルト: 60）
+            bm25_weight: BM25スコアの重み（Noneの場合はsettingsから取得）
+            vector_weight: Vectorスコアの重み（Noneの場合はsettingsから取得）
+            rrf_k: RRFのkパラメータ（Noneの場合はsettingsから取得）
         """
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        # パラメータが指定されていない場合は設定から取得
+        if bm25_weight is None:
+            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+        if vector_weight is None:
+            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+        if rrf_k is None:
+            rrf_k = settings.DEFAULT_RRF_K
+
         self.index_dir = Path(index_dir)
         self.bm25_weight = bm25_weight
         self.vector_weight = vector_weight
@@ -71,18 +83,24 @@ class HybridSearchEngine:
     def search_bm25(
         self,
         query: str,
-        top_k: int = 100
+        top_k: int = None
     ) -> List[Tuple[int, float]]:
         """
         BM25検索を実行
 
         Args:
             query: 検索クエリ
-            top_k: 取得する結果数
+            top_k: 取得する結果数（Noneの場合はsettingsから取得）
 
         Returns:
             [(doc_index, score), ...]
         """
+        # 設定を取得
+        if top_k is None:
+            from ..config.settings import get_settings
+            settings = get_settings()
+            top_k = settings.DEFAULT_SEARCH_TOP_K
+
         # クエリのトークナイズ
         query_tokens = bm25s.tokenize(
             [query],
@@ -227,8 +245,8 @@ class HybridSearchEngine:
         faiss_index,
         embedding_service,
         items: List[Dict],
-        top_k: int = 40,
-        stage1_top_k: int = 100
+        top_k: int = None,
+        stage1_top_k: int = None
     ) -> List[Dict[str, Any]]:
         """
         ハイブリッドサーチを実行
@@ -238,12 +256,21 @@ class HybridSearchEngine:
             faiss_index: FAISSインデックス
             embedding_service: 埋め込みサービス
             items: アイテムメタデータ
-            top_k: 返却する結果数
-            stage1_top_k: Stage1で取得する候補数
+            top_k: 返却する結果数（Noneの場合はsettingsから取得）
+            stage1_top_k: Stage1で取得する候補数（Noneの場合はsettingsから取得）
 
         Returns:
             検索結果のリスト
         """
+        # 設定を取得
+        if top_k is None or stage1_top_k is None:
+            from ..config.settings import get_settings
+            settings = get_settings()
+            if top_k is None:
+                top_k = settings.DEFAULT_DEBUG_TOP_K
+            if stage1_top_k is None:
+                stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+
         logger.info(f"🔍 Hybrid search: '{query}'")
 
         try:
