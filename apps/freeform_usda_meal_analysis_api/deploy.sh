@@ -3,6 +3,9 @@
 
 set -e
 
+# gcloud コマンドのパス設定
+GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
+
 # 設定
 PROJECT_ID="new-snap-calorie"
 REGION="us-central1"
@@ -35,7 +38,7 @@ cd "$(dirname "$0")"
 
 # 1. Docker イメージのビルドとプッシュ
 echo "📦 Building and pushing Docker image..."
-gcloud builds submit \
+$GCLOUD builds submit \
   --tag "${IMAGE_TAG}" \
   --timeout=900 \
   --project="${PROJECT_ID}" \
@@ -46,7 +49,7 @@ echo ""
 
 # 2. Cloud Run デプロイ
 echo "🚀 Deploying to Cloud Run..."
-gcloud run deploy "${SERVICE_NAME}" \
+$GCLOUD run deploy "${SERVICE_NAME}" \
   --image "${IMAGE_TAG}" \
   --region "${REGION}" \
   --platform managed \
@@ -67,7 +70,7 @@ echo "=================================="
 echo ""
 
 # サービスURLを取得
-SERVICE_URL=$(gcloud run services describe "${SERVICE_NAME}" \
+SERVICE_URL=$($GCLOUD run services describe "${SERVICE_NAME}" \
   --region="${REGION}" \
   --platform managed \
   --format="value(status.url)" \

@@ -11,6 +11,12 @@ import logging
 import time
 from datetime import datetime
 
+from ..models.response_models import (
+    RetrievalResponse,
+    RetrievalMetadata,
+    RetrievalStatus
+)
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -32,14 +38,14 @@ def set_hybrid_search_engine(engine):
     _hybrid_search_engine = engine
 
 
-@router.get("/retrieve")
+@router.get("/retrieve", response_model=RetrievalResponse)
 async def retrieve_foods(
     q: str = Query(..., min_length=1, description="検索クエリ"),
     mode: str = Query("hybrid", description="検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS)"),
     top_k: int = Query(10, ge=1, le=50, description="返却結果数（1-50）"),
     include_nutrition: bool = Query(True, description="栄養情報を含めるか"),
     debug: bool = Query(False, description="デバッグ情報を含めるか")
-) -> Dict[str, Any]:
+) -> RetrievalResponse:
     """
     USDA食材検索API（FAISS検索）
 
@@ -92,25 +98,22 @@ async def retrieve_foods(
         processing_time_ms = int((time.time() - start_time) * 1000)
 
         # レスポンス構築
-        response = {
-            "query": q,
-            "mode": mode,
-            "results": result.get("results", []),
-            "metadata": {
-                "total_results": len(result.get("results", [])),
-                "search_time_ms": processing_time_ms,
-                "index_type": "FAISS",
-                "algorithm": "Stage1" if mode == "fast" else "Stage1+Stage2_Rerank"
-            },
-            "status": {
-                "success": True,
-                "message": "Search completed successfully"
-            }
-        }
-
-        # デバッグ情報追加
-        if debug:
-            response["debug_info"] = result.get("debug_info", {})
+        response = RetrievalResponse(
+            query=q,
+            mode=mode,
+            results=result.get("results", []),
+            metadata=RetrievalMetadata(
+                total_results=len(result.get("results", [])),
+                search_time_ms=processing_time_ms,
+                index_type="FAISS",
+                algorithm="Stage1" if mode == "fast" else "Stage1+Stage2_Rerank"
+            ),
+            status=RetrievalStatus(
+                success=True,
+                message="Search completed successfully"
+            ),
+            debug_info=result.get("debug_info") if debug else None
+        )
 
         logger.info(f"✅ Retrieval completed: {len(result.get('results', []))} results in {processing_time_ms}ms")
 

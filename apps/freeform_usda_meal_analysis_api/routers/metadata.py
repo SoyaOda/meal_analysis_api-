@@ -14,6 +14,7 @@ import gzip
 from pathlib import Path
 
 from ..config import get_settings
+from ..models.response_models import MetadataSearchResponse
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -201,13 +202,13 @@ async def get_metadata_info() -> Dict[str, Any]:
         raise HTTPException(500, f"Failed to get metadata info: {str(e)}")
 
 
-@router.get("/api/v1/metadata/search")
+@router.get("/api/v1/metadata/search", response_model=MetadataSearchResponse)
 async def search_metadata(
     q: str = Query(..., min_length=1, description="検索クエリ"),
     limit: int = Query(20, ge=1, le=100, description="返却件数（1-100）"),
     offset: int = Query(0, ge=0, description="オフセット"),
     source: Optional[str] = Query(None, description="データソースフィルター（survey/foundation/sr_legacy）")
-) -> Dict[str, Any]:
+) -> MetadataSearchResponse:
     """
     メタデータ検索（軽量版）
 
@@ -268,14 +269,14 @@ async def search_metadata(
 
         logger.info(f"🔍 Metadata search: query='{q}', source={source}, total={total}, returned={len(paginated_results)}")
 
-        return {
-            "query": q,
-            "results": paginated_results,
-            "total": total,
-            "limit": limit,
-            "offset": offset,
-            "has_more": offset + limit < total
-        }
+        return MetadataSearchResponse(
+            query=q,
+            results=paginated_results,
+            total=total,
+            limit=limit,
+            offset=offset,
+            has_more=offset + limit < total
+        )
 
     except Exception as e:
         logger.error(f"Metadata search failed: {e}", exc_info=True)
