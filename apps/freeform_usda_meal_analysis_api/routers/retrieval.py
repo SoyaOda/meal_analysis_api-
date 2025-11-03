@@ -163,15 +163,13 @@ async def _search_fast_mode(query: str, top_k: int) -> Dict[str, Any]:
             }
 
             results.append({
-                "fdc_id": item.get("fdc_id"),
-                "name": item.get("description", ""),
+                "fdc_id": str(item.get("fdc_id")),
+                "description": item.get("description", ""),
                 "main_name": item.get("main_name", ""),
                 "descriptors": item.get("descriptors", ""),
                 "source": item.get("source", "unknown"),
                 "score": float(dist),
-                "score_type": "cosine_similarity",
-                "nutrition_per_100g": nutrition_per_100g,
-                "portions": item.get("portions")
+                "nutrition_per_100g": nutrition_per_100g
             })
 
     return {
@@ -217,16 +215,13 @@ async def _search_accurate_mode(query: str, top_k: int) -> Dict[str, Any]:
             }
 
         results.append({
-            "fdc_id": candidate.get("fdc_id"),
-            "name": candidate.get("description", ""),
+            "fdc_id": str(candidate.get("fdc_id")),
+            "description": candidate.get("description", ""),
             "main_name": candidate.get("main_name", ""),
             "descriptors": candidate.get("descriptors", ""),
             "source": candidate.get("source", "unknown"),
             "score": candidate.get("rerank_score", 0),
-            "score_type": "rerank_score",
-            "stage1_score": candidate.get("stage1_score", 0),
-            "nutrition_per_100g": nutrition_per_100g,
-            "portions": item.get("portions") if item else None
+            "nutrition_per_100g": nutrition_per_100g
         })
 
     return {
@@ -281,16 +276,13 @@ async def _search_hybrid_mode(query: str, top_k: int) -> Dict[str, Any]:
             }
 
         results.append({
-            "fdc_id": candidate.get("fdc_id"),
-            "name": candidate.get("description", ""),
+            "fdc_id": str(candidate.get("fdc_id")),
+            "description": candidate.get("description", ""),
             "main_name": candidate.get("main_name", ""),
             "descriptors": candidate.get("descriptors", ""),
             "source": candidate.get("source", "unknown"),
             "score": candidate.get("hybrid_score", 0),
-            "score_type": "hybrid_score",
-            "component_scores": candidate.get("component_scores", {}),
-            "nutrition_per_100g": nutrition_per_100g,
-            "portions": item.get("portions") if item else None
+            "nutrition_per_100g": nutrition_per_100g
         })
 
     return {

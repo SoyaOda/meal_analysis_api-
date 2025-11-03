@@ -120,7 +120,7 @@ async function searchFood(query, topK = 10) {
 // 使用例
 const results = await searchFood('grilled chicken breast', 5);
 results.forEach(food => {
-  console.log(`${food.name}: ${food.nutrition_per_100g.calories} kcal/100g`);
+  console.log(`${food.description}: ${food.nutrition_per_100g.calories} kcal/100g`);
 });
 ```
 
@@ -608,13 +608,12 @@ curl -X GET "http://localhost:8006/api/v1/retrieve?q=rice&mode=hybrid&top_k=5&de
   "mode": "hybrid",
   "results": [
     {
-      "fdc_id": 2706085,
-      "name": "Chicken feet",
+      "fdc_id": "2706085",
+      "description": "Chicken feet",
       "main_name": "Chicken feet",
       "descriptors": "",
       "source": "survey",
       "score": 0.9159824474180568,
-      "score_type": "hybrid_score",
       "component_scores": {
         "bm25": 0.9056922034159449,
         "vector": 0.8694238066673279,

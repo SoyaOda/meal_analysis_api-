@@ -2,7 +2,7 @@
 Response models for Freeform USDA Meal Analysis API
 """
 from typing import List, Dict, Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 
 
 class HealthCheckResponse(BaseModel):
@@ -20,12 +20,12 @@ class NutritionInfo(BaseModel):
     model_config = {"protected_namespaces": ()}
 
     calories: float = Field(..., description="カロリー（kcal）", example=156.0)
-    protein: float = Field(..., description="タンパク質（g）", example=12.0)
-    fat: float = Field(..., description="脂質（g）", example=10.5)
-    carbs: float = Field(..., description="炭水化物（g）", example=1.1)
-    fiber: Optional[float] = Field(None, description="食物繊維（g）", example=0.0)
-    sugar: Optional[float] = Field(None, description="糖質（g）", example=0.7)
-    sodium: Optional[float] = Field(None, description="ナトリウム（mg）", example=142.0)
+    protein: float = Field(..., validation_alias=AliasChoices("protein", "protein_g"), description="タンパク質（g）", example=12.0)
+    fat: float = Field(..., validation_alias=AliasChoices("fat", "fat_g"), description="脂質（g）", example=10.5)
+    carbs: float = Field(..., validation_alias=AliasChoices("carbs", "carbs_g"), description="炭水化物（g）", example=1.1)
+    fiber: Optional[float] = Field(None, validation_alias=AliasChoices("fiber", "fiber_g"), description="食物繊維（g）", example=0.0)
+    sugar: Optional[float] = Field(None, validation_alias=AliasChoices("sugar", "sugar_g"), description="糖質（g）", example=0.7)
+    sodium: Optional[float] = Field(None, validation_alias=AliasChoices("sodium", "sodium_mg"), description="ナトリウム（mg）", example=142.0)
 
 
 class IngredientDetail(BaseModel):
