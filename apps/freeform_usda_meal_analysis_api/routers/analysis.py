@@ -31,7 +31,7 @@ def get_pipeline() -> MealAnalysisPipeline:
     return _pipeline
 
 
-def initialize_pipeline(hybrid_engine=None):
+def initialize_pipeline(hybrid_engine=None, use_lazy_loading=True):
     """パイプラインを初期化（アプリ起動時に呼び出す）"""
     global _pipeline
     settings = get_settings()
@@ -45,7 +45,8 @@ def initialize_pipeline(hybrid_engine=None):
             usda_metadata_file=settings.USDA_METADATA_FILE,
             stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,
             device=settings.DEFAULT_DEVICE,
-            hybrid_engine=hybrid_engine
+            hybrid_engine=hybrid_engine,
+            use_lazy_loading=use_lazy_loading
         )
         logger.info("✅ Pipeline initialized successfully")
     except Exception as e:
@@ -61,6 +62,7 @@ async def analyze_meal_from_image(
     model_id: Optional[str] = Form(None, description="VLMモデルID"),
     prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
     thinking_budget: Optional[int] = Form(None, description="思考トークン数(QVQモデル用)"),
+    enable_thinking: Optional[bool] = Form(None, description="Thinking modeのon/off(Alibabaモデル用)"),
     temperature: Optional[float] = Form(None, description="生成温度"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
     # Search config overrides
@@ -100,11 +102,12 @@ async def analyze_meal_from_image(
 
         # モデル設定のオーバーライド処理
         model_config_override = None
-        if any([model_id, prompt_path, thinking_budget, temperature, max_tokens]):
+        if any([model_id, prompt_path, thinking_budget, enable_thinking, temperature, max_tokens]):
             model_config_override = ModelConfig(
                 model_id=model_id,
                 prompt_path=prompt_path,
                 thinking_budget=thinking_budget,
+                enable_thinking=enable_thinking,
                 temperature=temperature,
                 max_tokens=max_tokens,
             )
@@ -151,12 +154,19 @@ async def analyze_meal_from_image(
         logger.error(f"Validation error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        logger.error(f"Analysis failed: {e}", exc_info=True)
+        # エラーメッセージを確実に取得
+        error_message = str(e) if str(e) else f"An error occurred: {type(e).__name__}"
+        logger.error(f"Analysis failed: {error_message}", exc_info=True)
+
+        # エラーの詳細情報を取得（デバッグ用）
+        import traceback
+        error_detail = traceback.format_exc()
+
         return JSONResponse(
             status_code=500,
             content=ErrorResponse(
                 error="InternalServerError",
-                message=str(e),
+                message=error_message,
                 analysis_id=analysis_id,
             ).model_dump()
         )

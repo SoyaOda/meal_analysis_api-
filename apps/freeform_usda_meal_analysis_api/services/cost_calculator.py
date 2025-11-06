@@ -20,10 +20,11 @@ class CostCalculator:
     token数からコストを計算する。
     """
 
-    def __init__(self, pricing_file: Optional[str] = None):
+    def __init__(self, pricing_file: Optional[str] = None, use_default_for_unknown: bool = False):
         """
         Args:
             pricing_file: model_pricing.jsonのパス（Noneの場合はデフォルト）
+            use_default_for_unknown: pricing情報がないモデルにデフォルト値を使うか（Falseの場合はNone返却）
         """
         if pricing_file is None:
             # デフォルト: config/model_pricing.json
@@ -31,6 +32,7 @@ class CostCalculator:
 
         self.pricing_file = Path(pricing_file)
         self.pricing_data: Dict = {}
+        self.use_default_for_unknown = use_default_for_unknown
 
         # ロード実行
         self._load_pricing_data()
@@ -39,13 +41,23 @@ class CostCalculator:
         """model_pricing.jsonから価格情報をロード"""
         logger.info(f"📂 Loading model pricing data from: {self.pricing_file}")
 
-        with open(self.pricing_file, 'r', encoding='utf-8') as f:
-            self.pricing_data = json.load(f)
+        if not self.pricing_file.exists():
+            logger.warning(f"⚠️  Pricing file not found: {self.pricing_file}")
+            logger.warning("Cost calculation will be disabled for all models")
+            self.pricing_data = {}
+            return
 
-        model_count = len(self.pricing_data.get("models", {}))
-        logger.info(f"✅ Loaded pricing data for {model_count} models")
+        try:
+            with open(self.pricing_file, 'r', encoding='utf-8') as f:
+                self.pricing_data = json.load(f)
 
-    def get_model_pricing(self, model_id: str) -> Dict[str, float]:
+            model_count = len(self.pricing_data.get("models", {}))
+            logger.info(f"✅ Loaded pricing data for {model_count} models")
+        except Exception as e:
+            logger.error(f"❌ Failed to load pricing data: {e}")
+            self.pricing_data = {}
+
+    def get_model_pricing(self, model_id: str) -> Optional[Dict[str, float]]:
         """
         指定されたモデルの価格情報を取得
 
@@ -57,6 +69,7 @@ class CostCalculator:
                 "input_price_per_million": float,
                 "output_price_per_million": float
             }
+            または None（pricing情報が存在しない、かつuse_default_for_unknown=Falseの場合）
         """
         models = self.pricing_data.get("models", {})
 
@@ -67,20 +80,24 @@ class CostCalculator:
                 "output_price_per_million": model_info["output_price_per_million"]
             }
 
-        # モデルが見つからない場合はデフォルトを使用
-        logger.warning(f"Model '{model_id}' not found in pricing data, using default pricing")
-        default_info = self.pricing_data.get("default", {})
-        return {
-            "input_price_per_million": default_info.get("input_price_per_million", 0.50),
-            "output_price_per_million": default_info.get("output_price_per_million", 0.50)
-        }
+        # モデルが見つからない場合の処理
+        if self.use_default_for_unknown:
+            logger.warning(f"⚠️  Model '{model_id}' not found in pricing data, using default pricing")
+            default_info = self.pricing_data.get("default", {})
+            return {
+                "input_price_per_million": default_info.get("input_price_per_million", 0.50),
+                "output_price_per_million": default_info.get("output_price_per_million", 0.50)
+            }
+        else:
+            logger.info(f"ℹ️  Model '{model_id}' not found in pricing data, cost calculation disabled")
+            return None
 
     def calculate_cost(
         self,
         model_id: str,
         prompt_tokens: int,
         completion_tokens: int
-    ) -> Dict[str, any]:
+    ) -> Optional[Dict[str, any]]:
         """
         Token使用量からコストを計算
 
@@ -100,8 +117,14 @@ class CostCalculator:
                     "output_price_per_million": float
                 }
             }
+            または None（pricing情報がない場合）
         """
         pricing = self.get_model_pricing(model_id)
+
+        # pricing情報がない場合はNoneを返す
+        if pricing is None:
+            logger.info(f"ℹ️  Cost calculation skipped for model '{model_id}' (no pricing data)")
+            return None
 
         # コスト計算（per million tokens）
         input_cost = (prompt_tokens / 1_000_000) * pricing["input_price_per_million"]

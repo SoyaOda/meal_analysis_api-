@@ -39,8 +39,20 @@ async def lifespan(app: FastAPI):
     logger.info(f"Default Prompt: {settings.DEFAULT_PROMPT_FILE}")
     logger.info(f"USDA Index Directory: {settings.USDA_INDEX_DIR}")
     logger.info("=" * 60)
-
-    # ハイブリッドサーチエンジンの初期化（パイプラインより先に初期化）
+    
+    # Cloud Run最適化: バックグラウンドでインデックスをロード
+    import asyncio
+    from .core import startup_optimizer
+    
+    logger.info("🚀 Starting with Lazy Loading - indexes will be loaded on first request")
+    
+    # バックグラウンドでインデックスをプリロード開始（オプション）
+    # 起動時間を最優先する場合はコメントアウト
+    if settings.PRELOAD_INDEXES_ON_STARTUP:
+        logger.info("📦 Starting background index preloading...")
+        asyncio.create_task(startup_optimizer.lazy_load_indexes())
+    
+    # ハイブリッドサーチエンジンの初期化（軽量なので即座に実行）
     hybrid_engine = None
     try:
         from .services.hybrid_search import HybridSearchEngine
@@ -55,9 +67,12 @@ async def lifespan(app: FastAPI):
         logger.warning(f"⚠️ Hybrid search engine initialization failed: {e}")
         logger.warning("   Hybrid mode will not be available")
 
-    # パイプライン初期化（hybrid_engineを渡す）
+    # パイプライン初期化（Lazy Loading対応）
     try:
-        analysis.initialize_pipeline(hybrid_engine=hybrid_engine)
+        analysis.initialize_pipeline(
+            hybrid_engine=hybrid_engine,
+            use_lazy_loading=True  # Lazy Loadingを有効化
+        )
     except Exception as e:
         logger.error(f"Failed to initialize pipeline during startup: {e}")
         raise
@@ -72,9 +87,9 @@ async def lifespan(app: FastAPI):
         retrieval.set_hybrid_search_engine(hybrid_engine)
         logger.info("✅ Retrieval router initialized with hybrid search engine")
 
-    # startup_optimizerのロード状態を更新
-    startup_optimizer.is_loaded = True
-    logger.info("✅ Startup optimizer marked as loaded")
+    # startup_optimizerのロード状態は、実際のロード後に更新される
+    # ここではすぐに"ready"とマークしない（Lazy Loadingのため）
+    logger.info("✅ Application initialized - ready to accept requests")
 
     yield  # アプリケーション実行中
 

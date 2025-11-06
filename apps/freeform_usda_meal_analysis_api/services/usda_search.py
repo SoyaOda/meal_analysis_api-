@@ -181,13 +181,14 @@ class SimplifiedUSDASearcher:
 
     def search(
         self,
-        query_main: str,
-        query_descriptors: str = "",
-        return_top_k: int = 1
+        query: str,
+        search_mode: str = "full_index_only",
+        stage1_top_k: int = 1
     ) -> Dict[str, Any]:
         """
         検索を実行（同期ラッパー）
 
         asyncioイベントループで非同期検索を実行
         """
-        return asyncio.run(self.search_async(query_main, query_descriptors, return_top_k))
+        # 互換性のためsearch_modeとstage1_top_kは無視（SimplifiedUSDASearcherは独自のパラメータを使用）
+        return asyncio.run(self.search_async(query, "", stage1_top_k))

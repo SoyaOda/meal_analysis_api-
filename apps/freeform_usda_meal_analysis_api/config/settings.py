@@ -59,10 +59,19 @@ class Settings:
         self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.6"))  # Qwen公式推奨値
         self.DEFAULT_SEED = int(os.getenv("VLM_SEED", "123456"))
 
-        # ========== DeepInfra API設定 ==========
+        # ========== VLM Provider API設定 ==========
+        # DeepInfra API Key（デフォルトプロバイダー）
         self.DEEPINFRA_API_KEY = os.getenv("DEEPINFRA_API_KEY")
         if not self.DEEPINFRA_API_KEY:
             raise ValueError("DEEPINFRA_API_KEY environment variable is required")
+
+        # Alibaba Cloud API Key（オプション）
+        # provider:model_id形式で "alibaba:qwen-vl-plus" などを指定する場合に必要
+        self.ALIBABA_API_KEY = os.getenv("ALIBABA_API_KEY")
+
+        # OpenRouter API Key（オプション）
+        # provider:model_id形式で "openrouter:qwen/qwen3-vl-235b-a22b-thinking" などを指定する場合に必要
+        self.OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
         # ========== USDA検索設定 ==========
         # データディレクトリ（自己完結型）
@@ -102,6 +111,8 @@ class Settings:
         # 検索結果数の設定
         self.DEFAULT_SEARCH_TOP_K = int(os.getenv("SEARCH_TOP_K", "100"))
         self.DEFAULT_SEARCH_STAGE1_TOP_K = int(os.getenv("SEARCH_STAGE1_TOP_K", "100"))
+        # Cloud Run最適化設定
+        self.PRELOAD_INDEXES_ON_STARTUP = os.getenv("PRELOAD_INDEXES_ON_STARTUP", "false").lower() == "true"
 
         # ========== Thinkingモデル推奨設定 ==========
         # Thinkingモデル使用時の推奨パラメータ

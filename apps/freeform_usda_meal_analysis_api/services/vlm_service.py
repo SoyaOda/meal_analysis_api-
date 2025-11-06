@@ -3,7 +3,7 @@
 """
 VLM (Vision Language Model) Service
 
-DeepInfra APIを使用して画像から食事情報を抽出する。
+VLMプロバイダー（DeepInfra, Alibaba Cloud等）を使用して画像から食事情報を抽出する。
 """
 
 import json
@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 import mimetypes
 
-from .deepinfra_service import DeepInfraService
 from ..config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,8 @@ class VLMService:
     """
     VLMを使用して画像から食事情報を抽出するサービス
 
-    DeepInfraのQwen3-VL-235Bモデルを使用して、画像から料理とその重量、説明を抽出する。
+    複数のVLMプロバイダー（DeepInfra, Alibaba Cloud等）をサポートし、
+    画像から料理とその重量、説明を抽出する。
     """
 
     def __init__(
@@ -32,8 +32,9 @@ class VLMService:
     ):
         """
         Args:
-            model_id: DeepInfra VLMモデルID（Noneの場合はconfig設定値を使用）
-            prompt_file: プロンプトファイルのパス（Noneの場合はデフォルトのUSDAフォーマットプロンプトを使用）
+            model_id: VLMモデルID（"provider:model_id" または "model_id" 形式）
+                     None の場合は config 設定値を使用
+            prompt_file: プロンプトファイル名（None の場合は config のデフォルトプロンプトを使用）
         """
         # config からデフォルト値を取得
         settings = get_settings()
@@ -41,20 +42,26 @@ class VLMService:
             model_id = settings.VLM_MODEL_ID
 
         self.model_id = model_id
-        self.deepinfra_service = DeepInfraService(model_id=model_id)
+        
+        # VLMProviderFactoryを使ってプロバイダーを生成
+        from .providers import VLMProviderFactory
+        self.provider = VLMProviderFactory.create_provider(model_id)
+        
+        # 後方互換性のために deepinfra_service プロパティも保持
+        # （pipeline.py で使われているため）
+        self.deepinfra_service = self.provider
 
-        # プロンプトロード
-        if prompt_file:
-            self.prompt = self._load_prompt(prompt_file)
-        else:
-            # デフォルト: freeform_prompt_usda_format_ver.txt (apps内のpromptsディレクトリ)
-            default_prompt_path = (
-                Path(__file__).parent.parent / "prompts" / "freeform_prompt_usda_format_ver.txt"
-            )
-            self.prompt = self._load_prompt(str(default_prompt_path))
+        # プロンプトロード - config管理を使用
+        prompt_path = settings.get_prompt_path(prompt_file)
+        self.prompt = self._load_prompt(prompt_path)
 
         logger.info(f"VLMService initialized with model: {model_id}")
+        logger.info(f"Using prompt file: {prompt_path}")
         logger.info(f"Prompt length: {len(self.prompt)} characters")
+        
+        # ✅ 追加: Promptの最初の部分をログ出力（デバッグ用）
+        prompt_preview = self.prompt[:500] if len(self.prompt) > 500 else self.prompt
+        logger.info(f"Prompt preview (first 500 chars):\n{prompt_preview}")
 
     def _load_prompt(self, prompt_file: str) -> str:
         """プロンプトファイルを読み込む"""
@@ -76,7 +83,8 @@ class VLMService:
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
         max_tokens: Optional[int] = None,
-        thinking_budget: Optional[int] = None
+        thinking_budget: Optional[int] = None,
+        enable_thinking: Optional[bool] = None
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
@@ -96,6 +104,11 @@ class VLMService:
         """
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
         logger.info(f"Parameters: temperature={temperature}, seed={seed}, max_tokens={max_tokens}")
+        
+        # ✅ 追加: VLM呼び出し直前にpromptの内容をログ出力
+        logger.info(f"📝 Using prompt (length: {len(self.prompt)} chars)")
+        prompt_preview = self.prompt[:300] if len(self.prompt) > 300 else self.prompt
+        logger.info(f"📝 Prompt preview (first 300 chars):\n{prompt_preview}")
 
         # API呼び出しパラメータ構築（Noneは渡さない）
         api_params = {
@@ -114,10 +127,12 @@ class VLMService:
             api_params["seed"] = seed
         if thinking_budget is not None:
             api_params["thinking_budget"] = thinking_budget
+        if enable_thinking is not None:
+            api_params["enable_thinking"] = enable_thinking
 
-        # VLM呼び出し
+        # VLM呼び出し（providerを使用）
         try:
-            raw_response, usage = await self.deepinfra_service.analyze_image(**api_params)
+            raw_response, usage = await self.provider.analyze_image(**api_params)
         except Exception as e:
             logger.error(f"VLM API call failed: {e}")
             raise RuntimeError(f"[VLM Service] API call failed: {e}") from e

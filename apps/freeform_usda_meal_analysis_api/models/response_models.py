@@ -58,8 +58,6 @@ class DishDetail(BaseModel):
     """料理詳細情報"""
     model_config = {"protected_namespaces": ()}
 
-    dish_name: str = Field(..., description="料理名", example="Two Large Eggs")
-    confidence: float = Field(..., description="識別信頼度", ge=0.0, le=1.0, example=0.95)
     ingredients: List[IngredientDetail] = Field(..., description="食材詳細リスト")
     total_nutrition: NutritionInfo = Field(..., description="料理の総栄養価")
     calculation_metadata: Dict[str, Any] = Field(
@@ -81,10 +79,14 @@ class UsageInfo(BaseModel):
     prompt_tokens: int = Field(..., description="入力トークン数", example=1250)
     completion_tokens: int = Field(..., description="出力トークン数", example=450)
     total_tokens: int = Field(..., description="合計トークン数", example=1700)
-    estimated_cost_usd: float = Field(..., description="推定コスト（USD）", example=0.00125)
-    model_pricing: Dict[str, Any] = Field(
-        ...,
-        description="使用したモデルの価格情報",
+    estimated_cost_usd: Optional[float] = Field(
+        None,
+        description="推定コスト（USD）(pricing情報がない場合はNone)",
+        example=0.00125
+    )
+    model_pricing: Optional[Dict[str, Any]] = Field(
+        None,
+        description="使用したモデルの価格情報 (pricing情報がない場合はNone)",
         example={
             "input_price_per_million": 0.29,
             "output_price_per_million": 0.99
@@ -94,6 +96,11 @@ class UsageInfo(BaseModel):
         None,
         description="VLMの生出力（デバッグ用）",
         example="<think>...</think>\n{\"dishes\": ...}"
+    )
+    prompt_content: Optional[str] = Field(
+        None,
+        description="VLMに送信したプロンプトの内容（デバッグ用）",
+        example="You are an expert food analyst..."
     )
 
 
@@ -110,8 +117,6 @@ class AnalysisResponse(BaseModel):
                 "processing_time_seconds": 12.34,
                 "dishes": [
                     {
-                        "dish_name": "Grilled Chicken Breast",
-                        "confidence": 0.95,
                         "ingredients": [
                             {
                                 "ingredient_name": "Chicken breast, grilled",
@@ -160,8 +165,6 @@ class AnalysisResponse(BaseModel):
                         }
                     },
                     {
-                        "dish_name": "Caesar Salad",
-                        "confidence": 0.90,
                         "ingredients": [
                             {
                                 "ingredient_name": "Romaine lettuce, raw",

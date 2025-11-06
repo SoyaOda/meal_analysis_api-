@@ -183,8 +183,14 @@ class DeepInfraService:
                 
                 # JSONクリーニング処理
                 cleaned_content = raw_json_content
-                
-                # 1. Markdown コードブロックの除去
+
+                # 1. <think>...</think> タグの除去（Gemini等のThinking出力対応）
+                import re
+                # <think>タグとその内容を除去
+                cleaned_content = re.sub(r'<think>.*?</think>', '', cleaned_content, flags=re.DOTALL)
+                cleaned_content = cleaned_content.strip()
+
+                # 2. Markdown コードブロックの除去
                 if cleaned_content.startswith("```json"):
                     cleaned_content = cleaned_content[7:]
                 if cleaned_content.startswith("```"):
@@ -192,13 +198,12 @@ class DeepInfraService:
                 if cleaned_content.endswith("```"):
                     cleaned_content = cleaned_content[:-3]
                 cleaned_content = cleaned_content.strip()
-                
-                # 2. trailing commaの除去（JSON仕様違反）
-                import re
+
+                # 3. trailing commaの除去（JSON仕様違反）
                 # オブジェクトや配列の末尾のカンマを削除
                 cleaned_content = re.sub(r',(\s*[}\]])', r'\1', cleaned_content)
-                
-                # 3. 再パース試行
+
+                # 4. 再パース試行
                 try:
                     parsed_json = json.loads(cleaned_content)
                     raw_json_content = cleaned_content  # クリーニング成功

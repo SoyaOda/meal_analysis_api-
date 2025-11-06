@@ -34,7 +34,8 @@ class MealAnalysisPipeline:
         usda_metadata_file: str = None,
         stage1_top_k: int = None,
         device: str = "cpu",
-        hybrid_engine=None
+        hybrid_engine=None,
+        use_lazy_loading: bool = True
     ):
         """
         Args:
@@ -70,7 +71,8 @@ class MealAnalysisPipeline:
             index_dir=index_dir,
             stage1_top_k=stage1_top_k,
             device=device,
-            hybrid_engine=hybrid_engine
+            hybrid_engine=hybrid_engine,
+            use_lazy_loading=use_lazy_loading
         )
 
         # 栄養素サービス初期化
@@ -94,6 +96,7 @@ class MealAnalysisPipeline:
         vlm_seed: Optional[int] = None,
         vlm_max_tokens: Optional[int] = None,
         vlm_thinking_budget: Optional[int] = None,
+        vlm_enable_thinking: Optional[bool] = None,
         parallel_search: bool = True
     ) -> Dict[str, Any]:
         """
@@ -117,7 +120,6 @@ class MealAnalysisPipeline:
                             "search_name": str,
                             "description": str,
                             "weight_g": float,
-                            "confidence": float,
                             "usda_match": {
                                 "fdc_id": int,
                                 "matched_description": str,
@@ -159,7 +161,8 @@ class MealAnalysisPipeline:
                 temperature=vlm_temperature,
                 seed=vlm_seed,
                 max_tokens=vlm_max_tokens,
-                thinking_budget=vlm_thinking_budget
+                thinking_budget=vlm_thinking_budget,
+                enable_thinking=vlm_enable_thinking
             )
         except Exception as e:
             logger.error(f"VLM analysis failed: {e}")
@@ -186,7 +189,7 @@ class MealAnalysisPipeline:
             search_results = await self._parallel_search(queries)
         else:
             # 逐次検索
-            search_results = self._sequential_search(queries)
+            search_results = await self._sequential_search(queries)
 
         logger.info(f"✅ USDA search complete: {len(search_results)} results")
 
@@ -258,6 +261,8 @@ class MealAnalysisPipeline:
                 vlm_kwargs["vlm_max_tokens"] = model_config_override.max_tokens
             if model_config_override.thinking_budget is not None:
                 vlm_kwargs["vlm_thinking_budget"] = model_config_override.thinking_budget
+            if model_config_override.enable_thinking is not None:
+                vlm_kwargs["vlm_enable_thinking"] = model_config_override.enable_thinking
 
         # プロンプトのオーバーライド(一時的に変更)
         original_prompt = None
@@ -273,11 +278,13 @@ class MealAnalysisPipeline:
         if model_config_override and model_config_override.model_id:
             original_model_id = self.vlm_service.model_id
             self.vlm_service.model_id = model_config_override.model_id
-            # DeepInfraサービスも更新
-            from .deepinfra_service import DeepInfraService
-            self.vlm_service.deepinfra_service = DeepInfraService(
+            # プロバイダーも更新（VLMProviderFactoryを使用）
+            from .providers import VLMProviderFactory
+            self.vlm_service.provider = VLMProviderFactory.create_provider(
                 model_id=model_config_override.model_id
             )
+            # 後方互換性のため
+            self.vlm_service.deepinfra_service = self.vlm_service.provider
 
         try:
             # 分析実行
@@ -295,52 +302,71 @@ class MealAnalysisPipeline:
             api_dishes = []
             for dish in result["dishes"]:
                 # メインフードを処理
-                main_food = dish.get("main_food", {})
-                usda_match = main_food.get("usda_match") or {}
-                nutrition = main_food.get("nutrition") or {}
+                main_food = dish.get("main_food")
 
-                # USDA検索が失敗した場合は500エラーを返す
-                if not usda_match:
-                    search_name = main_food.get("search_name", "Unknown")
-                    logger.error(f"❌ USDA search failed completely for '{search_name}' after all retries")
-                    raise HTTPException(
-                        status_code=500,
-                        detail=f"USDA food database search failed for ingredient: '{search_name}'. Please try again later."
+                ingredients = []
+
+                # main_foodがNoneの場合はextrasのみの料理として扱う（正常ケース）
+                if main_food is None:
+                    logger.info("📝 Dish has no main_food (extras-only dish)")
+                else:
+                    # main_foodが存在する場合はUSDA検索結果を確認
+                    usda_match = main_food.get("usda_match")
+                    nutrition = main_food.get("nutrition")
+
+                    # USDA検索が失敗した場合は明確なエラー
+                    if not usda_match:
+                        search_name = main_food.get("search_name")
+                        if not search_name:
+                            logger.error(f"❌ main_food is missing 'search_name' field")
+                            logger.error(f"   main_food content: {main_food}")
+                            # raise HTTPException を Exception に変更
+                            raise Exception(
+                                "VLM returned a dish with main_food but no search_name field. "
+                                "This indicates a VLM response format error."
+                            )
+                        else:
+                            logger.error(f"❌ USDA search failed for main_food: '{search_name}'")
+                            logger.error(f"   main_food: {main_food}")
+                            # raise HTTPException を Exception に変更
+                            raise Exception(
+                                f"USDA food database search failed for ingredient: '{search_name}'. "
+                                f"The food item could not be matched in the USDA database."
+                            )
+
+                    # 正常にUSDA検索できた場合の処理
+                    main_fdc_id = usda_match.get("fdc_id")
+                    main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
+
+                    # デバッグ情報を抽出
+                    debug_info = {
+                        "retriever_candidates": usda_match.get("retriever_candidates", []),
+                        "reranker_results": usda_match.get("reranker_results", []),
+                        "retry_count": usda_match.get("retry_count", 0)
+                    }
+
+                    ingredients.append(
+                        IngredientDetail(
+                            ingredient_name=main_food.get("matched_description", main_food.get("search_name", "")),
+                            weight_g=main_food.get("weight_g", 0.0),
+                            nutrition_per_100g=NutritionInfo(
+                                calories=main_nutrition_per_100g.get("calories", 0.0) if main_nutrition_per_100g else 0.0,
+                                protein=main_nutrition_per_100g.get("protein_g", 0.0) if main_nutrition_per_100g else 0.0,
+                                fat=main_nutrition_per_100g.get("fat_g", 0.0) if main_nutrition_per_100g else 0.0,
+                                carbs=main_nutrition_per_100g.get("carbs_g", 0.0) if main_nutrition_per_100g else 0.0,
+                            ),
+                            calculated_nutrition=NutritionInfo(
+                                calories=nutrition.get("calories", 0.0) if nutrition else 0.0,
+                                protein=nutrition.get("protein_g", 0.0) if nutrition else 0.0,
+                                fat=nutrition.get("fat_g", 0.0) if nutrition else 0.0,
+                                carbs=nutrition.get("carbs_g", 0.0) if nutrition else 0.0,
+                            ),
+                            source_db="usda_fndds",
+                            fdc_id=str(usda_match.get("fdc_id", "")),
+                            calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"],
+                            debug_info=debug_info
+                        )
                     )
-
-                # fdc_idから100gあたりの栄養素を取得
-                main_fdc_id = usda_match.get("fdc_id")
-                main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
-
-                # デバッグ情報を抽出
-                debug_info = {
-                    "retriever_candidates": usda_match.get("retriever_candidates", []),
-                    "reranker_results": usda_match.get("reranker_results", []),
-                    "retry_count": usda_match.get("retry_count", 0)
-                }
-
-                ingredients = [
-                    IngredientDetail(
-                        ingredient_name=main_food.get("matched_description", main_food.get("search_name", "Unknown")),
-                        weight_g=main_food.get("weight_g", 0.0),
-                        nutrition_per_100g=NutritionInfo(
-                            calories=main_nutrition_per_100g.get("calories", 0.0) if main_nutrition_per_100g else 0.0,
-                            protein=main_nutrition_per_100g.get("protein_g", 0.0) if main_nutrition_per_100g else 0.0,
-                            fat=main_nutrition_per_100g.get("fat_g", 0.0) if main_nutrition_per_100g else 0.0,
-                            carbs=main_nutrition_per_100g.get("carbs_g", 0.0) if main_nutrition_per_100g else 0.0,
-                        ),
-                        calculated_nutrition=NutritionInfo(
-                            calories=nutrition.get("calories", 0.0) if nutrition else 0.0,
-                            protein=nutrition.get("protein_g", 0.0) if nutrition else 0.0,
-                            fat=nutrition.get("fat_g", 0.0) if nutrition else 0.0,
-                            carbs=nutrition.get("carbs_g", 0.0) if nutrition else 0.0,
-                        ),
-                        source_db="usda_fndds",
-                        fdc_id=str(usda_match.get("fdc_id", "")),
-                        calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"],
-                        debug_info=debug_info
-                    )
-                ]
 
                 # Extrasを追加
                 for extra in dish.get("extras", []):
@@ -389,11 +415,8 @@ class MealAnalysisPipeline:
                     carbs=sum(ing.calculated_nutrition.carbs for ing in ingredients),
                 )
 
-                # dish_nameをユーザーフレンドリーな名前に変更(matched_descriptionまたはsearch_nameを使用)
                 api_dishes.append(
                     DishDetail(
-                        dish_name=main_food.get("matched_description", main_food.get("search_name", "Unknown Dish")),
-                        confidence=main_food.get("confidence", 0.0),
                         ingredients=ingredients,
                         total_nutrition=dish_nutrition,
                         calculation_metadata={
@@ -422,6 +445,8 @@ class MealAnalysisPipeline:
 
             # Usage情報とコスト計算
             from ..models.response_models import UsageInfo
+            # プロンプト内容を取得（デバッグ用）
+            prompt_content = self.vlm_service.prompt if hasattr(self.vlm_service, 'prompt') else None
             usage_info = None
             if result.get("usage"):
                 usage_data = result["usage"]
@@ -430,14 +455,28 @@ class MealAnalysisPipeline:
                     prompt_tokens=usage_data.get("prompt_tokens", 0),
                     completion_tokens=usage_data.get("completion_tokens", 0)
                 )
-                usage_info = UsageInfo(
-                    prompt_tokens=cost_data["prompt_tokens"],
-                    completion_tokens=cost_data["completion_tokens"],
-                    total_tokens=cost_data["total_tokens"],
-                    estimated_cost_usd=cost_data["estimated_cost_usd"],
-                    model_pricing=cost_data["model_pricing"],
-                    raw_vlm_output=usage_data.get("raw_vlm_output")
-                )
+
+                # cost_dataがNoneの場合（pricing情報がないモデル）はtoken情報のみ
+                if cost_data is None:
+                    usage_info = UsageInfo(
+                        prompt_tokens=usage_data.get("prompt_tokens", 0),
+                        completion_tokens=usage_data.get("completion_tokens", 0),
+                        total_tokens=usage_data.get("total_tokens", 0),
+                        estimated_cost_usd=None,
+                        model_pricing=None,
+                        raw_vlm_output=usage_data.get("raw_vlm_output"),
+                        prompt_content=prompt_content
+                    )
+                else:
+                    usage_info = UsageInfo(
+                        prompt_tokens=cost_data["prompt_tokens"],
+                        completion_tokens=cost_data["completion_tokens"],
+                        total_tokens=cost_data["total_tokens"],
+                        estimated_cost_usd=cost_data["estimated_cost_usd"],
+                        model_pricing=cost_data["model_pricing"],
+                        raw_vlm_output=usage_data.get("raw_vlm_output"),
+                        prompt_content=prompt_content
+                    )
 
             return {
                 "dishes": api_dishes,
@@ -449,6 +488,12 @@ class MealAnalysisPipeline:
                 "warnings": [],
             }
 
+        except Exception as e:
+            # エラー詳細をログ出力（元のエラーメッセージを保持）
+            logger.error(f"❌ analyze_meal_from_image failed: {str(e)}", exc_info=True)
+            # エラーを再発生（元のエラーメッセージを保持）
+            raise
+
         finally:
             # プロンプトを元に戻す
             if original_prompt is not None:
@@ -456,38 +501,37 @@ class MealAnalysisPipeline:
             # モデルIDを元に戻す
             if original_model_id is not None:
                 self.vlm_service.model_id = original_model_id
-                from .deepinfra_service import DeepInfraService
-                self.vlm_service.deepinfra_service = DeepInfraService(
+                # プロバイダーも元に戻す（VLMProviderFactoryを使用）
+                from .providers import VLMProviderFactory
+                self.vlm_service.provider = VLMProviderFactory.create_provider(
                     model_id=original_model_id
                 )
+                # 後方互換性のため
+                self.vlm_service.deepinfra_service = self.vlm_service.provider
 
     async def _parallel_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を並列実行"""
-        # ThreadPoolExecutorで並列実行（FAISSはGILに影響されにくい）
-        loop = asyncio.get_event_loop()
+        # 非同期関数を直接並列実行
+        tasks = []
+        for query in queries:
+            task = self.food_search_service.search(
+                query=query['search_name'],
+                search_mode="full_index_only",
+                stage1_top_k=1
+            )
+            tasks.append(task)
 
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = []
-            for query in queries:
-                future = loop.run_in_executor(
-                    executor,
-                    self.food_search_service.search,
-                    query['search_name'],
-                    query['description']
-                )
-                futures.append(future)
-
-            results = await asyncio.gather(*futures)
-
+        results = await asyncio.gather(*tasks)
         return list(results)
 
-    def _sequential_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
+    async def _sequential_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を逐次実行"""
         results = []
         for query in queries:
-            result = self.food_search_service.search(
-                search_name=query['search_name'],
-                description=query['description']
+            result = await self.food_search_service.search(
+                query=query['search_name'],
+                search_mode="full_index_only",
+                stage1_top_k=1
             )
             results.append(result)
 
@@ -529,6 +573,9 @@ class MealAnalysisPipeline:
                     query=main_query
                 )
                 enriched_dish['main_food'] = enriched_main
+            else:
+                # main_foodがnullの場合は明示的にNoneを設定（extrasのみの料理）
+                enriched_dish['main_food'] = None
 
             # extras処理
             extras_queries = [
@@ -593,17 +640,53 @@ class MealAnalysisPipeline:
         }
 
         for dish in dishes:
-            # main_food
-            main_food = dish.get('main_food', {})
-            main_nutrition = main_food.get('nutrition')
-            if main_nutrition:
-                for key in total:
-                    total[key] += main_nutrition.get(key, 0.0)
+            # main_food処理
+            main_food = dish.get('main_food')
 
-            # extras
-            for extra in dish.get('extras', []):
+            if main_food is None:
+                # extras-onlyの料理（正常ケース）
+                logger.debug("📝 Dish has no main_food (extras-only), skipping main_food nutrition")
+            elif isinstance(main_food, dict):
+                # main_foodが辞書の場合（正常ケース）
+                main_nutrition = main_food.get('nutrition')
+                if main_nutrition:
+                    if not isinstance(main_nutrition, dict):
+                        raise ValueError(
+                            f"❌ Invalid main_food.nutrition type: expected dict, got {type(main_nutrition).__name__}. "
+                            f"Value: {main_nutrition}"
+                        )
+                    for key in total:
+                        total[key] += main_nutrition.get(key, 0.0)
+            else:
+                # main_foodがNoneでも辞書でもない（異常ケース）
+                raise ValueError(
+                    f"❌ Invalid main_food type: expected dict or None, got {type(main_food).__name__}. "
+                    f"main_food value: {main_food}"
+                )
+
+            # extras処理
+            extras = dish.get('extras')
+            if extras is None:
+                extras = []
+            elif not isinstance(extras, list):
+                raise ValueError(
+                    f"❌ Invalid extras type: expected list or None, got {type(extras).__name__}. "
+                    f"extras value: {extras}"
+                )
+
+            for extra in extras:
+                if not isinstance(extra, dict):
+                    raise ValueError(
+                        f"❌ Invalid extra item type: expected dict, got {type(extra).__name__}. "
+                        f"extra value: {extra}"
+                    )
                 extra_nutrition = extra.get('nutrition')
                 if extra_nutrition:
+                    if not isinstance(extra_nutrition, dict):
+                        raise ValueError(
+                            f"❌ Invalid extra.nutrition type: expected dict, got {type(extra_nutrition).__name__}. "
+                            f"Value: {extra_nutrition}"
+                        )
                     for key in total:
                         total[key] += extra_nutrition.get(key, 0.0)
 

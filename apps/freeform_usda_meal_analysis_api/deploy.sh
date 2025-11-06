@@ -22,7 +22,7 @@ echo "Region: ${REGION}"
 echo "Service: ${SERVICE_NAME}"
 echo ""
 
-# DEEPINFRA_API_KEY 環境変数チェック
+# VLM Provider API Keys チェック
 if [ -z "$DEEPINFRA_API_KEY" ]; then
     echo "❌ Error: DEEPINFRA_API_KEY environment variable is not set"
     echo "Please set it before running this script:"
@@ -31,6 +31,20 @@ if [ -z "$DEEPINFRA_API_KEY" ]; then
 fi
 
 echo "✅ DEEPINFRA_API_KEY is set"
+
+# ALIBABA_API_KEY はオプション
+if [ -z "$ALIBABA_API_KEY" ]; then
+    echo "⚠️  ALIBABA_API_KEY is not set (optional, only needed for alibaba: provider)"
+else
+    echo "✅ ALIBABA_API_KEY is set"
+fi
+
+# OPENROUTER_API_KEY はオプション
+if [ -z "$OPENROUTER_API_KEY" ]; then
+    echo "⚠️  OPENROUTER_API_KEY is not set (optional, only needed for openrouter: provider)"
+else
+    echo "✅ OPENROUTER_API_KEY is set"
+fi
 echo ""
 
 # アプリケーションディレクトリに移動（自己完結型）
@@ -49,6 +63,20 @@ echo ""
 
 # 2. Cloud Run デプロイ
 echo "🚀 Deploying to Cloud Run..."
+
+# 環境変数を構築
+ENV_VARS="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},LOG_LEVEL=INFO,DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY}"
+
+# ALIBABA_API_KEY が設定されている場合は追加
+if [ ! -z "$ALIBABA_API_KEY" ]; then
+    ENV_VARS="${ENV_VARS},ALIBABA_API_KEY=${ALIBABA_API_KEY}"
+fi
+
+# OPENROUTER_API_KEY が設定されている場合は追加
+if [ ! -z "$OPENROUTER_API_KEY" ]; then
+    ENV_VARS="${ENV_VARS},OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"
+fi
+
 $GCLOUD run deploy "${SERVICE_NAME}" \
   --image "${IMAGE_TAG}" \
   --region "${REGION}" \
@@ -58,9 +86,7 @@ $GCLOUD run deploy "${SERVICE_NAME}" \
   --timeout=600 \
   --memory=2Gi \
   --cpu=1 \
-  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID}" \
-  --set-env-vars="LOG_LEVEL=INFO" \
-  --set-env-vars="DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY}" \
+  --set-env-vars="${ENV_VARS}" \
   --project="${PROJECT_ID}"
 
 echo ""

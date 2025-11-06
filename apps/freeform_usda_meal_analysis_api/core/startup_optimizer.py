@@ -20,43 +20,74 @@ class StartupOptimizer:
     def __init__(self):
         self.faiss_index = None
         self.bm25_index = None
+        self.metadata = None
+        self.embedding_model = None
+        self.reranker = None
         self.is_loaded = False
+        self.is_loading = False
         self.load_lock = asyncio.Lock()
+        self.searcher = None  # SimplifiedUSDASearcherインスタンスを保持
 
-    async def lazy_load_indexes(self) -> Tuple[Optional[object], Optional[object]]:
+    async def get_indexes(self):
+        """初回アクセス時にインデックスをロード"""
+        # ロードされていない場合は待機
+        if not self.is_loaded:
+            if not self.is_loading:
+                # まだロードが開始されていない場合は、このスレッドがロードを開始
+                await self.lazy_load_indexes()
+            else:
+                # 他のスレッドがロード中の場合は、完了まで待機
+                while self.is_loading:
+                    await asyncio.sleep(0.1)
+        return self.searcher
+
+    async def lazy_load_indexes(self) -> None:
         """インデックスの遅延ロード（必要時のみ）"""
         async with self.load_lock:
             if self.is_loaded:
-                return self.faiss_index, self.bm25_index
+                return
 
+            self.is_loading = True
             start_time = time.time()
             logger.info("Starting lazy loading of indexes...")
 
-            # FAISSインデックスのロード
-            faiss_path = os.getenv("USDA_INDEX_DIR", "/app/data/faiss")
-            if os.path.exists(faiss_path):
-                try:
-                    # 実際のFAISSロードロジックをここに実装
-                    # self.faiss_index = load_faiss_index(faiss_path)
-                    logger.info(f"FAISS index loaded from {faiss_path}")
-                except Exception as e:
-                    logger.error(f"Failed to load FAISS index: {e}")
-
-            # BM25インデックスのロード
-            bm25_path = os.getenv("BM25_INDEX_PATH", "/app/data/bm25/bm25_index.pkl")
-            if os.path.exists(bm25_path):
-                try:
-                    with open(bm25_path, 'rb') as f:
-                        self.bm25_index = pickle.load(f)
-                    logger.info(f"BM25 index loaded from {bm25_path}")
-                except Exception as e:
-                    logger.error(f"Failed to load BM25 index: {e}")
-
-            self.is_loaded = True
-            elapsed = time.time() - start_time
-            logger.info(f"Index loading completed in {elapsed:.2f} seconds")
-
-            return self.faiss_index, self.bm25_index
+            try:
+                # 設定を取得
+                from ..config import get_settings
+                settings = get_settings()
+                
+                index_dir = settings.USDA_INDEX_DIR
+                stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+                
+                # SimplifiedUSDASearcherを非同期でインスタンス化
+                # （実際のインデックスロードは別スレッドで実行）
+                loop = asyncio.get_event_loop()
+                self.searcher = await loop.run_in_executor(
+                    None,
+                    self._create_searcher,
+                    index_dir,
+                    stage1_top_k
+                )
+                
+                self.is_loaded = True
+                elapsed = time.time() - start_time
+                logger.info(f"✅ Index loading completed in {elapsed:.2f} seconds")
+                
+            except Exception as e:
+                logger.error(f"Failed to load indexes: {e}")
+                self.is_loading = False
+                raise
+            finally:
+                self.is_loading = False
+    
+    def _create_searcher(self, index_dir: str, stage1_top_k: int):
+        """SimplifiedUSDASearcherのインスタンスを作成（ブロッキング処理）"""
+        from ..services.usda_search import SimplifiedUSDASearcher
+        return SimplifiedUSDASearcher(
+            index_dir=index_dir,
+            stage1_top_k=stage1_top_k,
+            device="cpu"
+        )
 
     def preload_critical_resources(self):
         """クリティカルなリソースの事前ロード"""

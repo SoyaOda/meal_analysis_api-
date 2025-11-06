@@ -29,6 +29,12 @@ class ModelConfig(BaseModel):
         example=4096
     )
 
+    enable_thinking: Optional[bool] = Field(
+        None,
+        description="Thinking modeのon/off（Alibabaのqwen3-vl-plus等で使用）",
+        example=True
+    )
+
     temperature: Optional[float] = Field(
         None,
         description="生成温度（0.0-2.0）",

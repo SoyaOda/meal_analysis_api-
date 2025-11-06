@@ -54,6 +54,22 @@
       "vision_supported": true,
       "source": "User provided (2025-01-24)",
       "_note": "More cost-effective Thinking model compared to 235B variant"
+    },
+    "google/gemini-2.5-flash": {
+      "name": "Google Gemini 2.5 Flash",
+      "input_price_per_million": 0.30,
+      "output_price_per_million": 2.50,
+      "vision_supported": true,
+      "source": "User provided (2025-01-26)",
+      "_note": "Requires pre-payment on DeepInfra"
+    },
+    "google/gemini-2.5-pro": {
+      "name": "Google Gemini 2.5 Pro",
+      "input_price_per_million": 1.25,
+      "output_price_per_million": 10.00,
+      "vision_supported": true,
+      "source": "User provided (2025-01-26)",
+      "_note": "Requires pre-payment on DeepInfra, higher quality than flash"
     }
   },
   "default": {
