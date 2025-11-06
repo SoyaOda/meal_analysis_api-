@@ -283,9 +283,9 @@ class OpenRouterProvider(BaseVLMProvider):
                 cleaned_content = re.sub(r'<think>.*?</think>', '', cleaned_content, flags=re.DOTALL)
                 cleaned_content = cleaned_content.strip()
 
-                # 1.5. GLM-4.5V の特殊トークンの除去
-                cleaned_content = re.sub(r'<\|begin_of_box\|>', '', cleaned_content)
-                cleaned_content = re.sub(r'<\|end_of_box\|>', '', cleaned_content)
+                # 1.5. GLM-4.5V の特殊トークンの除去（修正版）
+                cleaned_content = cleaned_content.replace('<|begin_of_box|>', '')
+                cleaned_content = cleaned_content.replace('<|end_of_box|>', '')
                 cleaned_content = cleaned_content.strip()
 
                 # 2. Markdown コードブロックの除去
