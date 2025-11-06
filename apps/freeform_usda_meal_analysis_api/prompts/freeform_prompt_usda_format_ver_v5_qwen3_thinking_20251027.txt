@@ -112,7 +112,6 @@ OUTPUT JSON STRUCTURE
           "shape_factor": <number>,
           "weight_g": <integer>
         },
-        "confidence": <0.0-1.0>
       },
       "extras": [
         {
@@ -123,7 +122,6 @@ OUTPUT JSON STRUCTURE
             "relative_area": <0.0-1.0>
           },
           "weight_g": <integer>,
-          "confidence": <0.0-1.0>
         }
       ]
     }

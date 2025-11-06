@@ -66,14 +66,12 @@ OUTPUT JSON STRUCTURE (FIXED)
         "search_name": "string",
         "description": "cooked, grilled, etc",
         "weight_g": <integer 100-400>,
-        "confidence": <0.7-1.0>
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": <integer 10-150>,
-          "confidence": <0.6-1.0>
         }
       ]
     }

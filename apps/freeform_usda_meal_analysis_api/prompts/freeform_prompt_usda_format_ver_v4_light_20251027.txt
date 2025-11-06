@@ -148,7 +148,6 @@ OUTPUT — JSON WITH WEIGHT REASONING
         "volume_cm3": <positive integer>,
         "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW",
         "weight_reasoning": "string explaining the weight estimate (e.g., 'Covers 60% of 25cm plate (~15cm diameter), 3cm thick based on shadow, cylindrical shape = π×7.5²×3 = 530cm³, meat density 1.1g/cm³ = 583g, but seems excessive for single serving, adjusted to typical 200g portion')",
-        "confidence": <float 0.0-1.0>
       },
       "extras": [
         {
@@ -159,7 +158,6 @@ OUTPUT — JSON WITH WEIGHT REASONING
           "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW|null",
           "estimation_method": "volume_density|direct",
           "weight_reasoning": "string explaining this weight",
-          "confidence": <float 0.0-1.0>
         }
       ]
     }

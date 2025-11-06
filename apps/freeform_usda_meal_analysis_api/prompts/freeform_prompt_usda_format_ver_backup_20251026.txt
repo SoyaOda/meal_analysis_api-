@@ -96,14 +96,12 @@ Return exactly ONE JSON object with this schema:
         "search_name": "string",
         "description": "string or null",
         "weight_g": <positive integer>,
-        "confidence": <float 0.0-1.0>
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": <positive integer>,
-          "confidence": <float 0.0-1.0>
         }
       ]
     }
@@ -132,14 +130,12 @@ Example 1: Grain dish with integrated sauce and meat
         "search_name": "pasta with tomato sauce and meat",
         "description": "with vegetables",
         "weight_g": 320,
-        "confidence": 0.90
       },
       "extras": [
         {
           "search_name": "parmesan cheese",
           "description": "grated",
           "weight_g": 10,
-          "confidence": 0.85
         }
       ]
     }
@@ -154,20 +150,17 @@ Example 2: Salad with pourable dressing separated
         "search_name": "caesar salad",
         "description": null,
         "weight_g": 150,
-        "confidence": 0.85
       },
       "extras": [
         {
           "search_name": "caesar dressing",
           "description": null,
           "weight_g": 30,
-          "confidence": 0.80
         },
         {
           "search_name": "croutons",
           "description": null,
           "weight_g": 15,
-          "confidence": 0.85
         }
       ]
     }
@@ -182,14 +175,12 @@ Example 3: Multiple separate dishes
         "search_name": "cheeseburger",
         "description": null,
         "weight_g": 190,
-        "confidence": 0.95
       },
       "extras": [
         {
           "search_name": "bacon",
           "description": null,
           "weight_g": 15,
-          "confidence": 0.90
         }
       ]
     },
@@ -198,14 +189,12 @@ Example 3: Multiple separate dishes
         "search_name": "french fries",
         "description": null,
         "weight_g": 150,
-        "confidence": 0.95
       },
       "extras": [
         {
           "search_name": "ketchup",
           "description": null,
           "weight_g": 25,
-          "confidence": 0.75
         }
       ]
     }

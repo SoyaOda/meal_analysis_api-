@@ -106,14 +106,12 @@ OUTPUT — JSON WITH DETAILED REASONING
         "search_name": "string",
         "description": "string or null",
         "weight_g": <positive integer 80-400>,
-        "confidence": <float 0.7-1.0>
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": <positive integer 5-150>,
-          "confidence": <float 0.6-1.0>
         }
       ]
     }
@@ -129,7 +127,7 @@ STRICT RULES
 4) Main dishes: 100-400g range typically
 5) Total meal: 400-800g for single plate
 6) weight_reasoning MUST use step-by-step Chain-of-Thought
-7) If uncertain about meat type, use generic with lower confidence
+7) If uncertain about meat type, use generic when uncertain
 8) Include ALL small items in extras
 9) Forbidden fields: unit_count, found_in_list, nutrition_per_100g
 10) If no food visible: { "dishes": [] }

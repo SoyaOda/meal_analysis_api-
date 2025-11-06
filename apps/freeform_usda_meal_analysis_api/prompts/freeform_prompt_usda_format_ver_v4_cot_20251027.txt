@@ -183,7 +183,6 @@ OUTPUT — JSON WITH REASONING
         "volume_cm3": <positive integer>,
         "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW",
         "weight_reasoning": "why this weight was estimated (e.g., 'compared to plate diameter of 25cm, appears to be 15cm diameter and 3cm thick')",
-        "confidence": <float 0.0-1.0>
       },
       "extras": [
         {
@@ -194,7 +193,6 @@ OUTPUT — JSON WITH REASONING
           "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW|null",
           "estimation_method": "volume_density|direct",
           "weight_reasoning": "reasoning for this weight estimate",
-          "confidence": <float 0.0-1.0>
         }
       ]
     }

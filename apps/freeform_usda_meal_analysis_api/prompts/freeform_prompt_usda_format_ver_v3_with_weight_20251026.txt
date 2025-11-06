@@ -116,7 +116,6 @@ OUTPUT — JSON ONLY
         "weight_g": <positive integer>,
         "volume_cm3": <positive integer>,
         "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW",
-        "confidence": <float 0.0-1.0>
       },
       "extras": [
         {
@@ -126,7 +125,6 @@ OUTPUT — JSON ONLY
           "volume_cm3": <positive integer or null>,
           "density_category": "HIGH|MEDIUM|LIQUID|LOW|VERY_LOW|null",
           "estimation_method": "volume_density|direct",
-          "confidence": <float 0.0-1.0>
         }
       ]
     }

@@ -113,14 +113,12 @@ OUTPUT — JSON ONLY
         "search_name": "string",
         "description": "string or null",
         "weight_g": <positive integer>,
-        "confidence": <float 0.0-1.0>
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": <positive integer>,
-          "confidence": <float 0.0-1.0>
         }
       ]
     }

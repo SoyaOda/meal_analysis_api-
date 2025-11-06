@@ -91,14 +91,12 @@ OUTPUT FORMAT WITH ENHANCED REASONING
         "search_name": "string",
         "description": "cooked, grilled, etc",
         "weight_g": <integer 80-400>,
-        "confidence": <0.7-1.0>
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": <integer 5-150>,
-          "confidence": <0.6-1.0>
         }
       ]
     }

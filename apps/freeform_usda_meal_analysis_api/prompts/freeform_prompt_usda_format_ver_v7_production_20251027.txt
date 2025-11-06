@@ -98,18 +98,17 @@ OUTPUT FORMAT
 {
   "dishes": [
     {
+      "dish_name": "string (simple dish description)",
       "main_food": null or {
         "search_name": "string",
         "description": "string or null",
         "weight_g": integer (80-400),
-        "confidence": float (0.7-1.0)
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
           "weight_g": integer (5-150),
-          "confidence": float (0.6-1.0)
         }
       ]
     }
@@ -120,8 +119,9 @@ OUTPUT FORMAT
 
 CRITICAL RULES
 
-1. NEVER skip the secondary scan for small items
-2. Small items can have large calorie impact (1 tbsp mayo = 100 kcal)
-3. If unsure about presence of oil/butter, include with lower confidence
-4. Check total weight is realistic (400-800g typical)
-5. Return ONLY valid JSON, no other text
+1. Each dish needs a dish_name - simple description
+2. NEVER skip the secondary scan for small items
+3. Small items can have large calorie impact (1 tbsp mayo = 100 kcal)
+4. If unsure about presence of oil/butter, include when uncertain
+5. Check total weight is realistic (400-800g typical)
+6. Return ONLY valid JSON, no other text
