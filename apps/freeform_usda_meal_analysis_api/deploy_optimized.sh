@@ -15,7 +15,7 @@ GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
 # 設定
 PROJECT_ID="new-snap-calorie"
 REGION="us-central1"
-SERVICE_NAME="freeform-usda-meal-analysis-api"
+SERVICE_NAME=${SERVICE_NAME:-"freeform-usda-meal-analysis-api"}  # 環境変数で上書き可能
 IMAGE_TAG="gcr.io/${PROJECT_ID}/${SERVICE_NAME}:optimized"
 
 # デプロイモード選択
@@ -57,25 +57,35 @@ else
 fi
 echo ""
 
-# アプリケーションディレクトリに移動（自己完結型）
+# アプリケーションディレクトリに移動
 cd "$(dirname "$0")"
+APP_DIR=$(pwd)
+
+# リポジトリルートに移動
+cd ../../
 
 # 1. 最適化されたDockerfile使用の確認
-if [ -f "Dockerfile.optimized" ]; then
+if [ -f "apps/freeform_usda_meal_analysis_api/Dockerfile.optimized" ]; then
     echo "📦 Using optimized Dockerfile..."
-    cp Dockerfile.optimized Dockerfile
+    cp apps/freeform_usda_meal_analysis_api/Dockerfile.optimized Dockerfile
 else
     echo "⚠️  Dockerfile.optimized not found, using default Dockerfile"
+    if [ -f "apps/freeform_usda_meal_analysis_api/Dockerfile" ]; then
+        cp apps/freeform_usda_meal_analysis_api/Dockerfile Dockerfile
+    fi
 fi
 
 # 2. Docker イメージのビルドとプッシュ（最適化）
-echo "📦 Building optimized Docker image..."
+echo "📦 Building optimized Docker image from repository root..."
 $GCLOUD builds submit \
   --tag "${IMAGE_TAG}" \
   --timeout=1200 \
   --machine-type=E2_HIGHCPU_32 \
   --project="${PROJECT_ID}" \
   .
+
+# ビルド後、一時的なDockerfileを削除
+rm -f Dockerfile
 
 echo "✅ Optimized Docker image built and pushed"
 echo ""
