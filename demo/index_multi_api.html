@@ -860,7 +860,9 @@
             }
 
             const resultsHtml = results.map((result, index) => {
-                const highlightedName = highlightSearchTerm(result.name || '', query);
+                // FAISSのAPIレスポンスはdescriptionフィールドに食材名がある
+                const displayName = result.description || result.name || '';
+                const highlightedName = highlightSearchTerm(displayName, query);
                 const nutrition = result.nutrition_per_100g || {};
 
                 // スコア表示（hybridモードの場合はコンポーネントスコアも表示）
@@ -980,7 +982,9 @@
         function selectSuggestion(index) {
             const suggestion = currentSuggestions[index];
             if (suggestion) {
-                searchInput.value = suggestion.name || '';
+                // FAISSの場合はdescription、Elasticsearchの場合はsuggestion.suggestionまたはname
+                const displayName = suggestion.description || suggestion.suggestion || suggestion.name || '';
+                searchInput.value = displayName;
                 hideSuggestions();
                 console.log('Selected:', suggestion);
             }
