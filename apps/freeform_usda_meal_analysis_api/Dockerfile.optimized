@@ -40,10 +40,6 @@ RUN mkdir -p /app/data/faiss /app/data/bm25 && \
 
 # インデックスファイルのコピー（ビルド時にコピーして起動時間短縮）
 COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/data/faiss/ /app/data/faiss/
-COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/data/bm25/ /app/data/bm25/
-
-# ヘルスチェック用スクリプト
-COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/healthcheck.py ./healthcheck.py
 
 # 非rootユーザーで実行
 USER appuser
