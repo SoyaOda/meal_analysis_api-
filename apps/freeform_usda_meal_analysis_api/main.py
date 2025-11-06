@@ -7,11 +7,13 @@ with customizable VLM models and prompts.
 import os
 import logging
 import uvicorn
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
 from .routers import health, analysis, retrieval, metadata
+from .core import startup_optimizer
 
 # ロギング設定
 logging.basicConfig(
@@ -23,35 +25,11 @@ logger = logging.getLogger(__name__)
 # 設定読み込み
 settings = get_settings()
 
-# FastAPIアプリケーション作成
-app = FastAPI(
-    title=settings.API_TITLE,
-    description=settings.API_DESCRIPTION,
-    version=settings.API_VERSION,
-    docs_url="/docs",
-    redoc_url="/redoc",
-    openapi_url="/openapi.json",
-)
 
-# CORS設定
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切に制限すること
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ルーター登録
-app.include_router(health.router)
-app.include_router(analysis.router)
-app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
-app.include_router(metadata.router, tags=["Metadata"])
-
-
-@app.on_event("startup")
-async def startup_event():
-    """アプリケーション起動時の処理"""
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """アプリケーションのライフサイクル管理"""
+    # Startup
     logger.info("=" * 60)
     logger.info(f"{settings.API_TITLE} v{settings.API_VERSION}")
     logger.info("=" * 60)
@@ -94,11 +72,41 @@ async def startup_event():
         retrieval.set_hybrid_search_engine(hybrid_engine)
         logger.info("✅ Retrieval router initialized with hybrid search engine")
 
+    # startup_optimizerのロード状態を更新
+    startup_optimizer.is_loaded = True
+    logger.info("✅ Startup optimizer marked as loaded")
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    """アプリケーション終了時の処理"""
+    yield  # アプリケーション実行中
+
+    # Shutdown
     logger.info("Shutting down Freeform USDA Meal Analysis API...")
+
+
+# FastAPIアプリケーション作成
+app = FastAPI(
+    title=settings.API_TITLE,
+    description=settings.API_DESCRIPTION,
+    version=settings.API_VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    lifespan=lifespan,
+)
+
+# CORS設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 本番環境では適切に制限すること
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ルーター登録
+app.include_router(health.router)
+app.include_router(analysis.router)
+app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
+app.include_router(metadata.router, tags=["Metadata"])
 
 
 @app.get("/")
