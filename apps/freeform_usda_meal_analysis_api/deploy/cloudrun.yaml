@@ -1,0 +1,73 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: freeform-usda-meal-analysis-api
+  annotations:
+    run.googleapis.com/launch-stage: GA
+spec:
+  template:
+    metadata:
+      annotations:
+        # コールドスタート最適化
+        run.googleapis.com/startup-cpu-boost: "true"
+        # 実行環境
+        run.googleapis.com/execution-environment: gen2
+        # CPU常時割り当て（コスト注意）
+        run.googleapis.com/cpu-throttling: "false"
+    spec:
+      # タイムアウト設定（最大10分）
+      timeoutSeconds: 600
+      # 同時リクエスト数（1インスタンスあたり）
+      containerConcurrency: 10
+      serviceAccountName: meal-analysis-api@new-snap-calorie.iam.gserviceaccount.com
+      containers:
+      - image: gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "new-snap-calorie"
+        - name: USDA_INDEX_DIR
+          value: "/app/data/faiss"
+        - name: BM25_INDEX_PATH
+          value: "/app/data/bm25/bm25_index.pkl"
+        - name: NUTRITION_DATA_SOURCE
+          value: "usda_api"
+        - name: INGREDIENT_ELASTICSEARCH_INDEX
+          value: "usda_unified_nutrition_db"
+        # ヘルスチェック
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+        # レディネスチェック
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          limits:
+            # メモリ（インデックス + アプリケーション）
+            memory: 4Gi
+            # CPU（ML推論用）
+            cpu: "4"
+          requests:
+            memory: 2Gi
+            cpu: "2"
+  traffic:
+  - percent: 100
+    latestRevision: true
+  # オートスケーリング設定
+  metadata:
+    annotations:
+      autoscaling.knative.dev/minScale: "1"  # 最小インスタンス数（コールドスタート回避）
+      autoscaling.knative.dev/maxScale: "100"  # 最大インスタンス数
+      autoscaling.knative.dev/target: "80"  # CPU使用率ターゲット
