@@ -65,4 +65,7 @@ docs/
 
 # IMPORTANT: DO NOT ignore data/faiss/ - we need these files for the deployment!
 # The files are large but essential for the application to run
-# If you need to exclude them, use Cloud Storage instead
+# Explicitly include the FAISS data directory
+!apps/freeform_usda_meal_analysis_api/data/
+!apps/freeform_usda_meal_analysis_api/data/faiss/
+!apps/freeform_usda_meal_analysis_api/data/faiss/**
