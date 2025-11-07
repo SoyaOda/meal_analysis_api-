@@ -47,12 +47,11 @@ USER appuser
 # 環境変数の設定
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PORT=8080 \
     USDA_INDEX_DIR=/app/data/faiss \
     BM25_INDEX_PATH=/app/data/bm25/bm25_index.pkl
 
-# アプリケーション起動
-EXPOSE 8080
+# アプリケーション起動 (PORTはCloud Runが自動設定)
+EXPOSE 8006
 
 # gunicornを使用した本番環境向け起動
 CMD exec gunicorn apps.freeform_usda_meal_analysis_api.main:app \
