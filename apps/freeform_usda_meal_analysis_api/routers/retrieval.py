@@ -138,6 +138,9 @@ async def _search_fast_mode(query: str, top_k: int) -> Dict[str, Any]:
     """
     import numpy as np
 
+    # Lazy Loading対応：初回アクセス時にインデックスをロード
+    await _search_service._ensure_searcher_loaded()
+    
     searcher = _search_service.searcher
 
     # Embedding生成
@@ -188,6 +191,8 @@ async def _search_accurate_mode(query: str, top_k: int) -> Dict[str, Any]:
 
     SimplifiedUSDASearcherの完全な検索パイプラインを使用
     """
+    # Lazy Loading対応：初回アクセス時にインデックスをロード
+    await _search_service._ensure_searcher_loaded()
 
     # USDAFoodSearchServiceのsearch_batchメソッドを使用
     # （内部でSimplifiedUSDASearcher.searchを呼ぶ）
@@ -246,6 +251,9 @@ async def _search_hybrid_mode(query: str, top_k: int) -> Dict[str, Any]:
             detail="Hybrid search engine not initialized"
         )
 
+    # Lazy Loading対応：初回アクセス時にインデックスをロード
+    await _search_service._ensure_searcher_loaded()
+    
     searcher = _search_service.searcher
 
     # ハイブリッドサーチ実行
