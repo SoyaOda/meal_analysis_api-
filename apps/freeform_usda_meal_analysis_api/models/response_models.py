@@ -535,3 +535,97 @@ class MetadataSearchResponse(BaseModel):
     limit: int = Field(..., description="取得件数制限", example=20)
     offset: int = Field(..., description="オフセット", example=0)
     has_more: bool = Field(..., description="さらに結果があるか", example=True)
+
+
+# ============================================================
+# Additional Response Models
+# ============================================================
+
+class RootResponse(BaseModel):
+    """Root endpoint response"""
+    model_config = {"protected_namespaces": ()}
+
+    name: str = Field(..., description="API名", example="Freeform USDA Meal Analysis API")
+    version: str = Field(..., description="APIバージョン", example="1.0.0")
+    status: str = Field(..., description="ステータス", example="running")
+    documentation: Dict[str, str] = Field(
+        ...,
+        description="ドキュメントURL",
+        example={
+            "swagger": "/docs",
+            "redoc": "/redoc",
+            "openapi": "/openapi.json"
+        }
+    )
+    endpoints: Dict[str, str] = Field(
+        ...,
+        description="主要エンドポイント",
+        example={
+            "health": "/health",
+            "analysis": "/api/v1/meal-analyses",
+            "retrieval": "/api/v1/retrieve"
+        }
+    )
+    default_config: Dict[str, Any] = Field(
+        ...,
+        description="デフォルト設定",
+        example={
+            "model": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+            "prompt": "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt",
+            "search": {
+                "mode": "full_index_only",
+                "stage1_top_k": 40
+            }
+        }
+    )
+
+
+class EndpointInfoResponse(BaseModel):
+    """Endpoint information response"""
+    model_config = {"protected_namespaces": ()}
+
+    endpoints: Dict[str, str] = Field(
+        ...,
+        description="利用可能なエンドポイント",
+        example={
+            "POST /api/v1/meal-analyses/complete": "画像から食事を分析",
+            "GET /health": "ヘルスチェック"
+        }
+    )
+    documentation: str = Field(..., description="ドキュメントURL", example="/docs")
+
+
+class RetrievalHealthResponse(BaseModel):
+    """Retrieval API health check response"""
+    model_config = {"protected_namespaces": ()}
+
+    status: str = Field(..., description="ステータス", example="healthy")
+    service: str = Field(..., description="サービス名", example="usda_retrieval_api")
+    index_type: str = Field(..., description="インデックスタイプ", example="FAISS")
+    modes: List[str] = Field(..., description="利用可能な検索モード", example=["fast", "accurate", "hybrid"])
+    searcher_initialized: bool = Field(..., description="Searcherの初期化状態", example=True)
+    hybrid_search_enabled: bool = Field(..., description="ハイブリッド検索の有効状態", example=True)
+
+
+class MetadataInfoResponse(BaseModel):
+    """Metadata information response"""
+    model_config = {"protected_namespaces": ()}
+
+    total_items: int = Field(..., description="総アイテム数", example=13564)
+    file_size_bytes: int = Field(..., description="ファイルサイズ（バイト）", example=8767812)
+    file_size_mb: float = Field(..., description="ファイルサイズ（MB）", example=8.36)
+    compressed_size_bytes: int = Field(..., description="圧縮後サイズ（バイト）", example=702565)
+    compressed_size_mb: float = Field(..., description="圧縮後サイズ（MB）", example=0.67)
+    compression_ratio: float = Field(..., description="圧縮率", example=0.08)
+    sources: Dict[str, int] = Field(
+        ...,
+        description="ソース別件数",
+        example={
+            "survey": 7000,
+            "foundation": 5000,
+            "sr_legacy": 1564
+        }
+    )
+    portions_coverage_percent: float = Field(..., description="Portionsカバレッジ（%）", example=85.5)
+    items_with_portions: int = Field(..., description="Portions情報を持つアイテム数", example=11600)
+    last_modified: float = Field(..., description="最終更新時刻（UNIX timestamp）", example=1698765432.0)

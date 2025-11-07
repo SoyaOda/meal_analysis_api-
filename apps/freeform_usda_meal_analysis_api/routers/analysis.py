@@ -9,7 +9,7 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 
 from ..models.request_models import ImageAnalysisRequest, ModelConfig, SearchConfig
-from ..models.response_models import AnalysisResponse, ErrorResponse
+from ..models.response_models import AnalysisResponse, ErrorResponse, EndpointInfoResponse
 from ..services.pipeline import MealAnalysisPipeline
 from ..config import get_settings
 
@@ -172,13 +172,16 @@ async def analyze_meal_from_image(
         )
 
 
-@router.get("/")
+@router.get("/", response_model=EndpointInfoResponse)
 async def list_endpoint_info():
     """
-    利用可能なエンドポイント情報
+    利用可能なエンドポイント情報取得
+
+    ## 概要
+    Meal Analysis APIで利用可能なエンドポイントの一覧を取得します。
 
     Returns:
-        dict: エンドポイント情報
+        EndpointInfoResponse: エンドポイント情報
     """
     return {
         "endpoints": {

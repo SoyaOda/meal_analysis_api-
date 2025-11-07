@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .routers import health, analysis, retrieval, metadata
 from .core import startup_optimizer
+from .models.response_models import RootResponse
 
 # ロギング設定
 logging.basicConfig(
@@ -106,6 +107,28 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
     lifespan=lifespan,
+    openapi_tags=[
+        {
+            "name": "Root",
+            "description": "ルートエンドポイント - API情報とエンドポイント一覧を取得"
+        },
+        {
+            "name": "Health",
+            "description": "ヘルスチェック - サービス稼働状態確認（Cloud Run用 liveness/readiness probe）"
+        },
+        {
+            "name": "Analysis",
+            "description": "食事分析（メイン機能） - 画像から食事を分析し栄養価を計算。Match rate: 平均95%以上"
+        },
+        {
+            "name": "Retrieval",
+            "description": "食材検索 - USDA DBから類似食材を検索。Fast（高速180ms）/ Accurate（高精度800ms）/ Hybrid（最高精度、BM25+Vector）"
+        },
+        {
+            "name": "Metadata",
+            "description": "メタデータ配信 - USDA食材の詳細情報（13,564件）。フロントエンド向け、gzip圧縮推奨（8.4MB→0.7MB）"
+        }
+    ]
 )
 
 # CORS設定
@@ -124,13 +147,16 @@ app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
 app.include_router(metadata.router, tags=["Metadata"])
 
 
-@app.get("/")
+@app.get("/", response_model=RootResponse, tags=["Root"])
 async def root():
     """
-    ルートエンドポイント
+    ルートエンドポイント - API情報取得
+
+    ## 概要
+    APIの基本情報、利用可能なエンドポイント、デフォルト設定を取得します。
 
     Returns:
-        dict: API情報
+        RootResponse: API情報
     """
     return {
         "name": settings.API_TITLE,

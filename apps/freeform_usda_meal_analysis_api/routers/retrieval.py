@@ -14,7 +14,8 @@ from datetime import datetime
 from ..models.response_models import (
     RetrievalResponse,
     RetrievalMetadata,
-    RetrievalStatus
+    RetrievalStatus,
+    RetrievalHealthResponse
 )
 
 logger = logging.getLogger(__name__)
@@ -305,9 +306,17 @@ async def _search_hybrid_mode(query: str, top_k: int) -> Dict[str, Any]:
     }
 
 
-@router.get("/retrieve/health")
+@router.get("/retrieve/health", response_model=RetrievalHealthResponse)
 async def retrieval_health_check():
-    """Retrieval APIヘルスチェック"""
+    """
+    Retrieval APIヘルスチェック
+
+    ## 概要
+    Retrieval APIの状態、利用可能な検索モード、インデックスの初期化状態を確認します。
+
+    Returns:
+        RetrievalHealthResponse: Retrieval APIの状態情報
+    """
     if not _search_service:
         raise HTTPException(
             status_code=503,

@@ -14,7 +14,7 @@ import gzip
 from pathlib import Path
 
 from ..config import get_settings
-from ..models.response_models import MetadataSearchResponse
+from ..models.response_models import MetadataSearchResponse, MetadataInfoResponse, MetadataItem
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -132,8 +132,8 @@ async def get_usda_metadata(
         )
 
 
-@router.get("/api/v1/metadata/info")
-async def get_metadata_info() -> Dict[str, Any]:
+@router.get("/api/v1/metadata/info", response_model=MetadataInfoResponse)
+async def get_metadata_info() -> MetadataInfoResponse:
     """
     メタデータ情報取得
 
@@ -283,8 +283,8 @@ async def search_metadata(
         raise HTTPException(500, f"Metadata search failed: {str(e)}")
 
 
-@router.get("/api/v1/metadata/{fdc_id}")
-async def get_metadata_by_fdc_id(fdc_id: int) -> Dict[str, Any]:
+@router.get("/api/v1/metadata/{fdc_id}", response_model=MetadataItem)
+async def get_metadata_by_fdc_id(fdc_id: int) -> MetadataItem:
     """
     FDC ID指定でメタデータ取得
 
