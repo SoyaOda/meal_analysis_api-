@@ -23,6 +23,13 @@ test_images/
 test-audio/
 test_scripts/
 
+# Exclude other apps (we only need freeform_usda_meal_analysis_api)
+apps/word_query_api/
+apps/meal_analysis_api/
+apps/barcode_api/
+apps/usda_word_query_api/
+apps/usda_meal_analysis_api/
+
 # Documentation
 *.md
 !README.md
