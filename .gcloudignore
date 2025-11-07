@@ -30,6 +30,21 @@ apps/barcode_api/
 apps/usda_word_query_api/
 apps/usda_meal_analysis_api/
 
+# Exclude large data directories (not needed for deployment)
+web_scraping/
+db/
+core_food_processing/
+usda_database/
+raw_nutrition_data/
+venv/
+elasticsearch-8.10.4/
+usda_data_processing/
+MyNetDiary_json_builder/
+web_scraping_2/
+nutrition_db_experiment/
+analysis_results/
+app_backup/
+
 # Documentation
 *.md
 !README.md
