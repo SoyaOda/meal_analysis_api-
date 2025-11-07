@@ -78,37 +78,17 @@ fi
 # 2. Docker イメージのビルドとプッシュ（最適化）
 echo "📦 Building optimized Docker image from repository root..."
 
-# 一時的に.gitignoreをリネームしてFAISSファイルを含める
-if [ -f ".gitignore" ]; then
-    mv .gitignore .gitignore.tmp
-    echo "⚠️  Temporarily renamed .gitignore to include FAISS files"
-fi
-
-# エラーハンドリング付きでビルド実行
-set +e
+# ビルド実行（.gcloudignoreで必要なファイルのみアップロード）
 $GCLOUD builds submit \
   --tag "${IMAGE_TAG}" \
   --timeout=1200 \
   --machine-type=E2_HIGHCPU_32 \
   --project="${PROJECT_ID}" \
+  --gcs-source-staging-dir=gs://new-snap-calorie_cloudbuild/staging \
   .
-BUILD_STATUS=$?
-set -e
-
-# .gitignoreを元に戻す
-if [ -f ".gitignore.tmp" ]; then
-    mv .gitignore.tmp .gitignore
-    echo "✅ Restored .gitignore"
-fi
 
 # ビルド後、一時的なDockerfileを削除
 rm -f Dockerfile
-
-# ビルドが失敗した場合は終了
-if [ $BUILD_STATUS -ne 0 ]; then
-    echo "❌ Build failed"
-    exit $BUILD_STATUS
-fi
 
 echo "✅ Optimized Docker image built and pushed"
 echo ""

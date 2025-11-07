@@ -1,36 +1,18 @@
-# This file specifies files that are *not* uploaded to Google Cloud
-# using gcloud. It follows the same syntax as .gitignore, with the addition of
-# "#!include" directives (which insert the entries of the given .gitignore-style
-# file at that point).
-#
-# For more information, run:
-#   $ gcloud topic gcloudignore
-#
+# Cloud Build用の除外設定（シンプル版）
+# 注意: .gitignoreは読み込まない（FAISSファイルを確実に含めるため）
+
 .gcloudignore
-# If you would like to upload your .git directory, .gitignore file or files
-# from your .gitignore file, remove the corresponding line
-# below:
 .git
 .gitignore
 
-# Python pycache:
+# Python
 __pycache__/
-# Ignored by the build system
-/setup.cfg
+*.pyc
+*.pyo
+*.pyd
+.Python
 
-# Test files
-test_images/
-test-audio/
-test_scripts/
-
-# Exclude other apps (we only need freeform_usda_meal_analysis_api)
-apps/word_query_api/
-apps/meal_analysis_api/
-apps/barcode_api/
-apps/usda_word_query_api/
-apps/usda_meal_analysis_api/
-
-# Exclude large data directories (not needed for deployment)
+# 不要な大規模ディレクトリ
 web_scraping/
 db/
 core_food_processing/
@@ -45,10 +27,22 @@ nutrition_db_experiment/
 analysis_results/
 app_backup/
 
-# Documentation
+# 他のアプリケーション（このデプロイには不要）
+apps/word_query_api/
+apps/meal_analysis_api/
+apps/barcode_api/
+apps/usda_word_query_api/
+apps/usda_meal_analysis_api/
+
+# テストファイル
+test_images/
+test-audio/
+test_scripts/
+
+# ドキュメント
+docs/
 *.md
 !README.md
-docs/
 
 # IDE
 .vscode/
@@ -56,17 +50,9 @@ docs/
 *.swp
 *.swo
 
-# Logs
+# ログ
 *.log
 
-# Environment files (secrets should be passed via env vars)
+# 環境変数ファイル
 .env
 .env.*
-
-# IMPORTANT: DO NOT ignore data/faiss/ - we need these files for the deployment!
-# The files are large but essential for the application to run
-# Explicitly include the FAISS data directory (override .gitignore's *.faiss exclusion)
-!apps/freeform_usda_meal_analysis_api/data/faiss/
-!apps/freeform_usda_meal_analysis_api/data/faiss/*.faiss
-!apps/freeform_usda_meal_analysis_api/data/faiss/*.json
-!apps/freeform_usda_meal_analysis_api/data/faiss/usda_bm25_index/
