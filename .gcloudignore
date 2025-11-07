@@ -65,7 +65,8 @@ docs/
 
 # IMPORTANT: DO NOT ignore data/faiss/ - we need these files for the deployment!
 # The files are large but essential for the application to run
-# Explicitly include the FAISS data directory
-!apps/freeform_usda_meal_analysis_api/data/
+# Explicitly include the FAISS data directory (override .gitignore's *.faiss exclusion)
 !apps/freeform_usda_meal_analysis_api/data/faiss/
-!apps/freeform_usda_meal_analysis_api/data/faiss/**
+!apps/freeform_usda_meal_analysis_api/data/faiss/*.faiss
+!apps/freeform_usda_meal_analysis_api/data/faiss/*.json
+!apps/freeform_usda_meal_analysis_api/data/faiss/usda_bm25_index/
