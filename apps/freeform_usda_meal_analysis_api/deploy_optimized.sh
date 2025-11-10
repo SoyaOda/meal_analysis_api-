@@ -9,6 +9,24 @@
 
 set -e
 
+# リポジトリルートの.envファイルを読み込む
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ENV_FILE="${REPO_ROOT}/.env"
+
+if [ -f "${ENV_FILE}" ]; then
+    echo "📂 Loading environment variables from ${ENV_FILE}..."
+    set -a  # 自動的にexportする
+    source "${ENV_FILE}"
+    set +a
+    echo "✅ Environment variables loaded"
+    echo ""
+else
+    echo "⚠️  Warning: .env file not found at ${ENV_FILE}"
+    echo "   API keys must be set manually"
+    echo ""
+fi
+
 # gcloud コマンドのパス設定
 GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
 
