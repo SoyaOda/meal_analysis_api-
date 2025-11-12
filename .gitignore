@@ -113,3 +113,9 @@ apps.zip
 shared.zip
 test_images.zip
 test_scripts.zip
+
+# Backup files
+*.bak
+
+# Test script outputs
+test_scripts/output/*.md
