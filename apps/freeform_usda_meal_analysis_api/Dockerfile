@@ -1,27 +1,72 @@
-# Freeform USDA Meal Analysis API - Local Data Included
-# FAISSデータをイメージに含める（ローカル環境と同じ動作）
+# ビルドステージ: 依存関係のインストール
+FROM python:3.11-slim as builder
 
-FROM python:3.10-slim
+WORKDIR /build
+
+# ビルドに必要なツールのインストール
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 依存関係のコピーとインストール
+COPY apps/freeform_usda_meal_analysis_api/requirements.txt ./
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ランタイムステージ: 最小限のイメージ
+FROM python:3.11-slim
+
+# 必要最小限のランタイム依存関係
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# アプリケーション用ユーザーの作成
+RUN useradd -m -u 1001 appuser
 
 WORKDIR /app
 
-# システム依存関係のインストール
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# ビルドステージからPythonパッケージをコピー
+COPY --from=builder /install /usr/local
 
-# Pythonパッケージのインストール
-COPY requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# アプリケーションコードのコピー
+COPY --chown=appuser:appuser apps/ ./apps/
+COPY --chown=appuser:appuser shared/ ./shared/
 
-# アプリケーションコード全体をコピー（data/を含む）
-COPY . ./freeform_usda_meal_analysis_api
+# データディレクトリの作成（インデックスファイル用）
+RUN mkdir -p /app/data/faiss /app/data/bm25 && \
+    chown -R appuser:appuser /app/data
 
-# 環境変数のデフォルト設定
-ENV LOG_LEVEL=INFO
-ENV USDA_INDEX_DIR=/app/freeform_usda_meal_analysis_api/data/faiss
-ENV USDA_METADATA_FILE=/app/freeform_usda_meal_analysis_api/data/faiss/usda_metadata.json
-ENV PYTHONPATH=/app
+# インデックスファイルのコピー（ビルド時にコピーして起動時間短縮）
+COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/data/faiss/ /app/data/faiss/
+COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/data/bm25/ /app/data/bm25/
 
-# python -m でモジュールとして起動
-CMD ["python", "-m", "freeform_usda_meal_analysis_api.main"]
+# ヘルスチェック用スクリプト
+COPY --chown=appuser:appuser apps/freeform_usda_meal_analysis_api/healthcheck.py ./healthcheck.py
+
+# 非rootユーザーで実行
+USER appuser
+
+# 環境変数の設定
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=8080 \
+    USDA_INDEX_DIR=/app/data/faiss \
+    BM25_INDEX_PATH=/app/data/bm25/bm25_index.pkl
+
+# アプリケーション起動
+EXPOSE 8080
+
+# gunicornを使用した本番環境向け起動
+CMD exec gunicorn apps.freeform_usda_meal_analysis_api.main:app \
+    --bind :${PORT} \
+    --workers 1 \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --timeout 600 \
+    --keep-alive 5 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile - \
+    --error-logfile - \
+    --preload
