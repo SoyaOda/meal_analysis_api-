@@ -101,7 +101,11 @@ class USDAFoodSearchService:
         # Hybrid searchパラメータ
         bm25_weight: float = 0.6,
         vector_weight: float = 0.4,
-        rrf_k: int = 60
+        rrf_k: int = 60,
+        # Rerankerパラメータ
+        reranker_model: Optional[str] = None,
+        reranker_instruction: Optional[str] = None,
+        reranker_top_n: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         """
         食品検索の実行
@@ -142,14 +146,19 @@ class USDAFoodSearchService:
                 # ハイブリッドサーチが有効で、エンジンが利用可能な場合
                 if use_hybrid and self.hybrid_engine:
                     try:
-                        # Hybrid search実行
-                        hybrid_results = await self.hybrid_engine.search_hybrid(
+                        # Hybrid search + Reranker実行
+                        hybrid_results = await self.hybrid_engine.search_hybrid_with_reranker(
                             query=q_text,
                             faiss_index=self.searcher.index_full,
                             embedding_service=self.searcher.embedding_service,
+                            reranker_service=self.searcher.reranker_service,
                             items=self.searcher.items,
                             top_k=hybrid_top_k,
-                            stage1_top_k=stage1_top_k
+                            stage1_top_k=stage1_top_k,
+                            bm25_weight=bm25_weight,
+                            vector_weight=vector_weight,
+                            rrf_k=rrf_k,
+                            reranker_instruction=reranker_instruction
                         )
 
                         # Hybrid search結果を追加（既に辞書形式で返される）
@@ -200,14 +209,19 @@ class USDAFoodSearchService:
         # ハイブリッドサーチが有効で、エンジンが利用可能な場合
         if use_hybrid and self.hybrid_engine:
             try:
-                # Hybrid search実行
-                hybrid_results = await self.hybrid_engine.search_hybrid(
+                # Hybrid search + Reranker実行
+                hybrid_results = await self.hybrid_engine.search_hybrid_with_reranker(
                     query=query,
                     faiss_index=self.searcher.index_full,
                     embedding_service=self.searcher.embedding_service,
+                    reranker_service=self.searcher.reranker_service,
                     items=self.searcher.items,
                     top_k=hybrid_top_k,
-                    stage1_top_k=stage1_top_k
+                    stage1_top_k=stage1_top_k,
+                    bm25_weight=bm25_weight,
+                    vector_weight=vector_weight,
+                    rrf_k=rrf_k,
+                    reranker_instruction=reranker_instruction
                 )
 
                 # Hybrid search結果を返す（既に辞書形式）
@@ -230,7 +244,8 @@ class USDAFoodSearchService:
         result = await self.searcher.search_async(
             query_main=query,
             query_descriptors="",
-            return_top_k=stage1_top_k
+            return_top_k=stage1_top_k,
+            reranker_instruction=reranker_instruction
         )
         # SimplifiedUSDASearcherのレスポンスフォーマットを変換
         # best_matchを返す（pipeline.pyがfdc_idに直接アクセスするため）

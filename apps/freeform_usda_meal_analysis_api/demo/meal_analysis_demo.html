@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Analysis API Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .file-upload-label:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+
+        .file-upload-label.has-file {
+            border-style: solid;
+            background: #e8f5e9;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-text {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .elapsed-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .result-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-panel.show {
+            display: block;
+        }
+
+        .result-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .dish-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .dish-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .ingredient {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .ingredient-weight {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            font-size: 0.9em;
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .nutrition-value {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .accordion {
+            margin-top: 10px;
+        }
+
+        .accordion-header {
+            background: #667eea;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .accordion-content {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .accordion-content.show {
+            display: block;
+        }
+
+        .accordion-content pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .collapsible-section {
+            margin-top: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            background: #f0f4ff;
+            padding: 12px 15px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .collapsible-header:hover {
+            background: #e8f0ff;
+        }
+
+        .collapsible-content {
+            padding: 15px;
+            display: none;
+        }
+
+        .collapsible-content.show {
+            display: block;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ Meal Analysis API Demo</h1>
+            <p>画像から食事を分析して栄養価を計算</p>
+        </div>
+
+        <div class="content">
+            <!-- Left Panel: Input Form -->
+            <div class="panel">
+                <h2>📤 画像アップロード & パラメータ設定</h2>
+
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label>画像ファイル (必須)</label>
+                    <div class="file-upload">
+                        <input type="file" id="imageInput" accept="image/*">
+                        <label for="imageInput" class="file-upload-label" id="fileLabel">
+                            <div>
+                                <div style="font-size: 3em; margin-bottom: 10px;">📷</div>
+                                <div>クリックして画像を選択</div>
+                                <div style="font-size: 0.9em; color: #666; margin-top: 5px;">またはドラッグ&ドロップ</div>
+                            </div>
+                        </label>
+                    </div>
+                    <img id="imagePreview" class="image-preview">
+                </div>
+
+                <!-- User Context -->
+                <div class="form-group">
+                    <label>ユーザーコンテキスト (オプション)</label>
+                    <input type="text" id="userContext" placeholder="例: dinner analysis">
+                </div>
+
+                <!-- Advanced Settings (Collapsible) -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('modelSettings')">
+                        <span>⚙️ モデル設定</span>
+                        <span class="toggle-icon" id="modelSettings-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="modelSettings">
+                        <div class="form-group">
+                            <label>VLMモデルID</label>
+                            <input type="text" id="modelId" placeholder="例: Qwen/Qwen3-VL-30B-A3B-Thinking, openrouter:qwen/qvq-72b-preview">
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                💡 空欄でデフォルト (Qwen3-VL-30B-A3B-Thinking) を使用<br>
+                                📝 例: Qwen/Qwen2-VL-72B-Instruct, openrouter:qwen/qwen3-vl-235b-a22b-thinking
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>プロンプトファイル (選択)</label>
+                            <select id="promptPathSelect" onchange="updatePromptPath()">
+                                <option value="">選択してください...</option>
+                                <option value="freeform_prompt_usda_format_ver_v7_experimental_20251027.txt">v7_experimental (推奨)</option>
+                                <option value="freeform_prompt_usda_format_ver_v7_production_20251027.txt">v7_production</option>
+                                <option value="freeform_prompt_usda_format_ver_v6_enhanced_20251027.txt">v6_enhanced</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>プロンプトファイル (テキスト入力)</label>
+                            <input type="text" id="promptPath" placeholder="例: freeform_prompt_usda_format_ver_v7_experimental_20251027.txt">
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                💡 空欄でデフォルト (v7_experimental) を使用<br>
+                                📝 上の選択肢から選ぶか、ここに直接入力
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>プロンプトテキスト (カスタムプロンプト全文)</label>
+                            <textarea id="promptText" rows="8" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: monospace; resize: vertical;" placeholder="カスタムプロンプトの全文をここに入力...&#10;&#10;例:&#10;You are an expert food analyst for a US-based diet app.&#10;Analyze the meal image and identify all food items..."></textarea>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                ⚠️ <strong>注意:</strong> prompt_textを指定した場合、prompt_pathより優先されます<br>
+                                💡 空欄の場合は上のprompt_pathまたはデフォルトプロンプトが使用されます
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Temperature (0.0 - 2.0)</label>
+                            <input type="number" id="temperature" step="0.1" min="0" max="2" placeholder="デフォルト: 0.7">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Max Tokens</label>
+                            <input type="number" id="maxTokens" step="512" min="512" max="16384" placeholder="デフォルト: 4096">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Thinking Budget (QVQモデル用)</label>
+                            <input type="number" id="thinkingBudget" step="1024" min="0" max="32768" placeholder="例: 8192">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('searchSettings')">
+                        <span>🔍 検索設定</span>
+                        <span class="toggle-icon" id="searchSettings-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="searchSettings">
+                        <div class="form-group">
+                            <label>Stage1 Top K (候補数)</label>
+                            <input type="number" id="stage1TopK" min="10" max="100" placeholder="デフォルト: 40">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header" onclick="toggleSection('endpointSettings')">
+                        <span>🌐 エンドポイント設定</span>
+                        <span class="toggle-icon" id="endpointSettings-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="endpointSettings">
+                        <div class="form-group">
+                            <label>API URL</label>
+                            <select id="apiUrl">
+                                <option value="http://localhost:8006">ローカル (localhost:8006)</option>
+                                <option value="https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app">本番環境 (Cloud Run)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeMeal()">
+                    🔬 分析開始
+                </button>
+
+                <!-- Loading Indicator -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="progress-text">画像を分析中...</div>
+                    <div class="elapsed-time">経過時間: <span id="elapsedTime">0</span>秒</div>
+                    <div style="color: #999; font-size: 0.9em; margin-top: 10px;">通常30-50秒かかります</div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results -->
+            <div class="panel">
+                <h2>📊 分析結果</h2>
+
+                <div id="resultContainer">
+                    <div style="text-align: center; padding: 60px 20px; color: #999;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">📋</div>
+                        <div style="font-size: 1.2em;">画像をアップロードして分析を開始してください</div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div class="error-message" id="errorMessage"></div>
+
+                <!-- Result Panel -->
+                <div class="result-panel" id="resultPanel">
+                    <!-- Summary Stats -->
+                    <div class="result-summary" id="resultSummary"></div>
+
+                    <!-- Dishes -->
+                    <div id="dishesContainer"></div>
+
+                    <!-- Raw JSON (Collapsible) -->
+                    <div class="accordion">
+                        <div class="accordion-header" onclick="toggleAccordion()">
+                            📄 Raw JSON レスポンス
+                        </div>
+                        <div class="accordion-content" id="rawJson">
+                            <pre id="jsonContent"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let startTime = null;
+        let timerInterval = null;
+
+        // Image Preview
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.classList.add('show');
+                    document.getElementById('fileLabel').classList.add('has-file');
+                    document.getElementById('fileLabel').innerHTML = `
+                        <div>
+                            <div style="font-size: 2em; margin-bottom: 10px;">✅</div>
+                            <div>${file.name}</div>
+                            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and Drop
+        const fileLabel = document.getElementById('fileLabel');
+        fileLabel.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileLabel.style.background = '#e8f5e9';
+        });
+
+        fileLabel.addEventListener('dragleave', () => {
+            fileLabel.style.background = 'white';
+        });
+
+        fileLabel.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileLabel.style.background = 'white';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                document.getElementById('imageInput').files = e.dataTransfer.files;
+                document.getElementById('imageInput').dispatchEvent(new Event('change'));
+            }
+        });
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.getElementById(sectionId + '-icon');
+            content.classList.toggle('show');
+            icon.classList.toggle('open');
+        }
+
+        function toggleAccordion() {
+            document.getElementById('rawJson').classList.toggle('show');
+        }
+
+        function updatePromptPath() {
+            const selectedValue = document.getElementById('promptPathSelect').value;
+            if (selectedValue) {
+                document.getElementById('promptPath').value = selectedValue;
+            }
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('elapsedTime').textContent = elapsed;
+            }, 100);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        async function analyzeMeal() {
+            const imageInput = document.getElementById('imageInput');
+            const file = imageInput.files[0];
+
+            if (!file) {
+                alert('画像ファイルを選択してください');
+                return;
+            }
+
+            // Prepare FormData
+            const formData = new FormData();
+            formData.append('image', file);
+
+            // Optional parameters
+            const userContext = document.getElementById('userContext').value;
+            if (userContext) formData.append('user_context', userContext);
+
+            const modelId = document.getElementById('modelId').value;
+            if (modelId) formData.append('model_id', modelId);
+
+            const promptPath = document.getElementById('promptPath').value;
+            if (promptPath) formData.append('prompt_path', promptPath);
+
+            const promptText = document.getElementById('promptText').value;
+            if (promptText) formData.append('prompt_text', promptText);
+
+            const temperature = document.getElementById('temperature').value;
+            if (temperature) formData.append('temperature', temperature);
+
+            const maxTokens = document.getElementById('maxTokens').value;
+            if (maxTokens) formData.append('max_tokens', maxTokens);
+
+            const thinkingBudget = document.getElementById('thinkingBudget').value;
+            if (thinkingBudget) formData.append('thinking_budget', thinkingBudget);
+
+            const stage1TopK = document.getElementById('stage1TopK').value;
+            if (stage1TopK) formData.append('stage1_top_k', stage1TopK);
+
+            // UI updates
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('resultPanel').classList.remove('show');
+            document.getElementById('resultContainer').innerHTML = '';
+
+            startTimer();
+
+            try {
+                const apiUrl = document.getElementById('apiUrl').value;
+                const response = await fetch(`${apiUrl}/api/v1/meal-analyses/complete`, {
+                    method: 'POST',
+                    body: formData,
+                    signal: AbortSignal.timeout(120000) // 120秒タイムアウト
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                displayResult(result);
+
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.textContent = `エラー: ${error.message}`;
+                errorMsg.classList.add('show');
+            } finally {
+                stopTimer();
+                document.getElementById('analyzeBtn').disabled = false;
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+
+        function displayResult(data) {
+            // Hide placeholder
+            document.getElementById('resultContainer').innerHTML = '';
+            document.getElementById('resultPanel').classList.add('show');
+
+            // Summary Stats
+            const summary = document.getElementById('resultSummary');
+            summary.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_nutrition.calories.toFixed(1)}</div>
+                    <div class="stat-label">kcal</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_nutrition.protein.toFixed(1)}</div>
+                    <div class="stat-label">タンパク質 (g)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_nutrition.fat.toFixed(1)}</div>
+                    <div class="stat-label">脂質 (g)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_nutrition.carbs.toFixed(1)}</div>
+                    <div class="stat-label">炭水化物 (g)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_dishes}</div>
+                    <div class="stat-label">料理数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.total_ingredients}</div>
+                    <div class="stat-label">食材数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.processing_time_seconds.toFixed(1)}s</div>
+                    <div class="stat-label">処理時間</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${data.match_rate_percent.toFixed(0)}%</div>
+                    <div class="stat-label">マッチ率</div>
+                </div>
+                ${data.usage && data.usage.estimated_cost_usd !== null && data.usage.estimated_cost_usd !== undefined ? `
+                <div class="stat-card" style="background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);">
+                    <div class="stat-value">$${data.usage.estimated_cost_usd.toFixed(4)}</div>
+                    <div class="stat-label">VLM Cost</div>
+                </div>
+                ` : ''}
+            `;
+
+            // Dishes
+            const dishesContainer = document.getElementById('dishesContainer');
+            dishesContainer.innerHTML = data.dishes.map((dish, index) => `
+                <div class="dish-card">
+                    <div class="dish-name">🍽️ ${dish.dish_name}</div>
+                    <div style="color: #666; margin-bottom: 15px; font-size: 0.9em;">
+                        信頼度: ${(dish.confidence * 100).toFixed(0)}% |
+                        ${dish.total_nutrition.calories.toFixed(1)} kcal
+                    </div>
+                    ${dish.ingredients.map(ing => `
+                        <div class="ingredient">
+                            <div class="ingredient-header">
+                                <span class="ingredient-name">${ing.ingredient_name}</span>
+                                <span class="ingredient-weight">${ing.weight_g}g</span>
+                            </div>
+                            ${ing.vlm_query && ing.matched_db_description ? `
+                            <div style="margin: 8px 0; padding: 8px; background: #f0f4ff; border-radius: 5px; font-size: 0.85em;">
+                                <div style="color: #667eea; margin-bottom: 3px;">
+                                    <strong>🔍 VLMクエリ:</strong> "${ing.vlm_query}"
+                                </div>
+                                <div style="color: #764ba2;">
+                                    <strong>✅ DBマッチ:</strong> "${ing.matched_db_description}"
+                                </div>
+                            </div>
+                            ` : ''}
+                            <div class="nutrition-grid">
+                                <div class="nutrition-item">
+                                    <div class="nutrition-value">${ing.calculated_nutrition.calories.toFixed(1)}</div>
+                                    <div>kcal</div>
+                                </div>
+                                <div class="nutrition-item">
+                                    <div class="nutrition-value">${ing.calculated_nutrition.protein.toFixed(1)}g</div>
+                                    <div>タンパク質</div>
+                                </div>
+                                <div class="nutrition-item">
+                                    <div class="nutrition-value">${ing.calculated_nutrition.fat.toFixed(1)}g</div>
+                                    <div>脂質</div>
+                                </div>
+                                <div class="nutrition-item">
+                                    <div class="nutrition-value">${ing.calculated_nutrition.carbs.toFixed(1)}g</div>
+                                    <div>炭水化物</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 0.85em; color: #999;">
+                                FDC ID: ${ing.fdc_id} | Source: ${ing.source_db}
+                            </div>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px;">
+                        <strong>料理合計:</strong>
+                        ${dish.total_nutrition.calories.toFixed(1)} kcal |
+                        P: ${dish.total_nutrition.protein.toFixed(1)}g |
+                        F: ${dish.total_nutrition.fat.toFixed(1)}g |
+                        C: ${dish.total_nutrition.carbs.toFixed(1)}g
+                    </div>
+                </div>
+            `).join('');
+
+            // Metadata
+            dishesContainer.innerHTML += `
+                <div style="margin-top: 20px; padding: 15px; background: #f0f4ff; border-radius: 10px; font-size: 0.9em;">
+                    <div><strong>AI Model:</strong> ${data.ai_model_used}</div>
+                    <div><strong>Prompt File:</strong> ${data.prompt_file_used}</div>
+                    <div><strong>Analysis ID:</strong> ${data.analysis_id}</div>
+                    ${data.usage ? `
+                        <div><strong>Tokens:</strong> ${data.usage.total_tokens} (Input: ${data.usage.prompt_tokens}, Output: ${data.usage.completion_tokens})</div>
+                        ${data.usage.estimated_cost_usd !== null && data.usage.estimated_cost_usd !== undefined ? `
+                            <div><strong>💰 VLM API Cost:</strong> $${data.usage.estimated_cost_usd.toFixed(6)} USD</div>
+                        ` : ''}
+                        ${data.usage.model_pricing ? `
+                            <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                📊 料金: Input $${data.usage.model_pricing.input_price_per_million || 0}/1M tokens,
+                                Output $${data.usage.model_pricing.output_price_per_million || 0}/1M tokens
+                            </div>
+                        ` : ''}
+                    ` : ''}
+                </div>
+            `;
+
+            // Raw JSON
+            document.getElementById('jsonContent').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>

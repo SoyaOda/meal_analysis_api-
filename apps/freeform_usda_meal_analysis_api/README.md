@@ -39,6 +39,81 @@ https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/docs
 | `/api/v1/metadata/search` | GET | 食材名検索 | 0.05-0.1秒 |
 | `/health` | GET | ヘルスチェック | 0.01秒 |
 
+### 🎨 インタラクティブデモページ
+
+APIの機能を直感的に試せるデモページを用意しています：
+
+#### 📁 デモページの場所
+```
+apps/freeform_usda_meal_analysis_api/demo/
+├── index.html                  # デモポータル（両方のデモへのリンク）
+├── meal_analysis_demo.html     # 画像分析デモ
+└── retriever_demo.html         # 食材検索デモ
+```
+
+#### 🍽️ Meal Analysis Demo（画像分析デモ）
+
+**機能:**
+- 📷 画像アップロード（ドラッグ&ドロップ対応）
+- ⚙️ VLMモデルとプロンプト選択
+  - Qwen3-VL-30B-A3B-Thinking（デフォルト）
+  - Qwen2-VL-72B-Instruct
+  - OpenRouter: Qwen3-VL-235B
+  - OpenRouter: QVQ-72B
+- 🎛️ パラメータ調整
+  - Temperature (0.0-2.0)
+  - Max Tokens
+  - Thinking Budget (QVQモデル用)
+  - Stage1 Top K (検索候補数)
+- 📊 詳細な栄養分析結果表示
+  - 料理ごとの栄養価
+  - 食材ごとの栄養価
+  - 合計栄養価
+- 🌐 ローカル/本番環境の切り替え
+- ⏱️ リアルタイム処理時間表示
+
+**アクセス方法:**
+```bash
+# ローカルでサーバーを起動後
+open apps/freeform_usda_meal_analysis_api/demo/meal_analysis_demo.html
+```
+
+#### 🔍 Retriever Demo（食材検索デモ）
+
+**機能:**
+- 🔎 3つの検索モード切り替え
+  - ⚡ **Fast**: FAISS Vector検索のみ（最速）
+  - 🎯 **Accurate**: FAISS + Qwen3-Reranker（高精度）
+  - 💎 **Hybrid**: BM25 + Vector + RRF（最高精度、推奨）
+- 📏 単位変換情報表示（portions）
+  - 96.2%の食材でカップ、スプーン、枚などの単位情報を表示
+- 📊 栄養情報表示
+  - カロリー、タンパク質、脂質、炭水化物（100gあたり）
+- 🔍 スコア内訳表示（デバッグモード）
+  - BM25スコア、Vectorスコア、RRFスコア
+- 🌐 ローカル/本番環境の切り替え
+- ⚡ 検索時間: 0.2-0.5秒
+
+**アクセス方法:**
+```bash
+# ローカルでサーバーを起動後
+open apps/freeform_usda_meal_analysis_api/demo/retriever_demo.html
+```
+
+#### 🚀 デモポータル
+
+両方のデモへアクセスできるポータルページ：
+
+```bash
+open apps/freeform_usda_meal_analysis_api/demo/index.html
+```
+
+**特徴:**
+- 🎨 美しいUI/UX
+- 📱 レスポンシブデザイン
+- ⌨️ キーボードショートカット対応
+- 🎯 ワンクリックでデモにアクセス
+
 ### JavaScript実装例
 
 #### 1. 画像分析（Meal Analysis）
@@ -1032,6 +1107,10 @@ gcloud config set project new-snap-calorie
 
 #### オプション1: 最適化デプロイスクリプト（推奨）
 
+**⚠️ 重要: 環境変数は必ず`export`を使って設定してください**
+
+zsh（macOSデフォルト）やbashで正しく動作させるため、環境変数は`export`コマンドで設定する必要があります。
+
 **Performance Mode（ゼロコールドスタート）:**
 
 ```bash
@@ -1057,6 +1136,21 @@ bash deploy_optimized.sh
 - **用途**: 開発環境、テスト、低頻度利用
 - **特徴**: min-instances=0、使用時のみ起動、CPU boost有効
 - **コスト**: 従量課金のみ
+
+**複数サービスをデプロイする場合（サービス名を変更）:**
+
+```bash
+cd apps/freeform_usda_meal_analysis_api
+export SERVICE_NAME=freeform-usda-meal-analysis-api-v2  # サービス名を指定
+export DEPLOY_MODE=performance
+bash deploy_optimized.sh
+```
+
+**❌ 間違った例（zshで動作しません）:**
+```bash
+# これはzshで失敗します - exportを使ってください
+SERVICE_NAME=... DEPLOY_MODE=... bash deploy_optimized.sh
+```
 
 デプロイスクリプトが自動実行する処理：
 1. Dockerイメージのビルド（`Dockerfile.optimized`使用、マルチステージビルド）

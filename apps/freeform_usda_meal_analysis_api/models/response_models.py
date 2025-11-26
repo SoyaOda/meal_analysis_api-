@@ -32,8 +32,10 @@ class IngredientDetail(BaseModel):
     """食材詳細情報"""
     model_config = {"protected_namespaces": ()}
 
-    ingredient_name: str = Field(..., description="食材名", example="Egg, whole, raw")
-    weight_g: float = Field(..., description="重量（グラム）", example=100.0)
+    ingredient_name: str = Field(..., description="食材名（DBマッチ名またはVLMクエリ）", example="Egg, whole, raw")
+    vlm_query: Optional[str] = Field(None, description="VLMが生成したクエリ", example="boiled egg")
+    matched_db_description: Optional[str] = Field(None, description="DBから選ばれた名前", example="Egg, whole, raw")
+    weight_g: float = Field(..., description="重量(グラム)", example=100.0)
     nutrition_per_100g: NutritionInfo = Field(..., description="100gあたりの栄養情報")
     calculated_nutrition: NutritionInfo = Field(..., description="計算済み栄養情報")
     source_db: str = Field(..., description="データソース", example="usda_fndds")
@@ -58,6 +60,7 @@ class DishDetail(BaseModel):
     """料理詳細情報"""
     model_config = {"protected_namespaces": ()}
 
+    dish_name: Optional[str] = Field(None, description="料理名", example="Grilled Chicken Salad")
     ingredients: List[IngredientDetail] = Field(..., description="食材詳細リスト")
     total_nutrition: NutritionInfo = Field(..., description="料理の総栄養価")
     calculation_metadata: Dict[str, Any] = Field(

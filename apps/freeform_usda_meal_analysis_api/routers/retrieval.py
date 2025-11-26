@@ -42,7 +42,7 @@ def set_hybrid_search_engine(engine):
 @router.get("/retrieve", response_model=RetrievalResponse)
 async def retrieve_foods(
     q: str = Query(..., min_length=1, description="検索クエリ"),
-    mode: str = Query("hybrid", description="検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS)"),
+    mode: str = Query("hybrid", description="検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS) | hybrid_reranker (BM25 + FAISS + Rerank)"),
     top_k: int = Query(10, ge=1, le=50, description="返却結果数（1-50）"),
     include_nutrition: bool = Query(True, description="栄養情報を含めるか"),
     debug: bool = Query(False, description="デバッグ情報を含めるか")
@@ -52,7 +52,7 @@ async def retrieve_foods(
 
     Args:
         q: 検索クエリ（例: "chicken breast grilled"）
-        mode: "fast" (FAISS検索のみ、高速) or "accurate" (FAISS + Reranking、高精度) or "hybrid" (BM25 + FAISS、最高精度)
+        mode: "fast" (FAISS検索のみ、高速) or "accurate" (FAISS + Reranking、高精度) or "hybrid" (BM25 + FAISS、最高精度) or "hybrid_reranker" (BM25 + FAISS + Reranking、最高精度)
         top_k: 返却する結果数
         include_nutrition: 栄養情報を含めるか
         debug: デバッグ情報を含めるか
@@ -73,10 +73,10 @@ async def retrieve_foods(
         logger.info(f"🔍 Retrieval request: query='{q}', mode={mode}, top_k={top_k}")
 
         # モード検証
-        if mode not in ["fast", "accurate", "hybrid"]:
+        if mode not in ["fast", "accurate", "hybrid", "hybrid_reranker"]:
             raise HTTPException(
                 status_code=400,
-                detail="Invalid mode. Must be 'fast', 'accurate', or 'hybrid'"
+                detail="Invalid mode. Must be 'fast', 'accurate', 'hybrid', or 'hybrid_reranker'"
             )
 
         # 検索実行
@@ -86,6 +86,9 @@ async def retrieve_foods(
         elif mode == "hybrid":
             # Hybrid mode: BM25 + FAISS（RRF融合）
             result = await _search_hybrid_mode(q, top_k)
+        elif mode == "hybrid_reranker":
+            # Hybrid + Reranker mode: BM25 + FAISS（RRF融合）+ Reranking
+            result = await _search_hybrid_reranker_mode(q, top_k)
         else:
             # Accurate mode: FAISS + Reranking（Stage 1 + 2）
             result = await _search_accurate_mode(q, top_k)
@@ -302,6 +305,76 @@ async def _search_hybrid_mode(query: str, top_k: int) -> Dict[str, Any]:
             "bm25_weight": _hybrid_search_engine.bm25_weight,
             "vector_weight": _hybrid_search_engine.vector_weight,
             "rrf_k": _hybrid_search_engine.rrf_k
+        }
+    }
+
+
+
+async def _search_hybrid_reranker_mode(query: str, top_k: int) -> Dict[str, Any]:
+    """
+    Hybrid + Reranker mode: BM25 + FAISS（RRF融合） + Reranking
+
+    HybridSearchEngineを使用してBM25とVectorを組み合わせた検索を実行し、
+    さらにRerankerで精度を向上
+    """
+    if not _hybrid_search_engine:
+        raise HTTPException(
+            status_code=503,
+            detail="Hybrid search engine not initialized"
+        )
+
+    # Lazy Loading対応：初回アクセス時にインデックスをロード
+    await _search_service._ensure_searcher_loaded()
+    
+    searcher = _search_service.searcher
+
+    # ハイブリッド + リランキング検索実行
+    candidates = await _hybrid_search_engine.search_hybrid_with_reranker(
+        query=query,
+        faiss_index=searcher.index_full,
+        embedding_service=searcher.embedding_service,
+        reranker_service=searcher.reranker_service,
+        items=searcher.items,
+        top_k=top_k,
+        stage1_top_k=100  # Stage1で取得する候補数
+    )
+
+    # 結果を整形
+    results = []
+    for candidate in candidates:
+        # メタデータから栄養情報を取得
+        fdc_id = candidate.get("fdc_id")
+        item = next((i for i in searcher.items if i.get("fdc_id") == fdc_id), None)
+
+        nutrition_per_100g = {"calories": 0, "protein": 0, "fat": 0, "carbs": 0}
+        if item:
+            nutrition = item.get("nutrition", {})
+            nutrition_per_100g = {
+                "calories": round(nutrition.get("calories", 0), 1),
+                "protein": round(nutrition.get("protein_g", 0), 1),
+                "fat": round(nutrition.get("fat_g", 0), 1),
+                "carbs": round(nutrition.get("carbs_g", 0), 1)
+            }
+
+        results.append({
+            "fdc_id": str(candidate.get("fdc_id")),
+            "description": candidate.get("description", ""),
+            "main_name": candidate.get("main_name", ""),
+            "descriptors": candidate.get("descriptors", ""),
+            "source": candidate.get("source", "unknown"),
+            "score": candidate.get("rerank_score", 0),  # Rerankスコアを使用
+            "nutrition_per_100g": nutrition_per_100g
+        })
+
+    return {
+        "results": results,
+        "debug_info": {
+            "mode": "hybrid_reranker",
+            "algorithm": "BM25+Vector_RRF+Reranker",
+            "bm25_weight": _hybrid_search_engine.bm25_weight,
+            "vector_weight": _hybrid_search_engine.vector_weight,
+            "rrf_k": _hybrid_search_engine.rrf_k,
+            "reranking_applied": True
         }
     }
 

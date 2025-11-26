@@ -155,7 +155,8 @@ class HybridSearchEngine:
     def apply_rrf(
         self,
         bm25_results: List[Tuple[int, float]],
-        vector_results: List[Tuple[int, float]]
+        vector_results: List[Tuple[int, float]],
+        k: int = None
     ) -> Dict[int, float]:
         """
         Reciprocal Rank Fusion（RRF）を適用
@@ -163,19 +164,23 @@ class HybridSearchEngine:
         Args:
             bm25_results: BM25検索結果 [(doc_idx, score), ...]
             vector_results: Vector検索結果 [(doc_idx, score), ...]
+            k: RRFのkパラメータ（Noneの場合はインスタンス変数を使用）
 
         Returns:
             {doc_idx: rrf_score, ...}
         """
+        # kパラメータが指定されていない場合はインスタンス変数を使用
+        rrf_k = k if k is not None else self.rrf_k
+
         rrf_scores = {}
 
         # BM25結果のRRFスコア計算
         for rank, (doc_idx, _) in enumerate(bm25_results):
-            rrf_scores[doc_idx] = rrf_scores.get(doc_idx, 0) + 1 / (rank + self.rrf_k)
+            rrf_scores[doc_idx] = rrf_scores.get(doc_idx, 0) + 1 / (rank + rrf_k)
 
         # Vector結果のRRFスコア計算
         for rank, (doc_idx, _) in enumerate(vector_results):
-            rrf_scores[doc_idx] = rrf_scores.get(doc_idx, 0) + 1 / (rank + self.rrf_k)
+            rrf_scores[doc_idx] = rrf_scores.get(doc_idx, 0) + 1 / (rank + rrf_k)
 
         return rrf_scores
 
@@ -183,7 +188,9 @@ class HybridSearchEngine:
         self,
         bm25_results: List[Tuple[int, float]],
         vector_results: List[Tuple[int, float]],
-        rrf_scores: Dict[int, float]
+        rrf_scores: Dict[int, float],
+        bm25_weight: float = None,
+        vector_weight: float = None
     ) -> List[Tuple[int, float, Dict[str, float]]]:
         """
         重み付け融合を適用
@@ -192,10 +199,16 @@ class HybridSearchEngine:
             bm25_results: BM25検索結果
             vector_results: Vector検索結果
             rrf_scores: RRFスコア
+            bm25_weight: BM25スコアの重み（Noneの場合はインスタンス変数を使用）
+            vector_weight: Vectorスコアの重み（Noneの場合はインスタンス変数を使用）
 
         Returns:
             [(doc_idx, final_score, {'bm25': score, 'vector': score, 'rrf': score}), ...]
         """
+        # 重みパラメータが指定されていない場合はインスタンス変数を使用
+        bm25_w = bm25_weight if bm25_weight is not None else self.bm25_weight
+        vector_w = vector_weight if vector_weight is not None else self.vector_weight
+
         # スコアを正規化
         bm25_scores_dict = {idx: score for idx, score in bm25_results}
         vector_scores_dict = {idx: score for idx, score in vector_results}
@@ -219,8 +232,8 @@ class HybridSearchEngine:
 
             # 重み付けスコア
             final_score = (
-                self.bm25_weight * bm25_score +
-                self.vector_weight * vector_score +
+                bm25_w * bm25_score +
+                vector_w * vector_score +
                 rrf_score  # RRFスコアも追加
             )
 
@@ -246,7 +259,10 @@ class HybridSearchEngine:
         embedding_service,
         items: List[Dict],
         top_k: int = None,
-        stage1_top_k: int = None
+        stage1_top_k: int = None,
+        bm25_weight: float = None,
+        vector_weight: float = None,
+        rrf_k: int = None
     ) -> List[Dict[str, Any]]:
         """
         ハイブリッドサーチを実行
@@ -263,15 +279,22 @@ class HybridSearchEngine:
             検索結果のリスト
         """
         # 設定を取得
-        if top_k is None or stage1_top_k is None:
+        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k]):
             from ..config.settings import get_settings
             settings = get_settings()
             if top_k is None:
                 top_k = settings.DEFAULT_DEBUG_TOP_K
             if stage1_top_k is None:
                 stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+            if bm25_weight is None:
+                bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            if vector_weight is None:
+                vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            if rrf_k is None:
+                rrf_k = settings.DEFAULT_RRF_K
 
         logger.info(f"🔍 Hybrid search: '{query}'")
+        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
 
         try:
             # Stage 1: BM25 + Vector検索を並列実行
@@ -296,11 +319,14 @@ class HybridSearchEngine:
         logger.info(f"  Vector results: {len(vector_results)}")
 
         # Stage 2: RRF適用
-        rrf_scores = self.apply_rrf(bm25_results, vector_results)
+        rrf_scores = self.apply_rrf(bm25_results, vector_results, k=rrf_k)
         logger.info(f"  RRF merged: {len(rrf_scores)} unique documents")
 
         # Stage 3: 重み付け融合
-        final_scores = self.apply_weighted_fusion(bm25_results, vector_results, rrf_scores)
+        final_scores = self.apply_weighted_fusion(
+            bm25_results, vector_results, rrf_scores,
+            bm25_weight=bm25_weight, vector_weight=vector_weight
+        )
 
         # 結果を整形
         results = []
@@ -324,3 +350,188 @@ class HybridSearchEngine:
         logger.info(f"✅ Hybrid search completed: {len(results)} results")
 
         return results
+
+
+    async def search_hybrid_with_reranker(
+        self,
+        query: str,
+        faiss_index,
+        embedding_service,
+        reranker_service,
+        items: List[Dict],
+        top_k: int = None,
+        stage1_top_k: int = None,
+        bm25_weight: float = None,
+        vector_weight: float = None,
+        rrf_k: int = None,
+        reranker_instruction: str = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Hybrid search + Reranker の統合版（5段階パイプライン）
+
+        Args:
+            query: 検索クエリ
+            faiss_index: FAISSインデックス
+            embedding_service: 埋め込みサービス
+            reranker_service: リランカーサービス
+            items: アイテムメタデータ
+            top_k: 返却する結果数（Noneの場合settingsから取得）
+            stage1_top_k: Stage1で取得する候補数（Noneの場合settingsから取得）
+            reranker_instruction: Reranker用のinstruction（Noneの場合settingsから取得）
+
+        Returns:
+            検索結果のリスト
+        """
+        # 設定を取得
+        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, reranker_instruction]):
+            from ..config.settings import get_settings
+            settings = get_settings()
+            if top_k is None:
+                top_k = settings.DEFAULT_DEBUG_TOP_K
+            if stage1_top_k is None:
+                stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+            if bm25_weight is None:
+                bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            if vector_weight is None:
+                vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            if rrf_k is None:
+                rrf_k = settings.DEFAULT_RRF_K
+            if reranker_instruction is None:
+                reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+                if reranker_instruction is None:
+                    raise ValueError(
+                        "reranker_instruction is required for hybrid search with reranker, "
+                        "but it was not provided and DEFAULT_RERANKER_INSTRUCTION is not configured in settings. "
+                        "Please either pass reranker_instruction parameter or set DEFAULT_RERANKER_INSTRUCTION in settings."
+                    )
+
+        logger.info(f"🔍 Hybrid search with reranker: '{query}'")
+        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
+
+        # ===== Stage 1: BM25 キーワード検索 =====
+        start_time_bm25 = asyncio.get_event_loop().time()
+
+        # クエリのトークナイズ
+        query_tokens = bm25s.tokenize(
+            [query],
+            stopwords="en",
+            stemmer=self.stemmer
+        )
+
+        # BM25検索
+        bm25_results_raw, bm25_scores_raw = self.bm25_model.retrieve(
+            query_tokens,
+            k=stage1_top_k
+        )
+        bm25_time = asyncio.get_event_loop().time() - start_time_bm25
+
+        # BM25の結果をインデックスに変換（numpy配列をリストに）
+        bm25_indices = bm25_results_raw[0].tolist()
+        bm25_scores = bm25_scores_raw[0].tolist()
+
+        # ===== Stage 2: FAISS Vector 検索 =====
+        start_time_vector = asyncio.get_event_loop().time()
+        # クエリのベクトル化
+        query_vectors = await embedding_service.generate_embeddings([query])
+        query_vector_np = np.array([query_vectors[0]], dtype='float32')
+
+        # FAISS検索
+        distances, indices = faiss_index.search(query_vector_np, stage1_top_k)
+        vector_indices = indices[0].tolist()
+        # FAISSの距離をスコアに変換（距離が小さいほど良い → スコアは大きいほど良い）
+        vector_scores = (1.0 / (1.0 + distances[0])).tolist()
+        vector_time = asyncio.get_event_loop().time() - start_time_vector
+
+        logger.info(f"  BM25 results: {len(bm25_indices)}")
+        logger.info(f"  Vector results: {len(vector_indices)}")
+
+        # ===== Stage 3: RRF (Reciprocal Rank Fusion) =====
+        start_time_rrf = asyncio.get_event_loop().time()
+
+        # 各候補の rank を計算（0-indexed → 1-indexed）
+        bm25_ranks = {idx: rank + 1 for rank, idx in enumerate(bm25_indices)}
+        vector_ranks = {idx: rank + 1 for rank, idx in enumerate(vector_indices)}
+
+        # RRF スコア計算
+        rrf_scores = {}
+        all_indices = set(bm25_indices) | set(vector_indices)
+
+        for idx in all_indices:
+            bm25_rank = bm25_ranks.get(idx, float('inf'))
+            vector_rank = vector_ranks.get(idx, float('inf'))
+
+            # RRF スコア: 1 / (k + rank)
+            bm25_rrf = 1.0 / (rrf_k + bm25_rank) if bm25_rank != float('inf') else 0.0
+            vector_rrf = 1.0 / (rrf_k + vector_rank) if vector_rank != float('inf') else 0.0
+
+            rrf_scores[idx] = bm25_rrf + vector_rrf
+
+        rrf_time = asyncio.get_event_loop().time() - start_time_rrf
+        logger.info(f"  RRF merged: {len(rrf_scores)} unique documents")
+
+        # ===== Stage 4: Weighted Fusion (BM25 + Vector) =====
+        start_time_fusion = asyncio.get_event_loop().time()
+
+        # BM25 と Vector のスコアを正規化
+        bm25_score_dict = {idx: score for idx, score in zip(bm25_indices, bm25_scores)}
+        vector_score_dict = {idx: score for idx, score in zip(vector_indices, vector_scores)}
+
+        max_bm25 = max(bm25_scores) if bm25_scores else 1.0
+        max_vector = max(vector_scores) if vector_scores else 1.0
+
+        # Weighted Fusion
+        hybrid_scores = {}
+        for idx in all_indices:
+            bm25_normalized = bm25_score_dict.get(idx, 0) / max_bm25
+            vector_normalized = vector_score_dict.get(idx, 0) / max_vector
+
+            # RRF スコアと weighted スコアを組み合わせ
+            rrf_score = rrf_scores[idx]
+            weighted_score = (bm25_weight * bm25_normalized) + (vector_weight * vector_normalized)
+
+            # 最終スコア = RRF + Weighted（両方の強みを活かす）
+            hybrid_scores[idx] = rrf_score + weighted_score
+
+        # スコアでソート
+        sorted_candidates = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)
+        hybrid_candidates = [
+            {
+                "fdc_id": items[idx]["fdc_id"],
+                "description": items[idx]["description"],
+                "hybrid_score": score,
+                "bm25_score": bm25_score_dict.get(idx, 0),
+                "vector_score": vector_score_dict.get(idx, 0),
+                "rrf_score": rrf_scores[idx]
+            }
+            for idx, score in sorted_candidates[:stage1_top_k]
+        ]
+
+        fusion_time = asyncio.get_event_loop().time() - start_time_fusion
+        logger.info(f"  Hybrid fusion: {len(hybrid_candidates)} candidates for reranking")
+
+        # ===== Stage 5: Reranker =====
+        # リランキング用のドキュメントリスト
+        documents = [c["description"] for c in hybrid_candidates]
+
+        logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if reranker_instruction and len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
+
+        # リランキング実行（DeepInfra API）
+        best_idx, reranked_scores = await reranker_service.rerank(
+            query=query,
+            documents=documents,
+            instruction=reranker_instruction
+        )
+
+        # リランキング結果を反映
+        for i, candidate in enumerate(hybrid_candidates):
+            candidate["rerank_score"] = reranked_scores[i]
+            candidate["original_rank"] = i + 1
+
+        # Rerankerスコアでソート
+        reranked_results = sorted(hybrid_candidates, key=lambda x: x["rerank_score"], reverse=True)
+
+        logger.info(f"✅ Hybrid+Reranker search completed: {len(reranked_results)} results")
+        if reranked_results:
+            logger.info(f"  Best match: {reranked_results[0]['description']} (rerank_score: {reranked_results[0]['rerank_score']:.4f})")
+
+        return reranked_results[:top_k]

@@ -10,7 +10,6 @@ GOAL
   • main_food: when the dish is a coherent single unit (e.g., "cheeseburger", "slice of pizza")
   • extras: visible add-ons NOT part of the typical composition
 - CRITICAL: Do NOT miss any visible items (vegetables, sauces, garnishes)
-- Total weight should be realistic: 400-800g for single plate, 600-1200g for multiple dishes
 
 ──────────────────────────────────────────────────────────────────────────────
 
@@ -141,17 +140,6 @@ STANDARD DENSITY VALUES (FAO/INFOODS):
 - Dressings/sauces: 1.0 g/cm³
 - Oil/butter: 0.92 g/cm³
 
-PORTION VALIDATION (MANDATORY - MUST CHECK BEFORE OUTPUT):
-✓ Main protein: 100-200g (palm-sized) - MAXIMUM 200g
-✓ Pasta/rice (cooked): 150-250g - MAXIMUM 250g
-✓ Vegetables (cooked): 80-150g - MAXIMUM 150g
-✓ Salad greens: 40-80g - MAXIMUM 80g
-✓ Sauce/dressing: 15-40g - MAXIMUM 40g
-✓ Oil/butter coating: 5-15g - MAXIMUM 15g
-✓ Single meal total: typically 400-700g
-
-CRITICAL: If your estimate exceeds these MAXIMUM values, recalculate using smaller volume.
-
 ──────────────────────────────────────────────────────────────────────────────
 
 OUTPUT — JSON ONLY
@@ -163,13 +151,13 @@ OUTPUT — JSON ONLY
       "main_food": null | {
         "search_name": "string",
         "description": "string or null",
-        "weight_g": <positive integer 80-400>,
+        "weight_g": <positive integer>,
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
-          "weight_g": <positive integer 5-150>,
+          "weight_g": <positive integer>,
         }
       ]
     }
@@ -182,11 +170,10 @@ STRICT RULES
 1) Each dish needs a dish_name - simple description
 2) Single JSON object only
 3) MUST detect ALL visible items - use systematic scanning
-4) Weight must be realistic - MANDATORY CHECK against PORTION VALIDATION section above
+4) Weight must be realistic based on visual analysis and density calculations
 5) For composite foods, use component-based calculation
 6) Small items matter - 1 tbsp mayo = 100 kcal
 7) When in doubt about oil/butter presence, include when uncertain
 8) Include ALL garnishes and condiments
-9) NEVER exceed MAXIMUM values in PORTION VALIDATION
-10) Total meal: 400-800g for single plate
-11) If no food visible: { "dishes": [] }
+9) Use visual references and density values for accurate weight estimation
+10) If no food visible: { "dishes": [] }

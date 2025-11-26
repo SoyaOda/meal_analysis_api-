@@ -61,12 +61,19 @@ async def analyze_meal_from_image(
     # Model config overrides
     model_id: Optional[str] = Form(None, description="VLMモデルID"),
     prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
+    prompt_text: Optional[str] = Form(None, description="プロンプトテキスト全文(prompt_pathより優先)"),
     thinking_budget: Optional[int] = Form(None, description="思考トークン数(QVQモデル用)"),
     enable_thinking: Optional[bool] = Form(None, description="Thinking modeのon/off(Alibabaモデル用)"),
     temperature: Optional[float] = Form(None, description="生成温度"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
     # Search config overrides
     stage1_top_k: Optional[int] = Form(None, description="Stage1候補数"),
+    bm25_weight: Optional[float] = Form(None, description="BM25検索の重み(0.0-1.0)"),
+    vector_weight: Optional[float] = Form(None, description="Vector検索の重み(0.0-1.0)"),
+    rrf_k: Optional[int] = Form(None, description="RRFのkパラメータ"),
+    reranker_model: Optional[str] = Form(None, description="Rerankerモデル名"),
+    reranker_instruction: Optional[str] = Form(None, description="Reranker instruction"),
+    reranker_top_n: Optional[int] = Form(None, description="Reranker返却数"),
 ):
     """
     画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)
@@ -83,7 +90,13 @@ async def analyze_meal_from_image(
     - **max_tokens**: 最大トークン数
 
     ## 検索設定(オプション)
-    - **stage1_top_k**: Stage1で取得する候補数(デフォルト: 40)
+    - **stage1_top_k**: Stage1で取得する候補数(デフォルト: 50)
+    - **bm25_weight**: BM25検索の重み(デフォルト: 0.4)
+    - **vector_weight**: Vector検索の重み(デフォルト: 0.6)
+    - **rrf_k**: RRFのkパラメータ(デフォルト: 60)
+    - **reranker_model**: Rerankerモデル名(デフォルト: Qwen/Qwen3-Reranker-8B)
+    - **reranker_instruction**: Reranker用instruction
+    - **reranker_top_n**: Rerankerで返す結果数
 
     ## レスポンス
     - 検出された料理と食材の詳細
@@ -102,10 +115,11 @@ async def analyze_meal_from_image(
 
         # モデル設定のオーバーライド処理
         model_config_override = None
-        if any([model_id, prompt_path, thinking_budget, enable_thinking, temperature, max_tokens]):
+        if any([model_id, prompt_path, prompt_text, thinking_budget, enable_thinking, temperature, max_tokens]):
             model_config_override = ModelConfig(
                 model_id=model_id,
                 prompt_path=prompt_path,
+                prompt_text=prompt_text,
                 thinking_budget=thinking_budget,
                 enable_thinking=enable_thinking,
                 temperature=temperature,
@@ -114,9 +128,15 @@ async def analyze_meal_from_image(
 
         # 検索設定のオーバーライド処理
         search_config_override = None
-        if stage1_top_k is not None:
+        if any([stage1_top_k, bm25_weight, vector_weight, rrf_k, reranker_model, reranker_instruction, reranker_top_n]):
             search_config_override = SearchConfig(
                 stage1_top_k=stage1_top_k,
+                bm25_weight=bm25_weight,
+                vector_weight=vector_weight,
+                rrf_k=rrf_k,
+                reranker_model=reranker_model,
+                reranker_instruction=reranker_instruction,
+                reranker_top_n=reranker_top_n,
             )
 
         # パイプライン実行

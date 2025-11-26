@@ -287,7 +287,8 @@ class DeepInfraService:
         query: str,
         documents: List[str],
         model: str = "Qwen/Qwen3-Reranker-8B",
-        top_n: Optional[int] = None
+        top_n: Optional[int] = None,
+        instruction: Optional[str] = None
     ) -> Tuple[int, List[float]]:
         """
         文書をリランキング（DeepInfra API使用）
@@ -297,6 +298,7 @@ class DeepInfraService:
             documents: リランキング対象の文書リスト
             model: 使用するrerankingモデル
             top_n: 上位何件を返すか（Noneの場合は全件）
+            instruction: タスク特化の指示文（Noneの場合はデフォルト）
 
         Returns:
             (best_index, scores)のタプル
@@ -318,6 +320,8 @@ class DeepInfraService:
                 }
                 if top_n is not None:
                     payload["top_n"] = top_n
+                if instruction is not None:
+                    payload["instruction"] = instruction
 
                 headers = {
                     "Authorization": f"Bearer {api_key}",

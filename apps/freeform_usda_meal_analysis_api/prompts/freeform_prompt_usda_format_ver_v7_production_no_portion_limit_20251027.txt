@@ -54,20 +54,6 @@ Use visual references and spatial reasoning for accurate weight estimation:
 
 ──────────────────────────────────────────────────────────────────────────────
 
-PORTION SIZE VALIDATION (MANDATORY - MUST CHECK BEFORE OUTPUT)
-
-Typical single servings (use as reality check):
-- Protein: 120-200g (palm-sized) - MAXIMUM 200g
-- Starch: 150-250g (fist-sized) - MAXIMUM 250g
-- Vegetables: 80-150g (handful) - MAXIMUM 150g
-- Condiments/sauces: 15-30g per dollop - MAXIMUM 30g
-- Oil/butter coating: 5-15g - MAXIMUM 15g
-- Total meal: 400-800g
-
-CRITICAL: If your estimate exceeds these MAXIMUM values, recalculate using smaller volume.
-
-──────────────────────────────────────────────────────────────────────────────
-
 DETECTION PRIORITY (Research-Based)
 
 Studies show these items are most commonly missed in vision systems:
@@ -132,13 +118,13 @@ OUTPUT FORMAT
       "main_food": null or {
         "search_name": "string",
         "description": "string or null",
-        "weight_g": integer (80-400),
+        "weight_g": integer,
       },
       "extras": [
         {
           "search_name": "string",
           "description": "string or null",
-          "weight_g": integer (5-150),
+          "weight_g": integer,
         }
       ]
     }
@@ -153,7 +139,5 @@ CRITICAL RULES
 2. NEVER skip the secondary scan for small items
 3. Small items can have large calorie impact (1 tbsp mayo = 100 kcal)
 4. If unsure about presence of oil/butter, include when uncertain
-5. MANDATORY CHECK against PORTION SIZE VALIDATION section above
-6. NEVER exceed MAXIMUM values in PORTION SIZE VALIDATION
-7. Check total weight is realistic (400-800g typical)
-8. Return ONLY valid JSON, no other text
+5. Weight must be realistic based on visual analysis and density calculations
+6. Return ONLY valid JSON, no other text

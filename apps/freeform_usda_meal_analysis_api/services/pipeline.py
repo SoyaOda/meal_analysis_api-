@@ -56,6 +56,9 @@ class MealAnalysisPipeline:
         # stage1_top_kが指定されていない場合は設定から取得
         if stage1_top_k is None:
             stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+        
+        # インスタンス変数として保存（_parallel_searchで使用）
+        self.stage1_top_k = stage1_top_k
 
         # VLMサービス初期化
         self.vlm_service = VLMService(
@@ -97,7 +100,15 @@ class MealAnalysisPipeline:
         vlm_max_tokens: Optional[int] = None,
         vlm_thinking_budget: Optional[int] = None,
         vlm_enable_thinking: Optional[bool] = None,
-        parallel_search: bool = True
+        parallel_search: bool = True,
+        # 検索設定パラメータ
+        search_stage1_top_k: Optional[int] = None,
+        search_bm25_weight: Optional[float] = None,
+        search_vector_weight: Optional[float] = None,
+        search_rrf_k: Optional[int] = None,
+        search_reranker_model: Optional[str] = None,
+        search_reranker_instruction: Optional[str] = None,
+        search_reranker_top_n: Optional[int] = None
     ) -> Dict[str, Any]:
         """
         画像から栄養素計算までのEnd-to-End処理
@@ -186,10 +197,28 @@ class MealAnalysisPipeline:
 
         if parallel_search:
             # 並列検索
-            search_results = await self._parallel_search(queries)
+            search_results = await self._parallel_search(
+                queries,
+                stage1_top_k=search_stage1_top_k,
+                bm25_weight=search_bm25_weight,
+                vector_weight=search_vector_weight,
+                rrf_k=search_rrf_k,
+                reranker_model=search_reranker_model,
+                reranker_instruction=search_reranker_instruction,
+                reranker_top_n=search_reranker_top_n
+            )
         else:
             # 逐次検索
-            search_results = await self._sequential_search(queries)
+            search_results = await self._sequential_search(
+                queries,
+                stage1_top_k=search_stage1_top_k,
+                bm25_weight=search_bm25_weight,
+                vector_weight=search_vector_weight,
+                rrf_k=search_rrf_k,
+                reranker_model=search_reranker_model,
+                reranker_instruction=search_reranker_instruction,
+                reranker_top_n=search_reranker_top_n
+            )
 
         logger.info(f"✅ USDA search complete: {len(search_results)} results")
 
@@ -264,14 +293,36 @@ class MealAnalysisPipeline:
             if model_config_override.enable_thinking is not None:
                 vlm_kwargs["vlm_enable_thinking"] = model_config_override.enable_thinking
 
+        # 検索設定の適用
+        search_kwargs = {}
+        if search_config_override:
+            if search_config_override.stage1_top_k is not None:
+                search_kwargs["search_stage1_top_k"] = search_config_override.stage1_top_k
+            if search_config_override.bm25_weight is not None:
+                search_kwargs["search_bm25_weight"] = search_config_override.bm25_weight
+            if search_config_override.vector_weight is not None:
+                search_kwargs["search_vector_weight"] = search_config_override.vector_weight
+            if search_config_override.rrf_k is not None:
+                search_kwargs["search_rrf_k"] = search_config_override.rrf_k
+            if search_config_override.reranker_model is not None:
+                search_kwargs["search_reranker_model"] = search_config_override.reranker_model
+            if search_config_override.reranker_instruction is not None:
+                search_kwargs["search_reranker_instruction"] = search_config_override.reranker_instruction
+            if search_config_override.reranker_top_n is not None:
+                search_kwargs["search_reranker_top_n"] = search_config_override.reranker_top_n
+
         # プロンプトのオーバーライド(一時的に変更)
         original_prompt = None
-        if model_config_override and model_config_override.prompt_path:
-            from ..config import get_settings
-            settings = get_settings()
-            prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
+        if model_config_override and (model_config_override.prompt_text or model_config_override.prompt_path):
             original_prompt = self.vlm_service.prompt
-            self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
+            # prompt_textが指定されている場合はそちらを優先
+            if model_config_override.prompt_text:
+                self.vlm_service.prompt = model_config_override.prompt_text
+            elif model_config_override.prompt_path:
+                from ..config import get_settings
+                settings = get_settings()
+                prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
+                self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
 
         # モデルIDのオーバーライド(一時的に変更)
         original_model_id = None
@@ -291,7 +342,8 @@ class MealAnalysisPipeline:
             result = await self.analyze_image(
                 image_bytes=image_bytes,
                 image_mime_type="image/jpeg",
-                **vlm_kwargs
+                **vlm_kwargs,
+                **search_kwargs
             )
 
             # API用のレスポンス形式に変換
@@ -348,6 +400,8 @@ class MealAnalysisPipeline:
                     ingredients.append(
                         IngredientDetail(
                             ingredient_name=main_food.get("matched_description", main_food.get("search_name", "")),
+                            vlm_query=main_food.get("search_name", ""),
+                            matched_db_description=main_food.get("matched_description", ""),
                             weight_g=main_food.get("weight_g", 0.0),
                             nutrition_per_100g=NutritionInfo(
                                 calories=main_nutrition_per_100g.get("calories", 0.0) if main_nutrition_per_100g else 0.0,
@@ -387,6 +441,8 @@ class MealAnalysisPipeline:
                     ingredients.append(
                         IngredientDetail(
                             ingredient_name=extra.get("matched_description", extra.get("search_name", "Unknown")),
+                            vlm_query=extra.get("search_name", ""),
+                            matched_db_description=extra.get("matched_description", ""),
                             weight_g=extra.get("weight_g", 0.0),
                             nutrition_per_100g=NutritionInfo(
                                 calories=extra_nutrition_per_100g.get("calories", 0.0) if extra_nutrition_per_100g else 0.0,
@@ -415,8 +471,12 @@ class MealAnalysisPipeline:
                     carbs=sum(ing.calculated_nutrition.carbs for ing in ingredients),
                 )
 
+                # VLMレスポンスからdish_nameを取得
+                dish_name = dish.get("dish_name")
+
                 api_dishes.append(
                     DishDetail(
+                        dish_name=dish_name,
                         ingredients=ingredients,
                         total_nutrition=dish_nutrition,
                         calculation_metadata={
@@ -436,7 +496,13 @@ class MealAnalysisPipeline:
 
             # モデル情報
             ai_model_used = model_config_override.model_id if model_config_override and model_config_override.model_id else self.vlm_service.model_id
-            prompt_file_used = model_config_override.prompt_path if model_config_override and model_config_override.prompt_path else "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+            # プロンプト情報を取得
+            if model_config_override and model_config_override.prompt_text:
+                prompt_file_used = "[Custom Prompt Text]"
+            elif model_config_override and model_config_override.prompt_path:
+                prompt_file_used = model_config_override.prompt_path
+            else:
+                prompt_file_used = "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
 
             # マッチ率計算
             total_queries = len(api_dishes)
@@ -509,30 +575,92 @@ class MealAnalysisPipeline:
                 # 後方互換性のため
                 self.vlm_service.deepinfra_service = self.vlm_service.provider
 
-    async def _parallel_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
+    async def _parallel_search(
+        self,
+        queries: List[Dict[str, Any]],
+        stage1_top_k: Optional[int] = None,
+        bm25_weight: Optional[float] = None,
+        vector_weight: Optional[float] = None,
+        rrf_k: Optional[int] = None,
+        reranker_model: Optional[str] = None,
+        reranker_instruction: Optional[str] = None,
+        reranker_top_n: Optional[int] = None
+    ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を並列実行"""
+        # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
+        from ..config import get_settings
+        settings = get_settings()
+
+        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else self.stage1_top_k
+        effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
+        effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
+        effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
+
         # 非同期関数を直接並列実行
         tasks = []
         for query in queries:
             task = self.food_search_service.search(
                 query=query['search_name'],
                 search_mode="full_index_only",
-                stage1_top_k=1
+                stage1_top_k=effective_stage1_top_k,
+                use_hybrid=True,  # 画像分析APIはHybrid search + Reranker を使用
+                bm25_weight=effective_bm25_weight,
+                vector_weight=effective_vector_weight,
+                rrf_k=effective_rrf_k,
+                reranker_model=reranker_model,
+                reranker_instruction=reranker_instruction,
+                reranker_top_n=reranker_top_n
             )
             tasks.append(task)
 
         results = await asyncio.gather(*tasks)
-        return list(results)
+        # 結果がリストの場合は最初の要素（best match）を取得
+        processed_results = []
+        for result in results:
+            if isinstance(result, list) and len(result) > 0:
+                processed_results.append(result[0])
+            else:
+                processed_results.append(result)
+        return processed_results
 
-    async def _sequential_search(self, queries: List[Dict[str, Any]]) -> List[Optional[Dict[str, Any]]]:
+    async def _sequential_search(
+        self,
+        queries: List[Dict[str, Any]],
+        stage1_top_k: Optional[int] = None,
+        bm25_weight: Optional[float] = None,
+        vector_weight: Optional[float] = None,
+        rrf_k: Optional[int] = None,
+        reranker_model: Optional[str] = None,
+        reranker_instruction: Optional[str] = None,
+        reranker_top_n: Optional[int] = None
+    ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を逐次実行"""
+        # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
+        from ..config import get_settings
+        settings = get_settings()
+
+        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else self.stage1_top_k
+        effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
+        effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
+        effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
+
         results = []
         for query in queries:
             result = await self.food_search_service.search(
                 query=query['search_name'],
                 search_mode="full_index_only",
-                stage1_top_k=1
+                stage1_top_k=effective_stage1_top_k,
+                use_hybrid=True,  # 画像分析APIはHybrid search + Reranker を使用
+                bm25_weight=effective_bm25_weight,
+                vector_weight=effective_vector_weight,
+                rrf_k=effective_rrf_k,
+                reranker_model=reranker_model,
+                reranker_instruction=reranker_instruction,
+                reranker_top_n=reranker_top_n
             )
+            # 結果がリストの場合は最初の要素（best match）を取得
+            if isinstance(result, list) and len(result) > 0:
+                result = result[0]
             results.append(result)
 
         return results
@@ -559,6 +687,9 @@ class MealAnalysisPipeline:
 
         for dish_index, dish in enumerate(original_dishes):
             enriched_dish = {}
+
+            # dish_nameを保持（VLMレスポンスから）
+            enriched_dish['dish_name'] = dish.get('dish_name')
 
             # main_food処理
             main_food_queries = [
@@ -617,6 +748,8 @@ class MealAnalysisPipeline:
         usda_match = query.get('usda_match')
         if usda_match:
             enriched['usda_match'] = usda_match
+            # DBから選ばれた名前を保存（VLMクエリとの比較用）
+            enriched['matched_description'] = usda_match.get('description', '')
 
             # 栄養素計算
             fdc_id = usda_match['fdc_id']
@@ -626,6 +759,7 @@ class MealAnalysisPipeline:
             enriched['nutrition'] = nutrition
         else:
             enriched['usda_match'] = None
+            enriched['matched_description'] = ''
             enriched['nutrition'] = None
 
         return enriched

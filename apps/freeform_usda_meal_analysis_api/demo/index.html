@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freeform USDA Meal Analysis API - Demo Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1em;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 50px 30px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: #667eea;
+        }
+
+        .demo-card.meal-analysis {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .demo-card.retriever {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+
+        .demo-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .demo-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .demo-description {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .demo-features {
+            text-align: left;
+            margin-bottom: 25px;
+            opacity: 0.85;
+        }
+
+        .demo-features li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .demo-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .demo-card.meal-analysis .demo-button {
+            color: #667eea;
+        }
+
+        .demo-card.retriever .demo-button {
+            color: #43e97b;
+        }
+
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .info-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .link-section {
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .link-section h3 {
+            color: #43e97b;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .link-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(67, 233, 123, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Freeform USDA Meal Analysis API</h1>
+            <p>デモポータル</p>
+            <div class="subtitle">画像から食事分析 & USDA食材検索</div>
+        </div>
+
+        <div class="content">
+            <div class="demo-grid">
+                <!-- Meal Analysis Demo Card -->
+                <div class="demo-card meal-analysis" onclick="location.href='meal_analysis_demo.html'">
+                    <div class="demo-icon">🍽️</div>
+                    <div class="demo-title">Meal Analysis Demo</div>
+                    <div class="demo-description">
+                        画像から食事を分析して栄養価を計算
+                    </div>
+                    <ul class="demo-features">
+                        <li>📷 画像アップロード (ドラッグ&ドロップ対応)</li>
+                        <li>⚙️ モデル・プロンプト選択</li>
+                        <li>🎛️ パラメータ調整機能</li>
+                        <li>📊 詳細な栄養分析結果</li>
+                        <li>⏱️ 処理時間: 30-50秒</li>
+                    </ul>
+                    <a href="meal_analysis_demo.html" class="demo-button">デモを試す →</a>
+                </div>
+
+                <!-- Retriever Demo Card -->
+                <div class="demo-card retriever" onclick="location.href='retriever_demo.html'">
+                    <div class="demo-icon">🔍</div>
+                    <div class="demo-title">Retriever API Demo</div>
+                    <div class="demo-description">
+                        USDA FoodData Centralから食材を検索
+                    </div>
+                    <ul class="demo-features">
+                        <li>🔎 3つの検索モード (Fast/Accurate/Hybrid)</li>
+                        <li>💎 Hybrid: BM25 + Vector検索</li>
+                        <li>📊 栄養情報表示</li>
+                        <li>📏 単位変換情報 (96.2%カバレッジ)</li>
+                        <li>⚡ 検索時間: 0.2-0.5秒</li>
+                    </ul>
+                    <a href="retriever_demo.html" class="demo-button">デモを試す →</a>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="info-section">
+                <h2>📚 API情報</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3>🌐 本番環境URL</h3>
+                        <p style="word-break: break-all; font-size: 0.9em;">
+                            https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app
+                        </p>
+                    </div>
+                    <div class="info-item">
+                        <h3>📖 API仕様書</h3>
+                        <p>Swagger UIで詳細な仕様を確認できます</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>🍔 食材データベース</h3>
+                        <p>USDA FoodData Central: 13,564食材</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>🔓 CORS設定</h3>
+                        <p>すべてのオリジンから呼び出し可能（認証不要）</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links Section -->
+            <div class="link-section">
+                <h3>🔗 関連リンク</h3>
+                <a href="http://localhost:8006/docs" class="link-button" target="_blank">📖 Swagger UI (Local)</a>
+                <a href="https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/docs" class="link-button" target="_blank">📖 Swagger UI (Production)</a>
+                <a href="../README.md" class="link-button">📄 README</a>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="info-section" style="margin-top: 30px;">
+                <h2>⚙️ 技術スタック</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3>🤖 VLM</h3>
+                        <p>Qwen3-VL-30B-A3B-Thinking (DeepInfra API)</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>🔍 検索エンジン</h3>
+                        <p>FAISS + BM25 + Qwen3-Reranker</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>🗄️ データベース</h3>
+                        <p>USDA FoodData Central (Survey, Foundation, SR Legacy)</p>
+                    </div>
+                    <div class="info-item">
+                        <h3>⚡ フレームワーク</h3>
+                        <p>FastAPI + Python 3.11</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') {
+                location.href = 'meal_analysis_demo.html';
+            } else if (e.key === '2') {
+                location.href = 'retriever_demo.html';
+            }
+        });
+    </script>
+</body>
+</html>

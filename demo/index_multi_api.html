@@ -471,7 +471,11 @@
                     </button>
                     <button class="mode-button" data-mode="hybrid">
                         🔀 Hybrid Mode<br>
-                        <small>BM25 + FAISS (最高精度)</small>
+                        <small>BM25 + FAISS + RRF</small>
+                    </button>
+                    <button class="mode-button" data-mode="hybrid_reranker">
+                        🚀 Hybrid Reranker<br>
+                        <small>BM25 + FAISS + RRF + Reranker (最高精度)</small>
                     </button>
                 </div>
             </div>
@@ -575,7 +579,7 @@
                 },
                 dataSource: 'USDA (Survey + Foundation + Legacy, 13,564 items)',
                 algorithm: 'FAISS + BGE Embeddings',
-                modes: ['fast', 'accurate', 'hybrid']
+                modes: ['fast', 'accurate', 'hybrid', 'hybrid_reranker']
             },
             'cloud_faiss_retrieval': {
                 name: 'FAISS Retrieval API (Cloud Run)',
@@ -590,7 +594,7 @@
                 },
                 dataSource: 'USDA (Survey + Foundation + Legacy, 13,564 items) - Cloud',
                 algorithm: 'FAISS + BGE Embeddings (Cloud Run)',
-                modes: ['fast', 'accurate', 'hybrid']
+                modes: ['fast', 'accurate', 'hybrid', 'hybrid_reranker']
             }
         };
 
@@ -698,6 +702,8 @@
                     algorithm += ' (Stage1+Stage2 Rerank)';
                 } else if (currentFaissMode === 'hybrid') {
                     algorithm += ' (BM25 + Vector + RRF融合)';
+                } else if (currentFaissMode === 'hybrid_reranker') {
+                    algorithm += ' (BM25 + Vector + RRF + Reranker - 最高精度)';
                 }
             }
             infoAlgorithm.textContent = algorithm;

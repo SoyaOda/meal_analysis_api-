@@ -5,6 +5,10 @@ import os
 from pathlib import Path
 from functools import lru_cache
 from typing import Optional
+from dotenv import load_dotenv
+
+# .envファイルを自動的に読み込む
+load_dotenv()
 
 
 class Settings:
@@ -114,6 +118,28 @@ class Settings:
         # Cloud Run最適化設定
         self.PRELOAD_INDEXES_ON_STARTUP = os.getenv("PRELOAD_INDEXES_ON_STARTUP", "false").lower() == "true"
 
+        # ========== Reranker設定 ==========
+        # Rerankerモデル設定
+        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-8B")
+
+        # Reranker instruction (USDA食材マッチング用に最適化)
+        self.DEFAULT_RERANKER_INSTRUCTION = os.getenv(
+            "RERANKER_INSTRUCTION",
+            """Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.
+
+Nutritional values (calories, protein, fat, carbs per 100g) vary significantly based on preparation method, so precise matching is essential for accurate nutrition calculation.
+
+Examples:
+- 'grilled chicken' → 'Chicken, grilled' NOT 'Chicken, raw'
+- 'caesar salad' → 'Caesar salad, with romaine' NOT 'Caesar dressing'
+- 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'
+
+Prioritize: Complete phrase match > Preparation method match > Ingredient name similarity"""
+        )
+
+        # Reranker top_n (返す結果数、Noneの場合は全件)
+        self.DEFAULT_RERANKER_TOP_N = int(os.getenv("RERANKER_TOP_N", "0")) if os.getenv("RERANKER_TOP_N") else None
+
         # ========== Thinkingモデル推奨設定 ==========
         # Thinkingモデル使用時の推奨パラメータ
         self.THINKING_RECOMMENDED_TEMPERATURE = float(os.getenv("THINKING_RECOMMENDED_TEMP", "0.6"))
@@ -140,10 +166,21 @@ class Settings:
             プロンプトファイルの絶対パス
 
         Raises:
+            ValueError: プロンプトファイル名が不正な場合
             FileNotFoundError: プロンプトファイルが存在しない場合
         """
         if prompt_filename is None:
             prompt_filename = self.DEFAULT_PROMPT_FILE
+
+        # バリデーション: ファイル名ではなくプロンプトテキストが渡された場合のチェック
+        if len(prompt_filename) > 200 or '\n' in prompt_filename:
+            raise ValueError(
+                "Invalid prompt_path: expected a file name, but received text content.\n"
+                "Please provide only the file name (e.g., 'freeform_prompt_usda_format_ver_v7_experimental_20251027.txt'),\n"
+                "not the full prompt text.\n\n"
+                f"Available prompts in {self.PROMPTS_DIR}:\n" +
+                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
+            )
 
         prompt_path = self.PROMPTS_DIR / prompt_filename
 

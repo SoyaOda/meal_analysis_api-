@@ -103,7 +103,8 @@ class SimplifiedUSDASearcher:
         self,
         query_main: str,
         query_descriptors: str = "",
-        return_top_k: int = 1
+        return_top_k: int = 1,
+        reranker_instruction: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         検索を実行（Fullインデックスのみ使用、DeepInfra API）
@@ -112,6 +113,7 @@ class SimplifiedUSDASearcher:
             query_main: 主クエリ（例: "chicken"）
             query_descriptors: 説明クエリ（例: "grilled"）
             return_top_k: 返す候補数
+            reranker_instruction: Reranker用のinstruction（Noneの場合はsettingsから取得）
 
         Returns:
             {
@@ -159,10 +161,19 @@ class SimplifiedUSDASearcher:
         # リランキング用のドキュメントリスト
         documents = [c["description"] for c in candidates]
 
+        # Reranker instructionを取得（指定がない場合はsettingsから）
+        if reranker_instruction is None:
+            from ..config.settings import get_settings
+            settings = get_settings()
+            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+
+        logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
+
         # リランキング実行（DeepInfra API）
         best_idx, reranked_scores = await self.reranker_service.rerank(
             query=full_query,
-            documents=documents
+            documents=documents,
+            instruction=reranker_instruction
         )
 
         # スコアを候補に追加
