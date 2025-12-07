@@ -47,11 +47,15 @@ class IngredientDetail(BaseModel):
     )
     debug_info: Optional[Dict[str, Any]] = Field(
         None,
-        description="デバッグ情報（USDA検索の詳細）",
+        description="デバッグ情報（USDA検索の詳細、debug=trueで取得）",
         example={
-            "retriever_candidates": [],  # FAISS検索の候補
-            "reranker_results": [],      # リランク結果
-            "retry_count": 0              # リトライ回数
+            "query": "green tea",
+            "bm25_top10": [{"fdc_id": "xxx", "description": "...", "bm25_score": 0.5}],
+            "vector_top10": [{"fdc_id": "xxx", "description": "...", "vector_score": 0.5}],
+            "hybrid_top10": [{"fdc_id": "xxx", "description": "...", "hybrid_score": 0.5}],
+            "reranked_top10": [{"fdc_id": "xxx", "description": "...", "rerank_score": 0.9}],
+            "timing": {"bm25_time_ms": 10, "vector_time_ms": 50},
+            "parameters": {"bm25_weight": 0.4, "vector_weight": 0.6}
         }
     )
 
@@ -115,6 +119,7 @@ class AnalysisResponse(BaseModel):
             "example": {
                 "analysis_id": "a1b2c3d4",
                 "input_type": "image",
+                "meal_title": "Chicken & Caesar Salad",
                 "total_dishes": 2,
                 "total_ingredients": 5,
                 "processing_time_seconds": 12.34,
@@ -314,6 +319,13 @@ class AnalysisResponse(BaseModel):
 
     analysis_id: str = Field(..., description="分析ID", example="a1b2c3d4")
     input_type: str = Field(..., description="入力タイプ", example="image")
+
+    # 食事タイトル
+    meal_title: Optional[str] = Field(
+        None,
+        description="食事全体のタイトル（MAX 30文字）",
+        example="Grilled Chicken with Salad"
+    )
 
     # 処理サマリー
     total_dishes: int = Field(..., description="検出された料理数", example=3)

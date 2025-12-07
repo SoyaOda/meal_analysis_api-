@@ -74,6 +74,8 @@ async def analyze_meal_from_image(
     reranker_model: Optional[str] = Form(None, description="Rerankerモデル名"),
     reranker_instruction: Optional[str] = Form(None, description="Reranker instruction"),
     reranker_top_n: Optional[int] = Form(None, description="Reranker返却数"),
+    # Debug options
+    debug: bool = Form(False, description="デバッグ情報を含める(retriever/reranker結果)"),
 ):
     """
     画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)
@@ -145,6 +147,7 @@ async def analyze_meal_from_image(
             user_context=user_context,
             model_config_override=model_config_override,
             search_config_override=search_config_override,
+            include_debug_info=debug,
         )
 
         # レスポンス作成
@@ -153,6 +156,7 @@ async def analyze_meal_from_image(
         response = AnalysisResponse(
             analysis_id=analysis_id,
             input_type="image",
+            meal_title=result.get("meal_title"),  # VLMから取得したmeal_title
             total_dishes=len(result["dishes"]),
             total_ingredients=sum(len(d.ingredients) for d in result["dishes"]),
             processing_time_seconds=processing_time,

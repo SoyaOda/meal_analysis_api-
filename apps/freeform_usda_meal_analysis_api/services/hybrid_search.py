@@ -9,6 +9,7 @@ BM25キーワードサーチとVector意味検索を組み合わせた
 
 import logging
 import asyncio
+import json
 from pathlib import Path
 from typing import List, Dict, Any, Tuple
 import numpy as np
@@ -364,8 +365,9 @@ class HybridSearchEngine:
         bm25_weight: float = None,
         vector_weight: float = None,
         rrf_k: int = None,
-        reranker_instruction: str = None
-    ) -> List[Dict[str, Any]]:
+        reranker_instruction: str = None,
+        include_debug_info: bool = False
+    ) -> Dict[str, Any]:
         """
         Hybrid search + Reranker の統合版（5段階パイプライン）
 
@@ -378,9 +380,10 @@ class HybridSearchEngine:
             top_k: 返却する結果数（Noneの場合settingsから取得）
             stage1_top_k: Stage1で取得する候補数（Noneの場合settingsから取得）
             reranker_instruction: Reranker用のinstruction（Noneの場合settingsから取得）
+            include_debug_info: デバッグ情報を含めるか
 
         Returns:
-            検索結果のリスト
+            Dict with 'results' (and optionally 'debug_info')
         """
         # 設定を取得
         if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, reranker_instruction]):
@@ -534,4 +537,128 @@ class HybridSearchEngine:
         if reranked_results:
             logger.info(f"  Best match: {reranked_results[0]['description']} (rerank_score: {reranked_results[0]['rerank_score']:.4f})")
 
-        return reranked_results[:top_k]
+        # 結果を返す
+        final_results = reranked_results[:top_k]
+
+        # ===== Cloud Logging用デバッグ出力（常に出力） =====
+        # Cloud Run上ではJSON形式でログ出力するとCloud Loggingで構造化ログとして扱われる
+        # Top 5に限定してログ容量を抑える
+        cloud_log_data = {
+            "message": "HYBRID_SEARCH_DEBUG",
+            "severity": "INFO",
+            "query": query,
+            "best_match": {
+                "fdc_id": reranked_results[0]["fdc_id"] if reranked_results else None,
+                "description": reranked_results[0]["description"] if reranked_results else None,
+                "rerank_score": reranked_results[0]["rerank_score"] if reranked_results else None,
+            },
+            "bm25_top5": [
+                {"rank": i + 1, "fdc_id": items[idx]["fdc_id"], "desc": items[idx]["description"][:50], "score": round(bm25_scores[i], 4) if i < len(bm25_scores) else 0}
+                for i, idx in enumerate(bm25_indices[:5])
+            ],
+            "vector_top5": [
+                {"rank": i + 1, "fdc_id": items[idx]["fdc_id"], "desc": items[idx]["description"][:50], "score": round(vector_scores[i], 4) if i < len(vector_scores) else 0}
+                for i, idx in enumerate(vector_indices[:5])
+            ],
+            "hybrid_top5": [
+                {"rank": i + 1, "fdc_id": c["fdc_id"], "desc": c["description"][:50], "score": round(c["hybrid_score"], 4)}
+                for i, c in enumerate(hybrid_candidates[:5])
+            ],
+            "reranked_top5": [
+                {"rank": i + 1, "fdc_id": r["fdc_id"], "desc": r["description"][:50], "score": round(r["rerank_score"], 4), "original_rank": r["original_rank"]}
+                for i, r in enumerate(reranked_results[:5])
+            ],
+            "timing_ms": {
+                "bm25": int(bm25_time * 1000),
+                "vector": int(vector_time * 1000),
+                "rrf": int(rrf_time * 1000),
+                "fusion": int(fusion_time * 1000),
+            },
+            "params": {
+                "bm25_weight": bm25_weight,
+                "vector_weight": vector_weight,
+                "rrf_k": rrf_k,
+                "stage1_top_k": stage1_top_k,
+            }
+        }
+        # Cloud Loggingで検索可能な構造化ログを出力
+        print(json.dumps(cloud_log_data, ensure_ascii=False))
+
+        # デバッグ情報を構築（レスポンスに含める場合）
+        if include_debug_info:
+            # BM25 Top 10
+            bm25_top10 = [
+                {
+                    "fdc_id": items[idx]["fdc_id"],
+                    "description": items[idx]["description"],
+                    "bm25_score": bm25_scores[i] if i < len(bm25_scores) else 0,
+                    "rank": i + 1
+                }
+                for i, idx in enumerate(bm25_indices[:10])
+            ]
+
+            # Vector Top 10
+            vector_top10 = [
+                {
+                    "fdc_id": items[idx]["fdc_id"],
+                    "description": items[idx]["description"],
+                    "vector_score": vector_scores[i] if i < len(vector_scores) else 0,
+                    "rank": i + 1
+                }
+                for i, idx in enumerate(vector_indices[:10])
+            ]
+
+            # Hybrid (pre-reranker) Top 10 - 明示的にコピーして循環参照を防止
+            hybrid_top10 = [
+                {
+                    "fdc_id": c["fdc_id"],
+                    "description": c["description"],
+                    "hybrid_score": c["hybrid_score"],
+                    "bm25_score": c.get("bm25_score", 0),
+                    "vector_score": c.get("vector_score", 0),
+                    "rank": i + 1
+                }
+                for i, c in enumerate(hybrid_candidates[:10])
+            ]
+
+            # Reranked Top 10
+            reranked_top10 = [
+                {
+                    "fdc_id": r["fdc_id"],
+                    "description": r["description"],
+                    "rerank_score": r["rerank_score"],
+                    "original_rank": r["original_rank"],
+                    "final_rank": i + 1
+                }
+                for i, r in enumerate(reranked_results[:10])
+            ]
+
+            debug_info = {
+                "query": query,
+                "bm25_top10": bm25_top10,
+                "vector_top10": vector_top10,
+                "hybrid_top10": hybrid_top10,
+                "reranked_top10": reranked_top10,
+                "timing": {
+                    "bm25_time_ms": int(bm25_time * 1000),
+                    "vector_time_ms": int(vector_time * 1000),
+                    "rrf_time_ms": int(rrf_time * 1000),
+                    "fusion_time_ms": int(fusion_time * 1000),
+                },
+                "parameters": {
+                    "bm25_weight": bm25_weight,
+                    "vector_weight": vector_weight,
+                    "rrf_k": rrf_k,
+                    "stage1_top_k": stage1_top_k,
+                }
+            }
+
+            return {
+                "results": final_results,
+                "debug_info": debug_info
+            }
+
+        return {
+            "results": final_results,
+            "debug_info": None
+        }

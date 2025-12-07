@@ -1,1 +1,2099 @@
-{"openapi":"3.1.0","info":{"title":"Freeform USDA Meal Analysis API","description":"\n        USDA FNDDSデータベースを使用した食事分析API\n\n        ## 機能\n        - 画像から食事を分析し栄養価を計算\n        - 音声入力による食事分析\n        - カスタマイズ可能なVLMモデル設定\n        - 柔軟なプロンプト選択\n\n        ## デフォルト設定\n        - モデル: Qwen3-VL-30B-A3B-Thinking (30Bパラメータ)\n        - プロンプト: v7_experimental\n        - 検索: Fullインデックスのみ使用\n        ","version":"1.0.0"},"paths":{"/health":{"get":{"tags":["Health"],"summary":"Health Check","description":"ヘルスチェックエンドポイント（Liveness Check）\nCloud Runのliveness probeで使用\n\nReturns:\n    HealthCheckResponse: APIのステータス情報","operationId":"health_check_health_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HealthCheckResponse"}}}}}}},"/health/ready":{"get":{"tags":["Health"],"summary":"Readiness Check","description":"Readiness check for Cloud Run\nインデックスがロードされているか確認してサービスの準備状態を返す\n\nReturns:\n    ReadinessResponse: サービスの準備状態","operationId":"readiness_check_health_ready_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ReadinessResponse"}}}}}}},"/api/v1/meal-analyses/complete":{"post":{"tags":["Analysis"],"summary":"Analyze Meal From Image","description":"画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)\n\n## リクエストパラメータ\n- **image**: 食事画像ファイル(必須)\n- **user_context**: 食事の説明やコンテキスト(オプション)\n\n## モデル設定(オプション、指定しない場合はデフォルト値を使用)\n- **model_id**: DeepInfra VLMモデルID\n- **prompt_path**: プロンプトファイル名(例: \"freeform_prompt_usda_format_ver_v7_production_20251027.txt\")\n- **thinking_budget**: 思考トークン数(QVQモデル使用時)\n- **temperature**: 生成温度(0.0-2.0)\n- **max_tokens**: 最大トークン数\n\n## 検索設定(オプション)\n- **stage1_top_k**: Stage1で取得する候補数(デフォルト: 40)\n\n## レスポンス\n- 検出された料理と食材の詳細\n- 栄養価計算結果\n- 処理時間とメタデータ","operationId":"analyze_meal_from_image_api_v1_meal_analyses_complete_post","requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/AnalysisResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/meal-analyses/":{"get":{"tags":["Analysis"],"summary":"List Endpoint Info","description":"利用可能なエンドポイント情報取得\n\n## 概要\nMeal Analysis APIで利用可能なエンドポイントの一覧を取得します。\n\nReturns:\n    EndpointInfoResponse: エンドポイント情報","operationId":"list_endpoint_info_api_v1_meal_analyses__get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/EndpointInfoResponse"}}}}}}},"/api/v1/retrieve":{"get":{"tags":["Retrieval"],"summary":"Retrieve Foods","description":"USDA食材検索API（FAISS検索）\n\nArgs:\n    q: 検索クエリ（例: \"chicken breast grilled\"）\n    mode: \"fast\" (FAISS検索のみ、高速) or \"accurate\" (FAISS + Reranking、高精度) or \"hybrid\" (BM25 + FAISS、最高精度)\n    top_k: 返却する結果数\n    include_nutrition: 栄養情報を含めるか\n    debug: デバッグ情報を含めるか\n\nReturns:\n    検索結果のJSON","operationId":"retrieve_foods_api_v1_retrieve_get","parameters":[{"name":"q","in":"query","required":true,"schema":{"type":"string","minLength":1,"description":"検索クエリ","title":"Q"},"description":"検索クエリ"},{"name":"mode","in":"query","required":false,"schema":{"type":"string","description":"検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS)","default":"hybrid","title":"Mode"},"description":"検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS)"},{"name":"top_k","in":"query","required":false,"schema":{"type":"integer","maximum":50,"minimum":1,"description":"返却結果数（1-50）","default":10,"title":"Top K"},"description":"返却結果数（1-50）"},{"name":"include_nutrition","in":"query","required":false,"schema":{"type":"boolean","description":"栄養情報を含めるか","default":true,"title":"Include Nutrition"},"description":"栄養情報を含めるか"},{"name":"debug","in":"query","required":false,"schema":{"type":"boolean","description":"デバッグ情報を含めるか","default":false,"title":"Debug"},"description":"デバッグ情報を含めるか"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RetrievalResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/retrieve/health":{"get":{"tags":["Retrieval"],"summary":"Retrieval Health Check","description":"Retrieval APIヘルスチェック\n\n## 概要\nRetrieval APIの状態、利用可能な検索モード、インデックスの初期化状態を確認します。\n\nReturns:\n    RetrievalHealthResponse: Retrieval APIの状態情報","operationId":"retrieval_health_check_api_v1_retrieve_health_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RetrievalHealthResponse"}}}}}}},"/api/v1/metadata":{"get":{"tags":["Metadata"],"summary":"Get Usda Metadata","description":"USDA食材メタデータ全件取得（13,564件）\n\n## 概要\nフロントエンドでの食材選択、栄養情報表示、portions変換に必要な\n全てのメタデータを取得します。\n\n## パラメータ\n- **compressed**: gzip圧縮して返すか（デフォルト: True）\n  - True: 8.4MB → 約1.5MB（推奨）\n  - False: 8.4MB（非推奨、開発時のみ使用）\n\n## レスポンス\n- Content-Type: application/json\n- Content-Encoding: gzip（compressed=Trueの場合）\n- Cache-Control: public, max-age=86400（24時間キャッシュ）\n\n## データ構造\n```json\n[\n  {\n    \"fdc_id\": 123456,\n    \"description\": \"Chicken, breast, grilled\",\n    \"main_name\": \"Chicken, breast\",\n    \"descriptors\": \"grilled\",\n    \"source\": \"survey\",\n    \"nutrition\": {\n      \"calories\": 165,\n      \"protein_g\": 31.0,\n      \"fat_g\": 3.6,\n      \"carbs_g\": 0.0\n    },\n    \"portions\": [\n      {\n        \"description\": \"1 breast, bone and skin removed\",\n        \"gram_weight\": 86.0\n      }\n    ]\n  }\n]\n```\n\n## 使用例（JavaScript）\n```javascript\n// gzip圧縮版を取得（推奨）\nconst response = await fetch('http://localhost:8006/api/v1/metadata?compressed=true');\nconst metadata = await response.json();\n\n// ローカルストレージにキャッシュ\nlocalStorage.setItem('usda_metadata', JSON.stringify({\n  items: metadata,\n  timestamp: Date.now()\n}));\n```","operationId":"get_usda_metadata_api_v1_metadata_get","parameters":[{"name":"compressed","in":"query","required":false,"schema":{"type":"boolean","description":"gzip圧縮して返すか（推奨）","default":true,"title":"Compressed"},"description":"gzip圧縮して返すか（推奨）"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/metadata/info":{"get":{"tags":["Metadata"],"summary":"Get Metadata Info","description":"メタデータ情報取得\n\n## 概要\nメタデータファイルの統計情報を取得します。\n\n## レスポンス\n```json\n{\n  \"total_items\": 13564,\n  \"file_size_mb\": 8.4,\n  \"compressed_size_mb\": 1.5,\n  \"compression_ratio\": 0.18,\n  \"sources\": {\n    \"survey\": 5000,\n    \"foundation\": 6000,\n    \"sr_legacy\": 2564\n  },\n  \"last_updated\": \"2025-10-28T19:00:00Z\"\n}\n```","operationId":"get_metadata_info_api_v1_metadata_info_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MetadataInfoResponse"}}}}}}},"/api/v1/metadata/search":{"get":{"tags":["Metadata"],"summary":"Search Metadata","description":"メタデータ検索（軽量版）\n\n## 概要\nメタデータをクエリ文字列で検索します。\ndescriptionとmain_nameフィールドを対象に部分一致検索を行います。\n\n## パラメータ\n- **q**: 検索クエリ（例: \"chicken breast\"）\n- **limit**: 返却件数（デフォルト: 20、最大: 100）\n- **offset**: オフセット（ページネーション用）\n- **source**: データソースフィルター（例: \"survey\"）\n\n## レスポンス\n```json\n{\n  \"query\": \"chicken breast\",\n  \"results\": [...],\n  \"total\": 50,\n  \"limit\": 20,\n  \"offset\": 0\n}\n```\n\n## 注意\n- この検索はシンプルな部分一致検索です\n- 高度な検索（セマンティック検索）には `/api/v1/retrieve` を使用してください","operationId":"search_metadata_api_v1_metadata_search_get","parameters":[{"name":"q","in":"query","required":true,"schema":{"type":"string","minLength":1,"description":"検索クエリ","title":"Q"},"description":"検索クエリ"},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","maximum":100,"minimum":1,"description":"返却件数（1-100）","default":20,"title":"Limit"},"description":"返却件数（1-100）"},{"name":"offset","in":"query","required":false,"schema":{"type":"integer","minimum":0,"description":"オフセット","default":0,"title":"Offset"},"description":"オフセット"},{"name":"source","in":"query","required":false,"schema":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"データソースフィルター（survey/foundation/sr_legacy）","title":"Source"},"description":"データソースフィルター（survey/foundation/sr_legacy）"}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MetadataSearchResponse"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/api/v1/metadata/{fdc_id}":{"get":{"tags":["Metadata"],"summary":"Get Metadata By Fdc Id","description":"FDC ID指定でメタデータ取得\n\n## 概要\nFDC IDを指定して単一の食材メタデータを取得します。\n\n## パラメータ\n- **fdc_id**: FDC ID（例: 746774）\n\n## レスポンス\n```json\n{\n  \"fdc_id\": 746774,\n  \"description\": \"Chicken, breast, grilled\",\n  \"main_name\": \"Chicken, breast\",\n  \"descriptors\": \"grilled\",\n  \"source\": \"survey\",\n  \"nutrition\": {...},\n  \"portions\": [...]\n}\n```","operationId":"get_metadata_by_fdc_id_api_v1_metadata__fdc_id__get","parameters":[{"name":"fdc_id","in":"path","required":true,"schema":{"type":"integer","title":"Fdc Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/MetadataItem"}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/":{"get":{"tags":["Root"],"summary":"Root","description":"ルートエンドポイント - API情報取得\n\n## 概要\nAPIの基本情報、利用可能なエンドポイント、デフォルト設定を取得します。\n\nReturns:\n    RootResponse: API情報","operationId":"root__get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RootResponse"}}}}}}}},"components":{"schemas":{"AnalysisResponse":{"properties":{"analysis_id":{"type":"string","title":"Analysis Id","description":"分析ID","example":"a1b2c3d4"},"input_type":{"type":"string","title":"Input Type","description":"入力タイプ","example":"image"},"total_dishes":{"type":"integer","title":"Total Dishes","description":"検出された料理数","example":3},"total_ingredients":{"type":"integer","title":"Total Ingredients","description":"総食材数","example":9},"processing_time_seconds":{"type":"number","title":"Processing Time Seconds","description":"処理時間（秒）","example":15.65},"dishes":{"items":{"$ref":"#/components/schemas/DishDetail"},"type":"array","title":"Dishes","description":"検出された料理一覧"},"total_nutrition":{"allOf":[{"$ref":"#/components/schemas/NutritionInfo"}],"description":"総栄養価"},"ai_model_used":{"type":"string","title":"Ai Model Used","description":"使用AIモデル","example":"Qwen/Qwen2-VL-72B-Instruct"},"prompt_file_used":{"type":"string","title":"Prompt File Used","description":"使用プロンプトファイル","example":"freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"},"match_rate_percent":{"type":"number","maximum":100.0,"minimum":0.0,"title":"Match Rate Percent","description":"栄養検索マッチ率（%）","example":100.0},"usage":{"anyOf":[{"$ref":"#/components/schemas/UsageInfo"},{"type":"null"}],"description":"Token使用量とコスト情報"},"transcript":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Transcript","description":"音声認識テキスト（音声入力時のみ）"},"warnings":{"items":{"type":"string"},"type":"array","title":"Warnings","description":"警告メッセージ","example":[]}},"type":"object","required":["analysis_id","input_type","total_dishes","total_ingredients","processing_time_seconds","dishes","total_nutrition","ai_model_used","prompt_file_used","match_rate_percent"],"title":"AnalysisResponse","description":"分析レスポンス","example":{"ai_model_used":"Qwen/Qwen2-VL-72B-Instruct","analysis_id":"a1b2c3d4","dishes":[{"calculation_metadata":{"calculation_method":"weight_based_scaling","ingredient_count":1,"total_weight_g":150.0},"ingredients":[{"calculated_nutrition":{"calories":247.5,"carbs":0.0,"fat":5.4,"fiber":0.0,"protein":46.5,"sodium":111.0,"sugar":0.0},"calculation_notes":["Scaled from 100g base data using factor 1.500"],"debug_info":{"reranker_results":["167782","167783"],"retriever_candidates":["167782","167783","167784"],"retry_count":0},"fdc_id":"167782","ingredient_name":"Chicken breast, grilled","nutrition_per_100g":{"calories":165.0,"carbs":0.0,"fat":3.6,"fiber":0.0,"protein":31.0,"sodium":74.0,"sugar":0.0},"source_db":"usda_fndds","weight_g":150.0}],"total_nutrition":{"calories":247.5,"carbs":0.0,"fat":5.4,"fiber":0.0,"protein":46.5,"sodium":111.0,"sugar":0.0}},{"calculation_metadata":{"calculation_method":"weight_based_scaling","ingredient_count":4,"total_weight_g":155.0},"ingredients":[{"calculated_nutrition":{"calories":17.0,"carbs":3.3,"fat":0.3,"fiber":2.1,"protein":1.2,"sodium":8.0,"sugar":1.2},"calculation_notes":["Scaled from 100g base data using factor 1.000"],"fdc_id":"169248","ingredient_name":"Romaine lettuce, raw","nutrition_per_100g":{"calories":17.0,"carbs":3.3,"fat":0.3,"fiber":2.1,"protein":1.2,"sodium":8.0,"sugar":1.2},"source_db":"usda_fndds","weight_g":100.0},{"calculated_nutrition":{"calories":141.0,"carbs":2.1,"fat":14.4,"fiber":0.0,"protein":0.75,"sodium":270.0,"sugar":1.5},"calculation_notes":["Scaled from 100g base data using factor 0.300"],"fdc_id":"173306","ingredient_name":"Caesar dressing","nutrition_per_100g":{"calories":470.0,"carbs":7.0,"fat":48.0,"fiber":0.0,"protein":2.5,"sodium":900.0,"sugar":5.0},"source_db":"usda_fndds","weight_g":30.0},{"calculated_nutrition":{"calories":39.2,"carbs":0.32,"fat":2.58,"fiber":0.0,"protein":3.58,"sodium":152.9,"sugar":0.09},"calculation_notes":["Scaled from 100g base data using factor 0.100"],"fdc_id":"171287","ingredient_name":"Parmesan cheese, grated","nutrition_per_100g":{"calories":392.0,"carbs":3.2,"fat":25.8,"fiber":0.0,"protein":35.8,"sodium":1529.0,"sugar":0.9},"source_db":"usda_fndds","weight_g":10.0},{"calculated_nutrition":{"calories":61.05,"carbs":11.025,"fat":0.99,"fiber":0.75,"protein":1.785,"sodium":104.7,"sugar":0.87},"calculation_notes":["Scaled from 100g base data using factor 0.150"],"fdc_id":"168042","ingredient_name":"Croutons, plain","nutrition_per_100g":{"calories":407.0,"carbs":73.5,"fat":6.6,"fiber":5.0,"protein":11.9,"sodium":698.0,"sugar":5.8},"source_db":"usda_fndds","weight_g":15.0}],"total_nutrition":{"calories":258.25,"carbs":16.745,"fat":18.27,"fiber":2.85,"protein":7.315,"sodium":535.6,"sugar":3.66}}],"input_type":"image","match_rate_percent":100.0,"processing_time_seconds":12.34,"prompt_file_used":"freeform_prompt_usda_format_ver_v7_production_20251027.txt","total_dishes":2,"total_ingredients":5,"total_nutrition":{"calories":505.75,"carbs":16.745,"fat":23.67,"fiber":2.85,"protein":53.815,"sodium":646.6,"sugar":3.66},"usage":{"estimated_cost_usd":0.0234,"input_tokens":2500,"output_tokens":450,"raw_vlm_output":"<think>\nImage shows grilled chicken breast and a Caesar salad...\n</think>\n\n{\n  \"dishes\": [\n    {\"dish_name\": \"Grilled Chicken Breast\", ...}\n  ]\n}","thinking_tokens":3200,"total_tokens":6150},"warnings":[]}},"Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post":{"properties":{"image":{"type":"string","format":"binary","title":"Image","description":"食事画像ファイル"},"user_context":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"User Context","description":"ユーザーコンテキスト"},"model_id":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Model Id","description":"VLMモデルID"},"prompt_path":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Prompt Path","description":"プロンプトファイルパス(prompts/以下)"},"thinking_budget":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Thinking Budget","description":"思考トークン数(QVQモデル用)"},"enable_thinking":{"anyOf":[{"type":"boolean"},{"type":"null"}],"title":"Enable Thinking","description":"Thinking modeのon/off(Alibabaモデル用)"},"temperature":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Temperature","description":"生成温度"},"max_tokens":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Max Tokens","description":"最大トークン数"},"stage1_top_k":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Stage1 Top K","description":"Stage1候補数"}},"type":"object","required":["image"],"title":"Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post"},"DishDetail":{"properties":{"ingredients":{"items":{"$ref":"#/components/schemas/IngredientDetail"},"type":"array","title":"Ingredients","description":"食材詳細リスト"},"total_nutrition":{"allOf":[{"$ref":"#/components/schemas/NutritionInfo"}],"description":"料理の総栄養価"},"calculation_metadata":{"type":"object","title":"Calculation Metadata","description":"計算メタデータ","example":{"calculation_method":"weight_based_scaling","ingredient_count":2,"total_weight_g":200.0}}},"type":"object","required":["ingredients","total_nutrition","calculation_metadata"],"title":"DishDetail","description":"料理詳細情報"},"EndpointInfoResponse":{"properties":{"endpoints":{"additionalProperties":{"type":"string"},"type":"object","title":"Endpoints","description":"利用可能なエンドポイント","example":{"GET /health":"ヘルスチェック","POST /api/v1/meal-analyses/complete":"画像から食事を分析"}},"documentation":{"type":"string","title":"Documentation","description":"ドキュメントURL","example":"/docs"}},"type":"object","required":["endpoints","documentation"],"title":"EndpointInfoResponse","description":"Endpoint information response"},"FoodItem":{"properties":{"fdc_id":{"type":"string","title":"Fdc Id","description":"USDA FDC ID","example":"167782"},"description":{"type":"string","title":"Description","description":"食材名","example":"Chicken, broilers or fryers, breast, meat only, grilled"},"main_name":{"type":"string","title":"Main Name","description":"主要名称","example":"Chicken, broilers or fryers, breast, meat only"},"descriptors":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descriptors","description":"調理方法等の記述子","example":"grilled"},"source":{"type":"string","title":"Source","description":"データソース","example":"survey"},"score":{"type":"number","title":"Score","description":"類似度スコア","example":0.95},"nutrition_per_100g":{"anyOf":[{"$ref":"#/components/schemas/NutritionInfo"},{"type":"null"}],"description":"100gあたりの栄養情報"}},"type":"object","required":["fdc_id","description","main_name","source","score"],"title":"FoodItem","description":"食材検索結果アイテム"},"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"HealthCheckResponse":{"properties":{"status":{"type":"string","title":"Status","description":"ステータス","example":"healthy"},"version":{"type":"string","title":"Version","description":"APIバージョン","example":"1.0.0"},"model_id":{"type":"string","title":"Model Id","description":"使用中のVLMモデルID"},"prompt_file":{"type":"string","title":"Prompt File","description":"使用中のプロンプトファイル"}},"type":"object","required":["status","version","model_id","prompt_file"],"title":"HealthCheckResponse","description":"ヘルスチェックレスポンス"},"IngredientDetail":{"properties":{"ingredient_name":{"type":"string","title":"Ingredient Name","description":"食材名","example":"Egg, whole, raw"},"weight_g":{"type":"number","title":"Weight G","description":"重量（グラム）","example":100.0},"nutrition_per_100g":{"allOf":[{"$ref":"#/components/schemas/NutritionInfo"}],"description":"100gあたりの栄養情報"},"calculated_nutrition":{"allOf":[{"$ref":"#/components/schemas/NutritionInfo"}],"description":"計算済み栄養情報"},"source_db":{"type":"string","title":"Source Db","description":"データソース","example":"usda_fndds"},"fdc_id":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Fdc Id","description":"USDA FDC ID","example":"167782"},"calculation_notes":{"items":{"type":"string"},"type":"array","title":"Calculation Notes","description":"計算に関する注記","example":["Scaled from 100g base data using factor 1.000"]},"debug_info":{"anyOf":[{"type":"object"},{"type":"null"}],"title":"Debug Info","description":"デバッグ情報（USDA検索の詳細）","example":{"reranker_results":[],"retriever_candidates":[],"retry_count":0}}},"type":"object","required":["ingredient_name","weight_g","nutrition_per_100g","calculated_nutrition","source_db"],"title":"IngredientDetail","description":"食材詳細情報"},"MetadataInfoResponse":{"properties":{"total_items":{"type":"integer","title":"Total Items","description":"総アイテム数","example":13564},"file_size_bytes":{"type":"integer","title":"File Size Bytes","description":"ファイルサイズ（バイト）","example":8767812},"file_size_mb":{"type":"number","title":"File Size Mb","description":"ファイルサイズ（MB）","example":8.36},"compressed_size_bytes":{"type":"integer","title":"Compressed Size Bytes","description":"圧縮後サイズ（バイト）","example":702565},"compressed_size_mb":{"type":"number","title":"Compressed Size Mb","description":"圧縮後サイズ（MB）","example":0.67},"compression_ratio":{"type":"number","title":"Compression Ratio","description":"圧縮率","example":0.08},"sources":{"additionalProperties":{"type":"integer"},"type":"object","title":"Sources","description":"ソース別件数","example":{"foundation":5000,"sr_legacy":1564,"survey":7000}},"portions_coverage_percent":{"type":"number","title":"Portions Coverage Percent","description":"Portionsカバレッジ（%）","example":85.5},"items_with_portions":{"type":"integer","title":"Items With Portions","description":"Portions情報を持つアイテム数","example":11600},"last_modified":{"type":"number","title":"Last Modified","description":"最終更新時刻（UNIX timestamp）","example":1698765432.0}},"type":"object","required":["total_items","file_size_bytes","file_size_mb","compressed_size_bytes","compressed_size_mb","compression_ratio","sources","portions_coverage_percent","items_with_portions","last_modified"],"title":"MetadataInfoResponse","description":"Metadata information response"},"MetadataItem":{"properties":{"fdc_id":{"type":"integer","title":"Fdc Id","description":"USDA FDC ID","example":167782},"description":{"type":"string","title":"Description","description":"食材名","example":"Chicken, broilers or fryers, breast, meat only, grilled"},"main_name":{"type":"string","title":"Main Name","description":"主要名称","example":"Chicken, broilers or fryers, breast, meat only"},"descriptors":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Descriptors","description":"調理方法等の記述子","example":"grilled"},"source":{"type":"string","title":"Source","description":"データソース","example":"survey"},"nutrition":{"allOf":[{"$ref":"#/components/schemas/NutritionInfo"}],"description":"栄養情報（100gあたり）"},"portions":{"anyOf":[{"items":{"type":"object"},"type":"array"},{"type":"null"}],"title":"Portions","description":"ポーション情報","example":[{"description":"1 breast, bone and skin removed","gram_weight":86.0}]}},"type":"object","required":["fdc_id","description","main_name","source","nutrition"],"title":"MetadataItem","description":"メタデータアイテム"},"MetadataSearchResponse":{"properties":{"query":{"type":"string","title":"Query","description":"検索クエリ","example":"chicken breast"},"results":{"items":{"$ref":"#/components/schemas/MetadataItem"},"type":"array","title":"Results","description":"検索結果リスト"},"total":{"type":"integer","title":"Total","description":"総件数","example":50},"limit":{"type":"integer","title":"Limit","description":"取得件数制限","example":20},"offset":{"type":"integer","title":"Offset","description":"オフセット","example":0},"has_more":{"type":"boolean","title":"Has More","description":"さらに結果があるか","example":true}},"type":"object","required":["query","results","total","limit","offset","has_more"],"title":"MetadataSearchResponse","description":"メタデータ検索レスポンス","example":{"has_more":true,"limit":20,"offset":0,"query":"chicken breast","results":[{"description":"Chicken, broilers or fryers, breast, meat only, grilled","descriptors":"grilled","fdc_id":167782,"main_name":"Chicken, broilers or fryers, breast, meat only","nutrition":{"calories":165.0,"carbs":0.0,"fat":3.6,"fiber":0.0,"protein":31.0,"sodium":74.0,"sugar":0.0},"portions":[{"description":"1 breast, bone and skin removed","gram_weight":86.0}],"source":"survey"}],"total":50}},"NutritionInfo":{"properties":{"calories":{"type":"number","title":"Calories","description":"カロリー（kcal）","example":156.0},"protein":{"type":"number","title":"Protein","description":"タンパク質（g）","example":12.0},"fat":{"type":"number","title":"Fat","description":"脂質（g）","example":10.5},"carbs":{"type":"number","title":"Carbs","description":"炭水化物（g）","example":1.1},"fiber":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Fiber","description":"食物繊維（g）","example":0.0},"sugar":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Sugar","description":"糖質（g）","example":0.7},"sodium":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Sodium","description":"ナトリウム（mg）","example":142.0}},"type":"object","required":["calories","protein","fat","carbs"],"title":"NutritionInfo","description":"栄養価情報"},"ReadinessResponse":{"properties":{"status":{"type":"string","title":"Status"},"service":{"type":"string","title":"Service"},"indexes_loaded":{"type":"boolean","title":"Indexes Loaded"},"message":{"type":"string","title":"Message"}},"type":"object","required":["status","service","indexes_loaded","message"],"title":"ReadinessResponse","description":"Readiness check response model"},"RetrievalHealthResponse":{"properties":{"status":{"type":"string","title":"Status","description":"ステータス","example":"healthy"},"service":{"type":"string","title":"Service","description":"サービス名","example":"usda_retrieval_api"},"index_type":{"type":"string","title":"Index Type","description":"インデックスタイプ","example":"FAISS"},"modes":{"items":{"type":"string"},"type":"array","title":"Modes","description":"利用可能な検索モード","example":["fast","accurate","hybrid"]},"searcher_initialized":{"type":"boolean","title":"Searcher Initialized","description":"Searcherの初期化状態","example":true},"hybrid_search_enabled":{"type":"boolean","title":"Hybrid Search Enabled","description":"ハイブリッド検索の有効状態","example":true}},"type":"object","required":["status","service","index_type","modes","searcher_initialized","hybrid_search_enabled"],"title":"RetrievalHealthResponse","description":"Retrieval API health check response"},"RetrievalMetadata":{"properties":{"total_results":{"type":"integer","title":"Total Results","description":"結果数","example":10},"search_time_ms":{"type":"integer","title":"Search Time Ms","description":"検索時間（ミリ秒）","example":250},"index_type":{"type":"string","title":"Index Type","description":"インデックスタイプ","example":"FAISS"},"algorithm":{"type":"string","title":"Algorithm","description":"使用アルゴリズム","example":"Stage1+Stage2_Rerank"}},"type":"object","required":["total_results","search_time_ms","index_type","algorithm"],"title":"RetrievalMetadata","description":"検索メタデータ"},"RetrievalResponse":{"properties":{"query":{"type":"string","title":"Query","description":"検索クエリ","example":"grilled chicken breast"},"mode":{"type":"string","title":"Mode","description":"検索モード","example":"hybrid"},"results":{"items":{"$ref":"#/components/schemas/FoodItem"},"type":"array","title":"Results","description":"検索結果リスト"},"metadata":{"$ref":"#/components/schemas/RetrievalMetadata"},"status":{"$ref":"#/components/schemas/RetrievalStatus"},"debug_info":{"anyOf":[{"type":"object"},{"type":"null"}],"title":"Debug Info","description":"デバッグ情報（debug=trueの場合のみ）"}},"type":"object","required":["query","mode","results","metadata","status"],"title":"RetrievalResponse","description":"食材検索レスポンス","example":{"metadata":{"algorithm":"Stage1+Stage2_Rerank","index_type":"FAISS","search_time_ms":250,"total_results":10},"mode":"hybrid","query":"grilled chicken breast","results":[{"description":"Chicken, broilers or fryers, breast, meat only, grilled","descriptors":"grilled","fdc_id":"167782","main_name":"Chicken, broilers or fryers, breast, meat only","nutrition_per_100g":{"calories":165.0,"carbs":0.0,"fat":3.6,"fiber":0.0,"protein":31.0,"sodium":74.0,"sugar":0.0},"score":0.95,"source":"survey"},{"description":"Chicken, broilers or fryers, breast, meat only, cooked, roasted","descriptors":"cooked, roasted","fdc_id":"171477","main_name":"Chicken, broilers or fryers, breast, meat only","nutrition_per_100g":{"calories":165.0,"carbs":0.0,"fat":3.6,"fiber":0.0,"protein":31.0,"sodium":74.0,"sugar":0.0},"score":0.89,"source":"foundation"}],"status":{"message":"Search completed successfully","success":true}}},"RetrievalStatus":{"properties":{"success":{"type":"boolean","title":"Success","description":"成功フラグ","example":true},"message":{"type":"string","title":"Message","description":"ステータスメッセージ","example":"Search completed successfully"}},"type":"object","required":["success","message"],"title":"RetrievalStatus","description":"検索ステータス"},"RootResponse":{"properties":{"name":{"type":"string","title":"Name","description":"API名","example":"Freeform USDA Meal Analysis API"},"version":{"type":"string","title":"Version","description":"APIバージョン","example":"1.0.0"},"status":{"type":"string","title":"Status","description":"ステータス","example":"running"},"documentation":{"additionalProperties":{"type":"string"},"type":"object","title":"Documentation","description":"ドキュメントURL","example":{"openapi":"/openapi.json","redoc":"/redoc","swagger":"/docs"}},"endpoints":{"additionalProperties":{"type":"string"},"type":"object","title":"Endpoints","description":"主要エンドポイント","example":{"analysis":"/api/v1/meal-analyses","health":"/health","retrieval":"/api/v1/retrieve"}},"default_config":{"type":"object","title":"Default Config","description":"デフォルト設定","example":{"model":"Qwen/Qwen3-VL-30B-A3B-Thinking","prompt":"freeform_prompt_usda_format_ver_v7_experimental_20251027.txt","search":{"mode":"full_index_only","stage1_top_k":40}}}},"type":"object","required":["name","version","status","documentation","endpoints","default_config"],"title":"RootResponse","description":"Root endpoint response"},"UsageInfo":{"properties":{"prompt_tokens":{"type":"integer","title":"Prompt Tokens","description":"入力トークン数","example":1250},"completion_tokens":{"type":"integer","title":"Completion Tokens","description":"出力トークン数","example":450},"total_tokens":{"type":"integer","title":"Total Tokens","description":"合計トークン数","example":1700},"estimated_cost_usd":{"anyOf":[{"type":"number"},{"type":"null"}],"title":"Estimated Cost Usd","description":"推定コスト（USD）(pricing情報がない場合はNone)","example":0.00125},"model_pricing":{"anyOf":[{"type":"object"},{"type":"null"}],"title":"Model Pricing","description":"使用したモデルの価格情報 (pricing情報がない場合はNone)","example":{"input_price_per_million":0.29,"output_price_per_million":0.99}},"raw_vlm_output":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Raw Vlm Output","description":"VLMの生出力（デバッグ用）","example":"<think>...</think>\n{\"dishes\": ...}"},"prompt_content":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Prompt Content","description":"VLMに送信したプロンプトの内容（デバッグ用）","example":"You are an expert food analyst..."}},"type":"object","required":["prompt_tokens","completion_tokens","total_tokens"],"title":"UsageInfo","description":"Token使用量とコスト情報"},"ValidationError":{"properties":{"loc":{"items":{"anyOf":[{"type":"string"},{"type":"integer"}]},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"}}},"tags":[{"name":"Root","description":"ルートエンドポイント - API情報とエンドポイント一覧を取得"},{"name":"Health","description":"ヘルスチェック - サービス稼働状態確認（Cloud Run用 liveness/readiness probe）"},{"name":"Analysis","description":"食事分析（メイン機能） - 画像から食事を分析し栄養価を計算。Match rate: 平均95%以上"},{"name":"Retrieval","description":"食材検索 - USDA DBから類似食材を検索。Fast（高速180ms）/ Accurate（高精度800ms）/ Hybrid（最高精度、BM25+Vector）"},{"name":"Metadata","description":"メタデータ配信 - USDA食材の詳細情報（13,564件）。フロントエンド向け、gzip圧縮推奨（8.4MB→0.7MB）"}]}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Freeform USDA Meal Analysis API",
+    "description": "\n        USDA FNDDS\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9\u3092\u4f7f\u7528\u3057\u305f\u98df\u4e8b\u5206\u6790API\n\n        ## \u6a5f\u80fd\n        - \u753b\u50cf\u304b\u3089\u98df\u4e8b\u3092\u5206\u6790\u3057\u6804\u990a\u4fa1\u3092\u8a08\u7b97\n        - \u97f3\u58f0\u5165\u529b\u306b\u3088\u308b\u98df\u4e8b\u5206\u6790\n        - \u30ab\u30b9\u30bf\u30de\u30a4\u30ba\u53ef\u80fd\u306aVLM\u30e2\u30c7\u30eb\u8a2d\u5b9a\n        - \u67d4\u8edf\u306a\u30d7\u30ed\u30f3\u30d7\u30c8\u9078\u629e\n\n        ## \u30c7\u30d5\u30a9\u30eb\u30c8\u8a2d\u5b9a\n        - \u30e2\u30c7\u30eb: Qwen3-VL-30B-A3B-Thinking (30B\u30d1\u30e9\u30e1\u30fc\u30bf)\n        - \u30d7\u30ed\u30f3\u30d7\u30c8: v7_experimental\n        - \u691c\u7d22: Full\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u307f\u4f7f\u7528\n        ",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "description": "\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\uff08Liveness Check\uff09\nCloud Run\u306eliveness probe\u3067\u4f7f\u7528\n\nReturns:\n    HealthCheckResponse: API\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u60c5\u5831",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Readiness Check",
+        "description": "Readiness check for Cloud Run\n\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u304c\u30ed\u30fc\u30c9\u3055\u308c\u3066\u3044\u308b\u304b\u78ba\u8a8d\u3057\u3066\u30b5\u30fc\u30d3\u30b9\u306e\u6e96\u5099\u72b6\u614b\u3092\u8fd4\u3059\n\nReturns:\n    ReadinessResponse: \u30b5\u30fc\u30d3\u30b9\u306e\u6e96\u5099\u72b6\u614b",
+        "operationId": "readiness_check_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meal-analyses/complete": {
+      "post": {
+        "tags": [
+          "Analysis"
+        ],
+        "summary": "Analyze Meal From Image",
+        "description": "\u753b\u50cf\u304b\u3089\u98df\u4e8b\u3092\u5206\u6790\u3057\u3066\u6804\u990a\u4fa1\u3092\u8a08\u7b97(Full\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u307f\u4f7f\u7528)\n\n## \u30ea\u30af\u30a8\u30b9\u30c8\u30d1\u30e9\u30e1\u30fc\u30bf\n- **image**: \u98df\u4e8b\u753b\u50cf\u30d5\u30a1\u30a4\u30eb(\u5fc5\u9808)\n- **user_context**: \u98df\u4e8b\u306e\u8aac\u660e\u3084\u30b3\u30f3\u30c6\u30ad\u30b9\u30c8(\u30aa\u30d7\u30b7\u30e7\u30f3)\n\n## \u30e2\u30c7\u30eb\u8a2d\u5b9a(\u30aa\u30d7\u30b7\u30e7\u30f3\u3001\u6307\u5b9a\u3057\u306a\u3044\u5834\u5408\u306f\u30c7\u30d5\u30a9\u30eb\u30c8\u5024\u3092\u4f7f\u7528)\n- **model_id**: DeepInfra VLM\u30e2\u30c7\u30ebID\n- **prompt_path**: \u30d7\u30ed\u30f3\u30d7\u30c8\u30d5\u30a1\u30a4\u30eb\u540d(\u4f8b: \"freeform_prompt_usda_format_ver_v7_production_20251027.txt\")\n- **thinking_budget**: \u601d\u8003\u30c8\u30fc\u30af\u30f3\u6570(QVQ\u30e2\u30c7\u30eb\u4f7f\u7528\u6642)\n- **temperature**: \u751f\u6210\u6e29\u5ea6(0.0-2.0)\n- **max_tokens**: \u6700\u5927\u30c8\u30fc\u30af\u30f3\u6570\n\n## \u691c\u7d22\u8a2d\u5b9a(\u30aa\u30d7\u30b7\u30e7\u30f3)\n- **stage1_top_k**: Stage1\u3067\u53d6\u5f97\u3059\u308b\u5019\u88dc\u6570(\u30c7\u30d5\u30a9\u30eb\u30c8: 50)\n- **bm25_weight**: BM25\u691c\u7d22\u306e\u91cd\u307f(\u30c7\u30d5\u30a9\u30eb\u30c8: 0.4)\n- **vector_weight**: Vector\u691c\u7d22\u306e\u91cd\u307f(\u30c7\u30d5\u30a9\u30eb\u30c8: 0.6)\n- **rrf_k**: RRF\u306ek\u30d1\u30e9\u30e1\u30fc\u30bf(\u30c7\u30d5\u30a9\u30eb\u30c8: 60)\n- **reranker_model**: Reranker\u30e2\u30c7\u30eb\u540d(\u30c7\u30d5\u30a9\u30eb\u30c8: Qwen/Qwen3-Reranker-8B)\n- **reranker_instruction**: Reranker\u7528instruction\n- **reranker_top_n**: Reranker\u3067\u8fd4\u3059\u7d50\u679c\u6570\n\n## \u30ec\u30b9\u30dd\u30f3\u30b9\n- \u691c\u51fa\u3055\u308c\u305f\u6599\u7406\u3068\u98df\u6750\u306e\u8a73\u7d30\n- \u6804\u990a\u4fa1\u8a08\u7b97\u7d50\u679c\n- \u51e6\u7406\u6642\u9593\u3068\u30e1\u30bf\u30c7\u30fc\u30bf",
+        "operationId": "analyze_meal_from_image_api_v1_meal_analyses_complete_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/meal-analyses/": {
+      "get": {
+        "tags": [
+          "Analysis"
+        ],
+        "summary": "List Endpoint Info",
+        "description": "\u5229\u7528\u53ef\u80fd\u306a\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u60c5\u5831\u53d6\u5f97\n\n## \u6982\u8981\nMeal Analysis API\u3067\u5229\u7528\u53ef\u80fd\u306a\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u306e\u4e00\u89a7\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002\n\nReturns:\n    EndpointInfoResponse: \u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u60c5\u5831",
+        "operationId": "list_endpoint_info_api_v1_meal_analyses__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndpointInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/retrieve": {
+      "get": {
+        "tags": [
+          "Retrieval"
+        ],
+        "summary": "Retrieve Foods",
+        "description": "USDA\u98df\u6750\u691c\u7d22API\uff08FAISS\u691c\u7d22\uff09\n\nArgs:\n    q: \u691c\u7d22\u30af\u30a8\u30ea\uff08\u4f8b: \"chicken breast grilled\"\uff09\n    mode: \"fast\" (FAISS\u691c\u7d22\u306e\u307f\u3001\u9ad8\u901f) or \"accurate\" (FAISS + Reranking\u3001\u9ad8\u7cbe\u5ea6) or \"hybrid\" (BM25 + FAISS\u3001\u6700\u9ad8\u7cbe\u5ea6) or \"hybrid_reranker\" (BM25 + FAISS + Reranking\u3001\u6700\u9ad8\u7cbe\u5ea6)\n    top_k: \u8fd4\u5374\u3059\u308b\u7d50\u679c\u6570\n    include_nutrition: \u6804\u990a\u60c5\u5831\u3092\u542b\u3081\u308b\u304b\n    debug: \u30c7\u30d0\u30c3\u30b0\u60c5\u5831\u3092\u542b\u3081\u308b\u304b\n\nReturns:\n    \u691c\u7d22\u7d50\u679c\u306eJSON",
+        "operationId": "retrieve_foods_api_v1_retrieve_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "\u691c\u7d22\u30af\u30a8\u30ea",
+              "title": "Q"
+            },
+            "description": "\u691c\u7d22\u30af\u30a8\u30ea"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "\u691c\u7d22\u30e2\u30fc\u30c9: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS) | hybrid_reranker (BM25 + FAISS + Rerank)",
+              "default": "hybrid",
+              "title": "Mode"
+            },
+            "description": "\u691c\u7d22\u30e2\u30fc\u30c9: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS) | hybrid_reranker (BM25 + FAISS + Rerank)"
+          },
+          {
+            "name": "top_k",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "description": "\u8fd4\u5374\u7d50\u679c\u6570\uff081-50\uff09",
+              "default": 10,
+              "title": "Top K"
+            },
+            "description": "\u8fd4\u5374\u7d50\u679c\u6570\uff081-50\uff09"
+          },
+          {
+            "name": "include_nutrition",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "\u6804\u990a\u60c5\u5831\u3092\u542b\u3081\u308b\u304b",
+              "default": true,
+              "title": "Include Nutrition"
+            },
+            "description": "\u6804\u990a\u60c5\u5831\u3092\u542b\u3081\u308b\u304b"
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "\u30c7\u30d0\u30c3\u30b0\u60c5\u5831\u3092\u542b\u3081\u308b\u304b",
+              "default": false,
+              "title": "Debug"
+            },
+            "description": "\u30c7\u30d0\u30c3\u30b0\u60c5\u5831\u3092\u542b\u3081\u308b\u304b"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/retrieve/health": {
+      "get": {
+        "tags": [
+          "Retrieval"
+        ],
+        "summary": "Retrieval Health Check",
+        "description": "Retrieval API\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af\n\n## \u6982\u8981\nRetrieval API\u306e\u72b6\u614b\u3001\u5229\u7528\u53ef\u80fd\u306a\u691c\u7d22\u30e2\u30fc\u30c9\u3001\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u306e\u521d\u671f\u5316\u72b6\u614b\u3092\u78ba\u8a8d\u3057\u307e\u3059\u3002\n\nReturns:\n    RetrievalHealthResponse: Retrieval API\u306e\u72b6\u614b\u60c5\u5831",
+        "operationId": "retrieval_health_check_api_v1_retrieve_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalHealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Usda Metadata",
+        "description": "USDA\u98df\u6750\u30e1\u30bf\u30c7\u30fc\u30bf\u5168\u4ef6\u53d6\u5f97\uff0813,564\u4ef6\uff09\n\n## \u6982\u8981\n\u30d5\u30ed\u30f3\u30c8\u30a8\u30f3\u30c9\u3067\u306e\u98df\u6750\u9078\u629e\u3001\u6804\u990a\u60c5\u5831\u8868\u793a\u3001portions\u5909\u63db\u306b\u5fc5\u8981\u306a\n\u5168\u3066\u306e\u30e1\u30bf\u30c7\u30fc\u30bf\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002\n\n## \u30d1\u30e9\u30e1\u30fc\u30bf\n- **compressed**: gzip\u5727\u7e2e\u3057\u3066\u8fd4\u3059\u304b\uff08\u30c7\u30d5\u30a9\u30eb\u30c8: True\uff09\n  - True: 8.4MB \u2192 \u7d041.5MB\uff08\u63a8\u5968\uff09\n  - False: 8.4MB\uff08\u975e\u63a8\u5968\u3001\u958b\u767a\u6642\u306e\u307f\u4f7f\u7528\uff09\n\n## \u30ec\u30b9\u30dd\u30f3\u30b9\n- Content-Type: application/json\n- Content-Encoding: gzip\uff08compressed=True\u306e\u5834\u5408\uff09\n- Cache-Control: public, max-age=86400\uff0824\u6642\u9593\u30ad\u30e3\u30c3\u30b7\u30e5\uff09\n\n## \u30c7\u30fc\u30bf\u69cb\u9020\n```json\n[\n  {\n    \"fdc_id\": 123456,\n    \"description\": \"Chicken, breast, grilled\",\n    \"main_name\": \"Chicken, breast\",\n    \"descriptors\": \"grilled\",\n    \"source\": \"survey\",\n    \"nutrition\": {\n      \"calories\": 165,\n      \"protein_g\": 31.0,\n      \"fat_g\": 3.6,\n      \"carbs_g\": 0.0\n    },\n    \"portions\": [\n      {\n        \"description\": \"1 breast, bone and skin removed\",\n        \"gram_weight\": 86.0\n      }\n    ]\n  }\n]\n```\n\n## \u4f7f\u7528\u4f8b\uff08JavaScript\uff09\n```javascript\n// gzip\u5727\u7e2e\u7248\u3092\u53d6\u5f97\uff08\u63a8\u5968\uff09\nconst response = await fetch('http://localhost:8006/api/v1/metadata?compressed=true');\nconst metadata = await response.json();\n\n// \u30ed\u30fc\u30ab\u30eb\u30b9\u30c8\u30ec\u30fc\u30b8\u306b\u30ad\u30e3\u30c3\u30b7\u30e5\nlocalStorage.setItem('usda_metadata', JSON.stringify({\n  items: metadata,\n  timestamp: Date.now()\n}));\n```",
+        "operationId": "get_usda_metadata_api_v1_metadata_get",
+        "parameters": [
+          {
+            "name": "compressed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "gzip\u5727\u7e2e\u3057\u3066\u8fd4\u3059\u304b\uff08\u63a8\u5968\uff09",
+              "default": true,
+              "title": "Compressed"
+            },
+            "description": "gzip\u5727\u7e2e\u3057\u3066\u8fd4\u3059\u304b\uff08\u63a8\u5968\uff09"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/info": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Metadata Info",
+        "description": "\u30e1\u30bf\u30c7\u30fc\u30bf\u60c5\u5831\u53d6\u5f97\n\n## \u6982\u8981\n\u30e1\u30bf\u30c7\u30fc\u30bf\u30d5\u30a1\u30a4\u30eb\u306e\u7d71\u8a08\u60c5\u5831\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002\n\n## \u30ec\u30b9\u30dd\u30f3\u30b9\n```json\n{\n  \"total_items\": 13564,\n  \"file_size_mb\": 8.4,\n  \"compressed_size_mb\": 1.5,\n  \"compression_ratio\": 0.18,\n  \"sources\": {\n    \"survey\": 5000,\n    \"foundation\": 6000,\n    \"sr_legacy\": 2564\n  },\n  \"last_updated\": \"2025-10-28T19:00:00Z\"\n}\n```",
+        "operationId": "get_metadata_info_api_v1_metadata_info_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/search": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Search Metadata",
+        "description": "\u30e1\u30bf\u30c7\u30fc\u30bf\u691c\u7d22\uff08\u8efd\u91cf\u7248\uff09\n\n## \u6982\u8981\n\u30e1\u30bf\u30c7\u30fc\u30bf\u3092\u30af\u30a8\u30ea\u6587\u5b57\u5217\u3067\u691c\u7d22\u3057\u307e\u3059\u3002\ndescription\u3068main_name\u30d5\u30a3\u30fc\u30eb\u30c9\u3092\u5bfe\u8c61\u306b\u90e8\u5206\u4e00\u81f4\u691c\u7d22\u3092\u884c\u3044\u307e\u3059\u3002\n\n## \u30d1\u30e9\u30e1\u30fc\u30bf\n- **q**: \u691c\u7d22\u30af\u30a8\u30ea\uff08\u4f8b: \"chicken breast\"\uff09\n- **limit**: \u8fd4\u5374\u4ef6\u6570\uff08\u30c7\u30d5\u30a9\u30eb\u30c8: 20\u3001\u6700\u5927: 100\uff09\n- **offset**: \u30aa\u30d5\u30bb\u30c3\u30c8\uff08\u30da\u30fc\u30b8\u30cd\u30fc\u30b7\u30e7\u30f3\u7528\uff09\n- **source**: \u30c7\u30fc\u30bf\u30bd\u30fc\u30b9\u30d5\u30a3\u30eb\u30bf\u30fc\uff08\u4f8b: \"survey\"\uff09\n\n## \u30ec\u30b9\u30dd\u30f3\u30b9\n```json\n{\n  \"query\": \"chicken breast\",\n  \"results\": [...],\n  \"total\": 50,\n  \"limit\": 20,\n  \"offset\": 0\n}\n```\n\n## \u6ce8\u610f\n- \u3053\u306e\u691c\u7d22\u306f\u30b7\u30f3\u30d7\u30eb\u306a\u90e8\u5206\u4e00\u81f4\u691c\u7d22\u3067\u3059\n- \u9ad8\u5ea6\u306a\u691c\u7d22\uff08\u30bb\u30de\u30f3\u30c6\u30a3\u30c3\u30af\u691c\u7d22\uff09\u306b\u306f `/api/v1/retrieve` \u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044",
+        "operationId": "search_metadata_api_v1_metadata_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "description": "\u691c\u7d22\u30af\u30a8\u30ea",
+              "title": "Q"
+            },
+            "description": "\u691c\u7d22\u30af\u30a8\u30ea"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "\u8fd4\u5374\u4ef6\u6570\uff081-100\uff09",
+              "default": 20,
+              "title": "Limit"
+            },
+            "description": "\u8fd4\u5374\u4ef6\u6570\uff081-100\uff09"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "\u30aa\u30d5\u30bb\u30c3\u30c8",
+              "default": 0,
+              "title": "Offset"
+            },
+            "description": "\u30aa\u30d5\u30bb\u30c3\u30c8"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9\u30d5\u30a3\u30eb\u30bf\u30fc\uff08survey/foundation/sr_legacy\uff09",
+              "title": "Source"
+            },
+            "description": "\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9\u30d5\u30a3\u30eb\u30bf\u30fc\uff08survey/foundation/sr_legacy\uff09"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataSearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/{fdc_id}": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get Metadata By Fdc Id",
+        "description": "FDC ID\u6307\u5b9a\u3067\u30e1\u30bf\u30c7\u30fc\u30bf\u53d6\u5f97\n\n## \u6982\u8981\nFDC ID\u3092\u6307\u5b9a\u3057\u3066\u5358\u4e00\u306e\u98df\u6750\u30e1\u30bf\u30c7\u30fc\u30bf\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002\n\n## \u30d1\u30e9\u30e1\u30fc\u30bf\n- **fdc_id**: FDC ID\uff08\u4f8b: 746774\uff09\n\n## \u30ec\u30b9\u30dd\u30f3\u30b9\n```json\n{\n  \"fdc_id\": 746774,\n  \"description\": \"Chicken, breast, grilled\",\n  \"main_name\": \"Chicken, breast\",\n  \"descriptors\": \"grilled\",\n  \"source\": \"survey\",\n  \"nutrition\": {...},\n  \"portions\": [...]\n}\n```",
+        "operationId": "get_metadata_by_fdc_id_api_v1_metadata__fdc_id__get",
+        "parameters": [
+          {
+            "name": "fdc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Fdc Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Root"
+        ],
+        "summary": "Root",
+        "description": "\u30eb\u30fc\u30c8\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8 - API\u60c5\u5831\u53d6\u5f97\n\n## \u6982\u8981\nAPI\u306e\u57fa\u672c\u60c5\u5831\u3001\u5229\u7528\u53ef\u80fd\u306a\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u3001\u30c7\u30d5\u30a9\u30eb\u30c8\u8a2d\u5b9a\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002\n\nReturns:\n    RootResponse: API\u60c5\u5831",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisResponse": {
+        "properties": {
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id",
+            "description": "\u5206\u6790ID",
+            "example": "a1b2c3d4"
+          },
+          "input_type": {
+            "type": "string",
+            "title": "Input Type",
+            "description": "\u5165\u529b\u30bf\u30a4\u30d7",
+            "example": "image"
+          },
+          "meal_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meal Title",
+            "description": "\u98df\u4e8b\u5168\u4f53\u306e\u30bf\u30a4\u30c8\u30eb\uff08MAX 30\u6587\u5b57\uff09",
+            "example": "Grilled Chicken with Salad"
+          },
+          "total_dishes": {
+            "type": "integer",
+            "title": "Total Dishes",
+            "description": "\u691c\u51fa\u3055\u308c\u305f\u6599\u7406\u6570",
+            "example": 3
+          },
+          "total_ingredients": {
+            "type": "integer",
+            "title": "Total Ingredients",
+            "description": "\u7dcf\u98df\u6750\u6570",
+            "example": 9
+          },
+          "processing_time_seconds": {
+            "type": "number",
+            "title": "Processing Time Seconds",
+            "description": "\u51e6\u7406\u6642\u9593\uff08\u79d2\uff09",
+            "example": 15.65
+          },
+          "dishes": {
+            "items": {
+              "$ref": "#/components/schemas/DishDetail"
+            },
+            "type": "array",
+            "title": "Dishes",
+            "description": "\u691c\u51fa\u3055\u308c\u305f\u6599\u7406\u4e00\u89a7"
+          },
+          "total_nutrition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              }
+            ],
+            "description": "\u7dcf\u6804\u990a\u4fa1"
+          },
+          "ai_model_used": {
+            "type": "string",
+            "title": "Ai Model Used",
+            "description": "\u4f7f\u7528AI\u30e2\u30c7\u30eb",
+            "example": "Qwen/Qwen2-VL-72B-Instruct"
+          },
+          "prompt_file_used": {
+            "type": "string",
+            "title": "Prompt File Used",
+            "description": "\u4f7f\u7528\u30d7\u30ed\u30f3\u30d7\u30c8\u30d5\u30a1\u30a4\u30eb",
+            "example": "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+          },
+          "match_rate_percent": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Match Rate Percent",
+            "description": "\u6804\u990a\u691c\u7d22\u30de\u30c3\u30c1\u7387\uff08%\uff09",
+            "example": 100.0
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Token\u4f7f\u7528\u91cf\u3068\u30b3\u30b9\u30c8\u60c5\u5831"
+          },
+          "transcript": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript",
+            "description": "\u97f3\u58f0\u8a8d\u8b58\u30c6\u30ad\u30b9\u30c8\uff08\u97f3\u58f0\u5165\u529b\u6642\u306e\u307f\uff09"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings",
+            "description": "\u8b66\u544a\u30e1\u30c3\u30bb\u30fc\u30b8",
+            "example": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "analysis_id",
+          "input_type",
+          "total_dishes",
+          "total_ingredients",
+          "processing_time_seconds",
+          "dishes",
+          "total_nutrition",
+          "ai_model_used",
+          "prompt_file_used",
+          "match_rate_percent"
+        ],
+        "title": "AnalysisResponse",
+        "description": "\u5206\u6790\u30ec\u30b9\u30dd\u30f3\u30b9",
+        "example": {
+          "ai_model_used": "Qwen/Qwen2-VL-72B-Instruct",
+          "analysis_id": "a1b2c3d4",
+          "dishes": [
+            {
+              "calculation_metadata": {
+                "calculation_method": "weight_based_scaling",
+                "ingredient_count": 1,
+                "total_weight_g": 150.0
+              },
+              "ingredients": [
+                {
+                  "calculated_nutrition": {
+                    "calories": 247.5,
+                    "carbs": 0.0,
+                    "fat": 5.4,
+                    "fiber": 0.0,
+                    "protein": 46.5,
+                    "sodium": 111.0,
+                    "sugar": 0.0
+                  },
+                  "calculation_notes": [
+                    "Scaled from 100g base data using factor 1.500"
+                  ],
+                  "debug_info": {
+                    "reranker_results": [
+                      "167782",
+                      "167783"
+                    ],
+                    "retriever_candidates": [
+                      "167782",
+                      "167783",
+                      "167784"
+                    ],
+                    "retry_count": 0
+                  },
+                  "fdc_id": "167782",
+                  "ingredient_name": "Chicken breast, grilled",
+                  "nutrition_per_100g": {
+                    "calories": 165.0,
+                    "carbs": 0.0,
+                    "fat": 3.6,
+                    "fiber": 0.0,
+                    "protein": 31.0,
+                    "sodium": 74.0,
+                    "sugar": 0.0
+                  },
+                  "source_db": "usda_fndds",
+                  "weight_g": 150.0
+                }
+              ],
+              "total_nutrition": {
+                "calories": 247.5,
+                "carbs": 0.0,
+                "fat": 5.4,
+                "fiber": 0.0,
+                "protein": 46.5,
+                "sodium": 111.0,
+                "sugar": 0.0
+              }
+            },
+            {
+              "calculation_metadata": {
+                "calculation_method": "weight_based_scaling",
+                "ingredient_count": 4,
+                "total_weight_g": 155.0
+              },
+              "ingredients": [
+                {
+                  "calculated_nutrition": {
+                    "calories": 17.0,
+                    "carbs": 3.3,
+                    "fat": 0.3,
+                    "fiber": 2.1,
+                    "protein": 1.2,
+                    "sodium": 8.0,
+                    "sugar": 1.2
+                  },
+                  "calculation_notes": [
+                    "Scaled from 100g base data using factor 1.000"
+                  ],
+                  "fdc_id": "169248",
+                  "ingredient_name": "Romaine lettuce, raw",
+                  "nutrition_per_100g": {
+                    "calories": 17.0,
+                    "carbs": 3.3,
+                    "fat": 0.3,
+                    "fiber": 2.1,
+                    "protein": 1.2,
+                    "sodium": 8.0,
+                    "sugar": 1.2
+                  },
+                  "source_db": "usda_fndds",
+                  "weight_g": 100.0
+                },
+                {
+                  "calculated_nutrition": {
+                    "calories": 141.0,
+                    "carbs": 2.1,
+                    "fat": 14.4,
+                    "fiber": 0.0,
+                    "protein": 0.75,
+                    "sodium": 270.0,
+                    "sugar": 1.5
+                  },
+                  "calculation_notes": [
+                    "Scaled from 100g base data using factor 0.300"
+                  ],
+                  "fdc_id": "173306",
+                  "ingredient_name": "Caesar dressing",
+                  "nutrition_per_100g": {
+                    "calories": 470.0,
+                    "carbs": 7.0,
+                    "fat": 48.0,
+                    "fiber": 0.0,
+                    "protein": 2.5,
+                    "sodium": 900.0,
+                    "sugar": 5.0
+                  },
+                  "source_db": "usda_fndds",
+                  "weight_g": 30.0
+                },
+                {
+                  "calculated_nutrition": {
+                    "calories": 39.2,
+                    "carbs": 0.32,
+                    "fat": 2.58,
+                    "fiber": 0.0,
+                    "protein": 3.58,
+                    "sodium": 152.9,
+                    "sugar": 0.09
+                  },
+                  "calculation_notes": [
+                    "Scaled from 100g base data using factor 0.100"
+                  ],
+                  "fdc_id": "171287",
+                  "ingredient_name": "Parmesan cheese, grated",
+                  "nutrition_per_100g": {
+                    "calories": 392.0,
+                    "carbs": 3.2,
+                    "fat": 25.8,
+                    "fiber": 0.0,
+                    "protein": 35.8,
+                    "sodium": 1529.0,
+                    "sugar": 0.9
+                  },
+                  "source_db": "usda_fndds",
+                  "weight_g": 10.0
+                },
+                {
+                  "calculated_nutrition": {
+                    "calories": 61.05,
+                    "carbs": 11.025,
+                    "fat": 0.99,
+                    "fiber": 0.75,
+                    "protein": 1.785,
+                    "sodium": 104.7,
+                    "sugar": 0.87
+                  },
+                  "calculation_notes": [
+                    "Scaled from 100g base data using factor 0.150"
+                  ],
+                  "fdc_id": "168042",
+                  "ingredient_name": "Croutons, plain",
+                  "nutrition_per_100g": {
+                    "calories": 407.0,
+                    "carbs": 73.5,
+                    "fat": 6.6,
+                    "fiber": 5.0,
+                    "protein": 11.9,
+                    "sodium": 698.0,
+                    "sugar": 5.8
+                  },
+                  "source_db": "usda_fndds",
+                  "weight_g": 15.0
+                }
+              ],
+              "total_nutrition": {
+                "calories": 258.25,
+                "carbs": 16.745,
+                "fat": 18.27,
+                "fiber": 2.85,
+                "protein": 7.315,
+                "sodium": 535.6,
+                "sugar": 3.66
+              }
+            }
+          ],
+          "input_type": "image",
+          "match_rate_percent": 100.0,
+          "meal_title": "Chicken & Caesar Salad",
+          "processing_time_seconds": 12.34,
+          "prompt_file_used": "freeform_prompt_usda_format_ver_v7_production_20251027.txt",
+          "total_dishes": 2,
+          "total_ingredients": 5,
+          "total_nutrition": {
+            "calories": 505.75,
+            "carbs": 16.745,
+            "fat": 23.67,
+            "fiber": 2.85,
+            "protein": 53.815,
+            "sodium": 646.6,
+            "sugar": 3.66
+          },
+          "usage": {
+            "estimated_cost_usd": 0.0234,
+            "input_tokens": 2500,
+            "output_tokens": 450,
+            "raw_vlm_output": "<think>\nImage shows grilled chicken breast and a Caesar salad...\n</think>\n\n{\n  \"dishes\": [\n    {\"dish_name\": \"Grilled Chicken Breast\", ...}\n  ]\n}",
+            "thinking_tokens": 3200,
+            "total_tokens": 6150
+          },
+          "warnings": []
+        }
+      },
+      "Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post": {
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "title": "Image",
+            "description": "\u98df\u4e8b\u753b\u50cf\u30d5\u30a1\u30a4\u30eb"
+          },
+          "user_context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Context",
+            "description": "\u30e6\u30fc\u30b6\u30fc\u30b3\u30f3\u30c6\u30ad\u30b9\u30c8"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id",
+            "description": "VLM\u30e2\u30c7\u30ebID"
+          },
+          "prompt_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Path",
+            "description": "\u30d7\u30ed\u30f3\u30d7\u30c8\u30d5\u30a1\u30a4\u30eb\u30d1\u30b9(prompts/\u4ee5\u4e0b)"
+          },
+          "prompt_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Text",
+            "description": "\u30d7\u30ed\u30f3\u30d7\u30c8\u30c6\u30ad\u30b9\u30c8\u5168\u6587(prompt_path\u3088\u308a\u512a\u5148)"
+          },
+          "thinking_budget": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thinking Budget",
+            "description": "\u601d\u8003\u30c8\u30fc\u30af\u30f3\u6570(QVQ\u30e2\u30c7\u30eb\u7528)"
+          },
+          "enable_thinking": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enable Thinking",
+            "description": "Thinking mode\u306eon/off(Alibaba\u30e2\u30c7\u30eb\u7528)"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature",
+            "description": "\u751f\u6210\u6e29\u5ea6"
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "\u6700\u5927\u30c8\u30fc\u30af\u30f3\u6570"
+          },
+          "stage1_top_k": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stage1 Top K",
+            "description": "Stage1\u5019\u88dc\u6570"
+          },
+          "bm25_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bm25 Weight",
+            "description": "BM25\u691c\u7d22\u306e\u91cd\u307f(0.0-1.0)"
+          },
+          "vector_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vector Weight",
+            "description": "Vector\u691c\u7d22\u306e\u91cd\u307f(0.0-1.0)"
+          },
+          "rrf_k": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rrf K",
+            "description": "RRF\u306ek\u30d1\u30e9\u30e1\u30fc\u30bf"
+          },
+          "reranker_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reranker Model",
+            "description": "Reranker\u30e2\u30c7\u30eb\u540d"
+          },
+          "reranker_instruction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reranker Instruction",
+            "description": "Reranker instruction"
+          },
+          "reranker_top_n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reranker Top N",
+            "description": "Reranker\u8fd4\u5374\u6570"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image"
+        ],
+        "title": "Body_analyze_meal_from_image_api_v1_meal_analyses_complete_post"
+      },
+      "DishDetail": {
+        "properties": {
+          "dish_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dish Name",
+            "description": "\u6599\u7406\u540d",
+            "example": "Grilled Chicken Salad"
+          },
+          "ingredients": {
+            "items": {
+              "$ref": "#/components/schemas/IngredientDetail"
+            },
+            "type": "array",
+            "title": "Ingredients",
+            "description": "\u98df\u6750\u8a73\u7d30\u30ea\u30b9\u30c8"
+          },
+          "total_nutrition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              }
+            ],
+            "description": "\u6599\u7406\u306e\u7dcf\u6804\u990a\u4fa1"
+          },
+          "calculation_metadata": {
+            "type": "object",
+            "title": "Calculation Metadata",
+            "description": "\u8a08\u7b97\u30e1\u30bf\u30c7\u30fc\u30bf",
+            "example": {
+              "calculation_method": "weight_based_scaling",
+              "ingredient_count": 2,
+              "total_weight_g": 200.0
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "ingredients",
+          "total_nutrition",
+          "calculation_metadata"
+        ],
+        "title": "DishDetail",
+        "description": "\u6599\u7406\u8a73\u7d30\u60c5\u5831"
+      },
+      "EndpointInfoResponse": {
+        "properties": {
+          "endpoints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Endpoints",
+            "description": "\u5229\u7528\u53ef\u80fd\u306a\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8",
+            "example": {
+              "GET /health": "\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af",
+              "POST /api/v1/meal-analyses/complete": "\u753b\u50cf\u304b\u3089\u98df\u4e8b\u3092\u5206\u6790"
+            }
+          },
+          "documentation": {
+            "type": "string",
+            "title": "Documentation",
+            "description": "\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8URL",
+            "example": "/docs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "endpoints",
+          "documentation"
+        ],
+        "title": "EndpointInfoResponse",
+        "description": "Endpoint information response"
+      },
+      "FoodItem": {
+        "properties": {
+          "fdc_id": {
+            "type": "string",
+            "title": "Fdc Id",
+            "description": "USDA FDC ID",
+            "example": "167782"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "\u98df\u6750\u540d",
+            "example": "Chicken, broilers or fryers, breast, meat only, grilled"
+          },
+          "main_name": {
+            "type": "string",
+            "title": "Main Name",
+            "description": "\u4e3b\u8981\u540d\u79f0",
+            "example": "Chicken, broilers or fryers, breast, meat only"
+          },
+          "descriptors": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descriptors",
+            "description": "\u8abf\u7406\u65b9\u6cd5\u7b49\u306e\u8a18\u8ff0\u5b50",
+            "example": "grilled"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9",
+            "example": "survey"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score",
+            "description": "\u985e\u4f3c\u5ea6\u30b9\u30b3\u30a2",
+            "example": 0.95
+          },
+          "nutrition_per_100g": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "100g\u3042\u305f\u308a\u306e\u6804\u990a\u60c5\u5831"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fdc_id",
+          "description",
+          "main_name",
+          "source",
+          "score"
+        ],
+        "title": "FoodItem",
+        "description": "\u98df\u6750\u691c\u7d22\u7d50\u679c\u30a2\u30a4\u30c6\u30e0"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthCheckResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "\u30b9\u30c6\u30fc\u30bf\u30b9",
+            "example": "healthy"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "API\u30d0\u30fc\u30b8\u30e7\u30f3",
+            "example": "1.0.0"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id",
+            "description": "\u4f7f\u7528\u4e2d\u306eVLM\u30e2\u30c7\u30ebID"
+          },
+          "prompt_file": {
+            "type": "string",
+            "title": "Prompt File",
+            "description": "\u4f7f\u7528\u4e2d\u306e\u30d7\u30ed\u30f3\u30d7\u30c8\u30d5\u30a1\u30a4\u30eb"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "model_id",
+          "prompt_file"
+        ],
+        "title": "HealthCheckResponse",
+        "description": "\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af\u30ec\u30b9\u30dd\u30f3\u30b9"
+      },
+      "IngredientDetail": {
+        "properties": {
+          "ingredient_name": {
+            "type": "string",
+            "title": "Ingredient Name",
+            "description": "\u98df\u6750\u540d\uff08DB\u30de\u30c3\u30c1\u540d\u307e\u305f\u306fVLM\u30af\u30a8\u30ea\uff09",
+            "example": "Egg, whole, raw"
+          },
+          "vlm_query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vlm Query",
+            "description": "VLM\u304c\u751f\u6210\u3057\u305f\u30af\u30a8\u30ea",
+            "example": "boiled egg"
+          },
+          "matched_db_description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Matched Db Description",
+            "description": "DB\u304b\u3089\u9078\u3070\u308c\u305f\u540d\u524d",
+            "example": "Egg, whole, raw"
+          },
+          "weight_g": {
+            "type": "number",
+            "title": "Weight G",
+            "description": "\u91cd\u91cf(\u30b0\u30e9\u30e0)",
+            "example": 100.0
+          },
+          "nutrition_per_100g": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              }
+            ],
+            "description": "100g\u3042\u305f\u308a\u306e\u6804\u990a\u60c5\u5831"
+          },
+          "calculated_nutrition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              }
+            ],
+            "description": "\u8a08\u7b97\u6e08\u307f\u6804\u990a\u60c5\u5831"
+          },
+          "source_db": {
+            "type": "string",
+            "title": "Source Db",
+            "description": "\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9",
+            "example": "usda_fndds"
+          },
+          "fdc_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fdc Id",
+            "description": "USDA FDC ID",
+            "example": "167782"
+          },
+          "calculation_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Calculation Notes",
+            "description": "\u8a08\u7b97\u306b\u95a2\u3059\u308b\u6ce8\u8a18",
+            "example": [
+              "Scaled from 100g base data using factor 1.000"
+            ]
+          },
+          "debug_info": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Debug Info",
+            "description": "\u30c7\u30d0\u30c3\u30b0\u60c5\u5831\uff08USDA\u691c\u7d22\u306e\u8a73\u7d30\uff09",
+            "example": {
+              "reranker_results": [],
+              "retriever_candidates": [],
+              "retry_count": 0
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "ingredient_name",
+          "weight_g",
+          "nutrition_per_100g",
+          "calculated_nutrition",
+          "source_db"
+        ],
+        "title": "IngredientDetail",
+        "description": "\u98df\u6750\u8a73\u7d30\u60c5\u5831"
+      },
+      "MetadataInfoResponse": {
+        "properties": {
+          "total_items": {
+            "type": "integer",
+            "title": "Total Items",
+            "description": "\u7dcf\u30a2\u30a4\u30c6\u30e0\u6570",
+            "example": 13564
+          },
+          "file_size_bytes": {
+            "type": "integer",
+            "title": "File Size Bytes",
+            "description": "\u30d5\u30a1\u30a4\u30eb\u30b5\u30a4\u30ba\uff08\u30d0\u30a4\u30c8\uff09",
+            "example": 8767812
+          },
+          "file_size_mb": {
+            "type": "number",
+            "title": "File Size Mb",
+            "description": "\u30d5\u30a1\u30a4\u30eb\u30b5\u30a4\u30ba\uff08MB\uff09",
+            "example": 8.36
+          },
+          "compressed_size_bytes": {
+            "type": "integer",
+            "title": "Compressed Size Bytes",
+            "description": "\u5727\u7e2e\u5f8c\u30b5\u30a4\u30ba\uff08\u30d0\u30a4\u30c8\uff09",
+            "example": 702565
+          },
+          "compressed_size_mb": {
+            "type": "number",
+            "title": "Compressed Size Mb",
+            "description": "\u5727\u7e2e\u5f8c\u30b5\u30a4\u30ba\uff08MB\uff09",
+            "example": 0.67
+          },
+          "compression_ratio": {
+            "type": "number",
+            "title": "Compression Ratio",
+            "description": "\u5727\u7e2e\u7387",
+            "example": 0.08
+          },
+          "sources": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Sources",
+            "description": "\u30bd\u30fc\u30b9\u5225\u4ef6\u6570",
+            "example": {
+              "foundation": 5000,
+              "sr_legacy": 1564,
+              "survey": 7000
+            }
+          },
+          "portions_coverage_percent": {
+            "type": "number",
+            "title": "Portions Coverage Percent",
+            "description": "Portions\u30ab\u30d0\u30ec\u30c3\u30b8\uff08%\uff09",
+            "example": 85.5
+          },
+          "items_with_portions": {
+            "type": "integer",
+            "title": "Items With Portions",
+            "description": "Portions\u60c5\u5831\u3092\u6301\u3064\u30a2\u30a4\u30c6\u30e0\u6570",
+            "example": 11600
+          },
+          "last_modified": {
+            "type": "number",
+            "title": "Last Modified",
+            "description": "\u6700\u7d42\u66f4\u65b0\u6642\u523b\uff08UNIX timestamp\uff09",
+            "example": 1698765432.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_items",
+          "file_size_bytes",
+          "file_size_mb",
+          "compressed_size_bytes",
+          "compressed_size_mb",
+          "compression_ratio",
+          "sources",
+          "portions_coverage_percent",
+          "items_with_portions",
+          "last_modified"
+        ],
+        "title": "MetadataInfoResponse",
+        "description": "Metadata information response"
+      },
+      "MetadataItem": {
+        "properties": {
+          "fdc_id": {
+            "type": "integer",
+            "title": "Fdc Id",
+            "description": "USDA FDC ID",
+            "example": 167782
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "description": "\u98df\u6750\u540d",
+            "example": "Chicken, broilers or fryers, breast, meat only, grilled"
+          },
+          "main_name": {
+            "type": "string",
+            "title": "Main Name",
+            "description": "\u4e3b\u8981\u540d\u79f0",
+            "example": "Chicken, broilers or fryers, breast, meat only"
+          },
+          "descriptors": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Descriptors",
+            "description": "\u8abf\u7406\u65b9\u6cd5\u7b49\u306e\u8a18\u8ff0\u5b50",
+            "example": "grilled"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "\u30c7\u30fc\u30bf\u30bd\u30fc\u30b9",
+            "example": "survey"
+          },
+          "nutrition": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/NutritionInfo"
+              }
+            ],
+            "description": "\u6804\u990a\u60c5\u5831\uff08100g\u3042\u305f\u308a\uff09"
+          },
+          "portions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Portions",
+            "description": "\u30dd\u30fc\u30b7\u30e7\u30f3\u60c5\u5831",
+            "example": [
+              {
+                "description": "1 breast, bone and skin removed",
+                "gram_weight": 86.0
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "fdc_id",
+          "description",
+          "main_name",
+          "source",
+          "nutrition"
+        ],
+        "title": "MetadataItem",
+        "description": "\u30e1\u30bf\u30c7\u30fc\u30bf\u30a2\u30a4\u30c6\u30e0"
+      },
+      "MetadataSearchResponse": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "\u691c\u7d22\u30af\u30a8\u30ea",
+            "example": "chicken breast"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/MetadataItem"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "\u691c\u7d22\u7d50\u679c\u30ea\u30b9\u30c8"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "\u7dcf\u4ef6\u6570",
+            "example": 50
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit",
+            "description": "\u53d6\u5f97\u4ef6\u6570\u5236\u9650",
+            "example": 20
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset",
+            "description": "\u30aa\u30d5\u30bb\u30c3\u30c8",
+            "example": 0
+          },
+          "has_more": {
+            "type": "boolean",
+            "title": "Has More",
+            "description": "\u3055\u3089\u306b\u7d50\u679c\u304c\u3042\u308b\u304b",
+            "example": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "results",
+          "total",
+          "limit",
+          "offset",
+          "has_more"
+        ],
+        "title": "MetadataSearchResponse",
+        "description": "\u30e1\u30bf\u30c7\u30fc\u30bf\u691c\u7d22\u30ec\u30b9\u30dd\u30f3\u30b9",
+        "example": {
+          "has_more": true,
+          "limit": 20,
+          "offset": 0,
+          "query": "chicken breast",
+          "results": [
+            {
+              "description": "Chicken, broilers or fryers, breast, meat only, grilled",
+              "descriptors": "grilled",
+              "fdc_id": 167782,
+              "main_name": "Chicken, broilers or fryers, breast, meat only",
+              "nutrition": {
+                "calories": 165.0,
+                "carbs": 0.0,
+                "fat": 3.6,
+                "fiber": 0.0,
+                "protein": 31.0,
+                "sodium": 74.0,
+                "sugar": 0.0
+              },
+              "portions": [
+                {
+                  "description": "1 breast, bone and skin removed",
+                  "gram_weight": 86.0
+                }
+              ],
+              "source": "survey"
+            }
+          ],
+          "total": 50
+        }
+      },
+      "NutritionInfo": {
+        "properties": {
+          "calories": {
+            "type": "number",
+            "title": "Calories",
+            "description": "\u30ab\u30ed\u30ea\u30fc\uff08kcal\uff09",
+            "example": 156.0
+          },
+          "protein": {
+            "type": "number",
+            "title": "Protein",
+            "description": "\u30bf\u30f3\u30d1\u30af\u8cea\uff08g\uff09",
+            "example": 12.0
+          },
+          "fat": {
+            "type": "number",
+            "title": "Fat",
+            "description": "\u8102\u8cea\uff08g\uff09",
+            "example": 10.5
+          },
+          "carbs": {
+            "type": "number",
+            "title": "Carbs",
+            "description": "\u70ad\u6c34\u5316\u7269\uff08g\uff09",
+            "example": 1.1
+          },
+          "fiber": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fiber",
+            "description": "\u98df\u7269\u7e4a\u7dad\uff08g\uff09",
+            "example": 0.0
+          },
+          "sugar": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sugar",
+            "description": "\u7cd6\u8cea\uff08g\uff09",
+            "example": 0.7
+          },
+          "sodium": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sodium",
+            "description": "\u30ca\u30c8\u30ea\u30a6\u30e0\uff08mg\uff09",
+            "example": 142.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "calories",
+          "protein",
+          "fat",
+          "carbs"
+        ],
+        "title": "NutritionInfo",
+        "description": "\u6804\u990a\u4fa1\u60c5\u5831"
+      },
+      "ReadinessResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "indexes_loaded": {
+            "type": "boolean",
+            "title": "Indexes Loaded"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "indexes_loaded",
+          "message"
+        ],
+        "title": "ReadinessResponse",
+        "description": "Readiness check response model"
+      },
+      "RetrievalHealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "\u30b9\u30c6\u30fc\u30bf\u30b9",
+            "example": "healthy"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "description": "\u30b5\u30fc\u30d3\u30b9\u540d",
+            "example": "usda_retrieval_api"
+          },
+          "index_type": {
+            "type": "string",
+            "title": "Index Type",
+            "description": "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30bf\u30a4\u30d7",
+            "example": "FAISS"
+          },
+          "modes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Modes",
+            "description": "\u5229\u7528\u53ef\u80fd\u306a\u691c\u7d22\u30e2\u30fc\u30c9",
+            "example": [
+              "fast",
+              "accurate",
+              "hybrid"
+            ]
+          },
+          "searcher_initialized": {
+            "type": "boolean",
+            "title": "Searcher Initialized",
+            "description": "Searcher\u306e\u521d\u671f\u5316\u72b6\u614b",
+            "example": true
+          },
+          "hybrid_search_enabled": {
+            "type": "boolean",
+            "title": "Hybrid Search Enabled",
+            "description": "\u30cf\u30a4\u30d6\u30ea\u30c3\u30c9\u691c\u7d22\u306e\u6709\u52b9\u72b6\u614b",
+            "example": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "service",
+          "index_type",
+          "modes",
+          "searcher_initialized",
+          "hybrid_search_enabled"
+        ],
+        "title": "RetrievalHealthResponse",
+        "description": "Retrieval API health check response"
+      },
+      "RetrievalMetadata": {
+        "properties": {
+          "total_results": {
+            "type": "integer",
+            "title": "Total Results",
+            "description": "\u7d50\u679c\u6570",
+            "example": 10
+          },
+          "search_time_ms": {
+            "type": "integer",
+            "title": "Search Time Ms",
+            "description": "\u691c\u7d22\u6642\u9593\uff08\u30df\u30ea\u79d2\uff09",
+            "example": 250
+          },
+          "index_type": {
+            "type": "string",
+            "title": "Index Type",
+            "description": "\u30a4\u30f3\u30c7\u30c3\u30af\u30b9\u30bf\u30a4\u30d7",
+            "example": "FAISS"
+          },
+          "algorithm": {
+            "type": "string",
+            "title": "Algorithm",
+            "description": "\u4f7f\u7528\u30a2\u30eb\u30b4\u30ea\u30ba\u30e0",
+            "example": "Stage1+Stage2_Rerank"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total_results",
+          "search_time_ms",
+          "index_type",
+          "algorithm"
+        ],
+        "title": "RetrievalMetadata",
+        "description": "\u691c\u7d22\u30e1\u30bf\u30c7\u30fc\u30bf"
+      },
+      "RetrievalResponse": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "\u691c\u7d22\u30af\u30a8\u30ea",
+            "example": "grilled chicken breast"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "\u691c\u7d22\u30e2\u30fc\u30c9",
+            "example": "hybrid"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/FoodItem"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "\u691c\u7d22\u7d50\u679c\u30ea\u30b9\u30c8"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/RetrievalMetadata"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RetrievalStatus"
+          },
+          "debug_info": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Debug Info",
+            "description": "\u30c7\u30d0\u30c3\u30b0\u60c5\u5831\uff08debug=true\u306e\u5834\u5408\u306e\u307f\uff09"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "mode",
+          "results",
+          "metadata",
+          "status"
+        ],
+        "title": "RetrievalResponse",
+        "description": "\u98df\u6750\u691c\u7d22\u30ec\u30b9\u30dd\u30f3\u30b9",
+        "example": {
+          "metadata": {
+            "algorithm": "Stage1+Stage2_Rerank",
+            "index_type": "FAISS",
+            "search_time_ms": 250,
+            "total_results": 10
+          },
+          "mode": "hybrid",
+          "query": "grilled chicken breast",
+          "results": [
+            {
+              "description": "Chicken, broilers or fryers, breast, meat only, grilled",
+              "descriptors": "grilled",
+              "fdc_id": "167782",
+              "main_name": "Chicken, broilers or fryers, breast, meat only",
+              "nutrition_per_100g": {
+                "calories": 165.0,
+                "carbs": 0.0,
+                "fat": 3.6,
+                "fiber": 0.0,
+                "protein": 31.0,
+                "sodium": 74.0,
+                "sugar": 0.0
+              },
+              "score": 0.95,
+              "source": "survey"
+            },
+            {
+              "description": "Chicken, broilers or fryers, breast, meat only, cooked, roasted",
+              "descriptors": "cooked, roasted",
+              "fdc_id": "171477",
+              "main_name": "Chicken, broilers or fryers, breast, meat only",
+              "nutrition_per_100g": {
+                "calories": 165.0,
+                "carbs": 0.0,
+                "fat": 3.6,
+                "fiber": 0.0,
+                "protein": 31.0,
+                "sodium": 74.0,
+                "sugar": 0.0
+              },
+              "score": 0.89,
+              "source": "foundation"
+            }
+          ],
+          "status": {
+            "message": "Search completed successfully",
+            "success": true
+          }
+        }
+      },
+      "RetrievalStatus": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "\u6210\u529f\u30d5\u30e9\u30b0",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "\u30b9\u30c6\u30fc\u30bf\u30b9\u30e1\u30c3\u30bb\u30fc\u30b8",
+            "example": "Search completed successfully"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message"
+        ],
+        "title": "RetrievalStatus",
+        "description": "\u691c\u7d22\u30b9\u30c6\u30fc\u30bf\u30b9"
+      },
+      "RootResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "API\u540d",
+            "example": "Freeform USDA Meal Analysis API"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "API\u30d0\u30fc\u30b8\u30e7\u30f3",
+            "example": "1.0.0"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "\u30b9\u30c6\u30fc\u30bf\u30b9",
+            "example": "running"
+          },
+          "documentation": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Documentation",
+            "description": "\u30c9\u30ad\u30e5\u30e1\u30f3\u30c8URL",
+            "example": {
+              "openapi": "/openapi.json",
+              "redoc": "/redoc",
+              "swagger": "/docs"
+            }
+          },
+          "endpoints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Endpoints",
+            "description": "\u4e3b\u8981\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8",
+            "example": {
+              "analysis": "/api/v1/meal-analyses",
+              "health": "/health",
+              "retrieval": "/api/v1/retrieve"
+            }
+          },
+          "default_config": {
+            "type": "object",
+            "title": "Default Config",
+            "description": "\u30c7\u30d5\u30a9\u30eb\u30c8\u8a2d\u5b9a",
+            "example": {
+              "model": "Qwen/Qwen3-VL-30B-A3B-Thinking",
+              "prompt": "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt",
+              "search": {
+                "mode": "full_index_only",
+                "stage1_top_k": 40
+              }
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "status",
+          "documentation",
+          "endpoints",
+          "default_config"
+        ],
+        "title": "RootResponse",
+        "description": "Root endpoint response"
+      },
+      "UsageInfo": {
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "title": "Prompt Tokens",
+            "description": "\u5165\u529b\u30c8\u30fc\u30af\u30f3\u6570",
+            "example": 1250
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "title": "Completion Tokens",
+            "description": "\u51fa\u529b\u30c8\u30fc\u30af\u30f3\u6570",
+            "example": 450
+          },
+          "total_tokens": {
+            "type": "integer",
+            "title": "Total Tokens",
+            "description": "\u5408\u8a08\u30c8\u30fc\u30af\u30f3\u6570",
+            "example": 1700
+          },
+          "estimated_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Cost Usd",
+            "description": "\u63a8\u5b9a\u30b3\u30b9\u30c8\uff08USD\uff09(pricing\u60c5\u5831\u304c\u306a\u3044\u5834\u5408\u306fNone)",
+            "example": 0.00125
+          },
+          "model_pricing": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Pricing",
+            "description": "\u4f7f\u7528\u3057\u305f\u30e2\u30c7\u30eb\u306e\u4fa1\u683c\u60c5\u5831 (pricing\u60c5\u5831\u304c\u306a\u3044\u5834\u5408\u306fNone)",
+            "example": {
+              "input_price_per_million": 0.29,
+              "output_price_per_million": 0.99
+            }
+          },
+          "raw_vlm_output": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Vlm Output",
+            "description": "VLM\u306e\u751f\u51fa\u529b\uff08\u30c7\u30d0\u30c3\u30b0\u7528\uff09",
+            "example": "<think>...</think>\n{\"dishes\": ...}"
+          },
+          "prompt_content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Content",
+            "description": "VLM\u306b\u9001\u4fe1\u3057\u305f\u30d7\u30ed\u30f3\u30d7\u30c8\u306e\u5185\u5bb9\uff08\u30c7\u30d0\u30c3\u30b0\u7528\uff09",
+            "example": "You are an expert food analyst..."
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ],
+        "title": "UsageInfo",
+        "description": "Token\u4f7f\u7528\u91cf\u3068\u30b3\u30b9\u30c8\u60c5\u5831"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Root",
+      "description": "\u30eb\u30fc\u30c8\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8 - API\u60c5\u5831\u3068\u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u4e00\u89a7\u3092\u53d6\u5f97"
+    },
+    {
+      "name": "Health",
+      "description": "\u30d8\u30eb\u30b9\u30c1\u30a7\u30c3\u30af - \u30b5\u30fc\u30d3\u30b9\u7a3c\u50cd\u72b6\u614b\u78ba\u8a8d\uff08Cloud Run\u7528 liveness/readiness probe\uff09"
+    },
+    {
+      "name": "Analysis",
+      "description": "\u98df\u4e8b\u5206\u6790\uff08\u30e1\u30a4\u30f3\u6a5f\u80fd\uff09 - \u753b\u50cf\u304b\u3089\u98df\u4e8b\u3092\u5206\u6790\u3057\u6804\u990a\u4fa1\u3092\u8a08\u7b97\u3002Match rate: \u5e73\u574795%\u4ee5\u4e0a"
+    },
+    {
+      "name": "Retrieval",
+      "description": "\u98df\u6750\u691c\u7d22 - USDA DB\u304b\u3089\u985e\u4f3c\u98df\u6750\u3092\u691c\u7d22\u3002Fast\uff08\u9ad8\u901f180ms\uff09/ Accurate\uff08\u9ad8\u7cbe\u5ea6800ms\uff09/ Hybrid\uff08\u6700\u9ad8\u7cbe\u5ea6\u3001BM25+Vector\uff09"
+    },
+    {
+      "name": "Metadata",
+      "description": "\u30e1\u30bf\u30c7\u30fc\u30bf\u914d\u4fe1 - USDA\u98df\u6750\u306e\u8a73\u7d30\u60c5\u5831\uff0813,564\u4ef6\uff09\u3002\u30d5\u30ed\u30f3\u30c8\u30a8\u30f3\u30c9\u5411\u3051\u3001gzip\u5727\u7e2e\u63a8\u5968\uff088.4MB\u21920.7MB\uff09"
+    }
+  ]
+}

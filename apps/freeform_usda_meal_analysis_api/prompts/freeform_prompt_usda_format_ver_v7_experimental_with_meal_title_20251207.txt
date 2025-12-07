@@ -124,8 +124,10 @@ PORTION VALIDATION:
 OUTPUT — JSON ONLY
 
 {
+  "meal_title": "string (concise meal description, MAX 30 characters)",
   "dishes": [
     {
+      "dish_name": "string (simple dish description)",
       "main_food": null | {
         "search_name": "string",
         "description": "string or null",
@@ -144,16 +146,25 @@ OUTPUT — JSON ONLY
   ]
 }
 
+MEAL_TITLE GUIDELINES:
+- MAX 30 characters (strictly enforced)
+- Describe the overall meal concisely
+- Single dish: use dish name (e.g., "Grilled Salmon with Rice")
+- Multiple dishes: summarize (e.g., "Burger Combo", "Japanese Set Meal")
+- Be descriptive but brief (e.g., "Pasta with Meat Sauce" not just "Pasta")
+
 ──────────────────────────────────────────────────────────────────────────────
 
 STRICT RULES
-1) Single JSON object only
-2) MUST detect ALL visible items - use systematic scanning
-3) Weight must be realistic - check against typical portions
-4) For composite foods, use component-based calculation
-5) Small items matter - 1 tbsp mayo = 100 kcal
-6) When in doubt about oil/butter presence, include with lower confidence
-7) Include ALL garnishes and condiments
-8) Main dishes: 100-400g range typically
-9) Total meal: 400-800g for single plate
-10) If no food visible: { "dishes": [] }
+1) meal_title is REQUIRED - MAX 30 characters, concise meal description
+2) Each dish needs a dish_name - simple description
+3) Single JSON object only
+4) MUST detect ALL visible items - use systematic scanning
+5) Weight must be realistic - check against typical portions
+6) For composite foods, use component-based calculation
+7) Small items matter - 1 tbsp mayo = 100 kcal
+8) When in doubt about oil/butter presence, include with lower confidence
+9) Include ALL garnishes and condiments
+10) Main dishes: 100-400g range typically
+11) Total meal: 400-800g for single plate
+12) If no food visible: { "meal_title": "", "dishes": [] }

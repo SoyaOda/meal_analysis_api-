@@ -108,7 +108,9 @@ class MealAnalysisPipeline:
         search_rrf_k: Optional[int] = None,
         search_reranker_model: Optional[str] = None,
         search_reranker_instruction: Optional[str] = None,
-        search_reranker_top_n: Optional[int] = None
+        search_reranker_top_n: Optional[int] = None,
+        # デバッグオプション
+        include_debug_info: bool = False
     ) -> Dict[str, Any]:
         """
         画像から栄養素計算までのEnd-to-End処理
@@ -205,7 +207,8 @@ class MealAnalysisPipeline:
                 rrf_k=search_rrf_k,
                 reranker_model=search_reranker_model,
                 reranker_instruction=search_reranker_instruction,
-                reranker_top_n=search_reranker_top_n
+                reranker_top_n=search_reranker_top_n,
+                include_debug_info=include_debug_info
             )
         else:
             # 逐次検索
@@ -217,7 +220,8 @@ class MealAnalysisPipeline:
                 rrf_k=search_rrf_k,
                 reranker_model=search_reranker_model,
                 reranker_instruction=search_reranker_instruction,
-                reranker_top_n=search_reranker_top_n
+                reranker_top_n=search_reranker_top_n,
+                include_debug_info=include_debug_info
             )
 
         logger.info(f"✅ USDA search complete: {len(search_results)} results")
@@ -268,6 +272,7 @@ class MealAnalysisPipeline:
         user_context: Optional[str] = None,
         model_config_override: Optional[Any] = None,
         search_config_override: Optional[Any] = None,
+        include_debug_info: bool = False,
     ) -> Dict[str, Any]:
         """
         API用の画像分析エンドポイント(パラメータオーバーライド対応)
@@ -277,6 +282,7 @@ class MealAnalysisPipeline:
             user_context: ユーザーコンテキスト
             model_config_override: モデル設定のオーバーライド(ModelConfigオブジェクト)
             search_config_override: 検索設定のオーバーライド(SearchConfigオブジェクト)
+            include_debug_info: デバッグ情報を含めるか
 
         Returns:
             API用にフォーマットされた分析結果
@@ -342,6 +348,7 @@ class MealAnalysisPipeline:
             result = await self.analyze_image(
                 image_bytes=image_bytes,
                 image_mime_type="image/jpeg",
+                include_debug_info=include_debug_info,
                 **vlm_kwargs,
                 **search_kwargs
             )
@@ -350,6 +357,10 @@ class MealAnalysisPipeline:
             from ..models.response_models import (
                 IngredientDetail, DishDetail, NutritionInfo
             )
+
+            # VLMレスポンスからmeal_titleを取得
+            vlm_output = result.get("vlm_output", {})
+            meal_title = vlm_output.get("meal_title")
 
             api_dishes = []
             for dish in result["dishes"]:
@@ -390,12 +401,19 @@ class MealAnalysisPipeline:
                     main_fdc_id = usda_match.get("fdc_id")
                     main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
 
-                    # デバッグ情報を抽出
-                    debug_info = {
-                        "retriever_candidates": usda_match.get("retriever_candidates", []),
-                        "reranker_results": usda_match.get("reranker_results", []),
-                        "retry_count": usda_match.get("retry_count", 0)
-                    }
+                    # デバッグ情報を抽出（新しい _debug_info フィールドを優先）
+                    debug_info = None
+                    if include_debug_info:
+                        hybrid_debug = usda_match.get("_debug_info")
+                        if hybrid_debug:
+                            debug_info = hybrid_debug
+                        else:
+                            # 旧形式のデバッグ情報へのフォールバック
+                            debug_info = {
+                                "retriever_candidates": usda_match.get("retriever_candidates", []),
+                                "reranker_results": usda_match.get("reranker_results", []),
+                                "retry_count": usda_match.get("retry_count", 0)
+                            }
 
                     ingredients.append(
                         IngredientDetail(
@@ -431,12 +449,19 @@ class MealAnalysisPipeline:
                     extra_fdc_id = extra_usda.get("fdc_id")
                     extra_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(extra_fdc_id) if extra_fdc_id else None
 
-                    # extraのデバッグ情報を抽出
-                    extra_debug_info = {
-                        "retriever_candidates": extra_usda.get("retriever_candidates", []),
-                        "reranker_results": extra_usda.get("reranker_results", []),
-                        "retry_count": extra_usda.get("retry_count", 0)
-                    }
+                    # extraのデバッグ情報を抽出（新しい _debug_info フィールドを優先）
+                    extra_debug_info = None
+                    if include_debug_info:
+                        extra_hybrid_debug = extra_usda.get("_debug_info")
+                        if extra_hybrid_debug:
+                            extra_debug_info = extra_hybrid_debug
+                        else:
+                            # 旧形式のデバッグ情報へのフォールバック
+                            extra_debug_info = {
+                                "retriever_candidates": extra_usda.get("retriever_candidates", []),
+                                "reranker_results": extra_usda.get("reranker_results", []),
+                                "retry_count": extra_usda.get("retry_count", 0)
+                            }
 
                     ingredients.append(
                         IngredientDetail(
@@ -546,6 +571,7 @@ class MealAnalysisPipeline:
 
             return {
                 "dishes": api_dishes,
+                "meal_title": meal_title,
                 "total_nutrition": total_nutrition,
                 "ai_model_used": ai_model_used,
                 "prompt_file_used": prompt_file_used,
@@ -584,7 +610,8 @@ class MealAnalysisPipeline:
         rrf_k: Optional[int] = None,
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
-        reranker_top_n: Optional[int] = None
+        reranker_top_n: Optional[int] = None,
+        include_debug_info: bool = False
     ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を並列実行"""
         # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
@@ -609,18 +636,37 @@ class MealAnalysisPipeline:
                 rrf_k=effective_rrf_k,
                 reranker_model=reranker_model,
                 reranker_instruction=reranker_instruction,
-                reranker_top_n=reranker_top_n
+                reranker_top_n=reranker_top_n,
+                include_debug_info=include_debug_info
             )
             tasks.append(task)
 
         results = await asyncio.gather(*tasks)
-        # 結果がリストの場合は最初の要素（best match）を取得
+        # 新しいレスポンス形式に対応 {"result": ..., "debug_info": ...}
         processed_results = []
-        for result in results:
-            if isinstance(result, list) and len(result) > 0:
-                processed_results.append(result[0])
-            else:
+        for response in results:
+            if isinstance(response, dict) and "result" in response:
+                # 新しい形式: {"result": ..., "debug_info": ...}
+                result = response.get("result")
+                debug_info = response.get("debug_info")
+                if result:
+                    result["_debug_info"] = debug_info  # デバッグ情報を結果に付与
                 processed_results.append(result)
+            elif isinstance(response, dict) and "results" in response:
+                # 複数結果の形式: {"results": [...], "debug_info": ...}
+                results_list = response.get("results", [])
+                debug_info = response.get("debug_info")
+                if results_list:
+                    result = results_list[0]
+                    result["_debug_info"] = debug_info
+                    processed_results.append(result)
+                else:
+                    processed_results.append(None)
+            elif isinstance(response, list) and len(response) > 0:
+                # 旧形式（リスト）
+                processed_results.append(response[0])
+            else:
+                processed_results.append(response)
         return processed_results
 
     async def _sequential_search(
@@ -632,7 +678,8 @@ class MealAnalysisPipeline:
         rrf_k: Optional[int] = None,
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
-        reranker_top_n: Optional[int] = None
+        reranker_top_n: Optional[int] = None,
+        include_debug_info: bool = False
     ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を逐次実行"""
         # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
@@ -646,7 +693,7 @@ class MealAnalysisPipeline:
 
         results = []
         for query in queries:
-            result = await self.food_search_service.search(
+            response = await self.food_search_service.search(
                 query=query['search_name'],
                 search_mode="full_index_only",
                 stage1_top_k=effective_stage1_top_k,
@@ -656,12 +703,32 @@ class MealAnalysisPipeline:
                 rrf_k=effective_rrf_k,
                 reranker_model=reranker_model,
                 reranker_instruction=reranker_instruction,
-                reranker_top_n=reranker_top_n
+                reranker_top_n=reranker_top_n,
+                include_debug_info=include_debug_info
             )
-            # 結果がリストの場合は最初の要素（best match）を取得
-            if isinstance(result, list) and len(result) > 0:
-                result = result[0]
-            results.append(result)
+            # 新しいレスポンス形式に対応 {"result": ..., "debug_info": ...}
+            if isinstance(response, dict) and "result" in response:
+                # 新しい形式: {"result": ..., "debug_info": ...}
+                result = response.get("result")
+                debug_info = response.get("debug_info")
+                if result:
+                    result["_debug_info"] = debug_info  # デバッグ情報を結果に付与
+                results.append(result)
+            elif isinstance(response, dict) and "results" in response:
+                # 複数結果の形式: {"results": [...], "debug_info": ...}
+                results_list = response.get("results", [])
+                debug_info = response.get("debug_info")
+                if results_list:
+                    result = results_list[0]
+                    result["_debug_info"] = debug_info
+                    results.append(result)
+                else:
+                    results.append(None)
+            elif isinstance(response, list) and len(response) > 0:
+                # 旧形式（リスト）
+                results.append(response[0])
+            else:
+                results.append(response)
 
         return results
 

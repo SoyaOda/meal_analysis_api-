@@ -105,8 +105,10 @@ class USDAFoodSearchService:
         # Rerankerパラメータ
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
-        reranker_top_n: Optional[int] = None
-    ) -> List[Dict[str, Any]]:
+        reranker_top_n: Optional[int] = None,
+        # デバッグオプション
+        include_debug_info: bool = False
+    ) -> Dict[str, Any]:
         """
         食品検索の実行
         
@@ -207,10 +209,11 @@ class USDAFoodSearchService:
         
         # 単一クエリの場合
         # ハイブリッドサーチが有効で、エンジンが利用可能な場合
+        debug_info = None
         if use_hybrid and self.hybrid_engine:
             try:
                 # Hybrid search + Reranker実行
-                hybrid_results = await self.hybrid_engine.search_hybrid_with_reranker(
+                hybrid_response = await self.hybrid_engine.search_hybrid_with_reranker(
                     query=query,
                     faiss_index=self.searcher.index_full,
                     embedding_service=self.searcher.embedding_service,
@@ -221,8 +224,13 @@ class USDAFoodSearchService:
                     bm25_weight=bm25_weight,
                     vector_weight=vector_weight,
                     rrf_k=rrf_k,
-                    reranker_instruction=reranker_instruction
+                    reranker_instruction=reranker_instruction,
+                    include_debug_info=include_debug_info
                 )
+
+                # 新しいレスポンス形式に対応
+                hybrid_results = hybrid_response.get("results", [])
+                debug_info = hybrid_response.get("debug_info")
 
                 # Hybrid search結果を返す（既に辞書形式）
                 logger.info(f"✅ Hybrid search returned {len(hybrid_results)} results")
@@ -232,14 +240,15 @@ class USDAFoodSearchService:
 
                 # stage1_top_k=1の場合は単一のアイテムを返す（pipeline.pyとの互換性）
                 if stage1_top_k == 1:
-                    return hybrid_results[0] if hybrid_results else None
+                    result = hybrid_results[0] if hybrid_results else None
+                    return {"result": result, "debug_info": debug_info}
                 else:
-                    return hybrid_results[:stage1_top_k]
-                
+                    return {"results": hybrid_results[:stage1_top_k], "debug_info": debug_info}
+
             except Exception as e:
                 logger.warning(f"Hybrid search failed, falling back to FAISS: {e}")
                 # Hybrid searchが失敗した場合は通常のFAISSサーチにフォールバック
-                
+
         # 通常のFAISSサーチ（非同期）
         result = await self.searcher.search_async(
             query_main=query,
@@ -249,7 +258,8 @@ class USDAFoodSearchService:
         )
         # SimplifiedUSDASearcherのレスポンスフォーマットを変換
         # best_matchを返す（pipeline.pyがfdc_idに直接アクセスするため）
-        return result["best_match"] if result and result.get("best_match") else None
+        best_match = result["best_match"] if result and result.get("best_match") else None
+        return {"result": best_match, "debug_info": None}
 
     async def search_batch(
         self,

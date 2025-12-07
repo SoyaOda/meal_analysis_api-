@@ -533,6 +533,116 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
   -F "model_id=Qwen/Qwen3-VL-235B-A22B-Thinking"
 ```
 
+## デバッグ機能
+
+### 概要
+
+検索パイプラインのデバッグに役立つ2つの機能を提供しています：
+
+1. **APIレスポンスにデバッグ情報を含める** (`debug=true`パラメータ)
+2. **Cloud Loggingへの自動出力** (本番環境で常時有効)
+
+### 1. APIデバッグモード（debug=true）
+
+画像分析エンドポイントに`debug=true`を渡すと、各食材の検索結果に詳細なデバッグ情報が含まれます。
+
+```bash
+curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
+  -F "image=@test_images/food1.jpg" \
+  -F "debug=true"
+```
+
+**レスポンス例（debug_info部分）:**
+```json
+{
+  "dishes": [
+    {
+      "ingredients": [
+        {
+          "ingredient_name": "Green tea",
+          "debug_info": {
+            "query": "green tea",
+            "bm25_top10": [
+              {"rank": 1, "fdc_id": "2346712", "description": "Tea, green, brewed", "bm25_score": 12.34}
+            ],
+            "vector_top10": [
+              {"rank": 1, "fdc_id": "2346712", "description": "Tea, green, brewed", "vector_score": 0.89}
+            ],
+            "hybrid_top10": [
+              {"rank": 1, "fdc_id": "2346712", "description": "Tea, green, brewed", "hybrid_score": 1.23}
+            ],
+            "reranked_top10": [
+              {"rank": 1, "fdc_id": "2346712", "description": "Tea, green, brewed", "rerank_score": 0.95}
+            ],
+            "timing": {
+              "bm25_time_ms": 5,
+              "vector_time_ms": 120,
+              "rrf_time_ms": 2,
+              "fusion_time_ms": 1
+            },
+            "parameters": {
+              "bm25_weight": 0.4,
+              "vector_weight": 0.6,
+              "rrf_k": 60,
+              "stage1_top_k": 50
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**用途:**
+- 「tea → Syrup」のような検索ミスマッチの原因調査
+- 各検索ステージ（BM25, Vector, Hybrid, Reranker）の結果比較
+- パラメータチューニングの効果検証
+
+### 2. Cloud Logging自動出力（本番環境）
+
+本番環境では、すべての検索リクエストのデバッグ情報がCloud Loggingに自動出力されます。
+
+**Cloud Loggingで検索:**
+
+```bash
+# GCPコンソールで検索（Logs Explorer）
+jsonPayload.message="HYBRID_SEARCH_DEBUG"
+
+# gcloudコマンドで確認
+gcloud logging read \
+  'resource.type="cloud_run_revision" AND jsonPayload.message="HYBRID_SEARCH_DEBUG"' \
+  --project=new-snap-calorie \
+  --limit=10 \
+  --format=json
+```
+
+**特定のクエリを検索:**
+
+```bash
+# "tea"というクエリのログを検索
+gcloud logging read \
+  'resource.type="cloud_run_revision" AND jsonPayload.message="HYBRID_SEARCH_DEBUG" AND jsonPayload.query="tea"' \
+  --project=new-snap-calorie \
+  --limit=5 \
+  --format=json
+```
+
+**ログ出力内容:**
+- `message`: `HYBRID_SEARCH_DEBUG`（検索キー）
+- `query`: 検索クエリ
+- `best_match`: 最終選択された食材
+- `bm25_top5`: BM25検索のTop 5結果
+- `vector_top5`: ベクトル検索のTop 5結果
+- `hybrid_top5`: Hybrid検索（Rerank前）のTop 5結果
+- `reranked_top5`: Rerank後のTop 5結果
+- `timing_ms`: 各ステージの処理時間
+- `params`: 使用されたパラメータ
+
+**ログサイズ最適化:**
+- Top 5に限定してログ容量を削減（APIレスポンスはTop 10）
+- description は50文字で切り詰め
+
 ## ローカル起動
 
 ### 起動スクリプトを使用（推奨）
