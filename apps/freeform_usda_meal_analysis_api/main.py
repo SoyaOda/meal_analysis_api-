@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routers import health, analysis, retrieval, metadata
+from .routers import health, analysis, retrieval, metadata, voice
 from .core import startup_optimizer
 from .models.response_models import RootResponse
 
@@ -88,6 +88,11 @@ async def lifespan(app: FastAPI):
         retrieval.set_hybrid_search_engine(hybrid_engine)
         logger.info("✅ Retrieval router initialized with hybrid search engine")
 
+    # Voice router に pipeline を設定
+    from .routers import voice
+    voice.set_pipeline(analysis._pipeline)
+    logger.info("✅ Voice router initialized with pipeline")
+
     # startup_optimizerのロード状態は、実際のロード後に更新される
     # ここではすぐに"ready"とマークしない（Lazy Loadingのため）
     logger.info("✅ Application initialized - ready to accept requests")
@@ -121,6 +126,10 @@ app = FastAPI(
             "description": "食事分析（メイン機能） - 画像から食事を分析し栄養価を計算。Match rate: 平均95%以上"
         },
         {
+            "name": "Voice Analysis",
+            "description": "音声入力分析 - 音声から食事を分析し栄養価を計算。Whisper STT + LLM + USDA検索"
+        },
+        {
             "name": "Retrieval",
             "description": "食材検索 - USDA DBから類似食材を検索。Fast（高速180ms）/ Accurate（高精度800ms）/ Hybrid（最高精度、BM25+Vector）"
         },
@@ -143,6 +152,7 @@ app.add_middleware(
 # ルーター登録
 app.include_router(health.router)
 app.include_router(analysis.router)
+app.include_router(voice.router)  # Voice analysis router
 app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
 app.include_router(metadata.router, tags=["Metadata"])
 
@@ -170,6 +180,7 @@ async def root():
         "endpoints": {
             "health": "/health",
             "analysis": "/api/v1/meal-analyses",
+            "voice": "/api/v1/meal-analyses/voice",
             "retrieval": "/api/v1/retrieve",
         },
         "default_config": {

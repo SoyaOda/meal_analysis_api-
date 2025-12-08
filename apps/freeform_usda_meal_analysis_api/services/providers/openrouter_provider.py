@@ -364,3 +364,105 @@ class OpenRouterProvider(BaseVLMProvider):
             logger.error(error_msg, exc_info=True)
             # エラーメッセージを含めて例外を再発生
             raise Exception(error_msg) from e
+
+    async def analyze_text(
+        self,
+        text: str,
+        prompt: str,
+        max_tokens: Optional[int] = None,
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None,
+        return_usage: bool = False
+    ) -> Union[str, Tuple[str, Dict[str, Any]]]:
+        """
+        テキスト入力を分析してLLMの応答を取得（Voice入力用）
+
+        画像なしでテキストのみを処理する。音声入力から変換されたテキストの
+        分析に使用される。
+
+        Args:
+            text: 分析対象のテキスト（音声認識結果など）
+            prompt: LLMへのシステムプロンプト
+            max_tokens: 最大出力トークン数
+            temperature: ランダム性制御
+            seed: 再現性のためのシード値
+            return_usage: Trueの場合、(response, usage_dict) のタプルを返す
+
+        Returns:
+            LLMの応答JSON文字列（return_usage=Falseの場合）
+            または (response, usage_dict) のタプル（return_usage=Trueの場合）
+        """
+        # config から設定を取得
+        settings = get_settings()
+
+        # パラメータのデフォルト値を設定
+        if max_tokens is None:
+            max_tokens = settings.DEFAULT_VOICE_MAX_TOKENS
+        if temperature is None:
+            temperature = settings.DEFAULT_VOICE_TEMPERATURE
+        if seed is None:
+            seed = settings.DEFAULT_SEED
+
+        logger.info(f"🔧 LLM Parameters (text mode): max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
+
+        try:
+            logger.info(f"📝 Analyzing text with OpenRouter LLM (model: {self.model_id})")
+            logger.info(f"   Prompt length: {len(prompt)} chars")
+            logger.info(f"   Text length: {len(text)} chars")
+
+            # メッセージ構築（テキストのみ）
+            messages = [
+                {
+                    "role": "system",
+                    "content": prompt
+                },
+                {
+                    "role": "user",
+                    "content": text
+                }
+            ]
+
+            # リクエストパラメータ
+            request_params = {
+                "model": self.model_id,
+                "messages": messages,
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+            }
+
+            if seed is not None:
+                request_params["seed"] = seed
+
+            # API呼び出し
+            response = await self.client.chat.completions.create(**request_params)
+
+            # 応答が空でないかチェック
+            if not response.choices or not response.choices[0].message.content:
+                logger.error("❌ API response is empty or invalid.")
+                raise ValueError(f"[OpenRouter Provider] Empty or invalid API response")
+
+            # 応答内容を取得
+            raw_content = response.choices[0].message.content.strip()
+
+            logger.info(f"✅ LLM response received ({len(raw_content)} chars)")
+
+            # usage情報を取得
+            usage_dict = {}
+            if response.usage:
+                usage_dict = {
+                    "prompt_tokens": response.usage.prompt_tokens,
+                    "completion_tokens": response.usage.completion_tokens,
+                    "total_tokens": response.usage.total_tokens,
+                }
+                logger.info(f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
+                          f"completion={usage_dict['completion_tokens']}, "
+                          f"total={usage_dict['total_tokens']}")
+
+            if return_usage:
+                return raw_content, usage_dict
+            return raw_content
+
+        except Exception as e:
+            error_msg = f"Unexpected error during text analysis: {str(e) or type(e).__name__}"
+            logger.error(error_msg, exc_info=True)
+            raise Exception(error_msg) from e

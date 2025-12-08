@@ -149,6 +149,31 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
         # 通常モデル使用時のパラメータ
         self.NORMAL_MODEL_TOP_P = float(os.getenv("NORMAL_MODEL_TOP_P", "1.0"))
 
+        # ========== Voice分析設定 ==========
+        # Voice用LLM/VLMモデル（テキストモード）
+        # デフォルト: gemma-3-27b-it（軽量で高速なLLM）
+        # VLMモデル（Qwen3-VL等）もテキストモードで使用可能
+        self.DEFAULT_VOICE_MODEL_ID = os.getenv(
+            "VOICE_MODEL_ID",
+            "google/gemma-3-27b-it"
+        )
+
+        # Voice用プロンプトファイル
+        self.DEFAULT_VOICE_PROMPT_FILE = os.getenv(
+            "DEFAULT_VOICE_PROMPT_FILE",
+            "freeform_voice_prompt_usda.txt"
+        )
+
+        # 音声認識設定
+        self.DEFAULT_WHISPER_MODEL = os.getenv(
+            "WHISPER_MODEL",
+            "openai/whisper-large-v3-turbo"
+        )
+
+        # Voice用LLMパラメータ
+        self.DEFAULT_VOICE_MAX_TOKENS = int(os.getenv("VOICE_MAX_TOKENS", "4096"))
+        self.DEFAULT_VOICE_TEMPERATURE = float(os.getenv("VOICE_TEMPERATURE", "0.3"))
+
         # ========== Google Cloud設定 ==========
         self.GOOGLE_CLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -192,6 +217,45 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
             )
 
         return str(prompt_path)
+
+    def get_voice_prompt_path(self, prompt_filename: Optional[str] = None) -> str:
+        """
+        Voice用プロンプトファイルの絶対パスを取得
+
+        Args:
+            prompt_filename: プロンプトファイル名（Noneの場合はデフォルト）
+
+        Returns:
+            プロンプトファイルの絶対パス
+
+        Raises:
+            ValueError: プロンプトファイル名が不正な場合
+            FileNotFoundError: プロンプトファイルが存在しない場合
+        """
+        if prompt_filename is None:
+            prompt_filename = self.DEFAULT_VOICE_PROMPT_FILE
+
+        # バリデーション: ファイル名ではなくプロンプトテキストが渡された場合のチェック
+        if len(prompt_filename) > 200 or '\n' in prompt_filename:
+            raise ValueError(
+                "Invalid voice prompt_path: expected a file name, but received text content.\n"
+                "Please provide only the file name (e.g., 'freeform_voice_prompt_usda.txt'),\n"
+                "not the full prompt text.\n\n"
+                f"Available voice prompts in {self.PROMPTS_DIR}:\n" +
+                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*voice*.txt"))
+            )
+
+        prompt_path = self.PROMPTS_DIR / prompt_filename
+
+        if not prompt_path.exists():
+            raise FileNotFoundError(
+                f"Voice prompt file not found: {prompt_path}\n"
+                f"Available prompts in {self.PROMPTS_DIR}:\n" +
+                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
+            )
+
+        return str(prompt_path)
+
 
 @lru_cache()
 def get_settings() -> Settings:

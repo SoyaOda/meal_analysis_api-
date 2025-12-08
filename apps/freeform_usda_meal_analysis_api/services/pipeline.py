@@ -893,3 +893,318 @@ class MealAnalysisPipeline:
 
         # 丸め処理
         return {k: round(v, 1) for k, v in total.items()}
+
+    async def analyze_meal_from_voice(
+        self,
+        audio_bytes: bytes,
+        user_context: Optional[str] = None,
+        model_config_override: Optional[Any] = None,
+        search_config_override: Optional[Any] = None,
+        voice_model_id: Optional[str] = None,
+        voice_prompt_file: Optional[str] = None,
+        whisper_model: Optional[str] = None,
+        language: str = "en",
+        include_debug_info: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        API用の音声分析エンドポイント
+
+        処理フロー:
+        1. 音声 → Whisper STT → テキスト変換
+        2. テキスト → LLM → 食事情報抽出（USDA形式JSON）
+        3. USDA検索 → 栄養価計算
+
+        Args:
+            audio_bytes: 音声データ（バイト列）
+            user_context: ユーザーコンテキスト
+            model_config_override: モデル設定のオーバーライド
+            search_config_override: 検索設定のオーバーライド
+            voice_model_id: Voice解析用LLM/VLMモデルID
+            voice_prompt_file: Voice解析用プロンプトファイル
+            whisper_model: Whisperモデル（STT用）
+            language: 言語コード（en, ja等）
+            include_debug_info: デバッグ情報を含めるか
+
+        Returns:
+            - dishes: 検出された料理リスト
+            - total_nutrition: 総栄養価
+            - transcript: 音声認識テキスト
+            - voice_metadata: 音声メタデータ
+            - usage: Token使用量
+        """
+        import time
+        from .speech_service import SpeechService
+        from .text_analysis_service import TextAnalysisService
+        from ..models.response_models import (
+            IngredientDetail, DishDetail, NutritionInfo, VoiceMetadata
+        )
+
+        logger.info("=" * 80)
+        logger.info("Starting Voice-based Meal Analysis")
+        logger.info("=" * 80)
+
+        start_time = time.time()
+
+        # Step 1: 音声認識 (STT)
+        logger.info("\n🔄 Step 1/4: Speech-to-Text (Whisper)")
+
+        speech_service = SpeechService()
+        try:
+            transcript, stt_metadata = await speech_service.transcribe_audio(
+                audio_data=audio_bytes,
+                language=language,
+                model=whisper_model
+            )
+        except Exception as e:
+            logger.error(f"STT failed: {e}")
+            raise RuntimeError(f"[Pipeline] Speech-to-text failed: {e}") from e
+
+        if not transcript or not transcript.strip():
+            raise ValueError("[Pipeline] Speech recognition returned empty text")
+
+        logger.info(f"✅ Transcript: '{transcript[:100]}...'")
+
+        # Step 2: テキスト分析 (LLM)
+        logger.info("\n🔄 Step 2/4: Text Analysis (LLM)")
+
+        text_analysis_service = TextAnalysisService(
+            model_id=voice_model_id,
+            prompt_file=voice_prompt_file
+        )
+
+        try:
+            llm_result, llm_usage = await text_analysis_service.analyze_text(
+                text=transcript,
+                temperature=model_config_override.temperature if model_config_override else None,
+                max_tokens=model_config_override.max_tokens if model_config_override else None
+            )
+        except Exception as e:
+            logger.error(f"LLM analysis failed: {e}")
+            raise RuntimeError(f"[Pipeline] LLM text analysis failed: {e}") from e
+
+        dishes = llm_result.get("dishes", [])
+        logger.info(f"✅ LLM analysis complete: {len(dishes)} dishes found")
+
+        # Step 3: クエリ抽出 & USDA検索
+        logger.info("\n🔄 Step 3/4: Query Extraction & USDA Search")
+
+        queries = self.query_extraction.extract_queries(llm_result)
+        logger.info(f"✅ Extracted {len(queries)} queries")
+
+        # 検索設定の適用
+        search_kwargs = {}
+        if search_config_override:
+            if search_config_override.stage1_top_k is not None:
+                search_kwargs["stage1_top_k"] = search_config_override.stage1_top_k
+            if search_config_override.bm25_weight is not None:
+                search_kwargs["bm25_weight"] = search_config_override.bm25_weight
+            if search_config_override.vector_weight is not None:
+                search_kwargs["vector_weight"] = search_config_override.vector_weight
+            if search_config_override.rrf_k is not None:
+                search_kwargs["rrf_k"] = search_config_override.rrf_k
+            if search_config_override.reranker_model is not None:
+                search_kwargs["reranker_model"] = search_config_override.reranker_model
+            if search_config_override.reranker_instruction is not None:
+                search_kwargs["reranker_instruction"] = search_config_override.reranker_instruction
+            if search_config_override.reranker_top_n is not None:
+                search_kwargs["reranker_top_n"] = search_config_override.reranker_top_n
+
+        # 並列検索
+        search_results = await self._parallel_search(
+            queries,
+            include_debug_info=include_debug_info,
+            **search_kwargs
+        )
+        logger.info(f"✅ USDA search complete: {len(search_results)} results")
+
+        # クエリに検索結果を付与
+        for i, query in enumerate(queries):
+            query['usda_match'] = search_results[i]
+
+        # Step 4: 栄養素計算
+        logger.info("\n🔄 Step 4/4: Nutrition Calculation")
+
+        enriched_dishes = self._build_enriched_dishes(dishes, queries)
+        total_nutrition = self._calculate_total_nutrition(enriched_dishes)
+
+        logger.info(f"✅ Nutrition calculation complete")
+        logger.info(f"   Total: {total_nutrition['calories']} kcal")
+
+        # API用のレスポンス形式に変換
+        api_dishes = []
+        for dish in enriched_dishes:
+            main_food = dish.get("main_food")
+            ingredients = []
+
+            if main_food is not None:
+                usda_match = main_food.get("usda_match")
+                nutrition = main_food.get("nutrition")
+
+                if usda_match:
+                    main_fdc_id = usda_match.get("fdc_id")
+                    main_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(main_fdc_id) if main_fdc_id else None
+
+                    debug_info = None
+                    if include_debug_info:
+                        debug_info = usda_match.get("_debug_info")
+
+                    ingredients.append(
+                        IngredientDetail(
+                            ingredient_name=main_food.get("matched_description", main_food.get("search_name", "")),
+                            vlm_query=main_food.get("search_name", ""),
+                            matched_db_description=main_food.get("matched_description", ""),
+                            weight_g=main_food.get("weight_g", 0.0),
+                            nutrition_per_100g=NutritionInfo(
+                                calories=main_nutrition_per_100g.get("calories", 0.0) if main_nutrition_per_100g else 0.0,
+                                protein=main_nutrition_per_100g.get("protein_g", 0.0) if main_nutrition_per_100g else 0.0,
+                                fat=main_nutrition_per_100g.get("fat_g", 0.0) if main_nutrition_per_100g else 0.0,
+                                carbs=main_nutrition_per_100g.get("carbs_g", 0.0) if main_nutrition_per_100g else 0.0,
+                            ),
+                            calculated_nutrition=NutritionInfo(
+                                calories=nutrition.get("calories", 0.0) if nutrition else 0.0,
+                                protein=nutrition.get("protein_g", 0.0) if nutrition else 0.0,
+                                fat=nutrition.get("fat_g", 0.0) if nutrition else 0.0,
+                                carbs=nutrition.get("carbs_g", 0.0) if nutrition else 0.0,
+                            ),
+                            source_db="usda_fndds",
+                            fdc_id=str(usda_match.get("fdc_id", "")),
+                            calculation_notes=[f"Weight: {main_food.get('weight_g', 0)}g"],
+                            debug_info=debug_info
+                        )
+                    )
+
+            # Extrasを追加
+            for extra in dish.get("extras", []):
+                extra_nutrition = extra.get("nutrition", {})
+                extra_usda = extra.get("usda_match", {})
+                extra_fdc_id = extra_usda.get("fdc_id")
+                extra_nutrition_per_100g = self.nutrition_service.get_nutrition_per_100g(extra_fdc_id) if extra_fdc_id else None
+
+                extra_debug_info = None
+                if include_debug_info:
+                    extra_debug_info = extra_usda.get("_debug_info")
+
+                ingredients.append(
+                    IngredientDetail(
+                        ingredient_name=extra.get("matched_description", extra.get("search_name", "Unknown")),
+                        vlm_query=extra.get("search_name", ""),
+                        matched_db_description=extra.get("matched_description", ""),
+                        weight_g=extra.get("weight_g", 0.0),
+                        nutrition_per_100g=NutritionInfo(
+                            calories=extra_nutrition_per_100g.get("calories", 0.0) if extra_nutrition_per_100g else 0.0,
+                            protein=extra_nutrition_per_100g.get("protein_g", 0.0) if extra_nutrition_per_100g else 0.0,
+                            fat=extra_nutrition_per_100g.get("fat_g", 0.0) if extra_nutrition_per_100g else 0.0,
+                            carbs=extra_nutrition_per_100g.get("carbs_g", 0.0) if extra_nutrition_per_100g else 0.0,
+                        ),
+                        calculated_nutrition=NutritionInfo(
+                            calories=extra_nutrition.get("calories", 0.0) if extra_nutrition else 0.0,
+                            protein=extra_nutrition.get("protein_g", 0.0) if extra_nutrition else 0.0,
+                            fat=extra_nutrition.get("fat_g", 0.0) if extra_nutrition else 0.0,
+                            carbs=extra_nutrition.get("carbs_g", 0.0) if extra_nutrition else 0.0,
+                        ),
+                        source_db="usda_fndds",
+                        fdc_id=str(extra_usda.get("fdc_id", "")),
+                        calculation_notes=[f"Weight: {extra.get('weight_g', 0)}g"],
+                        debug_info=extra_debug_info
+                    )
+                )
+
+            # 料理の総栄養を計算
+            dish_nutrition = NutritionInfo(
+                calories=sum(ing.calculated_nutrition.calories for ing in ingredients),
+                protein=sum(ing.calculated_nutrition.protein for ing in ingredients),
+                fat=sum(ing.calculated_nutrition.fat for ing in ingredients),
+                carbs=sum(ing.calculated_nutrition.carbs for ing in ingredients),
+            )
+
+            dish_name = dish.get("dish_name")
+
+            api_dishes.append(
+                DishDetail(
+                    dish_name=dish_name,
+                    ingredients=ingredients,
+                    total_nutrition=dish_nutrition,
+                    calculation_metadata={
+                        "ingredient_count": len(ingredients),
+                        "total_weight_g": sum(ing.weight_g for ing in ingredients),
+                    }
+                )
+            )
+
+        # 全体の栄養
+        total_nutrition_info = NutritionInfo(
+            calories=total_nutrition["calories"],
+            protein=total_nutrition["protein_g"],
+            fat=total_nutrition["fat_g"],
+            carbs=total_nutrition["carbs_g"],
+        )
+
+        # 終了時刻を記録
+        end_time = time.time()
+        total_time = end_time - start_time
+
+        # モデル情報
+        ai_model_used = voice_model_id or text_analysis_service.model_id
+        prompt_file_used = voice_prompt_file or text_analysis_service.prompt_file
+
+        # マッチ率計算
+        total_queries_count = len(api_dishes)
+        matched_queries = sum(1 for dish in api_dishes if len(dish.ingredients) > 0)
+        match_rate = (matched_queries / total_queries_count * 100) if total_queries_count > 0 else 0.0
+
+        # Usage情報とコスト計算
+        from ..models.response_models import UsageInfo
+        usage_info = None
+        if llm_usage:
+            cost_data = self.cost_calculator.calculate_cost(
+                model_id=ai_model_used,
+                prompt_tokens=llm_usage.get("prompt_tokens", 0),
+                completion_tokens=llm_usage.get("completion_tokens", 0)
+            )
+
+            if cost_data is None:
+                usage_info = UsageInfo(
+                    prompt_tokens=llm_usage.get("prompt_tokens", 0),
+                    completion_tokens=llm_usage.get("completion_tokens", 0),
+                    total_tokens=llm_usage.get("total_tokens", 0),
+                    estimated_cost_usd=None,
+                    model_pricing=None,
+                    raw_vlm_output=llm_usage.get("raw_vlm_output")
+                )
+            else:
+                usage_info = UsageInfo(
+                    prompt_tokens=cost_data["prompt_tokens"],
+                    completion_tokens=cost_data["completion_tokens"],
+                    total_tokens=cost_data["total_tokens"],
+                    estimated_cost_usd=cost_data["estimated_cost_usd"],
+                    model_pricing=cost_data["model_pricing"],
+                    raw_vlm_output=llm_usage.get("raw_vlm_output")
+                )
+
+        # VoiceMetadata
+        voice_metadata = VoiceMetadata(
+            whisper_model=stt_metadata.get("whisper_model", ""),
+            audio_duration_seconds=stt_metadata.get("audio_duration_seconds"),
+            audio_size_bytes=stt_metadata.get("audio_size_bytes", len(audio_bytes)),
+            language_detected=stt_metadata.get("language_detected"),
+            stt_processing_time_seconds=stt_metadata.get("stt_processing_time_seconds")
+        )
+
+        logger.info("\n" + "=" * 80)
+        logger.info("✅ Voice-based Analysis Complete")
+        logger.info(f"⏱️  Total time: {total_time:.2f} seconds")
+        logger.info("=" * 80)
+
+        return {
+            "dishes": api_dishes,
+            "meal_title": llm_result.get("meal_title"),
+            "total_nutrition": total_nutrition_info,
+            "ai_model_used": ai_model_used,
+            "prompt_file_used": prompt_file_used,
+            "match_rate_percent": match_rate,
+            "usage": usage_info,
+            "transcript": transcript,
+            "voice_metadata": voice_metadata,
+            "processing_time_seconds": round(total_time, 2),
+            "warnings": [],
+        }

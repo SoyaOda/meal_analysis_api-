@@ -79,6 +79,17 @@ class DishDetail(BaseModel):
 
 
 
+class VoiceMetadata(BaseModel):
+    """音声入力メタデータ"""
+    model_config = {"protected_namespaces": ()}
+
+    whisper_model: str = Field(..., description="使用したWhisperモデル", example="openai/whisper-large-v3-turbo")
+    audio_duration_seconds: Optional[float] = Field(None, description="音声の長さ（秒）", example=5.3)
+    audio_size_bytes: int = Field(..., description="音声ファイルサイズ（バイト）", example=84736)
+    language_detected: Optional[str] = Field(None, description="検出された言語", example="en")
+    stt_processing_time_seconds: Optional[float] = Field(None, description="STT処理時間（秒）", example=1.2)
+
+
 class UsageInfo(BaseModel):
     """Token使用量とコスト情報"""
     model_config = {"protected_namespaces": ()}
@@ -362,6 +373,7 @@ class AnalysisResponse(BaseModel):
 
     # 音声入力特有
     transcript: Optional[str] = Field(None, description="音声認識テキスト（音声入力時のみ）")
+    voice_metadata: Optional[VoiceMetadata] = Field(None, description="音声入力メタデータ（音声入力時のみ）")
 
     # 警告メッセージ
     warnings: List[str] = Field(
