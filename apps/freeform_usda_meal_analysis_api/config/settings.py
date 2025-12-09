@@ -31,16 +31,16 @@ class Settings:
         - 柔軟なプロンプト選択
 
         ## デフォルト設定
-        - モデル: Qwen3-VL-30B-A3B-Thinking (30Bパラメータ)
+        - モデル: OpenRouter GPT-5.1
         - プロンプト: v7_experimental
         - 検索: Fullインデックスのみ使用
         """
 
         # ========== VLMモデル設定 ==========
-        # デフォルト: 30B Thinking モデル
+        # デフォルト: OpenRouter GPT-5.1
         self.DEFAULT_VLM_MODEL_ID = os.getenv(
             "VLM_MODEL_ID",
-            "Qwen/Qwen3-VL-30B-A3B-Thinking"
+            "openrouter:openai/gpt-5.1"
         )
 
         # デフォルト: v7_experimental with meal_title プロンプト
