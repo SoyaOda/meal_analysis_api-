@@ -67,15 +67,22 @@ For layered/multi-component foods, calculate weight by components:
 USDA-FRIENDLY NAMING
 For EVERY item provide:
 
-1) search_name — core food identity (concise noun phrase):
-   - Natural descriptions matching nutrition databases
-   - Include species/cut when identifiable ("chicken breast" vs "pork loin")
-   - Use visual cues for meat identification:
+1) search_name — USDA database search key (use "Category, type" format):
+   - MUST use comma-separated format: "Soft drink, cola" NOT "cola"
+   - Pattern: "Category, type" or "Category, type, modifier"
+   - AVOID single words: "ham" → "Ham, sliced" | "rice" → "Rice, white, cooked"
+   - Include species/cut: "Chicken, breast" | "Beef, steak" | "Pork, loin"
+   - Common USDA patterns:
+     • Beverages: "Soft drink, cola" | "Coffee, brewed" | "Tea, black"
+     • Meats: "Chicken, breast, grilled" | "Beef, ground, cooked"
+     • Grains: "Rice, white, cooked" | "Bread, white" | "Pasta, cooked"
+     • Vegetables: "Broccoli, cooked" | "Carrot, raw" | "Tomato, fresh"
+   - Visual meat identification:
      • Chicken: white/pale, fine grain
      • Pork: pinkish-white, medium grain
      • Beef: red/brown, coarse grain, marbling
 
-2) description — normalized modifiers (comma-separated):
+2) description — additional modifiers (comma-separated):
    • state: raw, cooked, fresh, frozen, canned
    • method: boiled, steamed, roasted, grilled, baked, fried
    • components: with vegetables, with meat (if not in search_name)

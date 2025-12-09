@@ -329,7 +329,7 @@ async def _search_hybrid_reranker_mode(query: str, top_k: int) -> Dict[str, Any]
     searcher = _search_service.searcher
 
     # ハイブリッド + リランキング検索実行
-    candidates = await _hybrid_search_engine.search_hybrid_with_reranker(
+    search_result = await _hybrid_search_engine.search_hybrid_with_reranker(
         query=query,
         faiss_index=searcher.index_full,
         embedding_service=searcher.embedding_service,
@@ -338,6 +338,9 @@ async def _search_hybrid_reranker_mode(query: str, top_k: int) -> Dict[str, Any]
         top_k=top_k,
         stage1_top_k=100  # Stage1で取得する候補数
     )
+
+    # search_hybrid_with_rerankerは {"results": [...], "debug_info": {...}} を返す
+    candidates = search_result.get("results", [])
 
     # 結果を整形
     results = []

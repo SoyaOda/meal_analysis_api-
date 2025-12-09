@@ -34,6 +34,7 @@ https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/docs
 | エンドポイント | メソッド | 用途 | レスポンスタイム |
 |---------------|---------|------|------------------|
 | `/api/v1/meal-analyses/complete` | POST | 画像から食事分析 | 30-50秒 |
+| `/api/v1/meal-analyses/voice` | POST | 音声から食事分析 | 10-15秒 |
 | `/api/v1/retrieve` | GET | 食材検索（Hybrid） | 0.2-0.5秒 |
 | `/api/v1/metadata` | GET | 全食材メタデータ取得 | 0.1-0.3秒 |
 | `/api/v1/metadata/search` | GET | 食材名検索 | 0.05-0.1秒 |
@@ -284,6 +285,7 @@ APIはエラー時に以下の形式でJSONを返します：
 | 操作 | 平均レスポンスタイム | 推奨タイムアウト |
 |------|---------------------|-----------------|
 | 画像分析（VLM処理） | 30-50秒 | 60秒 |
+| 音声分析（Whisper + LLM） | 10-15秒 | 30秒 |
 | Hybrid検索 | 0.2-0.5秒 | 5秒 |
 | Fast検索 | 0.1-0.2秒 | 3秒 |
 | メタデータ取得（gzip） | 0.1-0.3秒 | 5秒 |
@@ -383,10 +385,78 @@ function MealAnalyzer() {
 }
 ```
 
+### 4. 音声入力による食事分析（Voice Input）
+
+```javascript
+// 音声ファイルをアップロードして栄養分析
+async function analyzeVoiceInput(audioFile) {
+  const formData = new FormData();
+  formData.append('audio_file', audioFile);
+  formData.append('user_context', 'breakfast analysis');
+
+  try {
+    const response = await fetch(
+      'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/api/v1/meal-analyses/voice',
+      {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(30000)  // 30秒タイムアウト
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    console.log(`Transcript: ${result.transcript}`);
+    console.log(`Total Calories: ${result.total_nutrition.calories} kcal`);
+    return result;
+
+  } catch (error) {
+    console.error('Voice analysis failed:', error);
+    throw error;
+  }
+}
+
+// 使用例（録音後）
+const audioBlob = await recordAudio();  // 録音機能は別途実装
+const result = await analyzeVoiceInput(audioBlob);
+```
+
+**サポートされる音声フォーマット:**
+- WAV, MP3, M4A, FLAC, OGG, WEBM
+- 推奨: WAV (16kHz, モノラル)
+- 最大ファイルサイズ: 25MB
+
+**音声入力レスポンス例:**
+```json
+{
+  "analysis_id": "8fe9b77b",
+  "input_type": "voice",
+  "transcript": "two large eggs, and one slice of whole wheat toast with butter",
+  "total_dishes": 1,
+  "total_ingredients": 3,
+  "processing_time_seconds": 11.98,
+  "dishes": [...],
+  "total_nutrition": {
+    "calories": 393.2,
+    "protein": 17.7,
+    "fat": 27.3,
+    "carbs": 17.9
+  },
+  "voice_metadata": {
+    "whisper_model": "openai/whisper-large-v3-turbo",
+    "stt_processing_time_seconds": 1.52
+  }
+}
+```
+
 ## アーキテクチャ
 
 ```
 画像入力 → VLM解析 → クエリ抽出 → USDA検索（Hybrid/Accurate/Fast） → 栄養素計算 → 結果出力
+音声入力 → Whisper STT → LLM解析 → クエリ抽出 → USDA検索 → 栄養素計算 → 結果出力
 ```
 
 ### 主要コンポーネント
@@ -413,6 +483,10 @@ function MealAnalyzer() {
    - **合計: 13,564 食材**（栄養素データ内蔵、270MBの外部JSONファイル不要）
    - **Portions情報**: 13,046食材（96.2%）に単位変換情報あり
 7. **NutritionCalculator**: 100g あたりの栄養素から実重量の栄養素を計算
+8. **VoiceAnalysisService**: 音声入力による食事分析
+   - **Whisper STT**: `openai/whisper-large-v3-turbo` による音声認識
+   - **LLM解析**: `google/gemma-3-27b-it` によるテキスト解析（デフォルト）
+   - 多言語対応（日本語、英語等）
 
 ## ディレクトリ構成
 
@@ -456,7 +530,8 @@ apps/freeform_usda_meal_analysis_api/
 ├── scripts/                   # データ生成スクリプト
 │   └── build_index_with_nutrition.py    # FAISSインデックス + 栄養データ統合生成
 ├── prompts/
-│   ├── freeform_prompt_usda_format_ver_v7_experimental_20251027.txt  # デフォルト
+│   ├── freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt  # デフォルト（画像）
+│   ├── freeform_voice_prompt_usda.txt                               # デフォルト（音声）
 │   ├── freeform_prompt_usda_format_ver_v7_production_20251027.txt
 │   └── ...                    # その他のプロンプトバージョン
 ├── services/
@@ -468,6 +543,7 @@ apps/freeform_usda_meal_analysis_api/
 │   ├── food_search_service.py # USDA検索サービス
 │   ├── hybrid_search.py       # Hybrid Search Engine (BM25 + Vector)
 │   ├── nutrition_service.py   # 栄養素計算
+│   ├── voice_analysis_service.py  # 音声入力分析（Whisper + LLM）
 │   └── pipeline.py            # End-to-End統合
 └── test_result_food1.json     # テスト結果サンプル
 ```
@@ -721,6 +797,29 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
   -F "max_tokens=4096" \
   -F "stage1_top_k=40"
 ```
+
+### 音声入力による食事分析
+
+```bash
+# 基本的な音声分析
+curl -X POST "http://localhost:8006/api/v1/meal-analyses/voice" \
+  -F "audio_file=@test_audio/breakfast_detailed.wav" \
+  -F "user_context=breakfast analysis"
+
+# モデルをカスタマイズ（VLMモデルもテキストモードで使用可能）
+curl -X POST "http://localhost:8006/api/v1/meal-analyses/voice" \
+  -F "audio_file=@test_audio/lunch.wav" \
+  -F "model_id=Qwen/Qwen3-VL-30B-A3B-Thinking" \
+  -F "temperature=0.3"
+```
+
+**音声入力パラメータ:**
+- `audio_file` (必須): 音声ファイル（WAV, MP3, M4A, FLAC, OGG, WEBM）
+- `user_context` (オプション): 追加コンテキスト
+- `model_id` (オプション): LLM/VLMモデルID（デフォルト: `google/gemma-3-27b-it`）
+- `prompt_path` (オプション): プロンプトファイル名（デフォルト: `freeform_voice_prompt_usda.txt`）
+- `temperature` (オプション): 生成温度（デフォルト: 0.3）
+- `max_tokens` (オプション): 最大トークン数（デフォルト: 4096）
 
 ### レスポンス例
 

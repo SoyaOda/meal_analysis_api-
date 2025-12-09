@@ -255,21 +255,40 @@ class DeepInfraService:
     async def generate_embeddings(
         self,
         texts: List[str],
-        model: str = "Qwen/Qwen3-Embedding-8B"
+        model: str = "Qwen/Qwen3-Embedding-8B",
+        instruction: Optional[str] = None
     ) -> List[List[float]]:
         """
         テキストのembeddingを生成（DeepInfra API使用）
 
+        Qwen3-Embedding-8BはInstruction-awareモデルのため、
+        instruction指定時は「Instruct: {task}\\nQuery: {query}」形式で
+        より正確なセマンティックマッチングが可能。
+
         Args:
             texts: embedding生成対象のテキストリスト
             model: 使用するembeddingモデル
+            instruction: タスク指示文（例: "Match food names to USDA database"）
+                         指定時はinline形式でクエリに埋め込む
 
         Returns:
             embedding vector のリスト
         """
         try:
+            # Instruction形式を適用（Qwen3-Embedding-8B対応）
+            # DeepInfra APIはinstructionパラメータを無視するため、
+            # inline形式「Instruct: {task}\nQuery: {query}」を使用
+            if instruction:
+                formatted_texts = [
+                    f"Instruct: {instruction}\nQuery: {text}"
+                    for text in texts
+                ]
+                logger.debug(f"Embedding with instruction: '{instruction[:50]}...'")
+            else:
+                formatted_texts = texts
+
             response = await self.client.embeddings.create(
-                input=texts,
+                input=formatted_texts,
                 model=model,
                 encoding_format="float"  # DeepInfra requires 'float'
             )

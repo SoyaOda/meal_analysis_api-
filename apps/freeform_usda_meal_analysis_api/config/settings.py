@@ -43,10 +43,10 @@ class Settings:
             "Qwen/Qwen3-VL-30B-A3B-Thinking"
         )
 
-        # デフォルト: v7_experimental プロンプト
+        # デフォルト: v7_experimental with meal_title プロンプト
         self.DEFAULT_PROMPT_FILE = os.getenv(
             "DEFAULT_PROMPT_FILE",
-            "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+            "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
         )
 
         # プロンプトディレクトリ
@@ -111,6 +111,13 @@ class Settings:
         self.DEFAULT_BM25_WEIGHT = float(os.getenv("BM25_WEIGHT", "0.4"))
         self.DEFAULT_VECTOR_WEIGHT = float(os.getenv("VECTOR_WEIGHT", "0.6"))
         self.DEFAULT_RRF_K = int(os.getenv("RRF_K", "60"))
+
+        # Embedding Instruction（Qwen3-Embedding-8B用）
+        # 短いクエリでも正しくUSDA食材にマッチさせるための指示
+        self.DEFAULT_EMBEDDING_INSTRUCTION = os.getenv(
+            "EMBEDDING_INSTRUCTION",
+            "Match food names to USDA FoodData Central database entries for nutrition lookup"
+        )
 
         # 検索結果数の設定
         self.DEFAULT_SEARCH_TOP_K = int(os.getenv("SEARCH_TOP_K", "100"))

@@ -14,7 +14,13 @@ import gzip
 from pathlib import Path
 
 from ..config import get_settings
-from ..models.response_models import MetadataSearchResponse, MetadataInfoResponse, MetadataItem
+from ..models.response_models import (
+    MetadataSearchResponse,
+    MetadataInfoResponse,
+    MetadataItem,
+    NormalizedUnit,
+)
+from ..services.portions_normalizer import normalize_portions_for_food
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -284,15 +290,24 @@ async def search_metadata(
 
 
 @router.get("/api/v1/metadata/{fdc_id}", response_model=MetadataItem)
-async def get_metadata_by_fdc_id(fdc_id: int) -> MetadataItem:
+async def get_metadata_by_fdc_id(
+    fdc_id: int,
+    include_normalized_units: bool = Query(
+        True,
+        description="正規化された単位リストを含めるか"
+    )
+) -> MetadataItem:
     """
     FDC ID指定でメタデータ取得
 
     ## 概要
     FDC IDを指定して単一の食材メタデータを取得します。
+    `include_normalized_units=true`（デフォルト）の場合、アプリUI用に
+    正規化された単位リスト（`normalized_units`）も含まれます。
 
     ## パラメータ
     - **fdc_id**: FDC ID（例: 746774）
+    - **include_normalized_units**: 正規化された単位リストを含めるか（デフォルト: true）
 
     ## レスポンス
     ```json
@@ -303,9 +318,19 @@ async def get_metadata_by_fdc_id(fdc_id: int) -> MetadataItem:
       "descriptors": "grilled",
       "source": "survey",
       "nutrition": {...},
-      "portions": [...]
+      "portions": [...],
+      "normalized_units": [
+        {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, ...},
+        {"name": "cup", "abbreviation": "cup", "grams_per_unit": 135.0, ...}
+      ]
     }
     ```
+
+    ## normalized_unitsについて
+    - `g`は常に先頭に含まれる（基準単位）
+    - DBのportionsから正規化された単位のみ含まれる
+    - 数量が1以外の場合は1単位あたりに換算済み
+    - "Quantity not specified", "yields"等は除外済み
     """
     metadata_path = Path(settings.USDA_METADATA_FILE)
 
@@ -321,6 +346,22 @@ async def get_metadata_by_fdc_id(fdc_id: int) -> MetadataItem:
         for item in metadata:
             if item.get('fdc_id') == fdc_id:
                 logger.info(f"✅ Found metadata for FDC ID: {fdc_id}")
+
+                # normalized_unitsを追加
+                if include_normalized_units:
+                    portions = item.get('portions', [])
+                    normalized = normalize_portions_for_food(portions)
+                    item['normalized_units'] = [
+                        {
+                            'name': u.name,
+                            'abbreviation': u.abbreviation,
+                            'grams_per_unit': u.grams_per_unit,
+                            'original_description': u.original_description,
+                            'is_base_unit': u.is_base_unit,
+                        }
+                        for u in normalized
+                    ]
+
                 return item
 
         # 見つからない場合

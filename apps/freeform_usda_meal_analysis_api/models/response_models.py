@@ -498,6 +498,25 @@ class RetrievalResponse(BaseModel):
 # Metadata Search Response Models
 # ============================================================
 
+class NormalizedUnit(BaseModel):
+    """正規化された単位情報（アプリUI用）"""
+    model_config = {"protected_namespaces": ()}
+
+    name: str = Field(..., description="単位名", example="cup")
+    abbreviation: str = Field(..., description="略称", example="cup")
+    grams_per_unit: float = Field(..., description="1単位あたりのグラム数", example=244.0)
+    original_description: str = Field(
+        ...,
+        description="元のdescription",
+        example="1 cup"
+    )
+    is_base_unit: bool = Field(
+        False,
+        description="基準単位（g）かどうか",
+        example=False
+    )
+
+
 class MetadataItem(BaseModel):
     """メタデータアイテム"""
     model_config = {"protected_namespaces": ()}
@@ -510,9 +529,17 @@ class MetadataItem(BaseModel):
     nutrition: NutritionInfo = Field(..., description="栄養情報（100gあたり）")
     portions: Optional[List[Dict[str, Any]]] = Field(
         None,
-        description="ポーション情報",
+        description="ポーション情報（元データ）",
         example=[
             {"description": "1 breast, bone and skin removed", "gram_weight": 86.0}
+        ]
+    )
+    normalized_units: Optional[List[NormalizedUnit]] = Field(
+        None,
+        description="正規化された単位リスト（アプリUI用）",
+        example=[
+            {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, "original_description": "gram (base unit)", "is_base_unit": True},
+            {"name": "cup", "abbreviation": "cup", "grams_per_unit": 244.0, "original_description": "1 cup", "is_base_unit": False}
         ]
     )
 

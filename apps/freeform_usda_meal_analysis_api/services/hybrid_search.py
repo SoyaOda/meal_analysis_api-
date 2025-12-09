@@ -126,7 +126,8 @@ class HybridSearchEngine:
         query: str,
         faiss_index,
         embedding_service,
-        top_k: int = 100
+        top_k: int = 100,
+        embedding_instruction: str = None
     ) -> List[Tuple[int, float]]:
         """
         Vectorセマンティック検索を実行
@@ -136,12 +137,22 @@ class HybridSearchEngine:
             faiss_index: FAISSインデックス
             embedding_service: 埋め込みサービス
             top_k: 取得する結果数
+            embedding_instruction: Qwen3-Embedding用のinstruction（設定から取得）
 
         Returns:
             [(doc_index, score), ...]
         """
-        # Embedding生成
-        embeddings = await embedding_service.generate_embeddings([query])
+        # Embedding Instruction取得
+        if embedding_instruction is None:
+            from ..config.settings import get_settings
+            settings = get_settings()
+            embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+
+        # Embedding生成（Instruction形式を適用）
+        embeddings = await embedding_service.generate_embeddings(
+            [query],
+            instruction=embedding_instruction
+        )
         query_vector = np.array(embeddings[0]).astype('float32').reshape(1, -1)
 
         # FAISS検索
@@ -319,6 +330,35 @@ class HybridSearchEngine:
         logger.info(f"  BM25 results: {len(bm25_results)}")
         logger.info(f"  Vector results: {len(vector_results)}")
 
+        # デバッグ: BM25とVector検索のTop 5結果を表示
+        logger.info(f"  BM25 Top 5: {[(items[idx]['description'], f'{score:.4f}') for idx, score in bm25_results[:5] if idx < len(items)]}")
+        logger.info(f"  Vector Top 5: {[(items[idx]['description'], f'{score:.4f}') for idx, score in vector_results[:5] if idx < len(items)]}")
+
+        # 「Soft drink, cola」が含まれているかチェック
+        bm25_indices = [idx for idx, _ in bm25_results]
+        vector_indices = [idx for idx, _ in vector_results]
+
+        # "Soft drink, cola"を探す
+        soft_drink_found_bm25 = False
+        soft_drink_found_vector = False
+        for idx, score in bm25_results:
+            if idx < len(items) and items[idx]['description'] == 'Soft drink, cola':
+                pos = bm25_indices.index(idx)
+                logger.info(f"  'Soft drink, cola' in BM25: position {pos+1}, score={score:.4f}")
+                soft_drink_found_bm25 = True
+                break
+        if not soft_drink_found_bm25:
+            logger.info(f"  'Soft drink, cola' NOT in BM25 top {len(bm25_results)}")
+
+        for idx, score in vector_results:
+            if idx < len(items) and items[idx]['description'] == 'Soft drink, cola':
+                pos = vector_indices.index(idx)
+                logger.info(f"  'Soft drink, cola' in Vector: position {pos+1}, score={score:.4f}")
+                soft_drink_found_vector = True
+                break
+        if not soft_drink_found_vector:
+            logger.info(f"  'Soft drink, cola' NOT in Vector top {len(vector_results)}")
+
         # Stage 2: RRF適用
         rrf_scores = self.apply_rrf(bm25_results, vector_results, k=rrf_k)
         logger.info(f"  RRF merged: {len(rrf_scores)} unique documents")
@@ -434,8 +474,13 @@ class HybridSearchEngine:
 
         # ===== Stage 2: FAISS Vector 検索 =====
         start_time_vector = asyncio.get_event_loop().time()
-        # クエリのベクトル化
-        query_vectors = await embedding_service.generate_embeddings([query])
+        # Embedding Instruction取得（Qwen3-Embedding-8B対応）
+        embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+        # クエリのベクトル化（Instruction形式を適用）
+        query_vectors = await embedding_service.generate_embeddings(
+            [query],
+            instruction=embedding_instruction
+        )
         query_vector_np = np.array([query_vectors[0]], dtype='float32')
 
         # FAISS検索
@@ -542,7 +587,7 @@ class HybridSearchEngine:
 
         # ===== Cloud Logging用デバッグ出力（常に出力） =====
         # Cloud Run上ではJSON形式でログ出力するとCloud Loggingで構造化ログとして扱われる
-        # Top 5に限定してログ容量を抑える
+        # Top 10を出力してデバッグ・分析に活用
         cloud_log_data = {
             "message": "HYBRID_SEARCH_DEBUG",
             "severity": "INFO",
@@ -552,21 +597,21 @@ class HybridSearchEngine:
                 "description": reranked_results[0]["description"] if reranked_results else None,
                 "rerank_score": reranked_results[0]["rerank_score"] if reranked_results else None,
             },
-            "bm25_top5": [
+            "bm25_top10": [
                 {"rank": i + 1, "fdc_id": items[idx]["fdc_id"], "desc": items[idx]["description"][:50], "score": round(bm25_scores[i], 4) if i < len(bm25_scores) else 0}
-                for i, idx in enumerate(bm25_indices[:5])
+                for i, idx in enumerate(bm25_indices[:10])
             ],
-            "vector_top5": [
+            "vector_top10": [
                 {"rank": i + 1, "fdc_id": items[idx]["fdc_id"], "desc": items[idx]["description"][:50], "score": round(vector_scores[i], 4) if i < len(vector_scores) else 0}
-                for i, idx in enumerate(vector_indices[:5])
+                for i, idx in enumerate(vector_indices[:10])
             ],
-            "hybrid_top5": [
+            "hybrid_top10": [
                 {"rank": i + 1, "fdc_id": c["fdc_id"], "desc": c["description"][:50], "score": round(c["hybrid_score"], 4)}
-                for i, c in enumerate(hybrid_candidates[:5])
+                for i, c in enumerate(hybrid_candidates[:10])
             ],
-            "reranked_top5": [
+            "reranked_top10": [
                 {"rank": i + 1, "fdc_id": r["fdc_id"], "desc": r["description"][:50], "score": round(r["rerank_score"], 4), "original_rank": r["original_rank"]}
-                for i, r in enumerate(reranked_results[:5])
+                for i, r in enumerate(reranked_results[:10])
             ],
             "timing_ms": {
                 "bm25": int(bm25_time * 1000),
