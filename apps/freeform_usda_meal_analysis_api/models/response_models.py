@@ -418,6 +418,10 @@ class RetrievalMetadata(BaseModel):
     search_time_ms: int = Field(..., description="検索時間（ミリ秒）", example=250)
     index_type: str = Field(..., description="インデックスタイプ", example="FAISS")
     algorithm: str = Field(..., description="使用アルゴリズム", example="Stage1+Stage2_Rerank")
+    # ページネーション情報
+    offset: int = Field(0, description="オフセット（スキップした結果数）", example=0)
+    has_more: bool = Field(False, description="追加結果があるか", example=True)
+    total_available: Optional[int] = Field(None, description="取得可能な総結果数（推定）", example=100)
 
 
 class RetrievalStatus(BaseModel):

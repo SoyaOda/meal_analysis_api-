@@ -44,6 +44,7 @@ async def retrieve_foods(
     q: str = Query(..., min_length=1, description="検索クエリ"),
     mode: str = Query("hybrid", description="検索モード: fast (FAISS only) | accurate (FAISS + Rerank) | hybrid (BM25 + FAISS) | hybrid_reranker (BM25 + FAISS + Rerank)"),
     top_k: int = Query(10, ge=1, le=50, description="返却結果数（1-50）"),
+    offset: int = Query(0, ge=0, le=500, description="オフセット（スキップする結果数、ページネーション用）"),
     include_nutrition: bool = Query(True, description="栄養情報を含めるか"),
     debug: bool = Query(False, description="デバッグ情報を含めるか")
 ) -> RetrievalResponse:
@@ -54,11 +55,12 @@ async def retrieve_foods(
         q: 検索クエリ（例: "chicken breast grilled"）
         mode: "fast" (FAISS検索のみ、高速) or "accurate" (FAISS + Reranking、高精度) or "hybrid" (BM25 + FAISS、最高精度) or "hybrid_reranker" (BM25 + FAISS + Reranking、最高精度)
         top_k: 返却する結果数
+        offset: オフセット（ページネーション用、スキップする結果数）
         include_nutrition: 栄養情報を含めるか
         debug: デバッグ情報を含めるか
 
     Returns:
-        検索結果のJSON
+        検索結果のJSON（metadata.has_moreでさらに結果があるか確認可能）
     """
 
     if not _search_service:
@@ -79,19 +81,29 @@ async def retrieve_foods(
                 detail="Invalid mode. Must be 'fast', 'accurate', 'hybrid', or 'hybrid_reranker'"
             )
 
+        # ページネーション用に多めに取得（offset + top_k + 1件で、has_moreを判定）
+        internal_top_k = offset + top_k + 1
+
         # 検索実行
         if mode == "fast":
             # Fast mode: FAISS検索のみ（Stage 1）
-            result = await _search_fast_mode(q, top_k)
+            result = await _search_fast_mode(q, internal_top_k)
         elif mode == "hybrid":
             # Hybrid mode: BM25 + FAISS（RRF融合）
-            result = await _search_hybrid_mode(q, top_k)
+            result = await _search_hybrid_mode(q, internal_top_k)
         elif mode == "hybrid_reranker":
             # Hybrid + Reranker mode: BM25 + FAISS（RRF融合）+ Reranking
-            result = await _search_hybrid_reranker_mode(q, top_k)
+            result = await _search_hybrid_reranker_mode(q, internal_top_k)
         else:
             # Accurate mode: FAISS + Reranking（Stage 1 + 2）
-            result = await _search_accurate_mode(q, top_k)
+            result = await _search_accurate_mode(q, internal_top_k)
+
+        # ページネーション適用（offsetからtop_k件を取得）
+        all_results = result.get("results", [])
+        total_available = len(all_results)
+        has_more = total_available > offset + top_k
+        paginated_results = all_results[offset:offset + top_k]
+        result["results"] = paginated_results
 
         # 栄養情報フィルタ
         if not include_nutrition:
@@ -110,7 +122,10 @@ async def retrieve_foods(
                 total_results=len(result.get("results", [])),
                 search_time_ms=processing_time_ms,
                 index_type="FAISS",
-                algorithm="Stage1" if mode == "fast" else "Stage1+Stage2_Rerank"
+                algorithm="Stage1" if mode == "fast" else "Stage1+Stage2_Rerank",
+                offset=offset,
+                has_more=has_more,
+                total_available=total_available if total_available > 0 else None
             ),
             status=RetrievalStatus(
                 success=True,
