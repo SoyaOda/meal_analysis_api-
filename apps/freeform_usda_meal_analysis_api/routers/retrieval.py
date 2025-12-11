@@ -632,6 +632,20 @@ async def log_food_selection(request: SelectionLogRequest) -> SelectionLogRespon
         )
 
 
+@router.get("/retrieve/cache/stats")
+async def cache_stats():
+    """
+    キャッシュ統計情報を取得
+
+    ## 概要
+    レスポンスキャッシュのヒット率、サイズ、TTLなどの統計情報を返します。
+
+    Returns:
+        キャッシュ統計情報
+    """
+    return _response_cache.stats()
+
+
 @router.get("/retrieve/health", response_model=RetrievalHealthResponse)
 async def retrieval_health_check():
     """
