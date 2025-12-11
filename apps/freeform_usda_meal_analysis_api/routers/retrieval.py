@@ -17,6 +17,8 @@ from ..models.response_models import (
     RetrievalStatus,
     RetrievalHealthResponse
 )
+from ..services.portions_normalizer import normalize_portions_for_food
+from dataclasses import asdict
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,7 @@ async def retrieve_foods(
     top_k: int = Query(10, ge=1, le=50, description="返却結果数（1-50）"),
     offset: int = Query(0, ge=0, le=500, description="オフセット（スキップする結果数、ページネーション用）"),
     include_nutrition: bool = Query(True, description="栄養情報を含めるか"),
+    include_units: bool = Query(False, description="利用可能な単位リストを含めるか（正規化済み）"),
     debug: bool = Query(False, description="デバッグ情報を含めるか")
 ) -> RetrievalResponse:
     """
@@ -57,6 +60,7 @@ async def retrieve_foods(
         top_k: 返却する結果数
         offset: オフセット（ページネーション用、スキップする結果数）
         include_nutrition: 栄養情報を含めるか
+        include_units: 利用可能な単位リストを含めるか（正規化済み、g/cup/oz等）
         debug: デバッグ情報を含めるか
 
     Returns:
@@ -109,6 +113,27 @@ async def retrieve_foods(
         if not include_nutrition:
             for item in result.get("results", []):
                 item.pop("nutrition_per_100g", None)
+
+        # 単位情報を追加（include_units=trueの場合）
+        if include_units:
+            # Lazy Loading対応：searcherのitemsから各食品のportions情報を取得
+            searcher = _search_service.searcher
+            for item in result.get("results", []):
+                fdc_id = item.get("fdc_id")
+                # items内から該当する食品を検索
+                food_item = next(
+                    (i for i in searcher.items if str(i.get("fdc_id")) == str(fdc_id)),
+                    None
+                )
+                if food_item:
+                    portions = food_item.get("portions", [])
+                    normalized_units = normalize_portions_for_food(portions, include_gram=True)
+                    item["available_units"] = [asdict(u) for u in normalized_units]
+                else:
+                    # 見つからない場合はgのみ
+                    item["available_units"] = [
+                        {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, "original_description": "gram (base unit)", "is_base_unit": True}
+                    ]
 
         # 処理時間計算
         processing_time_ms = int((time.time() - start_time) * 1000)

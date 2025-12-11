@@ -28,6 +28,17 @@ class NutritionInfo(BaseModel):
     sodium: Optional[float] = Field(None, validation_alias=AliasChoices("sodium", "sodium_mg"), description="ナトリウム（mg）", example=142.0)
 
 
+class NormalizedUnit(BaseModel):
+    """正規化された単位情報"""
+    model_config = {"protected_namespaces": ()}
+
+    name: str = Field(..., description="単位名", example="cup")
+    abbreviation: str = Field(..., description="略称", example="cup")
+    grams_per_unit: float = Field(..., description="1単位あたりのグラム数", example=128.0)
+    original_description: str = Field(..., description="元の記述", example="1 cup, sliced")
+    is_base_unit: bool = Field(False, description="基本単位（g）かどうか", example=False)
+
+
 class IngredientDetail(BaseModel):
     """食材詳細情報"""
     model_config = {"protected_namespaces": ()}
@@ -408,6 +419,14 @@ class FoodItem(BaseModel):
     source: str = Field(..., description="データソース", example="survey")
     score: float = Field(..., description="類似度スコア", example=0.95)
     nutrition_per_100g: Optional[NutritionInfo] = Field(None, description="100gあたりの栄養情報")
+    available_units: Optional[List[NormalizedUnit]] = Field(
+        None,
+        description="利用可能な単位リスト（正規化済み）",
+        example=[
+            {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, "original_description": "gram (base unit)", "is_base_unit": True},
+            {"name": "cup", "abbreviation": "cup", "grams_per_unit": 128.0, "original_description": "1 cup, sliced", "is_base_unit": False}
+        ]
+    )
 
 
 class RetrievalMetadata(BaseModel):
