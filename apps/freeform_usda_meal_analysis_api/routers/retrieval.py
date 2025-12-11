@@ -6,10 +6,13 @@ FAISS検索エンドポイント（fastモードとaccurateモード）
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 import logging
 import time
+import hashlib
 from datetime import datetime
+from collections import OrderedDict
+from threading import Lock
 
 from ..models.response_models import (
     RetrievalResponse,
@@ -23,6 +26,73 @@ from dataclasses import asdict
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# ============================================================
+# Response Cache with TTL
+# ============================================================
+class TTLCache:
+    """Thread-safe LRU cache with TTL (Time To Live)"""
+
+    def __init__(self, max_size: int = 100, ttl_seconds: int = 300):
+        """
+        Args:
+            max_size: Maximum number of cached items
+            ttl_seconds: Time to live in seconds (default: 5 minutes)
+        """
+        self._cache: OrderedDict[str, Tuple[Any, float]] = OrderedDict()
+        self._max_size = max_size
+        self._ttl = ttl_seconds
+        self._lock = Lock()
+        self._hits = 0
+        self._misses = 0
+
+    def _make_key(self, query: str, mode: str, top_k: int, offset: int) -> str:
+        """Generate cache key from search parameters"""
+        key_str = f"{query.lower().strip()}:{mode}:{top_k}:{offset}"
+        return hashlib.md5(key_str.encode()).hexdigest()
+
+    def get(self, query: str, mode: str, top_k: int, offset: int) -> Optional[Dict]:
+        """Get cached result if exists and not expired"""
+        key = self._make_key(query, mode, top_k, offset)
+        with self._lock:
+            if key in self._cache:
+                result, timestamp = self._cache[key]
+                if time.time() - timestamp < self._ttl:
+                    # Move to end (most recently used)
+                    self._cache.move_to_end(key)
+                    self._hits += 1
+                    return result
+                else:
+                    # Expired, remove
+                    del self._cache[key]
+            self._misses += 1
+            return None
+
+    def set(self, query: str, mode: str, top_k: int, offset: int, result: Dict):
+        """Cache a search result"""
+        key = self._make_key(query, mode, top_k, offset)
+        with self._lock:
+            # Evict oldest if at capacity
+            while len(self._cache) >= self._max_size:
+                self._cache.popitem(last=False)
+            self._cache[key] = (result, time.time())
+
+    def stats(self) -> Dict[str, Any]:
+        """Return cache statistics"""
+        with self._lock:
+            total = self._hits + self._misses
+            return {
+                "size": len(self._cache),
+                "max_size": self._max_size,
+                "hits": self._hits,
+                "misses": self._misses,
+                "hit_rate": round(self._hits / total, 3) if total > 0 else 0,
+                "ttl_seconds": self._ttl
+            }
+
+
+# Global cache instance (100 items, 5 minute TTL)
+_response_cache = TTLCache(max_size=100, ttl_seconds=300)
 
 # USDAFoodSearchServiceはmain.pyで初期化されたものをグローバルに保持
 _search_service = None
@@ -84,6 +154,33 @@ async def retrieve_foods(
                 status_code=400,
                 detail="Invalid mode. Must be 'fast', 'accurate', 'hybrid', or 'hybrid_reranker'"
             )
+
+        # キャッシュチェック（include_nutritionとinclude_unitsはポストプロセスなので基本パラメータでキャッシュ）
+        cached_result = _response_cache.get(q, mode, top_k, offset)
+        if cached_result is not None:
+            logger.info(f"✅ Cache hit for query='{q}'")
+            # キャッシュされた結果を使用（ポストプロセスは適用済み）
+            processing_time_ms = int((time.time() - start_time) * 1000)
+            response = RetrievalResponse(
+                query=q,
+                mode=mode,
+                results=cached_result["results"],
+                metadata=RetrievalMetadata(
+                    total_results=len(cached_result["results"]),
+                    search_time_ms=processing_time_ms,
+                    index_type="FAISS",
+                    algorithm=cached_result.get("algorithm", "cached"),
+                    offset=offset,
+                    has_more=cached_result.get("has_more", False),
+                    total_available=cached_result.get("total_available")
+                ),
+                status=RetrievalStatus(
+                    success=True,
+                    message="Search completed successfully (cached)"
+                ),
+                debug_info=None
+            )
+            return response
 
         # ページネーション用に多めに取得（offset + top_k + 1件で、has_moreを判定）
         internal_top_k = offset + top_k + 1
@@ -160,6 +257,15 @@ async def retrieve_foods(
         )
 
         logger.info(f"✅ Retrieval completed: {len(result.get('results', []))} results in {processing_time_ms}ms")
+
+        # キャッシュに保存（ポストプロセス適用後の結果を保存）
+        cache_data = {
+            "results": result.get("results", []),
+            "algorithm": "Stage1" if mode == "fast" else "Stage1+Stage2_Rerank",
+            "has_more": has_more,
+            "total_available": total_available if total_available > 0 else None
+        }
+        _response_cache.set(q, mode, top_k, offset, cache_data)
 
         return response
 
