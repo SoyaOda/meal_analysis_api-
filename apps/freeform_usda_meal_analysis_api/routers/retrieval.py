@@ -21,7 +21,9 @@ from ..models.response_models import (
     RetrievalHealthResponse
 )
 from ..services.portions_normalizer import normalize_portions_for_food
+from ..services.analytics import get_analytics
 from dataclasses import asdict
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -180,6 +182,23 @@ async def retrieve_foods(
                 ),
                 debug_info=None
             )
+
+            # キャッシュヒットの検索ログを記録
+            analytics = get_analytics()
+            if analytics:
+                try:
+                    await analytics.log_search(
+                        query=q,
+                        results_count=len(cached_result["results"]),
+                        mode=mode,
+                        latency_ms=processing_time_ms,
+                        offset=offset,
+                        top_k=top_k,
+                        cache_hit=True
+                    )
+                except Exception as log_err:
+                    logger.warning(f"Failed to log search analytics: {log_err}")
+
             return response
 
         # ページネーション用に多めに取得（offset + top_k + 1件で、has_moreを判定）
@@ -266,6 +285,22 @@ async def retrieve_foods(
             "total_available": total_available if total_available > 0 else None
         }
         _response_cache.set(q, mode, top_k, offset, cache_data)
+
+        # 検索ログを記録（非同期、ノンブロッキング）
+        analytics = get_analytics()
+        if analytics:
+            try:
+                await analytics.log_search(
+                    query=q,
+                    results_count=len(result.get("results", [])),
+                    mode=mode,
+                    latency_ms=processing_time_ms,
+                    offset=offset,
+                    top_k=top_k,
+                    cache_hit=False
+                )
+            except Exception as log_err:
+                logger.warning(f"Failed to log search analytics: {log_err}")
 
         return response
 
@@ -526,6 +561,67 @@ async def _search_hybrid_reranker_mode(query: str, top_k: int) -> Dict[str, Any]
             "reranking_applied": True
         }
     }
+
+
+class SelectionLogRequest(BaseModel):
+    """選択ログリクエスト"""
+    query: str
+    fdc_id: str
+    food_name: str
+    result_position: int
+    user_id: Optional[str] = None
+    session_id: Optional[str] = None
+
+
+class SelectionLogResponse(BaseModel):
+    """選択ログレスポンス"""
+    success: bool
+    message: str
+
+
+@router.post("/retrieve/selection", response_model=SelectionLogResponse)
+async def log_food_selection(request: SelectionLogRequest) -> SelectionLogResponse:
+    """
+    食品選択イベントをログに記録
+
+    ## 概要
+    ユーザーが検索結果から食品を選択した際にこのエンドポイントを呼び出すことで、
+    検索精度向上のためのデータを収集します。
+
+    Args:
+        request: 選択情報（検索クエリ、選択したFDC ID、食品名、結果位置等）
+
+    Returns:
+        SelectionLogResponse: ログ記録の成否
+    """
+    analytics = get_analytics()
+    if not analytics:
+        logger.warning("Analytics not initialized, selection not logged")
+        return SelectionLogResponse(
+            success=False,
+            message="Analytics not available"
+        )
+
+    try:
+        await analytics.log_selection(
+            query=request.query,
+            selected_fdc_id=request.fdc_id,
+            selected_food_name=request.food_name,
+            result_position=request.result_position,
+            user_id=request.user_id,
+            session_id=request.session_id
+        )
+        logger.info(f"📊 Selection logged: query='{request.query}', fdc_id={request.fdc_id}, position={request.result_position}")
+        return SelectionLogResponse(
+            success=True,
+            message="Selection logged successfully"
+        )
+    except Exception as e:
+        logger.error(f"Failed to log selection: {e}")
+        return SelectionLogResponse(
+            success=False,
+            message=f"Failed to log selection: {str(e)}"
+        )
 
 
 @router.get("/retrieve/health", response_model=RetrievalHealthResponse)

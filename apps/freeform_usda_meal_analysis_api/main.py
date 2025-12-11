@@ -15,6 +15,7 @@ from .config import get_settings
 from .routers import health, analysis, retrieval, metadata, voice
 from .core import startup_optimizer
 from .models.response_models import RootResponse
+from .services.analytics import init_analytics, get_analytics
 
 # ロギング設定
 logging.basicConfig(
@@ -93,6 +94,18 @@ async def lifespan(app: FastAPI):
     voice.set_pipeline(analysis._pipeline)
     logger.info("✅ Voice router initialized with pipeline")
 
+    # Search Analytics初期化（BigQueryログ記録）
+    analytics = None
+    try:
+        analytics = await init_analytics(
+            project_id=os.environ.get("GOOGLE_CLOUD_PROJECT"),
+            enabled=os.environ.get("SEARCH_ANALYTICS_ENABLED", "true").lower() == "true"
+        )
+        logger.info("✅ Search Analytics initialized")
+    except Exception as e:
+        logger.warning(f"⚠️ Search Analytics initialization failed: {e}")
+        logger.warning("   Search analytics logging will be disabled")
+
     # startup_optimizerのロード状態は、実際のロード後に更新される
     # ここではすぐに"ready"とマークしない（Lazy Loadingのため）
     logger.info("✅ Application initialized - ready to accept requests")
@@ -101,6 +114,12 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     logger.info("Shutting down Freeform USDA Meal Analysis API...")
+
+    # Search Analyticsの停止（残りのログをフラッシュ）
+    analytics = get_analytics()
+    if analytics:
+        await analytics.stop()
+        logger.info("✅ Search Analytics stopped")
 
 
 # FastAPIアプリケーション作成
