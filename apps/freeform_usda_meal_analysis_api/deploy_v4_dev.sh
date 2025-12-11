@@ -3,12 +3,30 @@
 #
 # 使用方法:
 #   cd apps/freeform_usda_meal_analysis_api
-#   source /Users/odasoya/meal_analysis_api_2/.env
 #   bash deploy_v4_dev.sh
 #
 # 注意: deploy_optimized.shと同じ:optimizedタグを使用
+#       .envファイルは自動的に読み込まれます
 
 set -e
+
+# リポジトリルートの.envファイルを読み込む
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ENV_FILE="${REPO_ROOT}/.env"
+
+if [ -f "${ENV_FILE}" ]; then
+    echo "📂 Loading environment variables from ${ENV_FILE}..."
+    set -a  # 自動的にexportする
+    source "${ENV_FILE}"
+    set +a
+    echo "✅ Environment variables loaded"
+    echo ""
+else
+    echo "⚠️  Warning: .env file not found at ${ENV_FILE}"
+    echo "   API keys must be set manually"
+    echo ""
+fi
 
 # gcloud コマンドのパス設定
 GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
@@ -56,17 +74,32 @@ else
 fi
 echo ""
 
-# アプリケーションディレクトリに移動（自己完結型）
-cd "$(dirname "$0")"
+# アプリケーションディレクトリを基準にリポジトリルートに移動
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "${SCRIPT_DIR}/../.."
 
-# 1. Docker イメージのビルドとプッシュ
+# 1. Docker イメージのビルドとプッシュ（Dockerfile.optimizedを使用）
 echo "📦 Building and pushing Docker image..."
 echo "   Tag: ${IMAGE_TAG}"
+echo "   Dockerfile: Dockerfile.optimized"
+
+# Dockerfile.optimizedをルートにコピー
+if [ -f "apps/freeform_usda_meal_analysis_api/Dockerfile.optimized" ]; then
+    cp apps/freeform_usda_meal_analysis_api/Dockerfile.optimized Dockerfile
+else
+    echo "❌ Error: Dockerfile.optimized not found"
+    exit 1
+fi
+
 $GCLOUD builds submit \
   --tag "${IMAGE_TAG}" \
   --timeout=900 \
+  --machine-type=E2_HIGHCPU_32 \
   --project="${PROJECT_ID}" \
   .
+
+# 一時的なDockerfileを削除
+rm -f Dockerfile
 
 echo "✅ Docker image built and pushed"
 echo ""
