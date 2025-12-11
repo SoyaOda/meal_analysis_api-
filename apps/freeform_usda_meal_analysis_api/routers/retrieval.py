@@ -157,6 +157,14 @@ async def retrieve_foods(
                 detail="Invalid mode. Must be 'fast', 'accurate', 'hybrid', or 'hybrid_reranker'"
             )
 
+        # 短いクエリの最適化: 3文字未満のクエリではBM25スコアが0になりやすいため
+        # hybrid/hybrid_rerankerモードの場合はfast（FAISS only）に自動切り替え
+        original_mode = mode
+        query_length = len(q.strip())
+        if query_length < 3 and mode in ["hybrid", "hybrid_reranker"]:
+            logger.info(f"🔄 Short query optimization: switching from '{mode}' to 'fast' for query='{q}' (length={query_length})")
+            mode = "fast"
+
         # キャッシュチェック（include_nutritionとinclude_unitsはポストプロセスなので基本パラメータでキャッシュ）
         cached_result = _response_cache.get(q, mode, top_k, offset)
         if cached_result is not None:
