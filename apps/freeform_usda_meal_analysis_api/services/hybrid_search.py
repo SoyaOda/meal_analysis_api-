@@ -226,7 +226,10 @@ class HybridSearchEngine:
         vector_scores_dict = {idx: score for idx, score in vector_results}
 
         # BM25スコアの正規化（0-1の範囲に）
+        # 注意: 短いクエリではBM25スコアが全て0になることがあるため、0除算を防止
         bm25_max = max(bm25_scores_dict.values()) if bm25_scores_dict else 1.0
+        if bm25_max == 0:
+            bm25_max = 1.0  # ゼロ除算防止
         bm25_normalized = {idx: score / bm25_max for idx, score in bm25_scores_dict.items()}
 
         # Vectorスコアの正規化（cosine similarityなので既に0-1の範囲）
@@ -524,8 +527,13 @@ class HybridSearchEngine:
         bm25_score_dict = {idx: score for idx, score in zip(bm25_indices, bm25_scores)}
         vector_score_dict = {idx: score for idx, score in zip(vector_indices, vector_scores)}
 
+        # 注意: 短いクエリではBM25スコアが全て0になることがあるため、0除算を防止
         max_bm25 = max(bm25_scores) if bm25_scores else 1.0
+        if max_bm25 == 0:
+            max_bm25 = 1.0  # ゼロ除算防止
         max_vector = max(vector_scores) if vector_scores else 1.0
+        if max_vector == 0:
+            max_vector = 1.0  # ゼロ除算防止
 
         # Weighted Fusion
         hybrid_scores = {}

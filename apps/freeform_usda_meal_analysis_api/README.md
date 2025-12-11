@@ -1398,6 +1398,85 @@ gcloud run deploy freeform-usda-meal-analysis-api \
   --set-env-vars="GOOGLE_CLOUD_PROJECT=new-snap-calorie,DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY},PRELOAD_INDEXES_ON_STARTUP=false"
 ```
 
+#### 開発環境（v4-dev）へのデプロイ
+
+**推奨: 専用デプロイスクリプトを使用**
+
+```bash
+cd apps/freeform_usda_meal_analysis_api
+source /Users/odasoya/meal_analysis_api_2/.env
+bash deploy_v4_dev.sh
+```
+
+**手動デプロイの場合:**
+
+⚠️ **重要: イメージタグは`:optimized`を使用すること（`:latest`ではない）**
+
+```bash
+cd /path/to/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api
+
+# 開発環境用のサービス名を設定
+export SERVICE_NAME=freeform-usda-meal-analysis-api-v4-dev
+
+# 1. イメージビルド（:optimizedタグを使用）
+gcloud builds submit \
+  --tag gcr.io/new-snap-calorie/${SERVICE_NAME}:optimized \
+  --timeout=900 \
+  --project=new-snap-calorie \
+  .
+
+# 2. Cloud Runにデプロイ（ビルドしたイメージ名・タグと一致させる）
+gcloud run deploy ${SERVICE_NAME} \
+  --image gcr.io/new-snap-calorie/${SERVICE_NAME}:optimized \
+  --platform managed \
+  --region us-central1 \
+  --project new-snap-calorie \
+  --allow-unauthenticated \
+  --memory 2Gi \
+  --cpu 1 \
+  --timeout 300 \
+  --concurrency 80 \
+  --min-instances 0 \
+  --max-instances 10 \
+  --set-env-vars "DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY},OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"
+```
+
+**❌ よくある間違い:**
+
+```bash
+# 間違い1: deploy_optimized.sh でビルドしたタグは :optimized
+gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api-v4-dev:optimized  # ビルド時
+
+# 手動デプロイで間違って :latest を指定（存在しない）
+gcloud run deploy freeform-usda-meal-analysis-api-v4-dev \
+  --image gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api-v4-dev:latest  # ← 間違い！
+
+# 間違い2: 本番用イメージを指定してしまう
+gcloud run deploy freeform-usda-meal-analysis-api-v4-dev \
+  --image gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api:optimized  # ← 間違い！古い本番イメージ
+```
+
+**✅ 正しい方法:**
+
+```bash
+# ビルドしたイメージ名・タグとデプロイ時のイメージ名・タグを一致させる
+gcloud run deploy freeform-usda-meal-analysis-api-v4-dev \
+  --image gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api-v4-dev:optimized  # ← 正しい
+```
+
+**💡 確認方法:**
+
+```bash
+# ビルド済みイメージの確認
+gcloud container images list --repository=gcr.io/new-snap-calorie --filter="name~freeform-usda"
+
+# 特定イメージのタグ確認（:optimizedがあることを確認）
+gcloud container images list-tags gcr.io/new-snap-calorie/freeform-usda-meal-analysis-api-v4-dev
+
+# デプロイ後の動作確認（normalized_unitsが返ることを確認）
+curl -s https://freeform-usda-meal-analysis-api-v4-dev-1077966746907.us-central1.run.app/api/v1/metadata/2705385 | jq '.normalized_units'
+```
+
 ### データ更新手順
 
 FAISSインデックスや栄養データを更新した場合：
