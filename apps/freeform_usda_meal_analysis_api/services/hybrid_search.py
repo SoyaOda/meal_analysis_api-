@@ -311,18 +311,28 @@ class HybridSearchEngine:
         logger.info(f"🔍 Hybrid search: '{query}'")
         logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
 
-        try:
-            # Stage 1: BM25 + Vector検索を並列実行
-            bm25_task = asyncio.create_task(
-                asyncio.to_thread(self.search_bm25, query, stage1_top_k)
-            )
-            vector_task = self.search_vector(query, faiss_index, embedding_service, stage1_top_k)
+        # 短いクエリ（3文字未満）の場合はBM25をスキップしてVectorのみで高速化
+        short_query_threshold = 3
+        skip_bm25 = len(query.strip()) < short_query_threshold
 
-            # タイムアウト付きで実行（30秒）
-            bm25_results, vector_results = await asyncio.wait_for(
-                asyncio.gather(bm25_task, vector_task),
-                timeout=30.0
-            )
+        try:
+            if skip_bm25:
+                logger.info(f"  Short query (<{short_query_threshold} chars): Using Vector-only search for faster response")
+                # Vectorのみ実行
+                vector_results = await self.search_vector(query, faiss_index, embedding_service, stage1_top_k)
+                bm25_results = []  # BM25スキップ
+            else:
+                # Stage 1: BM25 + Vector検索を並列実行
+                bm25_task = asyncio.create_task(
+                    asyncio.to_thread(self.search_bm25, query, stage1_top_k)
+                )
+                vector_task = self.search_vector(query, faiss_index, embedding_service, stage1_top_k)
+
+                # タイムアウト付きで実行（30秒）
+                bm25_results, vector_results = await asyncio.wait_for(
+                    asyncio.gather(bm25_task, vector_task),
+                    timeout=30.0
+                )
         except asyncio.TimeoutError:
             logger.error(f"❌ Hybrid search timeout after 30s")
             raise Exception("Hybrid search timeout")
@@ -454,26 +464,36 @@ class HybridSearchEngine:
         logger.info(f"🔍 Hybrid search with reranker: '{query}'")
         logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
 
+        # 短いクエリ（3文字未満）の場合はBM25をスキップしてVectorのみで高速化
+        short_query_threshold = 3
+        skip_bm25 = len(query.strip()) < short_query_threshold
+
         # ===== Stage 1: BM25 キーワード検索 =====
         start_time_bm25 = asyncio.get_event_loop().time()
 
-        # クエリのトークナイズ
-        query_tokens = bm25s.tokenize(
-            [query],
-            stopwords="en",
-            stemmer=self.stemmer
-        )
+        if skip_bm25:
+            logger.info(f"  Short query (<{short_query_threshold} chars): Skipping BM25 search for faster response")
+            bm25_indices = []
+            bm25_scores = []
+            bm25_time = 0.0
+        else:
+            # クエリのトークナイズ
+            query_tokens = bm25s.tokenize(
+                [query],
+                stopwords="en",
+                stemmer=self.stemmer
+            )
 
-        # BM25検索
-        bm25_results_raw, bm25_scores_raw = self.bm25_model.retrieve(
-            query_tokens,
-            k=stage1_top_k
-        )
-        bm25_time = asyncio.get_event_loop().time() - start_time_bm25
+            # BM25検索
+            bm25_results_raw, bm25_scores_raw = self.bm25_model.retrieve(
+                query_tokens,
+                k=stage1_top_k
+            )
+            bm25_time = asyncio.get_event_loop().time() - start_time_bm25
 
-        # BM25の結果をインデックスに変換（numpy配列をリストに）
-        bm25_indices = bm25_results_raw[0].tolist()
-        bm25_scores = bm25_scores_raw[0].tolist()
+            # BM25の結果をインデックスに変換（numpy配列をリストに）
+            bm25_indices = bm25_results_raw[0].tolist()
+            bm25_scores = bm25_scores_raw[0].tolist()
 
         # ===== Stage 2: FAISS Vector 検索 =====
         start_time_vector = asyncio.get_event_loop().time()
