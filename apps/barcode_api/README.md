@@ -2,6 +2,20 @@
 
 FoodData Central (FDC) データベースとOpen Food Factsを使用したバーコード検索APIです。多様な単位での栄養価表示とスマートな単位生成に対応しています。
 
+## 本番環境
+
+**Service URL**: `https://barcode-api-1077966746907.us-central1.run.app`
+
+```bash
+# ヘルスチェック
+curl https://barcode-api-1077966746907.us-central1.run.app/health
+
+# バーコード検索
+curl -X POST "https://barcode-api-1077966746907.us-central1.run.app/api/v1/barcode/lookup" \
+  -H "Content-Type: application/json" \
+  -d '{"gtin": "000000016872"}'
+```
+
 ## 概要
 
 このAPIは以下の機能を提供します：
@@ -75,6 +89,15 @@ gsutil cp db/FoodData_Central/fdc_barcode.db gs://new-snap-calorie-data/fdc/fdc_
 ```bash
 chmod +x apps/barcode_api/deploy.sh
 chmod +x apps/barcode_api/entrypoint.sh
+```
+
+3. **GCSアクセス権限を付与**（初回のみ）:
+```bash
+# Cloud Runサービスアカウントにストレージ読み取り権限を付与
+gsutil iam ch serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com:roles/storage.objectViewer gs://new-snap-calorie-data
+
+# プロジェクト番号の確認方法
+gcloud projects describe new-snap-calorie --format="value(projectNumber)"
 ```
 
 ### デプロイ実行
@@ -326,3 +349,4 @@ FDCデータベースで見つからない場合、自動的にOpen Food Facts A
 - **v2.1.0**: 拡張栄養素対応（17種類）
 - **v3.0.0**: スマート単位生成システム、Open Food Factsフォールバック、TTLキャッシュ追加
 - **v3.1.0**: Cloud Runデプロイ対応、GCS連携追加
+- **v3.2.0**: Cloud Runデプロイ完了、本番環境URL追加、GCS権限設定手順追加

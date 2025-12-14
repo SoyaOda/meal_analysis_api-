@@ -28,7 +28,7 @@ else
 fi
 
 # gcloud コマンドのパス設定
-GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
+GCLOUD="/opt/homebrew/bin/gcloud"
 
 # 設定
 PROJECT_ID="new-snap-calorie"
@@ -75,6 +75,56 @@ cd "${REPO_ROOT}"
 echo "📦 Preparing Dockerfile..."
 cp apps/barcode_api/Dockerfile Dockerfile.barcode
 
+# バックアップと一時的な.gcloudignoreを作成
+if [ -f .gcloudignore ]; then
+    mv .gcloudignore .gcloudignore.backup
+fi
+
+cat > .gcloudignore << 'GCLOUDIGNORE'
+# Barcode API用の.gcloudignore
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+
+# 不要な大規模ディレクトリ
+web_scraping/
+db/
+core_food_processing/
+usda_database/
+raw_nutrition_data/
+venv/
+elasticsearch-8.10.4/
+usda_data_processing/
+MyNetDiary_json_builder/
+web_scraping_2/
+nutrition_db_experiment/
+analysis_results/
+app_backup/
+
+# 他のアプリケーション（barcode_api以外）
+apps/word_query_api/
+apps/meal_analysis_api/
+apps/usda_word_query_api/
+apps/usda_meal_analysis_api/
+apps/freeform_usda_meal_analysis_api/
+
+# テストファイル
+test_images/
+test-audio/
+test_scripts/
+test_barcodes/
+
+# ログ
+*.log
+
+# 環境変数ファイル
+.env
+.env.*
+GCLOUDIGNORE
+
 # 起動スクリプトを含むDockerfileに更新
 cat > Dockerfile << 'DOCKERFILE'
 FROM python:3.11-slim
@@ -88,8 +138,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     apt-transport-https \
     ca-certificates \
-    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
     && apt-get update && apt-get install -y google-cloud-cli \
     && rm -rf /var/lib/apt/lists/*
 
@@ -130,6 +180,12 @@ $GCLOUD builds submit \
 
 # 一時ファイルを削除
 rm -f Dockerfile Dockerfile.barcode
+
+# .gcloudignoreを復元
+rm -f .gcloudignore
+if [ -f .gcloudignore.backup ]; then
+    mv .gcloudignore.backup .gcloudignore
+fi
 
 echo "✅ Docker image built and pushed"
 echo ""
