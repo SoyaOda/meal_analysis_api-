@@ -1,0 +1,9 @@
+# Barcode API Dependencies
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.0.0
+httpx>=0.25.0
+cachetools>=5.3.0
+pandas>=2.0.0
+requests>=2.31.0
+google-cloud-storage>=2.10.0

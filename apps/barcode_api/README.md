@@ -19,6 +19,9 @@ FoodData Central (FDC) データベースとOpen Food Factsを使用したバー
 apps/barcode_api/
 ├── README.md               # このファイル
 ├── main.py                 # FastAPIアプリケーションメイン
+├── Dockerfile              # Cloud Run用Dockerファイル
+├── deploy.sh               # Cloud Runデプロイスクリプト
+├── entrypoint.sh           # コンテナ起動スクリプト（GCSからDB取得）
 ├── api/
 │   ├── __init__.py
 │   └── barcode.py          # バーコード検索APIエンドポイント
@@ -28,6 +31,7 @@ apps/barcode_api/
 ├── services/
 │   ├── __init__.py
 │   ├── fdc_service.py      # FDCデータベース検索サービス
+│   ├── gtin_service.py     # GTIN正規化・検証サービス
 │   ├── off_service.py      # Open Food Facts APIサービス
 │   └── cache_service.py    # TTLキャッシュサービス
 ├── utils/
@@ -43,11 +47,80 @@ apps/barcode_api/
     └── analyze_fdc_units.py        # FDCデータ単位パターン分析
 ```
 
-## API起動方法
+## ローカル起動方法
 
 ```bash
 # プロジェクトルートから実行
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8003 python -m apps.barcode_api.main
+PYTHONPATH=/path/to/meal_analysis_api_2 PORT=8003 python -m apps.barcode_api.main
+```
+
+**必要条件**:
+- FDCデータベース: `db/FoodData_Central/fdc_barcode.db`（約2.8GB）
+- データベースがない場合は `scripts/setup_fdc_database.py` を実行
+
+## Cloud Run デプロイ
+
+### 事前準備
+
+1. **FDCデータベースをGCSにアップロード**（初回のみ、約5-10分）:
+```bash
+# GCSバケットを作成（既存の場合はスキップ）
+gsutil mb -l us-central1 gs://new-snap-calorie-data
+
+# FDCデータベースをアップロード
+gsutil cp db/FoodData_Central/fdc_barcode.db gs://new-snap-calorie-data/fdc/fdc_barcode.db
+```
+
+2. **実行権限を付与**:
+```bash
+chmod +x apps/barcode_api/deploy.sh
+chmod +x apps/barcode_api/entrypoint.sh
+```
+
+### デプロイ実行
+
+```bash
+# コスト優先モード（min-instances=0、コールドスタートあり）
+bash apps/barcode_api/deploy.sh
+
+# パフォーマンス優先モード（min-instances=1、常時起動）
+DEPLOY_MODE=performance bash apps/barcode_api/deploy.sh
+
+# サービス名を変更する場合
+SERVICE_NAME=barcode-api-dev bash apps/barcode_api/deploy.sh
+```
+
+### デプロイ設定
+
+| モード | min-instances | メモリ | CPU | 用途 |
+|--------|---------------|--------|-----|------|
+| cost | 0 | 4Gi | 2 | 開発・テスト環境 |
+| performance | 1 | 4Gi | 2 | 本番環境 |
+
+### Cloud Runアーキテクチャ
+
+```
+┌─────────────────────────────────────────────────────┐
+│                   Cloud Run                          │
+│  ┌───────────────────────────────────────────────┐  │
+│  │  entrypoint.sh                                │  │
+│  │  1. GCSからFDCデータベースをダウンロード      │  │
+│  │  2. /app/db/FoodData_Central/fdc_barcode.db  │  │
+│  │  3. Pythonアプリケーション起動               │  │
+│  └───────────────────────────────────────────────┘  │
+│                        ↓                            │
+│  ┌───────────────────────────────────────────────┐  │
+│  │  Barcode API (FastAPI)                        │  │
+│  │  - バーコード検索                             │  │
+│  │  - 栄養情報取得                               │  │
+│  │  - Open Food Factsフォールバック              │  │
+│  └───────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────┘
+           ↑                              ↑
+    ┌──────┴──────┐               ┌───────┴───────┐
+    │ Cloud Storage│               │ Open Food Facts│
+    │ (FDC DB)     │               │ (Fallback API) │
+    └─────────────┘               └────────────────┘
 ```
 
 ## APIエンドポイント
@@ -58,6 +131,39 @@ PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8003 python -m apps.barcode_a
 curl -X POST "http://localhost:8003/api/v1/barcode/lookup" \
   -H "Content-Type: application/json" \
   -d '{"gtin": "000000016872", "include_all_nutrients": false}'
+```
+
+**レスポンス例**:
+```json
+{
+  "success": true,
+  "gtin": "000000016872",
+  "product": {
+    "fdc_id": 1055419,
+    "description": "SUNRIDGE, ZEN PARTY MIX",
+    "brand_owner": "Edward Leeds & Company",
+    "ingredients": "..."
+  },
+  "serving_info": {
+    "serving_size": 30.0,
+    "serving_unit": "g"
+  },
+  "nutrients_per_100g": {
+    "energy_kcal": 533.0,
+    "protein_g": 16.67,
+    "fat_g": 36.67,
+    "carbohydrate_g": 36.67
+  },
+  "unit_options": [
+    {
+      "unit_id": "1serving",
+      "display_name": "1 serving (30.0g)",
+      "is_primary": true,
+      "energy_kcal": 159.9
+    }
+  ],
+  "data_source": "FDC"
+}
 ```
 
 ### ヘルスチェック
@@ -94,10 +200,13 @@ python apps/barcode_api/scripts/setup_fdc_database.py
 - **月次**: FDC Branded Foodsデータは毎月更新されるため
 - **自動化**: cronジョブまたはCI/CDパイプラインで実行
 
-**cron設定例**:
+**データベース更新後のCloud Run反映**:
 ```bash
-# 毎月1日午前2時に実行
-0 2 1 * * cd /path/to/project && python apps/barcode_api/scripts/setup_fdc_database.py --force-download
+# GCSのデータベースを更新
+gsutil cp db/FoodData_Central/fdc_barcode.db gs://new-snap-calorie-data/fdc/fdc_barcode.db
+
+# Cloud Runインスタンスを再起動（新しいDBをダウンロード）
+gcloud run services update barcode-api --region=us-central1 --no-traffic
 ```
 
 ### 2. FDCデータ分析
@@ -111,13 +220,6 @@ python apps/barcode_api/scripts/setup_fdc_database.py
 python apps/barcode_api/scripts/analyze_fdc_units.py
 ```
 
-**推奨実行頻度**:
-- **FDCデータ更新後**: 新しいデータパターンを検出するため
-- **四半期**: 単位解析の精度改善のため
-
-**出力ファイル**:
-- `apps/barcode_api/data/fdc_unit_analysis.json`
-
 ## データファイルの管理
 
 ### 1. 単位変換定義
@@ -126,48 +228,19 @@ python apps/barcode_api/scripts/analyze_fdc_units.py
 
 **内容**: 体積・重量・個数単位の変換係数と正規化ルール
 
-**更新タイミング**: 新しい単位パターンが発見された場合
-
 ### 2. 食品密度データ
 
 **ファイル**: `data/food_density_data.json`
 
 **内容**: 体積→重量変換のための食品カテゴリ別密度データ
 
-**更新タイミング**: より正確な密度データが入手可能になった場合
+### 3. FDCデータベース
 
-### 3. FDCデータ分析結果
+**場所**: `db/FoodData_Central/fdc_barcode.db`（プロジェクトルート）
 
-**ファイル**: `data/fdc_unit_analysis.json`
+**サイズ**: 約2.8GB
 
-**内容**: FDCデータの単位パターン分析結果（自動生成）
-
-**更新タイミング**: `analyze_fdc_units.py`実行時に自動更新
-
-## 運用監視
-
-### ログファイル
-
-- **場所**: `barcode_api.log`（実行ディレクトリに生成）
-- **レベル**: INFO以上
-- **監視項目**:
-  - データベース接続エラー
-  - バーコード検索失敗
-  - 単位解析エラー
-
-### データベース統計監視
-
-定期的にデータベース統計APIを呼び出し、以下の値を監視：
-
-```json
-{
-  "food_count": 2064912,
-  "branded_food_count": 1977398,
-  "food_nutrient_count": 26805037,
-  "nutrient_count": 477,
-  "products_with_barcode": 1977398
-}
-```
+**内容**: USDA FoodData Central Branded Foodsデータ
 
 ## トラブルシューティング
 
@@ -179,13 +252,13 @@ python apps/barcode_api/scripts/analyze_fdc_units.py
    ```
    → `setup_fdc_database.py`を実行してデータベースを構築
 
-2. **単位解析が失敗する**
-   - `data/unit_conversions.json`の設定を確認
-   - `analyze_fdc_units.py`を実行して新パターンを調査
+2. **Cloud Run起動が遅い**
+   - 初回起動時はGCSからDBダウンロード（約60-90秒）
+   - `DEPLOY_MODE=performance` で常時起動を推奨
 
 3. **メモリ不足エラー**
-   - 大容量データ処理時に発生可能
-   - チャンクサイズを調整（`setup_fdc_database.py`内のCHUNK_SIZE）
+   - Cloud Runのメモリを4Gi以上に設定
+   - SQLiteクエリの最適化を検討
 
 ### パフォーマンス最適化
 
@@ -194,142 +267,57 @@ python apps/barcode_api/scripts/analyze_fdc_units.py
    - 栄養素インデックス: `food_nutrient(fdc_id, nutrient_id)`
 
 2. **キャッシュ戦略**
-   - よく検索されるバーコードの結果をキャッシュ
-   - 単位変換結果のメモ化
+   - TTLCache（1時間）でバーコード検索結果をキャッシュ
+   - Open Food Facts結果もキャッシュ
 
 ## 開発・テスト
 
-### 単体テスト
+### GTIN正規化テスト
 ```bash
-# 単位解析テスト
-python -m pytest apps/barcode_api/tests/test_unit_parser.py
-
-# FDCサービステスト
-python -m pytest apps/barcode_api/tests/test_fdc_service.py
+python test_barcodes/comprehensive_gtin_test.py
 ```
 
-### 統合テスト
+### APIエンドポイントテスト
 ```bash
-# APIエンドポイントテスト
+# FDCデータ
 curl -X POST "http://localhost:8003/api/v1/barcode/lookup" \
   -H "Content-Type: application/json" \
-  -d '{"gtin": "000000016872", "include_all_nutrients": false}'
+  -d '{"gtin": "000000016872"}'
+
+# Open Food Factsフォールバック
+curl -X POST "http://localhost:8003/api/v1/barcode/lookup" \
+  -H "Content-Type: application/json" \
+  -d '{"gtin": "5449000000996"}'
 ```
+
+## スマート単位生成システム
+
+### unit_options フィールド
+
+APIレスポンスに`unit_options`フィールドが含まれ、食品タイプに応じた適切な単位での栄養価が自動生成されます。
+
+### 食品タイプ別単位生成
+
+| タイプ | キーワード例 | 推奨単位 | 密度 |
+|--------|-------------|---------|------|
+| Liquid | juice, milk, soda | ml, cup, fl oz | 1.0 |
+| Baked Goods | cookie, bread, cake | piece, slice | 0.4 |
+| Snacks | chips, nuts, pretzels | g, cup, piece | 0.3 |
+| Cereal | cereal, granola, oats | cup, g | 0.4 |
+| Candy | candy, chocolate, gummy | piece, g | 0.8 |
+
+### Open Food Facts フォールバック
+
+FDCデータベースで見つからない場合、自動的にOpen Food Facts APIで検索:
+
+- **データソース表示**: `"data_source": "Open Food Facts"`
+- **対応製品**: 世界中の食品（特に欧州・日本製品に強い）
+- **キャッシュ**: TTLCache（1時間）
 
 ## ライセンス・データソース
 
 - **FoodData Central**: USDA提供のパブリックドメインデータ
-- **API**: プロジェクト固有のライセンスに従う
-
-## 新機能：スマート単位生成システム
-
-### unit_options フィールド
-
-v3.0.0から、APIレスポンスに`unit_options`フィールドが追加されました。これにより、食品タイプに応じた適切な単位での栄養価が自動生成されます。
-
-```json
-{
-  "success": true,
-  "gtin": "000000016872",
-  "unit_options": [
-    {
-      "unit_id": "1serving",
-      "display_name": "1 serving (30.0g)",
-      "unit_type": "serving",
-      "is_primary": true,
-      "equivalent_weight_g": 30.0,
-      "energy_kcal": 159.9,
-      "protein_g": 5.0,
-      "fat_g": 11.0,
-      "carbohydrate_g": 11.0
-    },
-    {
-      "unit_id": "1g",
-      "display_name": "1 gram",
-      "unit_type": "weight",
-      "is_primary": false,
-      "equivalent_weight_g": 1.0,
-      "energy_kcal": 5.33,
-      "protein_g": 0.167
-    },
-    {
-      "unit_id": "1cup",
-      "display_name": "1 cup",
-      "unit_type": "volume",
-      "is_primary": false,
-      "equivalent_weight_g": 236.588,
-      "energy_kcal": 1261.0
-    }
-  ]
-}
-```
-
-### 食品タイプ別単位生成ロジック
-
-SmartUnitGeneratorが以下の食品タイプを自動判定し、適切な単位を生成します：
-
-#### 1. Liquid（液体系食品）
-- **判定キーワード**: juice, milk, water, soda, drink, beverage, soup, etc.
-- **推奨単位**: ml, fl oz, cup, liter
-- **密度**: 1.0 (水ベース)
-- **例**: 1 cup = 236.6g
-
-#### 2. Baked Goods（焼き菓子）
-- **判定キーワード**: cookie, cracker, cake, bread, muffin, etc.
-- **推奨単位**: piece, slice, cookie, cracker
-- **密度**: 0.4
-- **例**: 1 cup = 94.6g, 1 piece = 推定15g
-
-#### 3. Snacks（スナック菓子）
-- **判定キーワード**: chips, popcorn, nuts, pretzels, etc.
-- **推奨単位**: g, oz, cup, piece
-- **密度**: 0.3
-- **例**: 1 cup = 71g, 1 piece = 推定20g
-
-#### 4. Cereal（シリアル）
-- **判定キーワード**: cereal, granola, oats, muesli, etc.
-- **推奨単位**: cup, g, oz
-- **密度**: 0.4
-- **例**: 1 cup = 94.6g
-
-#### 5. Candy（キャンディ）
-- **判定キーワード**: candy, chocolate, gummy, etc.
-- **推奨単位**: piece, g, oz
-- **密度**: 0.8
-- **例**: 1 piece = 推定5g
-
-### 単位生成の優先順位
-
-1. **メーカー指定サービング**: `is_primary: true`でマーク
-2. **家庭用サービング情報**: household_serving_fulltextから解析
-3. **食品タイプ推奨単位**: 上記ロジックで自動生成
-4. **基本単位**: 1g, 100g（全食品共通）
-
-### 体積単位の重量換算
-
-体積単位（cup, fl oz等）は密度推定により重量換算されます：
-
-```python
-# 食品タイプ別密度
-density_estimates = {
-    "liquid": 1.0,      # 液体（水ベース）
-    "snacks": 0.3,      # スナック菓子
-    "cereal": 0.4,      # シリアル類
-    "candy": 0.8,       # キャンディ類
-    "default": 0.6      # デフォルト
-}
-
-# 1 US cup = 236.588ml × 密度 = グラム換算
-cup_weight_g = 236.588 * density
-```
-
-### Open Food Facts フォールバック
-
-FDCデータベースで見つからない場合、自動的にOpen Food Facts APIで検索します：
-
-- **データソース表示**: `"data_source": "Open Food Facts"`
-- **単位生成**: 同様のロジックで適切な単位を生成
-- **キャッシュ**: TTLCache（1時間）で高速化
+- **Open Food Facts**: オープンデータベース（ODbL）
 
 ## 更新履歴
 
@@ -337,3 +325,4 @@ FDCデータベースで見つからない場合、自動的にOpen Food Facts A
 - **v2.0.0**: 多単位栄養価表示機能追加
 - **v2.1.0**: 拡張栄養素対応（17種類）
 - **v3.0.0**: スマート単位生成システム、Open Food Factsフォールバック、TTLキャッシュ追加
+- **v3.1.0**: Cloud Runデプロイ対応、GCS連携追加
