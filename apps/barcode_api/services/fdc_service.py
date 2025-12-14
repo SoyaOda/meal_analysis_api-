@@ -17,6 +17,7 @@ from ..models.nutrition import (
 )
 from ..utils.unit_parser import UnitParser
 from .cache_service import get_cache_service
+from .unit_normalizer import get_unit_normalizer
 
 
 logger = logging.getLogger(__name__)
@@ -47,9 +48,8 @@ class FDCDatabaseService:
         # 単位解析器を初期化
         self.unit_parser = UnitParser()
 
-        # SmartUnitGeneratorを初期化
-        from ..utils.smart_unit_generator import SmartUnitGenerator
-        self.unit_generator = SmartUnitGenerator()
+        # UnitNormalizerを初期化（正規化された単位を生成）
+        self.unit_normalizer = get_unit_normalizer()
 
         # キャッシュサービスを初期化
         self.use_cache = use_cache
@@ -195,21 +195,21 @@ class FDCDatabaseService:
                         for alt in alt_nutrients:
                             alternative_nutrients.append(AlternativeNutrients(**alt))
 
-            # 6. スマートユニットオプションを生成
+            # 6. 正規化された単位オプションを生成
             unit_options = None
             try:
-                product_info_obj = ProductInfo(**product_info)
                 serving_size_g = serving_info.serving_size if serving_info else None
-                
-                unit_options = self.unit_generator.generate_unit_options(
-                    nutrients_100g=main_nutrients,
-                    product_info=product_info_obj,
-                    household_serving_info=household_serving_info,
-                    serving_size_g=serving_size_g
+                household_text = product_info.get('household_serving_fulltext')
+
+                normalized_units = self.unit_normalizer.normalize_for_fdc(
+                    serving_size_g=serving_size_g,
+                    household_serving_fulltext=household_text,
+                    product_description=product_info.get('description')
                 )
-                logger.debug(f"スマートユニット生成完了: {len(unit_options)}個 ({gtin})")
+                unit_options = self.unit_normalizer.to_dict_list(normalized_units)
+                logger.debug(f"正規化ユニット生成完了: {len(unit_options)}個 ({gtin})")
             except Exception as e:
-                logger.warning(f"スマートユニット生成エラー ({gtin}): {e}")
+                logger.warning(f"正規化ユニット生成エラー ({gtin}): {e}")
 
             # 7. 全栄養素情報を取得（オプション）
             all_nutrients = None

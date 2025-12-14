@@ -12,6 +12,7 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 
 from ..models.nutrition import NutritionResponse, ProductInfo, MainNutrients, ServingNutrients, AlternativeNutrients, HouseholdServingInfo
+from .unit_normalizer import get_unit_normalizer
 
 logger = logging.getLogger(__name__)
 
@@ -30,9 +31,8 @@ class OpenFoodFactsService:
         self.timeout = timeout
         self.session = None
 
-        # SmartUnitGeneratorを初期化
-        from ..utils.smart_unit_generator import SmartUnitGenerator
-        self.unit_generator = SmartUnitGenerator()
+        # UnitNormalizerを初期化（正規化された単位を生成）
+        self.unit_normalizer = get_unit_normalizer()
 
         logger.info(f"Open Food Facts サービス初期化完了: timeout={timeout}秒")
 
@@ -152,18 +152,22 @@ class OpenFoodFactsService:
                 vitamin_d_iu=round(nutrients_100g.vitamin_d_iu * serving_factor, 1) if nutrients_100g.vitamin_d_iu else None
             )
 
-            # スマートユニットオプションを生成
+            # 正規化された単位オプションを生成
             unit_options = None
             try:
-                unit_options = self.unit_generator.generate_unit_options(
-                    nutrients_100g=nutrients_100g,
-                    product_info=product_info,
-                    household_serving_info=None,  # OFF由来では基本的にNone
-                    serving_size_g=serving_size if serving_size != 100 else None
+                # serving_sizeテキストを取得（例: "15 g", "1 can (330 ml)"）
+                serving_size_text = product_data.get('serving_size')
+                serving_quantity = product_data.get('serving_quantity')  # 数値（gまたはml）
+
+                normalized_units = self.unit_normalizer.normalize_for_off(
+                    serving_size_text=serving_size_text,
+                    serving_quantity_g=serving_quantity,
+                    product_name=product_data.get('product_name')
                 )
-                logger.debug(f"OFF スマートユニット生成完了: {len(unit_options)}個 ({gtin})")
+                unit_options = self.unit_normalizer.to_dict_list(normalized_units)
+                logger.debug(f"OFF 正規化ユニット生成完了: {len(unit_options)}個 ({gtin})")
             except Exception as e:
-                logger.warning(f"OFF スマートユニット生成エラー ({gtin}): {e}")
+                logger.warning(f"OFF 正規化ユニット生成エラー ({gtin}): {e}")
 
             return NutritionResponse(
                 success=True,

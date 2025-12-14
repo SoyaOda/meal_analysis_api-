@@ -213,13 +213,13 @@ class AlternativeNutrients(BaseModel):
         }
 
 class NutrientUnitOption(BaseModel):
-    """単位オプションごとの栄養価"""
+    """単位オプションごとの栄養価（レガシー形式）"""
     unit_id: str = Field(..., description="単位ID（1g, 1cup, 1piece等）")
     display_name: str = Field(..., description="表示名")
     unit_type: str = Field(..., description="単位種別（weight/volume/count）")
     is_primary: bool = Field(False, description="メーカー推奨単位かどうか")
     equivalent_weight_g: Optional[float] = Field(None, description="グラム換算値")
-    
+
     # 栄養価データ
     energy_kcal: Optional[float] = Field(None, description="エネルギー (kcal)")
     energy_kj: Optional[float] = Field(None, description="エネルギー (kJ)")
@@ -255,6 +255,30 @@ class NutrientUnitOption(BaseModel):
         }
 
 
+class NormalizedUnitOption(BaseModel):
+    """
+    正規化された単位オプション（freeform_usda_meal_analysis_apiと互換）
+
+    FlutterアプリのServingUnit.fromBarcodeUnitOptions()で直接使用可能
+    """
+    name: str = Field(..., description="単位表示名 (例: 'g', 'cup', 'serving')")
+    abbreviation: str = Field(..., description="略称 (例: 'g', 'cup', 'srv')")
+    grams_per_unit: float = Field(..., description="1単位あたりのグラム数")
+    original_description: str = Field(..., description="元のdescription")
+    is_base_unit: bool = Field(False, description="基準単位（g）かどうか")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "serving",
+                "abbreviation": "srv",
+                "grams_per_unit": 30.0,
+                "original_description": "1 serving (30g)",
+                "is_base_unit": False
+            }
+        }
+
+
 class NutritionResponse(BaseModel):
     """バーコード検索APIのレスポンス"""
     success: bool = Field(..., description="検索成功フラグ")
@@ -265,7 +289,7 @@ class NutritionResponse(BaseModel):
     nutrients_per_100g: Optional[MainNutrients] = Field(None, description="100gあたりの主要栄養素")
     nutrients_per_serving: Optional[ServingNutrients] = Field(None, description="1食分の栄養素")
     alternative_nutrients: Optional[List[AlternativeNutrients]] = Field(None, description="代替単位での栄養素")
-    unit_options: Optional[List[NutrientUnitOption]] = Field(None, description="複数単位での栄養価オプション")
+    unit_options: Optional[List[NormalizedUnitOption]] = Field(None, description="正規化された単位オプション（freeform APIと互換）")
     all_nutrients: Optional[List[NutrientInfo]] = Field(None, description="全栄養素詳細情報")
     data_source: str = Field(default="FDC", description="データソース")
     cached: bool = Field(default=False, description="キャッシュから取得したかどうか")
@@ -317,26 +341,32 @@ class NutritionResponse(BaseModel):
                 ],
                 "unit_options": [
                     {
-                        "unit_id": "1g",
-                        "display_name": "1グラム",
-                        "unit_type": "weight",
-                        "is_primary": False,
-                        "equivalent_weight_g": 1.0,
-                        "energy_kcal": 4.5,
-                        "fat_g": 0.185,
-                        "carbohydrate_g": 0.652,
-                        "protein_g": 0.068
+                        "name": "g",
+                        "abbreviation": "g",
+                        "grams_per_unit": 1.0,
+                        "original_description": "gram (base unit)",
+                        "is_base_unit": True
                     },
                     {
-                        "unit_id": "1cookie",
-                        "display_name": "1枚（クッキー）",
-                        "unit_type": "count",
-                        "is_primary": True,
-                        "equivalent_weight_g": 15.0,
-                        "energy_kcal": 67.5,
-                        "fat_g": 2.8,
-                        "carbohydrate_g": 9.8,
-                        "protein_g": 1.0
+                        "name": "oz",
+                        "abbreviation": "oz",
+                        "grams_per_unit": 28.35,
+                        "original_description": "1 ounce",
+                        "is_base_unit": False
+                    },
+                    {
+                        "name": "serving",
+                        "abbreviation": "srv",
+                        "grams_per_unit": 30.0,
+                        "original_description": "1 serving (30g)",
+                        "is_base_unit": False
+                    },
+                    {
+                        "name": "cookie",
+                        "abbreviation": "cookie",
+                        "grams_per_unit": 15.0,
+                        "original_description": "2 cookies (30g)",
+                        "is_base_unit": False
                     }
                 ],
                 "data_source": "FDC",
