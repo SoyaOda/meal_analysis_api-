@@ -1,115 +1,37 @@
-# バーコードテストデータセット
+# Test Barcodes for Barcode Scanner
 
-このディレクトリには、GTIN正規化サービスをテストするための包括的なテストデータが含まれています。
+North American products verified on OpenFoodFacts and USDA FoodData Central.
 
-## 📁 ファイル構成
+## OpenFoodFacts Products (5)
 
-```
-test_barcodes/
-├── README.md                        # このファイル
-├── valid_barcodes.json             # 手動作成テストデータ（設計仕様）
-├── generated_valid_barcodes.json   # 自動生成テストデータ（実際の検証済みデータ）
-└── comprehensive_gtin_test.py       # 包括的テストスクリプト
-```
+| File | Barcode | Product | Brand |
+|------|---------|---------|-------|
+| OFF_coca_cola_zero_049000042566.png | 049000042566 | Zero Calorie Cola | Coca-Cola |
+| OFF_pringles_original_038000138416.png | 038000138416 | Pringles Original | Pringles |
+| OFF_cheerios_016000275287.png | 016000275287 | Cheerios | General Mills |
+| OFF_rold_gold_pretzels_028400047685.png | 028400047685 | Tiny Twists Original | Rold Gold |
+| OFF_jack_links_jerky_017082879004.png | 017082879004 | Flame Grilled Jerky | Jack Link's |
 
-## 🧪 テストデータの種類
+## USDA FoodData Central Products (5)
 
-### 1. 有効なUPC-12サンプル（5件）
-- `000000016872`: FDCデータベース実データ（SUNRIDGE ZEN PARTY MIX）
-- `012345678905`: 標準テスト用UPC-12
-- `036000291452`: Coca-Cola風商品コード
-- `071641090958`: General Mills風商品コード
-- `077890270493`: ハイフン除去テスト用
+| File | Barcode | Product | Brand |
+|------|---------|---------|-------|
+| USDA_quaker_real_medleys_030000315507.png | 030000315507 | Real Medleys Apple Walnut | Quaker |
+| USDA_wishbone_dressing_041000006067.png | 041000006067 | Chunky Blue Cheese Dressing | Wish-Bone |
+| USDA_yoplait_oui_blueberry_070470496535.png | 070470496535 | Oui Blueberry Yogurt | Yoplait |
+| USDA_sunshine_crackers_024100122264.png | 024100122264 | Baked Snack Crackers | Sunshine |
+| USDA_rodoula_kataifi_041318430028.png | 041318430028 | Kataifi Greek Sweets | RODOULA |
 
-### 2. 有効なEAN-13サンプル（3件）
-- `4902430735056`: 日本製品（JANコード）
-- `5901234123457`: ヨーロッパ製品
-- `3801234567898`: ブルガリア製品
+## How to Test
 
-### 3. 無効なサンプル（2件）
-- `000000016870`: チェックデジット間違い
-- `012345678900`: チェックデジット間違い
+### Physical Device
+1. Display barcode image on a monitor or print it
+2. Point your phone's camera at the barcode
+3. The app should detect and search for the product
 
-## 🔍 テスト項目
+## API Verification
 
-### ✅ 正規化機能テスト
-- UPC-12 → EAN-13変換
-- 既存EAN-13の維持
-- 無効コードの正しい拒否
-
-### ✅ チェックデジット検証テスト
-- UPC-12チェックデジット算出・検証
-- EAN-13チェックデジット算出・検証
-- 無効チェックデジットの検出
-
-### ✅ エッジケーステスト
-- 前後空白の除去
-- ハイフン付きコードの処理
-- 短縮形のゼロ埋め
-- 空文字列の処理
-- 英数字混在の拒否
-
-### ✅ パフォーマンステスト
-- 1000回実行でのレスポンス時間測定
-- 平均0.01ms/call（目標: < 1ms/call）
-
-## 🚀 テスト実行方法
-
-### 包括的テスト実行
 ```bash
-# プロジェクトルートから実行
-python test_barcodes/comprehensive_gtin_test.py
+# Test OpenFoodFacts API directly
+curl "https://world.openfoodfacts.org/api/v2/product/049000042566"
 ```
-
-### テストデータ再生成（必要時）
-```bash
-# プロジェクトルートから実行
-python generate_valid_test_barcodes.py
-```
-
-## 📊 期待される結果
-
-```
-============================================================
-🎉 総合テスト結果: 4/4 成功
-✅ すべてのテストが成功しました！
-
-🎯 実装完了機能:
-  - UPC-12 → EAN-13 変換
-  - チェックデジット検証（UPC-12/EAN-13）
-  - GTIN正規化（ゼロ埋め、文字除去）
-  - エッジケース処理
-  - 高速パフォーマンス（< 1ms/call）
-```
-
-## 🔧 チェックデジット計算仕様
-
-### UPC-12 チェックデジット
-```
-計算式: (奇数位置の合計 × 3 + 偶数位置の合計) mod 10
-チェックデジット: (10 - 計算結果) mod 10
-```
-
-### EAN-13 チェックデジット
-```
-計算式: (奇数位置の合計 + 偶数位置の合計 × 3) mod 10
-チェックデジット: (10 - 計算結果) mod 10
-```
-
-## 📚 参考資料
-
-- [GS1 GTIN仕様](https://www.gs1.org/)
-- [UPC-12 → EAN-13変換規則](https://www.gs1us.org/)
-- [FoodData Central API](https://fdc.nal.usda.gov/)
-
-## 🔄 メンテナンス
-
-### テストデータの更新頻度
-- **月次**: 新しい商品コードパターンの追加
-- **必要時**: エッジケース発見時の追加
-- **自動**: CI/CDパイプラインでの定期実行
-
-### 品質保証
-- 全テストが100%成功することを確認
-- パフォーマンス基準（< 1ms/call）の維持
-- 新機能追加時のリグレッション防止
