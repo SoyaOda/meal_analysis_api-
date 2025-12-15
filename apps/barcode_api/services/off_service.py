@@ -8,6 +8,7 @@ FDC未ヒット時のフォールバック検索用サービス
 import httpx
 import logging
 import asyncio
+import re
 from typing import Optional, Dict, Any
 from datetime import datetime
 
@@ -127,7 +128,13 @@ class OpenFoodFactsService:
             )
 
             # サービング情報（Open Food Factsではサービングサイズが明確でない場合が多い）
-            serving_size = nutriments.get('serving_size', 100)  # デフォルト100g
+            serving_size_raw = nutriments.get('serving_size', 100)
+            # 文字列の場合は数値を抽出
+            if isinstance(serving_size_raw, str):
+                match = re.search(r'([\d.]+)', serving_size_raw)
+                serving_size = float(match.group(1)) if match else 100.0
+            else:
+                serving_size = float(serving_size_raw) if serving_size_raw else 100.0
             serving_unit = "g"
 
             # 1食分の栄養素計算
@@ -157,7 +164,15 @@ class OpenFoodFactsService:
             try:
                 # serving_sizeテキストを取得（例: "15 g", "1 can (330 ml)"）
                 serving_size_text = product_data.get('serving_size')
-                serving_quantity = product_data.get('serving_quantity')  # 数値（gまたはml）
+                serving_quantity_raw = product_data.get('serving_quantity')  # 数値（gまたはml）
+
+                # serving_quantityを数値に変換
+                serving_quantity = None
+                if serving_quantity_raw is not None:
+                    try:
+                        serving_quantity = float(serving_quantity_raw)
+                    except (ValueError, TypeError):
+                        pass
 
                 normalized_units = self.unit_normalizer.normalize_for_off(
                     serving_size_text=serving_size_text,
