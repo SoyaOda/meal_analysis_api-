@@ -175,9 +175,16 @@ def _normalize_unit_name(unit_part: str) -> Optional[Tuple[str, str]]:
     if first_word in UNIT_MAPPING:
         return UNIT_MAPPING[first_word]
 
-    # マッチしない場合は元の単位をそのまま使用
-    clean_unit = first_word if len(first_word) <= 10 else first_word[:10]
-    return (clean_unit, clean_unit)
+    # マッチしない場合はNoneを返す（数字のみや不明な単位を除外）
+    # 数字のみの場合も除外
+    if first_word.isdigit() or not first_word:
+        return None
+
+    # 英字で構成された不明な単位のみ許可（10文字以下）
+    if first_word.isalpha() and len(first_word) <= 10:
+        return (first_word, first_word)
+
+    return None
 
 
 class UnitNormalizer:
