@@ -103,22 +103,22 @@ gcloud projects describe new-snap-calorie --format="value(projectNumber)"
 ### デプロイ実行
 
 ```bash
-# コスト優先モード（min-instances=0、コールドスタートあり）
-bash apps/barcode_api/deploy.sh
+# 開発環境（デフォルト: min-instances=0、コールドスタートあり）
+./apps/barcode_api/deploy.sh
 
-# パフォーマンス優先モード（min-instances=1、常時起動）
-DEPLOY_MODE=performance bash apps/barcode_api/deploy.sh
+# 本番環境（min-instances=1、常時起動、コールドスタートなし）
+ENVIRONMENT=production ./apps/barcode_api/deploy.sh
 
-# サービス名を変更する場合
-SERVICE_NAME=barcode-api-dev bash apps/barcode_api/deploy.sh
+# 本番環境 + CORS制限
+ENVIRONMENT=production ALLOWED_ORIGINS="https://yourapp.com" ./apps/barcode_api/deploy.sh
 ```
 
 ### デプロイ設定
 
-| モード | min-instances | メモリ | CPU | 用途 |
-|--------|---------------|--------|-----|------|
-| cost | 0 | 4Gi | 2 | 開発・テスト環境 |
-| performance | 1 | 4Gi | 2 | 本番環境 |
+| 環境 | サービス名 | min-instances | max-instances | メモリ | CPU | concurrency |
+|------|-----------|---------------|---------------|--------|-----|-------------|
+| development | barcode-api-dev | 0 | 5 | 4Gi | 2 | 80 |
+| production | barcode-api | 1 | 3 | 4Gi | 2 | 80 |
 
 ### Cloud Runアーキテクチャ
 

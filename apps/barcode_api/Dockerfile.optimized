@@ -1,0 +1,64 @@
+# ビルドステージ: 依存関係のインストール
+FROM python:3.11-slim as builder
+
+WORKDIR /build
+
+# ビルドに必要なツールのインストール
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# 依存関係のコピーとインストール
+COPY requirements-barcode.txt ./
+RUN pip install --no-cache-dir --prefix=/install -r requirements-barcode.txt
+
+# ランタイムステージ: 最小限のイメージ
+FROM python:3.11-slim
+
+# 必要最小限のランタイム依存関係
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gnupg \
+    apt-transport-https \
+    ca-certificates \
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && apt-get update && apt-get install -y google-cloud-cli \
+    && rm -rf /var/lib/apt/lists/*
+
+# アプリケーション用ユーザーの作成
+RUN useradd -m -u 1001 appuser
+
+WORKDIR /app
+
+# ビルドステージからPythonパッケージをコピー
+COPY --from=builder /install /usr/local
+
+# gunicornをインストール（Cloud Run最適化用）
+RUN pip install --no-cache-dir gunicorn uvicorn
+
+# アプリケーションコードのコピー
+COPY --chown=appuser:appuser apps/barcode_api /app/apps/barcode_api
+
+# データディレクトリを作成
+RUN mkdir -p /app/db/FoodData_Central && \
+    chown -R appuser:appuser /app/db
+
+# 起動スクリプトをコピー
+COPY --chown=appuser:appuser apps/barcode_api/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# 非rootユーザーで実行
+USER appuser
+
+# 環境変数の設定
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/app \
+    PORT=8003
+
+# ポート公開
+EXPOSE 8003
+
+# 起動コマンド（entrypoint.shでGCSからDBをダウンロード後、gunicornで起動）
+ENTRYPOINT ["/app/entrypoint.sh"]

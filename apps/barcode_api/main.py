@@ -9,27 +9,80 @@ import logging
 import sys
 import os
 from pathlib import Path
+from contextlib import asynccontextmanager
 
 # プロジェクトルートをPythonパスに追加
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .api.barcode import router as barcode_router
 
-# ログ設定
+# ========== 環境設定 ==========
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+IS_PRODUCTION = ENVIRONMENT == "production"
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO" if not IS_PRODUCTION else "WARNING")
+
+# ログ設定（Cloud Run対応: stdoutのみ）
+log_handlers = [logging.StreamHandler(sys.stdout)]
+
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, LOG_LEVEL.upper(), logging.INFO),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('barcode_api.log')
-    ]
+    handlers=log_handlers
 )
 logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """アプリケーションのライフサイクル管理"""
+    # ========== Startup ==========
+    logger.info("=" * 60)
+    logger.info("Barcode API v1.0.0")
+    logger.info("=" * 60)
+    logger.info(f"Environment: {ENVIRONMENT}")
+    if IS_PRODUCTION:
+        logger.info(f"CORS origins: {ALLOWED_ORIGINS}")
+    logger.info("=" * 60)
+
+    # データベース接続確認
+    fdc_service = None
+    try:
+        from .services.fdc_service import FDCDatabaseService
+        fdc_service = FDCDatabaseService()
+
+        if fdc_service.health_check():
+            stats = fdc_service.get_database_stats()
+            logger.info("✅ FDCデータベース接続成功")
+            logger.info(f"   データベース統計: {stats}")
+        else:
+            logger.error("❌ FDCデータベース接続失敗")
+
+    except Exception as e:
+        logger.error(f"起動時データベース確認エラー: {e}")
+
+    logger.info("✅ バーコード検索API起動完了")
+
+    yield  # アプリケーション実行中
+
+    # ========== Shutdown ==========
+    logger.info("Shutting down Barcode API...")
+
+    # Open Food Facts HTTPクライアントのクリーンアップ
+    try:
+        from .services.off_service import cleanup_off_service
+        await cleanup_off_service()
+        logger.info("✅ Open Food Facts service cleaned up")
+    except Exception as e:
+        logger.warning(f"Open Food Facts cleanup warning: {e}")
+
+    logger.info("✅ バーコード検索API終了")
+
 
 # FastAPIアプリケーション作成
 app = FastAPI(
@@ -37,13 +90,20 @@ app = FastAPI(
     description="FoodData Central (FDC) データベースを使用したバーコード検索API",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan
 )
 
-# CORS設定
+# CORS設定（環境に応じて制御）
+if IS_PRODUCTION and ALLOWED_ORIGINS != "*":
+    cors_origins = [origin.strip() for origin in ALLOWED_ORIGINS.split(",")]
+    logger.info(f"CORS origins: {cors_origins}")
+else:
+    cors_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切に制限する
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,41 +113,13 @@ app.add_middleware(
 app.include_router(barcode_router)
 
 
-@app.on_event("startup")
-async def startup_event():
-    """アプリケーション起動時の処理"""
-    logger.info("バーコード検索API起動中...")
-
-    # データベース接続確認
-    try:
-        from .services.fdc_service import FDCDatabaseService
-        fdc_service = FDCDatabaseService()
-
-        if fdc_service.health_check():
-            stats = fdc_service.get_database_stats()
-            logger.info("FDCデータベース接続成功")
-            logger.info(f"データベース統計: {stats}")
-        else:
-            logger.error("FDCデータベース接続失敗")
-
-    except Exception as e:
-        logger.error(f"起動時データベース確認エラー: {e}")
-
-    logger.info("バーコード検索API起動完了")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """アプリケーション終了時の処理"""
-    logger.info("バーコード検索API終了")
-
-
 @app.get("/")
 async def root():
     """ルートエンドポイント"""
     return {
         "service": "バーコード検索API",
         "version": "1.0.0",
+        "environment": ENVIRONMENT,
         "description": "FoodData Central (FDC) データベースを使用したバーコード検索API",
         "endpoints": {
             "barcode_lookup": "/api/v1/barcode/lookup",
@@ -111,6 +143,7 @@ async def app_health():
             "status": "healthy" if db_healthy else "degraded",
             "application": "running",
             "database": "connected" if db_healthy else "disconnected",
+            "environment": ENVIRONMENT,
             "version": "1.0.0"
         }
     except Exception as e:
@@ -122,6 +155,7 @@ async def app_health():
                 "application": "running",
                 "database": "error",
                 "error": str(e),
+                "environment": ENVIRONMENT,
                 "version": "1.0.0"
             }
         )

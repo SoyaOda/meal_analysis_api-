@@ -1,8 +1,12 @@
 #!/bin/bash
 # Barcode API - Cloud Run デプロイスクリプト
 #
+# 使用方法:
+#   開発環境: ./deploy.sh                              (デフォルト: development)
+#   本番環境: ENVIRONMENT=production ./deploy.sh
+#
 # FDCデータベース(約3GB)をCloud Storage経由で配信
-# 
+#
 # 事前準備:
 #   1. FDCデータベースをGCSにアップロード:
 #      gsutil cp db/FoodData_Central/fdc_barcode.db gs://new-snap-calorie-data/fdc/fdc_barcode.db
@@ -27,21 +31,32 @@ else
     echo ""
 fi
 
-# gcloud コマンドのパス設定
-GCLOUD="/opt/homebrew/bin/gcloud"
+# gcloud コマンドのパス設定（環境に依存しない）
+GCLOUD=$(which gcloud)
+
+# ========== 環境設定 ==========
+# ENVIRONMENT: "development" (デフォルト) または "production"
+ENVIRONMENT=${ENVIRONMENT:-"development"}
 
 # 設定
 PROJECT_ID="new-snap-calorie"
 REGION="us-central1"
-SERVICE_NAME=${SERVICE_NAME:-"barcode-api"}
+
+# 環境に応じたサービス名
+if [ "$ENVIRONMENT" = "production" ]; then
+    SERVICE_NAME=${SERVICE_NAME:-"barcode-api"}
+else
+    SERVICE_NAME=${SERVICE_NAME:-"barcode-api-dev"}
+fi
+
 IMAGE_TAG="gcr.io/${PROJECT_ID}/${SERVICE_NAME}:latest"
 
 # GCSバケット設定
 GCS_BUCKET="new-snap-calorie-data"
 GCS_DB_PATH="gs://${GCS_BUCKET}/fdc/fdc_barcode.db"
 
-# デプロイモード選択
-DEPLOY_MODE=${DEPLOY_MODE:-"cost"}  # "cost" or "performance"
+# 許可するオリジン（本番環境用、カンマ区切り）
+ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-"*"}
 
 echo "============================================"
 echo "Barcode API"
@@ -51,8 +66,11 @@ echo ""
 echo "Project: ${PROJECT_ID}"
 echo "Region: ${REGION}"
 echo "Service: ${SERVICE_NAME}"
-echo "Deploy Mode: ${DEPLOY_MODE}"
+echo "Environment: ${ENVIRONMENT}"
 echo "Database: ${GCS_DB_PATH}"
+if [ "$ENVIRONMENT" = "production" ]; then
+    echo "CORS Origins: ${ALLOWED_ORIGINS}"
+fi
 echo ""
 
 # GCSにデータベースがあるか確認
@@ -71,9 +89,29 @@ echo ""
 # リポジトリルートに移動
 cd "${REPO_ROOT}"
 
-# 1. Dockerfileを準備
-echo "📦 Preparing Dockerfile..."
-cp apps/barcode_api/Dockerfile Dockerfile.barcode
+# クリーンアップ関数（エラー時も確実に実行）
+cleanup() {
+    echo "🧹 Cleaning up temporary files..."
+    rm -f Dockerfile Dockerfile.barcode
+    rm -f .gcloudignore
+    if [ -f .gcloudignore.backup ]; then
+        mv .gcloudignore.backup .gcloudignore
+    fi
+}
+
+# スクリプト終了時（成功・失敗問わず）にクリーンアップを実行
+trap cleanup EXIT
+
+# 1. Dockerfile.optimizedを準備
+echo "📦 Preparing Dockerfile.optimized..."
+
+# Dockerfile.optimizedをルートにコピー
+if [ -f "apps/barcode_api/Dockerfile.optimized" ]; then
+    cp apps/barcode_api/Dockerfile.optimized Dockerfile
+else
+    echo "❌ Error: Dockerfile.optimized not found"
+    exit 1
+fi
 
 # バックアップと一時的な.gcloudignoreを作成
 if [ -f .gcloudignore ]; then
@@ -125,49 +163,6 @@ test_barcodes/
 .env.*
 GCLOUDIGNORE
 
-# 起動スクリプトを含むDockerfileに更新
-cat > Dockerfile << 'DOCKERFILE'
-FROM python:3.11-slim
-
-# 作業ディレクトリを設定
-WORKDIR /app
-
-# システム依存パッケージをインストール（Google Cloud SDK含む）
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    gnupg \
-    apt-transport-https \
-    ca-certificates \
-    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && apt-get update && apt-get install -y google-cloud-cli \
-    && rm -rf /var/lib/apt/lists/*
-
-# 必要なPythonパッケージをインストール
-COPY requirements-barcode.txt .
-RUN pip install --no-cache-dir -r requirements-barcode.txt
-
-# アプリケーションコードをコピー
-COPY apps/barcode_api /app/apps/barcode_api
-
-# データディレクトリを作成
-RUN mkdir -p /app/db/FoodData_Central
-
-# 起動スクリプトをコピー
-COPY apps/barcode_api/entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-# 環境変数
-ENV PYTHONPATH=/app
-ENV PORT=8003
-
-# ポート公開
-EXPOSE 8003
-
-# 起動コマンド
-ENTRYPOINT ["/app/entrypoint.sh"]
-DOCKERFILE
-
 # 2. Docker イメージのビルドとプッシュ
 echo "📦 Building Docker image..."
 
@@ -178,15 +173,6 @@ $GCLOUD builds submit \
   --project="${PROJECT_ID}" \
   .
 
-# 一時ファイルを削除
-rm -f Dockerfile Dockerfile.barcode
-
-# .gcloudignoreを復元
-rm -f .gcloudignore
-if [ -f .gcloudignore.backup ]; then
-    mv .gcloudignore.backup .gcloudignore
-fi
-
 echo "✅ Docker image built and pushed"
 echo ""
 
@@ -195,22 +181,27 @@ echo "🚀 Deploying to Cloud Run..."
 
 # 環境変数を構築
 ENV_VARS="GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
-ENV_VARS="${ENV_VARS},LOG_LEVEL=INFO"
+ENV_VARS="${ENV_VARS},ENVIRONMENT=${ENVIRONMENT}"
 ENV_VARS="${ENV_VARS},GCS_DB_PATH=${GCS_DB_PATH}"
 
-# デプロイモードに応じた設定
-if [ "$DEPLOY_MODE" = "performance" ]; then
-    echo "⚡ Performance Mode: min-instances=1 for zero cold starts"
+# 環境に応じた設定
+if [ "$ENVIRONMENT" = "production" ]; then
+    echo "🚀 Production Mode: min-instances=1, optimized for performance"
     MIN_INSTANCES=1
-    MAX_INSTANCES=10
-    MEMORY="4Gi"  # DBダウンロード + SQLite用に多めに
-    CPU=2
-else
-    echo "💰 Cost Mode: min-instances=0"
-    MIN_INSTANCES=0
-    MAX_INSTANCES=10
+    MAX_INSTANCES=3
     MEMORY="4Gi"
     CPU=2
+    LOG_LEVEL="WARNING"
+    ENV_VARS="${ENV_VARS},LOG_LEVEL=${LOG_LEVEL}"
+    ENV_VARS="${ENV_VARS},ALLOWED_ORIGINS=${ALLOWED_ORIGINS}"
+else
+    echo "🔧 Development Mode: min-instances=0, cost-optimized"
+    MIN_INSTANCES=0
+    MAX_INSTANCES=5
+    MEMORY="4Gi"
+    CPU=2
+    LOG_LEVEL="INFO"
+    ENV_VARS="${ENV_VARS},LOG_LEVEL=${LOG_LEVEL}"
 fi
 
 # Cloud Run デプロイ
@@ -225,7 +216,7 @@ $GCLOUD run deploy "${SERVICE_NAME}" \
   --cpu="${CPU}" \
   --cpu-boost \
   --execution-environment=gen2 \
-  --concurrency=100 \
+  --concurrency=80 \
   --max-instances="${MAX_INSTANCES}" \
   --min-instances="${MIN_INSTANCES}" \
   --set-env-vars="${ENV_VARS}" \

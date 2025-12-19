@@ -39,5 +39,15 @@ echo ""
 echo "🌐 Starting Barcode API on port ${PORT:-8003}..."
 echo ""
 
-# Pythonアプリケーションを起動
-exec python -m apps.barcode_api.main
+# gunicorn + uvicornで本番環境向けに起動
+exec gunicorn apps.barcode_api.main:app \
+    --bind :${PORT:-8003} \
+    --workers 1 \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --timeout 300 \
+    --keep-alive 5 \
+    --max-requests 1000 \
+    --max-requests-jitter 50 \
+    --access-logfile - \
+    --error-logfile - \
+    --preload

@@ -18,6 +18,15 @@ class Settings:
         # プロジェクトルート
         self.PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 
+        # ========== 環境設定 ==========
+        # ENVIRONMENT: "development" または "production"
+        self.ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+        self.IS_PRODUCTION = self.ENVIRONMENT == "production"
+
+        # 許可するオリジン（本番環境用）
+        # カンマ区切りで複数指定可能: "https://app1.com,https://app2.com"
+        self.ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*")
+
         # API設定
         self.API_VERSION = "1.0.0"
         self.API_TITLE = "Freeform USDA Meal Analysis API"

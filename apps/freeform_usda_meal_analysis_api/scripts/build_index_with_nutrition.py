@@ -28,7 +28,9 @@ from typing import List, Dict, Tuple, Optional
 
 # USDA栄養素ID → 内部キー名のマッピング
 NUTRIENT_IDS = {
-    1008: "calories",      # Energy (kcal)
+    1008: "calories",      # Energy (kcal) - Survey/SR Legacy
+    2047: "calories",      # Energy (Atwater General Factors) - Foundation
+    2048: "calories",      # Energy (Atwater Specific Factors) - Foundation (fallback)
     1003: "protein_g",     # Protein (g)
     1004: "fat_g",         # Total lipid (fat) (g)
     1005: "carbs_g"        # Carbohydrate, by difference (g)
@@ -60,6 +62,10 @@ def extract_nutrition(food_nutrients: List[Dict]) -> Dict[str, float]:
     """
     nutrients = {}
 
+    # カロリーの優先順位: 1008 > 2047 > 2048
+    # (1008: Energy kcal, 2047: Atwater General, 2048: Atwater Specific)
+    CALORIE_IDS_PRIORITY = [1008, 2047, 2048]
+
     for food_nutrient in food_nutrients:
         nutrient = food_nutrient.get('nutrient', {})
         nutrient_id = nutrient.get('id')
@@ -67,10 +73,18 @@ def extract_nutrition(food_nutrients: List[Dict]) -> Dict[str, float]:
         if nutrient_id in NUTRIENT_IDS:
             amount = food_nutrient.get('amount', 0.0)
             key = NUTRIENT_IDS[nutrient_id]
+
+            # caloriesの場合、既に値があれば優先順位をチェック
+            if key == "calories" and "calories" in nutrients:
+                # 既存の値より優先順位が高い場合のみ上書き
+                # (低いインデックスが高優先)
+                continue
+
             nutrients[key] = round(float(amount), 1)
 
-    # 4つの栄養素が全て揃っていない場合は0で補完
-    for key in NUTRIENT_IDS.values():
+    # 必要な栄養素が揃っていない場合は0で補完
+    required_keys = {"calories", "protein_g", "fat_g", "carbs_g"}
+    for key in required_keys:
         if key not in nutrients:
             nutrients[key] = 0.0
 

@@ -159,14 +159,22 @@ app = FastAPI(
     ]
 )
 
-# CORS設定
+# CORS設定（環境に応じて制限）
+if settings.ALLOWED_ORIGINS == "*":
+    cors_origins = ["*"]
+else:
+    cors_origins = [origin.strip() for origin in settings.ALLOWED_ORIGINS.split(",")]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切に制限すること
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+logger.info(f"Environment: {settings.ENVIRONMENT}")
+logger.info(f"CORS origins: {cors_origins}")
 
 # ルーター登録
 app.include_router(health.router)

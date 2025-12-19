@@ -497,8 +497,8 @@ apps/freeform_usda_meal_analysis_api/
 ├── main.py                    # FastAPI アプリケーション
 ├── Dockerfile.optimized       # Docker設定（本番用、マルチステージビルド）
 ├── Dockerfile                 # Docker設定（開発用、レガシー）
-├── deploy_optimized.sh        # デプロイスクリプト（本番推奨、Performance/Costモード対応）
-├── deploy.sh                  # デプロイスクリプト（レガシー）
+├── deploy.sh                  # デプロイスクリプト（開発/本番対応、ENVIRONMENT変数で切り替え）
+├── deploy_optimized.sh        # デプロイスクリプト（レガシー）
 ├── startup_data_loader.py     # Cloud Storage起動時ダウンロード（レガシー、現在未使用）
 ├── healthcheck.py             # ヘルスチェックスクリプト
 ├── .gcloudignore              # Cloud Buildから除外するファイル指定
@@ -1314,60 +1314,60 @@ gcloud config set project new-snap-calorie
 
 ### デプロイ手順
 
-#### オプション1: 最適化デプロイスクリプト（推奨）
+#### deploy.sh（推奨）
 
-**⚠️ 重要: 環境変数は必ず`export`を使って設定してください**
+`ENVIRONMENT`環境変数で開発/本番を切り替えられます。
 
-zsh（macOSデフォルト）やbashで正しく動作させるため、環境変数は`export`コマンドで設定する必要があります。
-
-**Performance Mode（ゼロコールドスタート）:**
+**開発環境（デフォルト）:**
 
 ```bash
 cd apps/freeform_usda_meal_analysis_api
-export DEEPINFRA_API_KEY=your-key
-export DEPLOY_MODE=performance  # min-instances=1
-bash deploy_optimized.sh
+./deploy.sh
 ```
 
-- **用途**: 本番環境、常時利用
+- **サービス名**: `freeform-usda-meal-analysis-api-v4-dev`
+- **特徴**: min-instances=0、使用時のみ起動、コスト最適化
+- **コスト**: 従量課金のみ
+
+**本番環境（ゼロコールドスタート）:**
+
+```bash
+cd apps/freeform_usda_meal_analysis_api
+ENVIRONMENT=production ./deploy.sh
+```
+
+- **サービス名**: `freeform-usda-meal-analysis-api`
 - **特徴**: min-instances=1、常時起動、コールドスタートなし
 - **コスト**: 月額$50-70
 
-**Cost Mode（従量課金）:**
+**環境別設定比較:**
+
+| 設定 | 開発 (development) | 本番 (production) |
+|------|-------------------|-------------------|
+| サービス名 | `*-v4-dev` | `freeform-usda-meal-analysis-api` |
+| min-instances | 0 | 1 |
+| max-instances | 10 | 5 |
+| メモリ | 2Gi | 2Gi |
+| CPU | 1 | 2 |
+| concurrency | 80 | 100 |
+| LOG_LEVEL | INFO | WARNING |
+| ENVIRONMENT | development | production |
+
+**サービス名を変更する場合:**
 
 ```bash
 cd apps/freeform_usda_meal_analysis_api
-export DEEPINFRA_API_KEY=your-key
-export DEPLOY_MODE=cost  # min-instances=0（デフォルト）
-bash deploy_optimized.sh
-```
-
-- **用途**: 開発環境、テスト、低頻度利用
-- **特徴**: min-instances=0、使用時のみ起動、CPU boost有効
-- **コスト**: 従量課金のみ
-
-**複数サービスをデプロイする場合（サービス名を変更）:**
-
-```bash
-cd apps/freeform_usda_meal_analysis_api
-export SERVICE_NAME=freeform-usda-meal-analysis-api-v2  # サービス名を指定
-export DEPLOY_MODE=performance
-bash deploy_optimized.sh
-```
-
-**❌ 間違った例（zshで動作しません）:**
-```bash
-# これはzshで失敗します - exportを使ってください
-SERVICE_NAME=... DEPLOY_MODE=... bash deploy_optimized.sh
+SERVICE_NAME=my-custom-service ENVIRONMENT=production ./deploy.sh
 ```
 
 デプロイスクリプトが自動実行する処理：
-1. Dockerイメージのビルド（`Dockerfile.optimized`使用、マルチステージビルド）
-2. Google Container Registryへのプッシュ
-3. Cloud Runへのデプロイ（最適化設定含む）
-4. ヘルスチェック＆Readinessチェック実行
+1. `.env`ファイルから環境変数を読み込み
+2. Dockerイメージのビルド（`Dockerfile.optimized`使用）
+3. Google Container Registryへのプッシュ
+4. Cloud Runへのデプロイ（環境に応じた設定）
+5. ヘルスチェック実行
 
-#### オプション2: 手動デプロイ
+#### 手動デプロイ
 
 ```bash
 cd /path/to/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api

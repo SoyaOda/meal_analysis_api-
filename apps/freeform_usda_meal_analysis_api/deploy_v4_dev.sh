@@ -28,8 +28,8 @@ else
     echo ""
 fi
 
-# gcloud コマンドのパス設定
-GCLOUD="/Users/odasoya/google-cloud-sdk/bin/gcloud"
+# gcloud コマンドのパス設定（環境に依存しない）
+GCLOUD=$(which gcloud)
 
 # 設定
 PROJECT_ID="new-snap-calorie"
