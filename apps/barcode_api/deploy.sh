@@ -92,10 +92,18 @@ cd "${REPO_ROOT}"
 # クリーンアップ関数（エラー時も確実に実行）
 cleanup() {
     echo "🧹 Cleaning up temporary files..."
-    rm -f Dockerfile Dockerfile.barcode
-    rm -f .gcloudignore
+    rm -f Dockerfile.barcode
+    # Dockerfileを復元（バックアップがあれば）
+    if [ -f Dockerfile.backup ]; then
+        mv Dockerfile.backup Dockerfile
+    else
+        rm -f Dockerfile
+    fi
+    # .gcloudignoreを復元
     if [ -f .gcloudignore.backup ]; then
         mv .gcloudignore.backup .gcloudignore
+    else
+        rm -f .gcloudignore
     fi
 }
 
@@ -104,6 +112,11 @@ trap cleanup EXIT
 
 # 1. Dockerfile.optimizedを準備
 echo "📦 Preparing Dockerfile.optimized..."
+
+# 既存のDockerfileをバックアップ
+if [ -f Dockerfile ]; then
+    mv Dockerfile Dockerfile.backup
+fi
 
 # Dockerfile.optimizedをルートにコピー
 if [ -f "apps/barcode_api/Dockerfile.optimized" ]; then

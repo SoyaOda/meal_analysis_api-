@@ -96,10 +96,17 @@ cd "${REPO_ROOT}"
 # クリーンアップ関数（エラー時も確実に実行）
 cleanup() {
     echo "🧹 Cleaning up temporary files..."
-    rm -f Dockerfile
-    rm -f .gcloudignore
+    # Dockerfileを復元（バックアップがあれば）
+    if [ -f Dockerfile.backup ]; then
+        mv Dockerfile.backup Dockerfile
+    else
+        rm -f Dockerfile
+    fi
+    # .gcloudignoreを復元
     if [ -f .gcloudignore.backup ]; then
         mv .gcloudignore.backup .gcloudignore
+    else
+        rm -f .gcloudignore
     fi
 }
 
@@ -110,6 +117,11 @@ trap cleanup EXIT
 echo "📦 Building and pushing Docker image..."
 echo "   Tag: ${IMAGE_TAG}"
 echo "   Dockerfile: Dockerfile.optimized"
+
+# 既存のDockerfileをバックアップ
+if [ -f Dockerfile ]; then
+    mv Dockerfile Dockerfile.backup
+fi
 
 # Dockerfile.optimizedをルートにコピー
 if [ -f "apps/freeform_usda_meal_analysis_api/Dockerfile.optimized" ]; then
