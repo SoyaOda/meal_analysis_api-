@@ -31,8 +31,7 @@ class BaseVLMProvider(ABC):
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
-        enable_thinking: Optional[bool] = None,
+        reasoning_effort: Optional[str] = None,
         return_usage: bool = False
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
@@ -45,8 +44,7 @@ class BaseVLMProvider(ABC):
             max_tokens: 最大出力トークン数
             temperature: ランダム性制御
             seed: 再現性のためのシード値
-            thinking_budget: Thinkingモデルの推論トークン数の上限
-            enable_thinking: Thinking modeのon/off（Alibabaのqwen3-vl-plus等で使用）
+            reasoning_effort: Reasoning effort レベル（minimal/low/medium/high/xhigh）
             return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:

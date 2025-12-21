@@ -98,8 +98,7 @@ class MealAnalysisPipeline:
         vlm_temperature: Optional[float] = None,
         vlm_seed: Optional[int] = None,
         vlm_max_tokens: Optional[int] = None,
-        vlm_thinking_budget: Optional[int] = None,
-        vlm_enable_thinking: Optional[bool] = None,
+        vlm_reasoning_effort: Optional[str] = None,
         parallel_search: bool = True,
         # 検索設定パラメータ
         search_stage1_top_k: Optional[int] = None,
@@ -121,7 +120,7 @@ class MealAnalysisPipeline:
             vlm_temperature: VLM temperature（Noneの場合はconfig設定値を使用）
             vlm_seed: VLM seed（Noneの場合はconfig設定値を使用）
             vlm_max_tokens: VLM max tokens（Noneの場合はconfig設定値を使用）
-            vlm_thinking_budget: VLM thinking budget（Noneの場合はconfig設定値を使用）
+            vlm_reasoning_effort: Reasoning effort レベル（minimal/low/medium/high/xhigh）
             parallel_search: USDA検索を並列実行するか
 
         Returns:
@@ -174,8 +173,7 @@ class MealAnalysisPipeline:
                 temperature=vlm_temperature,
                 seed=vlm_seed,
                 max_tokens=vlm_max_tokens,
-                thinking_budget=vlm_thinking_budget,
-                enable_thinking=vlm_enable_thinking
+                reasoning_effort=vlm_reasoning_effort
             )
         except Exception as e:
             logger.error(f"VLM analysis failed: {e}")
@@ -294,10 +292,8 @@ class MealAnalysisPipeline:
                 vlm_kwargs["vlm_temperature"] = model_config_override.temperature
             if model_config_override.max_tokens is not None:
                 vlm_kwargs["vlm_max_tokens"] = model_config_override.max_tokens
-            if model_config_override.thinking_budget is not None:
-                vlm_kwargs["vlm_thinking_budget"] = model_config_override.thinking_budget
-            if model_config_override.enable_thinking is not None:
-                vlm_kwargs["vlm_enable_thinking"] = model_config_override.enable_thinking
+            if model_config_override.reasoning_effort is not None:
+                vlm_kwargs["vlm_reasoning_effort"] = model_config_override.reasoning_effort
 
         # 検索設定の適用
         search_kwargs = {}

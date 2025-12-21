@@ -68,8 +68,7 @@ class AlibabaProvider(BaseVLMProvider):
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
-        enable_thinking: Optional[bool] = None,
+        reasoning_effort: Optional[str] = None,
         return_usage: bool = False
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
@@ -82,8 +81,7 @@ class AlibabaProvider(BaseVLMProvider):
             max_tokens: 最大出力トークン数
             temperature: ランダム性制御
             seed: 再現性のためのシード値
-            thinking_budget: Thinkingモデルの推論トークン数の上限
-            enable_thinking: Thinking modeのon/off（qwen3-vl-plus等で使用）
+            reasoning_effort: Reasoning effort レベル（Alibabaでは未使用）
             return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:
@@ -107,8 +105,9 @@ class AlibabaProvider(BaseVLMProvider):
         if seed is None:
             seed = settings.DEFAULT_SEED
 
-        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}, "
-                   f"thinking_budget={thinking_budget}, enable_thinking={enable_thinking}")
+        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
+        if reasoning_effort is not None:
+            logger.warning(f"⚠️ reasoning_effort={reasoning_effort} is not used by Alibaba")
 
         # Base64エンコード
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
@@ -141,21 +140,13 @@ class AlibabaProvider(BaseVLMProvider):
                 }
             ]
 
-            # extra_bodyの構築（thinking mode対応）
-            extra_body = {}
-            if enable_thinking is not None:
-                extra_body["enable_thinking"] = enable_thinking
-            if thinking_budget is not None:
-                extra_body["thinking_budget"] = thinking_budget
-
             # API呼び出し（OpenAI互換）
             response = await self.client.chat.completions.create(
                 model=self.model_id,
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                seed=seed,
-                extra_body=extra_body if extra_body else {}
+                seed=seed
             )
 
             # 応答が空でないかチェック

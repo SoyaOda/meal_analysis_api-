@@ -27,18 +27,10 @@ class ModelConfig(BaseModel):
         example="You are an expert food analyst. Analyze the meal image..."
     )
 
-    thinking_budget: Optional[int] = Field(
+    reasoning_effort: Optional[str] = Field(
         None,
-        description="思考トークン数（QVQモデル使用時のみ有効）",
-        ge=1,
-        le=32768,
-        example=4096
-    )
-
-    enable_thinking: Optional[bool] = Field(
-        None,
-        description="Thinking modeのon/off（Alibabaのqwen3-vl-plus等で使用）",
-        example=True
+        description="Reasoning effortレベル。'minimal', 'low', 'medium', 'high', 'xhigh' から選択。未指定時はモデルのデフォルト動作。",
+        example="medium"
     )
 
     temperature: Optional[float] = Field(

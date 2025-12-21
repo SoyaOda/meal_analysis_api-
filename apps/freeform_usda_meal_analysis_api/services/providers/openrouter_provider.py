@@ -48,10 +48,11 @@ class OpenRouterProvider(BaseVLMProvider):
         # OpenRouterのエンドポイント
         base_url = "https://openrouter.ai/api/v1"
 
-        # 非同期クライアントの初期化
+        # 非同期クライアントの初期化（Reasoning有効時は処理時間が長いため120秒に設定）
         self.client = AsyncOpenAI(
             api_key=api_key,
             base_url=base_url,
+            timeout=120.0,
         )
         logger.info(f"OpenRouterProvider initialized for model: {self.model_id}")
 
@@ -63,8 +64,7 @@ class OpenRouterProvider(BaseVLMProvider):
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
-        enable_thinking: Optional[bool] = None,
+        reasoning_effort: Optional[str] = None,
         return_usage: bool = False
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
@@ -77,8 +77,9 @@ class OpenRouterProvider(BaseVLMProvider):
             max_tokens: 最大出力トークン数
             temperature: ランダム性制御
             seed: 再現性のためのシード値
-            thinking_budget: Thinkingモデルの推論トークン数の上限（OpenRouterでは未サポート）
-            enable_thinking: Thinking modeのon/off（OpenRouterでは未サポート）
+            reasoning_effort: Reasoning effort レベル
+                             "minimal" (10%), "low" (20%), "medium" (50%), "high" (80%), "xhigh" (95%)
+                             → OpenRouter の reasoning.effort にマッピング
             return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:
@@ -103,10 +104,20 @@ class OpenRouterProvider(BaseVLMProvider):
         logger.info(f"📝 [OpenRouter] Prompt preview (first 300 chars):\n{prompt_preview}")
 
         logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
-        if thinking_budget:
-            logger.warning(f"⚠️  thinking_budget={thinking_budget} is not supported by OpenRouter API, ignoring")
-        if enable_thinking is not None:
-            logger.warning(f"⚠️  enable_thinking={enable_thinking} is not supported by OpenRouter API, ignoring")
+
+        # ========== Reasoning パラメータの構築 ==========
+        extra_body = {"usage": {"include": True}}  # OpenRouterのコスト情報を取得
+
+        # Reasoning設定を構築（呼び出し時指定 > デフォルト設定）
+        effective_effort = reasoning_effort if reasoning_effort is not None else settings.DEFAULT_REASONING_EFFORT
+        logger.info(f"🔧 Reasoning Parameters: reasoning_effort={reasoning_effort} (effective: {effective_effort})")
+
+        valid_efforts = ["minimal", "low", "medium", "high", "xhigh"]
+        if effective_effort not in valid_efforts:
+            logger.warning(f"⚠️ Invalid reasoning_effort '{effective_effort}', must be one of {valid_efforts}")
+        else:
+            extra_body["reasoning"] = {"effort": effective_effort}
+            logger.info(f"🧠 Reasoning enabled with effort: {effective_effort}")
 
         # Base64エンコード
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
@@ -119,6 +130,8 @@ class OpenRouterProvider(BaseVLMProvider):
             logger.info(f"   Prompt length: {len(prompt)} chars")
             logger.info(f"   Image size: {len(image_bytes)} bytes")
             logger.info(f"   Image hash: {image_hash[:16]}...")
+            if "reasoning" in extra_body:
+                logger.info(f"   Reasoning config: {extra_body['reasoning']}")
 
             # メッセージ構築（OpenAI互換形式）
             messages = [
@@ -148,14 +161,14 @@ class OpenRouterProvider(BaseVLMProvider):
                     logger.info(f"🔄 API call attempt {attempt + 1}/{max_retries}")
 
                     # API呼び出し（OpenAI互換）
-                    # OpenRouterのusage accounting機能を有効化してコスト情報も取得
+                    # extra_body にはusageとreasoning設定が含まれる
                     response = await self.client.chat.completions.create(
                         model=self.model_id,
                         messages=messages,
                         max_tokens=max_tokens,
                         temperature=temperature,
                         seed=seed,
-                        extra_body={"usage": {"include": True}}  # OpenRouterのコスト情報を取得
+                        extra_body=extra_body
                     )
 
                     # 応答が空でないかチェック

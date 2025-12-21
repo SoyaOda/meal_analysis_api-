@@ -65,12 +65,14 @@ class Settings:
         # Qwen3-VL-30B-A3B-Thinking推奨設定
         # - コンテキストウィンドウ: 256K (最大1Mまで拡張可能)
         # - 出力トークン数: 16384 (実際の上限はDeepInfra APIにより動的に制限される)
-        # - Thinking Budget: 8192 (max_tokensの約半分を推論に使用)
         # - Temperature: 0.6 (Qwen公式推奨値。0.0は性能劣化と無限ループの原因となるため非推奨)
         self.DEFAULT_MAX_TOKENS = int(os.getenv("VLM_MAX_TOKENS", "16384"))
-        self.DEFAULT_THINKING_BUDGET = int(os.getenv("VLM_THINKING_BUDGET", "8192"))  # max_tokensの約半分
         self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.6"))  # Qwen公式推奨値
         self.DEFAULT_SEED = int(os.getenv("VLM_SEED", "123456"))
+
+        # Reasoning Effort設定 (OpenRouter用)
+        # minimal(10%), low(20%), medium(50%), high(80%), xhigh(95%)
+        self.DEFAULT_REASONING_EFFORT = os.getenv("VLM_REASONING_EFFORT", "medium")
 
         # ========== VLM Provider API設定 ==========
         # DeepInfra API Key（デフォルトプロバイダー）

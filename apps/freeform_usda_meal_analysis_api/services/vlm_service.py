@@ -83,8 +83,7 @@ class VLMService:
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
         max_tokens: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
-        enable_thinking: Optional[bool] = None
+        reasoning_effort: Optional[str] = None
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
@@ -95,7 +94,7 @@ class VLMService:
             temperature: AI推論のランダム性制御。Noneの場合、config設定値を使用。
             seed: 再現性のためのシード値。Noneの場合、config設定値を使用。
             max_tokens: 最大出力トークン数。Noneの場合、config設定値を使用。
-            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、config設定値を使用。
+            reasoning_effort: Reasoning effortレベル（minimal/low/medium/high/xhigh）
 
         Returns:
             (vlm_response, usage_info) のタプル
@@ -125,10 +124,8 @@ class VLMService:
             api_params["temperature"] = temperature
         if seed is not None:
             api_params["seed"] = seed
-        if thinking_budget is not None:
-            api_params["thinking_budget"] = thinking_budget
-        if enable_thinking is not None:
-            api_params["enable_thinking"] = enable_thinking
+        if reasoning_effort is not None:
+            api_params["reasoning_effort"] = reasoning_effort
 
         # VLM呼び出し（providerを使用）
         try:

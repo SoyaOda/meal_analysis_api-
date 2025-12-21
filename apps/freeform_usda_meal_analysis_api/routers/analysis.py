@@ -62,8 +62,7 @@ async def analyze_meal_from_image(
     model_id: Optional[str] = Form(None, description="VLMモデルID"),
     prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
     prompt_text: Optional[str] = Form(None, description="プロンプトテキスト全文(prompt_pathより優先)"),
-    thinking_budget: Optional[int] = Form(None, description="思考トークン数(QVQモデル用)"),
-    enable_thinking: Optional[bool] = Form(None, description="Thinking modeのon/off(Alibabaモデル用)"),
+    reasoning_effort: Optional[str] = Form(None, description="Reasoning effortレベル: minimal/low/medium/high/xhigh"),
     temperature: Optional[float] = Form(None, description="生成温度"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
     # Search config overrides
@@ -85,9 +84,9 @@ async def analyze_meal_from_image(
     - **user_context**: 食事の説明やコンテキスト(オプション)
 
     ## モデル設定(オプション、指定しない場合はデフォルト値を使用)
-    - **model_id**: DeepInfra VLMモデルID
+    - **model_id**: VLMモデルID
     - **prompt_path**: プロンプトファイル名(例: "freeform_prompt_usda_format_ver_v7_production_20251027.txt")
-    - **thinking_budget**: 思考トークン数(QVQモデル使用時)
+    - **reasoning_effort**: Reasoning effortレベル(minimal/low/medium/high/xhigh)
     - **temperature**: 生成温度(0.0-2.0)
     - **max_tokens**: 最大トークン数
 
@@ -117,13 +116,12 @@ async def analyze_meal_from_image(
 
         # モデル設定のオーバーライド処理
         model_config_override = None
-        if any([model_id, prompt_path, prompt_text, thinking_budget, enable_thinking, temperature, max_tokens]):
+        if any([model_id, prompt_path, prompt_text, reasoning_effort, temperature, max_tokens]):
             model_config_override = ModelConfig(
                 model_id=model_id,
                 prompt_path=prompt_path,
                 prompt_text=prompt_text,
-                thinking_budget=thinking_budget,
-                enable_thinking=enable_thinking,
+                reasoning_effort=reasoning_effort,
                 temperature=temperature,
                 max_tokens=max_tokens,
             )

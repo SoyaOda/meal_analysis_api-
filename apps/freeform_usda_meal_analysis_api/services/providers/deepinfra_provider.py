@@ -61,8 +61,7 @@ class DeepInfraProvider(BaseVLMProvider):
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
-        enable_thinking: Optional[bool] = None,
+        reasoning_effort: Optional[str] = None,
         return_usage: bool = False
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
@@ -75,8 +74,7 @@ class DeepInfraProvider(BaseVLMProvider):
             max_tokens: 最大出力トークン数
             temperature: ランダム性制御
             seed: 再現性のためのシード値
-            thinking_budget: Thinkingモデルの推論トークン数の上限
-            enable_thinking: Thinking modeのon/off（DeepInfraでは未使用、Alibaba互換性のため）
+            reasoning_effort: Reasoning effort レベル（DeepInfraでは未使用）
             return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:
@@ -93,12 +91,10 @@ class DeepInfraProvider(BaseVLMProvider):
             temperature = settings.DEFAULT_TEMPERATURE
         if seed is None:
             seed = settings.DEFAULT_SEED
-        if thinking_budget is None:
-            thinking_budget = settings.DEFAULT_THINKING_BUDGET
 
-        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}, thinking_budget={thinking_budget}")
-        if enable_thinking is not None:
-            logger.warning(f"⚠️  enable_thinking={enable_thinking} is not used by DeepInfra (Alibaba-specific parameter)")
+        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
+        if reasoning_effort is not None:
+            logger.warning(f"⚠️ reasoning_effort={reasoning_effort} is not used by DeepInfra")
 
         # Base64エンコード
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
