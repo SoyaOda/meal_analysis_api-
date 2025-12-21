@@ -87,6 +87,14 @@ class SearchConfig(BaseModel):
         example=60
     )
 
+    rrf_weight: Optional[float] = Field(
+        None,
+        description="RRF融合スコアの重み（0.0-2.0）。最終スコア計算時に使用",
+        ge=0.0,
+        le=2.0,
+        example=0.5
+    )
+
     # ========== Reranker パラメータ ==========
     reranker_model: Optional[str] = Field(
         None,

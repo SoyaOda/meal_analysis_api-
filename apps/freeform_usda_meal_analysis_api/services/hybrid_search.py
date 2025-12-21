@@ -32,7 +32,8 @@ class HybridSearchEngine:
         index_dir: str,
         bm25_weight: float = None,
         vector_weight: float = None,
-        rrf_k: int = None
+        rrf_k: int = None,
+        rrf_weight: float = None
     ):
         """
         Args:
@@ -40,6 +41,7 @@ class HybridSearchEngine:
             bm25_weight: BM25スコアの重み（Noneの場合はsettingsから取得）
             vector_weight: Vectorスコアの重み（Noneの場合はsettingsから取得）
             rrf_k: RRFのkパラメータ（Noneの場合はsettingsから取得）
+            rrf_weight: RRF融合スコアの重み（Noneの場合はsettingsから取得）
         """
         # 設定を取得
         from ..config.settings import get_settings
@@ -52,11 +54,14 @@ class HybridSearchEngine:
             vector_weight = settings.DEFAULT_VECTOR_WEIGHT
         if rrf_k is None:
             rrf_k = settings.DEFAULT_RRF_K
+        if rrf_weight is None:
+            rrf_weight = settings.DEFAULT_RRF_WEIGHT
 
         self.index_dir = Path(index_dir)
         self.bm25_weight = bm25_weight
         self.vector_weight = vector_weight
         self.rrf_k = rrf_k
+        self.rrf_weight = rrf_weight
 
         logger.info(f"Initializing Hybrid Search Engine...")
         logger.info(f"  BM25 weight: {bm25_weight}")
@@ -202,7 +207,8 @@ class HybridSearchEngine:
         vector_results: List[Tuple[int, float]],
         rrf_scores: Dict[int, float],
         bm25_weight: float = None,
-        vector_weight: float = None
+        vector_weight: float = None,
+        rrf_weight: float = None
     ) -> List[Tuple[int, float, Dict[str, float]]]:
         """
         重み付け融合を適用
@@ -213,6 +219,7 @@ class HybridSearchEngine:
             rrf_scores: RRFスコア
             bm25_weight: BM25スコアの重み（Noneの場合はインスタンス変数を使用）
             vector_weight: Vectorスコアの重み（Noneの場合はインスタンス変数を使用）
+            rrf_weight: RRF融合スコアの重み（Noneの場合はインスタンス変数を使用）
 
         Returns:
             [(doc_idx, final_score, {'bm25': score, 'vector': score, 'rrf': score}), ...]
@@ -220,6 +227,7 @@ class HybridSearchEngine:
         # 重みパラメータが指定されていない場合はインスタンス変数を使用
         bm25_w = bm25_weight if bm25_weight is not None else self.bm25_weight
         vector_w = vector_weight if vector_weight is not None else self.vector_weight
+        rrf_w = rrf_weight if rrf_weight is not None else self.rrf_weight
 
         # スコアを正規化
         bm25_scores_dict = {idx: score for idx, score in bm25_results}
@@ -249,7 +257,7 @@ class HybridSearchEngine:
             final_score = (
                 bm25_w * bm25_score +
                 vector_w * vector_score +
-                rrf_score  # RRFスコアも追加
+                rrf_w * rrf_score  # RRFスコアに重みを適用
             )
 
             final_scores.append((
@@ -277,7 +285,8 @@ class HybridSearchEngine:
         stage1_top_k: int = None,
         bm25_weight: float = None,
         vector_weight: float = None,
-        rrf_k: int = None
+        rrf_k: int = None,
+        rrf_weight: float = None
     ) -> List[Dict[str, Any]]:
         """
         ハイブリッドサーチを実行
@@ -294,7 +303,7 @@ class HybridSearchEngine:
             検索結果のリスト
         """
         # 設定を取得
-        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k]):
+        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight]):
             from ..config.settings import get_settings
             settings = get_settings()
             if top_k is None:
@@ -307,9 +316,11 @@ class HybridSearchEngine:
                 vector_weight = settings.DEFAULT_VECTOR_WEIGHT
             if rrf_k is None:
                 rrf_k = settings.DEFAULT_RRF_K
+            if rrf_weight is None:
+                rrf_weight = settings.DEFAULT_RRF_WEIGHT
 
         logger.info(f"🔍 Hybrid search: '{query}'")
-        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
+        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, rrf_weight={rrf_weight}, stage1_top_k={stage1_top_k}")
 
         # 短いクエリ（3文字未満）の場合はBM25をスキップしてVectorのみで高速化
         short_query_threshold = 3
@@ -379,7 +390,7 @@ class HybridSearchEngine:
         # Stage 3: 重み付け融合
         final_scores = self.apply_weighted_fusion(
             bm25_results, vector_results, rrf_scores,
-            bm25_weight=bm25_weight, vector_weight=vector_weight
+            bm25_weight=bm25_weight, vector_weight=vector_weight, rrf_weight=rrf_weight
         )
 
         # 結果を整形
@@ -418,6 +429,7 @@ class HybridSearchEngine:
         bm25_weight: float = None,
         vector_weight: float = None,
         rrf_k: int = None,
+        rrf_weight: float = None,
         reranker_instruction: str = None,
         include_debug_info: bool = False
     ) -> Dict[str, Any]:
@@ -439,7 +451,7 @@ class HybridSearchEngine:
             Dict with 'results' (and optionally 'debug_info')
         """
         # 設定を取得
-        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, reranker_instruction]):
+        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight, reranker_instruction]):
             from ..config.settings import get_settings
             settings = get_settings()
             if top_k is None:
@@ -452,6 +464,8 @@ class HybridSearchEngine:
                 vector_weight = settings.DEFAULT_VECTOR_WEIGHT
             if rrf_k is None:
                 rrf_k = settings.DEFAULT_RRF_K
+            if rrf_weight is None:
+                rrf_weight = settings.DEFAULT_RRF_WEIGHT
             if reranker_instruction is None:
                 reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
                 if reranker_instruction is None:
@@ -462,7 +476,7 @@ class HybridSearchEngine:
                     )
 
         logger.info(f"🔍 Hybrid search with reranker: '{query}'")
-        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, stage1_top_k={stage1_top_k}")
+        logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, rrf_weight={rrf_weight}, stage1_top_k={stage1_top_k}")
 
         # 短いクエリ（3文字未満）の場合はBM25をスキップしてVectorのみで高速化
         short_query_threshold = 3
@@ -565,8 +579,8 @@ class HybridSearchEngine:
             rrf_score = rrf_scores[idx]
             weighted_score = (bm25_weight * bm25_normalized) + (vector_weight * vector_normalized)
 
-            # 最終スコア = RRF + Weighted（両方の強みを活かす）
-            hybrid_scores[idx] = rrf_score + weighted_score
+            # 最終スコア = RRF(重み付き) + Weighted（両方の強みを活かす）
+            hybrid_scores[idx] = (rrf_weight * rrf_score) + weighted_score
 
         # スコアでソート
         sorted_candidates = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)

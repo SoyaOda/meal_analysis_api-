@@ -105,6 +105,7 @@ class MealAnalysisPipeline:
         search_bm25_weight: Optional[float] = None,
         search_vector_weight: Optional[float] = None,
         search_rrf_k: Optional[int] = None,
+        search_rrf_weight: Optional[float] = None,
         search_reranker_model: Optional[str] = None,
         search_reranker_instruction: Optional[str] = None,
         search_reranker_top_n: Optional[int] = None,
@@ -203,6 +204,7 @@ class MealAnalysisPipeline:
                 bm25_weight=search_bm25_weight,
                 vector_weight=search_vector_weight,
                 rrf_k=search_rrf_k,
+                rrf_weight=search_rrf_weight,
                 reranker_model=search_reranker_model,
                 reranker_instruction=search_reranker_instruction,
                 reranker_top_n=search_reranker_top_n,
@@ -216,6 +218,7 @@ class MealAnalysisPipeline:
                 bm25_weight=search_bm25_weight,
                 vector_weight=search_vector_weight,
                 rrf_k=search_rrf_k,
+                rrf_weight=search_rrf_weight,
                 reranker_model=search_reranker_model,
                 reranker_instruction=search_reranker_instruction,
                 reranker_top_n=search_reranker_top_n,
@@ -306,6 +309,8 @@ class MealAnalysisPipeline:
                 search_kwargs["search_vector_weight"] = search_config_override.vector_weight
             if search_config_override.rrf_k is not None:
                 search_kwargs["search_rrf_k"] = search_config_override.rrf_k
+            if search_config_override.rrf_weight is not None:
+                search_kwargs["search_rrf_weight"] = search_config_override.rrf_weight
             if search_config_override.reranker_model is not None:
                 search_kwargs["search_reranker_model"] = search_config_override.reranker_model
             if search_config_override.reranker_instruction is not None:
@@ -604,6 +609,7 @@ class MealAnalysisPipeline:
         bm25_weight: Optional[float] = None,
         vector_weight: Optional[float] = None,
         rrf_k: Optional[int] = None,
+        rrf_weight: Optional[float] = None,
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
         reranker_top_n: Optional[int] = None,
@@ -618,6 +624,7 @@ class MealAnalysisPipeline:
         effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
         effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
         effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
+        effective_rrf_weight = rrf_weight if rrf_weight is not None else settings.DEFAULT_RRF_WEIGHT
 
         # 非同期関数を直接並列実行
         tasks = []
@@ -630,6 +637,7 @@ class MealAnalysisPipeline:
                 bm25_weight=effective_bm25_weight,
                 vector_weight=effective_vector_weight,
                 rrf_k=effective_rrf_k,
+                rrf_weight=effective_rrf_weight,
                 reranker_model=reranker_model,
                 reranker_instruction=reranker_instruction,
                 reranker_top_n=reranker_top_n,
@@ -672,6 +680,7 @@ class MealAnalysisPipeline:
         bm25_weight: Optional[float] = None,
         vector_weight: Optional[float] = None,
         rrf_k: Optional[int] = None,
+        rrf_weight: Optional[float] = None,
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
         reranker_top_n: Optional[int] = None,
@@ -686,6 +695,7 @@ class MealAnalysisPipeline:
         effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
         effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
         effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
+        effective_rrf_weight = rrf_weight if rrf_weight is not None else settings.DEFAULT_RRF_WEIGHT
 
         results = []
         for query in queries:
@@ -697,6 +707,7 @@ class MealAnalysisPipeline:
                 bm25_weight=effective_bm25_weight,
                 vector_weight=effective_vector_weight,
                 rrf_k=effective_rrf_k,
+                rrf_weight=effective_rrf_weight,
                 reranker_model=reranker_model,
                 reranker_instruction=reranker_instruction,
                 reranker_top_n=reranker_top_n,
@@ -998,6 +1009,8 @@ class MealAnalysisPipeline:
                 search_kwargs["vector_weight"] = search_config_override.vector_weight
             if search_config_override.rrf_k is not None:
                 search_kwargs["rrf_k"] = search_config_override.rrf_k
+            if search_config_override.rrf_weight is not None:
+                search_kwargs["rrf_weight"] = search_config_override.rrf_weight
             if search_config_override.reranker_model is not None:
                 search_kwargs["reranker_model"] = search_config_override.reranker_model
             if search_config_override.reranker_instruction is not None:

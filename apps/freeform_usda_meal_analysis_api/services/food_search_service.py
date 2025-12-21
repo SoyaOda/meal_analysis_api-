@@ -102,6 +102,7 @@ class USDAFoodSearchService:
         bm25_weight: float = 0.6,
         vector_weight: float = 0.4,
         rrf_k: int = 60,
+        rrf_weight: float = None,
         # Rerankerパラメータ
         reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
@@ -160,6 +161,7 @@ class USDAFoodSearchService:
                             bm25_weight=bm25_weight,
                             vector_weight=vector_weight,
                             rrf_k=rrf_k,
+                            rrf_weight=rrf_weight,
                             reranker_instruction=reranker_instruction
                         )
 
@@ -224,6 +226,7 @@ class USDAFoodSearchService:
                     bm25_weight=bm25_weight,
                     vector_weight=vector_weight,
                     rrf_k=rrf_k,
+                    rrf_weight=rrf_weight,
                     reranker_instruction=reranker_instruction,
                     include_debug_info=include_debug_info
                 )

@@ -70,6 +70,7 @@ async def analyze_meal_from_image(
     bm25_weight: Optional[float] = Form(None, description="BM25検索の重み(0.0-1.0)"),
     vector_weight: Optional[float] = Form(None, description="Vector検索の重み(0.0-1.0)"),
     rrf_k: Optional[int] = Form(None, description="RRFのkパラメータ"),
+    rrf_weight: Optional[float] = Form(None, description="RRF融合スコアの重み(0.0-2.0)"),
     reranker_model: Optional[str] = Form(None, description="Rerankerモデル名"),
     reranker_instruction: Optional[str] = Form(None, description="Reranker instruction"),
     reranker_top_n: Optional[int] = Form(None, description="Reranker返却数"),
@@ -95,6 +96,7 @@ async def analyze_meal_from_image(
     - **bm25_weight**: BM25検索の重み(デフォルト: 0.4)
     - **vector_weight**: Vector検索の重み(デフォルト: 0.6)
     - **rrf_k**: RRFのkパラメータ(デフォルト: 60)
+    - **rrf_weight**: RRF融合スコアの重み(デフォルト: 0.5)
     - **reranker_model**: Rerankerモデル名(デフォルト: Qwen/Qwen3-Reranker-8B)
     - **reranker_instruction**: Reranker用instruction
     - **reranker_top_n**: Rerankerで返す結果数
@@ -128,12 +130,13 @@ async def analyze_meal_from_image(
 
         # 検索設定のオーバーライド処理
         search_config_override = None
-        if any([stage1_top_k, bm25_weight, vector_weight, rrf_k, reranker_model, reranker_instruction, reranker_top_n]):
+        if any([stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight, reranker_model, reranker_instruction, reranker_top_n]):
             search_config_override = SearchConfig(
                 stage1_top_k=stage1_top_k,
                 bm25_weight=bm25_weight,
                 vector_weight=vector_weight,
                 rrf_k=rrf_k,
+                rrf_weight=rrf_weight,
                 reranker_model=reranker_model,
                 reranker_instruction=reranker_instruction,
                 reranker_top_n=reranker_top_n,

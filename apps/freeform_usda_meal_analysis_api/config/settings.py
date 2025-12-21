@@ -122,6 +122,8 @@ class Settings:
         self.DEFAULT_BM25_WEIGHT = float(os.getenv("BM25_WEIGHT", "0.4"))
         self.DEFAULT_VECTOR_WEIGHT = float(os.getenv("VECTOR_WEIGHT", "0.6"))
         self.DEFAULT_RRF_K = int(os.getenv("RRF_K", "60"))
+        # RRF融合スコアの重み（最終スコア計算時に使用）
+        self.DEFAULT_RRF_WEIGHT = float(os.getenv("RRF_WEIGHT", "0.5"))
 
         # Embedding Instruction（Qwen3-Embedding-8B用）
         # 短いクエリでも正しくUSDA食材にマッチさせるための指示
