@@ -524,77 +524,422 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 
 ---
 
-## 🚀 Phase 4: Reranker/Embedding プラットフォーム最適化
+## 🚀 Phase 4: 設定駆動型プロバイダーアーキテクチャ
 
-### 📋 背景と問題点
+### 📋 設計思想
 
-2025年12月の包括的レビューにより、以下の問題が特定された：
+**従来の問題点**:
+- モデルID、API URL がコード内にハードコード
+- 新プロバイダー追加に複数クラス作成が必要
+- モデル切替にコード変更が必要
 
-#### 現状の問題
-
-| 問題 | 詳細 | 影響 |
-|------|------|------|
-| **DeepInfra Reranker逐次処理** | asyncio.gatherで並列送信しても、API側で逐次処理される | 8クエリで~8秒（本来~1秒で可能） |
-| **DeepInfraプラットフォームリスク** | 価格変動(400%増)、モデル削除の報告あり | 運用安定性リスク |
-| **Qwen3-Reranker互換性問題** | vLLM, HuggingFace TEI, LangChainで複数のバグ報告 | 自前ホスト困難 |
-
-#### ログ証拠（2024-12-22 ローカルテスト）
-
-```
-16:50:06.407 - 🚀 Reranker[0] STARTED
-16:50:06.412 - 🚀 Reranker[1] STARTED  ← 全て同時に開始
-16:50:06.414 - 🚀 Reranker[6] STARTED
-16:50:07.754 - ✅ Reranker[0] COMPLETED  ← しかし逐次完了
-16:50:08.892 - ✅ Reranker[1] COMPLETED  （~1秒間隔）
-...
-16:50:13.311 - ✅ Reranker[6] COMPLETED
-```
-
-**結論**: リクエストは並列送信されているが、DeepInfra側で逐次処理されている
+**設定駆動型の利点**:
+| 操作 | 従来 | 設定駆動型 |
+|------|------|-----------|
+| プロバイダー追加 | クラス新規作成 + Factory修正 | **設定追加のみ** |
+| モデル切替 | コード変更 + デプロイ | **環境変数変更** |
+| URL変更 | コード変更 | **設定変更** |
+| 新モデル追加 | コード変更 | **設定追加** |
 
 ---
 
-### 🎯 最適化目標
+### 🎯 アーキテクチャ概要
 
-| 項目 | 現状 | 目標 | 改善率 |
-|------|------|------|--------|
-| Reranker処理時間 (8クエリ) | ~8秒 | ~1-2秒 | **75-87%削減** |
-| Embedding API | DeepInfra依存 | SiliconFlow移行 | プラットフォーム分散 |
-| 精度 | Qwen3-Reranker-8B (MTEB-R: 69.02) | 維持 | 精度維持 |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    config/provider_config.py                 │
+│  ┌─────────────────────────────────────────────────────────┐│
+│  │ PROVIDER_CONFIG = {                                      ││
+│  │   "reranker": { "jina": {...}, "cohere": {...}, ... }   ││
+│  │   "embedding": { "jina": {...}, "voyage": {...}, ... }  ││
+│  │   "vlm": { "openrouter": {...}, "deepinfra": {...} }    ││
+│  │ }                                                        ││
+│  └─────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│              services/ai_providers.py                        │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────┐ │
+│  │ GenericReranker │  │GenericEmbedding │  │  GenericVLM  │ │
+│  │    Provider     │  │    Provider     │  │   Provider   │ │
+│  └────────┬────────┘  └────────┬────────┘  └──────┬───────┘ │
+│           │                    │                   │         │
+│           └────────────┬───────┴───────────────────┘         │
+│                        ▼                                     │
+│              ProviderFactory.create()                        │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     環境変数で制御                           │
+│  RERANKER_PROVIDER=jina                                      │
+│  RERANKER_MODEL=jina-reranker-v2-base-multilingual          │
+│  EMBEDDING_PROVIDER=jina                                     │
+│  EMBEDDING_MODEL=jina-embeddings-v3                         │
+│  VLM_PROVIDER=openrouter                                     │
+│  VLM_MODEL=openai/gpt-4.1-mini                              │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-### 🔧 P3: Rerankerプロバイダー抽象化・移行
+### 🔧 P3: 統合プロバイダー設定
 
-#### P3-1: プロバイダー抽象化レイヤー
+#### P3-1: 中央設定ファイル
 
-**目的**: 複数のRerankerプロバイダーを環境変数で切り替え可能にする
-
-**新規ファイル**: `services/reranker_providers.py`
+**新規ファイル**: `config/provider_config.py`
 
 ```python
 """
-Rerankerプロバイダー抽象化レイヤー
+AI プロバイダー中央設定
 
-環境変数 RERANKER_PROVIDER で切り替え可能:
-- "siliconflow" (デフォルト): SiliconFlow API + Qwen3-Reranker-8B
-- "jina": Jina Reranker v2 API
-- "deepinfra": DeepInfra API (後方互換)
+全てのプロバイダー・モデル設定をここで管理。
+新規プロバイダー/モデル追加はこのファイルのみ修正すればOK。
+"""
+
+import os
+from typing import Dict, Any, Optional
+from dataclasses import dataclass, field
+
+
+@dataclass
+class ProviderEndpoint:
+    """プロバイダーエンドポイント設定"""
+    base_url: str
+    api_key_env: str  # 環境変数名
+    default_model: str
+    models: Dict[str, str] = field(default_factory=dict)  # alias -> model_id
+    headers: Dict[str, str] = field(default_factory=dict)  # 追加ヘッダー
+    request_format: str = "openai"  # "openai" | "jina" | "cohere" | "custom"
+    response_format: str = "openai"  # レスポンス形式
+
+
+# =============================================================================
+# Reranker プロバイダー設定
+# =============================================================================
+RERANKER_PROVIDERS: Dict[str, ProviderEndpoint] = {
+    # ★ メイン: SiliconFlow (精度最優先 - Qwen3モデル継続)
+    "siliconflow": ProviderEndpoint(
+        base_url="https://api.siliconflow.cn/v1",
+        api_key_env="SILICONFLOW_API_KEY",
+        default_model="Qwen/Qwen3-Reranker-8B",
+        models={
+            "default": "Qwen/Qwen3-Reranker-8B",  # MTEB-R: 69.02 (トップクラス)
+            "bge": "BAAI/bge-reranker-v2-m3",
+        },
+        request_format="siliconflow",
+        response_format="siliconflow",
+    ),
+    # ★ バックアップ: Jina (高速・API安定)
+    "jina": ProviderEndpoint(
+        base_url="https://api.jina.ai/v1",
+        api_key_env="JINA_API_KEY",
+        default_model="jina-reranker-v2-base-multilingual",
+        models={
+            "default": "jina-reranker-v2-base-multilingual",  # ~150ms超高速
+            "turbo": "jina-reranker-v1-turbo-en",  # 英語特化・高速
+        },
+        request_format="jina",
+        response_format="jina",
+    ),
+    # 後方互換
+    "deepinfra": ProviderEndpoint(
+        base_url="https://api.deepinfra.com/v1/inference",
+        api_key_env="DEEPINFRA_API_KEY",
+        default_model="Qwen/Qwen3-Reranker-8B",
+        models={
+            "default": "Qwen/Qwen3-Reranker-8B",
+            "bge": "BAAI/bge-reranker-v2-m3",
+        },
+        request_format="deepinfra",
+        response_format="deepinfra",
+    ),
+    # オプション: Cohere (エンタープライズ向け)
+    "cohere": ProviderEndpoint(
+        base_url="https://api.cohere.ai/v1",
+        api_key_env="COHERE_API_KEY",
+        default_model="rerank-v3.5",
+        models={
+            "default": "rerank-v3.5",
+            "multilingual": "rerank-multilingual-v3.0",
+            "english": "rerank-english-v3.0",
+        },
+        request_format="cohere",
+        response_format="cohere",
+    ),
+}
+
+
+# =============================================================================
+# Embedding プロバイダー設定
+# =============================================================================
+EMBEDDING_PROVIDERS: Dict[str, ProviderEndpoint] = {
+    # ★ メイン: SiliconFlow (精度最優先 - Qwen3モデル継続)
+    "siliconflow": ProviderEndpoint(
+        base_url="https://api.siliconflow.cn/v1",
+        api_key_env="SILICONFLOW_API_KEY",
+        default_model="Qwen/Qwen3-Embedding-8B",
+        models={
+            "default": "Qwen/Qwen3-Embedding-8B",  # MTEB多言語 #1 (70.58)
+            "bge": "BAAI/bge-m3",
+        },
+        request_format="siliconflow",
+        response_format="siliconflow",
+    ),
+    # ★ バックアップ: Jina (高速・API安定)
+    "jina": ProviderEndpoint(
+        base_url="https://api.jina.ai/v1",
+        api_key_env="JINA_API_KEY",
+        default_model="jina-embeddings-v3",
+        models={
+            "default": "jina-embeddings-v3",
+            "base": "jina-embeddings-v2-base-en",
+        },
+        request_format="jina",
+        response_format="openai",  # Jinaはembeddingのレスポンスがopenai形式
+    ),
+    # 後方互換
+    "deepinfra": ProviderEndpoint(
+        base_url="https://api.deepinfra.com/v1/openai",
+        api_key_env="DEEPINFRA_API_KEY",
+        default_model="Qwen/Qwen3-Embedding-8B",
+        models={
+            "default": "Qwen/Qwen3-Embedding-8B",
+            "bge": "BAAI/bge-m3",
+        },
+        request_format="openai",
+        response_format="openai",
+    ),
+    # オプション: Cohere (エンタープライズ向け)
+    "cohere": ProviderEndpoint(
+        base_url="https://api.cohere.ai/v1",
+        api_key_env="COHERE_API_KEY",
+        default_model="embed-v3.0",
+        models={
+            "default": "embed-v3.0",
+            "english": "embed-english-v3.0",
+            "multilingual": "embed-multilingual-v3.0",
+            "light": "embed-english-light-v3.0",
+        },
+        request_format="cohere",
+        response_format="cohere",
+    ),
+}
+
+
+# =============================================================================
+# VLM プロバイダー設定
+# =============================================================================
+VLM_PROVIDERS: Dict[str, ProviderEndpoint] = {
+    "openrouter": ProviderEndpoint(
+        base_url="https://openrouter.ai/api/v1",
+        api_key_env="OPENROUTER_API_KEY",
+        default_model="openai/gpt-4.1-mini",
+        models={
+            "default": "openai/gpt-4.1-mini",
+            "gpt4o": "openai/gpt-4o",
+            "gpt4o-mini": "openai/gpt-4o-mini",
+            "claude-sonnet": "anthropic/claude-3.5-sonnet",
+            "gemini-flash": "google/gemini-flash-1.5",
+        },
+        headers={
+            "HTTP-Referer": "https://meal-analysis-api.example.com",
+            "X-Title": "Meal Analysis API",
+        },
+        request_format="openai",
+        response_format="openai",
+    ),
+    "deepinfra": ProviderEndpoint(
+        base_url="https://api.deepinfra.com/v1/openai",
+        api_key_env="DEEPINFRA_API_KEY",
+        default_model="meta-llama/Llama-3.2-11B-Vision-Instruct",
+        models={
+            "default": "meta-llama/Llama-3.2-11B-Vision-Instruct",
+            "llama-90b": "meta-llama/Llama-3.2-90B-Vision-Instruct",
+            "qwen-vl": "Qwen/Qwen2-VL-7B-Instruct",
+        },
+        request_format="openai",
+        response_format="openai",
+    ),
+}
+
+
+# =============================================================================
+# ヘルパー関数
+# =============================================================================
+def get_provider_config(
+    provider_type: str,  # "reranker" | "embedding" | "vlm"
+    provider_name: Optional[str] = None
+) -> ProviderEndpoint:
+    """
+    プロバイダー設定を取得
+
+    Args:
+        provider_type: プロバイダータイプ
+        provider_name: プロバイダー名（Noneの場合は環境変数から取得）
+
+    Returns:
+        ProviderEndpoint設定
+    """
+    configs = {
+        "reranker": RERANKER_PROVIDERS,
+        "embedding": EMBEDDING_PROVIDERS,
+        "vlm": VLM_PROVIDERS,
+    }
+
+    if provider_type not in configs:
+        raise ValueError(f"Unknown provider type: {provider_type}")
+
+    provider_configs = configs[provider_type]
+
+    # 環境変数からプロバイダー名を取得
+    # デフォルト: SiliconFlow (精度最優先)、VLMはOpenRouter
+    if provider_name is None:
+        env_key = f"{provider_type.upper()}_PROVIDER"
+        provider_name = os.getenv(env_key, "siliconflow" if provider_type != "vlm" else "openrouter")
+
+    provider_name = provider_name.lower()
+
+    if provider_name not in provider_configs:
+        available = list(provider_configs.keys())
+        raise ValueError(
+            f"Unknown {provider_type} provider: {provider_name}. "
+            f"Available: {available}"
+        )
+
+    return provider_configs[provider_name]
+
+
+def get_model_id(
+    provider_type: str,
+    provider_name: Optional[str] = None,
+    model_alias: Optional[str] = None
+) -> str:
+    """
+    モデルIDを取得
+
+    Args:
+        provider_type: プロバイダータイプ
+        provider_name: プロバイダー名
+        model_alias: モデルエイリアス（環境変数でも指定可能）
+
+    Returns:
+        実際のモデルID
+    """
+    config = get_provider_config(provider_type, provider_name)
+
+    # 環境変数からモデルを取得
+    if model_alias is None:
+        env_key = f"{provider_type.upper()}_MODEL"
+        model_alias = os.getenv(env_key, "default")
+
+    # エイリアスから実際のモデルIDに変換
+    if model_alias in config.models:
+        return config.models[model_alias]
+
+    # エイリアスがなければそのまま使用（直接モデルID指定の場合）
+    return model_alias
+
+
+def get_api_key(provider_type: str, provider_name: Optional[str] = None) -> str:
+    """APIキーを取得"""
+    config = get_provider_config(provider_type, provider_name)
+    api_key = os.getenv(config.api_key_env)
+
+    if not api_key:
+        raise ValueError(
+            f"{config.api_key_env} environment variable is required for {provider_name}"
+        )
+
+    return api_key
+
+
+def list_available_providers(provider_type: str) -> Dict[str, list]:
+    """利用可能なプロバイダーとモデル一覧を取得"""
+    configs = {
+        "reranker": RERANKER_PROVIDERS,
+        "embedding": EMBEDDING_PROVIDERS,
+        "vlm": VLM_PROVIDERS,
+    }
+
+    provider_configs = configs.get(provider_type, {})
+
+    return {
+        name: list(config.models.keys())
+        for name, config in provider_configs.items()
+    }
+```
+
+---
+
+#### P3-2: 汎用プロバイダークラス
+
+**新規ファイル**: `services/ai_providers.py`
+
+```python
+"""
+汎用AIプロバイダー実装
+
+設定駆動型: provider_config.py の設定に基づいて動作。
+新規プロバイダー追加にコード変更不要。
 """
 
 import os
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Optional
-import httpx
+from typing import List, Tuple, Optional, Dict, Any
+
+from ..config.provider_config import (
+    get_provider_config,
+    get_model_id,
+    get_api_key,
+    ProviderEndpoint,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class RerankerProvider(ABC):
-    """Rerankerプロバイダーの抽象基底クラス"""
+# =============================================================================
+# 基底クラス
+# =============================================================================
+class BaseProvider(ABC):
+    """プロバイダー基底クラス"""
 
-    @abstractmethod
+    def __init__(
+        self,
+        provider_type: str,
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ):
+        self.provider_type = provider_type
+        self.config = get_provider_config(provider_type, provider_name)
+        self.model_id = get_model_id(provider_type, provider_name, model_alias)
+        self.api_key = get_api_key(provider_type, provider_name)
+
+        # 共有HTTPクライアント
+        from ..core.http_client import get_async_client
+        self.client = get_async_client()
+
+        logger.info(
+            f"{self.__class__.__name__} initialized: "
+            f"provider={provider_name}, model={self.model_id}"
+        )
+
+
+# =============================================================================
+# Reranker プロバイダー
+# =============================================================================
+class RerankerProvider(BaseProvider):
+    """汎用Rerankerプロバイダー"""
+
+    def __init__(
+        self,
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ):
+        super().__init__("reranker", provider_name, model_alias)
+
     async def rerank(
         self,
         query: str,
@@ -605,63 +950,18 @@ class RerankerProvider(ABC):
         """
         ドキュメントをリランキング
 
-        Args:
-            query: 検索クエリ
-            documents: リランキング対象ドキュメントリスト
-            top_n: 返す上位件数（Noneで全件）
-            instruction: タスク指示文
-
         Returns:
             (best_index, scores): 最高スコアのインデックスと全スコアリスト
         """
-        pass
+        url = f"{self.config.base_url}/rerank"
 
-
-class SiliconFlowRerankerProvider(RerankerProvider):
-    """
-    SiliconFlow API経由のQwen3-Reranker-8B
-
-    特徴:
-    - DeepInfraと同じQwen3モデルで精度維持
-    - 2.3x高速な推論
-    - 真の並列処理サポート
-    """
-
-    def __init__(self, model_id: str = "Qwen/Qwen3-Reranker-8B"):
-        self.api_key = os.getenv("SILICONFLOW_API_KEY")
-        if not self.api_key:
-            raise ValueError("SILICONFLOW_API_KEY environment variable is required")
-
-        self.model_id = model_id
-        self.base_url = "https://api.siliconflow.cn/v1"
-
-        # 共有HTTPクライアント
-        from ..core.http_client import get_async_client
-        self.client = get_async_client()
-
-        logger.info(f"SiliconFlowRerankerProvider initialized: {model_id}")
-
-    async def rerank(
-        self,
-        query: str,
-        documents: List[str],
-        top_n: Optional[int] = None,
-        instruction: Optional[str] = None
-    ) -> Tuple[int, List[float]]:
-        """SiliconFlow API経由でリランキング"""
-        url = f"{self.base_url}/rerank"
-
-        payload = {
-            "model": self.model_id,
-            "query": query,
-            "documents": documents,
-        }
-        if top_n is not None:
-            payload["top_n"] = top_n
+        # リクエスト形式に応じたペイロード構築
+        payload = self._build_request_payload(query, documents, top_n, instruction)
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            **self.config.headers,
         }
 
         try:
@@ -669,333 +969,156 @@ class SiliconFlowRerankerProvider(RerankerProvider):
             response.raise_for_status()
             result = response.json()
 
-            # レスポンス形式: {"results": [{"index": 0, "relevance_score": 0.95}, ...]}
-            results = result.get("results", [])
+            # レスポンス形式に応じたパース
+            return self._parse_response(result, len(documents))
 
-            # スコアリストを元のインデックス順に再構築
-            scores = [0.0] * len(documents)
+        except Exception as e:
+            logger.error(f"Rerank failed ({self.config.request_format}): {e}")
+            raise
+
+    def _build_request_payload(
+        self,
+        query: str,
+        documents: List[str],
+        top_n: Optional[int],
+        instruction: Optional[str]
+    ) -> Dict[str, Any]:
+        """リクエスト形式に応じたペイロード構築"""
+        fmt = self.config.request_format
+
+        if fmt == "siliconflow":
+            # SiliconFlow: Jina互換形式
+            payload = {
+                "model": self.model_id,
+                "query": query,
+                "documents": documents,
+            }
+            if top_n:
+                payload["top_n"] = top_n
+
+        elif fmt == "jina":
+            payload = {
+                "model": self.model_id,
+                "query": query,
+                "documents": documents,
+            }
+            if top_n:
+                payload["top_n"] = top_n
+
+        elif fmt == "cohere":
+            payload = {
+                "model": self.model_id,
+                "query": query,
+                "documents": documents,
+                "return_documents": False,
+            }
+            if top_n:
+                payload["top_n"] = top_n
+
+        elif fmt == "voyage":
+            payload = {
+                "model": self.model_id,
+                "query": query,
+                "documents": documents,
+            }
+            if top_n:
+                payload["top_k"] = top_n
+
+        elif fmt == "deepinfra":
+            payload = {
+                "queries": [query],
+                "documents": documents,
+            }
+            if top_n:
+                payload["top_n"] = top_n
+            if instruction:
+                payload["instruction"] = instruction
+
+        else:
+            raise ValueError(f"Unknown request format: {fmt}")
+
+        return payload
+
+    def _parse_response(
+        self,
+        result: Dict[str, Any],
+        doc_count: int
+    ) -> Tuple[int, List[float]]:
+        """レスポンス形式に応じたパース"""
+        fmt = self.config.response_format
+
+        if fmt in ("siliconflow", "jina", "cohere", "voyage"):
+            # 共通形式: {"results": [{"index": 0, "relevance_score": 0.95}, ...]}
+            results = result.get("results", [])
+            scores = [0.0] * doc_count
+
             for item in results:
                 idx = item.get("index", 0)
-                score = item.get("relevance_score", 0.0)
+                # Cohereは"relevance_score"、他は"score"の場合あり
+                score = item.get("relevance_score", item.get("score", 0.0))
                 if idx < len(scores):
                     scores[idx] = score
 
-            best_idx = scores.index(max(scores)) if scores else 0
-            return best_idx, scores
+        elif fmt == "deepinfra":
+            scores = result.get("scores", [0.0] * doc_count)
 
-        except Exception as e:
-            logger.error(f"SiliconFlow rerank failed: {e}")
-            raise
+        else:
+            raise ValueError(f"Unknown response format: {fmt}")
+
+        best_idx = scores.index(max(scores)) if scores else 0
+        return best_idx, scores
 
 
-class JinaRerankerProvider(RerankerProvider):
-    """
-    Jina Reranker v2 API
+# =============================================================================
+# Embedding プロバイダー
+# =============================================================================
+class EmbeddingProvider(BaseProvider):
+    """汎用Embeddingプロバイダー"""
 
-    特徴:
-    - ~150msレイテンシ（超高速）
-    - 1リクエストで最大2048ドキュメント
-    - 100+言語対応
-    - オープンソースベース
-    """
-
-    def __init__(self, model_id: str = "jina-reranker-v2-base-multilingual"):
-        self.api_key = os.getenv("JINA_API_KEY")
-        if not self.api_key:
-            raise ValueError("JINA_API_KEY environment variable is required")
-
-        self.model_id = model_id
-        self.base_url = "https://api.jina.ai/v1"
-
-        from ..core.http_client import get_async_client
-        self.client = get_async_client()
-
-        logger.info(f"JinaRerankerProvider initialized: {model_id}")
-
-    async def rerank(
+    def __init__(
         self,
-        query: str,
-        documents: List[str],
-        top_n: Optional[int] = None,
-        instruction: Optional[str] = None
-    ) -> Tuple[int, List[float]]:
-        """Jina API経由でリランキング"""
-        url = f"{self.base_url}/rerank"
-
-        payload = {
-            "model": self.model_id,
-            "query": query,
-            "documents": documents,
-        }
-        if top_n is not None:
-            payload["top_n"] = top_n
-
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-
-        try:
-            response = await self.client.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            result = response.json()
-
-            # Jinaレスポンス形式: {"results": [{"index": 0, "relevance_score": 0.95}, ...]}
-            results = result.get("results", [])
-
-            scores = [0.0] * len(documents)
-            for item in results:
-                idx = item.get("index", 0)
-                score = item.get("relevance_score", 0.0)
-                if idx < len(scores):
-                    scores[idx] = score
-
-            best_idx = scores.index(max(scores)) if scores else 0
-            return best_idx, scores
-
-        except Exception as e:
-            logger.error(f"Jina rerank failed: {e}")
-            raise
-
-
-class DeepInfraRerankerProvider(RerankerProvider):
-    """
-    DeepInfra API（後方互換用）
-
-    注意: 逐次処理の問題があるため、本番使用は非推奨
-    """
-
-    def __init__(self, model_id: str = "Qwen/Qwen3-Reranker-8B"):
-        self.api_key = os.getenv("DEEPINFRA_API_KEY")
-        if not self.api_key:
-            raise ValueError("DEEPINFRA_API_KEY environment variable is required")
-
-        self.model_id = model_id
-
-        from ..core.http_client import get_async_client
-        self.client = get_async_client()
-
-        logger.info(f"DeepInfraRerankerProvider initialized: {model_id}")
-
-    async def rerank(
-        self,
-        query: str,
-        documents: List[str],
-        top_n: Optional[int] = None,
-        instruction: Optional[str] = None
-    ) -> Tuple[int, List[float]]:
-        """DeepInfra API経由でリランキング"""
-        url = f"https://api.deepinfra.com/v1/inference/{self.model_id}"
-
-        payload = {
-            "queries": [query],
-            "documents": documents
-        }
-        if top_n is not None:
-            payload["top_n"] = top_n
-        if instruction is not None:
-            payload["instruction"] = instruction
-
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-
-        try:
-            response = await self.client.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            result = response.json()
-
-            scores = result.get("scores", [])
-            best_idx = scores.index(max(scores)) if scores else 0
-            return best_idx, scores
-
-        except Exception as e:
-            logger.error(f"DeepInfra rerank failed: {e}")
-            raise
-
-
-class RerankerProviderFactory:
-    """Rerankerプロバイダーのファクトリークラス"""
-
-    _providers = {
-        "siliconflow": SiliconFlowRerankerProvider,
-        "jina": JinaRerankerProvider,
-        "deepinfra": DeepInfraRerankerProvider,
-    }
-
-    @classmethod
-    def create(cls, provider_name: Optional[str] = None) -> RerankerProvider:
-        """
-        環境変数またはパラメータに基づいてプロバイダーを生成
-
-        Args:
-            provider_name: プロバイダー名（None時は環境変数から取得）
-
-        Returns:
-            RerankerProvider インスタンス
-        """
-        if provider_name is None:
-            provider_name = os.getenv("RERANKER_PROVIDER", "siliconflow")
-
-        provider_name = provider_name.lower()
-
-        if provider_name not in cls._providers:
-            raise ValueError(
-                f"Unknown reranker provider: {provider_name}. "
-                f"Available: {list(cls._providers.keys())}"
-            )
-
-        logger.info(f"Creating reranker provider: {provider_name}")
-        return cls._providers[provider_name]()
-```
-
-#### P3-2: hybrid_search.py の修正
-
-**変更箇所**: `apply_reranker_batch`メソッドで新プロバイダーを使用
-
-```python
-async def apply_reranker_batch(
-    self,
-    queries_and_candidates: List[Dict[str, Any]],
-    reranker_provider,  # RerankerProvider型に変更
-    reranker_instruction: str = None,
-    top_k: int = 1
-) -> List[Dict[str, Any]]:
-    """
-    複数クエリのRerankerを一括並列実行
-
-    新プロバイダー抽象化により、SiliconFlow/Jina/DeepInfraを
-    環境変数で切り替え可能。
-    """
-    import time as time_module
-
-    batch_start_time = time_module.time()
-
-    async def rerank_single(idx: int, query: str, candidates: List[Dict]) -> Dict[str, Any]:
-        """単一クエリのReranker実行"""
-        start_time = time_module.time()
-        logger.info(f"🚀 Reranker[{idx}] STARTED: query='{query[:30]}...'")
-
-        if not candidates:
-            return None
-
-        documents = [c["description"] for c in candidates]
-
-        # 新プロバイダーインターフェース使用
-        best_idx, reranked_scores = await reranker_provider.rerank(
-            query=query,
-            documents=documents,
-            instruction=reranker_instruction
-        )
-
-        elapsed = time_module.time() - start_time
-        logger.info(f"✅ Reranker[{idx}] COMPLETED in {elapsed:.2f}s")
-
-        for i, candidate in enumerate(candidates):
-            candidate["rerank_score"] = reranked_scores[i]
-            candidate["original_rank"] = i + 1
-
-        reranked = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
-        return reranked[0] if reranked else None
-
-    # 全Rerankerを並列実行
-    logger.info(f"🔄 Parallel reranker execution for {len(queries_and_candidates)} queries...")
-
-    tasks = [
-        rerank_single(i, item["query"], item["candidates"])
-        for i, item in enumerate(queries_and_candidates)
-    ]
-
-    results = await asyncio.gather(*tasks)
-
-    total_elapsed = time_module.time() - batch_start_time
-    logger.info(f"✅ Parallel reranker completed in {total_elapsed:.2f}s for {len(queries_and_candidates)} queries")
-
-    return results
-```
-
----
-
-### 🔧 P4: Embeddingプロバイダー移行（SiliconFlow）
-
-#### P4-1: Embeddingプロバイダー抽象化
-
-**新規ファイル**: `services/embedding_providers.py`
-
-```python
-"""
-Embeddingプロバイダー抽象化レイヤー
-
-環境変数 EMBEDDING_PROVIDER で切り替え可能:
-- "siliconflow" (デフォルト): SiliconFlow API + Qwen3-Embedding-8B
-- "deepinfra": DeepInfra API (後方互換)
-"""
-
-import os
-import logging
-from abc import ABC, abstractmethod
-from typing import List, Optional
-import httpx
-
-logger = logging.getLogger(__name__)
-
-
-class EmbeddingProvider(ABC):
-    """Embeddingプロバイダーの抽象基底クラス"""
-
-    @abstractmethod
-    async def generate_embeddings(
-        self,
-        texts: List[str],
-        instruction: Optional[str] = None
-    ) -> List[List[float]]:
-        """
-        テキストのEmbeddingを生成
-
-        Args:
-            texts: Embedding生成対象のテキストリスト
-            instruction: タスク指示文（instruction-awareモデル用）
-
-        Returns:
-            List[List[float]]: 各テキストのEmbeddingベクトル
-        """
-        pass
-
-
-class SiliconFlowEmbeddingProvider(EmbeddingProvider):
-    """
-    SiliconFlow API経由のQwen3-Embedding-8B
-
-    特徴:
-    - MTEB多言語 #1 (70.58)
-    - 32Kトークンコンテキスト
-    - instruction-aware対応
-    """
-
-    def __init__(self, model_id: str = "Qwen/Qwen3-Embedding-8B"):
-        self.api_key = os.getenv("SILICONFLOW_API_KEY")
-        if not self.api_key:
-            raise ValueError("SILICONFLOW_API_KEY environment variable is required")
-
-        self.model_id = model_id
-        self.base_url = "https://api.siliconflow.cn/v1"
-
-        from ..core.http_client import get_async_client
-        self.client = get_async_client()
-
-        logger.info(f"SiliconFlowEmbeddingProvider initialized: {model_id}")
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ):
+        super().__init__("embedding", provider_name, model_alias)
 
     async def generate_embeddings(
         self,
         texts: List[str],
         instruction: Optional[str] = None
     ) -> List[List[float]]:
-        """SiliconFlow API経由でEmbedding生成"""
-        url = f"{self.base_url}/embeddings"
+        """テキストのEmbeddingを生成"""
+        url = f"{self.config.base_url}/embeddings"
 
-        # instruction-aware形式
-        if instruction:
+        payload = self._build_request_payload(texts, instruction)
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+            **self.config.headers,
+        }
+
+        try:
+            response = await self.client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+
+            return self._parse_response(result)
+
+        except Exception as e:
+            logger.error(f"Embedding failed ({self.config.request_format}): {e}")
+            raise
+
+    def _build_request_payload(
+        self,
+        texts: List[str],
+        instruction: Optional[str]
+    ) -> Dict[str, Any]:
+        """リクエスト形式に応じたペイロード構築"""
+        fmt = self.config.request_format
+
+        # instruction-aware形式の適用 (SiliconFlow/OpenAI/DeepInfra)
+        if instruction and fmt in ("siliconflow", "openai", "deepinfra"):
             formatted_texts = [
                 f"Instruct: {instruction}\nQuery: {text}"
                 for text in texts
@@ -1003,261 +1126,366 @@ class SiliconFlowEmbeddingProvider(EmbeddingProvider):
         else:
             formatted_texts = texts
 
-        payload = {
-            "model": self.model_id,
-            "input": formatted_texts,
-            "encoding_format": "float"
-        }
+        if fmt == "siliconflow":
+            # SiliconFlow: OpenAI互換形式
+            return {
+                "model": self.model_id,
+                "input": formatted_texts,
+                "encoding_format": "float",
+            }
 
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
+        elif fmt in ("openai", "deepinfra"):
+            return {
+                "model": self.model_id,
+                "input": formatted_texts,
+                "encoding_format": "float",
+            }
 
-        try:
-            response = await self.client.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            result = response.json()
+        elif fmt == "jina":
+            payload = {
+                "model": self.model_id,
+                "input": formatted_texts,
+            }
+            if instruction:
+                payload["task"] = "retrieval.query"
+            return payload
 
-            embeddings = [item["embedding"] for item in result.get("data", [])]
-            logger.info(f"✅ Generated {len(embeddings)} embeddings via SiliconFlow")
-            return embeddings
+        elif fmt == "cohere":
+            return {
+                "model": self.model_id,
+                "texts": formatted_texts,
+                "input_type": "search_query" if instruction else "search_document",
+            }
 
-        except Exception as e:
-            logger.error(f"SiliconFlow embedding failed: {e}")
-            raise
+        elif fmt == "voyage":
+            return {
+                "model": self.model_id,
+                "input": formatted_texts,
+                "input_type": "query" if instruction else "document",
+            }
+
+        else:
+            raise ValueError(f"Unknown request format: {fmt}")
+
+    def _parse_response(self, result: Dict[str, Any]) -> List[List[float]]:
+        """レスポンス形式に応じたパース"""
+        fmt = self.config.response_format
+
+        if fmt in ("siliconflow", "openai", "jina"):
+            return [item["embedding"] for item in result.get("data", [])]
+
+        elif fmt == "cohere":
+            return result.get("embeddings", [])
+
+        elif fmt == "voyage":
+            return [item["embedding"] for item in result.get("data", [])]
+
+        else:
+            raise ValueError(f"Unknown response format: {fmt}")
 
 
-class DeepInfraEmbeddingProvider(EmbeddingProvider):
-    """DeepInfra API（後方互換用）"""
+# =============================================================================
+# VLM プロバイダー
+# =============================================================================
+class VLMProvider(BaseProvider):
+    """汎用VLMプロバイダー"""
 
-    def __init__(self, model_id: str = "Qwen/Qwen3-Embedding-8B"):
-        self.api_key = os.getenv("DEEPINFRA_API_KEY")
-        if not self.api_key:
-            raise ValueError("DEEPINFRA_API_KEY environment variable is required")
-
-        self.model_id = model_id
+    def __init__(
+        self,
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ):
+        super().__init__("vlm", provider_name, model_alias)
 
         # OpenAI互換クライアント
         from openai import AsyncOpenAI
-        self.client = AsyncOpenAI(
+        import httpx
+
+        self.openai_client = AsyncOpenAI(
             api_key=self.api_key,
-            base_url="https://api.deepinfra.com/v1/openai"
+            base_url=self.config.base_url,
+            default_headers=self.config.headers,
+            timeout=httpx.Timeout(
+                connect=10.0,
+                read=180.0,
+                write=30.0,
+                pool=10.0,
+            ),
         )
 
-        logger.info(f"DeepInfraEmbeddingProvider initialized: {model_id}")
-
-    async def generate_embeddings(
+    async def analyze_image(
         self,
-        texts: List[str],
-        instruction: Optional[str] = None
-    ) -> List[List[float]]:
-        """DeepInfra API経由でEmbedding生成"""
-        if instruction:
-            formatted_texts = [
-                f"Instruct: {instruction}\nQuery: {text}"
-                for text in texts
-            ]
-        else:
-            formatted_texts = texts
-
+        image_base64: str,
+        prompt: str,
+        max_tokens: int = 4096,
+        temperature: float = 0.1,
+    ) -> str:
+        """画像を分析してテキストを生成"""
         try:
-            response = await self.client.embeddings.create(
-                input=formatted_texts,
+            response = await self.openai_client.chat.completions.create(
                 model=self.model_id,
-                encoding_format="float"
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{image_base64}"
+                                },
+                            },
+                        ],
+                    }
+                ],
+                max_tokens=max_tokens,
+                temperature=temperature,
             )
 
-            embeddings = [item.embedding for item in response.data]
-            logger.info(f"✅ Generated {len(embeddings)} embeddings via DeepInfra")
-            return embeddings
+            return response.choices[0].message.content
 
         except Exception as e:
-            logger.error(f"DeepInfra embedding failed: {e}")
+            logger.error(f"VLM analysis failed: {e}")
             raise
 
 
-class EmbeddingProviderFactory:
-    """Embeddingプロバイダーのファクトリークラス"""
+# =============================================================================
+# ファクトリー
+# =============================================================================
+class ProviderFactory:
+    """統合プロバイダーファクトリー"""
 
-    _providers = {
-        "siliconflow": SiliconFlowEmbeddingProvider,
-        "deepinfra": DeepInfraEmbeddingProvider,
-    }
+    @staticmethod
+    def create_reranker(
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ) -> RerankerProvider:
+        """Rerankerプロバイダーを作成"""
+        return RerankerProvider(provider_name, model_alias)
 
-    @classmethod
-    def create(cls, provider_name: Optional[str] = None) -> EmbeddingProvider:
-        """環境変数またはパラメータに基づいてプロバイダーを生成"""
-        if provider_name is None:
-            provider_name = os.getenv("EMBEDDING_PROVIDER", "siliconflow")
+    @staticmethod
+    def create_embedding(
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ) -> EmbeddingProvider:
+        """Embeddingプロバイダーを作成"""
+        return EmbeddingProvider(provider_name, model_alias)
 
-        provider_name = provider_name.lower()
-
-        if provider_name not in cls._providers:
-            raise ValueError(
-                f"Unknown embedding provider: {provider_name}. "
-                f"Available: {list(cls._providers.keys())}"
-            )
-
-        logger.info(f"Creating embedding provider: {provider_name}")
-        return cls._providers[provider_name]()
+    @staticmethod
+    def create_vlm(
+        provider_name: Optional[str] = None,
+        model_alias: Optional[str] = None
+    ) -> VLMProvider:
+        """VLMプロバイダーを作成"""
+        return VLMProvider(provider_name, model_alias)
 ```
 
 ---
 
-### 🔧 P5: Reranker候補数最適化
+### 🔧 P4: 環境変数による制御
 
-#### P5-1: stage1_top_k設定の最適化
+#### 環境変数一覧
 
-**現状分析**:
+| 変数名 | 説明 | デフォルト | 例 |
+|--------|------|------------|-----|
+| `RERANKER_PROVIDER` | Rerankerプロバイダー | `siliconflow` | `siliconflow`, `jina`, `deepinfra`, `cohere` |
+| `RERANKER_MODEL` | Rerankerモデル | `default` | `default`, `bge`, または直接モデルID |
+| `EMBEDDING_PROVIDER` | Embeddingプロバイダー | `siliconflow` | `siliconflow`, `jina`, `deepinfra`, `cohere` |
+| `EMBEDDING_MODEL` | Embeddingモデル | `default` | `default`, `bge`, または直接モデルID |
+| `VLM_PROVIDER` | VLMプロバイダー | `openrouter` | `openrouter`, `deepinfra` |
+| `VLM_MODEL` | VLMモデル | `default` | `default`, `gpt4o`, または直接モデルID |
+
+#### APIキー環境変数
+
+| 変数名 | 用途 |
+|--------|------|
+| `SILICONFLOW_API_KEY` | SiliconFlow (Reranker/Embedding) ★メイン |
+| `JINA_API_KEY` | Jina AI (Reranker/Embedding) ★バックアップ |
+| `DEEPINFRA_API_KEY` | DeepInfra (後方互換) |
+| `COHERE_API_KEY` | Cohere (Reranker/Embedding) オプション |
+| `VOYAGE_API_KEY` | Voyage AI (Reranker/Embedding) オプション |
+| `OPENROUTER_API_KEY` | OpenRouter (VLM) |
+
+---
+
+### 🔧 P5: 使用例
+
+#### 基本的な使い方
 
 ```python
-# config/settings.py 現状
-self.DEFAULT_STAGE1_TOP_K = int(os.getenv("STAGE1_TOP_K", "100"))
+from services.ai_providers import ProviderFactory
+
+# 環境変数に基づいてプロバイダーを自動選択
+reranker = ProviderFactory.create_reranker()
+embedding = ProviderFactory.create_embedding()
+vlm = ProviderFactory.create_vlm()
+
+# 明示的にプロバイダー/モデルを指定
+reranker = ProviderFactory.create_reranker(
+    provider_name="cohere",
+    model_alias="multilingual"
+)
 ```
 
-**2025年ベストプラクティス**:
-> "Rerank 50-75 candidates for optimal NDCG@10 in most applications.
-> Beyond 100 candidates, quality improvements plateau while costs and latency increase linearly."
-> — [ZeroEntropy Guide](https://www.zeroentropy.dev/articles/ultimate-guide-to-choosing-the-best-reranking-model-in-2025)
+#### プロバイダー切り替え（環境変数のみ）
 
-**変更内容**:
+```bash
+# SiliconFlow → Jina に切り替え（コード変更不要）
+export RERANKER_PROVIDER=jina
+export RERANKER_MODEL=default
 
-**config/settings.py**
-```python
-# Before
-self.DEFAULT_STAGE1_TOP_K = int(os.getenv("STAGE1_TOP_K", "100"))
-
-# After
-# Reranker候補数最適化: 50-75が最適（2025ベストプラクティス）
-# 100以上は精度向上が頭打ちでコスト・レイテンシのみ増加
-self.DEFAULT_STAGE1_TOP_K = int(os.getenv("STAGE1_TOP_K", "60"))
+# SiliconFlowでモデルだけ変更
+export RERANKER_PROVIDER=siliconflow
+export RERANKER_MODEL=bge  # BAAI/bge-reranker-v2-m3に切り替え
 ```
 
-**Admin Panel対応** (`admin/config_manager.py`):
+#### 新規プロバイダー追加
 
 ```python
-class SearchConfig(BaseModel):
-    """検索設定"""
-    stage1_top_k: int = Field(
-        default=60,  # 100 → 60に変更
-        ge=20,
-        le=100,
-        description="Stage1で取得する候補数（推奨: 50-75）"
-    )
+# config/provider_config.py に追加するだけ
+RERANKER_PROVIDERS["new_provider"] = ProviderEndpoint(
+    base_url="https://api.new-provider.com/v1",
+    api_key_env="NEW_PROVIDER_API_KEY",
+    default_model="new-reranker-model",
+    models={
+        "default": "new-reranker-model",
+        "fast": "new-reranker-fast",
+    },
+    request_format="jina",  # 互換形式を指定
+    response_format="jina",
+)
+# → これだけで NEW_PROVIDER_API_KEY=xxx RERANKER_PROVIDER=new_provider で使用可能
 ```
 
 ---
 
-### 📝 環境変数設定
+### 📝 推奨設定
 
-#### 本番環境 (Cloud Run)
-
-```bash
-# Rerankerプロバイダー設定
-RERANKER_PROVIDER=siliconflow  # または "jina"
-SILICONFLOW_API_KEY=your_siliconflow_api_key
-JINA_API_KEY=your_jina_api_key  # Jina使用時のみ必要
-
-# Embeddingプロバイダー設定
-EMBEDDING_PROVIDER=siliconflow
-# SILICONFLOW_API_KEYは上記と共有
-
-# Reranker候補数
-STAGE1_TOP_K=60
-
-# 後方互換（DeepInfraを使用する場合のみ）
-# RERANKER_PROVIDER=deepinfra
-# EMBEDDING_PROVIDER=deepinfra
-# DEEPINFRA_API_KEY=your_deepinfra_api_key
-```
-
-#### ローカル開発環境 (.env)
+#### 本番環境 (.env.production)
 
 ```bash
-# プロバイダー選択
+# ★ Reranker: SiliconFlow + Qwen3（最高精度）
 RERANKER_PROVIDER=siliconflow
+RERANKER_MODEL=default  # Qwen/Qwen3-Reranker-8B (MTEB-R: 69.02)
+SILICONFLOW_API_KEY=your_siliconflow_api_key
+
+# ★ Embedding: SiliconFlow + Qwen3（最高精度・FAISS互換維持）
 EMBEDDING_PROVIDER=siliconflow
-SILICONFLOW_API_KEY=your_key
+EMBEDDING_MODEL=default  # Qwen/Qwen3-Embedding-8B (MTEB多言語 #1: 70.58)
 
-# オプション: Jina Rerankerテスト用
-# RERANKER_PROVIDER=jina
-# JINA_API_KEY=your_jina_key
+# バックアップ用Jina APIキー（フォールバック時に使用）
+JINA_API_KEY=your_jina_api_key
 
-# 候補数
+# VLM: OpenRouter経由GPT-4.1-mini
+VLM_PROVIDER=openrouter
+VLM_MODEL=default
+OPENROUTER_API_KEY=your_openrouter_api_key
+
+# 検索設定
 STAGE1_TOP_K=60
+```
+
+#### 開発環境 (.env.development)
+
+```bash
+# 本番と同じSiliconFlow（精度一貫性のため）
+RERANKER_PROVIDER=siliconflow
+RERANKER_MODEL=default
+
+EMBEDDING_PROVIDER=siliconflow
+EMBEDDING_MODEL=default
+
+VLM_PROVIDER=openrouter
+VLM_MODEL=gpt4o-mini  # コスト抑制
+```
+
+#### フォールバック環境（SiliconFlow障害時）
+
+```bash
+# Jinaに切り替え
+RERANKER_PROVIDER=jina
+RERANKER_MODEL=default  # jina-reranker-v2-base-multilingual
+
+EMBEDDING_PROVIDER=jina
+EMBEDDING_MODEL=default  # jina-embeddings-v3
 ```
 
 ---
 
 ### 📊 期待される改善効果
 
-| 項目 | 最適化前 | 最適化後 | 改善率 |
-|------|---------|---------|--------|
-| Reranker処理 (8クエリ) | ~8秒 | ~1-2秒 (SiliconFlow) / ~0.5秒 (Jina) | **75-94%** |
-| stage1_top_k | 100 | 60 | Reranker負荷40%削減 |
-| プラットフォームリスク | DeepInfra単一依存 | 3プロバイダー切替可能 | リスク分散 |
+| 項目 | 従来 | 設定駆動型 |
+|------|------|-----------|
+| プロバイダー追加 | クラス追加 + Factory修正 (~100行) | 設定追加 (~10行) |
+| モデル切り替え | コード変更 + デプロイ | 環境変数変更のみ |
+| 障害時のフォールバック | コード変更必要 | 環境変数変更で即座に切替 |
+| A/Bテスト | 困難 | 環境変数で簡単に実施可能 |
 
 ---
 
 ### 📋 実装チェックリスト
 
-- [ ] P3-1: Rerankerプロバイダー抽象化
-  - [ ] `services/reranker_providers.py` 新規作成
-  - [ ] SiliconFlowRerankerProvider 実装
-  - [ ] JinaRerankerProvider 実装
-  - [ ] DeepInfraRerankerProvider (後方互換) 実装
-  - [ ] RerankerProviderFactory 実装
+- [ ] P3-1: 中央設定ファイル
+  - [ ] `config/provider_config.py` 新規作成
+  - [ ] Rerankerプロバイダー設定追加
+  - [ ] Embeddingプロバイダー設定追加
+  - [ ] VLMプロバイダー設定追加
 
-- [ ] P3-2: hybrid_search.py 修正
-  - [ ] `apply_reranker_batch` を新プロバイダー対応に修正
-  - [ ] テスト実行
+- [ ] P3-2: 汎用プロバイダークラス
+  - [ ] `services/ai_providers.py` 新規作成
+  - [ ] BaseProvider 実装
+  - [ ] RerankerProvider 実装
+  - [ ] EmbeddingProvider 実装
+  - [ ] VLMProvider 実装
+  - [ ] ProviderFactory 実装
 
-- [ ] P4-1: Embeddingプロバイダー抽象化
-  - [ ] `services/embedding_providers.py` 新規作成
-  - [ ] SiliconFlowEmbeddingProvider 実装
-  - [ ] DeepInfraEmbeddingProvider (後方互換) 実装
-  - [ ] EmbeddingProviderFactory 実装
+- [ ] P4: 既存コード修正
+  - [ ] `services/hybrid_search.py` を新プロバイダー対応に修正
+  - [ ] `services/food_search_service.py` を新プロバイダー対応に修正
+  - [ ] `services/pipeline.py` を新プロバイダー対応に修正
 
-- [ ] P4-2: usda_search.py / food_search_service.py 修正
-  - [ ] 新Embeddingプロバイダー使用に修正
-
-- [ ] P5-1: stage1_top_k最適化
-  - [ ] config/settings.py 修正 (100 → 60)
-  - [ ] admin/config_manager.py 修正
-
-- [ ] 環境変数設定
-  - [ ] .env.example 更新
-  - [ ] deploy.sh 更新
+- [ ] P5: 環境変数・デプロイ設定
+  - [ ] `.env.example` 更新
+  - [ ] `deploy.sh` 更新
   - [ ] Cloud Run環境変数設定
 
 - [ ] テスト
-  - [ ] ローカルテスト (SiliconFlow)
-  - [ ] ローカルテスト (Jina)
+  - [ ] SiliconFlowプロバイダーテスト（メイン）
+  - [ ] Jinaプロバイダーテスト（バックアップ）
+  - [ ] フォールバック動作テスト
   - [ ] 本番デプロイ・テスト
 
 ---
 
 ### ⚠️ 注意事項
 
-1. **API Key取得が必要**
-   - SiliconFlow: https://siliconflow.cn/ でアカウント作成・API Key取得
-   - Jina: https://jina.ai/ でアカウント作成・API Key取得
+1. **推奨プロバイダー構成**
+   | 用途 | メイン | バックアップ | 理由 |
+   |------|--------|-------------|------|
+   | Reranker | SiliconFlow | Jina | Qwen3継続で100%精度維持、Jinaは高速フォールバック |
+   | Embedding | SiliconFlow | Jina | FAISS互換維持、Jinaは多言語対応 |
+   | VLM | OpenRouter | - | 複数モデル選択可能、安定 |
 
-2. **フォールバック戦略**
-   - 新プロバイダーでエラー時はDeepInfraにフォールバック可能な設計
-   - 環境変数で即座に切り替え可能
+2. **API Key取得**
+   - **SiliconFlow**: https://siliconflow.cn/ （★メイン: Reranker + Embedding共通）
+   - **Jina**: https://jina.ai/ （★バックアップ: Reranker + Embedding共通）
+   - DeepInfra: https://deepinfra.com/ （後方互換）
+   - Cohere: https://cohere.com/ （オプション）
+   - Voyage: https://www.voyageai.com/ （オプション）
+   - OpenRouter: https://openrouter.ai/ （VLM用）
 
-3. **コスト比較（事前確認推奨）**
-   | プロバイダー | Reranker料金 | Embedding料金 |
-   |-------------|-------------|--------------|
-   | SiliconFlow | 要確認 | 要確認 |
-   | Jina | 従量課金 | - |
-   | DeepInfra | 現状料金 | 現状料金 |
+3. **コスト比較（要事前確認）**
+   | プロバイダー | Reranker | Embedding | 備考 |
+   |-------------|----------|-----------|------|
+   | SiliconFlow | 要確認 | 要確認 | ★メイン推奨 |
+   | Jina | $0.018/1K queries | $0.018/1M tokens | バックアップ |
+   | Cohere | $2/1K queries | Free tier あり | オプション |
 
-4. **精度検証**
-   - 本番移行前にテストセットで精度比較を実施推奨
-   - 特にJina移行時はモデルが異なるため注意
+4. **SiliconFlowを選択する理由**
+   - 現在のDeepInfraと同じQwen3モデルを使用 → 精度100%維持
+   - FAISSインデックス再構築不要（同一Embeddingモデル）
+   - 2.3x高速な推論（SiliconFlowベンチマーク）
+   - 真の並列処理サポート
 
 ---
 
@@ -1270,9 +1498,10 @@ STAGE1_TOP_K=60
 
 ### Phase 4 追加参考資料
 
-- [SiliconFlow Qwen3-Reranker-8B](https://www.siliconflow.com/models/qwen3-reranker-8b) - 2.3x高速推論
-- [Jina Reranker API](https://jina.ai/reranker/) - 150ms超高速レイテンシ
+- **[SiliconFlow](https://siliconflow.cn/)** - ★メインプロバイダー、Qwen3モデルホスティング
+- [Jina Reranker API](https://jina.ai/reranker/) - バックアップ、150ms超高速レイテンシ
+- [Jina Embeddings v3](https://jina.ai/embeddings/) - バックアップ、多言語対応
+- [Cohere Rerank](https://docs.cohere.com/docs/rerank) - エンタープライズ向け（オプション）
+- [Voyage AI](https://www.voyageai.com/) - 高精度Embedding（オプション）
+- [OpenRouter](https://openrouter.ai/) - マルチモデルゲートウェイ（VLM用）
 - [Ultimate Guide to Choosing the Best Reranking Model 2025](https://www.zeroentropy.dev/articles/ultimate-guide-to-choosing-the-best-reranking-model-in-2025)
-- [RAG Best Practices from 100+ Teams (Kapa.ai)](https://www.kapa.ai/blog/rag-best-practices)
-- [Building a Production RAG System with Qwen3](https://medium.com/@oliversmithth852/building-a-production-rag-system-qwen3-embeddings-reranking-and-vector-database-insights-9c114c5f9da8)
-- [Qwen3-Reranker GitHub Issues (vLLM)](https://github.com/vllm-project/vllm/issues/27857) - 既知の問題
