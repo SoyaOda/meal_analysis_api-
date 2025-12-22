@@ -445,12 +445,18 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Model ID</label>
-                        <select id="vlm-model_id" class="form-control" onchange="markDirty()">
-                            <option value="openrouter:openai/gpt-5.1" {{ 'selected' if config.vlm.model_id == 'openrouter:openai/gpt-5.1' }}>OpenRouter: GPT-5.1</option>
-                            <option value="openrouter:google/gemini-3-flash-preview" {{ 'selected' if config.vlm.model_id == 'openrouter:google/gemini-3-flash-preview' }}>OpenRouter: Gemini 3 Flash</option>
-                            <option value="openrouter:qwen/qwen3-vl-235b-a22b-thinking" {{ 'selected' if config.vlm.model_id == 'openrouter:qwen/qwen3-vl-235b-a22b-thinking' }}>OpenRouter: Qwen3-VL 235B Thinking</option>
-                            <option value="Qwen/Qwen2.5-VL-72B-Instruct" {{ 'selected' if config.vlm.model_id == 'Qwen/Qwen2.5-VL-72B-Instruct' }}>DeepInfra: Qwen2.5-VL 72B</option>
+                        <select id="vlm-model_id-select" class="form-control" onchange="handleModelSelect('vlm'); markDirty()">
+                            <option value="openrouter:openai/gpt-5.1">OpenRouter: GPT-5.1</option>
+                            <option value="openrouter:google/gemini-3-flash-preview">OpenRouter: Gemini 3 Flash</option>
+                            <option value="openrouter:qwen/qwen3-vl-235b-a22b-thinking">OpenRouter: Qwen3-VL 235B Thinking</option>
+                            <option value="Qwen/Qwen2.5-VL-72B-Instruct">DeepInfra: Qwen2.5-VL 72B</option>
+                            <option value="__custom__">Custom (direct input)</option>
                         </select>
+                        <input type="text" id="vlm-model_id" class="form-control" style="margin-top: 8px; display: none;"
+                               placeholder="e.g., openrouter:anthropic/claude-3.5-sonnet"
+                               value="{{ config.vlm.model_id }}"
+                               oninput="markDirty()">
+                        <p class="form-hint">Select preset or enter custom model ID</p>
                     </div>
 
                     <div class="form-group">
@@ -463,6 +469,17 @@
                             {% endfor %}
                         </select>
                         <div id="prompt-preview" class="prompt-preview" style="display: none;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Prompt Text (Override)</label>
+                        <textarea id="vlm-prompt_text" class="form-control" rows="8"
+                                  placeholder="Enter custom prompt text here. If set, this overrides the selected Prompt File."
+                                  oninput="markDirty(); togglePromptTextWarning()">{{ config.vlm.prompt_text or '' }}</textarea>
+                        <p class="form-hint" id="prompt-text-hint">Leave empty to use Prompt File. If set, Prompt File is ignored.</p>
+                        <p class="form-hint prompt-text-warning" id="prompt-text-warning" style="display: none; color: #f59e0b;">
+                            ⚠️ Custom prompt text is active - Prompt File selection is ignored
+                        </p>
                     </div>
 
                     <div class="form-group">
@@ -579,10 +596,16 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label">Model</label>
-                        <select id="reranker-model" class="form-control" onchange="markDirty()">
-                            <option value="Qwen/Qwen3-Reranker-8B" {{ 'selected' if config.reranker.model == 'Qwen/Qwen3-Reranker-8B' }}>Qwen3-Reranker-8B</option>
-                            <option value="BAAI/bge-reranker-v2-m3" {{ 'selected' if config.reranker.model == 'BAAI/bge-reranker-v2-m3' }}>BGE-Reranker-v2-M3</option>
+                        <select id="reranker-model-select" class="form-control" onchange="handleModelSelect('reranker'); markDirty()">
+                            <option value="Qwen/Qwen3-Reranker-8B">Qwen3-Reranker-8B</option>
+                            <option value="BAAI/bge-reranker-v2-m3">BGE-Reranker-v2-M3</option>
+                            <option value="__custom__">Custom (direct input)</option>
                         </select>
+                        <input type="text" id="reranker-model" class="form-control" style="margin-top: 8px; display: none;"
+                               placeholder="e.g., BAAI/bge-reranker-large"
+                               value="{{ config.reranker.model }}"
+                               oninput="markDirty()">
+                        <p class="form-hint">Select preset or enter custom model ID</p>
                     </div>
 
                     <div class="form-group">
@@ -690,10 +713,69 @@
             }, 3000);
         }
 
+        // Model select helpers (for VLM and Reranker custom model input)
+        function handleModelSelect(type) {
+            const selectId = type === 'vlm' ? 'vlm-model_id-select' : 'reranker-model-select';
+            const inputId = type === 'vlm' ? 'vlm-model_id' : 'reranker-model';
+
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            if (select.value === '__custom__') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = select.value;
+            }
+        }
+
+        function initModelSelect(type, currentValue) {
+            const selectId = type === 'vlm' ? 'vlm-model_id-select' : 'reranker-model-select';
+            const inputId = type === 'vlm' ? 'vlm-model_id' : 'reranker-model';
+
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            // Check if current value matches any preset option
+            let found = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === currentValue) {
+                    select.selectedIndex = i;
+                    input.style.display = 'none';
+                    found = true;
+                    break;
+                }
+            }
+
+            // If not found, it's a custom value
+            if (!found && currentValue) {
+                select.value = '__custom__';
+                input.style.display = 'block';
+                input.value = currentValue;
+            }
+        }
+
+        function togglePromptTextWarning() {
+            const promptText = document.getElementById('vlm-prompt_text').value.trim();
+            const warning = document.getElementById('prompt-text-warning');
+            const promptFileSelect = document.getElementById('vlm-prompt_file');
+
+            if (promptText) {
+                warning.style.display = 'block';
+                promptFileSelect.style.opacity = '0.5';
+            } else {
+                warning.style.display = 'none';
+                promptFileSelect.style.opacity = '1';
+            }
+        }
+
         function gatherConfig() {
+            const promptText = document.getElementById('vlm-prompt_text').value.trim();
             return {
                 'vlm.model_id': document.getElementById('vlm-model_id').value,
                 'vlm.prompt_file': document.getElementById('vlm-prompt_file').value,
+                'vlm.prompt_text': promptText || null,
                 'vlm.temperature': parseFloat(document.getElementById('vlm-temperature').value),
                 'vlm.max_tokens': parseInt(document.getElementById('vlm-max_tokens').value),
                 'vlm.reasoning_effort': document.getElementById('vlm-reasoning_effort').value,
@@ -756,12 +838,17 @@
 
         function updateFormFromConfig(config) {
             // VLM settings
-            document.getElementById('vlm-model_id').value = config.vlm.model_id || '';
+            const vlmModelId = config.vlm.model_id || '';
+            document.getElementById('vlm-model_id').value = vlmModelId;
+            initModelSelect('vlm', vlmModelId);
+
             document.getElementById('vlm-prompt_file').value = config.vlm.prompt_file || '';
+            document.getElementById('vlm-prompt_text').value = config.vlm.prompt_text || '';
             document.getElementById('vlm-temperature').value = config.vlm.temperature || 0.6;
             document.getElementById('vlm-temperature-slider').value = config.vlm.temperature || 0.6;
             document.getElementById('vlm-max_tokens').value = config.vlm.max_tokens || 16384;
             document.getElementById('vlm-reasoning_effort').value = config.vlm.reasoning_effort || 'medium';
+            togglePromptTextWarning();
 
             // Search settings
             document.getElementById('search-stage1_top_k').value = config.search.stage1_top_k || 50;
@@ -776,7 +863,10 @@
             document.getElementById('search-rrf_weight-slider').value = config.search.rrf_weight || 0.5;
 
             // Reranker settings
-            document.getElementById('reranker-model').value = config.reranker.model || 'Qwen/Qwen3-Reranker-8B';
+            const rerankerModel = config.reranker.model || 'Qwen/Qwen3-Reranker-8B';
+            document.getElementById('reranker-model').value = rerankerModel;
+            initModelSelect('reranker', rerankerModel);
+
             document.getElementById('reranker-top_n').value = config.reranker.top_n || '';
             document.getElementById('reranker-instruction').value = config.reranker.instruction || '';
 
@@ -837,6 +927,19 @@
                 e.preventDefault();
                 e.returnValue = '';
             }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize model selects
+            const vlmModelId = document.getElementById('vlm-model_id').value;
+            const rerankerModel = document.getElementById('reranker-model').value;
+
+            initModelSelect('vlm', vlmModelId);
+            initModelSelect('reranker', rerankerModel);
+
+            // Initialize prompt text warning
+            togglePromptTextWarning();
         });
     </script>
 </body>

@@ -7,8 +7,15 @@ from functools import lru_cache
 from typing import Optional
 from dotenv import load_dotenv
 
-# .envファイルを自動的に読み込む
-load_dotenv()
+# プロジェクトルートの.envファイルを自動的に読み込む
+# Path: meal_analysis_api_2/.env
+_PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
+_ENV_FILE = _PROJECT_ROOT / ".env"
+if _ENV_FILE.exists():
+    load_dotenv(_ENV_FILE)
+else:
+    # フォールバック: カレントディレクトリの.envを試行
+    load_dotenv()
 
 
 class Settings:

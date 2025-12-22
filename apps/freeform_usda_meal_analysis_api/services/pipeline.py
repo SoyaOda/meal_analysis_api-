@@ -329,7 +329,7 @@ class MealAnalysisPipeline:
                 search_kwargs["search_reranker_top_n"] = search_config_override.reranker_top_n
 
         # プロンプトのオーバーライド(一時的に変更)
-        # 優先順位: override.prompt_text > override.prompt_path > ConfigManager > 初期設定
+        # 優先順位: override.prompt_text > override.prompt_path > ConfigManager.prompt_text > ConfigManager.prompt_file > 初期設定
         original_prompt = None
         if model_config_override and (model_config_override.prompt_text or model_config_override.prompt_path):
             original_prompt = self.vlm_service.prompt
@@ -341,6 +341,10 @@ class MealAnalysisPipeline:
                 settings = get_settings()
                 prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
                 self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
+        elif config.vlm.prompt_text:
+            # ConfigManagerからプロンプトテキストを取得（prompt_fileより優先）
+            original_prompt = self.vlm_service.prompt
+            self.vlm_service.prompt = config.vlm.prompt_text
         elif config.vlm.prompt_file:
             # ConfigManagerからプロンプトファイルを取得
             original_prompt = self.vlm_service.prompt
@@ -549,9 +553,11 @@ class MealAnalysisPipeline:
             ai_model_used = self.vlm_service.model_id  # 一時的にオーバーライドされた値
             # プロンプト情報を取得
             if model_config_override and model_config_override.prompt_text:
-                prompt_file_used = "[Custom Prompt Text]"
+                prompt_file_used = "[Custom Prompt Text (API Override)]"
             elif model_config_override and model_config_override.prompt_path:
                 prompt_file_used = model_config_override.prompt_path
+            elif config.vlm.prompt_text:
+                prompt_file_used = "[Custom Prompt Text (Admin Config)]"
             else:
                 # ConfigManagerからのプロンプトファイル名を使用
                 prompt_file_used = config.vlm.prompt_file

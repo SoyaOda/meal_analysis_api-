@@ -24,6 +24,10 @@ class VLMConfig(BaseModel):
         default="freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt",
         description="Prompt file name (in prompts/ directory)"
     )
+    prompt_text: Optional[str] = Field(
+        default=None,
+        description="Direct prompt text (overrides prompt_file if set)"
+    )
     temperature: float = Field(
         default=0.6,
         ge=0.0,
