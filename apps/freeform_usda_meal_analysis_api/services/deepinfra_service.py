@@ -7,6 +7,7 @@ import json
 import hashlib
 from typing import Dict, Any, List, Union, Optional, Tuple
 
+import httpx
 from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 
 # ロガーの設定
@@ -46,10 +47,18 @@ class DeepInfraService:
 
         base_url = os.getenv("DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai")
 
-        # 非同期クライアントの初期化
+        # 非同期クライアントの初期化（明示的タイムアウト設定）
+        # VLM APIは処理時間が長いため、read timeoutを180秒に設定
         self.client = AsyncOpenAI(
             api_key=api_key,
             base_url=base_url,
+            timeout=httpx.Timeout(
+                connect=10.0,   # 接続タイムアウト
+                read=180.0,     # 読み取りタイムアウト（VLM処理は時間がかかる）
+                write=30.0,     # 書き込みタイムアウト
+                pool=10.0,      # プール取得タイムアウト
+            ),
+            max_retries=3,      # 自動リトライ（接続エラー時）
         )
         logger.info(f"DeepInfraService initialized for model: {self.model_id}")
 
@@ -312,6 +321,8 @@ class DeepInfraService:
         """
         文書をリランキング（DeepInfra API使用）
 
+        グローバルHTTPクライアントプールを使用してコネクションを再利用。
+
         Args:
             query: クエリテキスト
             documents: リランキング対象の文書リスト
@@ -325,41 +336,42 @@ class DeepInfraService:
             - scores: 全文書のスコアリスト
         """
         try:
-            # DeepInfra Reranker API エンドポイント
-            import httpx
+            # 共有HTTPクライアントを使用（コネクション再利用）
+            from ..core.http_client import get_async_client
 
             api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
             url = f"https://api.deepinfra.com/v1/inference/{model}"
 
-            async with httpx.AsyncClient() as client:
-                # 正しいフォーマット: queries は list
-                payload = {
-                    "queries": [query],  # list形式
-                    "documents": documents
-                }
-                if top_n is not None:
-                    payload["top_n"] = top_n
-                if instruction is not None:
-                    payload["instruction"] = instruction
+            client = get_async_client()
 
-                headers = {
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json"
-                }
+            # 正しいフォーマット: queries は list
+            payload = {
+                "queries": [query],  # list形式
+                "documents": documents
+            }
+            if top_n is not None:
+                payload["top_n"] = top_n
+            if instruction is not None:
+                payload["instruction"] = instruction
 
-                response = await client.post(url, json=payload, headers=headers, timeout=30.0)
-                response.raise_for_status()
-                result = response.json()
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
 
-                # Extract scores (scoresフィールドから直接取得)
-                scores = result.get("scores", [])
-                if not scores:
-                    logger.error(f"No scores returned from reranker API. Response: {result}")
-                    raise ValueError(f"[DeepInfra Service] Reranker API returned no scores. Response: {result}")
+            response = await client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            result = response.json()
 
-                best_idx = scores.index(max(scores)) if scores else 0
+            # Extract scores (scoresフィールドから直接取得)
+            scores = result.get("scores", [])
+            if not scores:
+                logger.error(f"No scores returned from reranker API. Response: {result}")
+                raise ValueError(f"[DeepInfra Service] Reranker API returned no scores. Response: {result}")
 
-                return best_idx, scores
+            best_idx = scores.index(max(scores)) if scores else 0
+
+            return best_idx, scores
 
         except Exception as e:
             logger.error(f"Reranking failed: {e}")

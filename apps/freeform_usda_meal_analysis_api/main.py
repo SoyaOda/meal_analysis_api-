@@ -116,6 +116,11 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("Shutting down Freeform USDA Meal Analysis API...")
 
+    # グローバルHTTPクライアントのクローズ
+    from .core.http_client import close_async_client
+    await close_async_client()
+    logger.info("✅ HTTP client closed")
+
     # Search Analyticsの停止（残りのログをフラッシュ）
     analytics = get_analytics()
     if analytics:

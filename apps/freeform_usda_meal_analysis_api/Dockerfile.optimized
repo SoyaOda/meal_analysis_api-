@@ -54,9 +54,11 @@ ENV PYTHONUNBUFFERED=1 \
 EXPOSE 8006
 
 # gunicornを使用した本番環境向け起動
+# WEB_CONCURRENCY環境変数でworker数を動的設定（推奨: (2 x CPU) + 1）
+# デフォルト: 3 workers（CPU=1の場合の推奨値）
 CMD exec gunicorn apps.freeform_usda_meal_analysis_api.main:app \
     --bind :${PORT} \
-    --workers 1 \
+    --workers ${WEB_CONCURRENCY:-3} \
     --worker-class uvicorn.workers.UvicornWorker \
     --timeout 600 \
     --keep-alive 5 \

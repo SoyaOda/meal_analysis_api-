@@ -211,15 +211,20 @@ fi
 
 # 環境に応じた設定
 if [ "$ENVIRONMENT" = "production" ]; then
-    echo "🚀 Production Mode: min-instances=1, optimized for performance"
-    MIN_INSTANCES=1
-    MAX_INSTANCES=5
-    MEMORY="2Gi"
+    echo "🚀 Production Mode: min-instances=2, optimized for performance"
+    MIN_INSTANCES=2
+    MAX_INSTANCES=10
+    MEMORY="4Gi"
     CPU=2
-    CONCURRENCY=100
+    CONCURRENCY=80
     LOG_LEVEL="WARNING"
+    # Worker数: (2 x CPU) + 1 = 5
+    WEB_CONCURRENCY=5
     ENV_VARS="${ENV_VARS},LOG_LEVEL=${LOG_LEVEL}"
     ENV_VARS="${ENV_VARS},ALLOWED_ORIGINS=${ALLOWED_ORIGINS}"
+    ENV_VARS="${ENV_VARS},WEB_CONCURRENCY=${WEB_CONCURRENCY}"
+    # 本番はプリロード有効
+    ENV_VARS="${ENV_VARS},PRELOAD_INDEXES_ON_STARTUP=true"
 else
     echo "🔧 Development Mode: min-instances=0, cost-optimized"
     MIN_INSTANCES=0
@@ -228,7 +233,12 @@ else
     CPU=1
     CONCURRENCY=80
     LOG_LEVEL="INFO"
+    # Worker数: (2 x CPU) + 1 = 3
+    WEB_CONCURRENCY=3
     ENV_VARS="${ENV_VARS},LOG_LEVEL=${LOG_LEVEL}"
+    ENV_VARS="${ENV_VARS},WEB_CONCURRENCY=${WEB_CONCURRENCY}"
+    # 開発もプリロード有効（テスト用）
+    ENV_VARS="${ENV_VARS},PRELOAD_INDEXES_ON_STARTUP=true"
 fi
 
 # Cloud Run デプロイ

@@ -450,30 +450,30 @@ class HybridSearchEngine:
         Returns:
             Dict with 'results' (and optionally 'debug_info')
         """
-        # 設定を取得
-        if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight, reranker_instruction]):
-            from ..config.settings import get_settings
-            settings = get_settings()
-            if top_k is None:
-                top_k = settings.DEFAULT_DEBUG_TOP_K
-            if stage1_top_k is None:
-                stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
-            if bm25_weight is None:
-                bm25_weight = settings.DEFAULT_BM25_WEIGHT
-            if vector_weight is None:
-                vector_weight = settings.DEFAULT_VECTOR_WEIGHT
-            if rrf_k is None:
-                rrf_k = settings.DEFAULT_RRF_K
-            if rrf_weight is None:
-                rrf_weight = settings.DEFAULT_RRF_WEIGHT
+        # 設定を取得（embedding_instructionで常に必要なため条件外で取得）
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        if top_k is None:
+            top_k = settings.DEFAULT_DEBUG_TOP_K
+        if stage1_top_k is None:
+            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+        if bm25_weight is None:
+            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+        if vector_weight is None:
+            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+        if rrf_k is None:
+            rrf_k = settings.DEFAULT_RRF_K
+        if rrf_weight is None:
+            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+        if reranker_instruction is None:
+            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
             if reranker_instruction is None:
-                reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
-                if reranker_instruction is None:
-                    raise ValueError(
-                        "reranker_instruction is required for hybrid search with reranker, "
-                        "but it was not provided and DEFAULT_RERANKER_INSTRUCTION is not configured in settings. "
-                        "Please either pass reranker_instruction parameter or set DEFAULT_RERANKER_INSTRUCTION in settings."
-                    )
+                raise ValueError(
+                    "reranker_instruction is required for hybrid search with reranker, "
+                    "but it was not provided and DEFAULT_RERANKER_INSTRUCTION is not configured in settings. "
+                    "Please either pass reranker_instruction parameter or set DEFAULT_RERANKER_INSTRUCTION in settings."
+                )
 
         logger.info(f"🔍 Hybrid search with reranker: '{query}'")
         logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, rrf_weight={rrf_weight}, stage1_top_k={stage1_top_k}")
@@ -749,3 +749,180 @@ class HybridSearchEngine:
             "results": final_results,
             "debug_info": None
         }
+
+    async def search_hybrid_with_reranker_precomputed(
+        self,
+        query: str,
+        query_embedding: List[float],
+        faiss_index,
+        reranker_service,
+        items: List[Dict],
+        top_k: int = None,
+        stage1_top_k: int = None,
+        bm25_weight: float = None,
+        vector_weight: float = None,
+        rrf_k: int = None,
+        rrf_weight: float = None,
+        reranker_instruction: str = None,
+        include_debug_info: bool = False
+    ) -> Dict[str, Any]:
+        """
+        Hybrid search + Reranker（事前計算済みembeddingを使用）
+
+        embedding生成をスキップして高速化。
+        バッチ検索時に事前にembeddingを一括生成しておき、
+        このメソッドに渡すことでAPI呼び出し回数を削減する。
+
+        Args:
+            query: 検索クエリ
+            query_embedding: 事前計算済みのクエリembedding
+            faiss_index: FAISSインデックス
+            reranker_service: リランカーサービス
+            items: アイテムメタデータ
+            top_k: 返却する結果数
+            stage1_top_k: Stage1で取得する候補数
+            reranker_instruction: Reranker用のinstruction
+
+        Returns:
+            Dict with 'results' (and optionally 'debug_info')
+        """
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        if top_k is None:
+            top_k = settings.DEFAULT_DEBUG_TOP_K
+        if stage1_top_k is None:
+            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+        if bm25_weight is None:
+            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+        if vector_weight is None:
+            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+        if rrf_k is None:
+            rrf_k = settings.DEFAULT_RRF_K
+        if rrf_weight is None:
+            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+        if reranker_instruction is None:
+            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+
+        logger.debug(f"🔍 Hybrid search (precomputed embedding): '{query}'")
+
+        # 短いクエリ（3文字未満）の場合はBM25をスキップ
+        short_query_threshold = 3
+        skip_bm25 = len(query.strip()) < short_query_threshold
+
+        # ===== Stage 1: BM25 キーワード検索 =====
+        start_time_bm25 = asyncio.get_event_loop().time()
+
+        if skip_bm25:
+            bm25_indices = []
+            bm25_scores = []
+            bm25_time = 0.0
+        else:
+            query_tokens = bm25s.tokenize(
+                [query],
+                stopwords="en",
+                stemmer=self.stemmer
+            )
+            bm25_results_raw, bm25_scores_raw = self.bm25_model.retrieve(
+                query_tokens,
+                k=stage1_top_k
+            )
+            bm25_time = asyncio.get_event_loop().time() - start_time_bm25
+            bm25_indices = bm25_results_raw[0].tolist()
+            bm25_scores = bm25_scores_raw[0].tolist()
+
+        # ===== Stage 2: FAISS Vector 検索（事前計算済みembedding使用） =====
+        start_time_vector = asyncio.get_event_loop().time()
+        query_vector_np = np.array([query_embedding], dtype='float32')
+        distances, indices = faiss_index.search(query_vector_np, stage1_top_k)
+        vector_indices = indices[0].tolist()
+        vector_scores = (1.0 / (1.0 + distances[0])).tolist()
+        vector_time = asyncio.get_event_loop().time() - start_time_vector
+
+        # ===== Stage 3: RRF (Reciprocal Rank Fusion) =====
+        start_time_rrf = asyncio.get_event_loop().time()
+        bm25_ranks = {idx: rank + 1 for rank, idx in enumerate(bm25_indices)}
+        vector_ranks = {idx: rank + 1 for rank, idx in enumerate(vector_indices)}
+        rrf_scores = {}
+        all_indices = set(bm25_indices) | set(vector_indices)
+
+        for idx in all_indices:
+            bm25_rank = bm25_ranks.get(idx, float('inf'))
+            vector_rank = vector_ranks.get(idx, float('inf'))
+            bm25_rrf = 1.0 / (rrf_k + bm25_rank) if bm25_rank != float('inf') else 0.0
+            vector_rrf = 1.0 / (rrf_k + vector_rank) if vector_rank != float('inf') else 0.0
+            rrf_scores[idx] = bm25_rrf + vector_rrf
+
+        rrf_time = asyncio.get_event_loop().time() - start_time_rrf
+
+        # ===== Stage 4: Weighted Fusion =====
+        start_time_fusion = asyncio.get_event_loop().time()
+        bm25_score_dict = {idx: score for idx, score in zip(bm25_indices, bm25_scores)}
+        vector_score_dict = {idx: score for idx, score in zip(vector_indices, vector_scores)}
+
+        max_bm25 = max(bm25_scores) if bm25_scores else 1.0
+        if max_bm25 == 0:
+            max_bm25 = 1.0
+        max_vector = max(vector_scores) if vector_scores else 1.0
+        if max_vector == 0:
+            max_vector = 1.0
+
+        hybrid_scores = {}
+        for idx in all_indices:
+            bm25_normalized = bm25_score_dict.get(idx, 0) / max_bm25
+            vector_normalized = vector_score_dict.get(idx, 0) / max_vector
+            rrf_score = rrf_scores[idx]
+            weighted_score = (bm25_weight * bm25_normalized) + (vector_weight * vector_normalized)
+            hybrid_scores[idx] = (rrf_weight * rrf_score) + weighted_score
+
+        sorted_candidates = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)
+        hybrid_candidates = [
+            {
+                "fdc_id": items[idx]["fdc_id"],
+                "description": items[idx]["description"],
+                "hybrid_score": score,
+                "bm25_score": bm25_score_dict.get(idx, 0),
+                "vector_score": vector_score_dict.get(idx, 0),
+                "rrf_score": rrf_scores[idx]
+            }
+            for idx, score in sorted_candidates[:stage1_top_k]
+        ]
+        fusion_time = asyncio.get_event_loop().time() - start_time_fusion
+
+        # ===== Stage 5: Reranker =====
+        documents = [c["description"] for c in hybrid_candidates]
+        best_idx, reranked_scores = await reranker_service.rerank(
+            query=query,
+            documents=documents,
+            instruction=reranker_instruction
+        )
+
+        for i, candidate in enumerate(hybrid_candidates):
+            candidate["rerank_score"] = reranked_scores[i]
+            candidate["original_rank"] = i + 1
+
+        reranked_results = sorted(hybrid_candidates, key=lambda x: x["rerank_score"], reverse=True)
+        final_results = reranked_results[:top_k]
+
+        # デバッグ情報
+        if include_debug_info:
+            debug_info = {
+                "query": query,
+                "timing": {
+                    "bm25_time_ms": int(bm25_time * 1000),
+                    "vector_time_ms": int(vector_time * 1000),
+                    "rrf_time_ms": int(rrf_time * 1000),
+                    "fusion_time_ms": int(fusion_time * 1000),
+                },
+                "parameters": {
+                    "bm25_weight": bm25_weight,
+                    "vector_weight": vector_weight,
+                    "rrf_k": rrf_k,
+                    "stage1_top_k": stage1_top_k,
+                },
+                "precomputed_embedding": True
+            }
+            return {"results": final_results, "debug_info": debug_info}
+
+        return {"results": final_results, "debug_info": None}

@@ -647,7 +647,7 @@ class MealAnalysisPipeline:
         reranker_top_n: Optional[int] = None,
         include_debug_info: bool = False
     ) -> List[Optional[Dict[str, Any]]]:
-        """USDA検索を並列実行"""
+        """USDA検索を並列実行（バッチembedding最適化）"""
         # パラメータがNoneの場合はConfigManager（動的設定）から取得
         config_manager = get_config_manager()
         config = config_manager.get_config()
@@ -661,26 +661,55 @@ class MealAnalysisPipeline:
         effective_reranker_instruction = reranker_instruction if reranker_instruction is not None else config.reranker.instruction
         effective_reranker_top_n = reranker_top_n if reranker_top_n is not None else config.reranker.top_n
 
-        # 非同期関数を直接並列実行
-        tasks = []
-        for query in queries:
-            task = self.food_search_service.search(
-                query=query['search_name'],
-                search_mode="full_index_only",
-                stage1_top_k=effective_stage1_top_k,
-                use_hybrid=True,  # 画像分析APIはHybrid search + Reranker を使用
-                bm25_weight=effective_bm25_weight,
-                vector_weight=effective_vector_weight,
-                rrf_k=effective_rrf_k,
-                rrf_weight=effective_rrf_weight,
-                reranker_model=effective_reranker_model,
-                reranker_instruction=effective_reranker_instruction,
-                reranker_top_n=effective_reranker_top_n,
-                include_debug_info=include_debug_info
-            )
-            tasks.append(task)
+        # クエリ文字列のリストを抽出
+        query_texts = [q['search_name'] for q in queries]
 
-        results = await asyncio.gather(*tasks)
+        # ===== バッチembedding最適化 =====
+        # 全クエリのembeddingを1回のAPI呼び出しで一括生成（N回→1回に削減）
+        try:
+            logger.info(f"🔄 Batch embedding generation for {len(query_texts)} queries...")
+            embeddings = await self.food_search_service.batch_generate_embeddings(query_texts)
+            logger.info(f"✅ Batch embedding completed")
+
+            # 事前計算済みembeddingを使用した検索を並列実行
+            tasks = []
+            for i, query in enumerate(queries):
+                task = self.food_search_service.search_with_precomputed_embedding(
+                    query=query['search_name'],
+                    query_embedding=embeddings[i],
+                    stage1_top_k=effective_stage1_top_k,
+                    bm25_weight=effective_bm25_weight,
+                    vector_weight=effective_vector_weight,
+                    rrf_k=effective_rrf_k,
+                    rrf_weight=effective_rrf_weight,
+                    reranker_instruction=effective_reranker_instruction,
+                    include_debug_info=include_debug_info
+                )
+                tasks.append(task)
+
+            results = await asyncio.gather(*tasks)
+
+        except Exception as e:
+            # バッチembeddingに失敗した場合は従来方式にフォールバック
+            logger.warning(f"⚠️ Batch embedding failed, falling back to individual calls: {e}")
+            tasks = []
+            for query in queries:
+                task = self.food_search_service.search(
+                    query=query['search_name'],
+                    search_mode="full_index_only",
+                    stage1_top_k=effective_stage1_top_k,
+                    use_hybrid=True,
+                    bm25_weight=effective_bm25_weight,
+                    vector_weight=effective_vector_weight,
+                    rrf_k=effective_rrf_k,
+                    rrf_weight=effective_rrf_weight,
+                    reranker_model=effective_reranker_model,
+                    reranker_instruction=effective_reranker_instruction,
+                    reranker_top_n=effective_reranker_top_n,
+                    include_debug_info=include_debug_info
+                )
+                tasks.append(task)
+            results = await asyncio.gather(*tasks)
         # 新しいレスポンス形式に対応 {"result": ..., "debug_info": ...}
         processed_results = []
         for response in results:

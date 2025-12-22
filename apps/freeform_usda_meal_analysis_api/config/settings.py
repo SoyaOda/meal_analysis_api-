@@ -143,7 +143,8 @@ class Settings:
         self.DEFAULT_SEARCH_TOP_K = int(os.getenv("SEARCH_TOP_K", "100"))
         self.DEFAULT_SEARCH_STAGE1_TOP_K = int(os.getenv("SEARCH_STAGE1_TOP_K", "100"))
         # Cloud Run最適化設定
-        self.PRELOAD_INDEXES_ON_STARTUP = os.getenv("PRELOAD_INDEXES_ON_STARTUP", "false").lower() == "true"
+        # デフォルトをtrueに変更（本番環境で推奨、コールドスタート時間削減）
+        self.PRELOAD_INDEXES_ON_STARTUP = os.getenv("PRELOAD_INDEXES_ON_STARTUP", "true").lower() == "true"
 
         # ========== Reranker設定 ==========
         # Rerankerモデル設定

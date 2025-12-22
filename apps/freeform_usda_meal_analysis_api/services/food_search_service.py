@@ -294,3 +294,117 @@ class USDAFoodSearchService:
             search_mode=search_mode,
             stage1_top_k=stage1_top_k
         )
+
+    async def search_with_precomputed_embedding(
+        self,
+        query: str,
+        query_embedding: List[float],
+        stage1_top_k: Optional[int] = None,
+        # Hybrid searchパラメータ
+        bm25_weight: float = 0.4,
+        vector_weight: float = 0.6,
+        rrf_k: int = 60,
+        rrf_weight: float = None,
+        # Rerankerパラメータ
+        reranker_instruction: Optional[str] = None,
+        # デバッグオプション
+        include_debug_info: bool = False
+    ) -> Dict[str, Any]:
+        """
+        事前計算済みembeddingを使用した検索（バッチ最適化用）
+
+        Embedding API呼び出しをスキップして高速化。
+        パイプラインで複数クエリのembeddingを一括生成後、
+        このメソッドで個別に検索を実行する。
+
+        Args:
+            query: 検索クエリ
+            query_embedding: 事前計算済みのクエリembedding
+            stage1_top_k: Stage1で取得する候補数
+            bm25_weight: BM25スコアの重み
+            vector_weight: ベクトル検索スコアの重み
+            rrf_k: RRFのパラメータ
+            rrf_weight: RRF融合スコアの重み
+            reranker_instruction: Reranker用のinstruction
+            include_debug_info: デバッグ情報を含めるか
+
+        Returns:
+            Dict[str, Any]: 検索結果（result, debug_info）
+        """
+        # Lazy Loading対応
+        if self.use_lazy_loading and self.searcher is None:
+            await self._ensure_searcher_loaded()
+
+        if stage1_top_k is None:
+            stage1_top_k = self.stage1_top_k
+
+        # Hybrid engineが必須
+        if not self.hybrid_engine:
+            raise ValueError("Hybrid engine is required for search_with_precomputed_embedding")
+
+        try:
+            # Hybrid search + Reranker実行（事前計算済みembedding使用）
+            response = await self.hybrid_engine.search_hybrid_with_reranker_precomputed(
+                query=query,
+                query_embedding=query_embedding,
+                faiss_index=self.searcher.index_full,
+                reranker_service=self.searcher.reranker_service,
+                items=self.searcher.items,
+                stage1_top_k=stage1_top_k,
+                bm25_weight=bm25_weight,
+                vector_weight=vector_weight,
+                rrf_k=rrf_k,
+                rrf_weight=rrf_weight,
+                reranker_instruction=reranker_instruction,
+                include_debug_info=include_debug_info
+            )
+
+            hybrid_results = response.get("results", [])
+            debug_info = response.get("debug_info")
+
+            # Hybrid search結果を返す
+            logger.debug(f"✅ Hybrid search (precomputed) returned {len(hybrid_results)} results")
+
+            for h_result in hybrid_results[:stage1_top_k]:
+                h_result["score"] = h_result.get("hybrid_score", 0)
+
+            if stage1_top_k == 1:
+                result = hybrid_results[0] if hybrid_results else None
+                return {"result": result, "debug_info": debug_info}
+            else:
+                return {"results": hybrid_results[:stage1_top_k], "debug_info": debug_info}
+
+        except Exception as e:
+            logger.error(f"Search with precomputed embedding failed: {e}")
+            raise
+
+    async def batch_generate_embeddings(
+        self,
+        queries: List[str]
+    ) -> List[List[float]]:
+        """
+        複数クエリのembeddingを一括生成
+
+        Args:
+            queries: 検索クエリのリスト
+
+        Returns:
+            List[List[float]]: 各クエリのembeddingベクトル
+        """
+        # Lazy Loading対応
+        if self.use_lazy_loading and self.searcher is None:
+            await self._ensure_searcher_loaded()
+
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+        embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+
+        # バッチでembedding生成
+        embeddings = await self.searcher.embedding_service.generate_embeddings(
+            queries,
+            instruction=embedding_instruction
+        )
+
+        logger.info(f"✅ Batch embedding generated for {len(queries)} queries")
+        return embeddings
