@@ -619,17 +619,17 @@ class ProviderEndpoint:
 # Reranker プロバイダー設定
 # =============================================================================
 RERANKER_PROVIDERS: Dict[str, ProviderEndpoint] = {
-    # ★ メイン: SiliconFlow (精度最優先 - Qwen3モデル継続)
-    "siliconflow": ProviderEndpoint(
-        base_url="https://api.siliconflow.cn/v1",
-        api_key_env="SILICONFLOW_API_KEY",
+    # ★ メイン: Novita AI (Qwen3モデル、国際対応、$0.04/1M tokens)
+    "novita": ProviderEndpoint(
+        base_url="https://api.novita.ai/v3/openai",
+        api_key_env="NOVITA_API_KEY",
         default_model="Qwen/Qwen3-Reranker-8B",
         models={
             "default": "Qwen/Qwen3-Reranker-8B",  # MTEB-R: 69.02 (トップクラス)
             "bge": "BAAI/bge-reranker-v2-m3",
         },
-        request_format="siliconflow",
-        response_format="siliconflow",
+        request_format="openai",  # OpenAI互換API
+        response_format="openai",
     ),
     # ★ バックアップ: Jina (高速・API安定)
     "jina": ProviderEndpoint(
@@ -675,17 +675,17 @@ RERANKER_PROVIDERS: Dict[str, ProviderEndpoint] = {
 # Embedding プロバイダー設定
 # =============================================================================
 EMBEDDING_PROVIDERS: Dict[str, ProviderEndpoint] = {
-    # ★ メイン: SiliconFlow (精度最優先 - Qwen3モデル継続)
-    "siliconflow": ProviderEndpoint(
-        base_url="https://api.siliconflow.cn/v1",
-        api_key_env="SILICONFLOW_API_KEY",
+    # ★ メイン: Novita AI (Qwen3モデル、国際対応、$0.056/1M tokens)
+    "novita": ProviderEndpoint(
+        base_url="https://api.novita.ai/v3/openai",
+        api_key_env="NOVITA_API_KEY",
         default_model="Qwen/Qwen3-Embedding-8B",
         models={
             "default": "Qwen/Qwen3-Embedding-8B",  # MTEB多言語 #1 (70.58)
             "bge": "BAAI/bge-m3",
         },
-        request_format="siliconflow",
-        response_format="siliconflow",
+        request_format="openai",  # OpenAI互換API
+        response_format="openai",
     ),
     # ★ バックアップ: Jina (高速・API安定)
     "jina": ProviderEndpoint(
@@ -797,7 +797,7 @@ def get_provider_config(
     # デフォルト: SiliconFlow (精度最優先)、VLMはOpenRouter
     if provider_name is None:
         env_key = f"{provider_type.upper()}_PROVIDER"
-        provider_name = os.getenv(env_key, "siliconflow" if provider_type != "vlm" else "openrouter")
+        provider_name = os.getenv(env_key, "novita" if provider_type != "vlm" else "openrouter")
 
     provider_name = provider_name.lower()
 
@@ -1288,9 +1288,9 @@ class ProviderFactory:
 
 | 変数名 | 説明 | デフォルト | 例 |
 |--------|------|------------|-----|
-| `RERANKER_PROVIDER` | Rerankerプロバイダー | `siliconflow` | `siliconflow`, `jina`, `deepinfra`, `cohere` |
+| `RERANKER_PROVIDER` | Rerankerプロバイダー | `novita` | `novita`, `jina`, `deepinfra`, `cohere` |
 | `RERANKER_MODEL` | Rerankerモデル | `default` | `default`, `bge`, または直接モデルID |
-| `EMBEDDING_PROVIDER` | Embeddingプロバイダー | `siliconflow` | `siliconflow`, `jina`, `deepinfra`, `cohere` |
+| `EMBEDDING_PROVIDER` | Embeddingプロバイダー | `novita` | `novita`, `jina`, `deepinfra`, `cohere` |
 | `EMBEDDING_MODEL` | Embeddingモデル | `default` | `default`, `bge`, または直接モデルID |
 | `VLM_PROVIDER` | VLMプロバイダー | `openrouter` | `openrouter`, `deepinfra` |
 | `VLM_MODEL` | VLMモデル | `default` | `default`, `gpt4o`, または直接モデルID |
@@ -1299,11 +1299,10 @@ class ProviderFactory:
 
 | 変数名 | 用途 |
 |--------|------|
-| `SILICONFLOW_API_KEY` | SiliconFlow (Reranker/Embedding) ★メイン |
+| `NOVITA_API_KEY` | Novita AI (Reranker/Embedding) ★メイン |
 | `JINA_API_KEY` | Jina AI (Reranker/Embedding) ★バックアップ |
 | `DEEPINFRA_API_KEY` | DeepInfra (後方互換) |
 | `COHERE_API_KEY` | Cohere (Reranker/Embedding) オプション |
-| `VOYAGE_API_KEY` | Voyage AI (Reranker/Embedding) オプション |
 | `OPENROUTER_API_KEY` | OpenRouter (VLM) |
 
 ---
@@ -1330,12 +1329,12 @@ reranker = ProviderFactory.create_reranker(
 #### プロバイダー切り替え（環境変数のみ）
 
 ```bash
-# SiliconFlow → Jina に切り替え（コード変更不要）
+# Novita AI → Jina に切り替え（コード変更不要）
 export RERANKER_PROVIDER=jina
 export RERANKER_MODEL=default
 
-# SiliconFlowでモデルだけ変更
-export RERANKER_PROVIDER=siliconflow
+# Novita AIでモデルだけ変更
+export RERANKER_PROVIDER=novita
 export RERANKER_MODEL=bge  # BAAI/bge-reranker-v2-m3に切り替え
 ```
 
@@ -1364,13 +1363,13 @@ RERANKER_PROVIDERS["new_provider"] = ProviderEndpoint(
 #### 本番環境 (.env.production)
 
 ```bash
-# ★ Reranker: SiliconFlow + Qwen3（最高精度）
-RERANKER_PROVIDER=siliconflow
+# ★ Reranker: Novita AI + Qwen3（最高精度、国際対応）
+RERANKER_PROVIDER=novita
 RERANKER_MODEL=default  # Qwen/Qwen3-Reranker-8B (MTEB-R: 69.02)
-SILICONFLOW_API_KEY=your_siliconflow_api_key
+NOVITA_API_KEY=your_novita_api_key
 
-# ★ Embedding: SiliconFlow + Qwen3（最高精度・FAISS互換維持）
-EMBEDDING_PROVIDER=siliconflow
+# ★ Embedding: Novita AI + Qwen3（最高精度・FAISS互換維持）
+EMBEDDING_PROVIDER=novita
 EMBEDDING_MODEL=default  # Qwen/Qwen3-Embedding-8B (MTEB多言語 #1: 70.58)
 
 # バックアップ用Jina APIキー（フォールバック時に使用）
@@ -1388,18 +1387,18 @@ STAGE1_TOP_K=60
 #### 開発環境 (.env.development)
 
 ```bash
-# 本番と同じSiliconFlow（精度一貫性のため）
-RERANKER_PROVIDER=siliconflow
+# 本番と同じNovita AI（精度一貫性のため）
+RERANKER_PROVIDER=novita
 RERANKER_MODEL=default
 
-EMBEDDING_PROVIDER=siliconflow
+EMBEDDING_PROVIDER=novita
 EMBEDDING_MODEL=default
 
 VLM_PROVIDER=openrouter
 VLM_MODEL=gpt4o-mini  # コスト抑制
 ```
 
-#### フォールバック環境（SiliconFlow障害時）
+#### フォールバック環境（Novita AI障害時）
 
 ```bash
 # Jinaに切り替え
@@ -1462,30 +1461,29 @@ EMBEDDING_MODEL=default  # jina-embeddings-v3
 1. **推奨プロバイダー構成**
    | 用途 | メイン | バックアップ | 理由 |
    |------|--------|-------------|------|
-   | Reranker | SiliconFlow | Jina | Qwen3継続で100%精度維持、Jinaは高速フォールバック |
-   | Embedding | SiliconFlow | Jina | FAISS互換維持、Jinaは多言語対応 |
+   | Reranker | Novita AI | Jina | Qwen3継続で100%精度維持、国際対応 |
+   | Embedding | Novita AI | Jina | FAISS互換維持、国際対応 |
    | VLM | OpenRouter | - | 複数モデル選択可能、安定 |
 
 2. **API Key取得**
-   - **SiliconFlow**: https://siliconflow.cn/ （★メイン: Reranker + Embedding共通）
+   - **Novita AI**: https://novita.ai/ （★メイン: Reranker + Embedding共通、$10無料クレジット）
    - **Jina**: https://jina.ai/ （★バックアップ: Reranker + Embedding共通）
    - DeepInfra: https://deepinfra.com/ （後方互換）
    - Cohere: https://cohere.com/ （オプション）
-   - Voyage: https://www.voyageai.com/ （オプション）
    - OpenRouter: https://openrouter.ai/ （VLM用）
 
-3. **コスト比較（要事前確認）**
+3. **コスト比較**
    | プロバイダー | Reranker | Embedding | 備考 |
    |-------------|----------|-----------|------|
-   | SiliconFlow | 要確認 | 要確認 | ★メイン推奨 |
+   | Novita AI | $0.04/1M tokens | $0.056/1M tokens | ★メイン推奨 |
    | Jina | $0.018/1K queries | $0.018/1M tokens | バックアップ |
-   | Cohere | $2/1K queries | Free tier あり | オプション |
+   | DeepInfra | $5.00/1M tokens | $1.00/1M tokens | 後方互換 |
 
-4. **SiliconFlowを選択する理由**
+4. **Novita AIを選択する理由**
    - 現在のDeepInfraと同じQwen3モデルを使用 → 精度100%維持
    - FAISSインデックス再構築不要（同一Embeddingモデル）
-   - 2.3x高速な推論（SiliconFlowベンチマーク）
-   - 真の並列処理サポート
+   - 国際対応（日本から登録可能）
+   - DeepInfraより大幅に安価（Reranker: 125倍安い）
 
 ---
 
@@ -1498,10 +1496,9 @@ EMBEDDING_MODEL=default  # jina-embeddings-v3
 
 ### Phase 4 追加参考資料
 
-- **[SiliconFlow](https://siliconflow.cn/)** - ★メインプロバイダー、Qwen3モデルホスティング
+- **[Novita AI](https://novita.ai/)** - ★メインプロバイダー、Qwen3モデルホスティング、国際対応
 - [Jina Reranker API](https://jina.ai/reranker/) - バックアップ、150ms超高速レイテンシ
 - [Jina Embeddings v3](https://jina.ai/embeddings/) - バックアップ、多言語対応
 - [Cohere Rerank](https://docs.cohere.com/docs/rerank) - エンタープライズ向け（オプション）
-- [Voyage AI](https://www.voyageai.com/) - 高精度Embedding（オプション）
 - [OpenRouter](https://openrouter.ai/) - マルチモデルゲートウェイ（VLM用）
 - [Ultimate Guide to Choosing the Best Reranking Model 2025](https://www.zeroentropy.dev/articles/ultimate-guide-to-choosing-the-best-reranking-model-in-2025)
