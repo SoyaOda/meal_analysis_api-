@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Config Admin - Freeform USDA Meal Analysis</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .badge-firestore {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .badge-memory {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header .icon {
+            font-size: 1.25rem;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-control:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Input with slider */
+        .input-with-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-with-slider input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .input-with-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .input-with-slider input[type="number"] {
+            width: 80px;
+            text-align: center;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Meta info */
+        .meta-info {
+            margin-top: 30px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-info span {
+            margin-right: 24px;
+        }
+
+        .meta-info strong {
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            .actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Prompt selector styles */
+        .prompt-preview {
+            margin-top: 8px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            max-height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <h1>API Configuration</h1>
+                <p style="color: var(--text-secondary); margin-top: 4px;">Freeform USDA Meal Analysis API</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="header-badge {{ 'badge-firestore' if use_firestore else 'badge-memory' }}">
+                    <span class="status-dot"></span>
+                    {{ 'Firestore' if use_firestore else 'In-Memory' }}
+                </span>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="refreshConfig()">
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="saveAllConfig()">
+                        Save Changes
+                    </button>
+                    <button class="btn btn-danger" onclick="resetConfig()">
+                        Reset Defaults
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Config Cards -->
+        <div class="cards-grid">
+            <!-- VLM Config Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="icon">🤖</span> VLM Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Model ID</label>
+                        <select id="vlm-model_id" class="form-control" onchange="markDirty()">
+                            <option value="openrouter:openai/gpt-5.1" {{ 'selected' if config.vlm.model_id == 'openrouter:openai/gpt-5.1' }}>OpenRouter: GPT-5.1</option>
+                            <option value="openrouter:google/gemini-3-flash-preview" {{ 'selected' if config.vlm.model_id == 'openrouter:google/gemini-3-flash-preview' }}>OpenRouter: Gemini 3 Flash</option>
+                            <option value="openrouter:qwen/qwen3-vl-235b-a22b-thinking" {{ 'selected' if config.vlm.model_id == 'openrouter:qwen/qwen3-vl-235b-a22b-thinking' }}>OpenRouter: Qwen3-VL 235B Thinking</option>
+                            <option value="Qwen/Qwen2.5-VL-72B-Instruct" {{ 'selected' if config.vlm.model_id == 'Qwen/Qwen2.5-VL-72B-Instruct' }}>DeepInfra: Qwen2.5-VL 72B</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Prompt File</label>
+                        <select id="vlm-prompt_file" class="form-control" onchange="markDirty(); updatePromptPreview()">
+                            {% for prompt in prompts %}
+                            <option value="{{ prompt.filename }}" {{ 'selected' if config.vlm.prompt_file == prompt.filename }}>
+                                {{ prompt.filename }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div id="prompt-preview" class="prompt-preview" style="display: none;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Temperature</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="vlm-temperature-slider" min="0" max="2" step="0.1"
+                                   value="{{ config.vlm.temperature }}"
+                                   oninput="syncSlider('vlm-temperature', this.value)">
+                            <input type="number" id="vlm-temperature" class="form-control"
+                                   min="0" max="2" step="0.1"
+                                   value="{{ config.vlm.temperature }}"
+                                   oninput="syncSlider('vlm-temperature', this.value, true); markDirty()">
+                        </div>
+                        <p class="form-hint">0.0 = Deterministic, 2.0 = Creative</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Max Tokens</label>
+                        <input type="number" id="vlm-max_tokens" class="form-control"
+                               min="1" max="32768" value="{{ config.vlm.max_tokens }}"
+                               oninput="markDirty()">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Reasoning Effort</label>
+                        <select id="vlm-reasoning_effort" class="form-control" onchange="markDirty()">
+                            <option value="minimal" {{ 'selected' if config.vlm.reasoning_effort == 'minimal' }}>Minimal (10%)</option>
+                            <option value="low" {{ 'selected' if config.vlm.reasoning_effort == 'low' }}>Low (20%)</option>
+                            <option value="medium" {{ 'selected' if config.vlm.reasoning_effort == 'medium' }}>Medium (50%)</option>
+                            <option value="high" {{ 'selected' if config.vlm.reasoning_effort == 'high' }}>High (80%)</option>
+                            <option value="xhigh" {{ 'selected' if config.vlm.reasoning_effort == 'xhigh' }}>Extra High (95%)</option>
+                        </select>
+                        <p class="form-hint">Higher effort = more thinking tokens (OpenRouter)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Config Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="icon">🔍</span> Hybrid Search Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Stage 1 Top K</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="search-stage1_top_k-slider" min="10" max="200" step="10"
+                                   value="{{ config.search.stage1_top_k }}"
+                                   oninput="syncSlider('search-stage1_top_k', this.value)">
+                            <input type="number" id="search-stage1_top_k" class="form-control"
+                                   min="1" max="200" value="{{ config.search.stage1_top_k }}"
+                                   oninput="syncSlider('search-stage1_top_k', this.value, true); markDirty()">
+                        </div>
+                        <p class="form-hint">Candidates retrieved in first stage</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">BM25 Weight</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="search-bm25_weight-slider" min="0" max="1" step="0.1"
+                                   value="{{ config.search.bm25_weight }}"
+                                   oninput="syncSlider('search-bm25_weight', this.value)">
+                            <input type="number" id="search-bm25_weight" class="form-control"
+                                   min="0" max="1" step="0.1" value="{{ config.search.bm25_weight }}"
+                                   oninput="syncSlider('search-bm25_weight', this.value, true); markDirty()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Vector Weight</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="search-vector_weight-slider" min="0" max="1" step="0.1"
+                                   value="{{ config.search.vector_weight }}"
+                                   oninput="syncSlider('search-vector_weight', this.value)">
+                            <input type="number" id="search-vector_weight" class="form-control"
+                                   min="0" max="1" step="0.1" value="{{ config.search.vector_weight }}"
+                                   oninput="syncSlider('search-vector_weight', this.value, true); markDirty()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">RRF K</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="search-rrf_k-slider" min="1" max="200" step="1"
+                                   value="{{ config.search.rrf_k }}"
+                                   oninput="syncSlider('search-rrf_k', this.value)">
+                            <input type="number" id="search-rrf_k" class="form-control"
+                                   min="1" max="200" value="{{ config.search.rrf_k }}"
+                                   oninput="syncSlider('search-rrf_k', this.value, true); markDirty()">
+                        </div>
+                        <p class="form-hint">Reciprocal Rank Fusion constant</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">RRF Weight</label>
+                        <div class="input-with-slider">
+                            <input type="range" id="search-rrf_weight-slider" min="0" max="2" step="0.1"
+                                   value="{{ config.search.rrf_weight }}"
+                                   oninput="syncSlider('search-rrf_weight', this.value)">
+                            <input type="number" id="search-rrf_weight" class="form-control"
+                                   min="0" max="2" step="0.1" value="{{ config.search.rrf_weight }}"
+                                   oninput="syncSlider('search-rrf_weight', this.value, true); markDirty()">
+                        </div>
+                        <p class="form-hint">Weight for RRF fusion score</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reranker Config Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><span class="icon">🎯</span> Reranker Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Model</label>
+                        <select id="reranker-model" class="form-control" onchange="markDirty()">
+                            <option value="Qwen/Qwen3-Reranker-8B" {{ 'selected' if config.reranker.model == 'Qwen/Qwen3-Reranker-8B' }}>Qwen3-Reranker-8B</option>
+                            <option value="BAAI/bge-reranker-v2-m3" {{ 'selected' if config.reranker.model == 'BAAI/bge-reranker-v2-m3' }}>BGE-Reranker-v2-M3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Top N Results</label>
+                        <input type="number" id="reranker-top_n" class="form-control"
+                               min="1" max="100" value="{{ config.reranker.top_n or '' }}"
+                               placeholder="None (return all)"
+                               oninput="markDirty()">
+                        <p class="form-hint">Leave empty to return all results</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Instruction</label>
+                        <textarea id="reranker-instruction" class="form-control" rows="6"
+                                  oninput="markDirty()">{{ config.reranker.instruction }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meta Info -->
+        <div class="meta-info">
+            <span><strong>Last Updated:</strong> {{ config.updated_at or 'Never' }}</span>
+            <span><strong>Updated By:</strong> {{ config.updated_by or 'System' }}</span>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let isDirty = false;
+
+        function markDirty() {
+            isDirty = true;
+        }
+
+        function syncSlider(baseId, value, fromInput = false) {
+            const slider = document.getElementById(baseId + '-slider');
+            const input = document.getElementById(baseId);
+
+            if (fromInput) {
+                if (slider) slider.value = value;
+            } else {
+                if (input) input.value = value;
+            }
+            markDirty();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast toast-${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function gatherConfig() {
+            return {
+                'vlm.model_id': document.getElementById('vlm-model_id').value,
+                'vlm.prompt_file': document.getElementById('vlm-prompt_file').value,
+                'vlm.temperature': parseFloat(document.getElementById('vlm-temperature').value),
+                'vlm.max_tokens': parseInt(document.getElementById('vlm-max_tokens').value),
+                'vlm.reasoning_effort': document.getElementById('vlm-reasoning_effort').value,
+                'search.stage1_top_k': parseInt(document.getElementById('search-stage1_top_k').value),
+                'search.bm25_weight': parseFloat(document.getElementById('search-bm25_weight').value),
+                'search.vector_weight': parseFloat(document.getElementById('search-vector_weight').value),
+                'search.rrf_k': parseInt(document.getElementById('search-rrf_k').value),
+                'search.rrf_weight': parseFloat(document.getElementById('search-rrf_weight').value),
+                'reranker.model': document.getElementById('reranker-model').value,
+                'reranker.top_n': document.getElementById('reranker-top_n').value ? parseInt(document.getElementById('reranker-top_n').value) : null,
+                'reranker.instruction': document.getElementById('reranker-instruction').value,
+            };
+        }
+
+        async function saveAllConfig() {
+            if (!isDirty) {
+                showToast('No changes to save', 'success');
+                return;
+            }
+
+            try {
+                const updates = gatherConfig();
+
+                const response = await fetch('/admin/api/config', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ updates })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Configuration saved successfully!', 'success');
+                    isDirty = false;
+                } else {
+                    showToast('Failed to save: ' + result.detail, 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function refreshConfig() {
+            try {
+                const response = await fetch('/admin/api/config?refresh=true');
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Configuration refreshed!', 'success');
+                    location.reload();
+                } else {
+                    showToast('Failed to refresh', 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function resetConfig() {
+            if (!confirm('Reset all settings to defaults? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/admin/api/config/reset', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Configuration reset to defaults!', 'success');
+                    location.reload();
+                } else {
+                    showToast('Failed to reset', 'error');
+                }
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function updatePromptPreview() {
+            const filename = document.getElementById('vlm-prompt_file').value;
+            const preview = document.getElementById('prompt-preview');
+
+            try {
+                const response = await fetch(`/admin/api/prompt/${filename}`);
+                const result = await response.json();
+
+                if (result.content) {
+                    preview.textContent = result.content.substring(0, 500) + '...';
+                    preview.style.display = 'block';
+                }
+            } catch (error) {
+                preview.style.display = 'none';
+            }
+        }
+
+        // Warn before leaving with unsaved changes
+        window.addEventListener('beforeunload', (e) => {
+            if (isDirty) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

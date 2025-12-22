@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .routers import health, analysis, retrieval, metadata, voice
 from .core import startup_optimizer
+from .admin import admin_router
 from .models.response_models import RootResponse
 from .services.analytics import init_analytics, get_analytics
 
@@ -155,6 +156,10 @@ app = FastAPI(
         {
             "name": "Metadata",
             "description": "メタデータ配信 - USDA食材の詳細情報（13,564件）。フロントエンド向け、gzip圧縮推奨（8.4MB→0.7MB）"
+        },
+        {
+            "name": "Admin",
+            "description": "管理パネル - API設定の動的変更（VLM、検索、Reranker）。Firestoreで永続化、TTLキャッシュ対応"
         }
     ]
 )
@@ -182,6 +187,7 @@ app.include_router(analysis.router)
 app.include_router(voice.router)  # Voice analysis router
 app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
 app.include_router(metadata.router, tags=["Metadata"])
+app.include_router(admin_router)  # Admin Panel（/admin）
 
 
 @app.get("/", response_model=RootResponse, tags=["Root"])
@@ -209,6 +215,7 @@ async def root():
             "analysis": "/api/v1/meal-analyses",
             "voice": "/api/v1/meal-analyses/voice",
             "retrieval": "/api/v1/retrieve",
+            "admin": "/admin",
         },
         "default_config": {
             "model": settings.DEFAULT_VLM_MODEL_ID,

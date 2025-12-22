@@ -17,6 +17,7 @@ from .vlm_service import VLMService
 from .query_extraction import QueryExtractionService
 from .food_search_service import USDAFoodSearchService
 from .nutrition_service import LocalUSDANutritionService, NutritionCalculator
+from ..admin import get_config_manager
 
 logger = logging.getLogger(__name__)
 
@@ -288,7 +289,11 @@ class MealAnalysisPipeline:
         Returns:
             API用にフォーマットされた分析結果
         """
-        # モデル設定の適用
+        # ConfigManagerから動的設定を取得
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+
+        # モデル設定の適用（オーバーライド > ConfigManager）
         vlm_kwargs = {}
         if model_config_override:
             if model_config_override.temperature is not None:
@@ -297,6 +302,11 @@ class MealAnalysisPipeline:
                 vlm_kwargs["vlm_max_tokens"] = model_config_override.max_tokens
             if model_config_override.reasoning_effort is not None:
                 vlm_kwargs["vlm_reasoning_effort"] = model_config_override.reasoning_effort
+        else:
+            # ConfigManagerからデフォルト値を適用
+            vlm_kwargs["vlm_temperature"] = config.vlm.temperature
+            vlm_kwargs["vlm_max_tokens"] = config.vlm.max_tokens
+            vlm_kwargs["vlm_reasoning_effort"] = config.vlm.reasoning_effort
 
         # 検索設定の適用
         search_kwargs = {}
@@ -319,6 +329,7 @@ class MealAnalysisPipeline:
                 search_kwargs["search_reranker_top_n"] = search_config_override.reranker_top_n
 
         # プロンプトのオーバーライド(一時的に変更)
+        # 優先順位: override.prompt_text > override.prompt_path > ConfigManager > 初期設定
         original_prompt = None
         if model_config_override and (model_config_override.prompt_text or model_config_override.prompt_path):
             original_prompt = self.vlm_service.prompt
@@ -330,16 +341,30 @@ class MealAnalysisPipeline:
                 settings = get_settings()
                 prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
                 self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
+        elif config.vlm.prompt_file:
+            # ConfigManagerからプロンプトファイルを取得
+            original_prompt = self.vlm_service.prompt
+            from ..config import get_settings
+            settings = get_settings()
+            prompt_full_path = settings.get_prompt_path(config.vlm.prompt_file)
+            self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
 
         # モデルIDのオーバーライド(一時的に変更)
+        # 優先順位: override.model_id > ConfigManager > 初期設定
         original_model_id = None
+        effective_model_id = None
         if model_config_override and model_config_override.model_id:
+            effective_model_id = model_config_override.model_id
+        elif config.vlm.model_id:
+            effective_model_id = config.vlm.model_id
+
+        if effective_model_id and effective_model_id != self.vlm_service.model_id:
             original_model_id = self.vlm_service.model_id
-            self.vlm_service.model_id = model_config_override.model_id
+            self.vlm_service.model_id = effective_model_id
             # プロバイダーも更新（VLMProviderFactoryを使用）
             from .providers import VLMProviderFactory
             self.vlm_service.provider = VLMProviderFactory.create_provider(
-                model_id=model_config_override.model_id
+                model_id=effective_model_id
             )
             # 後方互換性のため
             self.vlm_service.deepinfra_service = self.vlm_service.provider
@@ -520,15 +545,16 @@ class MealAnalysisPipeline:
                 carbs=result["total_nutrition"]["carbs_g"],
             )
 
-            # モデル情報
-            ai_model_used = model_config_override.model_id if model_config_override and model_config_override.model_id else self.vlm_service.model_id
+            # モデル情報（使用された実際の値を報告）
+            ai_model_used = self.vlm_service.model_id  # 一時的にオーバーライドされた値
             # プロンプト情報を取得
             if model_config_override and model_config_override.prompt_text:
                 prompt_file_used = "[Custom Prompt Text]"
             elif model_config_override and model_config_override.prompt_path:
                 prompt_file_used = model_config_override.prompt_path
             else:
-                prompt_file_used = "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+                # ConfigManagerからのプロンプトファイル名を使用
+                prompt_file_used = config.vlm.prompt_file
 
             # マッチ率計算
             total_queries = len(api_dishes)
@@ -616,15 +642,18 @@ class MealAnalysisPipeline:
         include_debug_info: bool = False
     ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を並列実行"""
-        # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
-        from ..config import get_settings
-        settings = get_settings()
+        # パラメータがNoneの場合はConfigManager（動的設定）から取得
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else self.stage1_top_k
-        effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
-        effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
-        effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
-        effective_rrf_weight = rrf_weight if rrf_weight is not None else settings.DEFAULT_RRF_WEIGHT
+        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else config.search.stage1_top_k
+        effective_bm25_weight = bm25_weight if bm25_weight is not None else config.search.bm25_weight
+        effective_vector_weight = vector_weight if vector_weight is not None else config.search.vector_weight
+        effective_rrf_k = rrf_k if rrf_k is not None else config.search.rrf_k
+        effective_rrf_weight = rrf_weight if rrf_weight is not None else config.search.rrf_weight
+        effective_reranker_model = reranker_model if reranker_model is not None else config.reranker.model
+        effective_reranker_instruction = reranker_instruction if reranker_instruction is not None else config.reranker.instruction
+        effective_reranker_top_n = reranker_top_n if reranker_top_n is not None else config.reranker.top_n
 
         # 非同期関数を直接並列実行
         tasks = []
@@ -638,9 +667,9 @@ class MealAnalysisPipeline:
                 vector_weight=effective_vector_weight,
                 rrf_k=effective_rrf_k,
                 rrf_weight=effective_rrf_weight,
-                reranker_model=reranker_model,
-                reranker_instruction=reranker_instruction,
-                reranker_top_n=reranker_top_n,
+                reranker_model=effective_reranker_model,
+                reranker_instruction=effective_reranker_instruction,
+                reranker_top_n=effective_reranker_top_n,
                 include_debug_info=include_debug_info
             )
             tasks.append(task)
@@ -687,15 +716,18 @@ class MealAnalysisPipeline:
         include_debug_info: bool = False
     ) -> List[Optional[Dict[str, Any]]]:
         """USDA検索を逐次実行"""
-        # パラメータがNoneの場合はインスタンス変数またはデフォルト値を使用
-        from ..config import get_settings
-        settings = get_settings()
+        # パラメータがNoneの場合はConfigManager（動的設定）から取得
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else self.stage1_top_k
-        effective_bm25_weight = bm25_weight if bm25_weight is not None else settings.DEFAULT_BM25_WEIGHT
-        effective_vector_weight = vector_weight if vector_weight is not None else settings.DEFAULT_VECTOR_WEIGHT
-        effective_rrf_k = rrf_k if rrf_k is not None else settings.DEFAULT_RRF_K
-        effective_rrf_weight = rrf_weight if rrf_weight is not None else settings.DEFAULT_RRF_WEIGHT
+        effective_stage1_top_k = stage1_top_k if stage1_top_k is not None else config.search.stage1_top_k
+        effective_bm25_weight = bm25_weight if bm25_weight is not None else config.search.bm25_weight
+        effective_vector_weight = vector_weight if vector_weight is not None else config.search.vector_weight
+        effective_rrf_k = rrf_k if rrf_k is not None else config.search.rrf_k
+        effective_rrf_weight = rrf_weight if rrf_weight is not None else config.search.rrf_weight
+        effective_reranker_model = reranker_model if reranker_model is not None else config.reranker.model
+        effective_reranker_instruction = reranker_instruction if reranker_instruction is not None else config.reranker.instruction
+        effective_reranker_top_n = reranker_top_n if reranker_top_n is not None else config.reranker.top_n
 
         results = []
         for query in queries:
@@ -708,9 +740,9 @@ class MealAnalysisPipeline:
                 vector_weight=effective_vector_weight,
                 rrf_k=effective_rrf_k,
                 rrf_weight=effective_rrf_weight,
-                reranker_model=reranker_model,
-                reranker_instruction=reranker_instruction,
-                reranker_top_n=reranker_top_n,
+                reranker_model=effective_reranker_model,
+                reranker_instruction=effective_reranker_instruction,
+                reranker_top_n=effective_reranker_top_n,
                 include_debug_info=include_debug_info
             )
             # 新しいレスポンス形式に対応 {"result": ..., "debug_info": ...}
