@@ -333,6 +333,63 @@
             max-height: 100px;
             overflow-y: auto;
         }
+
+        /* Environment Switcher */
+        .env-switcher {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-tertiary);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .env-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .env-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .env-btn.active {
+            color: white;
+        }
+
+        .env-btn.env-local.active {
+            background: #22c55e;
+        }
+
+        .env-btn.env-dev.active {
+            background: #f59e0b;
+        }
+
+        .env-btn.env-prod.active {
+            background: #ef4444;
+        }
+
+        .env-url {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .env-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body>
@@ -344,6 +401,22 @@
                 <p style="color: var(--text-secondary); margin-top: 4px;">Freeform USDA Meal Analysis API</p>
             </div>
             <div style="display: flex; align-items: center; gap: 16px;">
+                <!-- Environment Switcher -->
+                <div class="env-section">
+                    <div class="env-switcher">
+                        <button class="env-btn env-local active" onclick="switchEnvironment('local')" title="http://localhost:8006">
+                            🏠 Local
+                        </button>
+                        <button class="env-btn env-dev" onclick="switchEnvironment('dev')" title="Development Cloud Run">
+                            🔧 Dev
+                        </button>
+                        <button class="env-btn env-prod" onclick="switchEnvironment('prod')" title="Production Cloud Run">
+                            🚀 Prod
+                        </button>
+                    </div>
+                    <div id="env-url" class="env-url">localhost:8006</div>
+                </div>
+
                 <span class="header-badge {{ 'badge-firestore' if use_firestore else 'badge-memory' }}">
                     <span class="status-dot"></span>
                     {{ 'Firestore' if use_firestore else 'In-Memory' }}
@@ -541,7 +614,55 @@
     <div id="toast" class="toast"></div>
 
     <script>
+        // Environment Configuration
+        const ENVIRONMENTS = {
+            local: {
+                name: 'Local',
+                baseUrl: '',  // Empty = relative path (same origin)
+                displayUrl: 'localhost:8006'
+            },
+            dev: {
+                name: 'Development',
+                baseUrl: 'https://freeform-usda-meal-analysis-api-v4-dev-1077966746907.us-central1.run.app',
+                displayUrl: 'freeform-usda-meal-analysis-api-v4-dev-...run.app'
+            },
+            prod: {
+                name: 'Production',
+                baseUrl: 'https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app',
+                displayUrl: 'freeform-usda-meal-analysis-api-...run.app'
+            }
+        };
+
+        let currentEnv = 'local';
         let isDirty = false;
+
+        function getApiUrl(path) {
+            const env = ENVIRONMENTS[currentEnv];
+            return env.baseUrl + path;
+        }
+
+        function switchEnvironment(env) {
+            if (isDirty) {
+                if (!confirm('You have unsaved changes. Switch environment anyway?')) {
+                    return;
+                }
+            }
+
+            currentEnv = env;
+
+            // Update button states
+            document.querySelectorAll('.env-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.env-btn.env-${env}`).classList.add('active');
+
+            // Update URL display
+            document.getElementById('env-url').textContent = ENVIRONMENTS[env].displayUrl;
+
+            // Reload config from new environment
+            showToast(`Switched to ${ENVIRONMENTS[env].name}`, 'success');
+            refreshConfig();
+        }
 
         function markDirty() {
             isDirty = true;
@@ -596,7 +717,7 @@
             try {
                 const updates = gatherConfig();
 
-                const response = await fetch('/admin/api/config', {
+                const response = await fetch(getApiUrl('/admin/api/config'), {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ updates })
@@ -605,7 +726,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showToast('Configuration saved successfully!', 'success');
+                    showToast(`Configuration saved to ${ENVIRONMENTS[currentEnv].name}!`, 'success');
                     isDirty = false;
                 } else {
                     showToast('Failed to save: ' + result.detail, 'error');
@@ -617,35 +738,74 @@
 
         async function refreshConfig() {
             try {
-                const response = await fetch('/admin/api/config?refresh=true');
+                const response = await fetch(getApiUrl('/admin/api/config?refresh=true'));
                 const result = await response.json();
 
                 if (result.success) {
-                    showToast('Configuration refreshed!', 'success');
-                    location.reload();
+                    // Update form fields with new config
+                    updateFormFromConfig(result.config);
+                    showToast(`Configuration loaded from ${ENVIRONMENTS[currentEnv].name}!`, 'success');
+                    isDirty = false;
                 } else {
-                    showToast('Failed to refresh', 'error');
+                    showToast('Failed to refresh: ' + (result.detail || 'Unknown error'), 'error');
                 }
             } catch (error) {
-                showToast('Error: ' + error.message, 'error');
+                showToast('Error connecting to ' + ENVIRONMENTS[currentEnv].name + ': ' + error.message, 'error');
+            }
+        }
+
+        function updateFormFromConfig(config) {
+            // VLM settings
+            document.getElementById('vlm-model_id').value = config.vlm.model_id || '';
+            document.getElementById('vlm-prompt_file').value = config.vlm.prompt_file || '';
+            document.getElementById('vlm-temperature').value = config.vlm.temperature || 0.6;
+            document.getElementById('vlm-temperature-slider').value = config.vlm.temperature || 0.6;
+            document.getElementById('vlm-max_tokens').value = config.vlm.max_tokens || 16384;
+            document.getElementById('vlm-reasoning_effort').value = config.vlm.reasoning_effort || 'medium';
+
+            // Search settings
+            document.getElementById('search-stage1_top_k').value = config.search.stage1_top_k || 50;
+            document.getElementById('search-stage1_top_k-slider').value = config.search.stage1_top_k || 50;
+            document.getElementById('search-bm25_weight').value = config.search.bm25_weight || 0.4;
+            document.getElementById('search-bm25_weight-slider').value = config.search.bm25_weight || 0.4;
+            document.getElementById('search-vector_weight').value = config.search.vector_weight || 0.6;
+            document.getElementById('search-vector_weight-slider').value = config.search.vector_weight || 0.6;
+            document.getElementById('search-rrf_k').value = config.search.rrf_k || 60;
+            document.getElementById('search-rrf_k-slider').value = config.search.rrf_k || 60;
+            document.getElementById('search-rrf_weight').value = config.search.rrf_weight || 0.5;
+            document.getElementById('search-rrf_weight-slider').value = config.search.rrf_weight || 0.5;
+
+            // Reranker settings
+            document.getElementById('reranker-model').value = config.reranker.model || 'Qwen/Qwen3-Reranker-8B';
+            document.getElementById('reranker-top_n').value = config.reranker.top_n || '';
+            document.getElementById('reranker-instruction').value = config.reranker.instruction || '';
+
+            // Update meta info
+            const metaInfo = document.querySelector('.meta-info');
+            if (metaInfo) {
+                metaInfo.innerHTML = `
+                    <span><strong>Last Updated:</strong> ${config.updated_at || 'Never'}</span>
+                    <span><strong>Updated By:</strong> ${config.updated_by || 'System'}</span>
+                `;
             }
         }
 
         async function resetConfig() {
-            if (!confirm('Reset all settings to defaults? This cannot be undone.')) {
+            if (!confirm(`Reset all settings to defaults on ${ENVIRONMENTS[currentEnv].name}? This cannot be undone.`)) {
                 return;
             }
 
             try {
-                const response = await fetch('/admin/api/config/reset', {
+                const response = await fetch(getApiUrl('/admin/api/config/reset'), {
                     method: 'POST'
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
+                    updateFormFromConfig(result.config);
                     showToast('Configuration reset to defaults!', 'success');
-                    location.reload();
+                    isDirty = false;
                 } else {
                     showToast('Failed to reset', 'error');
                 }
@@ -659,7 +819,7 @@
             const preview = document.getElementById('prompt-preview');
 
             try {
-                const response = await fetch(`/admin/api/prompt/${filename}`);
+                const response = await fetch(getApiUrl(`/admin/api/prompt/${filename}`));
                 const result = await response.json();
 
                 if (result.content) {
