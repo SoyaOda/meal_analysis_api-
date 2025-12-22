@@ -218,10 +218,76 @@ class DeepInfraEmbeddingProvider(EmbeddingProvider):
             raise
 
 
+class NovitaEmbeddingProvider(EmbeddingProvider):
+    """
+    Novita AI API経由のQwen3-Embedding-8B
+
+    特徴:
+    - 国際アクセス可能（日本からも利用可）
+    - OpenAI互換API
+    - $0.056/1M tokens（DeepInfraの約90倍安い）
+    - Qwen3-Embedding-8B: MTEB多言語 #1
+    """
+
+    def __init__(self, model_id: str = "qwen/qwen3-embedding-8b"):
+        self.api_key = os.getenv("NOVITA_API_KEY")
+        if not self.api_key:
+            raise ValueError("NOVITA_API_KEY environment variable is required")
+
+        self.model_id = model_id
+        self.base_url = "https://api.novita.ai/openai/v1"
+
+        # OpenAI互換クライアント
+        from openai import AsyncOpenAI
+        import httpx
+        self.client = AsyncOpenAI(
+            api_key=self.api_key,
+            base_url=self.base_url,
+            timeout=httpx.Timeout(
+                connect=10.0,
+                read=60.0,
+                write=30.0,
+                pool=10.0,
+            ),
+        )
+
+        logger.info(f"NovitaEmbeddingProvider initialized: {model_id}")
+
+    async def generate_embeddings(
+        self,
+        texts: List[str],
+        instruction: Optional[str] = None
+    ) -> List[List[float]]:
+        """Novita AI API経由でEmbedding生成"""
+        if instruction:
+            formatted_texts = [
+                f"Instruct: {instruction}\nQuery: {text}"
+                for text in texts
+            ]
+        else:
+            formatted_texts = texts
+
+        try:
+            response = await self.client.embeddings.create(
+                input=formatted_texts,
+                model=self.model_id,
+                encoding_format="float"
+            )
+
+            embeddings = [item.embedding for item in response.data]
+            logger.info(f"✅ Generated {len(embeddings)} embeddings via Novita AI")
+            return embeddings
+
+        except Exception as e:
+            logger.error(f"Novita AI embedding failed: {e}")
+            raise
+
+
 class EmbeddingProviderFactory:
     """Embeddingプロバイダーのファクトリークラス"""
 
     _providers = {
+        "novita": NovitaEmbeddingProvider,
         "siliconflow": SiliconFlowEmbeddingProvider,
         "jina": JinaEmbeddingProvider,
         "deepinfra": DeepInfraEmbeddingProvider,

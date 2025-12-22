@@ -239,10 +239,83 @@ class DeepInfraRerankerProvider(RerankerProvider):
             raise
 
 
+class NovitaRerankerProvider(RerankerProvider):
+    """
+    Novita AI API経由のQwen3-Reranker-8B
+
+    特徴:
+    - 国際アクセス可能（日本からも利用可）
+    - OpenAI互換API
+    - $0.04/1M tokens（DeepInfraより大幅に安い）
+    - Qwen3-Reranker-8B: MTEB-R 69.02
+    """
+
+    def __init__(self, model_id: str = "qwen/qwen3-reranker-8b"):
+        self.api_key = os.getenv("NOVITA_API_KEY")
+        if not self.api_key:
+            raise ValueError("NOVITA_API_KEY environment variable is required")
+
+        self.model_id = model_id
+        self.base_url = "https://api.novita.ai/openai/v1"
+
+        from ..core.http_client import get_async_client
+        self.client = get_async_client()
+
+        logger.info(f"NovitaRerankerProvider initialized: {model_id}")
+
+    async def rerank(
+        self,
+        query: str,
+        documents: List[str],
+        top_n: Optional[int] = None,
+        instruction: Optional[str] = None
+    ) -> Tuple[int, List[float]]:
+        """Novita AI API経由でリランキング"""
+        url = f"{self.base_url}/rerank"
+
+        payload = {
+            "model": self.model_id,
+            "query": query,
+            "documents": documents,
+        }
+        if top_n is not None:
+            payload["top_n"] = top_n
+
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+
+        try:
+            response = await self.client.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+
+            # OpenAI互換レスポンス形式: {"results": [{"index": 0, "relevance_score": 0.95}, ...]}
+            results = result.get("results", [])
+
+            # スコアリストを元のインデックス順に再構築
+            scores = [0.0] * len(documents)
+            for item in results:
+                idx = item.get("index", 0)
+                score = item.get("relevance_score", 0.0)
+                if idx < len(scores):
+                    scores[idx] = score
+
+            best_idx = scores.index(max(scores)) if scores else 0
+            logger.info(f"✅ Reranked {len(documents)} documents via Novita AI")
+            return best_idx, scores
+
+        except Exception as e:
+            logger.error(f"Novita AI rerank failed: {e}")
+            raise
+
+
 class RerankerProviderFactory:
     """Rerankerプロバイダーのファクトリークラス"""
 
     _providers = {
+        "novita": NovitaRerankerProvider,
         "siliconflow": SiliconFlowRerankerProvider,
         "jina": JinaRerankerProvider,
         "deepinfra": DeepInfraRerankerProvider,
