@@ -926,3 +926,186 @@ class HybridSearchEngine:
             return {"results": final_results, "debug_info": debug_info}
 
         return {"results": final_results, "debug_info": None}
+
+    def get_hybrid_candidates_sync(
+        self,
+        query: str,
+        query_embedding: List[float],
+        faiss_index,
+        items: List[Dict],
+        stage1_top_k: int = None,
+        bm25_weight: float = None,
+        vector_weight: float = None,
+        rrf_k: int = None,
+        rrf_weight: float = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        BM25 + FAISS + RRF融合のみ実行（Rerankerなし、同期版）
+
+        Rerankerを後から一括並列実行するために、
+        候補リストのみを返す軽量メソッド。
+
+        Returns:
+            List of hybrid candidates (without reranker scores)
+        """
+        import time
+
+        # 設定を取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        if stage1_top_k is None:
+            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+        if bm25_weight is None:
+            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+        if vector_weight is None:
+            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+        if rrf_k is None:
+            rrf_k = settings.DEFAULT_RRF_K
+        if rrf_weight is None:
+            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+
+        # 短いクエリ（3文字未満）の場合はBM25をスキップ
+        short_query_threshold = 3
+        skip_bm25 = len(query.strip()) < short_query_threshold
+
+        # ===== Stage 1: BM25 キーワード検索 =====
+        if skip_bm25:
+            bm25_indices = []
+            bm25_scores = []
+        else:
+            query_tokens = bm25s.tokenize(
+                [query],
+                stopwords="en",
+                stemmer=self.stemmer
+            )
+            bm25_results_raw, bm25_scores_raw = self.bm25_model.retrieve(
+                query_tokens,
+                k=stage1_top_k
+            )
+            bm25_indices = bm25_results_raw[0].tolist()
+            bm25_scores = bm25_scores_raw[0].tolist()
+
+        # ===== Stage 2: FAISS Vector 検索 =====
+        query_vector_np = np.array([query_embedding], dtype='float32')
+        distances, indices = faiss_index.search(query_vector_np, stage1_top_k)
+        vector_indices = indices[0].tolist()
+        vector_scores = (1.0 / (1.0 + distances[0])).tolist()
+
+        # ===== Stage 3: RRF (Reciprocal Rank Fusion) =====
+        bm25_ranks = {idx: rank + 1 for rank, idx in enumerate(bm25_indices)}
+        vector_ranks = {idx: rank + 1 for rank, idx in enumerate(vector_indices)}
+        rrf_scores = {}
+        all_indices = set(bm25_indices) | set(vector_indices)
+
+        for idx in all_indices:
+            bm25_rank = bm25_ranks.get(idx, float('inf'))
+            vector_rank = vector_ranks.get(idx, float('inf'))
+            bm25_rrf = 1.0 / (rrf_k + bm25_rank) if bm25_rank != float('inf') else 0.0
+            vector_rrf = 1.0 / (rrf_k + vector_rank) if vector_rank != float('inf') else 0.0
+            rrf_scores[idx] = bm25_rrf + vector_rrf
+
+        # ===== Stage 4: Weighted Fusion =====
+        bm25_score_dict = {idx: score for idx, score in zip(bm25_indices, bm25_scores)}
+        vector_score_dict = {idx: score for idx, score in zip(vector_indices, vector_scores)}
+
+        max_bm25 = max(bm25_scores) if bm25_scores else 1.0
+        if max_bm25 == 0:
+            max_bm25 = 1.0
+        max_vector = max(vector_scores) if vector_scores else 1.0
+        if max_vector == 0:
+            max_vector = 1.0
+
+        hybrid_scores = {}
+        for idx in all_indices:
+            bm25_normalized = bm25_score_dict.get(idx, 0) / max_bm25
+            vector_normalized = vector_score_dict.get(idx, 0) / max_vector
+            rrf_score = rrf_scores[idx]
+            weighted_score = (bm25_weight * bm25_normalized) + (vector_weight * vector_normalized)
+            hybrid_scores[idx] = (rrf_weight * rrf_score) + weighted_score
+
+        sorted_candidates = sorted(hybrid_scores.items(), key=lambda x: x[1], reverse=True)
+        hybrid_candidates = [
+            {
+                "fdc_id": items[idx]["fdc_id"],
+                "description": items[idx]["description"],
+                "hybrid_score": score,
+                "bm25_score": bm25_score_dict.get(idx, 0),
+                "vector_score": vector_score_dict.get(idx, 0),
+                "rrf_score": rrf_scores[idx]
+            }
+            for idx, score in sorted_candidates[:stage1_top_k]
+        ]
+
+        return hybrid_candidates
+
+    async def apply_reranker_batch(
+        self,
+        queries_and_candidates: List[Dict[str, Any]],
+        reranker_service,
+        reranker_instruction: str = None,
+        top_k: int = 1
+    ) -> List[Dict[str, Any]]:
+        """
+        複数クエリのRerankerを一括並列実行
+
+        Args:
+            queries_and_candidates: [{"query": str, "candidates": List[Dict]}, ...]
+            reranker_service: Rerankerサービス
+            reranker_instruction: Reranker用instruction
+            top_k: 返却する結果数
+
+        Returns:
+            List of best results for each query
+        """
+        import time as time_module
+
+        from ..config.settings import get_settings
+        settings = get_settings()
+
+        if reranker_instruction is None:
+            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+
+        batch_start_time = time_module.time()
+
+        async def rerank_single(idx: int, query: str, candidates: List[Dict]) -> Dict[str, Any]:
+            """単一クエリのReranker実行"""
+            start_time = time_module.time()
+            logger.info(f"🚀 Reranker[{idx}] STARTED: query='{query[:30]}...'")
+
+            if not candidates:
+                return None
+
+            documents = [c["description"] for c in candidates]
+            best_idx, reranked_scores = await reranker_service.rerank(
+                query=query,
+                documents=documents,
+                instruction=reranker_instruction
+            )
+
+            elapsed = time_module.time() - start_time
+            logger.info(f"✅ Reranker[{idx}] COMPLETED in {elapsed:.2f}s")
+
+            for i, candidate in enumerate(candidates):
+                candidate["rerank_score"] = reranked_scores[i]
+                candidate["original_rank"] = i + 1
+
+            reranked = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
+            return reranked[0] if reranked else None
+
+        # 全Rerankerを並列実行
+        logger.info(f"🔄 Parallel reranker execution for {len(queries_and_candidates)} queries...")
+
+        # タスクを作成
+        tasks = [
+            rerank_single(i, item["query"], item["candidates"])
+            for i, item in enumerate(queries_and_candidates)
+        ]
+
+        # asyncio.gatherで並列実行
+        results = await asyncio.gather(*tasks)
+
+        total_elapsed = time_module.time() - batch_start_time
+        logger.info(f"✅ Parallel reranker completed in {total_elapsed:.2f}s for {len(queries_and_candidates)} queries")
+
+        return results

@@ -408,3 +408,82 @@ class USDAFoodSearchService:
 
         logger.info(f"✅ Batch embedding generated for {len(queries)} queries")
         return embeddings
+
+    def get_candidates_only_sync(
+        self,
+        query: str,
+        query_embedding: List[float],
+        stage1_top_k: Optional[int] = None,
+        bm25_weight: float = 0.4,
+        vector_weight: float = 0.6,
+        rrf_k: int = 60,
+        rrf_weight: float = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        候補取得のみ（Rerankerなし、同期版）
+
+        BM25 + FAISS + RRF融合まで実行し、候補リストを返す。
+        Rerankerは後から一括並列実行するため、このメソッドでは実行しない。
+
+        Args:
+            query: 検索クエリ
+            query_embedding: 事前計算済みembedding
+            stage1_top_k: 取得する候補数
+
+        Returns:
+            List[Dict]: 候補リスト（rerank_scoreなし）
+        """
+        if not self.hybrid_engine:
+            raise ValueError("Hybrid engine is required for get_candidates_only_sync")
+
+        if stage1_top_k is None:
+            stage1_top_k = self.stage1_top_k
+
+        # HybridSearchEngineの同期メソッドを呼び出し
+        candidates = self.hybrid_engine.get_hybrid_candidates_sync(
+            query=query,
+            query_embedding=query_embedding,
+            faiss_index=self.searcher.index_full,
+            items=self.searcher.items,
+            stage1_top_k=stage1_top_k,
+            bm25_weight=bm25_weight,
+            vector_weight=vector_weight,
+            rrf_k=rrf_k,
+            rrf_weight=rrf_weight,
+        )
+
+        return candidates
+
+    async def batch_rerank_candidates(
+        self,
+        queries_and_candidates: List[Dict[str, Any]],
+        reranker_instruction: Optional[str] = None,
+        top_k: int = 1
+    ) -> List[Optional[Dict[str, Any]]]:
+        """
+        複数クエリの候補をRerankerで一括並列処理
+
+        Args:
+            queries_and_candidates: [{"query": str, "candidates": List[Dict]}, ...]
+            reranker_instruction: Reranker用instruction
+            top_k: 各クエリから返す結果数
+
+        Returns:
+            List[Dict]: 各クエリのベストマッチ結果
+        """
+        # Lazy Loading対応
+        if self.use_lazy_loading and self.searcher is None:
+            await self._ensure_searcher_loaded()
+
+        if not self.hybrid_engine:
+            raise ValueError("Hybrid engine is required for batch_rerank_candidates")
+
+        # HybridSearchEngineの並列Rerankerメソッドを呼び出し
+        results = await self.hybrid_engine.apply_reranker_batch(
+            queries_and_candidates=queries_and_candidates,
+            reranker_service=self.searcher.reranker_service,
+            reranker_instruction=reranker_instruction,
+            top_k=top_k
+        )
+
+        return results
