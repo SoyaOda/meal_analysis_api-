@@ -163,8 +163,10 @@ class ConfigManager:
         if self.use_firestore:
             try:
                 from google.cloud import firestore
-                self._firestore_client = firestore.Client()
-                logger.info("ConfigManager initialized with Firestore backend")
+                # 明示的にプロジェクトを指定（ローカル環境でも正しいプロジェクトに接続）
+                project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+                self._firestore_client = firestore.Client(project=project_id)
+                logger.info(f"ConfigManager initialized with Firestore backend (project: {project_id})")
             except Exception as e:
                 logger.warning(f"Firestore initialization failed, falling back to in-memory: {e}")
                 self.use_firestore = False
