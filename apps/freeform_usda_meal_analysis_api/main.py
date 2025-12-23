@@ -13,7 +13,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
 from .routers import health, analysis, retrieval, metadata, voice
-from .core import startup_optimizer
 from .admin import admin_router
 from .models.response_models import RootResponse
 from .services.analytics import init_analytics, get_analytics

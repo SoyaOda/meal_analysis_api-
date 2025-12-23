@@ -64,7 +64,6 @@ def extract_nutrition(food_nutrients: List[Dict]) -> Dict[str, float]:
 
     # カロリーの優先順位: 1008 > 2047 > 2048
     # (1008: Energy kcal, 2047: Atwater General, 2048: Atwater Specific)
-    CALORIE_IDS_PRIORITY = [1008, 2047, 2048]
 
     for food_nutrient in food_nutrients:
         nutrient = food_nutrient.get('nutrient', {})

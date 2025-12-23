@@ -94,7 +94,7 @@ class AsyncMealAnalyzer:
             }
 
             # タスクをキューに送信
-            response = await self.tasks_client.create_task(
+            await self.tasks_client.create_task(
                 request={
                     "parent": self.parent,
                     "task": task

@@ -948,7 +948,6 @@ class HybridSearchEngine:
         Returns:
             List of hybrid candidates (without reranker scores)
         """
-        import time
 
         # 設定を取得
         from ..config.settings import get_settings

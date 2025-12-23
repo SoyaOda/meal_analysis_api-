@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Query
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
@@ -16,9 +16,6 @@ from .config_manager import (
     ConfigManager,
     get_config_manager,
     APIConfig,
-    VLMConfig,
-    SearchConfig,
-    RerankerConfig,
 )
 
 logger = logging.getLogger(__name__)

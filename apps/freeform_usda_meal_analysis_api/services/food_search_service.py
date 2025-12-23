@@ -6,10 +6,7 @@ USDA Food Search Service
 FAISS vector searchを使用してUSDA食材を検索する。
 """
 
-import json
 import logging
-import time
-import traceback
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Union
 

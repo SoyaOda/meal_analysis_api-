@@ -7,7 +7,7 @@ USDA Metadata API Router
 
 from fastapi import APIRouter, HTTPException, Query, Response
 from fastapi.responses import FileResponse
-from typing import Optional, List, Dict, Any
+from typing import Optional
 import logging
 import json
 import gzip
@@ -18,7 +18,6 @@ from ..models.response_models import (
     MetadataSearchResponse,
     MetadataInfoResponse,
     MetadataItem,
-    NormalizedUnit,
 )
 from ..services.portions_normalizer import normalize_portions_for_food
 

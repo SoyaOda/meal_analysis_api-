@@ -6,11 +6,10 @@ FAISS検索エンドポイント（fastモードとaccurateモード）
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from typing import Optional, List, Dict, Any, Tuple
+from typing import Optional, Dict, Any, Tuple
 import logging
 import time
 import hashlib
-from datetime import datetime
 from collections import OrderedDict
 from threading import Lock
 
@@ -159,7 +158,6 @@ async def retrieve_foods(
 
         # 短いクエリの最適化: 3文字未満のクエリではBM25スコアが0になりやすいため
         # hybrid/hybrid_rerankerモードの場合はfast（FAISS only）に自動切り替え
-        original_mode = mode
         query_length = len(q.strip())
         if query_length < 3 and mode in ["hybrid", "hybrid_reranker"]:
             logger.info(f"🔄 Short query optimization: switching from '{mode}' to 'fast' for query='{q}' (length={query_length})")

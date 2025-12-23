@@ -3,13 +3,10 @@ Startup optimization for Cloud Run deployment.
 インデックスの遅延ロードとキャッシュ管理を実装
 """
 
-import os
 import time
 import logging
-from typing import Optional, Tuple
 from functools import lru_cache
 import asyncio
-import pickle
 
 logger = logging.getLogger(__name__)
 
@@ -95,8 +92,6 @@ class StartupOptimizer:
         logger.info("Preloading critical resources...")
 
         # 必要最小限のインポート
-        import numpy as np
-        import faiss
 
         # ヘルスチェック用の軽量データのみ準備
         self._health_check_ready = True

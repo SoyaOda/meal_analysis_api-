@@ -11,7 +11,7 @@ import json
 import logging
 import asyncio
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 import faiss
 import numpy as np
 

@@ -1,7 +1,6 @@
 """
 Health check router for Cloud Run deployment
 """
-import os
 from fastapi import APIRouter, Response, status as http_status
 from ..models.response_models import HealthCheckResponse
 from ..config import get_settings

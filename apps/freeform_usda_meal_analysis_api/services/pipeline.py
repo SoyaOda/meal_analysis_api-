@@ -9,9 +9,7 @@ VLM画像解析 → クエリ抽出 → USDA検索 → 栄養素計算 の統合
 import logging
 import time
 from typing import Dict, List, Any, Optional
-from concurrent.futures import ThreadPoolExecutor
 import asyncio
-from fastapi import HTTPException
 
 from .vlm_service import VLMService
 from .query_extraction import QueryExtractionService

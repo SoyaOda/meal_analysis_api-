@@ -6,11 +6,9 @@ Startup Data Loader for Cloud Run
 Cloud Storageから起動時にFAISSデータをダウンロードする
 """
 
-import os
 import logging
 import asyncio
 from pathlib import Path
-from typing import List
 from google.cloud import storage
 
 logger = logging.getLogger(__name__)

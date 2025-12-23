@@ -180,7 +180,7 @@ class DeepInfraService:
             # JSONの妥当性を検証（JSONクリーニング処理を追加）
             try:
                 # まず元のJSONをパース試行
-                parsed_json = json.loads(raw_json_content)
+                json.loads(raw_json_content)
             except json.JSONDecodeError as e:
                 logger.warning(f"Initial JSON parsing failed: {e}")
                 
@@ -214,7 +214,7 @@ class DeepInfraService:
 
                 # 4. 再パース試行
                 try:
-                    parsed_json = json.loads(cleaned_content)
+                    json.loads(cleaned_content)
                     raw_json_content = cleaned_content  # クリーニング成功
                     logger.info("JSON cleaning successful")
                 except json.JSONDecodeError as e2:

@@ -8,7 +8,7 @@ from typing import Optional
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 
-from ..models.request_models import ImageAnalysisRequest, ModelConfig, SearchConfig
+from ..models.request_models import ModelConfig, SearchConfig
 from ..models.response_models import AnalysisResponse, ErrorResponse, EndpointInfoResponse
 from ..services.pipeline import MealAnalysisPipeline
 from ..config import get_settings
@@ -185,7 +185,7 @@ async def analyze_meal_from_image(
 
         # エラーの詳細情報を取得（デバッグ用）
         import traceback
-        error_detail = traceback.format_exc()
+        traceback.format_exc()
 
         return JSONResponse(
             status_code=500,
