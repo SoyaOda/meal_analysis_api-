@@ -160,3 +160,32 @@ def reset_all_breakers() -> None:
         if breaker is not None:
             breaker.close()
             logger.info(f"🔌 Circuit Breaker '{name}' reset to CLOSED")
+
+
+def with_circuit_breaker(breaker):
+    """
+    Circuit Breaker を条件付きで適用するデコレータファクトリ
+
+    aiobreaker がインストールされていない場合は、元の関数をそのまま返す。
+
+    使用例:
+        @with_circuit_breaker(vlm_breaker)
+        async def call_api(...):
+            ...
+    """
+    def decorator(func):
+        if breaker is None:
+            # Circuit Breaker が無効な場合は元の関数をそのまま返す
+            return func
+
+        # Circuit Breaker でラップ
+        async def wrapper(*args, **kwargs):
+            async with breaker:
+                return await func(*args, **kwargs)
+
+        # メタデータを保持
+        wrapper.__name__ = func.__name__
+        wrapper.__doc__ = func.__doc__
+        return wrapper
+
+    return decorator

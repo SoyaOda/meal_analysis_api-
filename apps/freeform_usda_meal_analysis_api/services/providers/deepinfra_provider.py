@@ -13,7 +13,7 @@ from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 from .base_provider import BaseVLMProvider
 from ...config import get_settings
 from ...core.retry import llm_retry
-from ...core.circuit_breaker import vlm_breaker, AIOBREAKER_AVAILABLE
+from ...core.circuit_breaker import vlm_breaker, with_circuit_breaker, AIOBREAKER_AVAILABLE
 
 logger = logging.getLogger(__name__)
 
@@ -56,13 +56,14 @@ class DeepInfraProvider(BaseVLMProvider):
         logger.info(f"DeepInfraProvider initialized for model: {self.model_id}")
 
     @llm_retry
+    @with_circuit_breaker(vlm_breaker)
     async def _call_chat_api(self, messages: list, max_tokens: int, temperature: float, seed: int):
         """
-        Chat Completions API呼び出し（リトライ付き）
+        Chat Completions API呼び出し（リトライ + Circuit Breaker付き）
 
-        tenacityによる自動リトライ:
-        - RateLimitError, APIConnectionError, タイムアウトで自動リトライ
-        - Exponential backoff with jitter
+        耐障害性:
+        - tenacity: RateLimitError, APIConnectionError, タイムアウトで自動リトライ
+        - Circuit Breaker: 連続5回失敗でOPEN状態に遷移、60秒後に再試行
         """
         return await self.client.chat.completions.create(
             model=self.model_id,

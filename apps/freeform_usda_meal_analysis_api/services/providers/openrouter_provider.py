@@ -6,13 +6,14 @@ import logging
 import json
 import hashlib
 import re
-import asyncio
 from typing import Dict, Any, Tuple, Union, Optional
 
-from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
+from openai import AsyncOpenAI
 
 from .base_provider import BaseVLMProvider
 from ...config import get_settings
+from ...core.retry import llm_retry
+from ...core.circuit_breaker import vlm_breaker, with_circuit_breaker
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,36 @@ class OpenRouterProvider(BaseVLMProvider):
             timeout=120.0,
         )
         logger.info(f"OpenRouterProvider initialized for model: {self.model_id}")
+
+    @llm_retry
+    @with_circuit_breaker(vlm_breaker)
+    async def _call_chat_api(
+        self,
+        messages: list,
+        max_tokens: int,
+        temperature: float,
+        seed: Optional[int] = None,
+        extra_body: Optional[dict] = None
+    ):
+        """
+        Chat Completions API呼び出し（リトライ + Circuit Breaker付き）
+
+        耐障害性:
+        - tenacity: タイムアウト、接続エラー、RateLimitで自動リトライ
+        - Circuit Breaker: 連続5回失敗でOPEN状態に遷移、60秒後に再試行
+        """
+        params = {
+            "model": self.model_id,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+        }
+        if seed is not None:
+            params["seed"] = seed
+        if extra_body is not None:
+            params["extra_body"] = extra_body
+
+        return await self.client.chat.completions.create(**params)
 
     async def analyze_image(
         self,
@@ -152,84 +183,19 @@ class OpenRouterProvider(BaseVLMProvider):
                 }
             ]
 
-            # リトライメカニズム実装（OpenRouter推奨）
-            max_retries = 3
+            # API呼び出し（tenacity + Circuit Breaker でリトライ）
+            response = await self._call_chat_api(
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                seed=seed,
+                extra_body=extra_body
+            )
 
-            for attempt in range(max_retries):
-                try:
-                    logger.info(f"🔄 API call attempt {attempt + 1}/{max_retries}")
-
-                    # API呼び出し（OpenAI互換）
-                    # extra_body にはusageとreasoning設定が含まれる
-                    response = await self.client.chat.completions.create(
-                        model=self.model_id,
-                        messages=messages,
-                        max_tokens=max_tokens,
-                        temperature=temperature,
-                        seed=seed,
-                        extra_body=extra_body
-                    )
-
-                    # 応答が空でないかチェック
-                    if not response.choices or not response.choices[0].message.content:
-                        error_msg = f"Empty or invalid API response (attempt {attempt + 1}/{max_retries})"
-                        logger.warning(f"⚠️  {error_msg}")
-                        logger.warning(f"Response object: {response}")
-
-                        # 最後のリトライでない場合は指数バックオフで待機
-                        if attempt < max_retries - 1:
-                            backoff_time = 2 ** attempt  # 1秒、2秒、4秒
-                            logger.info(f"⏱️  Waiting {backoff_time}s before retry...")
-                            await asyncio.sleep(backoff_time)
-                            continue
-                        else:
-                            # 最後のリトライでも失敗した場合
-                            raise ValueError(f"[OpenRouter Provider] Empty or invalid API response after {max_retries} attempts. Response: {response}")
-
-                    # 成功した場合はループを抜ける
-                    logger.info(f"✅ API call successful on attempt {attempt + 1}")
-                    break
-
-                except (RateLimitError, APIConnectionError) as e:
-                    logger.warning(f"⚠️  Retriable error on attempt {attempt + 1}/{max_retries}: {type(e).__name__}: {e}")
-
-                    # 最後のリトライでない場合は指数バックオフで待機
-                    if attempt < max_retries - 1:
-                        backoff_time = 2 ** attempt  # 1秒、2秒、4秒
-                        logger.info(f"⏱️  Waiting {backoff_time}s before retry...")
-                        await asyncio.sleep(backoff_time)
-                        continue
-                    else:
-                        # 最後のリトライでも失敗した場合
-                        logger.error(f"❌ All {max_retries} retry attempts failed with retriable errors")
-                        raise Exception(f"APIとの通信に一時的な問題が発生しました（{max_retries}回リトライ後）: {e}") from e
-
-                except APIError as e:
-                    # 502エラーなど、リトライ可能なAPIエラーをチェック
-                    error_str = str(e)
-                    is_retryable = (
-                        "502" in error_str or
-                        "Error processing stream" in error_str or
-                        hasattr(e, 'status_code') and e.status_code in [502, 503, 504]
-                    )
-
-                    if is_retryable:
-                        logger.warning(f"⚠️  Retriable API error on attempt {attempt + 1}/{max_retries}: {e}")
-
-                        # 最後のリトライでない場合は指数バックオフで待機
-                        if attempt < max_retries - 1:
-                            backoff_time = 2 ** attempt  # 1秒、2秒、4秒
-                            logger.info(f"⏱️  Waiting {backoff_time}s before retry...")
-                            await asyncio.sleep(backoff_time)
-                            continue
-                        else:
-                            # 最後のリトライでも失敗した場合
-                            logger.error(f"❌ All {max_retries} retry attempts failed with retriable API errors")
-                            raise Exception(f"APIとの通信に一時的な問題が発生しました（{max_retries}回リトライ後）: {e}") from e
-                    else:
-                        # リトライ不可能なエラーの場合はすぐに例外を発生
-                        logger.error(f"❌ Non-retriable API error occurred: {e}", exc_info=True)
-                        raise Exception(f"APIエラーが発生しました: {e}") from e
+            # 応答が空でないかチェック
+            if not response.choices or not response.choices[0].message.content:
+                logger.error("❌ API response is empty or invalid.")
+                raise ValueError("[OpenRouter Provider] Empty or invalid API response")
 
             # 応答内容を取得
             raw_json_content = response.choices[0].message.content.strip()
@@ -432,19 +398,13 @@ class OpenRouterProvider(BaseVLMProvider):
                 }
             ]
 
-            # リクエストパラメータ
-            request_params = {
-                "model": self.model_id,
-                "messages": messages,
-                "max_tokens": max_tokens,
-                "temperature": temperature,
-            }
-
-            if seed is not None:
-                request_params["seed"] = seed
-
-            # API呼び出し
-            response = await self.client.chat.completions.create(**request_params)
+            # API呼び出し（tenacity + Circuit Breaker でリトライ）
+            response = await self._call_chat_api(
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                seed=seed
+            )
 
             # 応答が空でないかチェック
             if not response.choices or not response.choices[0].message.content:

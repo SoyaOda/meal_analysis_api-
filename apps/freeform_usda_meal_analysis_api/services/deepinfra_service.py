@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 from ..config import get_settings
 from ..core.retry import llm_retry, embedding_retry, reranker_retry
 from ..core.embedding_cache import get_embedding_cache
+from ..core.circuit_breaker import embedding_breaker, reranker_breaker, with_circuit_breaker
 
 class DeepInfraService:
     """
@@ -259,17 +260,18 @@ class DeepInfraService:
             raise 
 
     @embedding_retry
+    @with_circuit_breaker(embedding_breaker)
     async def _call_embeddings_api(
         self,
         texts: List[str],
         model: str
     ) -> List[List[float]]:
         """
-        Embedding API呼び出し（リトライ付き）
+        Embedding API呼び出し（リトライ + Circuit Breaker付き）
 
-        tenacityによる自動リトライ:
-        - 最大3回リトライ
-        - Exponential backoff (0.5秒〜10秒)
+        耐障害性:
+        - tenacity: 最大3回リトライ、Exponential backoff (0.5秒〜10秒)
+        - Circuit Breaker: 連続5回失敗でOPEN状態に遷移、30秒後に再試行
         """
         response = await self.client.embeddings.create(
             input=texts,
@@ -353,6 +355,7 @@ class DeepInfraService:
         return final_results
 
     @reranker_retry
+    @with_circuit_breaker(reranker_breaker)
     async def rerank(
         self,
         query: str,
@@ -366,10 +369,9 @@ class DeepInfraService:
 
         グローバルHTTPクライアントプールを使用してコネクションを再利用。
 
-        tenacityリトライ設定:
-        - 最大3回リトライ
-        - Exponential backoff (0.5秒〜10秒)
-        - 対象: タイムアウト、RateLimitError、接続エラー
+        耐障害性:
+        - tenacity: 最大3回リトライ、Exponential backoff (0.5秒〜10秒)
+        - Circuit Breaker: 連続5回失敗でOPEN状態に遷移、30秒後に再試行
 
         Args:
             query: クエリテキスト

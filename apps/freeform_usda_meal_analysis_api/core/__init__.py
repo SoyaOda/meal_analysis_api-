@@ -26,6 +26,7 @@ from .circuit_breaker import (
     reranker_breaker,
     get_breaker_stats,
     reset_all_breakers,
+    with_circuit_breaker,
     AIOBREAKER_AVAILABLE,
 )
 
@@ -57,5 +58,6 @@ __all__ = [
     "reranker_breaker",
     "get_breaker_stats",
     "reset_all_breakers",
+    "with_circuit_breaker",
     "AIOBREAKER_AVAILABLE",
 ]

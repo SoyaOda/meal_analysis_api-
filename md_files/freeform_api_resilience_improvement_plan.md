@@ -34,7 +34,7 @@
 | VLMキャッシュ | 画像+プロンプト+モデルIDでキャッシュ | ✅ **P1実装済** |
 | Embeddingキャッシュ | テキスト+モデルでキャッシュ | ✅ **P2実装済** |
 | Circuit Breaker | aiobreaker による障害時フェイルファスト | ✅ **P3実装済** |
-| 並列処理 | Phase 2 の Reranker で asyncio.gather() | ⚠️ 部分的 |
+| 並列処理 | バッチEmbedding + 並列Reranker（2フェーズ最適化済み） | ✅ 良好 |
 | エラーハンドリング | リトライ + Circuit Breaker で強化済み | ✅ 良好 |
 
 ### 1.3 主要な外部依存
