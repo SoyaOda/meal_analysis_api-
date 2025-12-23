@@ -39,6 +39,22 @@ https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/docs
 | `/api/v1/metadata` | GET | 全食材メタデータ取得 | 0.1-0.3秒 |
 | `/api/v1/metadata/search` | GET | 食材名検索 | 0.05-0.1秒 |
 | `/health` | GET | ヘルスチェック | 0.01秒 |
+| `/admin` | GET | 管理パネル（設定変更） | - |
+
+### 🔧 Admin Panel（管理パネル）
+
+VLMモデル、プロンプト、検索パラメータをリアルタイムで変更できる管理画面：
+
+```
+https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app/admin
+```
+
+**主な機能:**
+- 📦 **VLMモデル切り替え**: OpenRouter/DeepInfra/Alibaba の各種モデルを選択
+- 📝 **プロンプト選択**: 複数のプロンプトバージョンから選択
+- 🎛️ **パラメータ調整**: temperature, max_tokens, reasoning_effort などを調整
+- 📊 **現在の設定確認**: APIが使用中の設定をリアルタイム表示
+- 🔄 **デフォルトにリセット**: ワンクリックで初期設定に戻す
 
 ### 🎨 インタラクティブデモページ
 
@@ -1776,6 +1792,26 @@ rm -rf usda_database
   - 96.2%の食材でカップ、スプーン、枚などの単位変換が可能
   - 外部API不要でグラム換算が完結
 - **単一ディレクトリデプロイ**: `apps/freeform_usda_meal_analysis_api/` だけでデプロイ可能
+
+### APIレジリエンス機能
+
+外部API障害に対する耐障害性を強化する4つの機能を実装:
+
+| 機能 | 説明 | 実装 |
+|------|------|------|
+| **P0: Retry** | Exponential backoff + jitter によるリトライ | tenacity |
+| **P1: VLM Cache** | 画像+プロンプト+model_idベースのキャッシュ | インメモリLRU |
+| **P2: Embedding Cache** | テキスト+モデルベースのキャッシュ（バッチ対応） | インメモリLRU |
+| **P3: Circuit Breaker** | 連続失敗時のフェイルファスト | aiobreaker |
+
+**適用箇所:**
+- VLM API呼び出し: Retry + Circuit Breaker + VLM Cache
+- Embedding API呼び出し: Retry + Circuit Breaker + Embedding Cache
+- Reranker API呼び出し: Retry + Circuit Breaker
+
+**設定:**
+- Retry: 最大3回、exponential backoff (1-10秒)、ジッター付き
+- Circuit Breaker: 5連続失敗でOPEN、30-60秒後にHALF-OPEN
 
 ### Thinking Model について
 
