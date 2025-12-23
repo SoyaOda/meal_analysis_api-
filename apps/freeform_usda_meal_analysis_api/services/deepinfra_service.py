@@ -247,7 +247,7 @@ class DeepInfraService:
 
         except (RateLimitError, APIConnectionError) as e:
             logger.error(f"API communication error (retriable): {e}", exc_info=True)
-            # TODO: ここに指数バックオフ付きのリトライロジックを実装することを推奨
+            # Note: VLM用途ではOpenRouterProviderを使用（リトライロジック実装済み）
             raise Exception(f"APIとの通信に一時的な問題が発生しました: {e}") from e
         except APIError as e:
             logger.error(f"A non-retriable API error occurred: {e}", exc_info=True)

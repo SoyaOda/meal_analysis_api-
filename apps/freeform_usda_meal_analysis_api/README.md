@@ -1727,15 +1727,16 @@ rm -rf usda_database
 ## 設定可能なパラメータ
 
 ### VLMモデル設定
-- `model_id`: DeepInfra VLMモデルID
-  - デフォルト: `Qwen/Qwen3-VL-30B-A3B-Thinking`
+- `model_id`: VLMモデルID（Admin Panelで設定可能）
+  - デフォルト: `openrouter:openai/gpt-5.1`
 - `prompt_path`: プロンプトファイル名（prompts/以下）
-  - デフォルト: `freeform_prompt_usda_format_ver_v7_experimental_20251027.txt`
-- `thinking_budget`: 思考トークン数（QVQモデル用、1-32768）
+  - デフォルト: `freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt`
+- `reasoning_effort`: Reasoning強度（minimal/low/medium/high/xhigh）
+  - デフォルト: medium
 - `temperature`: 生成温度（0.0-2.0）
-  - デフォルト: 0.6（Qwen公式推奨値）
+  - デフォルト: 0.6
 - `max_tokens`: 最大トークン数（1-32768）
-  - デフォルト: 4096
+  - デフォルト: 16384
 
 ### 検索設定
 - `stage1_top_k`: Stage1で取得する候補数（1-200）

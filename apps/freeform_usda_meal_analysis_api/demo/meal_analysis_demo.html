@@ -478,10 +478,6 @@
                             <input type="number" id="maxTokens" step="512" min="512" max="16384" placeholder="デフォルト: 4096">
                         </div>
 
-                        <div class="form-group">
-                            <label>Thinking Budget (QVQモデル用)</label>
-                            <input type="number" id="thinkingBudget" step="1024" min="0" max="32768" placeholder="例: 8192">
-                        </div>
                     </div>
                 </div>
 
@@ -677,9 +673,6 @@
 
             const maxTokens = document.getElementById('maxTokens').value;
             if (maxTokens) formData.append('max_tokens', maxTokens);
-
-            const thinkingBudget = document.getElementById('thinkingBudget').value;
-            if (thinkingBudget) formData.append('thinking_budget', thinkingBudget);
 
             const stage1TopK = document.getElementById('stage1TopK').value;
             if (stage1TopK) formData.append('stage1_top_k', stage1TopK);
