@@ -16,6 +16,10 @@ from .embedding_cache import (
     EmbeddingCache,
     get_embedding_cache,
 )
+from .vlm_cache import (
+    VLMCache,
+    get_vlm_cache,
+)
 
 __all__ = [
     # Startup optimization
@@ -36,4 +40,7 @@ __all__ = [
     # Embedding cache
     "EmbeddingCache",
     "get_embedding_cache",
+    # VLM cache
+    "VLMCache",
+    "get_vlm_cache",
 ]

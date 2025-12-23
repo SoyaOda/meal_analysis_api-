@@ -13,6 +13,7 @@ from typing import Dict, Any, Optional, Tuple
 import mimetypes
 
 from ..config import get_settings
+from ..core.vlm_cache import get_vlm_cache
 
 logger = logging.getLogger(__name__)
 
@@ -83,10 +84,17 @@ class VLMService:
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
         max_tokens: Optional[int] = None,
-        reasoning_effort: Optional[str] = None
+        reasoning_effort: Optional[str] = None,
+        use_cache: bool = True
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
+
+        キャッシュ機能:
+        - 同一画像 + 同一プロンプト + 同一モデルの結果をキャッシュ
+        - キャッシュヒット時はAPI呼び出しをスキップ（3-5秒 → 50ms）
+        - モデル比較時も正しく動作（model_idがキャッシュキーに含まれる）
+        - use_cache=Falseでキャッシュをバイパス可能
 
         Args:
             image_bytes: 画像データ（バイト列）
@@ -95,6 +103,7 @@ class VLMService:
             seed: 再現性のためのシード値。Noneの場合、config設定値を使用。
             max_tokens: 最大出力トークン数。Noneの場合、config設定値を使用。
             reasoning_effort: Reasoning effortレベル（minimal/low/medium/high/xhigh）
+            use_cache: キャッシュを使用するかどうか（デフォルト: True）
 
         Returns:
             (vlm_response, usage_info) のタプル
@@ -103,7 +112,21 @@ class VLMService:
         """
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
         logger.info(f"Parameters: temperature={temperature}, seed={seed}, max_tokens={max_tokens}")
-        
+
+        # キャッシュチェック（use_cache=Trueの場合のみ）
+        cache = get_vlm_cache()
+        if use_cache:
+            cached = await cache.get(image_bytes, self.prompt, self.model_id)
+            if cached:
+                vlm_response, usage = cached
+                # キャッシュヒットをusageに記録
+                usage = dict(usage)  # コピーを作成
+                usage["cached"] = True
+                logger.info(f"VLM analysis complete (cached): {len(vlm_response.get('dishes', []))} dishes found")
+                return vlm_response, usage
+        else:
+            logger.debug("VLM cache bypassed")
+
         # ✅ 追加: VLM呼び出し直前にpromptの内容をログ出力
         logger.info(f"📝 Using prompt (length: {len(self.prompt)} chars)")
         prompt_preview = self.prompt[:300] if len(self.prompt) > 300 else self.prompt
@@ -116,7 +139,7 @@ class VLMService:
             "prompt": self.prompt,
             "return_usage": True,
         }
-        
+
         # Optional パラメータは None でない場合のみ追加
         if max_tokens is not None:
             api_params["max_tokens"] = max_tokens
@@ -156,6 +179,13 @@ class VLMService:
         if vlm_response is None:
             logger.error("VLM response is None after parsing")
             raise ValueError("[VLM Service] VLM response is None after parsing")
+
+        # キャッシュに保存（use_cache=Trueの場合のみ）
+        if use_cache:
+            await cache.set(image_bytes, self.prompt, self.model_id, vlm_response, usage)
+
+        # usageにcached=Falseを追加
+        usage["cached"] = False
 
         logger.info(f"VLM analysis complete: {len(vlm_response.get('dishes', []))} dishes found")
 
