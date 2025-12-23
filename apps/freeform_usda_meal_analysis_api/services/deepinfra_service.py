@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # Config
 from ..config import get_settings
 from ..core.retry import llm_retry, embedding_retry, reranker_retry
+from ..core.embedding_cache import get_embedding_cache
 
 class DeepInfraService:
     """
@@ -258,11 +259,31 @@ class DeepInfraService:
             raise 
 
     @embedding_retry
+    async def _call_embeddings_api(
+        self,
+        texts: List[str],
+        model: str
+    ) -> List[List[float]]:
+        """
+        Embedding API呼び出し（リトライ付き）
+
+        tenacityによる自動リトライ:
+        - 最大3回リトライ
+        - Exponential backoff (0.5秒〜10秒)
+        """
+        response = await self.client.embeddings.create(
+            input=texts,
+            model=model,
+            encoding_format="float"  # DeepInfra requires 'float'
+        )
+        return [item.embedding for item in response.data]
+
     async def generate_embeddings(
         self,
         texts: List[str],
         model: str = "Qwen/Qwen3-Embedding-8B",
-        instruction: Optional[str] = None
+        instruction: Optional[str] = None,
+        use_cache: bool = True
     ) -> List[List[float]]:
         """
         テキストのembeddingを生成（DeepInfra API使用）
@@ -271,23 +292,26 @@ class DeepInfraService:
         instruction指定時は「Instruct: {task}\\nQuery: {query}」形式で
         より正確なセマンティックマッチングが可能。
 
-        tenacityリトライ設定:
-        - 最大3回リトライ
-        - Exponential backoff (0.5秒〜10秒)
-        - 対象: タイムアウト、RateLimitError、接続エラー
+        キャッシュ機能:
+        - 同一テキスト・同一モデルの結果をキャッシュ
+        - キャッシュヒット時はAPI呼び出しをスキップ（300ms → 1ms）
+        - use_cache=Falseでキャッシュをバイパス可能
 
         Args:
             texts: embedding生成対象のテキストリスト
             model: 使用するembeddingモデル
             instruction: タスク指示文（例: "Match food names to USDA database"）
                          指定時はinline形式でクエリに埋め込む
+            use_cache: キャッシュを使用するかどうか（デフォルト: True）
 
         Returns:
             embedding vector のリスト
         """
+        if not texts:
+            return []
+
         # Instruction形式を適用（Qwen3-Embedding-8B対応）
-        # DeepInfra APIはinstructionパラメータを無視するため、
-        # inline形式「Instruct: {task}\nQuery: {query}」を使用
+        # キャッシュキーはinstruction適用後のテキストを使用
         if instruction:
             formatted_texts = [
                 f"Instruct: {instruction}\nQuery: {text}"
@@ -297,15 +321,36 @@ class DeepInfraService:
         else:
             formatted_texts = texts
 
-        response = await self.client.embeddings.create(
-            input=formatted_texts,
-            model=model,
-            encoding_format="float"  # DeepInfra requires 'float'
-        )
+        # キャッシュを使用しない場合は直接API呼び出し
+        if not use_cache:
+            logger.debug("Embedding cache bypassed")
+            return await self._call_embeddings_api(formatted_texts, model)
 
-        # embeddingを抽出
-        embeddings = [item.embedding for item in response.data]
-        return embeddings
+        # キャッシュからバッチ取得
+        cache = get_embedding_cache()
+        cached_results, miss_indices = await cache.get_batch(formatted_texts, model)
+
+        # 全てキャッシュヒットの場合
+        if not miss_indices:
+            logger.info(f"📦 Embedding cache: {len(texts)} hits, 0 misses (100% hit rate)")
+            return cached_results
+
+        # キャッシュミスしたテキストのみAPI呼び出し
+        miss_texts = [formatted_texts[i] for i in miss_indices]
+        logger.info(f"📦 Embedding cache: {len(texts) - len(miss_indices)} hits, {len(miss_indices)} misses")
+
+        # API呼び出し（リトライ付き）
+        new_embeddings = await self._call_embeddings_api(miss_texts, model)
+
+        # キャッシュに保存
+        await cache.set_batch(miss_texts, model, new_embeddings)
+
+        # 結果をマージ
+        final_results = list(cached_results)  # コピーを作成
+        for i, miss_idx in enumerate(miss_indices):
+            final_results[miss_idx] = new_embeddings[i]
+
+        return final_results
 
     @reranker_retry
     async def rerank(

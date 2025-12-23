@@ -12,6 +12,10 @@ from .retry import (
     RetryConfig,
     RETRY_CONFIGS,
 )
+from .embedding_cache import (
+    EmbeddingCache,
+    get_embedding_cache,
+)
 
 __all__ = [
     # Startup optimization
@@ -29,4 +33,7 @@ __all__ = [
     "is_retryable_exception",
     "RetryConfig",
     "RETRY_CONFIGS",
+    # Embedding cache
+    "EmbeddingCache",
+    "get_embedding_cache",
 ]
