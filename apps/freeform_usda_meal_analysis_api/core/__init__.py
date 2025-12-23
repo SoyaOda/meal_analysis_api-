@@ -20,6 +20,14 @@ from .vlm_cache import (
     VLMCache,
     get_vlm_cache,
 )
+from .circuit_breaker import (
+    vlm_breaker,
+    embedding_breaker,
+    reranker_breaker,
+    get_breaker_stats,
+    reset_all_breakers,
+    AIOBREAKER_AVAILABLE,
+)
 
 __all__ = [
     # Startup optimization
@@ -43,4 +51,11 @@ __all__ = [
     # VLM cache
     "VLMCache",
     "get_vlm_cache",
+    # Circuit breaker
+    "vlm_breaker",
+    "embedding_breaker",
+    "reranker_breaker",
+    "get_breaker_stats",
+    "reset_all_breakers",
+    "AIOBREAKER_AVAILABLE",
 ]

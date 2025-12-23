@@ -13,6 +13,7 @@ from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 from .base_provider import BaseVLMProvider
 from ...config import get_settings
 from ...core.retry import llm_retry
+from ...core.circuit_breaker import vlm_breaker, AIOBREAKER_AVAILABLE
 
 logger = logging.getLogger(__name__)
 
