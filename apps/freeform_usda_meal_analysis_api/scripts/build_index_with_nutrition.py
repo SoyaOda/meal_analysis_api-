@@ -618,12 +618,12 @@ async def update_metadata_only(
             null_count += 1
 
     # Save updated metadata
-    print(f"\n💾 Saving updated metadata...")
+    print("\n💾 Saving updated metadata...")
     with open(metadata_path, 'w', encoding='utf-8') as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
-    print(f"   ✅ Metadata updated successfully!")
-    print(f"\n📊 Statistics:")
+    print("   ✅ Metadata updated successfully!")
+    print("\n📊 Statistics:")
     print(f"   - Total items: {len(metadata)}")
     print(f"   - With portions: {updated_count} ({updated_count/len(metadata)*100:.1f}%)")
     print(f"   - With null portions: {null_count} ({null_count/len(metadata)*100:.1f}%)")
@@ -631,10 +631,10 @@ async def update_metadata_only(
     print("\n" + "=" * 80)
     print("✅ Metadata-only update completed successfully!")
     print("=" * 80)
-    print(f"\n📝 Next steps:")
-    print(f"   1. Restart the API to load updated metadata")
-    print(f"   2. Test the retrieve endpoint to verify portions field")
-    print(f"   3. curl 'http://localhost:8006/api/v1/retrieve?q=chicken&mode=fast&top_k=1'\n")
+    print("\n📝 Next steps:")
+    print("   1. Restart the API to load updated metadata")
+    print("   2. Test the retrieve endpoint to verify portions field")
+    print("   3. curl 'http://localhost:8006/api/v1/retrieve?q=chicken&mode=fast&top_k=1'\n")
 
 async def main_async():
     """Main async function"""
@@ -699,7 +699,7 @@ Examples:
     print("USDA Index Builder with Nutrition Data")
     print("=" * 80)
 
-    print(f"\n📂 Data sources:")
+    print("\n📂 Data sources:")
     print(f"  - Survey: {survey_json.name}")
     print(f"  - Foundation: {foundation_json.name}")
     print(f"  - SR Legacy: {sr_legacy_json.name}")
@@ -726,7 +726,7 @@ Examples:
     print("\n" + "=" * 80)
     print("✅ Index building completed!")
     print("=" * 80)
-    print(f"\nSummary:")
+    print("\nSummary:")
     print(f"  - Total items: {len(items)}")
     print(f"  - Index vectors: {index.ntotal}")
     print(f"  - Survey items: {sum(1 for item in items if item['source'] == 'survey')}")

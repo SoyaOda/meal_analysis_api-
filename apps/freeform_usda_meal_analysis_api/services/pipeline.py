@@ -239,7 +239,7 @@ class MealAnalysisPipeline:
         # 全体の栄養素を計算
         total_nutrition = self._calculate_total_nutrition(enriched_dishes)
 
-        logger.info(f"✅ Nutrition calculation complete")
+        logger.info("✅ Nutrition calculation complete")
         logger.info(f"   Total: {total_nutrition['calories']} kcal, "
                    f"{total_nutrition['protein_g']}g protein, "
                    f"{total_nutrition['fat_g']}g fat, "
@@ -409,7 +409,7 @@ class MealAnalysisPipeline:
                     if not usda_match:
                         search_name = main_food.get("search_name")
                         if not search_name:
-                            logger.error(f"❌ main_food is missing 'search_name' field")
+                            logger.error("❌ main_food is missing 'search_name' field")
                             logger.error(f"   main_food content: {main_food}")
                             # raise HTTPException を Exception に変更
                             raise Exception(
@@ -1127,7 +1127,7 @@ class MealAnalysisPipeline:
         enriched_dishes = self._build_enriched_dishes(dishes, queries)
         total_nutrition = self._calculate_total_nutrition(enriched_dishes)
 
-        logger.info(f"✅ Nutrition calculation complete")
+        logger.info("✅ Nutrition calculation complete")
         logger.info(f"   Total: {total_nutrition['calories']} kcal")
 
         # API用のレスポンス形式に変換

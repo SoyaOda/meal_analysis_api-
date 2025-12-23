@@ -61,9 +61,9 @@ class USDAFoodSearchService:
                 raise FileNotFoundError(f"Index directory not found: {index_dir}")
 
             # SimplifiedUSDASearcherを初期化
-            logger.info(f"Initializing USDA Food Search Service...")
+            logger.info("Initializing USDA Food Search Service...")
             logger.info(f"Index directory: {index_dir}")
-            logger.info(f"Mode: Full index only")
+            logger.info("Mode: Full index only")
             logger.info(f"Stage1 top_k: {stage1_top_k}")
 
             # Import SimplifiedUSDASearcher
@@ -75,12 +75,12 @@ class USDAFoodSearchService:
                 device=device
             )
 
-            logger.info(f"✅ USDA Food Search Service initialized successfully")
+            logger.info("✅ USDA Food Search Service initialized successfully")
 
         # HybridSearchEngineを保持
         self.hybrid_engine = hybrid_engine
         if hybrid_engine:
-            logger.info(f"✅ Hybrid search engine attached")
+            logger.info("✅ Hybrid search engine attached")
     
     async def _ensure_searcher_loaded(self):
         """Lazy Loadingでsearcherを取得"""

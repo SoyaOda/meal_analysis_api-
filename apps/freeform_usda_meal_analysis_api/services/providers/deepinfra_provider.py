@@ -133,8 +133,7 @@ class DeepInfraProvider(BaseVLMProvider):
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                seed=seed,
-                extra_body={"thinking_budget": thinking_budget} if thinking_budget else {}
+                seed=seed
             )
 
             # 応答が空でないかチェック
@@ -309,7 +308,7 @@ class DeepInfraProvider(BaseVLMProvider):
             # 応答が空でないかチェック
             if not response.choices or not response.choices[0].message.content:
                 logger.error("❌ API response is empty or invalid.")
-                raise ValueError(f"[DeepInfra Provider] Empty or invalid API response")
+                raise ValueError("[DeepInfra Provider] Empty or invalid API response")
 
             # 応答内容を取得
             raw_content = response.choices[0].message.content.strip()

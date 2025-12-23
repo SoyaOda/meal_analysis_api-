@@ -54,7 +54,7 @@ def get_async_client() -> httpx.AsyncClient:
         )
 
         logger.info("✅ Global async HTTP client initialized")
-        logger.info(f"   Max connections: 100, Keep-alive: 20")
+        logger.info("   Max connections: 100, Keep-alive: 20")
 
     return _async_client
 

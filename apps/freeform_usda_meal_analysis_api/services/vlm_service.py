@@ -166,8 +166,7 @@ class VLMService:
         image_path: str,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        max_tokens: Optional[int] = None,
-        thinking_budget: Optional[int] = None
+        max_tokens: Optional[int] = None
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像ファイルから食事情報を抽出
@@ -177,7 +176,6 @@ class VLMService:
             temperature: AI推論のランダム性制御。Noneの場合、config設定値を使用。
             seed: 再現性のためのシード値。Noneの場合、config設定値を使用。
             max_tokens: 最大出力トークン数。Noneの場合、config設定値を使用。
-            thinking_budget: Thinkingモデルの推論トークン数の上限。Noneの場合、config設定値を使用。
 
         Returns:
             (vlm_response, usage_info) のタプル
@@ -204,8 +202,7 @@ class VLMService:
             image_mime_type=mime_type,
             temperature=temperature,
             seed=seed,
-            max_tokens=max_tokens,
-            thinking_budget=thinking_budget
+            max_tokens=max_tokens
         )
 
     def get_prompt(self) -> str:

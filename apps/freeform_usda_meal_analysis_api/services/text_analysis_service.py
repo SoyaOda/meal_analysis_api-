@@ -51,7 +51,7 @@ class TextAnalysisService:
         self.prompt = self._load_prompt(prompt_path)
         self.prompt_file = prompt_file or settings.DEFAULT_VOICE_PROMPT_FILE
 
-        logger.info(f"TextAnalysisService initialized:")
+        logger.info("TextAnalysisService initialized:")
         logger.info(f"  Model: {self.model_id}")
         logger.info(f"  Prompt: {self.prompt_file}")
 

@@ -52,9 +52,9 @@ class SimplifiedUSDASearcher:
         if not self.index_dir.exists():
             raise FileNotFoundError(f"Index directory not found: {index_dir}")
 
-        logger.info(f"Initializing Simplified USDA Searcher...")
+        logger.info("Initializing Simplified USDA Searcher...")
         logger.info(f"Index directory: {index_dir}")
-        logger.info(f"Mode: Full index only (no main index)")
+        logger.info("Mode: Full index only (no main index)")
         logger.info(f"Stage1 top_k: {stage1_top_k}")
 
         # FAISSインデックスとメタデータをロード
@@ -63,7 +63,7 @@ class SimplifiedUSDASearcher:
         self._load_embedding_model()
         self._load_reranker()
 
-        logger.info(f"✅ Simplified USDA Searcher initialized successfully")
+        logger.info("✅ Simplified USDA Searcher initialized successfully")
 
     def _load_full_index(self):
         """Fullインデックスのみをロード"""
@@ -91,13 +91,13 @@ class SimplifiedUSDASearcher:
         """埋め込みモデルをロード（DeepInfra API使用）"""
         from .deepinfra_service import DeepInfraService
         self.embedding_service = DeepInfraService(model_id="Qwen/Qwen3-Embedding-8B")
-        logger.info(f"✅ Embedding model initialized (DeepInfra API)")
+        logger.info("✅ Embedding model initialized (DeepInfra API)")
 
     def _load_reranker(self):
         """リランカーをロード（DeepInfra API使用）"""
         from .deepinfra_service import DeepInfraService
         self.reranker_service = DeepInfraService(model_id="Qwen/Qwen3-Reranker-8B")
-        logger.info(f"✅ Reranker model initialized (DeepInfra API)")
+        logger.info("✅ Reranker model initialized (DeepInfra API)")
 
     async def search_async(
         self,

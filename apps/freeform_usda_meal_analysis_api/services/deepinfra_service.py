@@ -77,7 +77,6 @@ class DeepInfraService:
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        thinking_budget: Optional[int] = None,
         return_usage: bool = False
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
@@ -90,7 +89,6 @@ class DeepInfraService:
             max_tokens: 最大出力トークン数（Noneの場合は config から取得）
             temperature: ランダム性制御（Noneの場合は config から取得）
             seed: 再現性のためのシード値（Noneの場合は config から取得）
-            thinking_budget: Thinkingモデルの推論トークン数の上限（Noneの場合は config から取得）
             return_usage: Trueの場合、(response, usage_dict) のタプルを返す
 
         Returns:
@@ -107,10 +105,8 @@ class DeepInfraService:
             temperature = settings.DEFAULT_TEMPERATURE
         if seed is None:
             seed = settings.DEFAULT_SEED
-        if thinking_budget is None:
-            thinking_budget = settings.DEFAULT_THINKING_BUDGET
 
-        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}, thinking_budget={thinking_budget}")
+        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
 
         # Base64エンコード
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
@@ -149,8 +145,7 @@ class DeepInfraService:
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                seed=seed,
-                extra_body={"thinking_budget": thinking_budget} if thinking_budget else {}
+                seed=seed
             )
 
             # 応答が空でないかチェック

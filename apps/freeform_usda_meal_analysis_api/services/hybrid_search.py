@@ -63,7 +63,7 @@ class HybridSearchEngine:
         self.rrf_k = rrf_k
         self.rrf_weight = rrf_weight
 
-        logger.info(f"Initializing Hybrid Search Engine...")
+        logger.info("Initializing Hybrid Search Engine...")
         logger.info(f"  BM25 weight: {bm25_weight}")
         logger.info(f"  Vector weight: {vector_weight}")
         logger.info(f"  RRF k: {rrf_k}")
@@ -74,7 +74,7 @@ class HybridSearchEngine:
         # ステマーの初期化
         self.stemmer = Stemmer.Stemmer("english")
 
-        logger.info(f"✅ Hybrid Search Engine initialized")
+        logger.info("✅ Hybrid Search Engine initialized")
 
     def _load_bm25_index(self):
         """BM25インデックスをロード"""
@@ -345,7 +345,7 @@ class HybridSearchEngine:
                     timeout=30.0
                 )
         except asyncio.TimeoutError:
-            logger.error(f"❌ Hybrid search timeout after 30s")
+            logger.error("❌ Hybrid search timeout after 30s")
             raise Exception("Hybrid search timeout")
         except Exception as e:
             logger.error(f"❌ Hybrid search error: {e}", exc_info=True)

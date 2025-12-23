@@ -43,7 +43,7 @@ def build_bm25_index(
         k1: BM25 k1パラメータ（term frequency saturation）
         b: BM25 bパラメータ（document length normalization）
     """
-    logger.info(f"Building BM25S index...")
+    logger.info("Building BM25S index...")
     logger.info(f"Parameters: k1={k1}, b={b}")
 
     # コーパスの準備
@@ -96,7 +96,7 @@ def build_bm25_index(
         json.dump(stats, f, indent=2)
 
     logger.info(f"✅ Statistics saved to: {stats_path}")
-    logger.info(f"\n📊 BM25S Index Statistics:")
+    logger.info("\n📊 BM25S Index Statistics:")
     logger.info(f"  Documents: {stats['num_documents']}")
     logger.info(f"  k1: {stats['k1']}")
     logger.info(f"  b: {stats['b']}")

@@ -321,7 +321,7 @@ class AlibabaProvider(BaseVLMProvider):
             # 応答が空でないかチェック
             if not response.choices or not response.choices[0].message.content:
                 logger.error("❌ API response is empty or invalid.")
-                raise ValueError(f"[Alibaba Provider] Empty or invalid API response")
+                raise ValueError("[Alibaba Provider] Empty or invalid API response")
 
             # 応答内容を取得
             raw_content = response.choices[0].message.content.strip()
