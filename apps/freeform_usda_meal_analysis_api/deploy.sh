@@ -28,7 +28,11 @@ else
 fi
 
 # gcloud コマンドのパス設定（環境に依存しない）
-GCLOUD=$(which gcloud)
+GCLOUD=$(which gcloud 2>/dev/null || echo "$HOME/google-cloud-sdk/bin/gcloud")
+if [ ! -x "$GCLOUD" ]; then
+    echo "❌ Error: gcloud not found. Please install Google Cloud SDK."
+    exit 1
+fi
 
 # ========== 環境設定 ==========
 # ENVIRONMENT: "development" (デフォルト) または "production"

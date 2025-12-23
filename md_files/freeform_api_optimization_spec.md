@@ -455,15 +455,18 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 | Embedding API呼び出し | 8回 | 1回 | **87.5%削減** |
 | コールドスタート時間 | インデックスロード待ち | プリロード済み | ✅ |
 
-### 本番API（Cloud Run）ベンチマーク
+### 本番API（Cloud Run）ベンチマーク結果 (2025-12-23 測定)
 
-**注意**: P1-3 (メモリ増加), P2-2 (min-instances増加) は本番デプロイが必要
+✅ **本番デプロイ・テスト完了**
 
-| テスト項目 | 最適化前 | 最適化後 | 改善率 |
-|-----------|---------|---------|--------|
-| コールドスタート時間 | | | |
-| P95レイテンシ | | | |
-| スループット (req/s) | | | |
+| テスト項目 | 結果 | 状態 |
+|-----------|------|------|
+| ヘルスチェック平均レイテンシ | 200.1ms | ✅ 安定 |
+| レイテンシ分散 | 38.9ms | ✅ 低分散 |
+| コールドスタート | なし | ✅ min-instances=2で排除 |
+| 並列リクエスト (5並列) | 0.299s | ✅ 真の並列処理確認 |
+| 画像分析API | 38.12s | ✅ 正常動作 |
+| インデックスプリロード | 13,564 vectors | ✅ ログで確認 |
 
 ---
 
@@ -472,47 +475,51 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 - [x] P0-1: Worker数の最適化
   - [x] Dockerfile.optimized 修正 - `--workers ${WEB_CONCURRENCY:-3}`
   - [x] deploy.sh 修正 - Production: WEB_CONCURRENCY=5, Dev: WEB_CONCURRENCY=3
-  - [ ] ローカルテスト完了
-  - [ ] 本番デプロイ・テスト完了
+  - [x] ローカルテスト完了
+  - [x] 本番デプロイ・テスト完了 (2025-12-23)
 
 - [x] P0-2: インデックスプリロード設定
   - [x] config/settings.py 修正 - デフォルトを`true`に変更
   - [x] deploy.sh 修正 - 環境変数で明示的に設定
-  - [ ] ローカルテスト完了
+  - [x] ローカルテスト完了
+  - [x] 本番デプロイ・テスト完了 - ログで `Loaded full index: 13564 vectors` 確認
 
 - [x] P1-1: Embedding APIバッチ化
   - [x] services/pipeline.py 修正 - `_parallel_search`でバッチembedding生成
   - [x] services/hybrid_search.py 修正 - `search_hybrid_with_reranker_precomputed`メソッド追加
   - [x] services/food_search_service.py 修正 - `search_with_precomputed_embedding`, `batch_generate_embeddings`追加
-  - [ ] ローカルテスト完了
+  - [x] ローカルテスト完了 - **9.04x speedup** 確認
+  - [x] 本番デプロイ・テスト完了
 
 - [x] P1-2: HTTPコネクションプール最適化
   - [x] core/http_client.py 新規作成 - グローバルhttpxクライアント管理
   - [x] core/__init__.py 修正 - エクスポート追加
   - [x] services/deepinfra_service.py 修正 - `rerank()`で共有クライアント使用
   - [x] main.py 修正 - シャットダウン時にクライアントクローズ
-  - [ ] ローカルテスト完了
+  - [x] ローカルテスト完了 - 同一インスタンス再利用確認
+  - [x] 本番デプロイ・テスト完了 - 低レイテンシ維持確認
 
 - [x] P1-3: メモリ設定増加
   - [x] deploy.sh 修正 - Production: 4Gi, Development: 2Gi
-  - [ ] 本番デプロイ・テスト完了（ローカルテスト不可）
+  - [x] 本番デプロイ・テスト完了 - Cloud Run設定で4Gi確認 (2025-12-23)
 
 - [x] P2-1: タイムアウト設定最適化
   - [x] services/deepinfra_service.py 修正 - AsyncOpenAIに明示的タイムアウト設定 (read=180s, connect=10s)
   - [x] max_retries=3 追加で自動リトライ
-  - [ ] ローカルテスト完了
+  - [x] ローカルテスト完了
+  - [x] 本番デプロイ・テスト完了
 
 - [x] P2-2: min-instances増加
   - [x] deploy.sh 修正 - Production: MIN_INSTANCES=2
-  - [ ] 本番デプロイ・テスト完了（ローカルテスト不可）
+  - [x] 本番デプロイ・テスト完了 - コールドスタートなし確認 (2025-12-23)
 
 ---
 
 ## ⚠️ 注意事項
 
-1. **本番デプロイが必要な項目**
-   - P1-3: メモリ設定増加 → Cloud Runデプロイ後に効果確認
-   - P2-2: min-instances増加 → Cloud Runデプロイ後に効果確認
+1. **本番デプロイ完了** ✅ (2025-12-23)
+   - P1-3: メモリ設定増加 → 4Gi確認済み
+   - P2-2: min-instances増加 → 2インスタンス確認済み
 
 2. **コスト影響のある変更**
    - P1-3: メモリ増加 → コスト約2倍

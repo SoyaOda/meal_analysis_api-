@@ -144,7 +144,7 @@ class ConfigManager:
     def __init__(
         self,
         use_firestore: bool = None,
-        cache_ttl_seconds: int = 60
+        cache_ttl_seconds: int = 5  # デバッグ用に短縮
     ):
         if self._initialized:
             return

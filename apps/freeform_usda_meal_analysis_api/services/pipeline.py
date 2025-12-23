@@ -293,6 +293,15 @@ class MealAnalysisPipeline:
         config_manager = get_config_manager()
         config = config_manager.get_config()
 
+        # デバッグログ: キャッシュ状態とprompt_text確認
+        prompt_text_len = len(config.vlm.prompt_text) if config.vlm.prompt_text else 0
+        logger.info(f"🔧 [Config Debug] cache_valid={config_manager._is_cache_valid()}, "
+                    f"cache_ttl={config_manager.cache_ttl_seconds}s, "
+                    f"prompt_text_len={prompt_text_len}, "
+                    f"prompt_text_truthy={bool(config.vlm.prompt_text)}, "
+                    f"prompt_text_type={type(config.vlm.prompt_text).__name__}, "
+                    f"prompt_file={config.vlm.prompt_file}")
+
         # モデル設定の適用（オーバーライド > ConfigManager）
         vlm_kwargs = {}
         if model_config_override:
@@ -328,12 +337,9 @@ class MealAnalysisPipeline:
             if search_config_override.reranker_top_n is not None:
                 search_kwargs["search_reranker_top_n"] = search_config_override.reranker_top_n
 
-        # プロンプトのオーバーライド(一時的に変更)
+        # プロンプトのオーバーライド
         # 優先順位: override.prompt_text > override.prompt_path > ConfigManager.prompt_text > ConfigManager.prompt_file > 初期設定
-        original_prompt = None
         if model_config_override and (model_config_override.prompt_text or model_config_override.prompt_path):
-            original_prompt = self.vlm_service.prompt
-            # prompt_textが指定されている場合はそちらを優先
             if model_config_override.prompt_text:
                 self.vlm_service.prompt = model_config_override.prompt_text
             elif model_config_override.prompt_path:
@@ -342,20 +348,15 @@ class MealAnalysisPipeline:
                 prompt_full_path = settings.get_prompt_path(model_config_override.prompt_path)
                 self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
         elif config.vlm.prompt_text:
-            # ConfigManagerからプロンプトテキストを取得（prompt_fileより優先）
-            original_prompt = self.vlm_service.prompt
             self.vlm_service.prompt = config.vlm.prompt_text
         elif config.vlm.prompt_file:
-            # ConfigManagerからプロンプトファイルを取得
-            original_prompt = self.vlm_service.prompt
             from ..config import get_settings
             settings = get_settings()
             prompt_full_path = settings.get_prompt_path(config.vlm.prompt_file)
             self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
 
-        # モデルIDのオーバーライド(一時的に変更)
+        # モデルIDのオーバーライド
         # 優先順位: override.model_id > ConfigManager > 初期設定
-        original_model_id = None
         effective_model_id = None
         if model_config_override and model_config_override.model_id:
             effective_model_id = model_config_override.model_id
@@ -363,7 +364,6 @@ class MealAnalysisPipeline:
             effective_model_id = config.vlm.model_id
 
         if effective_model_id and effective_model_id != self.vlm_service.model_id:
-            original_model_id = self.vlm_service.model_id
             self.vlm_service.model_id = effective_model_id
             # プロバイダーも更新（VLMProviderFactoryを使用）
             from .providers import VLMProviderFactory
@@ -614,25 +614,8 @@ class MealAnalysisPipeline:
             }
 
         except Exception as e:
-            # エラー詳細をログ出力（元のエラーメッセージを保持）
             logger.error(f"❌ analyze_meal_from_image failed: {str(e)}", exc_info=True)
-            # エラーを再発生（元のエラーメッセージを保持）
             raise
-
-        finally:
-            # プロンプトを元に戻す
-            if original_prompt is not None:
-                self.vlm_service.prompt = original_prompt
-            # モデルIDを元に戻す
-            if original_model_id is not None:
-                self.vlm_service.model_id = original_model_id
-                # プロバイダーも元に戻す（VLMProviderFactoryを使用）
-                from .providers import VLMProviderFactory
-                self.vlm_service.provider = VLMProviderFactory.create_provider(
-                    model_id=original_model_id
-                )
-                # 後方互換性のため
-                self.vlm_service.deepinfra_service = self.vlm_service.provider
 
     async def _parallel_search(
         self,

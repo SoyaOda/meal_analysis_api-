@@ -1,16 +1,10 @@
-# Cloud Build用の除外設定（シンプル版）
-# 注意: .gitignoreは読み込まない（FAISSファイルを確実に含めるため）
-
-.gcloudignore
+# Freeform USDA Meal Analysis API用の.gcloudignore
 .git
 .gitignore
 
 # Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
 
 # 不要な大規模ディレクトリ
 web_scraping/
@@ -27,28 +21,18 @@ nutrition_db_experiment/
 analysis_results/
 app_backup/
 
-# 他のアプリケーション（このデプロイには不要）
+# 他のアプリケーション（freeform_usda_meal_analysis_api以外）
 apps/word_query_api/
 apps/meal_analysis_api/
-apps/barcode_api/
 apps/usda_word_query_api/
 apps/usda_meal_analysis_api/
+apps/barcode_api/
 
 # テストファイル
 test_images/
 test-audio/
 test_scripts/
-
-# ドキュメント
-docs/
-*.md
-!README.md
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+test_barcodes/
 
 # ログ
 *.log
