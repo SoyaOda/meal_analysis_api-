@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Config
 from ..config import get_settings
+from ..core.retry import llm_retry, embedding_retry, reranker_retry
 
 class DeepInfraService:
     """
@@ -256,6 +257,7 @@ class DeepInfraService:
             logger.error(f"Unexpected error during image analysis: {e}", exc_info=True)
             raise 
 
+    @embedding_retry
     async def generate_embeddings(
         self,
         texts: List[str],
@@ -269,6 +271,11 @@ class DeepInfraService:
         instruction指定時は「Instruct: {task}\\nQuery: {query}」形式で
         より正確なセマンティックマッチングが可能。
 
+        tenacityリトライ設定:
+        - 最大3回リトライ
+        - Exponential backoff (0.5秒〜10秒)
+        - 対象: タイムアウト、RateLimitError、接続エラー
+
         Args:
             texts: embedding生成対象のテキストリスト
             model: 使用するembeddingモデル
@@ -278,33 +285,29 @@ class DeepInfraService:
         Returns:
             embedding vector のリスト
         """
-        try:
-            # Instruction形式を適用（Qwen3-Embedding-8B対応）
-            # DeepInfra APIはinstructionパラメータを無視するため、
-            # inline形式「Instruct: {task}\nQuery: {query}」を使用
-            if instruction:
-                formatted_texts = [
-                    f"Instruct: {instruction}\nQuery: {text}"
-                    for text in texts
-                ]
-                logger.debug(f"Embedding with instruction: '{instruction[:50]}...'")
-            else:
-                formatted_texts = texts
+        # Instruction形式を適用（Qwen3-Embedding-8B対応）
+        # DeepInfra APIはinstructionパラメータを無視するため、
+        # inline形式「Instruct: {task}\nQuery: {query}」を使用
+        if instruction:
+            formatted_texts = [
+                f"Instruct: {instruction}\nQuery: {text}"
+                for text in texts
+            ]
+            logger.debug(f"Embedding with instruction: '{instruction[:50]}...'")
+        else:
+            formatted_texts = texts
 
-            response = await self.client.embeddings.create(
-                input=formatted_texts,
-                model=model,
-                encoding_format="float"  # DeepInfra requires 'float'
-            )
+        response = await self.client.embeddings.create(
+            input=formatted_texts,
+            model=model,
+            encoding_format="float"  # DeepInfra requires 'float'
+        )
 
-            # embeddingを抽出
-            embeddings = [item.embedding for item in response.data]
-            return embeddings
+        # embeddingを抽出
+        embeddings = [item.embedding for item in response.data]
+        return embeddings
 
-        except Exception as e:
-            logger.error(f"Embedding generation failed: {e}")
-            raise
-
+    @reranker_retry
     async def rerank(
         self,
         query: str,
@@ -318,6 +321,11 @@ class DeepInfraService:
 
         グローバルHTTPクライアントプールを使用してコネクションを再利用。
 
+        tenacityリトライ設定:
+        - 最大3回リトライ
+        - Exponential backoff (0.5秒〜10秒)
+        - 対象: タイムアウト、RateLimitError、接続エラー
+
         Args:
             query: クエリテキスト
             documents: リランキング対象の文書リスト
@@ -330,44 +338,39 @@ class DeepInfraService:
             - best_index: 最高スコアのインデックス
             - scores: 全文書のスコアリスト
         """
-        try:
-            # 共有HTTPクライアントを使用（コネクション再利用）
-            from ..core.http_client import get_async_client
+        # 共有HTTPクライアントを使用（コネクション再利用）
+        from ..core.http_client import get_async_client
 
-            api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
-            url = f"https://api.deepinfra.com/v1/inference/{model}"
+        api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
+        url = f"https://api.deepinfra.com/v1/inference/{model}"
 
-            client = get_async_client()
+        client = get_async_client()
 
-            # 正しいフォーマット: queries は list
-            payload = {
-                "queries": [query],  # list形式
-                "documents": documents
-            }
-            if top_n is not None:
-                payload["top_n"] = top_n
-            if instruction is not None:
-                payload["instruction"] = instruction
+        # 正しいフォーマット: queries は list
+        payload = {
+            "queries": [query],  # list形式
+            "documents": documents
+        }
+        if top_n is not None:
+            payload["top_n"] = top_n
+        if instruction is not None:
+            payload["instruction"] = instruction
 
-            headers = {
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            }
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
 
-            response = await client.post(url, json=payload, headers=headers)
-            response.raise_for_status()
-            result = response.json()
+        response = await client.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        result = response.json()
 
-            # Extract scores (scoresフィールドから直接取得)
-            scores = result.get("scores", [])
-            if not scores:
-                logger.error(f"No scores returned from reranker API. Response: {result}")
-                raise ValueError(f"[DeepInfra Service] Reranker API returned no scores. Response: {result}")
+        # Extract scores (scoresフィールドから直接取得)
+        scores = result.get("scores", [])
+        if not scores:
+            logger.error(f"No scores returned from reranker API. Response: {result}")
+            raise ValueError(f"[DeepInfra Service] Reranker API returned no scores. Response: {result}")
 
-            best_idx = scores.index(max(scores)) if scores else 0
+        best_idx = scores.index(max(scores)) if scores else 0
 
-            return best_idx, scores
-
-        except Exception as e:
-            logger.error(f"Reranking failed: {e}")
-            raise
+        return best_idx, scores

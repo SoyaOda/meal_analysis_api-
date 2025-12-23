@@ -12,6 +12,7 @@ from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 
 from .base_provider import BaseVLMProvider
 from ...config import get_settings
+from ...core.retry import llm_retry
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,23 @@ class DeepInfraProvider(BaseVLMProvider):
             base_url=base_url,
         )
         logger.info(f"DeepInfraProvider initialized for model: {self.model_id}")
+
+    @llm_retry
+    async def _call_chat_api(self, messages: list, max_tokens: int, temperature: float, seed: int):
+        """
+        Chat Completions API呼び出し（リトライ付き）
+
+        tenacityによる自動リトライ:
+        - RateLimitError, APIConnectionError, タイムアウトで自動リトライ
+        - Exponential backoff with jitter
+        """
+        return await self.client.chat.completions.create(
+            model=self.model_id,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            seed=seed
+        )
 
     async def analyze_image(
         self,
@@ -127,9 +145,8 @@ class DeepInfraProvider(BaseVLMProvider):
                 }
             ]
 
-            # API呼び出し
-            response = await self.client.chat.completions.create(
-                model=self.model_id,
+            # API呼び出し（tenacityリトライ付き）
+            response = await self._call_chat_api(
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
@@ -296,9 +313,8 @@ class DeepInfraProvider(BaseVLMProvider):
                 }
             ]
 
-            # API呼び出し
-            response = await self.client.chat.completions.create(
-                model=self.model_id,
+            # API呼び出し（tenacityリトライ付き）
+            response = await self._call_chat_api(
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
