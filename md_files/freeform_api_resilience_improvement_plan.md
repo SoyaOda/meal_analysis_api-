@@ -5,7 +5,7 @@
 本ドキュメントは、`apps/freeform_usda_meal_analysis_api` の速度・安定性・ベストプラクティス観点での改善方針を、業界標準のリサーチに基づいて詳細に記述したものである。
 
 **作成日**: 2024-12-23
-**最終更新**: 2024-12-23（バッチEmbedding実装済み反映、Redisセマンティックキャッシュ不採用、優先度マトリクス更新）
+**最終更新**: 2024-12-23（P0-P3全て実装完了）
 **対象**: Freeform USDA Meal Analysis API v1.0.0
 
 ---
@@ -30,11 +30,12 @@
 | 項目 | 現状 | 評価 |
 |------|------|------|
 | HTTP接続管理 | httpx.Timeout設定あり (connect=10s, read=180s) | ✅ 良好 |
-| 自動リトライ | OpenAI SDK の max_retries=3 のみ | ⚠️ 不十分 |
-| キャッシュ | なし（image_hashは計算されるがログ出力のみ） | ❌ 未実装 |
-| Circuit Breaker | なし | ❌ 未実装 |
-| 並列処理 | Phase 2 の Reranker のみ asyncio.gather() | ⚠️ 部分的 |
-| エラーハンドリング | 基本的な try-except のみ | ⚠️ 改善余地あり |
+| 自動リトライ | tenacity による Exponential Backoff + Jitter | ✅ **P0実装済** |
+| VLMキャッシュ | 画像+プロンプト+モデルIDでキャッシュ | ✅ **P1実装済** |
+| Embeddingキャッシュ | テキスト+モデルでキャッシュ | ✅ **P2実装済** |
+| Circuit Breaker | aiobreaker による障害時フェイルファスト | ✅ **P3実装済** |
+| 並列処理 | Phase 2 の Reranker で asyncio.gather() | ⚠️ 部分的 |
+| エラーハンドリング | リトライ + Circuit Breaker で強化済み | ✅ 良好 |
 
 ### 1.3 主要な外部依存
 
@@ -595,10 +596,10 @@ embeddings = await self.food_search_service.batch_generate_embeddings(query_text
 
 | Phase | 項目 | メリット | デメリット | 状態 |
 |-------|------|---------|-----------|------|
-| **P0** | リトライ | モバイル環境での一時的接続エラーを自動回復。「再試行してください」表示を削減 | リトライ時に数秒の追加遅延（ただし失敗よりはるかに良い） | 🔴 **未実装・必須** |
-| **P1** | VLM画像キャッシュ | モデル比較時：各モデル結果を1回取得後、再比較が即座。誤タップ重複防止。デバッグ高速化 | メモリ消費増加（ただし軽微） | 🔴 **未実装・推奨** |
-| **P2** | Embeddingキャッシュ | 頻出食材 "grilled chicken", "white rice" 等でAPI削減。レイテンシ300ms→1ms | メモリ消費増加（ただし軽微） | 🔴 **未実装・推奨** |
-| **P3** | Circuit Breaker | API障害時に即座にエラー返却（30秒ハングより良いUX）。サーバーリソース節約 | エラーが即座に表示される（ただし正しい動作） | 🔴 未実装・本番推奨 |
+| **P0** | リトライ | モバイル環境での一時的接続エラーを自動回復。「再試行してください」表示を削減 | リトライ時に数秒の追加遅延（ただし失敗よりはるかに良い） | ✅ **実装済み** |
+| **P1** | VLM画像キャッシュ | モデル比較時：各モデル結果を1回取得後、再比較が即座。誤タップ重複防止。デバッグ高速化 | メモリ消費増加（ただし軽微） | ✅ **実装済み** |
+| **P2** | Embeddingキャッシュ | 頻出食材 "grilled chicken", "white rice" 等でAPI削減。レイテンシ300ms→1ms | メモリ消費増加（ただし軽微） | ✅ **実装済み** |
+| **P3** | Circuit Breaker | API障害時に即座にエラー返却（30秒ハングより良いUX）。サーバーリソース節約 | エラーが即座に表示される（ただし正しい動作） | ✅ **実装済み** |
 | ~~P4~~ | バッチEmbedding | 複数料理時のAPI呼び出し N回→1回に削減 | - | ✅ **実装済み** |
 | ~~P4~~ | セマンティックキャッシュ | 類似クエリでヒット | Redisインフラ必要、コスト対効果が低い | ❌ **不採用** |
 
@@ -622,23 +623,23 @@ embeddings = await self.food_search_service.batch_generate_embeddings(query_text
 
 ---
 
-## 5. 実装優先度マトリクス
+## 5. 実装状況
 
-### 5.1 未実装項目（実装予定）
+### 5.1 実装完了項目 ✅
 
-| 優先順位 | Phase | 改善項目 | 効果 | 工数 | 優先度 |
-|---------|-------|---------|------|------|--------|
-| 1️⃣ | P0 | Retry with Exponential Backoff | 安定性 ⬆️⬆️⬆️ | 1日 | **最優先** |
-| 2️⃣ | P2 | Embedding キャッシュ | レイテンシ ⬇️⬇️ | 1日 | **高** |
-| 3️⃣ | P1 | VLM 画像キャッシュ（model_id含む） | コスト ⬇️⬇️ / レイテンシ ⬇️⬇️ | 2日 | **高** |
-| 4️⃣ | P3 | Circuit Breaker | 安定性 ⬆️⬆️ | 1日 | **中（本番推奨）** |
+| Phase | 改善項目 | 効果 | 実装ファイル |
+|-------|---------|------|-------------|
+| P0 | Retry with Exponential Backoff | 安定性 ⬆️⬆️⬆️ | `core/retry.py` |
+| P1 | VLM 画像キャッシュ（model_id含む） | コスト ⬇️⬇️ / レイテンシ ⬇️⬇️ | `core/vlm_cache.py` |
+| P2 | Embedding キャッシュ | レイテンシ ⬇️⬇️ | `core/embedding_cache.py` |
+| P3 | Circuit Breaker | 安定性 ⬆️⬆️ | `core/circuit_breaker.py` |
+| P4 | バッチ Embedding | レイテンシ ⬇️⬇️ | `deepinfra_service.py`, `pipeline.py` |
 
-### 5.2 実装済み/不採用項目
+### 5.2 不採用項目
 
-| Phase | 項目 | 状態 | 備考 |
-|-------|------|------|------|
-| ~~P4~~ | バッチ Embedding | ✅ **実装済み** | `deepinfra_service.py`, `pipeline.py` で実装完了 |
-| ~~P4~~ | Redis セマンティックキャッシュ | ❌ **不採用** | Calorie Tracking Appではコスト対効果が低い |
+| 項目 | 理由 |
+|------|------|
+| Redis セマンティックキャッシュ | Calorie Tracking Appではコスト対効果が低い |
 
 ---
 
