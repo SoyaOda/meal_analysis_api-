@@ -12,7 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import get_settings
-from .routers import health, analysis, retrieval, metadata, voice
+from .routers import health, analysis, retrieval, metadata, voice, streaming
 from .admin import admin_router
 from .models.response_models import RootResponse
 from .services.analytics import init_analytics, get_analytics
@@ -154,6 +154,10 @@ app = FastAPI(
             "description": "音声入力分析 - 音声から食事を分析し栄養価を計算。Whisper STT + LLM + USDA検索"
         },
         {
+            "name": "Streaming",
+            "description": "SSEストリーミング - リアルタイム進捗表示付きの食事分析。プログレスバー実装に最適"
+        },
+        {
             "name": "Retrieval",
             "description": "食材検索 - USDA DBから類似食材を検索。Fast（高速180ms）/ Accurate（高精度800ms）/ Hybrid（最高精度、BM25+Vector）"
         },
@@ -189,6 +193,7 @@ logger.info(f"CORS origins: {cors_origins}")
 app.include_router(health.router)
 app.include_router(analysis.router)
 app.include_router(voice.router)  # Voice analysis router
+app.include_router(streaming.router)  # SSE streaming router
 app.include_router(retrieval.router, prefix="/api/v1", tags=["Retrieval"])
 app.include_router(metadata.router, tags=["Metadata"])
 app.include_router(admin_router)  # Admin Panel（/admin）
@@ -217,6 +222,7 @@ async def root():
         "endpoints": {
             "health": "/health",
             "analysis": "/api/v1/meal-analyses",
+            "analysis_stream": "/api/v1/meal-analyses/stream",
             "voice": "/api/v1/meal-analyses/voice",
             "retrieval": "/api/v1/retrieve",
             "admin": "/admin",

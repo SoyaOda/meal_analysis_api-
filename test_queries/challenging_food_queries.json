@@ -1,0 +1,482 @@
+{
+  "metadata": {
+    "description": "Challenging food queries for Retriever/Reranker quality testing",
+    "created": "2024-12-24",
+    "purpose": "Test semantic understanding and disambiguation capabilities",
+    "sources": [
+      "https://fdc.nal.usda.gov/",
+      "https://www.frontiersin.org/articles/10.3389/fnut.2022.875143/full",
+      "https://www.choochoocachew.com/ultimatenoodleguide/",
+      "https://www.fao.org/fileadmin/templates/food_composition/documents/upload/INFOODSGuidelinesforFoodMatching_final_july2011.pdf"
+    ]
+  },
+  "categories": {
+    "similar_vegetables": {
+      "description": "Vegetables that look similar or are commonly confused",
+      "queries": [
+        {
+          "query": "Broccoli, green, cooked",
+          "expected_match_contains": "broccoli",
+          "should_not_match": ["cauliflower"],
+          "difficulty": "high",
+          "known_issue": "0.6B model confuses with cauliflower"
+        },
+        {
+          "query": "Cauliflower, white, steamed",
+          "expected_match_contains": "cauliflower",
+          "should_not_match": ["broccoli"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Broccolini, sauteed",
+          "expected_match_contains": "broccoli",
+          "alternative_matches": ["broccolini", "broccoli rabe", "broccoflower"],
+          "difficulty": "high",
+          "note": "Broccolini not in USDA - broccoli/broccoflower are acceptable fallbacks"
+        },
+        {
+          "query": "Zucchini, green, grilled",
+          "expected_match_contains": "zucchini",
+          "alternative_matches": ["summer squash", "squash"],
+          "should_not_match": ["cucumber"],
+          "difficulty": "medium",
+          "note": "USDA: Squash, summer, green, zucchini"
+        },
+        {
+          "query": "Cucumber, sliced, raw",
+          "expected_match_contains": "cucumber",
+          "should_not_match": ["zucchini"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Yellow squash, sauteed",
+          "expected_match_contains": "squash",
+          "should_not_match": ["zucchini"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Cabbage, green, raw, shredded",
+          "expected_match_contains": "cabbage",
+          "should_not_match": ["lettuce"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Napa cabbage, stir-fried",
+          "expected_match_contains": "napa",
+          "should_not_match": ["bok choy"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Bok choy, steamed",
+          "expected_match_contains": "bok choy",
+          "difficulty": "high",
+          "note": "USDA: Cabbage, bok choy - cabbage is part of correct name"
+        },
+        {
+          "query": "Kale, raw, chopped",
+          "expected_match_contains": "kale",
+          "should_not_match": ["spinach", "collard"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Swiss chard, sauteed",
+          "expected_match_contains": "chard",
+          "should_not_match": ["spinach"],
+          "difficulty": "high"
+        }
+      ]
+    },
+    "asian_noodles": {
+      "description": "Asian noodles with confusing similar names",
+      "queries": [
+        {
+          "query": "Rice vermicelli, cooked",
+          "expected_match_contains": "rice",
+          "should_not_match": ["bean thread", "glass noodle"],
+          "difficulty": "high",
+          "note": "Rice vermicelli vs glass noodles confusion"
+        },
+        {
+          "query": "Glass noodles, stir-fried",
+          "expected_match_contains": "cellophane",
+          "alternative_matches": ["glass", "bean thread", "mung bean", "noodle", "mein"],
+          "difficulty": "high",
+          "note": "USDA may not have glass noodles - noodle/mein are acceptable fallbacks"
+        },
+        {
+          "query": "Pad Thai noodles, cooked",
+          "expected_match_contains": "rice",
+          "alternative_matches": ["pad thai", "noodle"],
+          "difficulty": "medium",
+          "note": "Pad Thai uses rice noodles - noodle is fallback"
+        },
+        {
+          "query": "Udon noodles, plain, cooked",
+          "expected_match_contains": "udon",
+          "alternative_matches": ["japanese", "wheat noodle", "pasta"],
+          "should_not_match": ["soba"],
+          "difficulty": "high",
+          "note": "USDA may classify udon as pasta/wheat noodle"
+        },
+        {
+          "query": "Soba noodles, buckwheat, cooked",
+          "expected_match_contains": "soba",
+          "should_not_match": ["udon"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Ramen noodles, fresh, cooked",
+          "expected_match_contains": "ramen",
+          "should_not_match": ["instant"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Chow mein noodles, crispy",
+          "expected_match_contains": "chow mein",
+          "should_not_match": ["lo mein"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Lo mein noodles, soft",
+          "expected_match_contains": "lo mein",
+          "alternative_matches": ["egg noodle", "chinese noodle"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Pho noodles, rice, flat",
+          "expected_match_contains": "rice",
+          "alternative_matches": ["pho", "rice stick", "noodle"],
+          "difficulty": "medium",
+          "note": "Pho uses flat rice noodles"
+        }
+      ]
+    },
+    "cooking_method_variations": {
+      "description": "Same ingredient with different cooking methods",
+      "queries": [
+        {
+          "query": "Chicken breast, grilled, skinless",
+          "expected_match_contains": "chicken",
+          "must_contain": ["breast"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Chicken breast, pan-fried, with skin",
+          "expected_match_contains": "chicken",
+          "must_contain": ["breast"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Chicken thigh, roasted, bone-in",
+          "expected_match_contains": "chicken",
+          "must_contain": ["thigh"],
+          "should_not_match": ["breast"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Salmon, baked, wild-caught",
+          "expected_match_contains": "salmon",
+          "difficulty": "medium"
+        },
+        {
+          "query": "Salmon, raw, sashimi grade",
+          "expected_match_contains": "salmon",
+          "must_contain": ["raw"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Eggs, scrambled, with butter",
+          "expected_match_contains": "egg",
+          "must_contain": ["scrambled"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Eggs, poached, soft",
+          "expected_match_contains": "egg",
+          "must_contain": ["poached"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Potatoes, mashed, with milk",
+          "expected_match_contains": "potato",
+          "must_contain": ["mashed"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Potatoes, roasted, with herbs",
+          "expected_match_contains": "potato",
+          "must_contain": ["roasted"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Sweet potato, baked, whole",
+          "expected_match_contains": "sweet potato",
+          "should_not_match": ["yam"],
+          "difficulty": "medium"
+        }
+      ]
+    },
+    "compound_dishes": {
+      "description": "Mixed dishes and compound foods",
+      "queries": [
+        {
+          "query": "Beef stew, homemade, with vegetables",
+          "expected_match_contains": "stew",
+          "must_contain": ["beef"],
+          "difficulty": "medium",
+          "note": "USDA: Stew, beef"
+        },
+        {
+          "query": "Chicken stir-fry, with mixed vegetables",
+          "expected_match_contains": "chicken",
+          "alternative_matches": ["stir-fry", "stir fry"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Fried rice, with egg and vegetables",
+          "expected_match_contains": "rice",
+          "must_contain": ["fried"],
+          "difficulty": "medium",
+          "note": "USDA: Rice, fried"
+        },
+        {
+          "query": "Caesar salad, with croutons and parmesan",
+          "expected_match_contains": "caesar",
+          "difficulty": "low"
+        },
+        {
+          "query": "Pasta primavera, with mixed vegetables",
+          "expected_match_contains": "pasta",
+          "difficulty": "high"
+        },
+        {
+          "query": "Burrito bowl, with rice and beans",
+          "expected_match_contains": "burrito",
+          "alternative_matches": ["mexican", "rice bowl"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Poke bowl, with tuna and rice",
+          "expected_match_contains": "poke",
+          "alternative_matches": ["tuna", "raw fish"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Bibimbap, Korean mixed rice",
+          "expected_match_contains": "bibimbap",
+          "alternative_matches": ["korean", "mixed rice"],
+          "difficulty": "high"
+        }
+      ]
+    },
+    "ambiguous_terms": {
+      "description": "Terms with multiple meanings or regional variations",
+      "queries": [
+        {
+          "query": "Chips, potato, fried",
+          "expected_match_contains": "chip",
+          "note": "US chips = UK crisps",
+          "difficulty": "medium"
+        },
+        {
+          "query": "Biscuit, southern style",
+          "expected_match_contains": "biscuit",
+          "note": "US biscuit vs UK cookie",
+          "difficulty": "high"
+        },
+        {
+          "query": "Cilantro, fresh, chopped",
+          "expected_match_contains": "cilantro",
+          "alternative_matches": ["coriander"],
+          "note": "Cilantro = Coriander leaves",
+          "difficulty": "medium"
+        },
+        {
+          "query": "Eggplant, grilled",
+          "expected_match_contains": "eggplant",
+          "alternative_matches": ["aubergine"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Arugula, raw, salad",
+          "expected_match_contains": "arugula",
+          "alternative_matches": ["rocket"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Scallion, raw, chopped",
+          "expected_match_contains": "scallion",
+          "alternative_matches": ["green onion", "spring onion"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Bell pepper, red, roasted",
+          "expected_match_contains": "pepper",
+          "alternative_matches": ["capsicum"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Shrimp, grilled, large",
+          "expected_match_contains": "shrimp",
+          "alternative_matches": ["prawn"],
+          "difficulty": "medium"
+        }
+      ]
+    },
+    "portion_descriptors": {
+      "description": "Queries with portion/cut descriptions",
+      "queries": [
+        {
+          "query": "Beef, ribeye steak, grilled, medium",
+          "expected_match_contains": "beef",
+          "must_contain": ["rib"],
+          "difficulty": "medium",
+          "note": "USDA: rib eye (with space)"
+        },
+        {
+          "query": "Pork, tenderloin, roasted, sliced",
+          "expected_match_contains": "pork",
+          "must_contain": ["tenderloin"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Lamb, chops, grilled, bone-in",
+          "expected_match_contains": "lamb",
+          "must_contain": ["chop"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Turkey, breast, deli-sliced",
+          "expected_match_contains": "turkey",
+          "must_contain": ["breast"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Ham, honey-glazed, sliced",
+          "expected_match_contains": "ham",
+          "difficulty": "medium"
+        },
+        {
+          "query": "Bacon, crispy, strips",
+          "expected_match_contains": "bacon",
+          "difficulty": "low"
+        }
+      ]
+    },
+    "dairy_alternatives": {
+      "description": "Dairy vs plant-based alternatives",
+      "queries": [
+        {
+          "query": "Milk, whole, cow's",
+          "expected_match_contains": "milk",
+          "should_not_match": ["almond", "soy", "oat"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Almond milk, unsweetened",
+          "expected_match_contains": "almond",
+          "should_not_match": ["cow", "dairy"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Oat milk, plain",
+          "expected_match_contains": "oat",
+          "should_not_match": ["cow", "dairy"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Greek yogurt, plain, full-fat",
+          "expected_match_contains": "yogurt",
+          "must_contain": ["greek"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Coconut yogurt, dairy-free",
+          "expected_match_contains": "coconut",
+          "should_not_match": ["dairy", "milk-based"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Cheese, cheddar, sharp",
+          "expected_match_contains": "cheese",
+          "must_contain": ["cheddar"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Vegan cheese, cheddar-style",
+          "expected_match_contains": "vegan",
+          "alternative_matches": ["non-dairy", "plant-based", "imitation"],
+          "difficulty": "high",
+          "note": "USDA: imitation cheese"
+        }
+      ]
+    },
+    "grains_and_starches": {
+      "description": "Similar grains and starches",
+      "queries": [
+        {
+          "query": "Rice, white, long-grain, cooked",
+          "expected_match_contains": "rice",
+          "must_contain": ["white"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Rice, brown, short-grain, cooked",
+          "expected_match_contains": "rice",
+          "must_contain": ["brown"],
+          "difficulty": "low"
+        },
+        {
+          "query": "Quinoa, cooked, plain",
+          "expected_match_contains": "quinoa",
+          "should_not_match": ["rice", "couscous"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Couscous, cooked, plain",
+          "expected_match_contains": "couscous",
+          "should_not_match": ["quinoa", "rice"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Bulgur wheat, cooked",
+          "expected_match_contains": "bulgur",
+          "should_not_match": ["couscous"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Farro, cooked, pearled",
+          "expected_match_contains": "farro",
+          "should_not_match": ["barley"],
+          "difficulty": "high"
+        },
+        {
+          "query": "Barley, pearl, cooked",
+          "expected_match_contains": "barley",
+          "should_not_match": ["farro"],
+          "difficulty": "medium"
+        },
+        {
+          "query": "Polenta, cooked, creamy",
+          "expected_match_contains": "polenta",
+          "alternative_matches": ["cornmeal", "corn", "grits"],
+          "difficulty": "high",
+          "note": "USDA may not have exact polenta entry - corn-based alternatives acceptable"
+        }
+      ]
+    }
+  },
+  "quick_test_set": {
+    "description": "Minimal set for quick quality checks",
+    "queries": [
+      "Broccoli, green, cooked",
+      "Cauliflower, white, steamed",
+      "Rice vermicelli, cooked",
+      "Glass noodles, stir-fried",
+      "Chicken breast, grilled, skinless",
+      "Salmon, baked, wild-caught",
+      "Quinoa, cooked, plain",
+      "Almond milk, unsweetened"
+    ]
+  }
+}
