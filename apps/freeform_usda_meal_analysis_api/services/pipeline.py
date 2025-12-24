@@ -693,6 +693,7 @@ class MealAnalysisPipeline:
 
             reranked_results = await self.food_search_service.batch_rerank_candidates(
                 queries_and_candidates=queries_and_candidates,
+                reranker_model=effective_reranker_model,
                 reranker_instruction=effective_reranker_instruction,
                 top_k=1
             )

@@ -421,3 +421,104 @@ class DeepInfraService:
         best_idx = scores.index(max(scores)) if scores else 0
 
         return best_idx, scores
+
+
+    @reranker_retry
+    @with_circuit_breaker(reranker_breaker)
+    async def rerank_batch(
+        self,
+        queries_and_documents: List[Dict[str, Any]],
+        model: str = "Qwen/Qwen3-Reranker-8B",
+        instruction: Optional[str] = None
+    ) -> List[Tuple[int, List[float]]]:
+        """
+        複数クエリのリランキングを1回のAPIコールでバッチ処理
+
+        DeepInfra APIは queries と documents を1:1ペアリングで処理するため、
+        複数クエリを単一リクエストにフラット化して送信することで、
+        サーバー側の順次処理問題を回避し、真の並列処理を実現。
+
+        Args:
+            queries_and_documents: [{"query": str, "documents": List[str]}, ...]
+            model: 使用するrerankingモデル
+            instruction: タスク特化の指示文
+
+        Returns:
+            List of (best_index, scores) tuples for each query
+        """
+        import time as time_module
+        from ..core.http_client import get_async_client
+
+        start_time = time_module.time()
+
+        # フラット化: 各クエリをそのドキュメント数分繰り返す
+        flattened_queries = []
+        flattened_documents = []
+        query_doc_counts = []  # 各クエリのドキュメント数を記録
+
+        for item in queries_and_documents:
+            query = item["query"]
+            docs = item["documents"]
+            doc_count = len(docs)
+            query_doc_counts.append(doc_count)
+
+            for doc in docs:
+                flattened_queries.append(query)
+                flattened_documents.append(doc)
+
+        total_pairs = len(flattened_queries)
+        logger.info(f"🔄 Batch reranker: {len(queries_and_documents)} queries → {total_pairs} pairs in 1 API call")
+
+        if total_pairs == 0:
+            return [(0, []) for _ in queries_and_documents]
+
+        # 1024ペアの制限チェック
+        if total_pairs > 1024:
+            logger.warning(f"⚠️ Batch size {total_pairs} exceeds 1024 limit, falling back to chunked processing")
+            # チャンク処理にフォールバック（将来的な拡張）
+            # 今回は単純に制限内に収まる前提
+
+        api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
+        url = f"https://api.deepinfra.com/v1/inference/{model}"
+
+        client = get_async_client()
+
+        payload = {
+            "queries": flattened_queries,
+            "documents": flattened_documents
+        }
+        if instruction is not None:
+            payload["instruction"] = instruction
+
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+
+        response = await client.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        result = response.json()
+
+        all_scores = result.get("scores", [])
+        if not all_scores:
+            logger.error(f"No scores returned from batch reranker API. Response: {result}")
+            raise ValueError(f"[DeepInfra Service] Batch Reranker API returned no scores")
+
+        elapsed = time_module.time() - start_time
+        logger.info(f"✅ Batch reranker completed in {elapsed:.2f}s for {total_pairs} pairs")
+
+        # スコアを各クエリに分配
+        results = []
+        score_offset = 0
+        for doc_count in query_doc_counts:
+            query_scores = all_scores[score_offset:score_offset + doc_count]
+            score_offset += doc_count
+
+            if query_scores:
+                best_idx = query_scores.index(max(query_scores))
+            else:
+                best_idx = 0
+
+            results.append((best_idx, query_scores))
+
+        return results

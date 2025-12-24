@@ -88,6 +88,15 @@
       "provider": "openrouter",
       "source": "User provided (2025-01-26)",
       "_note": "OpenAI GPT-5 Mini - cost-effective version accessed via OpenRouter API"
+    },
+    "openrouter:google/gemini-3-flash-preview": {
+      "name": "Google Gemini 3 Flash Preview (via OpenRouter)",
+      "input_price_per_million": 0.50,
+      "output_price_per_million": 3.00,
+      "vision_supported": true,
+      "provider": "openrouter",
+      "source": "OpenRouter official pricing (2025-12-24)",
+      "_note": "Gemini 3 Flash Preview - 40-50% faster than GPT-5.1, 60-70% cheaper"
     }
   },
   "default": {

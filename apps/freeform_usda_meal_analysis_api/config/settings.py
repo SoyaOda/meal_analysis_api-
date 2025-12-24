@@ -47,16 +47,16 @@ class Settings:
         - 柔軟なプロンプト選択
 
         ## デフォルト設定
-        - モデル: OpenRouter GPT-5.1
+        - モデル: Gemini 3 Flash Preview
         - プロンプト: v7_experimental
         - 検索: Fullインデックスのみ使用
         """
 
         # ========== VLMモデル設定 ==========
-        # デフォルト: OpenRouter GPT-5.1
+        # デフォルト: Gemini 3 Flash Preview (GPT-5.1より40-50%高速)
         self.DEFAULT_VLM_MODEL_ID = os.getenv(
             "VLM_MODEL_ID",
-            "openrouter:openai/gpt-5.1"
+            "openrouter:google/gemini-3-flash-preview"
         )
 
         # デフォルト: v7_experimental with meal_title プロンプト
@@ -148,7 +148,7 @@ class Settings:
 
         # ========== Reranker設定 ==========
         # Rerankerモデル設定
-        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-8B")
+        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-0.6B")
 
         # Reranker instruction (USDA食材マッチング用に最適化)
         self.DEFAULT_RERANKER_INSTRUCTION = os.getenv(

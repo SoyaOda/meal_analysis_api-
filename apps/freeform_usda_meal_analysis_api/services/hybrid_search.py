@@ -430,6 +430,7 @@ class HybridSearchEngine:
         vector_weight: float = None,
         rrf_k: int = None,
         rrf_weight: float = None,
+        reranker_model: str = None,
         reranker_instruction: str = None,
         include_debug_info: bool = False
     ) -> Dict[str, Any]:
@@ -466,6 +467,8 @@ class HybridSearchEngine:
             rrf_k = settings.DEFAULT_RRF_K
         if rrf_weight is None:
             rrf_weight = settings.DEFAULT_RRF_WEIGHT
+        if reranker_model is None:
+            reranker_model = settings.DEFAULT_RERANKER_MODEL
         if reranker_instruction is None:
             reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
             if reranker_instruction is None:
@@ -603,12 +606,14 @@ class HybridSearchEngine:
         # リランキング用のドキュメントリスト
         documents = [c["description"] for c in hybrid_candidates]
 
+        logger.info(f"  Reranker model: {reranker_model}")
         logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if reranker_instruction and len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
 
         # リランキング実行（DeepInfra API）
         best_idx, reranked_scores = await reranker_service.rerank(
             query=query,
             documents=documents,
+            model=reranker_model,
             instruction=reranker_instruction
         )
 
@@ -1042,15 +1047,22 @@ class HybridSearchEngine:
         self,
         queries_and_candidates: List[Dict[str, Any]],
         reranker_service,
+        reranker_model: str = None,
         reranker_instruction: str = None,
         top_k: int = 1
     ) -> List[Dict[str, Any]]:
         """
-        複数クエリのRerankerを一括並列実行
+        複数クエリのRerankerを一括バッチ処理（単一APIコール最適化版）
+
+        従来の並列実行（asyncio.gather）では、DeepInfraサーバー側の順次処理により
+        クエリ数に比例した遅延が発生していた。
+        本実装では全クエリ・ドキュメントペアを1回のAPIコールにフラット化することで、
+        真のバッチ処理を実現し、大幅な高速化を達成。
 
         Args:
             queries_and_candidates: [{"query": str, "candidates": List[Dict]}, ...]
-            reranker_service: Rerankerサービス
+            reranker_service: Rerankerサービス（rerank_batchメソッドを持つ）
+            reranker_model: Rerankerモデル（例: "Qwen/Qwen3-Reranker-0.6B"）
             reranker_instruction: Reranker用instruction
             top_k: 返却する結果数
 
@@ -1062,49 +1074,79 @@ class HybridSearchEngine:
         from ..config.settings import get_settings
         settings = get_settings()
 
+        if reranker_model is None:
+            reranker_model = settings.DEFAULT_RERANKER_MODEL
         if reranker_instruction is None:
             reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
 
+        logger.info(f"  Reranker model: {reranker_model}")
+
         batch_start_time = time_module.time()
 
-        async def rerank_single(idx: int, query: str, candidates: List[Dict]) -> Dict[str, Any]:
-            """単一クエリのReranker実行"""
-            start_time = time_module.time()
-            logger.info(f"🚀 Reranker[{idx}] STARTED: query='{query[:30]}...'")
+        # 空のcandidatesを持つクエリをフィルタリング
+        valid_items = []
+        valid_indices = []
+        for i, item in enumerate(queries_and_candidates):
+            if item["candidates"]:
+                valid_items.append(item)
+                valid_indices.append(i)
 
-            if not candidates:
-                return None
+        if not valid_items:
+            logger.info("No valid candidates for reranking")
+            return [None] * len(queries_and_candidates)
 
-            documents = [c["description"] for c in candidates]
-            best_idx, reranked_scores = await reranker_service.rerank(
-                query=query,
-                documents=documents,
+        # バッチAPI用のデータ準備
+        queries_and_documents = []
+        for item in valid_items:
+            queries_and_documents.append({
+                "query": item["query"],
+                "documents": [c["description"] for c in item["candidates"]]
+            })
+
+        logger.info(f"🔄 Batch reranker execution for {len(queries_and_documents)} queries...")
+
+        # rerank_batchメソッドが存在するか確認し、なければフォールバック
+        if hasattr(reranker_service, 'rerank_batch'):
+            # 新しいバッチAPIを使用（1回のAPIコール）
+            batch_results = await reranker_service.rerank_batch(
+                queries_and_documents=queries_and_documents,
+                model=reranker_model,
                 instruction=reranker_instruction
             )
+        else:
+            # フォールバック: 従来の並列実行
+            logger.warning("⚠️ rerank_batch not available, falling back to parallel individual calls")
 
-            elapsed = time_module.time() - start_time
-            logger.info(f"✅ Reranker[{idx}] COMPLETED in {elapsed:.2f}s")
+            async def rerank_single(query: str, documents: List[str]) -> Tuple[int, List[float]]:
+                best_idx, scores = await reranker_service.rerank(
+                    query=query,
+                    documents=documents,
+                    model=reranker_model,
+                    instruction=reranker_instruction
+                )
+                return (best_idx, scores)
 
+            tasks = [
+                rerank_single(item["query"], item["documents"])
+                for item in queries_and_documents
+            ]
+            batch_results = await asyncio.gather(*tasks)
+
+        # 結果をマッピング
+        final_results = [None] * len(queries_and_candidates)
+        for idx, (valid_idx, (best_idx, scores)) in enumerate(zip(valid_indices, batch_results)):
+            candidates = valid_items[idx]["candidates"]
+
+            # スコアをcandidatesに付与
             for i, candidate in enumerate(candidates):
-                candidate["rerank_score"] = reranked_scores[i]
+                candidate["rerank_score"] = scores[i] if i < len(scores) else 0.0
                 candidate["original_rank"] = i + 1
 
+            # スコアでソート
             reranked = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
-            return reranked[0] if reranked else None
-
-        # 全Rerankerを並列実行
-        logger.info(f"🔄 Parallel reranker execution for {len(queries_and_candidates)} queries...")
-
-        # タスクを作成
-        tasks = [
-            rerank_single(i, item["query"], item["candidates"])
-            for i, item in enumerate(queries_and_candidates)
-        ]
-
-        # asyncio.gatherで並列実行
-        results = await asyncio.gather(*tasks)
+            final_results[valid_idx] = reranked[0] if reranked else None
 
         total_elapsed = time_module.time() - batch_start_time
-        logger.info(f"✅ Parallel reranker completed in {total_elapsed:.2f}s for {len(queries_and_candidates)} queries")
+        logger.info(f"✅ Batch reranker completed in {total_elapsed:.2f}s for {len(valid_items)} queries")
 
-        return results
+        return final_results

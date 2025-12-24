@@ -159,6 +159,7 @@ class USDAFoodSearchService:
                             vector_weight=vector_weight,
                             rrf_k=rrf_k,
                             rrf_weight=rrf_weight,
+                            reranker_model=reranker_model,
                             reranker_instruction=reranker_instruction
                         )
 
@@ -454,6 +455,7 @@ class USDAFoodSearchService:
     async def batch_rerank_candidates(
         self,
         queries_and_candidates: List[Dict[str, Any]],
+        reranker_model: Optional[str] = None,
         reranker_instruction: Optional[str] = None,
         top_k: int = 1
     ) -> List[Optional[Dict[str, Any]]]:
@@ -462,6 +464,7 @@ class USDAFoodSearchService:
 
         Args:
             queries_and_candidates: [{"query": str, "candidates": List[Dict]}, ...]
+            reranker_model: Rerankerモデル（例: "Qwen/Qwen3-Reranker-0.6B"）
             reranker_instruction: Reranker用instruction
             top_k: 各クエリから返す結果数
 
@@ -479,6 +482,7 @@ class USDAFoodSearchService:
         results = await self.hybrid_engine.apply_reranker_batch(
             queries_and_candidates=queries_and_candidates,
             reranker_service=self.searcher.reranker_service,
+            reranker_model=reranker_model,
             reranker_instruction=reranker_instruction,
             top_k=top_k
         )

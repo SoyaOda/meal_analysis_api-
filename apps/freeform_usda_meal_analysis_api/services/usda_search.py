@@ -96,15 +96,19 @@ class SimplifiedUSDASearcher:
     def _load_reranker(self):
         """リランカーをロード（DeepInfra API使用）"""
         from .deepinfra_service import DeepInfraService
-        self.reranker_service = DeepInfraService(model_id="Qwen/Qwen3-Reranker-8B")
-        logger.info("✅ Reranker model initialized (DeepInfra API)")
+        from ..config.settings import get_settings
+        settings = get_settings()
+        reranker_model = settings.DEFAULT_RERANKER_MODEL
+        self.reranker_service = DeepInfraService(model_id=reranker_model)
+        logger.info(f"✅ Reranker model initialized: {reranker_model} (DeepInfra API)")
 
     async def search_async(
         self,
         query_main: str,
         query_descriptors: str = "",
         return_top_k: int = 1,
-        reranker_instruction: Optional[str] = None
+        reranker_instruction: Optional[str] = None,
+        reranker_model: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         検索を実行（Fullインデックスのみ使用、DeepInfra API）
@@ -114,6 +118,7 @@ class SimplifiedUSDASearcher:
             query_descriptors: 説明クエリ（例: "grilled"）
             return_top_k: 返す候補数
             reranker_instruction: Reranker用のinstruction（Noneの場合はsettingsから取得）
+            reranker_model: Rerankerモデル（例: "Qwen/Qwen3-Reranker-0.6B"）
 
         Returns:
             {
@@ -161,18 +166,26 @@ class SimplifiedUSDASearcher:
         # リランキング用のドキュメントリスト
         documents = [c["description"] for c in candidates]
 
+        # Settingsを取得
+        from ..config.settings import get_settings
+        settings = get_settings()
+
         # Reranker instructionを取得（指定がない場合はsettingsから）
         if reranker_instruction is None:
-            from ..config.settings import get_settings
-            settings = get_settings()
             reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
 
+        # Rerankerモデルを取得（指定がない場合はsettingsから）
+        if reranker_model is None:
+            reranker_model = settings.DEFAULT_RERANKER_MODEL
+
+        logger.info(f"  Reranker model: {reranker_model}")
         logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
 
         # リランキング実行（DeepInfra API）
         best_idx, reranked_scores = await self.reranker_service.rerank(
             query=full_query,
             documents=documents,
+            model=reranker_model,
             instruction=reranker_instruction
         )
 
