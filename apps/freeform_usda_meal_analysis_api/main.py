@@ -224,6 +224,7 @@ async def root():
             "analysis": "/api/v1/meal-analyses",
             "analysis_stream": "/api/v1/meal-analyses/stream",
             "voice": "/api/v1/meal-analyses/voice",
+            "voice_stream": "/api/v1/meal-analyses/voice/stream",
             "retrieval": "/api/v1/retrieve",
             "admin": "/admin",
         },
