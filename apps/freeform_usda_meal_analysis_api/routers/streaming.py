@@ -84,7 +84,7 @@ async def analyze_meal_stream(
     image: UploadFile = File(..., description="食事画像ファイル"),
     user_context: Optional[str] = Form(None, description="ユーザーコンテキスト"),
     # Model config overrides
-    model_id: Optional[str] = Form(None, description="VLMモデルID"),
+    vlm_model_id: Optional[str] = Form(None, description="VLMモデルID"),
     prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス"),
     reasoning_effort: Optional[str] = Form(None, description="Reasoning effortレベル"),
     temperature: Optional[float] = Form(None, description="生成温度"),
@@ -151,6 +151,17 @@ async def analyze_meal_stream(
     analysis_id = str(uuid.uuid4())[:8]
     start_time = time.time()
 
+    # Read image data BEFORE entering the generator (required for SSE)
+    # FastAPI closes the file after the request handler returns
+    image_bytes = await image.read()
+
+    if len(image_bytes) == 0:
+        raise HTTPException(status_code=400, detail="Image file is empty")
+
+    # File size limit (20MB)
+    if len(image_bytes) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Image file too large. Maximum size is 20MB.")
+
     async def event_generator() -> AsyncGenerator[dict, None]:
         try:
             # Stage: Upload received
@@ -159,17 +170,16 @@ async def analyze_meal_stream(
                 "data": json.dumps(create_progress_event("upload"))
             }
 
-            # Read image data
-            image_bytes = await image.read()
+            # image_bytes is already read above
 
             # Get pipeline
             pipeline = get_pipeline()
 
             # Build config overrides
             model_config_override = None
-            if any([model_id, prompt_path, reasoning_effort, temperature, max_tokens]):
+            if any([vlm_model_id, prompt_path, reasoning_effort, temperature, max_tokens]):
                 model_config_override = ModelConfig(
-                    model_id=model_id,
+                    vlm_model_id=vlm_model_id,
                     prompt_path=prompt_path,
                     reasoning_effort=reasoning_effort,
                     temperature=temperature,
@@ -311,8 +321,8 @@ async def stream_analysis(
 
     # Apply model ID override
     effective_model_id = None
-    if model_config_override and model_config_override.model_id:
-        effective_model_id = model_config_override.model_id
+    if model_config_override and model_config_override.vlm_model_id:
+        effective_model_id = model_config_override.vlm_model_id
     elif config.vlm.model_id:
         effective_model_id = config.vlm.model_id
 
@@ -637,6 +647,17 @@ async def analyze_meal_voice_stream(
     analysis_id = str(uuid.uuid4())[:8]
     start_time = time.time()
 
+    # Read audio data BEFORE entering the generator (required for SSE)
+    # FastAPI closes the file after the request handler returns
+    audio_bytes = await audio_file.read()
+
+    if len(audio_bytes) == 0:
+        raise HTTPException(status_code=400, detail="Audio file is empty")
+
+    # File size limit (50MB)
+    if len(audio_bytes) > 50 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Audio file too large. Maximum size is 50MB.")
+
     async def event_generator() -> AsyncGenerator[dict, None]:
         try:
             # Stage: Upload received
@@ -645,15 +666,7 @@ async def analyze_meal_voice_stream(
                 "data": json.dumps(create_progress_event("upload", stages=VOICE_STAGES))
             }
 
-            # Read audio data
-            audio_bytes = await audio_file.read()
-
-            if len(audio_bytes) == 0:
-                raise ValueError("Audio file is empty")
-
-            # File size limit (50MB)
-            if len(audio_bytes) > 50 * 1024 * 1024:
-                raise ValueError("Audio file too large. Maximum size is 50MB.")
+            # audio_bytes is already read above
 
             # Get pipeline
             pipeline = get_pipeline()
