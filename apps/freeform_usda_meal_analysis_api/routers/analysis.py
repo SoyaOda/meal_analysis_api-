@@ -59,7 +59,7 @@ async def analyze_meal_from_image(
     image: UploadFile = File(..., description="食事画像ファイル"),
     user_context: Optional[str] = Form(None, description="ユーザーコンテキスト"),
     # Model config overrides
-    model_id: Optional[str] = Form(None, description="VLMモデルID"),
+    vlm_model_id: Optional[str] = Form(None, description="VLMモデルID"),
     prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
     prompt_text: Optional[str] = Form(None, description="プロンプトテキスト全文(prompt_pathより優先)"),
     reasoning_effort: Optional[str] = Form(None, description="Reasoning effortレベル: minimal/low/medium/high/xhigh"),
@@ -85,7 +85,7 @@ async def analyze_meal_from_image(
     - **user_context**: 食事の説明やコンテキスト(オプション)
 
     ## モデル設定(オプション、指定しない場合はデフォルト値を使用)
-    - **model_id**: VLMモデルID
+    - **vlm_model_id**: VLMモデルID
     - **prompt_path**: プロンプトファイル名(例: "freeform_prompt_usda_format_ver_v7_production_20251027.txt")
     - **reasoning_effort**: Reasoning effortレベル(minimal/low/medium/high/xhigh)
     - **temperature**: 生成温度(0.0-2.0)
@@ -118,9 +118,9 @@ async def analyze_meal_from_image(
 
         # モデル設定のオーバーライド処理
         model_config_override = None
-        if any([model_id, prompt_path, prompt_text, reasoning_effort, temperature, max_tokens]):
+        if any([vlm_model_id, prompt_path, prompt_text, reasoning_effort, temperature, max_tokens]):
             model_config_override = ModelConfig(
-                model_id=model_id,
+                vlm_model_id=vlm_model_id,
                 prompt_path=prompt_path,
                 prompt_text=prompt_text,
                 reasoning_effort=reasoning_effort,

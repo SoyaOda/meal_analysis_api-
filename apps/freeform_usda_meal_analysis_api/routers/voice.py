@@ -68,15 +68,19 @@ async def analyze_meal_from_voice(
     # Voice model config
     voice_model_id: Optional[str] = Form(
         None,
-        description="Voice解析用LLM/VLMモデルID（デフォルト: google/gemma-3-27b-it）"
+        description="Voice解析用LLM/VLMモデルID（Admin Panel設定を使用）"
     ),
     voice_prompt_file: Optional[str] = Form(
         None,
-        description="Voice解析用プロンプトファイル（デフォルト: freeform_voice_prompt_usda.txt）"
+        description="Voice解析用プロンプトファイル（Admin Panel設定を使用）"
+    ),
+    voice_prompt_text: Optional[str] = Form(
+        None,
+        description="Voice解析用カスタムプロンプトテキスト（prompt_fileより優先）"
     ),
     whisper_model: Optional[str] = Form(
         None,
-        description="Whisperモデル（デフォルト: openai/whisper-large-v3-turbo）"
+        description="Whisperモデル（Admin Panel設定を使用）"
     ),
     # Model config overrides
     temperature: Optional[float] = Form(None, description="LLM生成温度（0.0-2.0）"),
@@ -164,6 +168,7 @@ async def analyze_meal_from_voice(
             search_config_override=search_config,
             voice_model_id=voice_model_id,
             voice_prompt_file=voice_prompt_file,
+            voice_prompt_text=voice_prompt_text,
             whisper_model=whisper_model,
             language=language or "en",
             include_debug_info=debug or False

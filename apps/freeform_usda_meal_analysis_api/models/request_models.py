@@ -9,10 +9,10 @@ class ModelConfig(BaseModel):
     """VLMモデル設定"""
     model_config = {"protected_namespaces": ()}
 
-    model_id: Optional[str] = Field(
+    vlm_model_id: Optional[str] = Field(
         None,
-        description="DeepInfra VLMモデルID（例: 'Qwen/Qwen2-VL-72B-Instruct'）。指定しない場合はデフォルト30Bモデル",
-        example="Qwen/Qwen2-VL-72B-Instruct"
+        description="VLMモデルID（例: 'openrouter:openai/gpt-5.1'）。指定しない場合はAdmin Panel設定を使用",
+        example="openrouter:openai/gpt-5.1"
     )
 
     prompt_path: Optional[str] = Field(

@@ -7,7 +7,7 @@ import time
 import logging
 from typing import Any, Dict, Optional
 from functools import lru_cache
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 class VLMConfig(BaseModel):
     """VLM (Vision Language Model) Configuration"""
+    model_config = ConfigDict(protected_namespaces=())
+
     model_id: str = Field(
         default="openrouter:openai/gpt-5.1",
         description="VLM Model ID (e.g., 'openrouter:openai/gpt-5.1', 'openrouter:google/gemini-3-flash-preview')"
@@ -82,6 +84,8 @@ class SearchConfig(BaseModel):
 
 class RerankerConfig(BaseModel):
     """Reranker Configuration"""
+    model_config = ConfigDict(protected_namespaces=())
+
     model: str = Field(
         default="Qwen/Qwen3-Reranker-8B",
         description="Reranker model name"
@@ -107,9 +111,44 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
     )
 
 
+class VoiceConfig(BaseModel):
+    """Voice Analysis Configuration (音声入力用設定)"""
+    model_config = ConfigDict(protected_namespaces=())
+
+    model_id: str = Field(
+        default="google/gemma-3-27b-it",
+        description="Voice解析用LLM/VLMモデルID (e.g., 'google/gemma-3-27b-it', 'openrouter:openai/gpt-5-mini')"
+    )
+    prompt_file: str = Field(
+        default="freeform_voice_prompt_usda.txt",
+        description="Voice解析用プロンプトファイル名 (in prompts/ directory)"
+    )
+    prompt_text: Optional[str] = Field(
+        default=None,
+        description="カスタムプロンプトテキスト (overrides prompt_file if set)"
+    )
+    whisper_model: str = Field(
+        default="openai/whisper-large-v3-turbo",
+        description="Whisper STTモデルID"
+    )
+    temperature: float = Field(
+        default=0.3,
+        ge=0.0,
+        le=2.0,
+        description="生成温度"
+    )
+    max_tokens: int = Field(
+        default=4096,
+        ge=1,
+        le=32768,
+        description="最大出力トークン数"
+    )
+
+
 class APIConfig(BaseModel):
     """Complete API Configuration"""
     vlm: VLMConfig = Field(default_factory=VLMConfig)
+    voice: VoiceConfig = Field(default_factory=VoiceConfig)
     search: SearchConfig = Field(default_factory=SearchConfig)
     reranker: RerankerConfig = Field(default_factory=RerankerConfig)
     updated_at: Optional[str] = Field(default=None, description="Last update timestamp")
@@ -192,6 +231,13 @@ class ConfigManager:
                     temperature=settings.DEFAULT_TEMPERATURE,
                     max_tokens=settings.DEFAULT_MAX_TOKENS,
                     reasoning_effort=settings.DEFAULT_REASONING_EFFORT,
+                ),
+                voice=VoiceConfig(
+                    model_id=settings.DEFAULT_VOICE_MODEL_ID,
+                    prompt_file=settings.DEFAULT_VOICE_PROMPT_FILE,
+                    whisper_model=settings.DEFAULT_WHISPER_MODEL,
+                    temperature=settings.DEFAULT_VOICE_TEMPERATURE,
+                    max_tokens=settings.DEFAULT_VOICE_MAX_TOKENS,
                 ),
                 search=SearchConfig(
                     stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,

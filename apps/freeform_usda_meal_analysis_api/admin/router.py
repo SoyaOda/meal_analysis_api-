@@ -61,8 +61,11 @@ async def admin_dashboard(request: Request):
     config_manager = get_config_manager()
     config = config_manager.get_config()
 
-    # Get available prompts
+    # Get available prompts (for VLM image analysis)
     prompts = await get_available_prompts()
+
+    # Get available voice prompts
+    voice_prompts = await get_available_voice_prompts()
 
     return templates.TemplateResponse(
         "dashboard.html",
@@ -70,6 +73,7 @@ async def admin_dashboard(request: Request):
             "request": request,
             "config": config.model_dump(),
             "prompts": prompts,
+            "voice_prompts": voice_prompts,
             "use_firestore": config_manager.use_firestore,
         }
     )
@@ -170,7 +174,7 @@ async def invalidate_cache(
 @router.get("/api/prompts", response_model=List[PromptInfo])
 async def get_available_prompts():
     """
-    List available prompt files
+    List available prompt files (for VLM image analysis)
 
     Returns a list of prompt files in the prompts/ directory
     """
@@ -181,8 +185,8 @@ async def get_available_prompts():
 
         prompts = []
         for prompt_file in sorted(prompts_dir.glob("*.txt")):
-            # Skip research/test files
-            if "test_" in prompt_file.name or prompt_file.name.startswith("."):
+            # Skip research/test/voice files
+            if "test_" in prompt_file.name or prompt_file.name.startswith(".") or "voice" in prompt_file.name.lower():
                 continue
 
             try:
@@ -200,6 +204,42 @@ async def get_available_prompts():
 
     except Exception as e:
         logger.error(f"Failed to list prompts: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/voice-prompts", response_model=List[PromptInfo])
+async def get_available_voice_prompts():
+    """
+    List available voice prompt files
+
+    Returns a list of voice prompt files in the prompts/ directory
+    """
+    try:
+        from ..config.settings import get_settings
+        settings = get_settings()
+        prompts_dir = settings.PROMPTS_DIR
+
+        prompts = []
+        for prompt_file in sorted(prompts_dir.glob("*voice*.txt")):
+            # Skip test files
+            if "test_" in prompt_file.name or prompt_file.name.startswith("."):
+                continue
+
+            try:
+                content = prompt_file.read_text()
+                preview = content[:200] + "..." if len(content) > 200 else content
+                prompts.append(PromptInfo(
+                    filename=prompt_file.name,
+                    size_bytes=prompt_file.stat().st_size,
+                    preview=preview.replace("\n", " ")
+                ))
+            except Exception:
+                continue
+
+        return prompts
+
+    except Exception as e:
+        logger.error(f"Failed to list voice prompts: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -26,7 +26,8 @@ class TextAnalysisService:
     def __init__(
         self,
         model_id: Optional[str] = None,
-        prompt_file: Optional[str] = None
+        prompt_file: Optional[str] = None,
+        prompt_text: Optional[str] = None
     ):
         """
         TextAnalysisServiceを初期化
@@ -34,6 +35,7 @@ class TextAnalysisService:
         Args:
             model_id: 使用するLLM/VLMモデルID（Noneの場合はデフォルト）
             prompt_file: プロンプトファイル名（Noneの場合はデフォルト）
+            prompt_text: カスタムプロンプトテキスト（prompt_fileより優先）
         """
         from ..config import get_settings
         settings = get_settings()
@@ -46,14 +48,20 @@ class TextAnalysisService:
             model_id=self.model_id
         )
 
-        # プロンプト読み込み
-        prompt_path = settings.get_voice_prompt_path(prompt_file)
-        self.prompt = self._load_prompt(prompt_path)
-        self.prompt_file = prompt_file or settings.DEFAULT_VOICE_PROMPT_FILE
-
-        logger.info("TextAnalysisService initialized:")
-        logger.info(f"  Model: {self.model_id}")
-        logger.info(f"  Prompt: {self.prompt_file}")
+        # プロンプト読み込み（prompt_textが指定されている場合はそちらを優先）
+        if prompt_text:
+            self.prompt = prompt_text
+            self.prompt_file = "[custom_prompt_text]"
+            logger.info("TextAnalysisService initialized:")
+            logger.info(f"  Model: {self.model_id}")
+            logger.info("  Prompt: [Custom prompt text provided]")
+        else:
+            prompt_path = settings.get_voice_prompt_path(prompt_file)
+            self.prompt = self._load_prompt(prompt_path)
+            self.prompt_file = prompt_file or settings.DEFAULT_VOICE_PROMPT_FILE
+            logger.info("TextAnalysisService initialized:")
+            logger.info(f"  Model: {self.model_id}")
+            logger.info(f"  Prompt: {self.prompt_file}")
 
     def _load_prompt(self, prompt_path: str) -> str:
         """プロンプトファイルを読み込む"""

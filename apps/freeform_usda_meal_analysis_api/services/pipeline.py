@@ -354,10 +354,10 @@ class MealAnalysisPipeline:
             self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
 
         # モデルIDのオーバーライド
-        # 優先順位: override.model_id > ConfigManager > 初期設定
+        # 優先順位: override.vlm_model_id > ConfigManager > 初期設定
         effective_model_id = None
-        if model_config_override and model_config_override.model_id:
-            effective_model_id = model_config_override.model_id
+        if model_config_override and model_config_override.vlm_model_id:
+            effective_model_id = model_config_override.vlm_model_id
         elif config.vlm.model_id:
             effective_model_id = config.vlm.model_id
 
@@ -1001,6 +1001,7 @@ class MealAnalysisPipeline:
         search_config_override: Optional[Any] = None,
         voice_model_id: Optional[str] = None,
         voice_prompt_file: Optional[str] = None,
+        voice_prompt_text: Optional[str] = None,
         whisper_model: Optional[str] = None,
         language: str = "en",
         include_debug_info: bool = False,
@@ -1020,6 +1021,7 @@ class MealAnalysisPipeline:
             search_config_override: 検索設定のオーバーライド
             voice_model_id: Voice解析用LLM/VLMモデルID
             voice_prompt_file: Voice解析用プロンプトファイル
+            voice_prompt_text: Voice解析用カスタムプロンプトテキスト（prompt_fileより優先）
             whisper_model: Whisperモデル（STT用）
             language: 言語コード（en, ja等）
             include_debug_info: デバッグ情報を含めるか
@@ -1037,12 +1039,39 @@ class MealAnalysisPipeline:
         from ..models.response_models import (
             IngredientDetail, DishDetail, NutritionInfo, VoiceMetadata
         )
+        from ..admin.config_manager import get_config_manager
 
         logger.info("=" * 80)
         logger.info("Starting Voice-based Meal Analysis")
         logger.info("=" * 80)
 
         start_time = time.time()
+
+        # Admin Panel設定を取得
+        config_manager = get_config_manager()
+        admin_config = config_manager.get_config()
+        voice_config = admin_config.voice
+
+        # パラメータ優先順位: API引数 > Admin Panel設定 > デフォルト
+        actual_voice_model_id = voice_model_id or voice_config.model_id
+        actual_voice_prompt_file = voice_prompt_file or voice_config.prompt_file
+        actual_voice_prompt_text = voice_prompt_text or voice_config.prompt_text
+        actual_whisper_model = whisper_model or voice_config.whisper_model
+        actual_temperature = (model_config_override.temperature if model_config_override and model_config_override.temperature is not None 
+                              else voice_config.temperature)
+        actual_max_tokens = (model_config_override.max_tokens if model_config_override and model_config_override.max_tokens is not None 
+                             else voice_config.max_tokens)
+
+        # 設定情報をログに記録（Firestoreで確認可能）
+        logger.info("📋 Voice Analysis Configuration:")
+        logger.info(f"   Voice Model ID: {actual_voice_model_id}")
+        logger.info(f"   Voice Prompt File: {actual_voice_prompt_file}")
+        logger.info(f"   Voice Prompt Text: {'[Custom text provided]' if actual_voice_prompt_text else '[Not set]'}")
+        logger.info(f"   Whisper Model: {actual_whisper_model}")
+        logger.info(f"   Temperature: {actual_temperature}")
+        logger.info(f"   Max Tokens: {actual_max_tokens}")
+        logger.info(f"   Language: {language}")
+        logger.info(f"   Config Source: Admin Panel (Firestore)" if config_manager.use_firestore else "   Config Source: In-Memory")
 
         # Step 1: 音声認識 (STT)
         logger.info("\n🔄 Step 1/4: Speech-to-Text (Whisper)")
@@ -1052,7 +1081,7 @@ class MealAnalysisPipeline:
             transcript, stt_metadata = await speech_service.transcribe_audio(
                 audio_data=audio_bytes,
                 language=language,
-                model=whisper_model
+                model=actual_whisper_model
             )
         except Exception as e:
             logger.error(f"STT failed: {e}")
@@ -1067,15 +1096,16 @@ class MealAnalysisPipeline:
         logger.info("\n🔄 Step 2/4: Text Analysis (LLM)")
 
         text_analysis_service = TextAnalysisService(
-            model_id=voice_model_id,
-            prompt_file=voice_prompt_file
+            model_id=actual_voice_model_id,
+            prompt_file=actual_voice_prompt_file,
+            prompt_text=actual_voice_prompt_text
         )
 
         try:
             llm_result, llm_usage = await text_analysis_service.analyze_text(
                 text=transcript,
-                temperature=model_config_override.temperature if model_config_override else None,
-                max_tokens=model_config_override.max_tokens if model_config_override else None
+                temperature=actual_temperature,
+                max_tokens=actual_max_tokens
             )
         except Exception as e:
             logger.error(f"LLM analysis failed: {e}")
@@ -1244,9 +1274,9 @@ class MealAnalysisPipeline:
         end_time = time.time()
         total_time = end_time - start_time
 
-        # モデル情報
-        ai_model_used = voice_model_id or text_analysis_service.model_id
-        prompt_file_used = voice_prompt_file or text_analysis_service.prompt_file
+        # モデル情報（実際に使用された設定を返す）
+        ai_model_used = actual_voice_model_id
+        prompt_file_used = actual_voice_prompt_file if not actual_voice_prompt_text else "[custom_prompt_text]"
 
         # マッチ率計算
         total_queries_count = len(api_dishes)
