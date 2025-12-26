@@ -4,7 +4,12 @@ FoodData Central (FDC) データベースとOpen Food Factsを使用したバー
 
 ## 本番環境
 
-**Service URL**: `https://barcode-api-1077966746907.us-central1.run.app`
+Cloud Runは複数のURLを提供します。どちらのURLでも同じサービスにアクセス可能です：
+
+| URL | 形式 |
+|-----|------|
+| `https://barcode-api-1077966746907.us-central1.run.app` | プロジェクト番号ベース（Flutter側で使用） |
+| `https://barcode-api-x27n75dvja-uc.a.run.app` | リビジョンID ベース |
 
 ```bash
 # ヘルスチェック
@@ -13,7 +18,7 @@ curl https://barcode-api-1077966746907.us-central1.run.app/health
 # バーコード検索
 curl -X POST "https://barcode-api-1077966746907.us-central1.run.app/api/v1/barcode/lookup" \
   -H "Content-Type: application/json" \
-  -d '{"gtin": "000000016872"}'
+  -d '{"gtin": "0016000275287"}'
 ```
 
 ## 概要
