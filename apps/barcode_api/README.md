@@ -283,6 +283,15 @@ python apps/barcode_api/scripts/analyze_fdc_units.py
    - Cloud Runのメモリを4Gi以上に設定
    - SQLiteクエリの最適化を検討
 
+4. **バーコードが見つからない（404）**
+   - FDCデータベースには様々な形式のGTINが保存されている（11桁、12桁、13桁、14桁）
+   - v3.3.0以降は自動的に複数バリエーションで検索
+   - 例: アプリが`0016000275287`（13桁）を送信 → DB内の`16000275287`（11桁）でヒット
+
+5. **Open Food Factsタイムアウト**
+   - 旧API（`world.openfoodfacts.org/api/v0`）はタイムアウト問題あり
+   - v3.3.0以降は新API（`world.openfoodfacts.net/api/v2`）を使用
+
 ### パフォーマンス最適化
 
 1. **データベースインデックス**
@@ -333,9 +342,11 @@ APIレスポンスに`unit_options`フィールドが含まれ、食品タイプ
 
 FDCデータベースで見つからない場合、自動的にOpen Food Facts APIで検索:
 
+- **APIエンドポイント**: `https://world.openfoodfacts.net/api/v2`（v3.3.0以降）
 - **データソース表示**: `"data_source": "Open Food Facts"`
 - **対応製品**: 世界中の食品（特に欧州・日本製品に強い）
 - **キャッシュ**: TTLCache（1時間）
+- **タイムアウト**: 10秒
 
 ## ライセンス・データソース
 
@@ -350,3 +361,6 @@ FDCデータベースで見つからない場合、自動的にOpen Food Facts A
 - **v3.0.0**: スマート単位生成システム、Open Food Factsフォールバック、TTLキャッシュ追加
 - **v3.1.0**: Cloud Runデプロイ対応、GCS連携追加
 - **v3.2.0**: Cloud Runデプロイ完了、本番環境URL追加、GCS権限設定手順追加
+- **v3.3.0** (2025-12-26): GTINバリエーション対応、Open Food Facts API v2移行
+  - FDCデータベース検索で複数GTIN形式対応（11/12/13/14桁）
+  - Open Food Facts APIを`world.openfoodfacts.org/api/v0`から`world.openfoodfacts.net/api/v2`に移行（タイムアウト問題解決）

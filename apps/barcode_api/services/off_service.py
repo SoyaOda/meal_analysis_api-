@@ -28,7 +28,10 @@ class OpenFoodFactsService:
         Args:
             timeout: HTTPリクエストのタイムアウト秒数
         """
-        self.base_url = "https://world.openfoodfacts.org/api/v0"
+        # 旧API（タイムアウト問題あり）
+        # self.base_url = "https://world.openfoodfacts.org/api/v0"
+        # 新API（2025-12-26 修正）
+        self.base_url = "https://world.openfoodfacts.net/api/v2"
         self.timeout = timeout
         self.session = None
 
@@ -67,18 +70,16 @@ class OpenFoodFactsService:
             normalized_gtin = gtin.strip()
 
             # Open Food Facts API呼び出し
-            url = f"{self.base_url}/product/{normalized_gtin}.json"
+            # 旧v0 API: url = f"{self.base_url}/product/{normalized_gtin}.json"
+            # 新v2 API（2025-12-26 修正）: 拡張子不要
+            url = f"{self.base_url}/product/{normalized_gtin}"
 
             response = await client.get(url)
             response.raise_for_status()
 
             data = response.json()
 
-            # ステータス確認
-            if data.get('status') != 1:
-                logger.warning(f"Open Food Facts: 製品が見つかりません: {gtin}")
-                return None
-
+            # v2 APIでは製品が見つからない場合、productフィールドが空またはnull
             # 製品データを抽出
             product_data = data.get('product', {})
             if not product_data:

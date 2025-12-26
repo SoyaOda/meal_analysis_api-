@@ -18,6 +18,7 @@ from ..models.nutrition import (
 from ..utils.unit_parser import UnitParser
 from .cache_service import get_cache_service
 from .unit_normalizer import get_unit_normalizer
+from .gtin_service import GTINService
 
 
 logger = logging.getLogger(__name__)
@@ -244,7 +245,10 @@ class FDCDatabaseService:
 
     def _get_product_by_gtin(self, conn: sqlite3.Connection, gtin: str) -> Optional[Dict[str, Any]]:
         """
-        GTINから製品情報を取得（最新版）
+        GTINから製品情報を取得（複数バリエーション対応）
+
+        FDCデータベースには様々な形式のGTINが保存されているため、
+        複数のバリエーション（11桁、12桁、13桁、14桁）で検索を行う。
 
         Args:
             conn: データベース接続
@@ -255,8 +259,36 @@ class FDCDatabaseService:
         """
         cursor = conn.cursor()
 
+        # === 旧実装（完全一致のみ）===
+        # query = """
+        # SELECT
+        #     bf.fdc_id,
+        #     bf.gtin_upc,
+        #     bf.brand_owner,
+        #     bf.brand_name,
+        #     bf.ingredients,
+        #     bf.serving_size,
+        #     bf.serving_size_unit,
+        #     bf.household_serving_fulltext,
+        #     f.description,
+        #     f.publication_date
+        # FROM branded_food bf
+        # JOIN food f ON bf.fdc_id = f.fdc_id
+        # WHERE bf.gtin_upc = ?
+        # ORDER BY f.publication_date DESC, bf.fdc_id DESC
+        # LIMIT 1
+        # """
+        # cursor.execute(query, (gtin,))
+        # === 旧実装ここまで ===
+
+        # === 新実装（2025-12-26 修正：GTINバリエーション対応）===
+        # GTINのバリエーションを生成
+        gtin_variations = self._generate_gtin_variations(gtin)
+        logger.debug(f"GTIN検索バリエーション: {gtin_variations}")
+
         # 重複GTINの場合は最新のpublication_dateを持つレコードを取得
-        query = """
+        placeholders = ','.join(['?' for _ in gtin_variations])
+        query = f"""
         SELECT
             bf.fdc_id,
             bf.gtin_upc,
@@ -270,17 +302,80 @@ class FDCDatabaseService:
             f.publication_date
         FROM branded_food bf
         JOIN food f ON bf.fdc_id = f.fdc_id
-        WHERE bf.gtin_upc = ?
+        WHERE bf.gtin_upc IN ({placeholders})
         ORDER BY f.publication_date DESC, bf.fdc_id DESC
         LIMIT 1
         """
 
-        cursor.execute(query, (gtin,))
+        cursor.execute(query, gtin_variations)
+        # === 新実装ここまで ===
+
         row = cursor.fetchone()
 
         if row:
+            logger.info(f"GTIN {gtin} で製品発見: {row['gtin_upc']} ({row['description'][:50]}...)")
             return dict(row)
         return None
+
+    def _generate_gtin_variations(self, gtin: str) -> list:
+        """
+        GTINの複数バリエーションを生成
+
+        FDCデータベースには様々な形式でGTINが保存されている:
+        - 00016000275287 (14桁: 先頭2桁のゼロ + UPC-12)
+        - 0016000275287 (13桁: EAN-13形式)
+        - 016000275287 (12桁: UPC-12形式)
+        - 16000275287 (11桁: 先頭ゼロなし)
+
+        Args:
+            gtin: 入力GTINコード
+
+        Returns:
+            検索用GTINバリエーションのリスト
+        """
+        import re
+
+        variations = set()
+
+        # 数字以外を除去
+        clean_gtin = re.sub(r'[^0-9]', '', gtin.strip())
+
+        if not clean_gtin:
+            return [gtin]
+
+        # 元のGTINを追加
+        variations.add(clean_gtin)
+
+        # 先頭のゼロを除去したバージョン
+        stripped = clean_gtin.lstrip('0')
+        if stripped:
+            variations.add(stripped)
+
+        # 12桁にゼロ埋め（UPC-12形式）
+        if len(stripped) <= 12:
+            upc12 = stripped.zfill(12)
+            variations.add(upc12)
+
+            # 13桁にゼロ埋め（EAN-13形式）
+            ean13 = upc12.zfill(13)
+            variations.add(ean13)
+
+            # 14桁にゼロ埋め（GTIN-14形式）
+            gtin14 = upc12.zfill(14)
+            variations.add(gtin14)
+
+        # GTINServiceで正規化されたバージョンも追加
+        try:
+            normalized = GTINService.normalize_gtin(gtin)
+            if normalized:
+                variations.add(normalized)
+                # 正規化後の値からも派生バリエーションを生成
+                variations.add(normalized.lstrip('0'))
+                variations.add(normalized.zfill(14))
+        except Exception as e:
+            logger.debug(f"GTIN正規化エラー（無視）: {e}")
+
+        return list(variations)
 
     def _get_main_nutrients(self, conn: sqlite3.Connection, fdc_id: int) -> Optional[MainNutrients]:
         """
