@@ -62,10 +62,11 @@ class SpeechService:
         if not self.api_key:
             raise ValueError("DEEPINFRA_API_KEY is required for speech recognition")
 
-        # デフォルト設定
-        from ..config import get_settings
-        settings = get_settings()
-        self.default_model = settings.DEFAULT_WHISPER_MODEL
+        # デフォルト設定 - ConfigManagerから取得
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+        self.default_model = config.voice.whisper_model
 
         logger.info(f"SpeechService initialized with model: {self.default_model}")
 

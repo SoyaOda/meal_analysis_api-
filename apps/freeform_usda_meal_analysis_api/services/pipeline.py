@@ -48,13 +48,14 @@ class MealAnalysisPipeline:
         """
         logger.info("Initializing Meal Analysis Pipeline (Full Index Only)...")
 
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # 設定を取得 - ConfigManagerから動的設定
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # stage1_top_kが指定されていない場合は設定から取得
+        # stage1_top_kが指定されていない場合はConfigManagerから取得
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
         
         # インスタンス変数として保存（_parallel_searchで使用）
         self.stage1_top_k = stage1_top_k

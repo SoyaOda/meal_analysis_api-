@@ -4,6 +4,7 @@ Health check router for Cloud Run deployment
 from fastapi import APIRouter, Response, status as http_status
 from ..models.response_models import HealthCheckResponse
 from ..config import get_settings
+from ..admin.config_manager import get_config_manager
 from pydantic import BaseModel
 
 router = APIRouter(tags=["Health"])
@@ -24,15 +25,17 @@ async def health_check():
     Cloud Runのliveness probeで使用
 
     Returns:
-        HealthCheckResponse: APIのステータス情報
+        HealthCheckResponse: APIのステータス情報（ConfigManagerから動的取得）
     """
     settings = get_settings()
+    config_manager = get_config_manager()
+    config = config_manager.get_config()
 
     return HealthCheckResponse(
         status="healthy",
-        version=settings.API_VERSION,
-        model_id=settings.DEFAULT_VLM_MODEL_ID,
-        prompt_file=settings.DEFAULT_PROMPT_FILE
+        version=settings.API_VERSION,  # 静的バージョン情報はsettingsから
+        model_id=config.vlm.model_id,  # 動的設定はConfigManagerから
+        prompt_file=config.vlm.prompt_file  # 動的設定はConfigManagerから
     )
 
 

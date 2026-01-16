@@ -88,12 +88,14 @@ class AlibabaProvider(BaseVLMProvider):
             VLMの応答JSON文字列（return_usage=Falseの場合）
             または (response, usage_dict) のタプル（return_usage=Trueの場合）
         """
-        # config から設定を取得
-        settings = get_settings()
+        # ConfigManagerから動的設定を取得
+        from ...admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # パラメータのデフォルト値を設定
+        # パラメータのデフォルト値をConfigManagerから設定
         if max_tokens is None:
-            max_tokens = settings.DEFAULT_MAX_TOKENS
+            max_tokens = config.vlm.max_tokens
 
         # Alibaba API の max_tokens 上限は 8192
         if max_tokens > 8192:
@@ -101,9 +103,9 @@ class AlibabaProvider(BaseVLMProvider):
             max_tokens = 8192
 
         if temperature is None:
-            temperature = settings.DEFAULT_TEMPERATURE
+            temperature = config.vlm.temperature
         if seed is None:
-            seed = settings.DEFAULT_SEED
+            seed = config.vlm.seed
 
         logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
         if reasoning_effort is not None:
@@ -279,16 +281,18 @@ class AlibabaProvider(BaseVLMProvider):
             LLMの応答JSON文字列（return_usage=Falseの場合）
             または (response, usage_dict) のタプル（return_usage=Trueの場合）
         """
-        # config から設定を取得
-        settings = get_settings()
+        # ConfigManagerから動的設定を取得
+        from ...admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # パラメータのデフォルト値を設定
+        # パラメータのデフォルト値をConfigManagerから設定
         if max_tokens is None:
-            max_tokens = settings.DEFAULT_VOICE_MAX_TOKENS
+            max_tokens = config.voice.max_tokens
         if temperature is None:
-            temperature = settings.DEFAULT_VOICE_TEMPERATURE
+            temperature = config.voice.temperature
         if seed is None:
-            seed = settings.DEFAULT_SEED
+            seed = config.voice.seed
 
         logger.info(f"🔧 LLM Parameters (text mode): max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
 

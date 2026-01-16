@@ -34,16 +34,17 @@ class SimplifiedUSDASearcher:
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス
-            stage1_top_k: Stage1で取得する候補数（Noneの場合はsettingsから取得）
+            stage1_top_k: Stage1で取得する候補数（Noneの場合はConfigManagerから取得）
             device: 計算デバイス（'cpu' or 'cuda'）
         """
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
-        
-        # stage1_top_kが指定されていない場合は設定から取得
+        # 設定を取得 - ConfigManagerから動的設定
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+
+        # stage1_top_kが指定されていない場合はConfigManagerから取得
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
             
         self.index_dir = Path(index_dir)
         self.stage1_top_k = stage1_top_k

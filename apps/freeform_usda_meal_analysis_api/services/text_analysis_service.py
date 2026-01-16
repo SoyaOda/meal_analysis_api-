@@ -33,15 +33,18 @@ class TextAnalysisService:
         TextAnalysisServiceを初期化
 
         Args:
-            model_id: 使用するLLM/VLMモデルID（Noneの場合はデフォルト）
-            prompt_file: プロンプトファイル名（Noneの場合はデフォルト）
+            model_id: 使用するLLM/VLMモデルID（Noneの場合はConfigManagerから取得）
+            prompt_file: プロンプトファイル名（Noneの場合はConfigManagerから取得）
             prompt_text: カスタムプロンプトテキスト（prompt_fileより優先）
         """
         from ..config import get_settings
+        from ..admin.config_manager import get_config_manager
         settings = get_settings()
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # モデル設定
-        self.model_id = model_id or settings.DEFAULT_VOICE_MODEL_ID
+        # モデル設定 - ConfigManagerから取得
+        self.model_id = model_id or config.voice.model_id
 
         # プロバイダー初期化
         self.provider = VLMProviderFactory.create_provider(
@@ -56,9 +59,11 @@ class TextAnalysisService:
             logger.info(f"  Model: {self.model_id}")
             logger.info("  Prompt: [Custom prompt text provided]")
         else:
-            prompt_path = settings.get_voice_prompt_path(prompt_file)
+            # prompt_fileが指定されていない場合はConfigManagerから取得
+            effective_prompt_file = prompt_file or config.voice.prompt_file
+            prompt_path = settings.get_voice_prompt_path(effective_prompt_file)
             self.prompt = self._load_prompt(prompt_path)
-            self.prompt_file = prompt_file or settings.DEFAULT_VOICE_PROMPT_FILE
+            self.prompt_file = effective_prompt_file
             logger.info("TextAnalysisService initialized:")
             logger.info(f"  Model: {self.model_id}")
             logger.info(f"  Prompt: {self.prompt_file}")
@@ -94,12 +99,13 @@ class TextAnalysisService:
         if not text or not text.strip():
             raise ValueError("Input text is empty")
 
-        from ..config import get_settings
-        settings = get_settings()
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # デフォルト値の設定
-        temperature = temperature if temperature is not None else settings.DEFAULT_VOICE_TEMPERATURE
-        max_tokens = max_tokens if max_tokens is not None else settings.DEFAULT_VOICE_MAX_TOKENS
+        # デフォルト値の設定 - ConfigManagerから取得
+        temperature = temperature if temperature is not None else config.voice.temperature
+        max_tokens = max_tokens if max_tokens is not None else config.voice.max_tokens
 
         logger.info(f"Analyzing text with LLM: '{text[:100]}...'")
         logger.info(f"  Model: {self.model_id}")
@@ -183,10 +189,15 @@ class TextAnalysisService:
     def reload_prompt(self, prompt_file: Optional[str] = None) -> None:
         """プロンプトを再読み込み"""
         from ..config import get_settings
+        from ..admin.config_manager import get_config_manager
         settings = get_settings()
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        prompt_path = settings.get_voice_prompt_path(prompt_file)
+        # prompt_fileが指定されていない場合はConfigManagerから取得
+        effective_prompt_file = prompt_file or config.voice.prompt_file
+        prompt_path = settings.get_voice_prompt_path(effective_prompt_file)
         self.prompt = self._load_prompt(prompt_path)
-        self.prompt_file = prompt_file or settings.DEFAULT_VOICE_PROMPT_FILE
+        self.prompt_file = effective_prompt_file
 
         logger.info(f"Prompt reloaded: {self.prompt_file}")

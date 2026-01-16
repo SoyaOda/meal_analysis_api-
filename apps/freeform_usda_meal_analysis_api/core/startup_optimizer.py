@@ -49,12 +49,15 @@ class StartupOptimizer:
             logger.info("Starting lazy loading of indexes...")
 
             try:
-                # 設定を取得
+                # 設定を取得 - settingsから静的パス、ConfigManagerから動的設定
                 from ..config import get_settings
+                from ..admin.config_manager import get_config_manager
                 settings = get_settings()
-                
+                config_manager = get_config_manager()
+                config = config_manager.get_config()
+
                 index_dir = settings.USDA_INDEX_DIR
-                stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+                stage1_top_k = config.search.stage1_top_k
                 
                 # SimplifiedUSDASearcherを非同期でインスタンス化
                 # （実際のインデックスロードは別スレッドで実行）

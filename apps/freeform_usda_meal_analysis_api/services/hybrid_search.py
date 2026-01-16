@@ -148,13 +148,12 @@ class HybridSearchEngine:
         Returns:
             [(doc_index, score), ...]
         """
-        # Embedding Instruction取得
-        # NOTE: embedding_instructionはConfigManager.SearchConfigに含まれていないため、
-        # settingsから取得（将来的にConfigManagerに統合可能）
+        # Embedding Instruction取得 - ConfigManagerから
         if embedding_instruction is None:
-            from ..config.settings import get_settings
-            settings = get_settings()
-            embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+            from ..admin.config_manager import get_config_manager
+            config_manager = get_config_manager()
+            config = config_manager.get_config()
+            embedding_instruction = config.search.embedding_instruction
 
         # Embedding生成（Instruction形式を適用）
         embeddings = await embedding_service.generate_embeddings(
@@ -514,8 +513,8 @@ class HybridSearchEngine:
 
         # ===== Stage 2: FAISS Vector 検索 =====
         start_time_vector = asyncio.get_event_loop().time()
-        # Embedding Instruction取得（Qwen3-Embedding-8B対応）
-        embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+        # Embedding Instruction取得（Qwen3-Embedding-8B対応）- ConfigManagerから
+        embedding_instruction = config.search.embedding_instruction
         # クエリのベクトル化（Instruction形式を適用）
         query_vectors = await embedding_service.generate_embeddings(
             [query],

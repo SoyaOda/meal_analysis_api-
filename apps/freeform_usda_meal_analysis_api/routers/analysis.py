@@ -12,6 +12,7 @@ from ..models.request_models import ModelConfig, SearchConfig
 from ..models.response_models import AnalysisResponse, ErrorResponse, EndpointInfoResponse
 from ..services.pipeline import MealAnalysisPipeline
 from ..config import get_settings
+from ..admin.config_manager import get_config_manager
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/meal-analyses", tags=["Analysis"])
@@ -32,19 +33,29 @@ def get_pipeline() -> MealAnalysisPipeline:
 
 
 def initialize_pipeline(hybrid_engine=None, use_lazy_loading=True):
-    """パイプラインを初期化（アプリ起動時に呼び出す）"""
+    """パイプラインを初期化（アプリ起動時に呼び出す）
+
+    Note: 初期化パラメータはConfigManager（Firestore）から取得。
+    settings.pyは静的なパス情報のみに使用。
+    """
     global _pipeline
     settings = get_settings()
+    config_manager = get_config_manager()
+    config = config_manager.get_config()
 
     try:
         logger.info("Initializing meal analysis pipeline (Full Index Only)...")
+        logger.info(f"  VLM Model: {config.vlm.model_id} (from ConfigManager)")
+        logger.info(f"  Stage1 Top-K: {config.search.stage1_top_k} (from ConfigManager)")
+        logger.info(f"  Device: {config.runtime.device} (from ConfigManager)")
+
         _pipeline = MealAnalysisPipeline(
-            vlm_model_id=settings.DEFAULT_VLM_MODEL_ID,
-            vlm_prompt_file=settings.get_prompt_path(),
+            vlm_model_id=config.vlm.model_id,
+            vlm_prompt_file=settings.get_prompt_path(config.vlm.prompt_file),
             index_dir=settings.USDA_INDEX_DIR,
             usda_metadata_file=settings.USDA_METADATA_FILE,
-            stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,
-            device=settings.DEFAULT_DEVICE,
+            stage1_top_k=config.search.stage1_top_k,
+            device=config.runtime.device,
             hybrid_engine=hybrid_engine,
             use_lazy_loading=use_lazy_loading
         )

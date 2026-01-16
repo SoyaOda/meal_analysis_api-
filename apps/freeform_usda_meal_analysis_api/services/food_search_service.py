@@ -27,18 +27,21 @@ class USDAFoodSearchService:
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス (Lazy Loadingの場合は不要)
-            stage1_top_k: Stage1で取得する候補数（Noneの場合はsettingsから取得）
+            stage1_top_k: Stage1で取得する候補数（Noneの場合はConfigManagerから取得）
             device: 計算デバイス('cpu' or 'cuda')
             hybrid_engine: HybridSearchEngineインスタンス（オプション）
             use_lazy_loading: Lazy Loadingを使用するか（デフォルトTrue）
         """
-        # 設定を取得
+        # 設定を取得 - ConfigManagerから動的設定、settingsから静的パス情報
         from ..config.settings import get_settings
+        from ..admin.config_manager import get_config_manager
         settings = get_settings()
-        
-        # stage1_top_kが指定されていない場合は設定から取得
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+
+        # stage1_top_kが指定されていない場合はConfigManagerから取得
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
         
         self.use_lazy_loading = use_lazy_loading
         self.stage1_top_k = stage1_top_k
@@ -393,10 +396,11 @@ class USDAFoodSearchService:
         if self.use_lazy_loading and self.searcher is None:
             await self._ensure_searcher_loaded()
 
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
-        embedding_instruction = settings.DEFAULT_EMBEDDING_INSTRUCTION
+        # 設定を取得 - ConfigManagerから動的設定
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+        embedding_instruction = config.search.embedding_instruction
 
         # バッチでembedding生成
         embeddings = await self.searcher.embedding_service.generate_embeddings(

@@ -46,6 +46,10 @@ class VLMConfig(BaseModel):
         default="medium",
         description="Reasoning effort level: minimal/low/medium/high/xhigh"
     )
+    seed: int = Field(
+        default=123456,
+        description="Random seed for reproducibility"
+    )
 
 
 class SearchConfig(BaseModel):
@@ -79,6 +83,10 @@ class SearchConfig(BaseModel):
         ge=0.0,
         le=2.0,
         description="RRF fusion score weight"
+    )
+    embedding_instruction: str = Field(
+        default="Match food names to USDA FoodData Central database entries for nutrition lookup",
+        description="Instruction for embedding model to improve food name matching"
     )
 
 
@@ -143,6 +151,18 @@ class VoiceConfig(BaseModel):
         le=32768,
         description="最大出力トークン数"
     )
+    seed: int = Field(
+        default=123456,
+        description="Random seed for reproducibility"
+    )
+
+
+class RuntimeConfig(BaseModel):
+    """Runtime Configuration (環境依存設定)"""
+    device: str = Field(
+        default="cpu",
+        description="Computation device: 'cpu' or 'cuda'"
+    )
 
 
 class APIConfig(BaseModel):
@@ -151,6 +171,7 @@ class APIConfig(BaseModel):
     voice: VoiceConfig = Field(default_factory=VoiceConfig)
     search: SearchConfig = Field(default_factory=SearchConfig)
     reranker: RerankerConfig = Field(default_factory=RerankerConfig)
+    runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
     updated_at: Optional[str] = Field(default=None, description="Last update timestamp")
     updated_by: Optional[str] = Field(default=None, description="Last updated by")
 
@@ -231,6 +252,7 @@ class ConfigManager:
                     temperature=settings.DEFAULT_TEMPERATURE,
                     max_tokens=settings.DEFAULT_MAX_TOKENS,
                     reasoning_effort=settings.DEFAULT_REASONING_EFFORT,
+                    seed=settings.DEFAULT_SEED,
                 ),
                 voice=VoiceConfig(
                     model_id=settings.DEFAULT_VOICE_MODEL_ID,
@@ -238,6 +260,7 @@ class ConfigManager:
                     whisper_model=settings.DEFAULT_WHISPER_MODEL,
                     temperature=settings.DEFAULT_VOICE_TEMPERATURE,
                     max_tokens=settings.DEFAULT_VOICE_MAX_TOKENS,
+                    seed=settings.DEFAULT_SEED,
                 ),
                 search=SearchConfig(
                     stage1_top_k=settings.DEFAULT_STAGE1_TOP_K,
@@ -245,11 +268,15 @@ class ConfigManager:
                     vector_weight=settings.DEFAULT_VECTOR_WEIGHT,
                     rrf_k=settings.DEFAULT_RRF_K,
                     rrf_weight=settings.DEFAULT_RRF_WEIGHT,
+                    embedding_instruction=settings.DEFAULT_EMBEDDING_INSTRUCTION,
                 ),
                 reranker=RerankerConfig(
                     model=settings.DEFAULT_RERANKER_MODEL,
                     instruction=settings.DEFAULT_RERANKER_INSTRUCTION,
                     top_n=settings.DEFAULT_RERANKER_TOP_N,
+                ),
+                runtime=RuntimeConfig(
+                    device=settings.DEFAULT_DEVICE,
                 ),
             )
         except Exception as e:

@@ -31,38 +31,44 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """アプリケーションのライフサイクル管理"""
+    # ConfigManagerから動的設定を取得
+    from .admin.config_manager import get_config_manager
+    config_manager = get_config_manager()
+    config = config_manager.get_config()
+
     # Startup
     logger.info("=" * 60)
     logger.info(f"{settings.API_TITLE} v{settings.API_VERSION}")
     logger.info("=" * 60)
 
     # FAISSデータはDockerイメージに含まれている（ローカル環境と同じ）
-    logger.info(f"Default VLM Model: {settings.DEFAULT_VLM_MODEL_ID}")
-    logger.info(f"Default Prompt: {settings.DEFAULT_PROMPT_FILE}")
+    # 動的設定はConfigManagerから取得してログ出力
+    logger.info(f"VLM Model: {config.vlm.model_id} (from ConfigManager)")
+    logger.info(f"Prompt: {config.vlm.prompt_file} (from ConfigManager)")
     logger.info(f"USDA Index Directory: {settings.USDA_INDEX_DIR}")
     logger.info("=" * 60)
-    
+
     # Cloud Run最適化: バックグラウンドでインデックスをロード
     import asyncio
     from .core import startup_optimizer
-    
+
     logger.info("🚀 Starting with Lazy Loading - indexes will be loaded on first request")
-    
+
     # バックグラウンドでインデックスをプリロード開始（オプション）
     # 起動時間を最優先する場合はコメントアウト
     if settings.PRELOAD_INDEXES_ON_STARTUP:
         logger.info("📦 Starting background index preloading...")
         asyncio.create_task(startup_optimizer.lazy_load_indexes())
-    
-    # ハイブリッドサーチエンジンの初期化（軽量なので即座に実行）
+
+    # ハイブリッドサーチエンジンの初期化（軽量なので即座に実行）- ConfigManagerから設定取得
     hybrid_engine = None
     try:
         from .services.hybrid_search import HybridSearchEngine
         hybrid_engine = HybridSearchEngine(
             index_dir=settings.USDA_INDEX_DIR,
-            bm25_weight=settings.DEFAULT_BM25_WEIGHT,
-            vector_weight=settings.DEFAULT_VECTOR_WEIGHT,
-            rrf_k=settings.DEFAULT_RRF_K
+            bm25_weight=config.search.bm25_weight,
+            vector_weight=config.search.vector_weight,
+            rrf_k=config.search.rrf_k
         )
         logger.info("✅ Hybrid search engine initialized")
     except Exception as e:
@@ -228,13 +234,21 @@ async def root():
             "retrieval": "/api/v1/retrieve",
             "admin": "/admin",
         },
-        "default_config": {
-            "model": settings.DEFAULT_VLM_MODEL_ID,
-            "prompt": settings.DEFAULT_PROMPT_FILE,
-            "search": {
-                "mode": "full_index_only",
-                "stage1_top_k": settings.DEFAULT_STAGE1_TOP_K,
-            }
+        "default_config": _get_current_config()
+    }
+
+
+def _get_current_config() -> dict:
+    """ConfigManagerから現在の設定を取得（Info endpoint用）"""
+    from .admin.config_manager import get_config_manager
+    config_manager = get_config_manager()
+    config = config_manager.get_config()
+    return {
+        "model": config.vlm.model_id,
+        "prompt": config.vlm.prompt_file,
+        "search": {
+            "mode": "full_index_only",
+            "stage1_top_k": config.search.stage1_top_k,
         }
     }
 

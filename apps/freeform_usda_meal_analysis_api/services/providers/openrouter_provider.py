@@ -117,17 +117,19 @@ class OpenRouterProvider(BaseVLMProvider):
             VLMの応答JSON文字列（return_usage=Falseの場合）
             または (response, usage_dict) のタプル（return_usage=Trueの場合）
         """
-        # config から設定を取得
-        settings = get_settings()
+        # ConfigManagerから動的設定を取得
+        from ...admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # パラメータのデフォルト値を設定
+        # パラメータのデフォルト値をConfigManagerから設定
         if max_tokens is None:
-            max_tokens = settings.DEFAULT_MAX_TOKENS
+            max_tokens = config.vlm.max_tokens
 
         if temperature is None:
-            temperature = settings.DEFAULT_TEMPERATURE
+            temperature = config.vlm.temperature
         if seed is None:
-            seed = settings.DEFAULT_SEED
+            seed = config.vlm.seed
 
         # ✅ 追加: 受け取ったpromptの内容を確認
         logger.info(f"📝 [OpenRouter] Received prompt (length: {len(prompt)} chars)")
@@ -139,8 +141,8 @@ class OpenRouterProvider(BaseVLMProvider):
         # ========== Reasoning パラメータの構築 ==========
         extra_body = {"usage": {"include": True}}  # OpenRouterのコスト情報を取得
 
-        # Reasoning設定を構築（呼び出し時指定 > デフォルト設定）
-        effective_effort = reasoning_effort if reasoning_effort is not None else settings.DEFAULT_REASONING_EFFORT
+        # Reasoning設定を構築（呼び出し時指定 > ConfigManager設定）
+        effective_effort = reasoning_effort if reasoning_effort is not None else config.vlm.reasoning_effort
         logger.info(f"🔧 Reasoning Parameters: reasoning_effort={reasoning_effort} (effective: {effective_effort})")
 
         valid_efforts = ["minimal", "low", "medium", "high", "xhigh"]
@@ -368,16 +370,18 @@ class OpenRouterProvider(BaseVLMProvider):
             LLMの応答JSON文字列（return_usage=Falseの場合）
             または (response, usage_dict) のタプル（return_usage=Trueの場合）
         """
-        # config から設定を取得
-        settings = get_settings()
+        # ConfigManagerから動的設定を取得
+        from ...admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # パラメータのデフォルト値を設定
+        # パラメータのデフォルト値をConfigManagerから設定
         if max_tokens is None:
-            max_tokens = settings.DEFAULT_VOICE_MAX_TOKENS
+            max_tokens = config.voice.max_tokens
         if temperature is None:
-            temperature = settings.DEFAULT_VOICE_TEMPERATURE
+            temperature = config.voice.temperature
         if seed is None:
-            seed = settings.DEFAULT_SEED
+            seed = config.voice.seed
 
         logger.info(f"🔧 LLM Parameters (text mode): max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
 
