@@ -11,6 +11,7 @@ import time
 from typing import Optional, Tuple, Dict, Any
 from enum import Enum
 import aiohttp
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 logger = logging.getLogger(__name__)
 
@@ -105,36 +106,25 @@ class SpeechService:
         # API URL
         api_url = f"{self.API_URL}/{model}"
 
-        # リクエストデータの準備
-        form_data = aiohttp.FormData()
-        form_data.add_field(
-            "audio",
-            io.BytesIO(audio_data),
-            filename=f"audio.{audio_format}",
-            content_type=mime_type
-        )
-        form_data.add_field("language", language)
-        form_data.add_field("temperature", str(temperature))
-        if prompt:
-            form_data.add_field("prompt", prompt)
-
-        # API呼び出し
+        # API呼び出し（リトライロジック付き）
         headers = {
             "Authorization": f"Bearer {self.api_key}"
         }
 
-        async with aiohttp.ClientSession() as session:
-            try:
-                async with session.post(api_url, data=form_data, headers=headers) as response:
-                    if response.status != 200:
-                        error_text = await response.text()
-                        logger.error(f"Whisper API error: {response.status} - {error_text}")
-                        raise RuntimeError(f"Whisper API failed: {response.status} - {error_text}")
+        # 音声サイズのログ（デバッグ用）
+        audio_size_kb = len(audio_data) / 1024
+        logger.info(f"Sending audio to Whisper API: {audio_size_kb:.1f}KB, format={audio_format}, model={model}")
 
-                    result = await response.json()
-            except aiohttp.ClientError as e:
-                logger.error(f"HTTP request failed: {e}")
-                raise RuntimeError(f"Failed to connect to Whisper API: {e}") from e
+        result = await self._call_whisper_api_with_retry(
+            api_url=api_url,
+            audio_data=audio_data,
+            audio_format=audio_format,
+            mime_type=mime_type,
+            language=language,
+            temperature=temperature,
+            prompt=prompt,
+            headers=headers
+        )
 
         # 処理時間
         processing_time = time.time() - start_time
@@ -156,6 +146,81 @@ class SpeechService:
         logger.info(f"Transcription completed: '{transcript[:100]}...' in {processing_time:.2f}s")
 
         return transcript, metadata
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=10),
+        retry=retry_if_exception_type(RuntimeError),
+        before_sleep=lambda retry_state: logger.warning(
+            f"Whisper API call failed (attempt {retry_state.attempt_number}), retrying in {retry_state.next_action.sleep:.1f}s..."
+        )
+    )
+    async def _call_whisper_api_with_retry(
+        self,
+        api_url: str,
+        audio_data: bytes,
+        audio_format: str,
+        mime_type: str,
+        language: str,
+        temperature: float,
+        prompt: Optional[str],
+        headers: dict
+    ) -> Dict[str, Any]:
+        """
+        リトライロジック付きのWhisper API呼び出し
+
+        Args:
+            api_url: API endpoint URL
+            audio_data: 音声データ
+            audio_format: 音声フォーマット
+            mime_type: MIMEタイプ
+            language: 言語コード
+            temperature: 生成温度
+            prompt: オプションのプロンプト
+            headers: HTTPヘッダー
+
+        Returns:
+            API応答のJSONデータ
+
+        Raises:
+            RuntimeError: API呼び出しが3回失敗した場合
+        """
+        # FormDataは毎回再作成する必要がある（ストリームの再利用不可）
+        form_data = aiohttp.FormData()
+        form_data.add_field(
+            "audio",
+            io.BytesIO(audio_data),
+            filename=f"audio.{audio_format}",
+            content_type=mime_type
+        )
+        form_data.add_field("language", language)
+        form_data.add_field("temperature", str(temperature))
+        if prompt:
+            form_data.add_field("prompt", prompt)
+
+        async with aiohttp.ClientSession() as session:
+            try:
+                async with session.post(api_url, data=form_data, headers=headers, timeout=aiohttp.ClientTimeout(total=120)) as response:
+                    response_text = await response.text()
+
+                    if response.status != 200:
+                        logger.error(
+                            f"Whisper API error: status={response.status}, "
+                            f"audio_size={len(audio_data)}bytes, "
+                            f"response={response_text[:500]}"
+                        )
+                        # 5xx エラーはリトライ対象
+                        if 500 <= response.status < 600:
+                            raise RuntimeError(f"Whisper API server error: {response.status} - {response_text}")
+                        # 4xx エラーはリトライしない
+                        raise ValueError(f"Whisper API client error: {response.status} - {response_text}")
+
+                    import json
+                    return json.loads(response_text)
+
+            except aiohttp.ClientError as e:
+                logger.error(f"HTTP request failed: {e}, audio_size={len(audio_data)}bytes")
+                raise RuntimeError(f"Failed to connect to Whisper API: {e}") from e
 
     @staticmethod
     def detect_audio_format(audio_data: bytes) -> Tuple[str, str]:

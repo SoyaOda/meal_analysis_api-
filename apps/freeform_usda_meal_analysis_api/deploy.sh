@@ -69,28 +69,55 @@ if [ "$ENVIRONMENT" = "production" ]; then
 fi
 echo ""
 
-# VLM Provider API Keys チェック
+# ========== 既存サービスからAPIキー自動取得 ==========
+# 必須APIキーが環境変数に設定されていない場合、既存のCloud Runサービスから取得
+fetch_api_key_from_service() {
+    local key_name=$1
+    local value=$($GCLOUD run services describe "${SERVICE_NAME}" \
+        --region="${REGION}" \
+        --project="${PROJECT_ID}" \
+        --format="yaml(spec.template.spec.containers[0].env)" 2>/dev/null \
+        | grep -A1 "name: ${key_name}" | grep "value:" | sed "s/.*value: //")
+    echo "$value"
+}
+
+echo "🔑 Checking API Keys..."
+
+# DEEPINFRA_API_KEY チェック（必須）
 if [ -z "$DEEPINFRA_API_KEY" ]; then
-    echo "❌ Error: DEEPINFRA_API_KEY environment variable is not set"
-    echo "Please set it before running this script:"
-    echo "  export DEEPINFRA_API_KEY=your-api-key"
-    exit 1
+    echo "   DEEPINFRA_API_KEY not in environment, fetching from existing service..."
+    DEEPINFRA_API_KEY=$(fetch_api_key_from_service "DEEPINFRA_API_KEY")
+    if [ -z "$DEEPINFRA_API_KEY" ]; then
+        echo "❌ Error: DEEPINFRA_API_KEY not found in environment or existing service"
+        echo "Please set it before running this script:"
+        echo "  export DEEPINFRA_API_KEY=your-api-key"
+        exit 1
+    fi
+    echo "   ✅ DEEPINFRA_API_KEY fetched from existing service"
+else
+    echo "   ✅ DEEPINFRA_API_KEY is set from environment"
 fi
 
-echo "✅ DEEPINFRA_API_KEY is set"
+# OPENROUTER_API_KEY チェック（必須）
+if [ -z "$OPENROUTER_API_KEY" ]; then
+    echo "   OPENROUTER_API_KEY not in environment, fetching from existing service..."
+    OPENROUTER_API_KEY=$(fetch_api_key_from_service "OPENROUTER_API_KEY")
+    if [ -z "$OPENROUTER_API_KEY" ]; then
+        echo "❌ Error: OPENROUTER_API_KEY not found in environment or existing service"
+        echo "Please set it before running this script:"
+        echo "  export OPENROUTER_API_KEY=your-api-key"
+        exit 1
+    fi
+    echo "   ✅ OPENROUTER_API_KEY fetched from existing service"
+else
+    echo "   ✅ OPENROUTER_API_KEY is set from environment"
+fi
 
 # ALIBABA_API_KEY はオプション
 if [ -z "$ALIBABA_API_KEY" ]; then
-    echo "⚠️  ALIBABA_API_KEY is not set (optional, only needed for alibaba: provider)"
+    echo "   ⚠️  ALIBABA_API_KEY is not set (optional)"
 else
-    echo "✅ ALIBABA_API_KEY is set"
-fi
-
-# OPENROUTER_API_KEY はオプション
-if [ -z "$OPENROUTER_API_KEY" ]; then
-    echo "⚠️  OPENROUTER_API_KEY is not set (optional, only needed for openrouter: provider)"
-else
-    echo "✅ OPENROUTER_API_KEY is set"
+    echo "   ✅ ALIBABA_API_KEY is set"
 fi
 echo ""
 
@@ -201,16 +228,13 @@ echo "🚀 Deploying to Cloud Run..."
 # 環境変数を構築
 ENV_VARS="GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
 ENV_VARS="${ENV_VARS},ENVIRONMENT=${ENVIRONMENT}"
+# 必須APIキー
 ENV_VARS="${ENV_VARS},DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY}"
+ENV_VARS="${ENV_VARS},OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"
 
-# ALIBABA_API_KEY が設定されている場合は追加
+# ALIBABA_API_KEY が設定されている場合は追加（オプション）
 if [ ! -z "$ALIBABA_API_KEY" ]; then
     ENV_VARS="${ENV_VARS},ALIBABA_API_KEY=${ALIBABA_API_KEY}"
-fi
-
-# OPENROUTER_API_KEY が設定されている場合は追加
-if [ ! -z "$OPENROUTER_API_KEY" ]; then
-    ENV_VARS="${ENV_VARS},OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"
 fi
 
 # 環境に応じた設定
