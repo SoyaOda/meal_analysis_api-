@@ -94,13 +94,17 @@ class SimplifiedUSDASearcher:
         logger.info("✅ Embedding model initialized (DeepInfra API)")
 
     def _load_reranker(self):
-        """リランカーをロード（DeepInfra API使用）"""
+        """リランカーをロード（DeepInfra API使用）
+
+        NOTE: このサービスはReranker APIクライアントとして初期化される。
+        実際に使用されるモデルは、API呼び出し時にConfigManager（Admin Panel）から
+        取得され、rerank_batch()のmodelパラメータとして渡される。
+        """
         from .deepinfra_service import DeepInfraService
-        from ..config.settings import get_settings
-        settings = get_settings()
-        reranker_model = settings.DEFAULT_RERANKER_MODEL
-        self.reranker_service = DeepInfraService(model_id=reranker_model)
-        logger.info(f"✅ Reranker model initialized: {reranker_model} (DeepInfra API)")
+        # Rerankerサービスをモデル非依存で初期化
+        # 実際のモデルはAPI呼び出し時に指定される
+        self.reranker_service = DeepInfraService(model_id="reranker-client")
+        logger.info("✅ Reranker service initialized (DeepInfra API)")
 
     async def search_async(
         self,
@@ -166,19 +170,20 @@ class SimplifiedUSDASearcher:
         # リランキング用のドキュメントリスト
         documents = [c["description"] for c in candidates]
 
-        # Settingsを取得
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # Reranker instructionを取得（指定がない場合はsettingsから）
+        # Reranker instructionを取得（指定がない場合はConfigManagerから）
         if reranker_instruction is None:
-            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+            reranker_instruction = config.reranker.instruction
 
-        # Rerankerモデルを取得（指定がない場合はsettingsから）
+        # Rerankerモデルを取得（指定がない場合はConfigManagerから）
         if reranker_model is None:
-            reranker_model = settings.DEFAULT_RERANKER_MODEL
+            reranker_model = config.reranker.model
 
-        logger.info(f"  Reranker model: {reranker_model}")
+        logger.info(f"  Reranker model: {reranker_model} (from ConfigManager)")
         logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
 
         # リランキング実行（DeepInfra API）

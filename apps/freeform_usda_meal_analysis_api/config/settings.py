@@ -148,7 +148,9 @@ class Settings:
 
         # ========== Reranker設定 ==========
         # Rerankerモデル設定
-        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-0.6B")
+        # NOTE: このデフォルト値はFirestore ConfigManagerのフォールバックとして使用
+        # 本番環境ではFirestore (Admin Panel) の設定が優先される
+        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-4B")
 
         # Reranker instruction (USDA食材マッチング用に最適化)
         self.DEFAULT_RERANKER_INSTRUCTION = os.getenv(

@@ -43,19 +43,20 @@ class HybridSearchEngine:
             rrf_k: RRFのkパラメータ（Noneの場合はsettingsから取得）
             rrf_weight: RRF融合スコアの重み（Noneの場合はsettingsから取得）
         """
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
-        # パラメータが指定されていない場合は設定から取得
+        # パラメータが指定されていない場合はConfigManagerから取得
         if bm25_weight is None:
-            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            bm25_weight = config.search.bm25_weight
         if vector_weight is None:
-            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            vector_weight = config.search.vector_weight
         if rrf_k is None:
-            rrf_k = settings.DEFAULT_RRF_K
+            rrf_k = config.search.rrf_k
         if rrf_weight is None:
-            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+            rrf_weight = config.search.rrf_weight
 
         self.index_dir = Path(index_dir)
         self.bm25_weight = bm25_weight
@@ -101,11 +102,11 @@ class HybridSearchEngine:
         Returns:
             [(doc_index, score), ...]
         """
-        # 設定を取得
+        # ConfigManagerから設定を取得
         if top_k is None:
-            from ..config.settings import get_settings
-            settings = get_settings()
-            top_k = settings.DEFAULT_SEARCH_TOP_K
+            from ..admin.config_manager import get_config_manager
+            config = get_config_manager().get_config()
+            top_k = config.search.stage1_top_k
 
         # クエリのトークナイズ
         query_tokens = bm25s.tokenize(
@@ -148,6 +149,8 @@ class HybridSearchEngine:
             [(doc_index, score), ...]
         """
         # Embedding Instruction取得
+        # NOTE: embedding_instructionはConfigManager.SearchConfigに含まれていないため、
+        # settingsから取得（将来的にConfigManagerに統合可能）
         if embedding_instruction is None:
             from ..config.settings import get_settings
             settings = get_settings()
@@ -302,22 +305,22 @@ class HybridSearchEngine:
         Returns:
             検索結果のリスト
         """
-        # 設定を取得
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
         if any(param is None for param in [top_k, stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight]):
-            from ..config.settings import get_settings
-            settings = get_settings()
+            from ..admin.config_manager import get_config_manager
+            config = get_config_manager().get_config()
             if top_k is None:
-                top_k = settings.DEFAULT_DEBUG_TOP_K
+                top_k = config.search.stage1_top_k
             if stage1_top_k is None:
-                stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+                stage1_top_k = config.search.stage1_top_k
             if bm25_weight is None:
-                bm25_weight = settings.DEFAULT_BM25_WEIGHT
+                bm25_weight = config.search.bm25_weight
             if vector_weight is None:
-                vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+                vector_weight = config.search.vector_weight
             if rrf_k is None:
-                rrf_k = settings.DEFAULT_RRF_K
+                rrf_k = config.search.rrf_k
             if rrf_weight is None:
-                rrf_weight = settings.DEFAULT_RRF_WEIGHT
+                rrf_weight = config.search.rrf_weight
 
         logger.info(f"🔍 Hybrid search: '{query}'")
         logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, rrf_weight={rrf_weight}, stage1_top_k={stage1_top_k}")
@@ -452,31 +455,28 @@ class HybridSearchEngine:
             Dict with 'results' (and optionally 'debug_info')
         """
         # 設定を取得（embedding_instructionで常に必要なため条件外で取得）
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
+        # 検索パラメータのデフォルト値をConfigManagerから取得
         if top_k is None:
-            top_k = settings.DEFAULT_DEBUG_TOP_K
+            top_k = config.search.stage1_top_k
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
         if bm25_weight is None:
-            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            bm25_weight = config.search.bm25_weight
         if vector_weight is None:
-            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            vector_weight = config.search.vector_weight
         if rrf_k is None:
-            rrf_k = settings.DEFAULT_RRF_K
+            rrf_k = config.search.rrf_k
         if rrf_weight is None:
-            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+            rrf_weight = config.search.rrf_weight
         if reranker_model is None:
-            reranker_model = settings.DEFAULT_RERANKER_MODEL
+            reranker_model = config.reranker.model
         if reranker_instruction is None:
-            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
-            if reranker_instruction is None:
-                raise ValueError(
-                    "reranker_instruction is required for hybrid search with reranker, "
-                    "but it was not provided and DEFAULT_RERANKER_INSTRUCTION is not configured in settings. "
-                    "Please either pass reranker_instruction parameter or set DEFAULT_RERANKER_INSTRUCTION in settings."
-                )
+            reranker_instruction = config.reranker.instruction
 
         logger.info(f"🔍 Hybrid search with reranker: '{query}'")
         logger.info(f"  Parameters: bm25_weight={bm25_weight}, vector_weight={vector_weight}, rrf_k={rrf_k}, rrf_weight={rrf_weight}, stage1_top_k={stage1_top_k}")
@@ -791,24 +791,26 @@ class HybridSearchEngine:
         Returns:
             Dict with 'results' (and optionally 'debug_info')
         """
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
+        # 検索パラメータのデフォルト値をConfigManagerから取得
         if top_k is None:
-            top_k = settings.DEFAULT_DEBUG_TOP_K
+            top_k = config.search.stage1_top_k
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
         if bm25_weight is None:
-            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            bm25_weight = config.search.bm25_weight
         if vector_weight is None:
-            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            vector_weight = config.search.vector_weight
         if rrf_k is None:
-            rrf_k = settings.DEFAULT_RRF_K
+            rrf_k = config.search.rrf_k
         if rrf_weight is None:
-            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+            rrf_weight = config.search.rrf_weight
         if reranker_instruction is None:
-            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+            reranker_instruction = config.reranker.instruction
 
         logger.debug(f"🔍 Hybrid search (precomputed embedding): '{query}'")
 
@@ -954,20 +956,21 @@ class HybridSearchEngine:
             List of hybrid candidates (without reranker scores)
         """
 
-        # 設定を取得
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
         if stage1_top_k is None:
-            stage1_top_k = settings.DEFAULT_SEARCH_STAGE1_TOP_K
+            stage1_top_k = config.search.stage1_top_k
         if bm25_weight is None:
-            bm25_weight = settings.DEFAULT_BM25_WEIGHT
+            bm25_weight = config.search.bm25_weight
         if vector_weight is None:
-            vector_weight = settings.DEFAULT_VECTOR_WEIGHT
+            vector_weight = config.search.vector_weight
         if rrf_k is None:
-            rrf_k = settings.DEFAULT_RRF_K
+            rrf_k = config.search.rrf_k
         if rrf_weight is None:
-            rrf_weight = settings.DEFAULT_RRF_WEIGHT
+            rrf_weight = config.search.rrf_weight
 
         # 短いクエリ（3文字未満）の場合はBM25をスキップ
         short_query_threshold = 3
@@ -1071,15 +1074,18 @@ class HybridSearchEngine:
         """
         import time as time_module
 
-        from ..config.settings import get_settings
-        settings = get_settings()
+        # ConfigManager（Firestore）を単一の設定ソースとして使用
+        # フォールバックはConfigManagerが内部で処理（settings.pyのデフォルト値を使用）
+        from ..admin.config_manager import get_config_manager
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
 
         if reranker_model is None:
-            reranker_model = settings.DEFAULT_RERANKER_MODEL
+            reranker_model = config.reranker.model
         if reranker_instruction is None:
-            reranker_instruction = settings.DEFAULT_RERANKER_INSTRUCTION
+            reranker_instruction = config.reranker.instruction
 
-        logger.info(f"  Reranker model: {reranker_model}")
+        logger.info(f"  Reranker model: {reranker_model} (from ConfigManager)")
 
         batch_start_time = time_module.time()
 

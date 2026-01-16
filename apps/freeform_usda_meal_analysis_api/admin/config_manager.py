@@ -87,7 +87,7 @@ class RerankerConfig(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
 
     model: str = Field(
-        default="Qwen/Qwen3-Reranker-8B",
+        default="Qwen/Qwen3-Reranker-4B",
         description="Reranker model name"
     )
     instruction: str = Field(
