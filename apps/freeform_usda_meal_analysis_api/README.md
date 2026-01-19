@@ -73,10 +73,10 @@ apps/freeform_usda_meal_analysis_api/demo/
 **機能:**
 - 📷 画像アップロード（ドラッグ&ドロップ対応）
 - ⚙️ VLMモデルとプロンプト選択
-  - Qwen3-VL-30B-A3B-Thinking（デフォルト）
-  - Qwen2-VL-72B-Instruct
-  - OpenRouter: Qwen3-VL-235B
-  - OpenRouter: QVQ-72B
+  - OpenRouter: Gemini 3 Flash Preview（デフォルト）
+  - OpenRouter: GPT-5.1
+  - DeepInfra: Qwen3-VL-30B-A3B-Thinking
+  - DeepInfra: Qwen3-VL-8B-Thinking
 - 🎛️ パラメータ調整
   - Temperature (0.0-2.0)
   - Max Tokens
@@ -480,9 +480,9 @@ const result = await analyzeVoiceInput(audioBlob);
 1. **DeepInfraService**: DeepInfra API との通信を管理（`shared/` に依存せず独立実装）
    - 環境変数から直接設定を取得
    - Thinking モデルのパラメータを自動最適化
-2. **VLMService**: DeepInfra の VLM モデルを使用した画像解析
-   - **デフォルトモデル**: `Qwen/Qwen3-VL-30B-A3B-Thinking` (30Bパラメータ)
-   - **デフォルトプロンプト**: `v7_experimental`
+2. **VLMService**: OpenRouter/DeepInfra の VLM モデルを使用した画像解析
+   - **デフォルトモデル**: `openrouter:google/gemini-3-flash-preview` (ConfigManager設定)
+   - **デフォルトプロンプト**: `v7_experimental_with_meal_title`
    - API呼び出し時にモデルとプロンプトを動的に変更可能
 3. **QueryExtractionService**: VLM レスポンスから検索クエリを抽出
 4. **SimplifiedUSDASearcher**: FAISS Full Index を使用した軽量な食材検索
@@ -568,18 +568,19 @@ apps/freeform_usda_meal_analysis_api/
 
 ### ローカル開発環境
 
+プロジェクトルートに`.env`ファイルを作成し、APIキーを設定します：
+
 ```bash
-# 必須
-DEEPINFRA_API_KEY=<your-api-key>
-GOOGLE_CLOUD_PROJECT=new-snap-calorie
-
-# FAISS インデックスディレクトリ（栄養データ統合版を含む）
-USDA_INDEX_DIR=/path/to/apps/freeform_usda_meal_analysis_api/data/faiss
-
-# オプション
-PORT=8006
-PYTHONPATH=/path/to/meal_analysis_api_2
+# .env ファイル（プロジェクトルート: meal_analysis_api_2/.env）
+DEEPINFRA_API_KEY=<your-deepinfra-api-key>
+OPENROUTER_API_KEY=<your-openrouter-api-key>
 ```
+
+**APIキーの取得方法:**
+- **DeepInfra**: https://deepinfra.com/dash/api_keys
+- **OpenRouter**: https://openrouter.ai/keys
+
+**注意:** デフォルトVLMモデル（`openrouter:google/gemini-3-flash-preview`）を使用するには**OPENROUTER_API_KEY**が必須です。
 
 ### Cloud Run環境
 
@@ -606,23 +607,33 @@ USDA_INDEX_DIR=/app/data/faiss             # コンテナ内インデックス�
 
 ### VLMモデルの選択
 
-デフォルトでは **Qwen/Qwen3-VL-30B-A3B-Thinking** を使用します。
+デフォルトでは **openrouter:google/gemini-3-flash-preview** を使用します（ConfigManagerまたはsettings.pyで設定）。
 
-**利用可能なThinking models:**
-- `Qwen/Qwen3-VL-30B-A3B-Thinking` (**デフォルト**、バランス型)
-- `Qwen/Qwen3-VL-235B-A22B-Thinking` (最高精度、高コスト)
-- `Qwen/Qwen3-VL-8B-Thinking` (軽量、最安)
+**利用可能なモデル:**
+
+| Provider | Model ID | 特徴 | 速度 |
+|----------|----------|------|------|
+| **OpenRouter** | `openrouter:google/gemini-3-flash-preview` | **デフォルト**、高精度・高速 | 30-40秒 |
+| OpenRouter | `openrouter:openai/gpt-5.1` | 最高精度 | 40-60秒 |
+| DeepInfra | `Qwen/Qwen3-VL-30B-A3B-Thinking` | バランス型 | 35-50秒 |
+| DeepInfra | `Qwen/Qwen3-VL-8B-Thinking` | 軽量・低コスト | 20-30秒 |
 
 **推奨設定:**
-- 本番環境（高精度重視）: `Qwen3-VL-235B-A22B-Thinking`
-- 本番環境（コストバランス重視）: `Qwen3-VL-30B-A3B-Thinking` (**デフォルト**)
-- 開発/テスト: `Qwen3-VL-8B-Thinking`
+- 本番環境: `openrouter:google/gemini-3-flash-preview`（**デフォルト**、高精度・高速）
+- 高精度重視: `openrouter:openai/gpt-5.1`
+- 低コスト: `Qwen/Qwen3-VL-8B-Thinking`
 
 API呼び出し時にモデルを動的に変更可能:
 ```bash
+# OpenRouterモデルを使用
 curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
   -F "image=@test_images/food1.jpg" \
-  -F "model_id=Qwen/Qwen3-VL-235B-A22B-Thinking"
+  -F "model_id=openrouter:openai/gpt-5.1"
+
+# DeepInfraモデルを使用
+curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
+  -F "image=@test_images/food1.jpg" \
+  -F "model_id=Qwen/Qwen3-VL-30B-A3B-Thinking"
 ```
 
 ## デバッグ機能
@@ -735,21 +746,117 @@ gcloud logging read \
 - Top 5に限定してログ容量を削減（APIレスポンスはTop 10）
 - description は50文字で切り詰め
 
-## ローカル起動
+## 開発環境セットアップ
 
-### 起動スクリプトを使用（推奨）
+### Python仮想環境
+
+このAPIはモノレポルートの仮想環境を使用します：
 
 ```bash
-# プロジェクトルートに移動
+# 仮想環境の場所
+/Users/odasoya/meal_analysis_api_2/venv/
+
+# 有効化
+cd /Users/odasoya/meal_analysis_api_2
+source venv/bin/activate
+
+# インストール済みの主要パッケージ
+# - faiss-cpu: ベクトル検索エンジン
+# - sentence-transformers: 埋め込みモデル
+# - numpy: 数値計算
+```
+
+### FAISSインデックスとメタデータの再構築
+
+USDAデータベースの栄養情報やポーション情報を更新する場合は、インデックスとメタデータを再構築します。
+
+#### 出力ファイル
+
+| ファイル | 説明 |
+|---------|------|
+| `data/faiss/usda_index_full.faiss` | FAISSベクトルインデックス（埋め込みベクトル） |
+| `data/faiss/usda_metadata.json` | 栄養情報・ポーション情報を含むメタデータ |
+
+#### フルビルド（埋め込み再計算 + メタデータ更新）
+
+```bash
+# 1. 仮想環境を有効化
+cd /Users/odasoya/meal_analysis_api_2
+source venv/bin/activate
+
+# 2. 環境変数設定（DeepInfra APIキー）
+source .env
+
+# 3. スクリプト実行
+cd apps/freeform_usda_meal_analysis_api
+python scripts/build_index_with_nutrition.py
+```
+
+**処理内容:**
+1. USDA JSONファイル（Survey, Foundation, SR Legacy）を読み込み
+2. 食品名からベクトル埋め込みを生成（DeepInfra Qwen3-Embedding-8B）
+3. FAISSインデックスを構築
+4. 栄養情報（カロリー、タンパク質、脂質、炭水化物）を抽出
+5. ポーション情報（単位変換）を抽出
+6. メタデータJSONを生成
+
+**カロリー抽出の優先順位:**
+- ID 1008 (Energy kcal): 最優先（Survey/SR Legacy Foods）
+- ID 2047 (Atwater General Factors): 中優先（Foundation Foods）
+- ID 2048 (Atwater Specific Factors): フォールバック（Foundation Foods）
+
+#### メタデータのみ更新（埋め込み再計算なし）
+
+```bash
+# ポーション情報のみ更新する場合（高速）
+python scripts/build_index_with_nutrition.py --metadata-only
+```
+
+**注意:** FAISSインデックスは変更されません。ポーション情報の追加・修正時に使用。
+
+#### 本番環境への反映
+
+```bash
+# 再構築後、Cloud Runにデプロイ
+ENVIRONMENT=production ./deploy.sh
+```
+
+#### ソースデータの場所
+
+```
+/Users/odasoya/meal_analysis_api_2/usda_database/
+├── surveyDownload.json                                    # Survey Foods (FNDDS)
+├── FoodData_Central_foundation_food_json_2025-04-24 2.json  # Foundation Foods
+└── FoodData_Central_sr_legacy_food_json_2018-04 2.json      # SR Legacy Foods
+```
+
+## ローカル起動
+
+### 前提条件
+
+1. **Python仮想環境**: `venv/`ディレクトリが存在すること
+2. **APIキー設定**: `.env`ファイルにAPIキーが設定されていること（[環境変数セクション](#ローカル開発環境)参照）
+
+### 起動手順
+
+```bash
+# 1. プロジェクトルートに移動
 cd /path/to/meal_analysis_api_2
 
-# 環境変数を設定して起動
+# 2. 仮想環境を有効化
+source venv/bin/activate
+
+# 3. .envファイルを読み込み（APIキー設定）
+source .env
+
+# 4. 環境変数を設定
 export USDA_INDEX_DIR="$(pwd)/apps/freeform_usda_meal_analysis_api/data/faiss"
 export PYTHONPATH="$(pwd)"
 export GOOGLE_CLOUD_PROJECT="new-snap-calorie"
 export PORT="8006"
+export PRELOAD_INDEXES_ON_STARTUP="false"  # 高速起動（Lazy Loading）
 
-# API 起動
+# 5. API起動
 python -m apps.freeform_usda_meal_analysis_api.main
 ```
 
@@ -758,19 +865,55 @@ python -m apps.freeform_usda_meal_analysis_api.main
 起動ログで以下が表示されることを確認：
 
 ```
-✅ Loaded 13564 foods with nutrition data
-✅ Loaded full index: 13564 vectors
+ConfigManager initialized with in-memory backend (local development mode)
+VLM Model: openrouter:google/gemini-3-flash-preview (from ConfigManager)
 ✅ Hybrid search engine initialized
 ✅ Pipeline initialized successfully
+✅ Application initialized - ready to accept requests
 Uvicorn running on http://0.0.0.0:8006
 ```
 
+**ヘルスチェック:**
+```bash
+curl -s http://localhost:8006/health | python3 -m json.tool
+```
+
+期待されるレスポンス:
+```json
+{
+    "status": "healthy",
+    "version": "1.0.0",
+    "model_id": "openrouter:google/gemini-3-flash-preview",
+    "prompt_file": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+}
+```
+
+### ローカルテスト
+
+**画像分析テスト:**
+```bash
+curl -s -X POST http://localhost:8006/api/v1/meal-analyses/complete \
+  -F image=@test_images/food1.jpg | python3 -m json.tool
+```
+
+**音声分析テスト:**
+```bash
+curl -s -X POST http://localhost:8006/api/v1/meal-analyses/voice \
+  -F audio_file=@test_audio/breakfast_detailed.wav | python3 -m json.tool
+```
+
+**テストデータ:**
+- 画像: `test_images/food1.jpg` ~ `food5.jpg`
+- 音声: `test_audio/breakfast_detailed.wav`, `lunch.wav`, `dinner.wav`
+
+### アクセス可能なURL
+
 起動後、以下の URL でアクセス可能:
-- **Swagger UI**: http://localhost:8006/docs (フロントエンドエンジニア向けAPI仕様書)
-- **ReDoc**: http://localhost:8006/redoc (読みやすいAPI仕様書)
+- **Swagger UI**: http://localhost:8006/docs
+- **ReDoc**: http://localhost:8006/redoc
 - **OpenAPI JSON**: http://localhost:8006/openapi.json
 - **Health Check**: http://localhost:8006/health
-- **API Root**: http://localhost:8006/
+- **Admin Panel**: http://localhost:8006/admin
 
 ## API使用例
 
@@ -787,7 +930,7 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 ```bash
 curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
   -F "image=@test_images/food1.jpg" \
-  -F "model_id=Qwen/Qwen2-VL-72B-Instruct" \
+  -F "model_id=openrouter:openai/gpt-5.1" \
   -F "prompt_path=freeform_prompt_usda_format_ver_v7_production_20251027.txt" \
   -F "temperature=0.5" \
   -F "max_tokens=8192"
@@ -807,11 +950,11 @@ curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
 curl -X POST "http://localhost:8006/api/v1/meal-analyses/complete" \
   -F "image=@test_images/food1.jpg" \
   -F "user_context=lunch" \
-  -F "model_id=Qwen/Qwen2-VL-72B-Instruct" \
-  -F "prompt_path=freeform_prompt_usda_format_ver_v6_enhanced_20251027.txt" \
-  -F "temperature=0.7" \
-  -F "max_tokens=4096" \
-  -F "stage1_top_k=40"
+  -F "model_id=Qwen/Qwen3-VL-30B-A3B-Thinking" \
+  -F "prompt_path=freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt" \
+  -F "temperature=0.6" \
+  -F "max_tokens=16384" \
+  -F "stage1_top_k=50"
 ```
 
 ### 音声入力による食事分析

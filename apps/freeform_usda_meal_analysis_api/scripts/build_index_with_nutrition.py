@@ -36,6 +36,13 @@ NUTRIENT_IDS = {
     1005: "carbs_g"        # Carbohydrate, by difference (g)
 }
 
+# カロリー優先順位マップ（数値が小さいほど高優先）
+CALORIE_PRIORITY = {
+    1008: 1,  # Energy (kcal) - 最優先（Survey/SR Legacy Foods）
+    2047: 2,  # Atwater General Factors - 中優先（Foundation Foods）
+    2048: 3,  # Atwater Specific Factors - フォールバック（Foundation Foods）
+}
+
 
 def parse_usda_name(description: str) -> Tuple[str, str]:
     """
@@ -57,28 +64,34 @@ def extract_nutrition(food_nutrients: List[Dict]) -> Dict[str, float]:
     """
     Extract nutrition data from foodNutrients array
 
+    カロリーは優先順位に従って選択:
+    - ID 1008 (Energy kcal): 最優先（Survey/SR Legacy Foods）
+    - ID 2047 (Atwater General): 中優先（Foundation Foods）
+    - ID 2048 (Atwater Specific): フォールバック（Foundation Foods）
+
     Returns:
         Dict with keys: calories, protein_g, fat_g, carbs_g
     """
     nutrients = {}
-
-    # カロリーの優先順位: 1008 > 2047 > 2048
-    # (1008: Energy kcal, 2047: Atwater General, 2048: Atwater Specific)
+    calorie_priority_found = float('inf')  # 現在見つかったカロリーの優先順位
 
     for food_nutrient in food_nutrients:
         nutrient = food_nutrient.get('nutrient', {})
         nutrient_id = nutrient.get('id')
 
-        if nutrient_id in NUTRIENT_IDS:
-            amount = food_nutrient.get('amount', 0.0)
-            key = NUTRIENT_IDS[nutrient_id]
+        if nutrient_id not in NUTRIENT_IDS:
+            continue
 
-            # caloriesの場合、既に値があれば優先順位をチェック
-            if key == "calories" and "calories" in nutrients:
-                # 既存の値より優先順位が高い場合のみ上書き
-                # (低いインデックスが高優先)
-                continue
+        amount = food_nutrient.get('amount', 0.0)
+        key = NUTRIENT_IDS[nutrient_id]
 
+        # カロリーの場合は優先順位を考慮
+        if key == "calories":
+            priority = CALORIE_PRIORITY.get(nutrient_id, float('inf'))
+            if priority < calorie_priority_found:
+                nutrients[key] = round(float(amount), 1)
+                calorie_priority_found = priority
+        else:
             nutrients[key] = round(float(amount), 1)
 
     # 必要な栄養素が揃っていない場合は0で補完
