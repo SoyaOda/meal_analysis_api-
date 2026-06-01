@@ -1,6 +1,7 @@
 """
 Settings and configuration for Freeform USDA Meal Analysis API
 """
+
 import os
 from pathlib import Path
 from functools import lru_cache
@@ -48,34 +49,34 @@ class Settings:
 
         ## デフォルト設定
         - モデル: Gemini 3 Flash Preview
-        - プロンプト: v7_experimental
+        - プロンプト: v11b_component_density
         - 検索: Fullインデックスのみ使用
         """
 
         # ========== VLMモデル設定 ==========
         # デフォルト: Gemini 3 Flash Preview (GPT-5.1より40-50%高速)
         self.DEFAULT_VLM_MODEL_ID = os.getenv(
-            "VLM_MODEL_ID",
-            "openrouter:google/gemini-3-flash-preview"
+            "VLM_MODEL_ID", "openrouter:google/gemini-3-flash-preview"
         )
 
-        # デフォルト: v7_experimental with meal_title プロンプト
+        # デフォルト: v11b (full50でpromote済みの安定版)
         self.DEFAULT_PROMPT_FILE = os.getenv(
             "DEFAULT_PROMPT_FILE",
-            "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+            "freeform_prompt_usda_format_ver_v11b_gemini_component_density_20260225.txt",
         )
 
         # プロンプトディレクトリ
         self.PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
-        # VLMトークン設定
-        # Qwen3-VL-30B-A3B-Thinking推奨設定
-        # - コンテキストウィンドウ: 256K (最大1Mまで拡張可能)
-        # - 出力トークン数: 16384 (実際の上限はDeepInfra APIにより動的に制限される)
-        # - Temperature: 0.6 (Qwen公式推奨値。0.0は性能劣化と無限ループの原因となるため非推奨)
-        self.DEFAULT_MAX_TOKENS = int(os.getenv("VLM_MAX_TOKENS", "16384"))
-        self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.6"))  # Qwen公式推奨値
+        # VLMパラメータ設定（Gemini 3 Flash運用の安定値）
+        # - 出力トークン数: 12288
+        # - Temperature: 0.3
+        self.DEFAULT_MAX_TOKENS = int(os.getenv("VLM_MAX_TOKENS", "12288"))
+        self.DEFAULT_TEMPERATURE = float(os.getenv("VLM_TEMPERATURE", "0.3"))
         self.DEFAULT_SEED = int(os.getenv("VLM_SEED", "123456"))
+        self.DEFAULT_VLM_USE_CACHE = (
+            os.getenv("VLM_USE_CACHE", "true").lower() == "true"
+        )
 
         # Reasoning Effort設定 (OpenRouter用)
         # minimal(10%), low(20%), medium(50%), high(80%), xhigh(95%)
@@ -85,7 +86,10 @@ class Settings:
         # DeepInfra API Key（デフォルトプロバイダー）
         self.DEEPINFRA_API_KEY = os.getenv("DEEPINFRA_API_KEY")
         if not self.DEEPINFRA_API_KEY:
-            raise ValueError("DEEPINFRA_API_KEY environment variable is required")
+            raise ValueError(
+                "DEEPINFRA_API_KEY environment variable is required. "
+                "USDA retrieval (embedding/reranker) depends on DeepInfra even when VLM uses OpenRouter."
+            )
 
         # Alibaba Cloud API Key（オプション）
         # provider:model_id形式で "alibaba:qwen-vl-plus" などを指定する場合に必要
@@ -100,15 +104,11 @@ class Settings:
         self.DATA_DIR = Path(__file__).parent.parent / "data"
 
         # FAISSインデックスディレクトリ（Fullインデックスのみ）
-        self.USDA_INDEX_DIR = os.getenv(
-            "USDA_INDEX_DIR",
-            str(self.DATA_DIR / "faiss")
-        )
+        self.USDA_INDEX_DIR = os.getenv("USDA_INDEX_DIR", str(self.DATA_DIR / "faiss"))
 
         # USDA Metadata ファイル (栄養素データを含む)
         self.USDA_METADATA_FILE = os.getenv(
-            "USDA_METADATA_FILE",
-            str(Path(self.USDA_INDEX_DIR) / "usda_metadata.json")
+            "USDA_METADATA_FILE", str(Path(self.USDA_INDEX_DIR) / "usda_metadata.json")
         )
 
         # 検索設定デフォルト値（Fullインデックスのみ）
@@ -130,13 +130,13 @@ class Settings:
         self.DEFAULT_VECTOR_WEIGHT = float(os.getenv("VECTOR_WEIGHT", "0.6"))
         self.DEFAULT_RRF_K = int(os.getenv("RRF_K", "60"))
         # RRF融合スコアの重み（最終スコア計算時に使用）
-        self.DEFAULT_RRF_WEIGHT = float(os.getenv("RRF_WEIGHT", "0.5"))
+        self.DEFAULT_RRF_WEIGHT = float(os.getenv("RRF_WEIGHT", "0.55"))
 
         # Embedding Instruction（Qwen3-Embedding-8B用）
         # 短いクエリでも正しくUSDA食材にマッチさせるための指示
         self.DEFAULT_EMBEDDING_INSTRUCTION = os.getenv(
             "EMBEDDING_INSTRUCTION",
-            "Match food names to USDA FoodData Central database entries for nutrition lookup"
+            "Match food names to USDA FoodData Central database entries for nutrition lookup",
         )
 
         # 検索結果数の設定
@@ -144,13 +144,17 @@ class Settings:
         self.DEFAULT_SEARCH_STAGE1_TOP_K = int(os.getenv("SEARCH_STAGE1_TOP_K", "100"))
         # Cloud Run最適化設定
         # デフォルトをtrueに変更（本番環境で推奨、コールドスタート時間削減）
-        self.PRELOAD_INDEXES_ON_STARTUP = os.getenv("PRELOAD_INDEXES_ON_STARTUP", "true").lower() == "true"
+        self.PRELOAD_INDEXES_ON_STARTUP = (
+            os.getenv("PRELOAD_INDEXES_ON_STARTUP", "true").lower() == "true"
+        )
 
         # ========== Reranker設定 ==========
         # Rerankerモデル設定
         # NOTE: このデフォルト値はFirestore ConfigManagerのフォールバックとして使用
         # 本番環境ではFirestore (Admin Panel) の設定が優先される
-        self.DEFAULT_RERANKER_MODEL = os.getenv("RERANKER_MODEL", "Qwen/Qwen3-Reranker-4B")
+        self.DEFAULT_RERANKER_MODEL = os.getenv(
+            "RERANKER_MODEL", "Qwen/Qwen3-Reranker-4B"
+        )
 
         # Reranker instruction (USDA食材マッチング用に最適化)
         self.DEFAULT_RERANKER_INSTRUCTION = os.getenv(
@@ -164,15 +168,21 @@ Examples:
 - 'caesar salad' → 'Caesar salad, with romaine' NOT 'Caesar dressing'
 - 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'
 
-Prioritize: Complete phrase match > Preparation method match > Ingredient name similarity"""
+Prioritize: Complete phrase match > Preparation method match > Ingredient name similarity""",
         )
 
         # Reranker top_n (返す結果数、Noneの場合は全件)
-        self.DEFAULT_RERANKER_TOP_N = int(os.getenv("RERANKER_TOP_N", "0")) if os.getenv("RERANKER_TOP_N") else None
+        self.DEFAULT_RERANKER_TOP_N = (
+            int(os.getenv("RERANKER_TOP_N", "0"))
+            if os.getenv("RERANKER_TOP_N")
+            else None
+        )
 
         # ========== Thinkingモデル推奨設定 ==========
         # Thinkingモデル使用時の推奨パラメータ
-        self.THINKING_RECOMMENDED_TEMPERATURE = float(os.getenv("THINKING_RECOMMENDED_TEMP", "0.6"))
+        self.THINKING_RECOMMENDED_TEMPERATURE = float(
+            os.getenv("THINKING_RECOMMENDED_TEMP", "0.6")
+        )
         self.THINKING_TOP_P = float(os.getenv("THINKING_TOP_P", "0.95"))
         self.THINKING_TOP_K = int(os.getenv("THINKING_TOP_K", "20"))
 
@@ -181,23 +191,20 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
 
         # ========== Voice分析設定 ==========
         # Voice用LLM/VLMモデル（テキストモード）
-        # デフォルト: gemma-3-27b-it（軽量で高速なLLM）
+        # デフォルト: OpenRouter GPT-5 Mini
         # VLMモデル（Qwen3-VL等）もテキストモードで使用可能
         self.DEFAULT_VOICE_MODEL_ID = os.getenv(
-            "VOICE_MODEL_ID",
-            "google/gemma-3-27b-it"
+            "VOICE_MODEL_ID", "openrouter:openai/gpt-5-mini"
         )
 
         # Voice用プロンプトファイル
         self.DEFAULT_VOICE_PROMPT_FILE = os.getenv(
-            "DEFAULT_VOICE_PROMPT_FILE",
-            "freeform_voice_prompt_usda.txt"
+            "DEFAULT_VOICE_PROMPT_FILE", "freeform_voice_prompt_usda.txt"
         )
 
         # 音声認識設定
         self.DEFAULT_WHISPER_MODEL = os.getenv(
-            "WHISPER_MODEL",
-            "openai/whisper-large-v3-turbo"
+            "WHISPER_MODEL", "openai/whisper-large-v3-turbo"
         )
 
         # Voice用LLMパラメータ
@@ -228,13 +235,13 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
             prompt_filename = self.DEFAULT_PROMPT_FILE
 
         # バリデーション: ファイル名ではなくプロンプトテキストが渡された場合のチェック
-        if len(prompt_filename) > 200 or '\n' in prompt_filename:
+        if len(prompt_filename) > 200 or "\n" in prompt_filename:
             raise ValueError(
                 "Invalid prompt_path: expected a file name, but received text content.\n"
                 "Please provide only the file name (e.g., 'freeform_prompt_usda_format_ver_v7_experimental_20251027.txt'),\n"
                 "not the full prompt text.\n\n"
-                f"Available prompts in {self.PROMPTS_DIR}:\n" +
-                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
+                f"Available prompts in {self.PROMPTS_DIR}:\n"
+                + "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
             )
 
         prompt_path = self.PROMPTS_DIR / prompt_filename
@@ -242,8 +249,8 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
         if not prompt_path.exists():
             raise FileNotFoundError(
                 f"Prompt file not found: {prompt_path}\n"
-                f"Available prompts in {self.PROMPTS_DIR}:\n" +
-                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
+                f"Available prompts in {self.PROMPTS_DIR}:\n"
+                + "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
             )
 
         return str(prompt_path)
@@ -266,13 +273,15 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
             prompt_filename = self.DEFAULT_VOICE_PROMPT_FILE
 
         # バリデーション: ファイル名ではなくプロンプトテキストが渡された場合のチェック
-        if len(prompt_filename) > 200 or '\n' in prompt_filename:
+        if len(prompt_filename) > 200 or "\n" in prompt_filename:
             raise ValueError(
                 "Invalid voice prompt_path: expected a file name, but received text content.\n"
                 "Please provide only the file name (e.g., 'freeform_voice_prompt_usda.txt'),\n"
                 "not the full prompt text.\n\n"
-                f"Available voice prompts in {self.PROMPTS_DIR}:\n" +
-                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*voice*.txt"))
+                f"Available voice prompts in {self.PROMPTS_DIR}:\n"
+                + "\n".join(
+                    f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*voice*.txt")
+                )
             )
 
         prompt_path = self.PROMPTS_DIR / prompt_filename
@@ -280,8 +289,8 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
         if not prompt_path.exists():
             raise FileNotFoundError(
                 f"Voice prompt file not found: {prompt_path}\n"
-                f"Available prompts in {self.PROMPTS_DIR}:\n" +
-                "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
+                f"Available prompts in {self.PROMPTS_DIR}:\n"
+                + "\n".join(f"  - {p.name}" for p in self.PROMPTS_DIR.glob("*.txt"))
             )
 
         return str(prompt_path)

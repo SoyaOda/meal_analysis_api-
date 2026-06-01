@@ -1,0 +1,59 @@
+# PDCA Evaluation Configuration
+# このファイルを編集して評価対象を設定
+
+api:
+  url: "https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app"
+  concurrent: 3
+  timeout_seconds: 300
+
+dataset:
+  images_dir: "test_images/images"
+  labels_dir: "test_images/images_label_with_nutrition"
+  num_images: 50
+
+# 評価対象モデル（キー名は出力ラベル、model_idはOpenRouter形式）
+models:
+  gemini3-flash:
+    model_id: "openrouter:google/gemini-3-flash-preview"
+    note: "現行本番モデル"
+  gemma4-26b:
+    model_id: "openrouter:google/gemma-4-26b-a4b-it"
+    note: "候補: Gemma 4 MoE"
+  # gemma4-31b:
+  #   model_id: "openrouter:google/gemma-4-31b-it"
+  #   note: "候補: Gemma 4 Dense"
+  # qwen36-plus:
+  #   model_id: "openrouter:qwen/qwen3.6-plus:free"
+  #   note: "候補: Qwen 3.6 Plus (free tier制限あり)"
+
+# 評価対象プロンプト（ファイル名のみ、prompts/配下）
+prompts:
+  server-default:
+    file: null
+    note: "サーバーデフォルト（Firestoreから取得）"
+  # v7-production:
+  #   file: "freeform_prompt_usda_format_ver_v7_production_20251027.txt"
+  #   note: "デプロイ済みプロンプト"
+
+# Reranker設定（オーバーライド、nullならサーバーデフォルト）
+reranker:
+  model: "Qwen/Qwen3-Reranker-8B"
+  instruction: null
+
+# 評価設定
+evaluation:
+  runs: 1                        # 再現性評価: 3-5推奨
+  use_vlm_cache: false           # キャッシュ無効（正確な比較）
+  debug: true                    # 中間結果取得
+  calorie_high_error_threshold: 30  # 高誤差の閾値(%)
+
+# フェーズ別評価の閾値（目標値）
+targets:
+  vlm:
+    food_recognition_f1: 0.80    # VLMの食材認識F1
+    weight_mape: 25.0            # 重量推定MAPE(%)
+  matching:
+    usda_match_accuracy: 0.70    # USDAマッチ正解率
+  nutrition:
+    calorie_mae: 15.0            # カロリーMAE(%)目標
+    high_error_rate: 10.0        # 30%以上誤差率(%)目標

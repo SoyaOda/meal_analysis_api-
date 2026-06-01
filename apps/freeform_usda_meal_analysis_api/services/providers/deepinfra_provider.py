@@ -13,7 +13,7 @@ from openai import AsyncOpenAI, APIError, RateLimitError, APIConnectionError
 from .base_provider import BaseVLMProvider
 from ...config import get_settings
 from ...core.retry import llm_retry
-from ...core.circuit_breaker import vlm_breaker, with_circuit_breaker, AIOBREAKER_AVAILABLE
+from ...core.circuit_breaker import vlm_breaker, with_circuit_breaker
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +41,16 @@ class DeepInfraProvider(BaseVLMProvider):
         # API keyの取得
         api_key = os.getenv("DEEPINFRA_API_KEY")
         if not api_key:
-            raise ValueError("DeepInfra API keyが設定されていません。環境変数 'DEEPINFRA_API_KEY' を設定してください。")
+            raise ValueError(
+                "DeepInfra API keyが設定されていません。環境変数 'DEEPINFRA_API_KEY' を設定してください。"
+            )
 
         # モデルIDの決定（バージョンpin対応）
         self.model_id = f"{model_id}:{model_version}" if model_version else model_id
 
-        base_url = os.getenv("DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai")
+        base_url = os.getenv(
+            "DEEPINFRA_BASE_URL", "https://api.deepinfra.com/v1/openai"
+        )
 
         # 非同期クライアントの初期化
         self.client = AsyncOpenAI(
@@ -57,7 +61,9 @@ class DeepInfraProvider(BaseVLMProvider):
 
     @llm_retry
     @with_circuit_breaker(vlm_breaker)
-    async def _call_chat_api(self, messages: list, max_tokens: int, temperature: float, seed: int):
+    async def _call_chat_api(
+        self, messages: list, max_tokens: int, temperature: float, seed: int
+    ):
         """
         Chat Completions API呼び出し（リトライ + Circuit Breaker付き）
 
@@ -70,7 +76,7 @@ class DeepInfraProvider(BaseVLMProvider):
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature,
-            seed=seed
+            seed=seed,
         )
 
     async def analyze_image(
@@ -82,7 +88,7 @@ class DeepInfraProvider(BaseVLMProvider):
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
         reasoning_effort: Optional[str] = None,
-        return_usage: bool = False
+        return_usage: bool = False,
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
         DeepInfra API経由で画像を分析
@@ -103,6 +109,7 @@ class DeepInfraProvider(BaseVLMProvider):
         """
         # ConfigManagerから動的設定を取得
         from ...admin.config_manager import get_config_manager
+
         config_manager = get_config_manager()
         config = config_manager.get_config()
 
@@ -114,9 +121,13 @@ class DeepInfraProvider(BaseVLMProvider):
         if seed is None:
             seed = config.vlm.seed
 
-        logger.info(f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
+        logger.info(
+            f"🔧 VLM Parameters: max_tokens={max_tokens}, temperature={temperature}, seed={seed}"
+        )
         if reasoning_effort is not None:
-            logger.warning(f"⚠️ reasoning_effort={reasoning_effort} is not used by DeepInfra")
+            logger.warning(
+                f"⚠️ reasoning_effort={reasoning_effort} is not used by DeepInfra"
+            )
 
         # Base64エンコード
         image_base64 = base64.b64encode(image_bytes).decode("utf-8")
@@ -125,7 +136,9 @@ class DeepInfraProvider(BaseVLMProvider):
         image_hash = hashlib.sha256(image_bytes).hexdigest()
 
         try:
-            logger.info(f"🖼️  Analyzing image with DeepInfra VLM (model: {self.model_id})")
+            logger.info(
+                f"🖼️  Analyzing image with DeepInfra VLM (model: {self.model_id})"
+            )
             logger.info(f"   Prompt length: {len(prompt)} chars")
             logger.info(f"   Image size: {len(image_bytes)} bytes")
             logger.info(f"   Image hash: {image_hash[:16]}...")
@@ -139,13 +152,10 @@ class DeepInfraProvider(BaseVLMProvider):
                             "type": "image_url",
                             "image_url": {
                                 "url": f"data:{image_mime_type};base64,{image_base64}"
-                            }
+                            },
                         },
-                        {
-                            "type": "text",
-                            "text": prompt
-                        }
-                    ]
+                        {"type": "text", "text": prompt},
+                    ],
                 }
             ]
 
@@ -154,14 +164,16 @@ class DeepInfraProvider(BaseVLMProvider):
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                seed=seed
+                seed=seed,
             )
 
             # 応答が空でないかチェック
             if not response.choices or not response.choices[0].message.content:
                 logger.error("❌ API response is empty or invalid.")
                 logger.error(f"Response object: {response}")
-                raise ValueError(f"[DeepInfra Provider] Empty or invalid API response. Response: {response}")
+                raise ValueError(
+                    f"[DeepInfra Provider] Empty or invalid API response. Response: {response}"
+                )
 
             # 応答内容を取得
             raw_json_content = response.choices[0].message.content.strip()
@@ -177,9 +189,11 @@ class DeepInfraProvider(BaseVLMProvider):
                     "completion_tokens": response.usage.completion_tokens,
                     "total_tokens": response.usage.total_tokens,
                 }
-                logger.info(f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
-                          f"completion={usage_dict['completion_tokens']}, "
-                          f"total={usage_dict['total_tokens']}")
+                logger.info(
+                    f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
+                    f"completion={usage_dict['completion_tokens']}, "
+                    f"total={usage_dict['total_tokens']}"
+                )
 
             # JSONの妥当性を検証（JSONクリーニング処理）
             try:
@@ -189,16 +203,20 @@ class DeepInfraProvider(BaseVLMProvider):
                 logger.warning(f"Initial JSON parsing failed: {e}")
 
                 # エラー箇所の周辺を表示
-                error_pos = e.pos if hasattr(e, 'pos') else 0
+                error_pos = e.pos if hasattr(e, "pos") else 0
                 context_start = max(0, error_pos - 100)
                 context_end = min(len(raw_json_content), error_pos + 100)
-                logger.warning(f"Error context: ...{raw_json_content[context_start:context_end]}...")
+                logger.warning(
+                    f"Error context: ...{raw_json_content[context_start:context_end]}..."
+                )
 
                 # JSONクリーニング処理
                 cleaned_content = raw_json_content
 
                 # 1. <think>...</think> タグの除去（Gemini等のThinking出力対応）
-                cleaned_content = re.sub(r'<think>.*?</think>', '', cleaned_content, flags=re.DOTALL)
+                cleaned_content = re.sub(
+                    r"<think>.*?</think>", "", cleaned_content, flags=re.DOTALL
+                )
                 cleaned_content = cleaned_content.strip()
 
                 # 2. Markdown コードブロックの除去
@@ -211,7 +229,7 @@ class DeepInfraProvider(BaseVLMProvider):
                 cleaned_content = cleaned_content.strip()
 
                 # 3. trailing commaの除去
-                cleaned_content = re.sub(r',(\s*[}\]])', r'\1', cleaned_content)
+                cleaned_content = re.sub(r",(\s*[}\]])", r"\1", cleaned_content)
 
                 # 4. 再パース試行
                 try:
@@ -221,12 +239,16 @@ class DeepInfraProvider(BaseVLMProvider):
                 except json.JSONDecodeError as e2:
                     # さらに詳細なエラー情報を出力
                     logger.error(f"JSON cleaning failed after all attempts: {e2}")
-                    logger.error(f"Error line: {e2.lineno if hasattr(e2, 'lineno') else 'unknown'}")
-                    logger.error(f"Error column: {e2.colno if hasattr(e2, 'colno') else 'unknown'}")
+                    logger.error(
+                        f"Error line: {e2.lineno if hasattr(e2, 'lineno') else 'unknown'}"
+                    )
+                    logger.error(
+                        f"Error column: {e2.colno if hasattr(e2, 'colno') else 'unknown'}"
+                    )
 
                     # エラー行の内容を表示
-                    lines = cleaned_content.split('\n')
-                    if hasattr(e2, 'lineno') and e2.lineno <= len(lines):
+                    lines = cleaned_content.split("\n")
+                    if hasattr(e2, "lineno") and e2.lineno <= len(lines):
                         error_line_idx = e2.lineno - 1
                         logger.error(f"Error line content: {lines[error_line_idx]}")
                         if error_line_idx > 0:
@@ -236,7 +258,7 @@ class DeepInfraProvider(BaseVLMProvider):
 
                     # 完全なJSONをファイルに保存
                     debug_file = f"/tmp/debug_json_error_{image_hash[:8]}.txt"
-                    with open(debug_file, 'w', encoding='utf-8') as f:
+                    with open(debug_file, "w", encoding="utf-8") as f:
                         f.write(cleaned_content)
                     logger.error(f"Full JSON content saved to: {debug_file}")
 
@@ -267,7 +289,7 @@ class DeepInfraProvider(BaseVLMProvider):
         max_tokens: Optional[int] = None,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        return_usage: bool = False
+        return_usage: bool = False,
     ) -> Union[str, Tuple[str, Dict[str, Any]]]:
         """
         テキスト入力を分析してLLMの応答を取得（Voice入力用）
@@ -289,6 +311,7 @@ class DeepInfraProvider(BaseVLMProvider):
         """
         # ConfigManagerから動的設定を取得
         from ...admin.config_manager import get_config_manager
+
         config_manager = get_config_manager()
         config = config_manager.get_config()
 
@@ -300,23 +323,21 @@ class DeepInfraProvider(BaseVLMProvider):
         if seed is None:
             seed = config.voice.seed
 
-        logger.info(f"🔧 LLM Parameters (text mode): max_tokens={max_tokens}, temperature={temperature}, seed={seed}")
+        logger.info(
+            f"🔧 LLM Parameters (text mode): max_tokens={max_tokens}, temperature={temperature}, seed={seed}"
+        )
 
         try:
-            logger.info(f"📝 Analyzing text with DeepInfra LLM (model: {self.model_id})")
+            logger.info(
+                f"📝 Analyzing text with DeepInfra LLM (model: {self.model_id})"
+            )
             logger.info(f"   Prompt length: {len(prompt)} chars")
             logger.info(f"   Text length: {len(text)} chars")
 
             # メッセージ構築（テキストのみ）
             messages = [
-                {
-                    "role": "system",
-                    "content": prompt
-                },
-                {
-                    "role": "user",
-                    "content": text
-                }
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": text},
             ]
 
             # API呼び出し（tenacityリトライ付き）
@@ -324,7 +345,7 @@ class DeepInfraProvider(BaseVLMProvider):
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                seed=seed
+                seed=seed,
             )
 
             # 応答が空でないかチェック
@@ -345,9 +366,11 @@ class DeepInfraProvider(BaseVLMProvider):
                     "completion_tokens": response.usage.completion_tokens,
                     "total_tokens": response.usage.total_tokens,
                 }
-                logger.info(f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
-                          f"completion={usage_dict['completion_tokens']}, "
-                          f"total={usage_dict['total_tokens']}")
+                logger.info(
+                    f"📊 Token usage: prompt={usage_dict['prompt_tokens']}, "
+                    f"completion={usage_dict['completion_tokens']}, "
+                    f"total={usage_dict['total_tokens']}"
+                )
 
             if return_usage:
                 return raw_content, usage_dict

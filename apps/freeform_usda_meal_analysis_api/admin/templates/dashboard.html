@@ -637,14 +637,14 @@
                     <div class="form-group">
                         <label class="form-label">Voice LLM Model ID</label>
                         <select id="voice-model_id-select" class="form-control" onchange="handleModelSelect('voice'); markDirty()">
-                            <option value="google/gemma-3-27b-it">DeepInfra: Gemma 3 27B IT (Recommended)</option>
-                            <option value="openrouter:openai/gpt-5-mini">OpenRouter: GPT-5 Mini</option>
+                            <option value="openrouter:openai/gpt-5-mini">OpenRouter: GPT-5 Mini (Recommended)</option>
+                            <option value="google/gemma-3-27b-it">DeepInfra: Gemma 3 27B IT</option>
                             <option value="openrouter:google/gemini-3-flash-preview">OpenRouter: Gemini 3 Flash</option>
                             <option value="Qwen/Qwen2.5-VL-72B-Instruct">DeepInfra: Qwen2.5-VL 72B</option>
                             <option value="__custom__">Custom (direct input)</option>
                         </select>
                         <input type="text" id="voice-model_id" class="form-control" style="margin-top: 8px; display: none;"
-                               placeholder="e.g., google/gemma-3-27b-it"
+                               placeholder="e.g., openrouter:openai/gpt-5-mini"
                                value="{{ config.voice.model_id }}"
                                oninput="markDirty()">
                         <p class="form-hint">LLM model for voice text analysis</p>
@@ -966,15 +966,15 @@
 
             document.getElementById('vlm-prompt_file').value = config.vlm.prompt_file || '';
             document.getElementById('vlm-prompt_text').value = config.vlm.prompt_text || '';
-            document.getElementById('vlm-temperature').value = config.vlm.temperature || 0.6;
-            document.getElementById('vlm-temperature-slider').value = config.vlm.temperature || 0.6;
-            document.getElementById('vlm-max_tokens').value = config.vlm.max_tokens || 16384;
+            document.getElementById('vlm-temperature').value = config.vlm.temperature || 0.3;
+            document.getElementById('vlm-temperature-slider').value = config.vlm.temperature || 0.3;
+            document.getElementById('vlm-max_tokens').value = config.vlm.max_tokens || 12288;
             document.getElementById('vlm-reasoning_effort').value = config.vlm.reasoning_effort || 'medium';
             togglePromptTextWarning();
 
             // Voice settings
             if (config.voice) {
-                const voiceModelId = config.voice.model_id || 'google/gemma-3-27b-it';
+                const voiceModelId = config.voice.model_id || 'openrouter:openai/gpt-5-mini';
                 document.getElementById('voice-model_id').value = voiceModelId;
                 initModelSelect('voice', voiceModelId);
 
@@ -996,8 +996,8 @@
             document.getElementById('search-vector_weight-slider').value = config.search.vector_weight || 0.6;
             document.getElementById('search-rrf_k').value = config.search.rrf_k || 60;
             document.getElementById('search-rrf_k-slider').value = config.search.rrf_k || 60;
-            document.getElementById('search-rrf_weight').value = config.search.rrf_weight || 0.5;
-            document.getElementById('search-rrf_weight-slider').value = config.search.rrf_weight || 0.5;
+            document.getElementById('search-rrf_weight').value = config.search.rrf_weight || 0.55;
+            document.getElementById('search-rrf_weight-slider').value = config.search.rrf_weight || 0.55;
 
             // Reranker settings
             const rerankerModel = config.reranker.model || 'Qwen/Qwen3-Reranker-8B';

@@ -1,0 +1,25 @@
+# Lesson Template
+
+- Date:
+- Run directory:
+- What changed:
+- What improved:
+- What regressed:
+- Failure pattern:
+- Likely root cause:
+- Next hypothesis:
+- Decision: Promote / Hold / Reject
+- Candidate factors (structured):
+  - `model_family=`
+  - `prompt_sha256=`
+  - `reasoning_effort=`
+  - `temperature=`
+  - `seed=`
+  - `max_tokens=`
+  - `use_vlm_cache=`
+- Effective factors (worked):
+- Ineffective factors (did not work):
+- Overfitting check:
+  - Prompt leakage check passed: yes/no
+  - Holdout or full50 confirmation run:
+  - failure_count == 0 and coverage_complete == true:

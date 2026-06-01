@@ -1,0 +1,25 @@
+# Experiment Plan Template
+
+- Date:
+- Owner:
+- Goal (single sentence):
+- Hypothesis:
+- Baseline file:
+- Dataset split: `dev_40_v1` / `holdout_10_v1` / `full50`
+- Required image count for promote:
+- Candidates:
+- Fixed params:
+- Budget guardrail:
+- Success criteria:
+- Rollback condition:
+- Anti-overfitting checks:
+  - Promptに`test_foodXX`/ground truth/label値を含めていない
+  - 比較対象間で画像集合が完全一致
+  - 評価時は `use_vlm_cache=false`
+- Planned factor tags (for long-term analysis):
+  - `model_family=`
+  - `prompt_variant=`
+  - `reasoning_effort=`
+  - `temperature=`
+  - `max_tokens=`
+  - `retrieval_stage1_top_k=`

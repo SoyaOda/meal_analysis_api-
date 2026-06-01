@@ -14,89 +14,74 @@ logger = logging.getLogger(__name__)
 
 # ========== Configuration Models ==========
 
+
 class VLMConfig(BaseModel):
     """VLM (Vision Language Model) Configuration"""
+
     model_config = ConfigDict(protected_namespaces=())
 
     model_id: str = Field(
-        default="openrouter:openai/gpt-5.1",
-        description="VLM Model ID (e.g., 'openrouter:openai/gpt-5.1', 'openrouter:google/gemini-3-flash-preview')"
+        default="openrouter:google/gemini-3-flash-preview",
+        description="VLM Model ID (e.g., 'openrouter:google/gemini-3-flash-preview', 'openrouter:openai/gpt-5.1')",
     )
     prompt_file: str = Field(
-        default="freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt",
-        description="Prompt file name (in prompts/ directory)"
+        default="freeform_prompt_usda_format_ver_v11b_gemini_component_density_20260225.txt",
+        description="Prompt file name (in prompts/ directory)",
     )
     prompt_text: Optional[str] = Field(
-        default=None,
-        description="Direct prompt text (overrides prompt_file if set)"
+        default=None, description="Direct prompt text (overrides prompt_file if set)"
     )
     temperature: float = Field(
-        default=0.6,
-        ge=0.0,
-        le=2.0,
-        description="Generation temperature"
+        default=0.3, ge=0.0, le=2.0, description="Generation temperature"
     )
     max_tokens: int = Field(
-        default=16384,
-        ge=1,
-        le=32768,
-        description="Maximum output tokens"
+        default=12288, ge=1, le=32768, description="Maximum output tokens"
     )
     reasoning_effort: str = Field(
         default="medium",
-        description="Reasoning effort level: minimal/low/medium/high/xhigh"
+        description="Reasoning effort level: minimal/low/medium/high/xhigh",
     )
-    seed: int = Field(
-        default=123456,
-        description="Random seed for reproducibility"
+    seed: int = Field(default=123456, description="Random seed for reproducibility")
+    use_cache: bool = Field(
+        default=True,
+        description="Whether to use VLM response cache",
     )
 
 
 class SearchConfig(BaseModel):
     """Hybrid Search Configuration"""
+
     stage1_top_k: int = Field(
         default=50,
         ge=1,
         le=200,
-        description="Number of candidates to retrieve in Stage 1"
+        description="Number of candidates to retrieve in Stage 1",
     )
     bm25_weight: float = Field(
-        default=0.4,
-        ge=0.0,
-        le=1.0,
-        description="BM25 search score weight"
+        default=0.4, ge=0.0, le=1.0, description="BM25 search score weight"
     )
     vector_weight: float = Field(
-        default=0.6,
-        ge=0.0,
-        le=1.0,
-        description="Vector search score weight"
+        default=0.6, ge=0.0, le=1.0, description="Vector search score weight"
     )
     rrf_k: int = Field(
-        default=60,
-        ge=1,
-        le=200,
-        description="RRF (Reciprocal Rank Fusion) k parameter"
+        default=60, ge=1, le=200, description="RRF (Reciprocal Rank Fusion) k parameter"
     )
     rrf_weight: float = Field(
-        default=0.5,
-        ge=0.0,
-        le=2.0,
-        description="RRF fusion score weight"
+        default=0.55, ge=0.0, le=2.0, description="RRF fusion score weight"
     )
     embedding_instruction: str = Field(
         default="Match food names to USDA FoodData Central database entries for nutrition lookup",
-        description="Instruction for embedding model to improve food name matching"
+        description="Instruction for embedding model to improve food name matching",
     )
 
 
 class RerankerConfig(BaseModel):
     """Reranker Configuration"""
+
     model_config = ConfigDict(protected_namespaces=())
 
     model: str = Field(
-        default="Qwen/Qwen3-Reranker-4B",
-        description="Reranker model name"
+        default="Qwen/Qwen3-Reranker-4B", description="Reranker model name"
     )
     instruction: str = Field(
         default="""Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.
@@ -109,64 +94,54 @@ Examples:
 - 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'
 
 Prioritize: Complete phrase match > Preparation method match > Ingredient name similarity""",
-        description="Reranker instruction for USDA food matching"
+        description="Reranker instruction for USDA food matching",
     )
     top_n: Optional[int] = Field(
         default=None,
         ge=1,
         le=100,
-        description="Number of results to return (None = all)"
+        description="Number of results to return (None = all)",
     )
 
 
 class VoiceConfig(BaseModel):
     """Voice Analysis Configuration (音声入力用設定)"""
+
     model_config = ConfigDict(protected_namespaces=())
 
     model_id: str = Field(
-        default="google/gemma-3-27b-it",
-        description="Voice解析用LLM/VLMモデルID (e.g., 'google/gemma-3-27b-it', 'openrouter:openai/gpt-5-mini')"
+        default="openrouter:openai/gpt-5-mini",
+        description="Voice解析用LLM/VLMモデルID (e.g., 'openrouter:openai/gpt-5-mini', 'google/gemma-3-27b-it')",
     )
     prompt_file: str = Field(
         default="freeform_voice_prompt_usda.txt",
-        description="Voice解析用プロンプトファイル名 (in prompts/ directory)"
+        description="Voice解析用プロンプトファイル名 (in prompts/ directory)",
     )
     prompt_text: Optional[str] = Field(
         default=None,
-        description="カスタムプロンプトテキスト (overrides prompt_file if set)"
+        description="カスタムプロンプトテキスト (overrides prompt_file if set)",
     )
     whisper_model: str = Field(
-        default="openai/whisper-large-v3-turbo",
-        description="Whisper STTモデルID"
+        default="openai/whisper-large-v3-turbo", description="Whisper STTモデルID"
     )
-    temperature: float = Field(
-        default=0.3,
-        ge=0.0,
-        le=2.0,
-        description="生成温度"
-    )
+    temperature: float = Field(default=0.3, ge=0.0, le=2.0, description="生成温度")
     max_tokens: int = Field(
-        default=4096,
-        ge=1,
-        le=32768,
-        description="最大出力トークン数"
+        default=4096, ge=1, le=32768, description="最大出力トークン数"
     )
-    seed: int = Field(
-        default=123456,
-        description="Random seed for reproducibility"
-    )
+    seed: int = Field(default=123456, description="Random seed for reproducibility")
 
 
 class RuntimeConfig(BaseModel):
     """Runtime Configuration (環境依存設定)"""
+
     device: str = Field(
-        default="cpu",
-        description="Computation device: 'cpu' or 'cuda'"
+        default="cpu", description="Computation device: 'cpu' or 'cuda'"
     )
 
 
 class APIConfig(BaseModel):
     """Complete API Configuration"""
+
     vlm: VLMConfig = Field(default_factory=VLMConfig)
     voice: VoiceConfig = Field(default_factory=VoiceConfig)
     search: SearchConfig = Field(default_factory=SearchConfig)
@@ -177,6 +152,7 @@ class APIConfig(BaseModel):
 
 
 # ========== Configuration Manager ==========
+
 
 class ConfigManager:
     """
@@ -204,7 +180,7 @@ class ConfigManager:
     def __init__(
         self,
         use_firestore: bool = None,
-        cache_ttl_seconds: int = 5  # デバッグ用に短縮
+        cache_ttl_seconds: int = 5,  # デバッグ用に短縮
     ):
         if self._initialized:
             return
@@ -223,17 +199,24 @@ class ConfigManager:
         if self.use_firestore:
             try:
                 from google.cloud import firestore
+
                 # 明示的にプロジェクトを指定（ローカル環境でも正しいプロジェクトに接続）
                 project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
                 self._firestore_client = firestore.Client(project=project_id)
-                logger.info(f"ConfigManager initialized with Firestore backend (project: {project_id})")
+                logger.info(
+                    f"ConfigManager initialized with Firestore backend (project: {project_id})"
+                )
             except Exception as e:
-                logger.warning(f"Firestore initialization failed, falling back to in-memory: {e}")
+                logger.warning(
+                    f"Firestore initialization failed, falling back to in-memory: {e}"
+                )
                 self.use_firestore = False
                 self._firestore_client = None
 
         if not self.use_firestore:
-            logger.info("ConfigManager initialized with in-memory backend (local development mode)")
+            logger.info(
+                "ConfigManager initialized with in-memory backend (local development mode)"
+            )
             # Load defaults from environment/settings
             self._cache = self._load_defaults_from_settings()
 
@@ -243,6 +226,7 @@ class ConfigManager:
         """Load default configuration from settings.py"""
         try:
             from ..config.settings import get_settings
+
             settings = get_settings()
 
             return APIConfig(
@@ -253,6 +237,7 @@ class ConfigManager:
                     max_tokens=settings.DEFAULT_MAX_TOKENS,
                     reasoning_effort=settings.DEFAULT_REASONING_EFFORT,
                     seed=settings.DEFAULT_SEED,
+                    use_cache=settings.DEFAULT_VLM_USE_CACHE,
                 ),
                 voice=VoiceConfig(
                     model_id=settings.DEFAULT_VOICE_MODEL_ID,
@@ -280,7 +265,9 @@ class ConfigManager:
                 ),
             )
         except Exception as e:
-            logger.warning(f"Failed to load from settings, using hardcoded defaults: {e}")
+            logger.warning(
+                f"Failed to load from settings, using hardcoded defaults: {e}"
+            )
             return APIConfig()
 
     def _is_cache_valid(self) -> bool:
@@ -304,7 +291,9 @@ class ConfigManager:
 
         if self.use_firestore and self._firestore_client:
             try:
-                doc_ref = self._firestore_client.collection(self.COLLECTION_NAME).document(self.DOCUMENT_ID)
+                doc_ref = self._firestore_client.collection(
+                    self.COLLECTION_NAME
+                ).document(self.DOCUMENT_ID)
                 doc = doc_ref.get()
 
                 if doc.exists:
@@ -338,7 +327,9 @@ class ConfigManager:
             return False
 
         try:
-            doc_ref = self._firestore_client.collection(self.COLLECTION_NAME).document(self.DOCUMENT_ID)
+            doc_ref = self._firestore_client.collection(self.COLLECTION_NAME).document(
+                self.DOCUMENT_ID
+            )
             doc_ref.set(config.model_dump())
             return True
         except Exception as e:
@@ -346,9 +337,7 @@ class ConfigManager:
             return False
 
     def update_config(
-        self,
-        updates: Dict[str, Any],
-        updated_by: str = "admin"
+        self, updates: Dict[str, Any], updated_by: str = "admin"
     ) -> APIConfig:
         """
         Update configuration
@@ -421,6 +410,7 @@ class ConfigManager:
 
 
 # ========== Singleton accessor ==========
+
 
 @lru_cache()
 def get_config_manager() -> ConfigManager:

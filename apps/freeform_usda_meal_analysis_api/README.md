@@ -10,6 +10,49 @@ VLM (Vision Language Model) による画像解析から、USDA FoodData Central�
 
 **単位変換サポート**: 食材ごとの利用可能な単位（カップ、スプーン、枚など）と重量変換情報を提供（96.2%カバレッジ）。
 
+## 🔁 Prompt/Model PDCA (2026)
+
+`apps/freeform_usda_meal_analysis_api/evals/` 配下に、50画像固定の評価基盤を用意。
+
+- 運用ルール: `apps/freeform_usda_meal_analysis_api/AGENTS.md`
+- Claude/Codex向け手順: `apps/freeform_usda_meal_analysis_api/CLAUDE.md`
+- 最新ベストプラクティス: `apps/freeform_usda_meal_analysis_api/docs/PDCA_BEST_PRACTICES_20260224.md`
+
+### クイック実行
+
+```bash
+# OpenRouter候補同期（thinking + 価格上限）
+python -m apps.freeform_usda_meal_analysis_api.scripts.sync_openrouter_candidates \
+  --thinking-only --max-prompt-price 3.0 --max-completion-price 15.0
+
+# 50画像バッチ評価
+python -m apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval \
+  --config apps/freeform_usda_meal_analysis_api/evals/configs/pdca_default_20260224.json \
+  --api-url http://localhost:8006 --limit 50
+```
+
+### セッション再現のための起動手順（Agent/Human共通）
+
+新しいセッションでPDCAを始める前に、必ず次を実行:
+
+```bash
+python -m apps.freeform_usda_meal_analysis_api.scripts.pdca_session_bootstrap \
+  --api-url https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app
+```
+
+確認対象:
+- `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md`
+- `apps/freeform_usda_meal_analysis_api/evals/knowledge/session_bootstrap_latest.md`
+- `apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json`
+
+この手順により、過去lesson・現行baseline・本番設定を毎回同じ形式で確認できる。
+
+### Admin Panel利用時の注意（重要）
+
+- `Local` タブは localhost 固定ではなく相対パス運用（現在開いているオリジン向け）。
+- 本番URL上で `Local` のまま保存すると、本番設定が更新される。
+- 保存後は必ず `/admin/api/config?refresh=true` で `updated_at` と設定値を確認する。
+
 ## 🚀 フロントエンドエンジニア向けクイックスタート
 
 ### 本番環境URL

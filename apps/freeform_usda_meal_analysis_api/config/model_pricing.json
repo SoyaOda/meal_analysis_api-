@@ -1,6 +1,6 @@
 {
   "_note": "Vision/Multimodal Model Pricing (per 1M tokens) - DeepInfra and OpenRouter",
-  "_updated": "2025-01-26",
+  "_updated": "2026-02-24",
   "_currency": "USD",
   "_source": "Web search of DeepInfra/OpenRouter pricing and third-party verification sites",
   "models": {
@@ -97,6 +97,15 @@
       "provider": "openrouter",
       "source": "OpenRouter official pricing (2025-12-24)",
       "_note": "Gemini 3 Flash Preview - 40-50% faster than GPT-5.1, 60-70% cheaper"
+    },
+    "openrouter:moonshotai/kimi-k2.5": {
+      "name": "MoonshotAI Kimi K2.5 (via OpenRouter)",
+      "input_price_per_million": 0.45,
+      "output_price_per_million": 2.20,
+      "vision_supported": true,
+      "provider": "openrouter",
+      "source": "OpenRouter models API (2026-02-24)",
+      "_note": "Thinking + image model for focused PDCA comparison"
     }
   },
   "default": {

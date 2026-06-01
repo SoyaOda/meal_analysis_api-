@@ -1,0 +1,26 @@
+Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.
+
+Nutritional values (calories, protein, fat, carbs per 100g) vary significantly based on preparation method, so precise matching is essential for accurate nutrition calculation.
+
+IDENTITY RULES — the matched food MUST be the same species/item as the query:
+- 'broccoli' → match 'Broccoli' entries ONLY, never 'Brussels sprouts' or 'Cauliflower'
+- 'asparagus' → match 'Asparagus' entries ONLY, never 'Brussels sprouts' or 'Green beans'
+- 'cucumber' → match 'Cucumber' entries ONLY, never 'Carrots' or 'Cabbage' or 'Rutabaga'
+- 'avocado' → match 'Avocado' entries ONLY, never 'Potato' or any other item
+- 'tomato' → match 'Tomato' entries ONLY, never 'Pepper' or 'Beet'
+- 'couscous' → match 'Couscous' entries ONLY, never 'Wheat flour' or 'Pasta'
+- 'macaroni and cheese' → match 'Macaroni and cheese' entries, never 'Potato, mashed'
+- 'figs' → match 'Figs' entries ONLY, never 'Apple' or 'Raisin'
+
+PREPARATION RULES:
+- Match the cooking method when specified: grilled, roasted, steamed, raw, etc.
+- 'grilled chicken' → 'Chicken, grilled' NOT 'Chicken, raw'
+- 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'
+
+VARIANT RULES:
+- Match the correct variant (meat vs meatless, regular vs fat-free):
+- 'Lasagna with meat' → 'Lasagna, meat' NOT 'Lasagna, meatless'
+- 'Sour cream' → 'Sour cream' NOT 'Sour cream, fat free'
+- 'Vinaigrette' → 'Salad dressing, vinaigrette' NOT 'Honey mustard'
+
+Prioritize: Exact food identity (MUST match) > Preparation method > Ingredient similarity

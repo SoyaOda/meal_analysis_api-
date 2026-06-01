@@ -7,6 +7,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 必ず serena MCP が日本語で対応すること！
 日本語で応答すること！
 
+### freeform_usda_meal_analysis_api のPDCA運用
+
+`apps/freeform_usda_meal_analysis_api` を触る場合は次を先に読むこと:
+
+- `apps/freeform_usda_meal_analysis_api/AGENTS.md`
+- `apps/freeform_usda_meal_analysis_api/CLAUDE.md`
+- `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md`
+- `apps/freeform_usda_meal_analysis_api/docs/PDCA_BEST_PRACTICES_20260224.md`
+- セッション開始時に `python -m apps.freeform_usda_meal_analysis_api.scripts.pdca_session_bootstrap --api-url https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app` を実行し、`evals/knowledge/session_bootstrap_latest.md` を確認する
+- 当面のモデル集中: `openrouter:google/gemini-3-flash-preview`
+- 採用判定は原則50例フル評価（中断時は分割再開可）で、Ground truth総カロリー比較を必須とする
+- 過学習防止: promptに評価データ固有情報（test image id / label値 / ground truth）を含めない
+- PDCA評価は原則 `use_vlm_cache=false` で実施する
+
 ### 3. API サーバーの起動
 
 #### Word Query API (ポート 8002)

@@ -30,6 +30,7 @@ VLM 画像キャッシュ
 """
 
 import hashlib
+import json
 import logging
 from typing import Dict, Any, Optional, Tuple
 from dataclasses import dataclass
@@ -42,6 +43,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VLMCacheEntry:
     """VLMキャッシュエントリ"""
+
     response: Dict[str, Any]
     usage: Dict[str, Any]
     model_id: str
@@ -79,7 +81,29 @@ class VLMCache:
 
         logger.info(f"VLMCache initialized: max_size={max_size}, ttl={ttl_hours}h")
 
-    def _compute_cache_key(self, image_bytes: bytes, prompt: str, model_id: str) -> str:
+    @staticmethod
+    def _normalize_cache_context(cache_context: Optional[Dict[str, Any]]) -> str:
+        if not cache_context:
+            return "noctx"
+        normalized: Dict[str, Any] = {}
+        for key in sorted(cache_context.keys()):
+            value = cache_context[key]
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                normalized[key] = value
+            else:
+                normalized[key] = str(value)
+        encoded = json.dumps(
+            normalized, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+        )
+        return hashlib.sha256(encoded.encode("utf-8")).hexdigest()[:12]
+
+    def _compute_cache_key(
+        self,
+        image_bytes: bytes,
+        prompt: str,
+        model_id: str,
+        cache_context: Optional[Dict[str, Any]] = None,
+    ) -> str:
         """
         画像 + プロンプト + モデルIDから一意なキャッシュキーを生成
 
@@ -94,13 +118,15 @@ class VLMCache:
         image_hash = hashlib.sha256(image_bytes).hexdigest()
         prompt_hash = hashlib.sha256(prompt.encode()).hexdigest()[:16]
         model_hash = hashlib.sha256(model_id.encode()).hexdigest()[:8]
-        return f"{image_hash}:{prompt_hash}:{model_hash}"
+        context_hash = self._normalize_cache_context(cache_context)
+        return f"{image_hash}:{prompt_hash}:{model_hash}:{context_hash}"
 
     async def get(
         self,
         image_bytes: bytes,
         prompt: str,
-        model_id: str
+        model_id: str,
+        cache_context: Optional[Dict[str, Any]] = None,
     ) -> Optional[Tuple[Dict[str, Any], Dict[str, Any]]]:
         """
         キャッシュから結果を取得
@@ -113,7 +139,7 @@ class VLMCache:
         Returns:
             キャッシュヒット時は (response, usage) タプル、ミス時は None
         """
-        key = self._compute_cache_key(image_bytes, prompt, model_id)
+        key = self._compute_cache_key(image_bytes, prompt, model_id, cache_context)
 
         async with self._lock:
             entry = self._cache.get(key)
@@ -131,7 +157,9 @@ class VLMCache:
                 return None
 
             self._hits += 1
-            logger.info(f"📦 VLM Cache HIT: model={model_id} (hits={self._hits}, misses={self._misses})")
+            logger.info(
+                f"📦 VLM Cache HIT: model={model_id} (hits={self._hits}, misses={self._misses})"
+            )
             return entry.response, entry.usage
 
     async def set(
@@ -140,7 +168,8 @@ class VLMCache:
         prompt: str,
         model_id: str,
         response: Dict[str, Any],
-        usage: Dict[str, Any]
+        usage: Dict[str, Any],
+        cache_context: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         キャッシュに結果を保存
@@ -152,7 +181,7 @@ class VLMCache:
             response: VLMの応答（パース済みJSON）
             usage: トークン使用量情報
         """
-        key = self._compute_cache_key(image_bytes, prompt, model_id)
+        key = self._compute_cache_key(image_bytes, prompt, model_id, cache_context)
 
         async with self._lock:
             # LRU: 最大サイズ超過時は古いエントリを削除
@@ -163,7 +192,7 @@ class VLMCache:
                 response=response,
                 usage=usage,
                 model_id=model_id,
-                created_at=datetime.now()
+                created_at=datetime.now(),
             )
             logger.info(f"📦 VLM Cache SET: model={model_id} (size={len(self._cache)})")
 
@@ -174,8 +203,7 @@ class VLMCache:
 
         # 作成日時でソートして古い順に削除
         sorted_keys = sorted(
-            self._cache.keys(),
-            key=lambda k: self._cache[k].created_at
+            self._cache.keys(), key=lambda k: self._cache[k].created_at
         )
 
         for key in sorted_keys[:evict_count]:

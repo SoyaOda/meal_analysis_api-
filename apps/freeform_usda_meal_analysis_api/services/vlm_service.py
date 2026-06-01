@@ -27,9 +27,7 @@ class VLMService:
     """
 
     def __init__(
-        self,
-        model_id: Optional[str] = None,
-        prompt_file: Optional[str] = None
+        self, model_id: Optional[str] = None, prompt_file: Optional[str] = None
     ):
         """
         Args:
@@ -43,11 +41,12 @@ class VLMService:
             model_id = settings.VLM_MODEL_ID
 
         self.model_id = model_id
-        
+
         # VLMProviderFactoryを使ってプロバイダーを生成
         from .providers import VLMProviderFactory
+
         self.provider = VLMProviderFactory.create_provider(model_id)
-        
+
         # 後方互換性のために deepinfra_service プロパティも保持
         # （pipeline.py で使われているため）
         self.deepinfra_service = self.provider
@@ -59,7 +58,7 @@ class VLMService:
         logger.info(f"VLMService initialized with model: {model_id}")
         logger.info(f"Using prompt file: {prompt_path}")
         logger.info(f"Prompt length: {len(self.prompt)} characters")
-        
+
         # ✅ 追加: Promptの最初の部分をログ出力（デバッグ用）
         prompt_preview = self.prompt[:500] if len(self.prompt) > 500 else self.prompt
         logger.info(f"Prompt preview (first 500 chars):\n{prompt_preview}")
@@ -71,7 +70,7 @@ class VLMService:
         if not prompt_path.exists():
             raise FileNotFoundError(f"Prompt file not found: {prompt_file}")
 
-        with open(prompt_path, 'r', encoding='utf-8') as f:
+        with open(prompt_path, "r", encoding="utf-8") as f:
             prompt = f.read()
 
         logger.info(f"Loaded prompt from: {prompt_file}")
@@ -85,7 +84,7 @@ class VLMService:
         seed: Optional[int] = None,
         max_tokens: Optional[int] = None,
         reasoning_effort: Optional[str] = None,
-        use_cache: bool = True
+        use_cache: bool = True,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
@@ -110,19 +109,57 @@ class VLMService:
             - vlm_response: VLMの解析結果（dishes配列を含むJSON）
             - usage_info: トークン使用量と料金情報
         """
+        from ..admin.config_manager import get_config_manager
+
+        config_manager = get_config_manager()
+        config = config_manager.get_config()
+
+        effective_temperature = (
+            temperature if temperature is not None else config.vlm.temperature
+        )
+        effective_seed = seed if seed is not None else config.vlm.seed
+        effective_max_tokens = (
+            max_tokens if max_tokens is not None else config.vlm.max_tokens
+        )
+        effective_reasoning_effort = (
+            reasoning_effort
+            if reasoning_effort is not None
+            else config.vlm.reasoning_effort
+        )
+
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
-        logger.info(f"Parameters: temperature={temperature}, seed={seed}, max_tokens={max_tokens}")
+        logger.info(
+            "Parameters: temperature=%s, seed=%s, max_tokens=%s, reasoning_effort=%s, use_cache=%s",
+            effective_temperature,
+            effective_seed,
+            effective_max_tokens,
+            effective_reasoning_effort,
+            use_cache,
+        )
 
         # キャッシュチェック（use_cache=Trueの場合のみ）
         cache = get_vlm_cache()
+        cache_context = {
+            "temperature": effective_temperature,
+            "seed": effective_seed,
+            "max_tokens": effective_max_tokens,
+            "reasoning_effort": effective_reasoning_effort,
+        }
         if use_cache:
-            cached = await cache.get(image_bytes, self.prompt, self.model_id)
+            cached = await cache.get(
+                image_bytes=image_bytes,
+                prompt=self.prompt,
+                model_id=self.model_id,
+                cache_context=cache_context,
+            )
             if cached:
                 vlm_response, usage = cached
                 # キャッシュヒットをusageに記録
                 usage = dict(usage)  # コピーを作成
                 usage["cached"] = True
-                logger.info(f"VLM analysis complete (cached): {len(vlm_response.get('dishes', []))} dishes found")
+                logger.info(
+                    f"VLM analysis complete (cached): {len(vlm_response.get('dishes', []))} dishes found"
+                )
                 return vlm_response, usage
         else:
             logger.debug("VLM cache bypassed")
@@ -138,17 +175,11 @@ class VLMService:
             "image_mime_type": image_mime_type,
             "prompt": self.prompt,
             "return_usage": True,
+            "max_tokens": effective_max_tokens,
+            "temperature": effective_temperature,
+            "seed": effective_seed,
+            "reasoning_effort": effective_reasoning_effort,
         }
-
-        # Optional パラメータは None でない場合のみ追加
-        if max_tokens is not None:
-            api_params["max_tokens"] = max_tokens
-        if temperature is not None:
-            api_params["temperature"] = temperature
-        if seed is not None:
-            api_params["seed"] = seed
-        if reasoning_effort is not None:
-            api_params["reasoning_effort"] = reasoning_effort
 
         # VLM呼び出し（providerを使用）
         try:
@@ -167,13 +198,19 @@ class VLMService:
             vlm_response = json.loads(raw_response)
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse VLM response as JSON: {e}")
-            logger.error(f"Raw response: {raw_response[:500] if raw_response else 'None'}")
-            raise ValueError(f"[VLM Service] Failed to parse VLM response as JSON: {e}") from e
+            logger.error(
+                f"Raw response: {raw_response[:500] if raw_response else 'None'}"
+            )
+            raise ValueError(
+                f"[VLM Service] Failed to parse VLM response as JSON: {e}"
+            ) from e
 
         # dishes配列の存在チェック
         if "dishes" not in vlm_response:
             logger.error("VLM response does not contain 'dishes' field")
-            raise ValueError(f"[VLM Service] VLM response does not contain 'dishes' field. Response keys: {list(vlm_response.keys())}")
+            raise ValueError(
+                f"[VLM Service] VLM response does not contain 'dishes' field. Response keys: {list(vlm_response.keys())}"
+            )
 
         # vlm_responseがNoneの場合の追加チェック（念のため）
         if vlm_response is None:
@@ -182,12 +219,21 @@ class VLMService:
 
         # キャッシュに保存（use_cache=Trueの場合のみ）
         if use_cache:
-            await cache.set(image_bytes, self.prompt, self.model_id, vlm_response, usage)
+            await cache.set(
+                image_bytes=image_bytes,
+                prompt=self.prompt,
+                model_id=self.model_id,
+                response=vlm_response,
+                usage=usage,
+                cache_context=cache_context,
+            )
 
         # usageにcached=Falseを追加
         usage["cached"] = False
 
-        logger.info(f"VLM analysis complete: {len(vlm_response.get('dishes', []))} dishes found")
+        logger.info(
+            f"VLM analysis complete: {len(vlm_response.get('dishes', []))} dishes found"
+        )
 
         return vlm_response, usage
 
@@ -196,7 +242,7 @@ class VLMService:
         image_path: str,
         temperature: Optional[float] = None,
         seed: Optional[int] = None,
-        max_tokens: Optional[int] = None
+        max_tokens: Optional[int] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像ファイルから食事情報を抽出
@@ -216,14 +262,16 @@ class VLMService:
             raise FileNotFoundError(f"Image file not found: {image_path}")
 
         # 画像読み込み
-        with open(image_file, 'rb') as f:
+        with open(image_file, "rb") as f:
             image_bytes = f.read()
 
         # MIMEタイプ取得
         mime_type, _ = mimetypes.guess_type(str(image_file))
         if not mime_type:
             logger.error(f"Failed to guess MIME type for file: {image_file}")
-            raise ValueError(f"[VLM Service] Cannot determine MIME type for image file: {image_file}")
+            raise ValueError(
+                f"[VLM Service] Cannot determine MIME type for image file: {image_file}"
+            )
 
         logger.info(f"Analyzing image file: {image_file.name}")
 
@@ -232,7 +280,7 @@ class VLMService:
             image_mime_type=mime_type,
             temperature=temperature,
             seed=seed,
-            max_tokens=max_tokens
+            max_tokens=max_tokens,
         )
 
     def get_prompt(self) -> str:

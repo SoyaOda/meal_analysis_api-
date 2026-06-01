@@ -148,7 +148,13 @@ async def call_api(
     api_url: str,
     image_path: str,
     model_id: Optional[str] = None,
-    prompt_path: Optional[str] = None
+    prompt_path: Optional[str] = None,
+    prompt_text: Optional[str] = None,
+    reranker_model: Optional[str] = None,
+    reranker_instruction: Optional[str] = None,
+    stage1_top_k: Optional[int] = None,
+    bm25_weight: Optional[float] = None,
+    vector_weight: Optional[float] = None,
 ) -> dict:
     """API呼び出し"""
     endpoint = f"{api_url}/api/v1/meal-analyses/complete"
@@ -166,6 +172,27 @@ async def call_api(
 
     if prompt_path:
         data.add_field('prompt_path', prompt_path)
+
+    if prompt_text:
+        data.add_field('prompt_text', prompt_text)
+
+    if reranker_model:
+        data.add_field('reranker_model', reranker_model)
+
+    if reranker_instruction:
+        data.add_field('reranker_instruction', reranker_instruction)
+
+    if stage1_top_k is not None:
+        data.add_field('stage1_top_k', str(stage1_top_k))
+
+    if bm25_weight is not None:
+        data.add_field('bm25_weight', str(bm25_weight))
+
+    if vector_weight is not None:
+        data.add_field('vector_weight', str(vector_weight))
+
+    # VLMキャッシュを無効化（モデル比較時に正確な結果を得るため）
+    data.add_field('use_vlm_cache', 'false')
 
     timeout = aiohttp.ClientTimeout(total=300)
     async with session.post(endpoint, data=data, timeout=timeout) as response:
@@ -261,7 +288,13 @@ async def process_image(
     model_id: Optional[str],
     prompt_path: Optional[str],
     image_index: int,
-    semaphore: asyncio.Semaphore
+    semaphore: asyncio.Semaphore,
+    prompt_text: Optional[str] = None,
+    reranker_model: Optional[str] = None,
+    reranker_instruction: Optional[str] = None,
+    stage1_top_k: Optional[int] = None,
+    bm25_weight: Optional[float] = None,
+    vector_weight: Optional[float] = None,
 ) -> Optional[dict]:
     """1画像を処理"""
     async with semaphore:
@@ -272,7 +305,13 @@ async def process_image(
         try:
             label_nutrition = load_label_nutrition(str(label_path))
             api_result = await call_api(
-                session, api_url, str(image_path), model_id, prompt_path
+                session, api_url, str(image_path), model_id, prompt_path,
+                prompt_text=prompt_text,
+                reranker_model=reranker_model,
+                reranker_instruction=reranker_instruction,
+                stage1_top_k=stage1_top_k,
+                bm25_weight=bm25_weight,
+                vector_weight=vector_weight,
             )
             error = calculate_error(label_nutrition, api_result['total_nutrition'])
 
@@ -308,7 +347,13 @@ async def run_single_evaluation(
     model_id: Optional[str],
     prompt_path: Optional[str],
     limit: int,
-    concurrent: int
+    concurrent: int,
+    prompt_text: Optional[str] = None,
+    reranker_model: Optional[str] = None,
+    reranker_instruction: Optional[str] = None,
+    stage1_top_k: Optional[int] = None,
+    bm25_weight: Optional[float] = None,
+    vector_weight: Optional[float] = None,
 ) -> RunResult:
     """1回の評価実行"""
     import time
@@ -322,7 +367,13 @@ async def run_single_evaluation(
 
     async with aiohttp.ClientSession() as session:
         tasks = [
-            process_image(session, api_url, model_id, prompt_path, i, semaphore)
+            process_image(session, api_url, model_id, prompt_path, i, semaphore,
+                         prompt_text=prompt_text,
+                         reranker_model=reranker_model,
+                         reranker_instruction=reranker_instruction,
+                         stage1_top_k=stage1_top_k,
+                         bm25_weight=bm25_weight,
+                         vector_weight=vector_weight)
             for i in range(1, limit + 1)
         ]
         results = await asyncio.gather(*tasks)
@@ -552,13 +603,71 @@ async def main():
         default=50,
         help="処理する画像数"
     )
+    parser.add_argument(
+        "--prompt-text",
+        type=str,
+        default=None,
+        help="インラインプロンプトテキスト（ファイルパスより優先）"
+    )
+    parser.add_argument(
+        "--prompt-text-file",
+        type=str,
+        default=None,
+        help="プロンプトテキストを含むファイル（内容をprompt_textとして送信）"
+    )
+    parser.add_argument(
+        "--reranker-model",
+        type=str,
+        default=None,
+        help="Rerankerモデル（例: Qwen/Qwen3-Reranker-8B）"
+    )
+    parser.add_argument(
+        "--reranker-instruction",
+        type=str,
+        default=None,
+        help="Reranker instruction テキスト"
+    )
+    parser.add_argument(
+        "--reranker-instruction-file",
+        type=str,
+        default=None,
+        help="Reranker instructionを含むファイル"
+    )
+    parser.add_argument(
+        "--stage1-top-k",
+        type=int,
+        default=None,
+        help="Stage1候補数（デフォルト: 50）"
+    )
+    parser.add_argument(
+        "--bm25-weight",
+        type=float,
+        default=None,
+        help="BM25検索の重み（デフォルト: 0.4）"
+    )
+    parser.add_argument(
+        "--vector-weight",
+        type=float,
+        default=None,
+        help="Vector検索の重み（デフォルト: 0.6）"
+    )
     args = parser.parse_args()
+
+    # ファイルからテキストを読み込み
+    prompt_text = args.prompt_text
+    if args.prompt_text_file:
+        prompt_text = Path(args.prompt_text_file).read_text(encoding='utf-8')
+
+    reranker_instruction = args.reranker_instruction
+    if args.reranker_instruction_file:
+        reranker_instruction = Path(args.reranker_instruction_file).read_text(encoding='utf-8')
 
     print("=" * 70)
     print("プロンプト精度・再現性評価")
     print("=" * 70)
-    print(f"プロンプト: {args.prompt or 'デフォルト'}")
+    print(f"プロンプト: {args.prompt or ('inline' if prompt_text else 'デフォルト')}")
     print(f"モデル: {args.model or 'デフォルト'}")
+    print(f"Reranker: {args.reranker_model or 'デフォルト'}")
     print(f"実行回数: {args.runs}")
     print(f"画像数: {args.limit}")
     print(f"並行数: {args.concurrent}")
@@ -575,7 +684,13 @@ async def main():
             model_id=args.model,
             prompt_path=args.prompt,
             limit=args.limit,
-            concurrent=args.concurrent
+            concurrent=args.concurrent,
+            prompt_text=prompt_text,
+            reranker_model=args.reranker_model,
+            reranker_instruction=reranker_instruction,
+            stage1_top_k=args.stage1_top_k,
+            bm25_weight=args.bm25_weight,
+            vector_weight=args.vector_weight,
         )
         all_runs.append(run_result)
 

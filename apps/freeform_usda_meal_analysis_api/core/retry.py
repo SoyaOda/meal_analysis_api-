@@ -18,7 +18,7 @@ VLM, Embedding, Reranker API呼び出しの耐障害性を向上させる。
 
 import logging
 import httpx
-from typing import Type, Tuple, Any
+from typing import Type, Tuple
 
 from tenacity import (
     retry,
@@ -27,7 +27,6 @@ from tenacity import (
     retry_if_exception_type,
     before_sleep_log,
     after_log,
-    RetryError,
 )
 
 # OpenAI SDK の例外をインポート
@@ -89,7 +88,7 @@ def _create_retry_decorator(
 # VLMは処理時間が長いため、待機時間を長めに設定
 llm_retry = _create_retry_decorator(
     max_attempts=3,
-    initial_wait=2.0,   # VLMは重いので初回待機を長く
+    initial_wait=2.0,  # VLMは重いので初回待機を長く
     max_wait=60.0,
     jitter=5.0,
 )
@@ -157,7 +156,11 @@ class RetryConfig:
 # プリセット設定
 RETRY_CONFIGS = {
     "vlm": RetryConfig(max_attempts=3, initial_wait=2.0, max_wait=60.0, jitter=5.0),
-    "embedding": RetryConfig(max_attempts=3, initial_wait=0.5, max_wait=10.0, jitter=2.0),
-    "reranker": RetryConfig(max_attempts=3, initial_wait=0.5, max_wait=10.0, jitter=2.0),
+    "embedding": RetryConfig(
+        max_attempts=3, initial_wait=0.5, max_wait=10.0, jitter=2.0
+    ),
+    "reranker": RetryConfig(
+        max_attempts=3, initial_wait=0.5, max_wait=10.0, jitter=2.0
+    ),
     "default": RetryConfig(max_attempts=3, initial_wait=1.0, max_wait=60.0, jitter=5.0),
 }

@@ -1,6 +1,7 @@
 """
 Analysis router for meal analysis endpoints
 """
+
 import uuid
 import time
 import logging
@@ -9,7 +10,11 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 
 from ..models.request_models import ModelConfig, SearchConfig
-from ..models.response_models import AnalysisResponse, ErrorResponse, EndpointInfoResponse
+from ..models.response_models import (
+    AnalysisResponse,
+    ErrorResponse,
+    EndpointInfoResponse,
+)
 from ..services.pipeline import MealAnalysisPipeline
 from ..config import get_settings
 from ..admin.config_manager import get_config_manager
@@ -27,7 +32,7 @@ def get_pipeline() -> MealAnalysisPipeline:
     if _pipeline is None:
         raise HTTPException(
             status_code=503,
-            detail="Pipeline not initialized. Please check server logs."
+            detail="Pipeline not initialized. Please check server logs.",
         )
     return _pipeline
 
@@ -46,7 +51,9 @@ def initialize_pipeline(hybrid_engine=None, use_lazy_loading=True):
     try:
         logger.info("Initializing meal analysis pipeline (Full Index Only)...")
         logger.info(f"  VLM Model: {config.vlm.model_id} (from ConfigManager)")
-        logger.info(f"  Stage1 Top-K: {config.search.stage1_top_k} (from ConfigManager)")
+        logger.info(
+            f"  Stage1 Top-K: {config.search.stage1_top_k} (from ConfigManager)"
+        )
         logger.info(f"  Device: {config.runtime.device} (from ConfigManager)")
 
         _pipeline = MealAnalysisPipeline(
@@ -57,7 +64,7 @@ def initialize_pipeline(hybrid_engine=None, use_lazy_loading=True):
             stage1_top_k=config.search.stage1_top_k,
             device=config.runtime.device,
             hybrid_engine=hybrid_engine,
-            use_lazy_loading=use_lazy_loading
+            use_lazy_loading=use_lazy_loading,
         )
         logger.info("✅ Pipeline initialized successfully")
     except Exception as e:
@@ -71,22 +78,45 @@ async def analyze_meal_from_image(
     user_context: Optional[str] = Form(None, description="ユーザーコンテキスト"),
     # Model config overrides
     vlm_model_id: Optional[str] = Form(None, description="VLMモデルID"),
-    prompt_path: Optional[str] = Form(None, description="プロンプトファイルパス(prompts/以下)"),
-    prompt_text: Optional[str] = Form(None, description="プロンプトテキスト全文(prompt_pathより優先)"),
-    reasoning_effort: Optional[str] = Form(None, description="Reasoning effortレベル: minimal/low/medium/high/xhigh"),
+    prompt_path: Optional[str] = Form(
+        None, description="プロンプトファイルパス(prompts/以下)"
+    ),
+    prompt_text: Optional[str] = Form(
+        None, description="プロンプトテキスト全文(prompt_pathより優先)"
+    ),
+    # Legacy aliases (backward compatibility for existing eval scripts)
+    model_id: Optional[str] = Form(
+        None, description="[Deprecated] vlm_model_id の旧名"
+    ),
+    custom_prompt: Optional[str] = Form(
+        None, description="[Deprecated] prompt_text の旧名"
+    ),
+    reasoning_effort: Optional[str] = Form(
+        None, description="Reasoning effortレベル: minimal/low/medium/high/xhigh"
+    ),
     temperature: Optional[float] = Form(None, description="生成温度"),
+    seed: Optional[int] = Form(None, description="生成シード"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
+    use_vlm_cache: Optional[bool] = Form(None, description="VLMキャッシュを利用するか"),
     # Search config overrides
     stage1_top_k: Optional[int] = Form(None, description="Stage1候補数"),
     bm25_weight: Optional[float] = Form(None, description="BM25検索の重み(0.0-1.0)"),
-    vector_weight: Optional[float] = Form(None, description="Vector検索の重み(0.0-1.0)"),
+    vector_weight: Optional[float] = Form(
+        None, description="Vector検索の重み(0.0-1.0)"
+    ),
     rrf_k: Optional[int] = Form(None, description="RRFのkパラメータ"),
-    rrf_weight: Optional[float] = Form(None, description="RRF融合スコアの重み(0.0-2.0)"),
+    rrf_weight: Optional[float] = Form(
+        None, description="RRF融合スコアの重み(0.0-2.0)"
+    ),
     reranker_model: Optional[str] = Form(None, description="Rerankerモデル名"),
-    reranker_instruction: Optional[str] = Form(None, description="Reranker instruction"),
+    reranker_instruction: Optional[str] = Form(
+        None, description="Reranker instruction"
+    ),
     reranker_top_n: Optional[int] = Form(None, description="Reranker返却数"),
     # Debug options
-    debug: bool = Form(False, description="デバッグ情報を含める(retriever/reranker結果)"),
+    debug: bool = Form(
+        False, description="デバッグ情報を含める(retriever/reranker結果)"
+    ),
 ):
     """
     画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)
@@ -98,9 +128,13 @@ async def analyze_meal_from_image(
     ## モデル設定(オプション、指定しない場合はデフォルト値を使用)
     - **vlm_model_id**: VLMモデルID
     - **prompt_path**: プロンプトファイル名(例: "freeform_prompt_usda_format_ver_v7_production_20251027.txt")
+    - **model_id**: `vlm_model_id` の旧名（後方互換）
+    - **custom_prompt**: `prompt_text` の旧名（後方互換）
     - **reasoning_effort**: Reasoning effortレベル(minimal/low/medium/high/xhigh)
     - **temperature**: 生成温度(0.0-2.0)
+    - **seed**: 生成シード
     - **max_tokens**: 最大トークン数
+    - **use_vlm_cache**: VLMキャッシュ利用可否
 
     ## 検索設定(オプション)
     - **stage1_top_k**: Stage1で取得する候補数(デフォルト: 50)
@@ -127,21 +161,57 @@ async def analyze_meal_from_image(
         # パイプライン取得
         pipeline = get_pipeline()
 
+        # 後方互換: 旧パラメータ名を新パラメータへ正規化
+        effective_model_id = vlm_model_id or model_id
+        effective_prompt_text = prompt_text or custom_prompt
+        if model_id and not vlm_model_id:
+            logger.warning(
+                "Deprecated parameter 'model_id' was used. Please migrate to 'vlm_model_id'."
+            )
+        if custom_prompt and not prompt_text:
+            logger.warning(
+                "Deprecated parameter 'custom_prompt' was used. Please migrate to 'prompt_text'."
+            )
+
         # モデル設定のオーバーライド処理
         model_config_override = None
-        if any([vlm_model_id, prompt_path, prompt_text, reasoning_effort, temperature, max_tokens]):
+        if any(
+            [
+                effective_model_id,
+                prompt_path,
+                effective_prompt_text,
+                reasoning_effort,
+                temperature,
+                seed,
+                max_tokens,
+                use_vlm_cache is not None,
+            ]
+        ):
             model_config_override = ModelConfig(
-                vlm_model_id=vlm_model_id,
+                vlm_model_id=effective_model_id,
                 prompt_path=prompt_path,
-                prompt_text=prompt_text,
+                prompt_text=effective_prompt_text,
                 reasoning_effort=reasoning_effort,
                 temperature=temperature,
+                seed=seed,
                 max_tokens=max_tokens,
+                use_vlm_cache=use_vlm_cache,
             )
 
         # 検索設定のオーバーライド処理
         search_config_override = None
-        if any([stage1_top_k, bm25_weight, vector_weight, rrf_k, rrf_weight, reranker_model, reranker_instruction, reranker_top_n]):
+        if any(
+            [
+                stage1_top_k,
+                bm25_weight,
+                vector_weight,
+                rrf_k,
+                rrf_weight,
+                reranker_model,
+                reranker_instruction,
+                reranker_top_n,
+            ]
+        ):
             search_config_override = SearchConfig(
                 stage1_top_k=stage1_top_k,
                 bm25_weight=bm25_weight,
@@ -196,6 +266,7 @@ async def analyze_meal_from_image(
 
         # エラーの詳細情報を取得（デバッグ用）
         import traceback
+
         traceback.format_exc()
 
         return JSONResponse(
@@ -204,7 +275,7 @@ async def analyze_meal_from_image(
                 error="InternalServerError",
                 message=error_message,
                 analysis_id=analysis_id,
-            ).model_dump()
+            ).model_dump(),
         )
 
 

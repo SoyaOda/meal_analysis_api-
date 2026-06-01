@@ -1,12 +1,14 @@
 """
 Response models for Freeform USDA Meal Analysis API
 """
+
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, AliasChoices
 
 
 class HealthCheckResponse(BaseModel):
     """ヘルスチェックレスポンス"""
+
     model_config = {"protected_namespaces": ()}
 
     status: str = Field(..., description="ステータス", example="healthy")
@@ -17,35 +19,82 @@ class HealthCheckResponse(BaseModel):
 
 class NutritionInfo(BaseModel):
     """栄養価情報"""
+
     model_config = {"protected_namespaces": ()}
 
     calories: float = Field(..., description="カロリー（kcal）", example=156.0)
-    protein: float = Field(..., validation_alias=AliasChoices("protein", "protein_g"), description="タンパク質（g）", example=12.0)
-    fat: float = Field(..., validation_alias=AliasChoices("fat", "fat_g"), description="脂質（g）", example=10.5)
-    carbs: float = Field(..., validation_alias=AliasChoices("carbs", "carbs_g"), description="炭水化物（g）", example=1.1)
-    fiber: Optional[float] = Field(None, validation_alias=AliasChoices("fiber", "fiber_g"), description="食物繊維（g）", example=0.0)
-    sugar: Optional[float] = Field(None, validation_alias=AliasChoices("sugar", "sugar_g"), description="糖質（g）", example=0.7)
-    sodium: Optional[float] = Field(None, validation_alias=AliasChoices("sodium", "sodium_mg"), description="ナトリウム（mg）", example=142.0)
+    protein: float = Field(
+        ...,
+        validation_alias=AliasChoices("protein", "protein_g"),
+        description="タンパク質（g）",
+        example=12.0,
+    )
+    fat: float = Field(
+        ...,
+        validation_alias=AliasChoices("fat", "fat_g"),
+        description="脂質（g）",
+        example=10.5,
+    )
+    carbs: float = Field(
+        ...,
+        validation_alias=AliasChoices("carbs", "carbs_g"),
+        description="炭水化物（g）",
+        example=1.1,
+    )
+    fiber: Optional[float] = Field(
+        None,
+        validation_alias=AliasChoices("fiber", "fiber_g"),
+        description="食物繊維（g）",
+        example=0.0,
+    )
+    sugar: Optional[float] = Field(
+        None,
+        validation_alias=AliasChoices("sugar", "sugar_g"),
+        description="糖質（g）",
+        example=0.7,
+    )
+    sodium: Optional[float] = Field(
+        None,
+        validation_alias=AliasChoices("sodium", "sodium_mg"),
+        description="ナトリウム（mg）",
+        example=142.0,
+    )
 
 
 class NormalizedUnit(BaseModel):
     """正規化された単位情報"""
+
     model_config = {"protected_namespaces": ()}
 
     name: str = Field(..., description="単位名", example="cup")
     abbreviation: str = Field(..., description="略称", example="cup")
-    grams_per_unit: float = Field(..., description="1単位あたりのグラム数", example=128.0)
-    original_description: str = Field(..., description="元の記述", example="1 cup, sliced")
-    is_base_unit: bool = Field(False, description="基本単位（g）かどうか", example=False)
+    grams_per_unit: float = Field(
+        ..., description="1単位あたりのグラム数", example=128.0
+    )
+    original_description: str = Field(
+        ..., description="元の記述", example="1 cup, sliced"
+    )
+    is_base_unit: bool = Field(
+        False, description="基本単位（g）かどうか", example=False
+    )
 
 
 class IngredientDetail(BaseModel):
     """食材詳細情報"""
+
     model_config = {"protected_namespaces": ()}
 
-    ingredient_name: str = Field(..., description="食材名（DBマッチ名またはVLMクエリ）", example="Egg, whole, raw")
-    vlm_query: Optional[str] = Field(None, description="VLMが生成したクエリ", example="boiled egg")
-    matched_db_description: Optional[str] = Field(None, description="DBから選ばれた名前", example="Egg, whole, raw")
+    ingredient_name: str = Field(
+        ...,
+        description="食材名（DBマッチ名またはVLMクエリ）",
+        example="Egg, whole, raw",
+    )
+    vlm_query: Optional[str] = Field(
+        None, description="VLMが生成したクエリ", example="boiled egg"
+    )
+    matched_db_description: Optional[str] = Field(
+        None, description="DBから選ばれた名前", example="Egg, whole, raw"
+    )
     weight_g: float = Field(..., description="重量(グラム)", example=100.0)
     nutrition_per_100g: NutritionInfo = Field(..., description="100gあたりの栄養情報")
     calculated_nutrition: NutritionInfo = Field(..., description="計算済み栄養情報")
@@ -54,7 +103,7 @@ class IngredientDetail(BaseModel):
     calculation_notes: List[str] = Field(
         default_factory=list,
         description="計算に関する注記",
-        example=["Scaled from 100g base data using factor 1.000"]
+        example=["Scaled from 100g base data using factor 1.000"],
     )
     debug_info: Optional[Dict[str, Any]] = Field(
         None,
@@ -62,20 +111,29 @@ class IngredientDetail(BaseModel):
         example={
             "query": "green tea",
             "bm25_top10": [{"fdc_id": "xxx", "description": "...", "bm25_score": 0.5}],
-            "vector_top10": [{"fdc_id": "xxx", "description": "...", "vector_score": 0.5}],
-            "hybrid_top10": [{"fdc_id": "xxx", "description": "...", "hybrid_score": 0.5}],
-            "reranked_top10": [{"fdc_id": "xxx", "description": "...", "rerank_score": 0.9}],
+            "vector_top10": [
+                {"fdc_id": "xxx", "description": "...", "vector_score": 0.5}
+            ],
+            "hybrid_top10": [
+                {"fdc_id": "xxx", "description": "...", "hybrid_score": 0.5}
+            ],
+            "reranked_top10": [
+                {"fdc_id": "xxx", "description": "...", "rerank_score": 0.9}
+            ],
             "timing": {"bm25_time_ms": 10, "vector_time_ms": 50},
-            "parameters": {"bm25_weight": 0.4, "vector_weight": 0.6}
-        }
+            "parameters": {"bm25_weight": 0.4, "vector_weight": 0.6},
+        },
     )
 
 
 class DishDetail(BaseModel):
     """料理詳細情報"""
+
     model_config = {"protected_namespaces": ()}
 
-    dish_name: Optional[str] = Field(None, description="料理名", example="Grilled Chicken Salad")
+    dish_name: Optional[str] = Field(
+        None, description="料理名", example="Grilled Chicken Salad"
+    )
     ingredients: List[IngredientDetail] = Field(..., description="食材詳細リスト")
     total_nutrition: NutritionInfo = Field(..., description="料理の総栄養価")
     calculation_metadata: Dict[str, Any] = Field(
@@ -84,25 +142,38 @@ class DishDetail(BaseModel):
         example={
             "ingredient_count": 2,
             "total_weight_g": 200.0,
-            "calculation_method": "weight_based_scaling"
-        }
+            "calculation_method": "weight_based_scaling",
+        },
     )
-
 
 
 class VoiceMetadata(BaseModel):
     """音声入力メタデータ"""
+
     model_config = {"protected_namespaces": ()}
 
-    whisper_model: str = Field(..., description="使用したWhisperモデル", example="openai/whisper-large-v3-turbo")
-    audio_duration_seconds: Optional[float] = Field(None, description="音声の長さ（秒）", example=5.3)
-    audio_size_bytes: int = Field(..., description="音声ファイルサイズ（バイト）", example=84736)
-    language_detected: Optional[str] = Field(None, description="検出された言語", example="en")
-    stt_processing_time_seconds: Optional[float] = Field(None, description="STT処理時間（秒）", example=1.2)
+    whisper_model: str = Field(
+        ...,
+        description="使用したWhisperモデル",
+        example="openai/whisper-large-v3-turbo",
+    )
+    audio_duration_seconds: Optional[float] = Field(
+        None, description="音声の長さ（秒）", example=5.3
+    )
+    audio_size_bytes: int = Field(
+        ..., description="音声ファイルサイズ（バイト）", example=84736
+    )
+    language_detected: Optional[str] = Field(
+        None, description="検出された言語", example="en"
+    )
+    stt_processing_time_seconds: Optional[float] = Field(
+        None, description="STT処理時間（秒）", example=1.2
+    )
 
 
 class UsageInfo(BaseModel):
     """Token使用量とコスト情報"""
+
     model_config = {"protected_namespaces": ()}
 
     prompt_tokens: int = Field(..., description="入力トークン数", example=1250)
@@ -111,30 +182,33 @@ class UsageInfo(BaseModel):
     estimated_cost_usd: Optional[float] = Field(
         None,
         description="推定コスト（USD）(pricing情報がない場合はNone)",
-        example=0.00125
+        example=0.00125,
     )
     model_pricing: Optional[Dict[str, Any]] = Field(
         None,
         description="使用したモデルの価格情報 (pricing情報がない場合はNone)",
-        example={
-            "input_price_per_million": 0.29,
-            "output_price_per_million": 0.99
-        }
+        example={"input_price_per_million": 0.29, "output_price_per_million": 0.99},
     )
     raw_vlm_output: Optional[str] = Field(
         None,
         description="VLMの生出力（デバッグ用）",
-        example="<think>...</think>\n{\"dishes\": ...}"
+        example='<think>...</think>\n{"dishes": ...}',
     )
     prompt_content: Optional[str] = Field(
         None,
         description="VLMに送信したプロンプトの内容（デバッグ用）",
-        example="You are an expert food analyst..."
+        example="You are an expert food analyst...",
+    )
+    cached: Optional[bool] = Field(
+        None,
+        description="VLMキャッシュヒット有無",
+        example=False,
     )
 
 
 class AnalysisResponse(BaseModel):
     """分析レスポンス"""
+
     model_config = {
         "protected_namespaces": (),
         "json_schema_extra": {
@@ -158,7 +232,7 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 0.0,
                                     "fiber": 0.0,
                                     "sugar": 0.0,
-                                    "sodium": 74.0
+                                    "sodium": 74.0,
                                 },
                                 "calculated_nutrition": {
                                     "calories": 247.5,
@@ -167,16 +241,22 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 0.0,
                                     "fiber": 0.0,
                                     "sugar": 0.0,
-                                    "sodium": 111.0
+                                    "sodium": 111.0,
                                 },
                                 "source_db": "usda_fndds",
                                 "fdc_id": "167782",
-                                "calculation_notes": ["Scaled from 100g base data using factor 1.500"],
+                                "calculation_notes": [
+                                    "Scaled from 100g base data using factor 1.500"
+                                ],
                                 "debug_info": {
-                                    "retriever_candidates": ["167782", "167783", "167784"],
+                                    "retriever_candidates": [
+                                        "167782",
+                                        "167783",
+                                        "167784",
+                                    ],
                                     "reranker_results": ["167782", "167783"],
-                                    "retry_count": 0
-                                }
+                                    "retry_count": 0,
+                                },
                             }
                         ],
                         "total_nutrition": {
@@ -186,13 +266,13 @@ class AnalysisResponse(BaseModel):
                             "carbs": 0.0,
                             "fiber": 0.0,
                             "sugar": 0.0,
-                            "sodium": 111.0
+                            "sodium": 111.0,
                         },
                         "calculation_metadata": {
                             "ingredient_count": 1,
                             "total_weight_g": 150.0,
-                            "calculation_method": "weight_based_scaling"
-                        }
+                            "calculation_method": "weight_based_scaling",
+                        },
                     },
                     {
                         "ingredients": [
@@ -206,7 +286,7 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 3.3,
                                     "fiber": 2.1,
                                     "sugar": 1.2,
-                                    "sodium": 8.0
+                                    "sodium": 8.0,
                                 },
                                 "calculated_nutrition": {
                                     "calories": 17.0,
@@ -215,11 +295,13 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 3.3,
                                     "fiber": 2.1,
                                     "sugar": 1.2,
-                                    "sodium": 8.0
+                                    "sodium": 8.0,
                                 },
                                 "source_db": "usda_fndds",
                                 "fdc_id": "169248",
-                                "calculation_notes": ["Scaled from 100g base data using factor 1.000"]
+                                "calculation_notes": [
+                                    "Scaled from 100g base data using factor 1.000"
+                                ],
                             },
                             {
                                 "ingredient_name": "Caesar dressing",
@@ -231,7 +313,7 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 7.0,
                                     "fiber": 0.0,
                                     "sugar": 5.0,
-                                    "sodium": 900.0
+                                    "sodium": 900.0,
                                 },
                                 "calculated_nutrition": {
                                     "calories": 141.0,
@@ -240,11 +322,13 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 2.1,
                                     "fiber": 0.0,
                                     "sugar": 1.5,
-                                    "sodium": 270.0
+                                    "sodium": 270.0,
                                 },
                                 "source_db": "usda_fndds",
                                 "fdc_id": "173306",
-                                "calculation_notes": ["Scaled from 100g base data using factor 0.300"]
+                                "calculation_notes": [
+                                    "Scaled from 100g base data using factor 0.300"
+                                ],
                             },
                             {
                                 "ingredient_name": "Parmesan cheese, grated",
@@ -256,7 +340,7 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 3.2,
                                     "fiber": 0.0,
                                     "sugar": 0.9,
-                                    "sodium": 1529.0
+                                    "sodium": 1529.0,
                                 },
                                 "calculated_nutrition": {
                                     "calories": 39.2,
@@ -265,11 +349,13 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 0.32,
                                     "fiber": 0.0,
                                     "sugar": 0.09,
-                                    "sodium": 152.9
+                                    "sodium": 152.9,
                                 },
                                 "source_db": "usda_fndds",
                                 "fdc_id": "171287",
-                                "calculation_notes": ["Scaled from 100g base data using factor 0.100"]
+                                "calculation_notes": [
+                                    "Scaled from 100g base data using factor 0.100"
+                                ],
                             },
                             {
                                 "ingredient_name": "Croutons, plain",
@@ -281,7 +367,7 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 73.5,
                                     "fiber": 5.0,
                                     "sugar": 5.8,
-                                    "sodium": 698.0
+                                    "sodium": 698.0,
                                 },
                                 "calculated_nutrition": {
                                     "calories": 61.05,
@@ -290,12 +376,14 @@ class AnalysisResponse(BaseModel):
                                     "carbs": 11.025,
                                     "fiber": 0.75,
                                     "sugar": 0.87,
-                                    "sodium": 104.7
+                                    "sodium": 104.7,
                                 },
                                 "source_db": "usda_fndds",
                                 "fdc_id": "168042",
-                                "calculation_notes": ["Scaled from 100g base data using factor 0.150"]
-                            }
+                                "calculation_notes": [
+                                    "Scaled from 100g base data using factor 0.150"
+                                ],
+                            },
                         ],
                         "total_nutrition": {
                             "calories": 258.25,
@@ -304,14 +392,14 @@ class AnalysisResponse(BaseModel):
                             "carbs": 16.745,
                             "fiber": 2.85,
                             "sugar": 3.66,
-                            "sodium": 535.6
+                            "sodium": 535.6,
                         },
                         "calculation_metadata": {
                             "ingredient_count": 4,
                             "total_weight_g": 155.0,
-                            "calculation_method": "weight_based_scaling"
-                        }
-                    }
+                            "calculation_method": "weight_based_scaling",
+                        },
+                    },
                 ],
                 "total_nutrition": {
                     "calories": 505.75,
@@ -320,7 +408,7 @@ class AnalysisResponse(BaseModel):
                     "carbs": 16.745,
                     "fiber": 2.85,
                     "sugar": 3.66,
-                    "sodium": 646.6
+                    "sodium": 646.6,
                 },
                 "ai_model_used": "Qwen/Qwen2-VL-72B-Instruct",
                 "prompt_file_used": "freeform_prompt_usda_format_ver_v7_production_20251027.txt",
@@ -330,13 +418,13 @@ class AnalysisResponse(BaseModel):
                     "thinking_tokens": 3200,
                     "output_tokens": 450,
                     "total_tokens": 6150,
-                    "raw_vlm_output": "<think>\nImage shows grilled chicken breast and a Caesar salad...\n</think>\n\n{\n  \"dishes\": [\n    {\"dish_name\": \"Grilled Chicken Breast\", ...}\n  ]\n}",
-                    "estimated_cost_usd": 0.0234
+                    "raw_vlm_output": '<think>\nImage shows grilled chicken breast and a Caesar salad...\n</think>\n\n{\n  "dishes": [\n    {"dish_name": "Grilled Chicken Breast", ...}\n  ]\n}',
+                    "estimated_cost_usd": 0.0234,
                 },
                 "transcript": None,
-                "warnings": []
+                "warnings": [],
             }
-        }
+        },
     }
 
     analysis_id: str = Field(..., description="分析ID", example="a1b2c3d4")
@@ -346,13 +434,15 @@ class AnalysisResponse(BaseModel):
     meal_title: Optional[str] = Field(
         None,
         description="食事全体のタイトル（MAX 30文字）",
-        example="Grilled Chicken with Salad"
+        example="Grilled Chicken with Salad",
     )
 
     # 処理サマリー
     total_dishes: int = Field(..., description="検出された料理数", example=3)
     total_ingredients: int = Field(..., description="総食材数", example=9)
-    processing_time_seconds: float = Field(..., description="処理時間（秒）", example=15.65)
+    processing_time_seconds: float = Field(
+        ..., description="処理時間（秒）", example=15.65
+    )
 
     # 料理一覧
     dishes: List[DishDetail] = Field(..., description="検出された料理一覧")
@@ -362,44 +452,43 @@ class AnalysisResponse(BaseModel):
 
     # メタデータ
     ai_model_used: str = Field(
-        ...,
-        description="使用AIモデル",
-        example="Qwen/Qwen2-VL-72B-Instruct"
+        ..., description="使用AIモデル", example="Qwen/Qwen2-VL-72B-Instruct"
     )
     prompt_file_used: str = Field(
         ...,
         description="使用プロンプトファイル",
-        example="freeform_prompt_usda_format_ver_v7_experimental_20251027.txt"
+        example="freeform_prompt_usda_format_ver_v7_experimental_20251027.txt",
     )
     match_rate_percent: float = Field(
-        ...,
-        description="栄養検索マッチ率（%）",
-        ge=0.0,
-        le=100.0,
-        example=100.0
+        ..., description="栄養検索マッチ率（%）", ge=0.0, le=100.0, example=100.0
     )
 
     # Token使用量とコスト情報
     usage: Optional[UsageInfo] = Field(None, description="Token使用量とコスト情報")
 
     # 音声入力特有
-    transcript: Optional[str] = Field(None, description="音声認識テキスト（音声入力時のみ）")
-    voice_metadata: Optional[VoiceMetadata] = Field(None, description="音声入力メタデータ（音声入力時のみ）")
+    transcript: Optional[str] = Field(
+        None, description="音声認識テキスト（音声入力時のみ）"
+    )
+    voice_metadata: Optional[VoiceMetadata] = Field(
+        None, description="音声入力メタデータ（音声入力時のみ）"
+    )
 
     # 警告メッセージ
     warnings: List[str] = Field(
-        default_factory=list,
-        description="警告メッセージ",
-        example=[]
+        default_factory=list, description="警告メッセージ", example=[]
     )
 
 
 class ErrorResponse(BaseModel):
     """エラーレスポンス"""
+
     model_config = {"protected_namespaces": ()}
 
     error: str = Field(..., description="エラータイプ", example="ValidationError")
-    message: str = Field(..., description="エラーメッセージ", example="Invalid input format")
+    message: str = Field(
+        ..., description="エラーメッセージ", example="Invalid input format"
+    )
     detail: Optional[Dict[str, Any]] = Field(None, description="詳細情報")
     analysis_id: Optional[str] = Field(None, description="分析ID（利用可能な場合）")
 
@@ -408,51 +497,86 @@ class ErrorResponse(BaseModel):
 # Retrieval API Response Models
 # ============================================================
 
+
 class FoodItem(BaseModel):
     """食材検索結果アイテム"""
+
     model_config = {"protected_namespaces": ()}
 
     fdc_id: str = Field(..., description="USDA FDC ID", example="167782")
-    description: str = Field(..., description="食材名", example="Chicken, broilers or fryers, breast, meat only, grilled")
-    main_name: str = Field(..., description="主要名称", example="Chicken, broilers or fryers, breast, meat only")
-    descriptors: Optional[str] = Field(None, description="調理方法等の記述子", example="grilled")
+    description: str = Field(
+        ...,
+        description="食材名",
+        example="Chicken, broilers or fryers, breast, meat only, grilled",
+    )
+    main_name: str = Field(
+        ...,
+        description="主要名称",
+        example="Chicken, broilers or fryers, breast, meat only",
+    )
+    descriptors: Optional[str] = Field(
+        None, description="調理方法等の記述子", example="grilled"
+    )
     source: str = Field(..., description="データソース", example="survey")
     score: float = Field(..., description="類似度スコア", example=0.95)
-    nutrition_per_100g: Optional[NutritionInfo] = Field(None, description="100gあたりの栄養情報")
+    nutrition_per_100g: Optional[NutritionInfo] = Field(
+        None, description="100gあたりの栄養情報"
+    )
     available_units: Optional[List[NormalizedUnit]] = Field(
         None,
         description="利用可能な単位リスト（正規化済み）",
         example=[
-            {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, "original_description": "gram (base unit)", "is_base_unit": True},
-            {"name": "cup", "abbreviation": "cup", "grams_per_unit": 128.0, "original_description": "1 cup, sliced", "is_base_unit": False}
-        ]
+            {
+                "name": "g",
+                "abbreviation": "g",
+                "grams_per_unit": 1.0,
+                "original_description": "gram (base unit)",
+                "is_base_unit": True,
+            },
+            {
+                "name": "cup",
+                "abbreviation": "cup",
+                "grams_per_unit": 128.0,
+                "original_description": "1 cup, sliced",
+                "is_base_unit": False,
+            },
+        ],
     )
 
 
 class RetrievalMetadata(BaseModel):
     """検索メタデータ"""
+
     model_config = {"protected_namespaces": ()}
 
     total_results: int = Field(..., description="結果数", example=10)
     search_time_ms: int = Field(..., description="検索時間（ミリ秒）", example=250)
     index_type: str = Field(..., description="インデックスタイプ", example="FAISS")
-    algorithm: str = Field(..., description="使用アルゴリズム", example="Stage1+Stage2_Rerank")
+    algorithm: str = Field(
+        ..., description="使用アルゴリズム", example="Stage1+Stage2_Rerank"
+    )
     # ページネーション情報
     offset: int = Field(0, description="オフセット（スキップした結果数）", example=0)
     has_more: bool = Field(False, description="追加結果があるか", example=True)
-    total_available: Optional[int] = Field(None, description="取得可能な総結果数（推定）", example=100)
+    total_available: Optional[int] = Field(
+        None, description="取得可能な総結果数（推定）", example=100
+    )
 
 
 class RetrievalStatus(BaseModel):
     """検索ステータス"""
+
     model_config = {"protected_namespaces": ()}
 
     success: bool = Field(..., description="成功フラグ", example=True)
-    message: str = Field(..., description="ステータスメッセージ", example="Search completed successfully")
+    message: str = Field(
+        ..., description="ステータスメッセージ", example="Search completed successfully"
+    )
 
 
 class RetrievalResponse(BaseModel):
     """食材検索レスポンス"""
+
     model_config = {
         "protected_namespaces": (),
         "json_schema_extra": {
@@ -474,8 +598,8 @@ class RetrievalResponse(BaseModel):
                             "carbs": 0.0,
                             "fiber": 0.0,
                             "sugar": 0.0,
-                            "sodium": 74.0
-                        }
+                            "sodium": 74.0,
+                        },
                     },
                     {
                         "fdc_id": "171477",
@@ -491,22 +615,19 @@ class RetrievalResponse(BaseModel):
                             "carbs": 0.0,
                             "fiber": 0.0,
                             "sugar": 0.0,
-                            "sodium": 74.0
-                        }
-                    }
+                            "sodium": 74.0,
+                        },
+                    },
                 ],
                 "metadata": {
                     "total_results": 10,
                     "search_time_ms": 250,
                     "index_type": "FAISS",
-                    "algorithm": "Stage1+Stage2_Rerank"
+                    "algorithm": "Stage1+Stage2_Rerank",
                 },
-                "status": {
-                    "success": True,
-                    "message": "Search completed successfully"
-                }
+                "status": {"success": True, "message": "Search completed successfully"},
             }
-        }
+        },
     }
 
     query: str = Field(..., description="検索クエリ", example="grilled chicken breast")
@@ -514,40 +635,53 @@ class RetrievalResponse(BaseModel):
     results: List[FoodItem] = Field(..., description="検索結果リスト")
     metadata: RetrievalMetadata = Field(..., description="検索メタデータ")
     status: RetrievalStatus = Field(..., description="検索ステータス")
-    debug_info: Optional[Dict[str, Any]] = Field(None, description="デバッグ情報（debug=trueの場合のみ）")
+    debug_info: Optional[Dict[str, Any]] = Field(
+        None, description="デバッグ情報（debug=trueの場合のみ）"
+    )
 
 
 # ============================================================
 # Metadata Search Response Models
 # ============================================================
 
+
 class NormalizedUnit(BaseModel):
     """正規化された単位情報（アプリUI用）"""
+
     model_config = {"protected_namespaces": ()}
 
     name: str = Field(..., description="単位名", example="cup")
     abbreviation: str = Field(..., description="略称", example="cup")
-    grams_per_unit: float = Field(..., description="1単位あたりのグラム数", example=244.0)
+    grams_per_unit: float = Field(
+        ..., description="1単位あたりのグラム数", example=244.0
+    )
     original_description: str = Field(
-        ...,
-        description="元のdescription",
-        example="1 cup"
+        ..., description="元のdescription", example="1 cup"
     )
     is_base_unit: bool = Field(
-        False,
-        description="基準単位（g）かどうか",
-        example=False
+        False, description="基準単位（g）かどうか", example=False
     )
 
 
 class MetadataItem(BaseModel):
     """メタデータアイテム"""
+
     model_config = {"protected_namespaces": ()}
 
     fdc_id: int = Field(..., description="USDA FDC ID", example=167782)
-    description: str = Field(..., description="食材名", example="Chicken, broilers or fryers, breast, meat only, grilled")
-    main_name: str = Field(..., description="主要名称", example="Chicken, broilers or fryers, breast, meat only")
-    descriptors: Optional[str] = Field(None, description="調理方法等の記述子", example="grilled")
+    description: str = Field(
+        ...,
+        description="食材名",
+        example="Chicken, broilers or fryers, breast, meat only, grilled",
+    )
+    main_name: str = Field(
+        ...,
+        description="主要名称",
+        example="Chicken, broilers or fryers, breast, meat only",
+    )
+    descriptors: Optional[str] = Field(
+        None, description="調理方法等の記述子", example="grilled"
+    )
     source: str = Field(..., description="データソース", example="survey")
     nutrition: NutritionInfo = Field(..., description="栄養情報（100gあたり）")
     portions: Optional[List[Dict[str, Any]]] = Field(
@@ -555,20 +689,33 @@ class MetadataItem(BaseModel):
         description="ポーション情報（元データ）",
         example=[
             {"description": "1 breast, bone and skin removed", "gram_weight": 86.0}
-        ]
+        ],
     )
     normalized_units: Optional[List[NormalizedUnit]] = Field(
         None,
         description="正規化された単位リスト（アプリUI用）",
         example=[
-            {"name": "g", "abbreviation": "g", "grams_per_unit": 1.0, "original_description": "gram (base unit)", "is_base_unit": True},
-            {"name": "cup", "abbreviation": "cup", "grams_per_unit": 244.0, "original_description": "1 cup", "is_base_unit": False}
-        ]
+            {
+                "name": "g",
+                "abbreviation": "g",
+                "grams_per_unit": 1.0,
+                "original_description": "gram (base unit)",
+                "is_base_unit": True,
+            },
+            {
+                "name": "cup",
+                "abbreviation": "cup",
+                "grams_per_unit": 244.0,
+                "original_description": "1 cup",
+                "is_base_unit": False,
+            },
+        ],
     )
 
 
 class MetadataSearchResponse(BaseModel):
     """メタデータ検索レスポンス"""
+
     model_config = {
         "protected_namespaces": (),
         "json_schema_extra": {
@@ -588,22 +735,22 @@ class MetadataSearchResponse(BaseModel):
                             "carbs": 0.0,
                             "fiber": 0.0,
                             "sugar": 0.0,
-                            "sodium": 74.0
+                            "sodium": 74.0,
                         },
                         "portions": [
                             {
                                 "description": "1 breast, bone and skin removed",
-                                "gram_weight": 86.0
+                                "gram_weight": 86.0,
                             }
-                        ]
+                        ],
                     }
                 ],
                 "total": 50,
                 "limit": 20,
                 "offset": 0,
-                "has_more": True
+                "has_more": True,
             }
-        }
+        },
     }
 
     query: str = Field(..., description="検索クエリ", example="chicken breast")
@@ -618,21 +765,21 @@ class MetadataSearchResponse(BaseModel):
 # Additional Response Models
 # ============================================================
 
+
 class RootResponse(BaseModel):
     """Root endpoint response"""
+
     model_config = {"protected_namespaces": ()}
 
-    name: str = Field(..., description="API名", example="Freeform USDA Meal Analysis API")
+    name: str = Field(
+        ..., description="API名", example="Freeform USDA Meal Analysis API"
+    )
     version: str = Field(..., description="APIバージョン", example="1.0.0")
     status: str = Field(..., description="ステータス", example="running")
     documentation: Dict[str, str] = Field(
         ...,
         description="ドキュメントURL",
-        example={
-            "swagger": "/docs",
-            "redoc": "/redoc",
-            "openapi": "/openapi.json"
-        }
+        example={"swagger": "/docs", "redoc": "/redoc", "openapi": "/openapi.json"},
     )
     endpoints: Dict[str, str] = Field(
         ...,
@@ -640,8 +787,8 @@ class RootResponse(BaseModel):
         example={
             "health": "/health",
             "analysis": "/api/v1/meal-analyses",
-            "retrieval": "/api/v1/retrieve"
-        }
+            "retrieval": "/api/v1/retrieve",
+        },
     )
     default_config: Dict[str, Any] = Field(
         ...,
@@ -649,16 +796,14 @@ class RootResponse(BaseModel):
         example={
             "model": "Qwen/Qwen3-VL-30B-A3B-Thinking",
             "prompt": "freeform_prompt_usda_format_ver_v7_experimental_20251027.txt",
-            "search": {
-                "mode": "full_index_only",
-                "stage1_top_k": 40
-            }
-        }
+            "search": {"mode": "full_index_only", "stage1_top_k": 40},
+        },
     )
 
 
 class EndpointInfoResponse(BaseModel):
     """Endpoint information response"""
+
     model_config = {"protected_namespaces": ()}
 
     endpoints: Dict[str, str] = Field(
@@ -666,43 +811,59 @@ class EndpointInfoResponse(BaseModel):
         description="利用可能なエンドポイント",
         example={
             "POST /api/v1/meal-analyses/complete": "画像から食事を分析",
-            "GET /health": "ヘルスチェック"
-        }
+            "GET /health": "ヘルスチェック",
+        },
     )
     documentation: str = Field(..., description="ドキュメントURL", example="/docs")
 
 
 class RetrievalHealthResponse(BaseModel):
     """Retrieval API health check response"""
+
     model_config = {"protected_namespaces": ()}
 
     status: str = Field(..., description="ステータス", example="healthy")
     service: str = Field(..., description="サービス名", example="usda_retrieval_api")
     index_type: str = Field(..., description="インデックスタイプ", example="FAISS")
-    modes: List[str] = Field(..., description="利用可能な検索モード", example=["fast", "accurate", "hybrid"])
-    searcher_initialized: bool = Field(..., description="Searcherの初期化状態", example=True)
-    hybrid_search_enabled: bool = Field(..., description="ハイブリッド検索の有効状態", example=True)
+    modes: List[str] = Field(
+        ..., description="利用可能な検索モード", example=["fast", "accurate", "hybrid"]
+    )
+    searcher_initialized: bool = Field(
+        ..., description="Searcherの初期化状態", example=True
+    )
+    hybrid_search_enabled: bool = Field(
+        ..., description="ハイブリッド検索の有効状態", example=True
+    )
 
 
 class MetadataInfoResponse(BaseModel):
     """Metadata information response"""
+
     model_config = {"protected_namespaces": ()}
 
     total_items: int = Field(..., description="総アイテム数", example=13564)
-    file_size_bytes: int = Field(..., description="ファイルサイズ（バイト）", example=8767812)
+    file_size_bytes: int = Field(
+        ..., description="ファイルサイズ（バイト）", example=8767812
+    )
     file_size_mb: float = Field(..., description="ファイルサイズ（MB）", example=8.36)
-    compressed_size_bytes: int = Field(..., description="圧縮後サイズ（バイト）", example=702565)
-    compressed_size_mb: float = Field(..., description="圧縮後サイズ（MB）", example=0.67)
+    compressed_size_bytes: int = Field(
+        ..., description="圧縮後サイズ（バイト）", example=702565
+    )
+    compressed_size_mb: float = Field(
+        ..., description="圧縮後サイズ（MB）", example=0.67
+    )
     compression_ratio: float = Field(..., description="圧縮率", example=0.08)
     sources: Dict[str, int] = Field(
         ...,
         description="ソース別件数",
-        example={
-            "survey": 7000,
-            "foundation": 5000,
-            "sr_legacy": 1564
-        }
+        example={"survey": 7000, "foundation": 5000, "sr_legacy": 1564},
     )
-    portions_coverage_percent: float = Field(..., description="Portionsカバレッジ（%）", example=85.5)
-    items_with_portions: int = Field(..., description="Portions情報を持つアイテム数", example=11600)
-    last_modified: float = Field(..., description="最終更新時刻（UNIX timestamp）", example=1698765432.0)
+    portions_coverage_percent: float = Field(
+        ..., description="Portionsカバレッジ（%）", example=85.5
+    )
+    items_with_portions: int = Field(
+        ..., description="Portions情報を持つアイテム数", example=11600
+    )
+    last_modified: float = Field(
+        ..., description="最終更新時刻（UNIX timestamp）", example=1698765432.0
+    )
