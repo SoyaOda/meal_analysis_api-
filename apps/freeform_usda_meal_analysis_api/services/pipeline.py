@@ -90,6 +90,11 @@ class MealAnalysisPipeline:
 
         self.cost_calculator = CostCalculator()
 
+        # 後段カロリーキャリブレーション（既定OFF。外部held-outでfitしたときのみ有効化）
+        from ..core.calorie_calibration import load_calibration
+
+        self.calorie_calibration = load_calibration()
+
         logger.info("✅ Meal Analysis Pipeline initialized successfully")
 
     async def analyze_image(
@@ -243,6 +248,9 @@ class MealAnalysisPipeline:
 
         # 全体の栄養素を計算
         total_nutrition = self._calculate_total_nutrition(enriched_dishes)
+        enriched_dishes, total_nutrition = self._apply_calorie_calibration(
+            enriched_dishes, total_nutrition
+        )
 
         logger.info("✅ Nutrition calculation complete")
         logger.info(
@@ -1138,6 +1146,49 @@ class MealAnalysisPipeline:
         # 丸め処理
         return {k: round(v, 1) for k, v in total.items()}
 
+    def _apply_calorie_calibration(
+        self, dishes: List[Dict], total_nutrition: Dict[str, float]
+    ) -> tuple:
+        """後段カロリーキャリブレーションを一貫して適用（既定OFFならno-op）。
+
+        系統的なカロリー過小推定（計測 calibration slope ~0.47）を補正する affine map
+        を、total・dish・ingredient の栄養素と weight_g に同一 factor で掛けて応答の
+        整合性を保つ。factor は guard rail でクランプ済み。
+        """
+        cal = getattr(self, "calorie_calibration", None)
+        if cal is None or not cal.enabled:
+            return dishes, total_nutrition
+
+        raw_cal = float(total_nutrition.get("calories", 0.0) or 0.0)
+        factor = cal.scale_factor(raw_cal)
+        if factor == 1.0:
+            return dishes, total_nutrition
+
+        def _scale_entry(entry: Optional[Dict]) -> None:
+            if not isinstance(entry, dict):
+                return
+            nutrition = entry.get("nutrition")
+            if isinstance(nutrition, dict):
+                for key in ("calories", "protein_g", "fat_g", "carbs_g"):
+                    if nutrition.get(key) is not None:
+                        nutrition[key] = round(nutrition[key] * factor, 1)
+            if entry.get("weight_g") is not None:
+                entry["weight_g"] = round(entry["weight_g"] * factor, 1)
+
+        for dish in dishes:
+            _scale_entry(dish.get("main_food"))
+            for extra in dish.get("extras") or []:
+                _scale_entry(extra)
+
+        scaled_total = {k: round(v * factor, 1) for k, v in total_nutrition.items()}
+        logger.info(
+            "Applied calorie calibration: factor=%.3f (raw=%.0f -> %.0f kcal)",
+            factor,
+            raw_cal,
+            scaled_total.get("calories", 0.0),
+        )
+        return dishes, scaled_total
+
     async def analyze_meal_from_voice(
         self,
         audio_bytes: bytes,
@@ -1315,6 +1366,9 @@ class MealAnalysisPipeline:
 
         enriched_dishes = self._build_enriched_dishes(dishes, queries)
         total_nutrition = self._calculate_total_nutrition(enriched_dishes)
+        enriched_dishes, total_nutrition = self._apply_calorie_calibration(
+            enriched_dishes, total_nutrition
+        )
 
         logger.info("✅ Nutrition calculation complete")
         logger.info(f"   Total: {total_nutrition['calories']} kcal")

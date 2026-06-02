@@ -102,8 +102,16 @@ python -m apps.freeform_usda_meal_analysis_api.scripts.pdca_session_bootstrap \
 - 週次で holdout をローテーションし、同一subset固定の最適化を避ける。
 - lessonには「効いた要素/効かなかった要素」を必ず分離して記録する。
 
+## Judge Eval（full-output / user-conviction）— 正典は `docs/EVAL_RUBRIC.md`
+- 最終KPIは総カロリー精度ではなく **user-conviction**（認識/命名/分量/栄養/総合をユーザがそのまま記録受け入れるか）。total-calorie MAE は **補完であって置換しない**。
+- Tier0（決定論的・コスト0・常時, summary.json 追加キー `recognition_agg`/`portion_bands`/`nutrient_self_consistency_rate`）+ Tier1/2（`meal-output-judge` subagent = Claude(VLM)-as-judge, 写真+GT grounding, 6次元0-5, 幾何平均conviction）。
+- **judge は検証されるまでゲートに使わない**: golden 15-25枚で weighted κ≥0.6 / Pearson r≥0.80 + perturbation gate 合格が前提。未検証/contract欠落は理由付きHOLD（silent promote禁止）。`gate.use_judge` default OFF。
+- anti-overfit: judge≠generator family（Gemini gen / Claude judge）、judge-only holdout、rubricにeval固有情報を埋め込まない、judge↑かつMAE↓は gaming疑いで human spot-check。
+- judge_contract（model_id/rubric_version/prompt_sha256/weights/seed）を artifact に pin。
+
 ## Directory Contract
 - `evals/configs/`: 実験設定JSON
+- `evals/judge/`: judge rubric版/contract/golden_set/perturbation/validation/cache（judge評価の資産）
 - `evals/catalog/`: OpenRouterモデル一覧スナップショット
 - `evals/runs/`: 実行結果（raw + summary）
 - `evals/baselines/`: 比較基準JSON

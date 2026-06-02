@@ -59,10 +59,12 @@ class Settings:
             "VLM_MODEL_ID", "openrouter:google/gemini-3-flash-preview"
         )
 
-        # デフォルト: v11b (full50でpromote済みの安定版)
+        # デフォルト: v13 (= 本番稼働中のv11b+飲料対応。v11bとはcalorie MAE非劣性
+        #   [paired 95%CI -4.73..+4.56, p=0.84, run 20260601_204037]。本番prompt_textを
+        #   prompts/に保全しコード既定に昇格。本番prompt_file label修正はデプロイ後に実施)
         self.DEFAULT_PROMPT_FILE = os.getenv(
             "DEFAULT_PROMPT_FILE",
-            "freeform_prompt_usda_format_ver_v11b_gemini_component_density_20260225.txt",
+            "freeform_prompt_usda_format_ver_v13_beverage_subject_prodcapture_20260226.txt",
         )
 
         # プロンプトディレクトリ

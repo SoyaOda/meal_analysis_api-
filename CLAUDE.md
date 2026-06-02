@@ -1,157 +1,46 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このリポジトリで作業する Claude Code 向けガイド。リポジトリ全体の方針は次を参照。
 
-## Project Overview
+@AGENTS.md
 
-必ず serena MCP が日本語で対応すること！
-日本語で応答すること！
+## 応答・MCP
+- 必ず**日本語**で応答すること。
+- serena MCP も日本語で対応すること。
 
-### freeform_usda_meal_analysis_api のPDCA運用
+## Apps（monorepo）
+`apps/` 配下に6つの API がある。編集対象アプリの dir 内で Claude を起動すると、そのアプリ + root の指示だけが読み込まれる。各アプリの詳細は各 `README.md`、起動・エンドポイント例は `docs/API_QUICKSTART.md` を参照。全コマンドは `PYTHONPATH=/Users/odasoya/meal_analysis_api_2` 前提。
 
-`apps/freeform_usda_meal_analysis_api` を触る場合は次を先に読むこと:
+| App | Port | 説明 |
+|-----|------|------|
+| `word_query_api` | 8002 | MyNetDiary版 単語検索 |
+| `meal_analysis_api` | 8001 | MyNetDiary版 食事分析 |
+| `barcode_api` | 8003 | バーコード検索 |
+| `usda_word_query_api` | 8004 | USDA FNDDS版 単語検索 |
+| `usda_meal_analysis_api` | 8005 | USDA FNDDS版 食事分析（8004必須） |
+| `freeform_usda_meal_analysis_api` | 8006 | USDA版 自由形式・写真カロリー推定（PDCA運用あり） |
 
-- `apps/freeform_usda_meal_analysis_api/AGENTS.md`
-- `apps/freeform_usda_meal_analysis_api/CLAUDE.md`
-- `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md`
-- `apps/freeform_usda_meal_analysis_api/docs/PDCA_BEST_PRACTICES_20260224.md`
-- セッション開始時に `python -m apps.freeform_usda_meal_analysis_api.scripts.pdca_session_bootstrap --api-url https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app` を実行し、`evals/knowledge/session_bootstrap_latest.md` を確認する
+## freeform_usda_meal_analysis_api のPDCA運用（重要）
+このアプリを触る場合は先に読むこと:
+- `apps/freeform_usda_meal_analysis_api/AGENTS.md` / `CLAUDE.md`
+- `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md` / `PDCA_BEST_PRACTICES_20260224.md`
+- 全体レビュー & 改善ロードマップ: `apps/freeform_usda_meal_analysis_api/docs/DEEP_REVIEW_20260601.md`
+
+精度PDCAに着手する前に `/pdca-bootstrap`（または `scripts/pdca_session_bootstrap`）を実行し、`evals/knowledge/session_bootstrap_latest.md` を確認する。
 - 当面のモデル集中: `openrouter:google/gemini-3-flash-preview`
-- 採用判定は原則50例フル評価（中断時は分割再開可）で、Ground truth総カロリー比較を必須とする
-- 過学習防止: promptに評価データ固有情報（test image id / label値 / ground truth）を含めない
-- PDCA評価は原則 `use_vlm_cache=false` で実施する
+- 採用判定は原則50例フル評価 + Ground truth総カロリー比較 + 安定性確認
+- 過学習防止: prompt に評価データ固有情報（test image id / label値 / ground truth）を含めない
+- PDCA評価は原則 `use_vlm_cache=false`
 
-### 3. API サーバーの起動
+## Tooling（Claude Code）
+- Skills: `/pdca-bootstrap` `/pdca-run` `/pdca-check`（freeform）, `/handoff`（`plans/current.md` 更新）
+- Subagent: `pdca-runner`（50画像evalを隔離実行し要約のみ返す）
+- Hooks: `Write|Edit` 後に *.py を `ruff format` + `python -m py_compile`（`.claude/settings.json`）
+- 引き継ぎSSOT: 各アプリの `plans/current.md`
 
-#### Word Query API (ポート 8002)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8002 python -m apps.word_query_api.main
-```
-
-#### Meal Analysis API (ポート 8001)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 GOOGLE_CLOUD_PROJECT=new-snap-calorie PORT=8001 python -m apps.meal_analysis_api.main
-```
-
-#### Barcode API (ポート 8003)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8003 python -m apps.barcode_api.main
-```
-
-#### USDA Word Query API (ポート 8004)
-
-```bash
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 PORT=8004 python -m apps.usda_word_query_api.main
-```
-
-#### USDA Meal Analysis API (ポート 8005)
-
-```bash
-# USDA Word Query APIが起動していることが必須（ポート8004）
-WORD_QUERY_API_URL=http://localhost:8004 \
-INGREDIENT_ELASTICSEARCH_INDEX=usda_unified_nutrition_db \
-NUTRITION_DATA_SOURCE=usda_api \
-PYTHONPATH=/Users/odasoya/meal_analysis_api_2 \
-GOOGLE_CLOUD_PROJECT=new-snap-calorie \
-PORT=8005 \
-python -m apps.usda_meal_analysis_api.main
-```
-
-## 📚 API エンドポイント
-
-### Meal Analysis API (http://localhost:8001)
-
-#### 音声入力による食事分析
-
-```bash
-curl -X POST "http://localhost:8001/api/v1/meal-analyses/voice" \
-  -F "audio_file=@test-audio/lunch_detailed.wav" \
-  -F "user_context=lunch analysis"
-```
-
-#### 画像入力による食事分析
-
-```bash
-curl -X POST "http://localhost:8001/api/v1/meal-analyses/complete" \
-  -F "image=@test_images/food1.jpg" \
-  -F "user_context=dinner analysis"
-```
-
-### Barcode API (http://localhost:8003)
-
-#### バーコード検索
-
-```bash
-curl -X POST "http://localhost:8003/api/v1/barcode/lookup" \
-  -H "Content-Type: application/json" \
-  -d '{"gtin": "000000016872"}'
-```
-
-#### キャッシュ統計確認
-
-```bash
-curl -X GET "http://localhost:8003/api/v1/barcode/cache-stats"
-```
-
-#### キャッシュクリア
-
-```bash
-curl -X DELETE "http://localhost:8003/api/v1/barcode/cache"
-```
-
-### USDA Word Query API (http://localhost:8004)
-
-#### 食材検索
-
-```bash
-curl -X GET "http://localhost:8004/api/v1/usda/suggest?q=chicken&limit=5"
-```
-
-#### ヘルスチェック
-
-```bash
-curl -X GET "http://localhost:8004/health"
-```
-
-### USDA Meal Analysis API (http://localhost:8005)
-
-#### 画像入力による食事分析（USDA版）
-
-```bash
-curl -X POST "http://localhost:8005/api/v1/meal-analyses/complete" \
-  -F "image=@test_images/food1.jpg" \
-  -F "user_context=USDA analysis"
-```
-
-#### 音声入力による食事分析（USDA版）
-
-```bash
-curl -X POST "http://localhost:8005/api/v1/meal-analyses/voice" \
-  -F "audio_file=@test-audio/lunch_detailed.wav" \
-  -F "user_context=USDA lunch analysis"
-```
-
-#### ヘルスチェック
-
-```bash
-curl -X GET "http://localhost:8005/health"
-```
-
-[Instruction]
-apps に 5 つの API が実装されている。詳細を各 README.md を見て理解すること。
-- apps/word_query_api (MyNetDiary版)
-- apps/meal_analysis_api (MyNetDiary版)
-- apps/barcode_api
-- apps/usda_word_query_api (USDA FNDDS版)
-- apps/usda_meal_analysis_api (USDA FNDDS版)
-
-[命令]
-
-[実装の上でのポイント]
-・一度に複数の Script を実装しないこと。Script ごとに機能の Test をして実装した内容がきちんと動くことを確認して次の機能の実装に移ること。
-・・Fallbackのような実装はせずきちんとエラーを出して止めるように実装すること
-・こちらで作業する必要がある部分や必要な情報があれば、その都度どのようにしたらいいか教えて。
-・修正したらpython -m py_compileで構文エラーは確かめてね
+## 実装の上でのポイント
+- 一度に複数の機能を同時実装しない。機能ごとにテスト・確認してから次へ進む。
+- Fallback のような実装はせず、きちんとエラーを出して止める。
+- 修正後は `python -m py_compile` で構文エラーを確認する。
+- 未使用コード・import は削除。本番コードでのデバッグ出力禁止。マジックナンバーは定数化。
+- 作業者側で必要な情報があれば、その都度確認する。

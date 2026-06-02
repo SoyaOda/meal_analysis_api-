@@ -15,11 +15,7 @@ from typing import Any, Dict, List, Optional
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_AGG_ROOT = (
-    PROJECT_ROOT
-    / "apps"
-    / "freeform_usda_meal_analysis_api"
-    / "evals"
-    / "repeat_runs"
+    PROJECT_ROOT / "apps" / "freeform_usda_meal_analysis_api" / "evals" / "repeat_runs"
 )
 RUN_PATH_PATTERN = re.compile(r"^Saved run:\s*(.+)$", re.MULTILINE)
 
@@ -142,6 +138,41 @@ def safe_stdev(values: List[float]) -> float:
     return float(statistics.stdev(values))
 
 
+def stability_verdict(
+    row: Dict[str, Any],
+    *,
+    baseline_mae: Optional[float],
+    max_mae_std: float,
+    max_high30_std: float,
+) -> Dict[str, Any]:
+    """Code-enforced stability gate over repeated runs.
+
+    A candidate is 'stable' only when every run fully succeeded/covered, the
+    run-to-run std of MAE and high30 are within bounds, and (when a baseline is
+    given) the mean MAE beats the baseline. Previously these thresholds were
+    applied only by hand in lesson notes.
+    """
+    reasons: List[str] = []
+    if row["success_run_count"] < row["run_count"]:
+        reasons.append(
+            f"only {row['success_run_count']}/{row['run_count']} runs fully succeeded/covered"
+        )
+    if row["mae_std"] > max_mae_std:
+        reasons.append(f"mae_std {row['mae_std']} > {max_mae_std}")
+    if row["high30_std"] > max_high30_std:
+        reasons.append(f"high30_std {row['high30_std']} > {max_high30_std}")
+    if baseline_mae is not None and row["mae_mean"] > baseline_mae:
+        reasons.append(
+            f"mae_mean {row['mae_mean']} does not beat baseline {round(baseline_mae, 4)}"
+        )
+    if reasons:
+        return {"decision": "hold", "reasons": reasons}
+    note = "mae_std/high30_std within bounds"
+    if baseline_mae is not None:
+        note += " and mae_mean beats baseline"
+    return {"decision": "stable", "reasons": [note]}
+
+
 def build_markdown_summary(path: Path, payload: Dict[str, Any]) -> None:
     lines: List[str] = []
     lines.append("# PDCA Repeated Eval Summary")
@@ -153,13 +184,14 @@ def build_markdown_summary(path: Path, payload: Dict[str, Any]) -> None:
     lines.append(f"- run_dirs_count: {len(payload['run_dirs'])}")
     lines.append("")
     lines.append(
-        "| candidate | runs | mae_mean | mae_std | high30_mean | high30_std | all_success_runs |"
+        "| candidate | runs | mae_mean | mae_std | high30_mean | high30_std | all_success_runs | stability |"
     )
-    lines.append("|---|---:|---:|---:|---:|---:|---:|")
+    lines.append("|---|---:|---:|---:|---:|---:|---:|---|")
 
     for row in payload["candidates"]:
+        stability = (row.get("stability") or {}).get("decision", "n/a")
         lines.append(
-            "| {name} | {runs} | {mae_mean:.4f} | {mae_std:.4f} | {high_mean:.4f} | {high_std:.4f} | {ok}/{runs} |".format(
+            "| {name} | {runs} | {mae_mean:.4f} | {mae_std:.4f} | {high_mean:.4f} | {high_std:.4f} | {ok}/{runs} | {stability} |".format(
                 name=row["name"],
                 runs=row["run_count"],
                 mae_mean=row["mae_mean"],
@@ -167,6 +199,7 @@ def build_markdown_summary(path: Path, payload: Dict[str, Any]) -> None:
                 high_mean=row["high30_mean"],
                 high_std=row["high30_std"],
                 ok=row["success_run_count"],
+                stability=stability,
             )
         )
 
@@ -203,6 +236,18 @@ def main() -> int:
         default=None,
     )
     parser.add_argument("--baseline-file", default=None)
+    parser.add_argument(
+        "--max-mae-std",
+        type=float,
+        default=1.0,
+        help="Max allowed run-to-run mae_std for a 'stable' verdict",
+    )
+    parser.add_argument(
+        "--max-high30-std",
+        type=float,
+        default=2.0,
+        help="Max allowed run-to-run high30_std for a 'stable' verdict",
+    )
     parser.add_argument(
         "--inner-output-root",
         default=None,
@@ -280,7 +325,8 @@ def main() -> int:
         success_runs = [
             s
             for s in summaries
-            if bool(s.get("all_success", False)) and bool(s.get("coverage_complete", False))
+            if bool(s.get("all_success", False))
+            and bool(s.get("coverage_complete", False))
         ]
         row = {
             "name": name,
@@ -299,7 +345,24 @@ def main() -> int:
 
     candidate_rows.sort(key=lambda r: (r["mae_mean"], r["high30_mean"]))
 
-    agg_dir = Path(args.output_root).resolve() / datetime.now().strftime("%Y%m%d_%H%M%S")
+    baseline_mae: Optional[float] = None
+    if baseline_file is not None and baseline_file.exists():
+        baseline_summary = load_json(baseline_file).get("summary") or {}
+        baseline_mae_value = baseline_summary.get("calorie_mae_percent")
+        if baseline_mae_value is not None:
+            baseline_mae = float(baseline_mae_value)
+
+    for row in candidate_rows:
+        row["stability"] = stability_verdict(
+            row,
+            baseline_mae=baseline_mae,
+            max_mae_std=args.max_mae_std,
+            max_high30_std=args.max_high30_std,
+        )
+
+    agg_dir = Path(args.output_root).resolve() / datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
     agg_dir.mkdir(parents=True, exist_ok=True)
 
     payload = {
@@ -315,7 +378,9 @@ def main() -> int:
     summary_path = agg_dir / "repeated_summary.json"
     md_path = agg_dir / "repeated_summary.md"
 
-    raw_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    raw_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     summary_payload = {
         "generated_at": payload["generated_at"],
         "config_path": payload["config_path"],
@@ -333,6 +398,7 @@ def main() -> int:
                 "high30_std": c["high30_std"],
                 "latency_mean": c["latency_mean"],
                 "cost_mean": c["cost_mean"],
+                "stability": c.get("stability"),
                 "candidate": c["candidate"],
             }
             for c in candidate_rows

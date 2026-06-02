@@ -15,6 +15,21 @@ class HealthCheckResponse(BaseModel):
     version: str = Field(..., description="APIバージョン", example="1.0.0")
     model_id: str = Field(..., description="使用中のVLMモデルID")
     prompt_file: str = Field(..., description="使用中のプロンプトファイル")
+    config_drift: Optional[bool] = Field(
+        default=None,
+        description="配信中の設定がコード既定と乖離しているか（True=ドリフト検出）",
+    )
+    config_drift_fields: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="ドリフトしているフィールドの {served, default} 詳細",
+    )
+    prompt_text_override_active: Optional[bool] = Field(
+        default=None,
+        description="サーバー側 prompt_text オーバーライドが有効か（prompt_file より優先される）",
+    )
+    schema_version: Optional[int] = Field(
+        default=None, description="配信中の設定スキーマバージョン"
+    )
 
 
 class NutritionInfo(BaseModel):

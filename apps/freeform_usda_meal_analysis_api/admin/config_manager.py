@@ -25,8 +25,8 @@ class VLMConfig(BaseModel):
         description="VLM Model ID (e.g., 'openrouter:google/gemini-3-flash-preview', 'openrouter:openai/gpt-5.1')",
     )
     prompt_file: str = Field(
-        default="freeform_prompt_usda_format_ver_v11b_gemini_component_density_20260225.txt",
-        description="Prompt file name (in prompts/ directory)",
+        default="freeform_prompt_usda_format_ver_v13_beverage_subject_prodcapture_20260226.txt",
+        description="Prompt file name (in prompts/ directory). v13 = 本番稼働中のv11b+飲料対応 (settings.py 参照)",
     )
     prompt_text: Optional[str] = Field(
         default=None, description="Direct prompt text (overrides prompt_file if set)"
@@ -149,6 +149,9 @@ class APIConfig(BaseModel):
     runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
     updated_at: Optional[str] = Field(default=None, description="Last update timestamp")
     updated_by: Optional[str] = Field(default=None, description="Last updated by")
+    schema_version: int = Field(
+        default=1, description="Config schema version for one-shot migrations"
+    )
 
 
 # ========== Configuration Manager ==========
@@ -320,6 +323,36 @@ class ConfigManager:
             self._cache_timestamp = time.time()
 
         return self._cache
+
+    def detect_config_drift(self) -> Dict[str, Any]:
+        """Compare the SERVED (persisted) config against the code defaults.
+
+        get_config() returns the persisted Firestore doc verbatim and only seeds
+        defaults on a MISSING doc, so a doc written under an older default keeps
+        serving stale values forever (e.g. prod serving an old prompt while the
+        code default and the benchmarked baseline have moved on). This surfaces
+        that mismatch for /health and ops, instead of relying on manual checks.
+
+        Returns:
+            {"drift": bool, "fields": {field: {"served": ..., "default": ...}}}
+        """
+        served = self.get_config()
+        defaults = self._load_defaults_from_settings()
+        checks = {
+            "vlm.model_id": (served.vlm.model_id, defaults.vlm.model_id),
+            "vlm.prompt_file": (served.vlm.prompt_file, defaults.vlm.prompt_file),
+            # A server-side prompt_text override silently wins over prompt_file,
+            # so flag it explicitly (the most dangerous drift case).
+            "vlm.prompt_text_active": (
+                served.vlm.prompt_text is not None,
+                defaults.vlm.prompt_text is not None,
+            ),
+        }
+        fields: Dict[str, Any] = {}
+        for name, (served_value, default_value) in checks.items():
+            if served_value != default_value:
+                fields[name] = {"served": served_value, "default": default_value}
+        return {"drift": bool(fields), "fields": fields}
 
     def _save_to_firestore(self, config: APIConfig) -> bool:
         """Save configuration to Firestore"""
