@@ -37,7 +37,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 APP_DIR = Path(__file__).resolve().parents[1]
 IMAGES_DIR = PROJECT_ROOT / "test_images" / "images"
 LABELS_DIR = PROJECT_ROOT / "test_images" / "images_label_with_nutrition"
-RUBRIC_PATH = APP_DIR / "evals" / "judge" / "judge_rubric_v1.txt"
+DEFAULT_RUBRIC_VERSION = "v2"
+
+
+def rubric_path_for(version: str) -> Path:
+    return APP_DIR / "evals" / "judge" / f"judge_rubric_{version}.txt"
+
+
+RUBRIC_PATH = rubric_path_for(DEFAULT_RUBRIC_VERSION)
 CACHE_DIR = APP_DIR / "evals" / "judge" / "cache"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -49,7 +56,7 @@ DIMENSION_WEIGHTS = {
     "nutrient_validity": 0.15,
     "total_plausibility": 0.10,
 }
-RUBRIC_VERSION = "v1"
+RUBRIC_VERSION = DEFAULT_RUBRIC_VERSION
 
 
 def resolve(path_str: str) -> Path:
@@ -224,18 +231,22 @@ def main() -> int:
     )
     ap.add_argument("--timeout-sec", type=int, default=120)
     ap.add_argument("--no-cache", action="store_true")
+    ap.add_argument("--rubric-version", default=DEFAULT_RUBRIC_VERSION)
     args = ap.parse_args()
 
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY not set (judge calls OpenRouter)")
 
+    rubric_path = rubric_path_for(args.rubric_version)
+    if not rubric_path.exists():
+        raise RuntimeError(f"rubric not found: {rubric_path}")
     run_dir = resolve(args.run_dir)
     raw = json.loads((run_dir / "raw_results.json").read_text(encoding="utf-8"))
-    rubric = RUBRIC_PATH.read_text(encoding="utf-8")
+    rubric = rubric_path.read_text(encoding="utf-8")
     contract = {
         "judge_model_id": args.judge_model,
-        "rubric_version": RUBRIC_VERSION,
+        "rubric_version": args.rubric_version,
         "prompt_sha256": hashlib.sha256(rubric.encode()).hexdigest()[:16],
         "weights": DIMENSION_WEIGHTS,
         "n_samples": args.samples,
@@ -353,7 +364,8 @@ def main() -> int:
             agg["note"] = (
                 "ADVISORY: judge not yet validated vs golden set; do NOT gate on this."
             )
-            out_path = run_dir / f"judge_{name}.json"
+            suffix = "" if args.rubric_version == "v1" else f"_{args.rubric_version}"
+            out_path = run_dir / f"judge_{name}{suffix}.json"
             out_path.write_text(
                 json.dumps(
                     {"summary": agg, "per_image": per_image},
@@ -368,7 +380,8 @@ def main() -> int:
                 f"dims={agg['per_dimension_mean']} cost=${agg['judge_cost_usd']} -> {out_path.name}"
             )
 
-    summary_path = run_dir / "judge_summary.json"
+    summary_suffix = "" if args.rubric_version == "v1" else f"_{args.rubric_version}"
+    summary_path = run_dir / f"judge_summary{summary_suffix}.json"
     summary_path.write_text(
         json.dumps(
             {
