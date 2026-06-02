@@ -15,14 +15,16 @@
 ## 6次元（judge, 各0-5）
 | 次元 | 重み | 何を見るか |
 |------|------|-----------|
-| recognition | 0.30 | 写真にある料理をGT網羅で当て、捏造しないか |
-| naming_db_match | 0.25 | matched USDAレコードが受け入れ可能か（raw/cooked, beef/pork等） |
-| portion_plausibility | 0.20 | weight_g が写真とGTに妥当か |
-| nutrient_validity | 0.15 | calculated_nutrition が self-consistent & 妥当か |
-| total_plausibility | 0.10 | 正しい部品から積上がるか（相殺誤差でないか） |
+| recognition | 0.30 | 写真にある料理をGT網羅で当て、捏造しないか（LLM judge） |
+| naming_db_match | 0.25 | matched USDAレコードが受け入れ可能か（raw/cooked, beef/pork等）（LLM judge） |
+| portion_plausibility | 0.20 | **決定的**: `dish_match_metrics.portion_score_0_5`（Hungarianマッチの weight band を 0-5化）。LLM judge の portion は **advisory**（融合に不使用） |
+| nutrient_validity | 0.15 | calculated_nutrition が self-consistent & 妥当か（LLM judge） |
+| total_plausibility | 0.10 | 正しい部品から積上がるか（相殺誤差でないか）（LLM judge） |
 | user_conviction (holistic) | — | そのまま記録を受け入れるか（融合に入れずcross-check） |
 
 `overall_conviction (0-100) = 100 × Π (score_d/5)^{w_d}`（D1–D5の**幾何平均**: 1次元崩壊で全体が落ちる=信頼の性質に一致。score 0→0.01 クランプ）。重み±0.05はρ>0.95で安定。重みは config に記録し無断調整禁止。
+
+> **portion は LLM judge ではなく決定的メトリクスを使う**（2026-06-02決定）。rubric v3 で portion を機械化したが fast judge が per-item算術を安定実行できず r 0.63→0.42 に悪化、かつ n≈20自己一致は再走ノイズ過大と判明。決定的 `portion_score_0_5`（ばらつきゼロ）は丁寧な Opus pass と κ=0.50（fast judge 0.27）で一致。`portion_score_0_5_mean`（batch summary）/ `portion_deterministic_mean`（judge summary）に集計。マッチャ精度は embedding 化で更に向上予定。lesson: `evals/lessons/20260602_rubric_v3_portion_should_be_deterministic.md`。
 
 ## バイアス対策（必須）
 - 入力は **写真→GT→候補** の順（image-first / anti-anchoring）。写真は認識/分量妥当性のみ、数値truthはGT。

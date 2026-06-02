@@ -418,6 +418,36 @@ _KCAL_PER_G_MIN = 0.1
 _KCAL_PER_G_MAX = 9.0
 
 
+def portion_score_from_bands(
+    portion_bands: Dict[str, float], matched: int
+) -> Optional[int]:
+    """Deterministic 0-5 portion_plausibility score from the matched-item weight bands.
+
+    This is the reproducible (zero run-variance) replacement for an LLM judge's portion
+    score; see lesson 20260602_rubric_v3_portion_should_be_deterministic.md. f25 = fraction
+    of matched items within 25% of GT weight, f10 = fraction within 10%. Returns None when
+    no matched item carried a comparable weight (banded == 0), so callers can distinguish
+    "no portion signal" from a real 0.
+    """
+    if not matched:
+        return 0
+    f10 = float(portion_bands.get("within_10", 0.0))
+    f25 = f10 + float(portion_bands.get("within_25", 0.0))
+    if f25 == 0.0 and float(portion_bands.get("gross", 0.0)) == 0.0:
+        return None
+    if f25 >= 0.999 and f10 >= 0.5:
+        return 5
+    if f25 >= 0.75:
+        return 4
+    if f25 >= 0.50:
+        return 3
+    if f25 >= 0.25:
+        return 2
+    if f25 > 0.0:
+        return 1
+    return 0
+
+
 def dish_match_metrics(
     pred_items: List[Dict[str, Any]],
     gt_items: List[Dict[str, Any]],
@@ -470,6 +500,7 @@ def dish_match_metrics(
             "n_gt": n_gt,
             "matched_weight_mae_g": None,
             "portion_bands": {"within_10": 0.0, "within_25": 0.0, "gross": 1.0},
+            "portion_score_0_5": 0,
             "nutrient_self_consistency": nutrient_self_consistency,
         }
 
@@ -519,6 +550,7 @@ def dish_match_metrics(
         "n_gt": n_gt,
         "matched_weight_mae_g": (round(_mean(weight_errs), 2) if weight_errs else None),
         "portion_bands": portion_bands,
+        "portion_score_0_5": portion_score_from_bands(portion_bands, matched),
         "nutrient_self_consistency": nutrient_self_consistency,
     }
 
@@ -1574,6 +1606,17 @@ def main() -> int:
                         k: round(_mean([b.get(k, 0.0) for b in bands]), 4)
                         for k in band_keys
                     }
+                # Deterministic portion_plausibility (0-5) — the reproducible gate signal
+                # that replaces the unstable LLM judge portion score (see lesson
+                # 20260602_rubric_v3_portion_should_be_deterministic.md).
+                portion_scores = [
+                    d["portion_score_0_5"]
+                    for d in dm
+                    if d.get("portion_score_0_5") is not None
+                ]
+                r["summary"]["portion_score_0_5_mean"] = (
+                    round(_mean(portion_scores), 4) if portion_scores else None
+                )
                 nsc = [
                     d["nutrient_self_consistency"]
                     for d in dm

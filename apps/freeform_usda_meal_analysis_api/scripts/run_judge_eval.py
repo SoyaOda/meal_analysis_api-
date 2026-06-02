@@ -28,6 +28,7 @@ import httpx
 
 from apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval import (
     bootstrap_mean_ci,
+    dish_match_metrics,
     load_label_items,
     load_label_nutrition,
     parse_image_index_from_name,
@@ -49,6 +50,9 @@ CACHE_DIR = APP_DIR / "evals" / "judge" / "cache"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Geometric-mean weights (sum=1.0); see docs/EVAL_RUBRIC.md.
+# portion_plausibility's 0.20 is sourced from the DETERMINISTIC dish-match band score
+# (not the LLM judge); the LLM portion score is advisory only. See lesson
+# 20260602_rubric_v3_portion_should_be_deterministic.md.
 DIMENSION_WEIGHTS = {
     "recognition": 0.30,
     "naming_db_match": 0.25,
@@ -91,6 +95,28 @@ def build_gt_view(image_index: int) -> Dict[str, Any]:
         "items": load_label_items(label_path),
         "total_nutrition": load_label_nutrition(label_path),
     }
+
+
+def deterministic_portion_score(
+    candidate_view: Dict[str, Any], gt_view: Dict[str, Any]
+) -> Optional[int]:
+    """Deterministic portion_plausibility (0-5) from Hungarian-matched weight bands.
+
+    This replaces the LLM judge's portion score in the conviction geometric mean: the
+    fast judge cannot execute the per-item rel_err arithmetic reliably (it swings 1<->5),
+    whereas this metric has zero run-variance and tracks a careful Opus pass more closely.
+    See lesson 20260602_rubric_v3_portion_should_be_deterministic.md. The LLM portion score
+    is kept in the per-image dimensions as advisory evidence only.
+    """
+    metrics = dish_match_metrics(
+        candidate_view.get("ingredients") or [], gt_view.get("items") or []
+    )
+    if metrics is None:
+        raise RuntimeError(
+            "dish_match_metrics returned None (scipy missing or empty GT); "
+            "cannot compute the deterministic portion score"
+        )
+    return metrics.get("portion_score_0_5")
 
 
 def parse_judge_json(text: str) -> Dict[str, Any]:
@@ -189,6 +215,11 @@ def aggregate(per_image: List[Dict[str, Any]]) -> Dict[str, Any]:
     edits = [
         r.get("edits_needed") for r in per_image if r.get("edits_needed") is not None
     ]
+    det_portions = [
+        r["portion_deterministic"]
+        for r in per_image
+        if r.get("portion_deterministic") is not None
+    ]
     ci = bootstrap_mean_ci(convictions) if convictions else None
     return {
         "n_images": len(per_image),
@@ -197,6 +228,10 @@ def aggregate(per_image: List[Dict[str, Any]]) -> Dict[str, Any]:
         else None,
         "overall_conviction_ci": [ci["ci_low"], ci["ci_high"]] if ci else None,
         "per_dimension_mean": per_dimension_mean,
+        "portion_deterministic_mean": round(statistics.mean(det_portions), 3)
+        if det_portions
+        else None,
+        "portion_source": "deterministic_dish_match (LLM portion is advisory)",
         "failure_tag_counts": dict(sorted(tag_counts.items(), key=lambda kv: -kv[1])),
         "edits_needed_mean": round(statistics.mean(edits), 2) if edits else None,
         "needs_human_review_rate": round(
@@ -344,13 +379,32 @@ def main() -> int:
                             merged["score"] = round(statistics.mean(scs), 3)
                             avg_dims[d] = merged
                     judged["dimensions"] = avg_dims
-                    judged["overall_conviction"] = overall_conviction(avg_dims)
                     judged["image_id"] = f"test_food{idx}"
                     judged.pop("_cost_usd", None)
                     if not args.no_cache:
                         cache_file.write_text(
                             json.dumps(judged, ensure_ascii=False, indent=2)
                         )
+                # Derive conviction from the DETERMINISTIC portion (not the LLM portion).
+                # Done after cache load so the conviction formula is independent of the
+                # cached raw judge result; the LLM portion stays as advisory evidence.
+                det_portion = deterministic_portion_score(cand_view, gt_view)
+                judged["portion_deterministic"] = det_portion
+                dims = judged.get("dimensions") or {}
+                llm_portion = dims.get("portion_plausibility")
+                if isinstance(llm_portion, dict):
+                    llm_portion["source"] = "llm_advisory"
+                # Always source portion from the deterministic score (never fall back to
+                # the LLM portion). If it is None the image has no portion signal -> its
+                # conviction is None and it is excluded from aggregation (fail loud).
+                conviction_dims = {
+                    **dims,
+                    "portion_plausibility": {
+                        **(llm_portion if isinstance(llm_portion, dict) else {}),
+                        "score": det_portion,
+                    },
+                }
+                judged["overall_conviction"] = overall_conviction(conviction_dims)
                 per_image.append(judged)
                 if i % 5 == 0 or i == len(rows):
                     print(f"  [{name}] {i}/{len(rows)}")
