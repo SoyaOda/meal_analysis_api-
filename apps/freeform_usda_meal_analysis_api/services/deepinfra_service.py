@@ -23,6 +23,22 @@ from ..core.circuit_breaker import (
 logger = logging.getLogger(__name__)
 
 
+def format_reranker_query(query: str, instruction: Optional[str]) -> str:
+    """Bake the reranker instruction INTO the query (Qwen3-Reranker instruction format).
+
+    Qwen3-Reranker is instruction-aware only when the instruction is part of the query
+    text. The DeepInfra rerank endpoint IGNORES a separate top-level 'instruction' payload
+    field (verified empirically 2026-06-02: 'prefer fat-free' and 'prefer full-fat' as the
+    instruction field produced byte-identical scores, while baking the same instructions
+    into the query flipped the ranking as intended). Returns the instruction-formatted
+    query, or the bare query when no usable instruction is given (whitespace-only -> bare,
+    which is the explicit "raw, no-instruction" path).
+    """
+    if instruction and instruction.strip():
+        return f"Instruct: {instruction.strip()}\nQuery: {query}"
+    return query
+
+
 class DeepInfraService:
     """
     Deep Infraのオープンai互換APIと通信するためのサービス。
@@ -424,15 +440,14 @@ class DeepInfraService:
 
         client = get_async_client()
 
-        # 正しいフォーマット: queries は list
+        # 正しいフォーマット: queries は list。instruction はクエリに焼き込む
+        # (DeepInfra rerank は top-level 'instruction' を無視するため; format_reranker_query 参照)
         payload = {
-            "queries": [query],  # list形式
+            "queries": [format_reranker_query(query, instruction)],
             "documents": documents,
         }
         if top_n is not None:
             payload["top_n"] = top_n
-        if instruction is not None:
-            payload["instruction"] = instruction
 
         headers = {
             "Authorization": f"Bearer {api_key}",
@@ -494,8 +509,10 @@ class DeepInfraService:
             doc_count = len(docs)
             query_doc_counts.append(doc_count)
 
+            # instruction はクエリに焼き込む(DeepInfra rerank は 'instruction' 無視)
+            formatted_query = format_reranker_query(query, instruction)
             for doc in docs:
-                flattened_queries.append(query)
+                flattened_queries.append(formatted_query)
                 flattened_documents.append(doc)
 
         total_pairs = len(flattened_queries)
@@ -520,8 +537,6 @@ class DeepInfraService:
         client = get_async_client()
 
         payload = {"queries": flattened_queries, "documents": flattened_documents}
-        if instruction is not None:
-            payload["instruction"] = instruction
 
         headers = {
             "Authorization": f"Bearer {api_key}",
