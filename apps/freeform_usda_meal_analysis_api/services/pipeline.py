@@ -106,6 +106,7 @@ class MealAnalysisPipeline:
         vlm_max_tokens: Optional[int] = None,
         vlm_reasoning_effort: Optional[str] = None,
         vlm_use_cache: bool = True,
+        enable_self_verification: bool = False,
         parallel_search: bool = True,
         # 検索設定パラメータ
         search_stage1_top_k: Optional[int] = None,
@@ -196,6 +197,41 @@ class MealAnalysisPipeline:
 
         dishes = vlm_response.get("dishes", [])
         logger.info(f"✅ VLM analysis complete: {len(dishes)} dishes found")
+
+        # Step 1.5: Self-verification (opt-in 2nd pass) — re-show the image with the
+        # candidate list and DROP items the model cannot actually see (precision lever
+        # against invented items). Single-pass behavior is unchanged when disabled.
+        if enable_self_verification and dishes:
+            from .vlm_service import apply_verification
+
+            candidate_names = []
+            for dish in dishes:
+                main_food = dish.get("main_food")
+                if main_food and main_food.get("search_name"):
+                    candidate_names.append(main_food["search_name"])
+                for extra in dish.get("extras") or []:
+                    if extra.get("search_name"):
+                        candidate_names.append(extra["search_name"])
+            logger.info(
+                f"\n🔎 Step 1.5/4: Self-verification of {len(candidate_names)} items"
+            )
+            verify_result = await self.vlm_service.verify_items(
+                image_bytes=image_bytes,
+                candidate_names=candidate_names,
+                image_mime_type=image_mime_type,
+                temperature=vlm_temperature,
+                seed=vlm_seed,
+                max_tokens=vlm_max_tokens,
+                reasoning_effort=vlm_reasoning_effort,
+            )
+            vlm_response, n_dropped = apply_verification(
+                vlm_response, verify_result["verdicts"]
+            )
+            dishes = vlm_response.get("dishes", [])
+            logger.info(
+                f"✅ Self-verification dropped {n_dropped} item(s); "
+                f"{len(dishes)} dishes, {len(verify_result['missing'])} flagged missing"
+            )
 
         # Step 2: クエリ抽出
         logger.info("\n🔄 Step 2/4: Query Extraction")
@@ -288,6 +324,7 @@ class MealAnalysisPipeline:
         model_config_override: Optional[Any] = None,
         search_config_override: Optional[Any] = None,
         include_debug_info: bool = False,
+        enable_self_verification: bool = False,
     ) -> Dict[str, Any]:
         """
         API用の画像分析エンドポイント(パラメータオーバーライド対応)
@@ -428,6 +465,7 @@ class MealAnalysisPipeline:
                 image_bytes=image_bytes,
                 image_mime_type="image/jpeg",
                 include_debug_info=include_debug_info,
+                enable_self_verification=enable_self_verification,
                 **vlm_kwargs,
                 **search_kwargs,
             )

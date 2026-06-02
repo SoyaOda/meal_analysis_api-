@@ -17,6 +17,49 @@ from ..core.vlm_cache import get_vlm_cache
 
 logger = logging.getLogger(__name__)
 
+# Self-verification (2nd-pass) prompt; injects the candidate list at {{CANDIDATES}}.
+VERIFY_PROMPT_FILE = "freeform_verify_pass_20260602.txt"
+
+
+def apply_verification(
+    vlm_response: Dict[str, Any],
+    verdicts: list,
+    drop_unsure: bool = False,
+) -> Tuple[Dict[str, Any], int]:
+    """Remove items the self-verification pass marked 'not_present' from the dish structure.
+
+    Matches verdict "item" to a dish's main_food/extra by exact search_name; a name that
+    does not match is KEPT (fail-safe toward recall — a paraphrased verdict never silently
+    drops a real item). 'unsure' is kept unless drop_unsure=True. A dish left with no
+    main_food and no extras is removed. Returns (filtered_response, n_dropped).
+    """
+    drop = {v.get("item") for v in verdicts if v.get("verdict") == "not_present"}
+    if drop_unsure:
+        drop |= {v.get("item") for v in verdicts if v.get("verdict") == "unsure"}
+    drop.discard(None)
+    n_dropped = 0
+    new_dishes = []
+    for dish in vlm_response.get("dishes", []) or []:
+        main_food = dish.get("main_food")
+        if main_food and main_food.get("search_name") in drop:
+            main_food = None
+            n_dropped += 1
+        extras = []
+        for extra in dish.get("extras") or []:
+            if extra.get("search_name") in drop:
+                n_dropped += 1
+            else:
+                extras.append(extra)
+        if main_food is None and not extras:
+            continue
+        new_dish = dict(dish)
+        new_dish["main_food"] = main_food
+        new_dish["extras"] = extras
+        new_dishes.append(new_dish)
+    out = dict(vlm_response)
+    out["dishes"] = new_dishes
+    return out, n_dropped
+
 
 class VLMService:
     """
@@ -54,6 +97,11 @@ class VLMService:
         # プロンプトロード - config管理を使用
         prompt_path = settings.get_prompt_path(prompt_file)
         self.prompt = self._load_prompt(prompt_path)
+
+        # Self-verification (2nd-pass) prompt — loaded once, used only when enabled.
+        self._verify_prompt = self._load_prompt(
+            settings.get_prompt_path(VERIFY_PROMPT_FILE)
+        )
 
         logger.info(f"VLMService initialized with model: {model_id}")
         logger.info(f"Using prompt file: {prompt_path}")
@@ -236,6 +284,67 @@ class VLMService:
         )
 
         return vlm_response, usage
+
+    async def verify_items(
+        self,
+        image_bytes: bytes,
+        candidate_names: list,
+        image_mime_type: str = "image/jpeg",
+        temperature: Optional[float] = None,
+        seed: Optional[int] = None,
+        max_tokens: Optional[int] = None,
+        reasoning_effort: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Second-pass self-verification: re-show the image with the candidate food list
+        and ask which items are actually visible. Returns {"verdicts": [...], "missing":
+        [...]}. Used to DROP invented items (a precision lever). Fails loud on a bad
+        response. This is a SEPARATE (uncached) VLM call; the single-pass path never calls
+        it.
+        """
+        if not candidate_names:
+            return {"verdicts": [], "missing": []}
+
+        from ..admin.config_manager import get_config_manager
+
+        config = get_config_manager().get_config()
+        eff_temp = temperature if temperature is not None else config.vlm.temperature
+        eff_seed = seed if seed is not None else config.vlm.seed
+        eff_max = max_tokens if max_tokens is not None else config.vlm.max_tokens
+        eff_re = (
+            reasoning_effort
+            if reasoning_effort is not None
+            else config.vlm.reasoning_effort
+        )
+
+        numbered = "\n".join(f"{i + 1}. {n}" for i, n in enumerate(candidate_names))
+        prompt = self._verify_prompt.replace("{{CANDIDATES}}", numbered)
+
+        try:
+            raw_response, _usage = await self.provider.analyze_image(
+                image_bytes=image_bytes,
+                image_mime_type=image_mime_type,
+                prompt=prompt,
+                return_usage=True,
+                max_tokens=eff_max,
+                temperature=eff_temp,
+                seed=eff_seed,
+                reasoning_effort=eff_re,
+            )
+        except Exception as e:
+            raise RuntimeError(f"[VLM Service] verify pass API call failed: {e}") from e
+
+        if not raw_response:
+            raise ValueError("[VLM Service] verify pass returned empty response")
+        try:
+            parsed = json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"[VLM Service] verify pass JSON parse failed: {e}; raw: {raw_response[:300]}"
+            ) from e
+        return {
+            "verdicts": parsed.get("verdicts") or [],
+            "missing": parsed.get("missing") or [],
+        }
 
     async def analyze_image_from_file(
         self,

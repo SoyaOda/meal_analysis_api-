@@ -861,6 +861,8 @@ async def call_complete_api(
         data["reranker_instruction"] = str(candidate["reranker_instruction"])
     if candidate.get("reranker_top_n") is not None:
         data["reranker_top_n"] = str(candidate["reranker_top_n"])
+    if candidate.get("enable_self_verification"):
+        data["enable_self_verification"] = "true"
 
     start = time.perf_counter()
     try:
@@ -1125,6 +1127,10 @@ def build_candidate_list(
                 cli_use_vlm_cache
                 if cli_use_vlm_cache is not None
                 else c.get("use_vlm_cache", defaults.get("use_vlm_cache", False))
+            ),
+            "enable_self_verification": c.get(
+                "enable_self_verification",
+                defaults.get("enable_self_verification", False),
             ),
         }
         for key in SEARCH_OVERRIDE_KEYS:

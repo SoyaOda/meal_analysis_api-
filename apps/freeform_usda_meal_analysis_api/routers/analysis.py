@@ -117,6 +117,9 @@ async def analyze_meal_from_image(
     debug: bool = Form(
         False, description="デバッグ情報を含める(retriever/reranker結果)"
     ),
+    enable_self_verification: bool = Form(
+        False, description="VLM 2nd-pass self-verification で不可視item を除去する"
+    ),
 ):
     """
     画像から食事を分析して栄養価を計算(Fullインデックスのみ使用)
@@ -230,6 +233,7 @@ async def analyze_meal_from_image(
             model_config_override=model_config_override,
             search_config_override=search_config_override,
             include_debug_info=debug,
+            enable_self_verification=enable_self_verification,
         )
 
         # レスポンス作成

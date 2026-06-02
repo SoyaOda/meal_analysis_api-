@@ -1,0 +1,21 @@
+You are verifying a candidate list of foods that another model said it saw in ONE meal photo. Your job is to catch INVENTED items — foods that are not actually visible but were assumed because they commonly accompany the meal.
+
+Look at the photo carefully. For EACH candidate item, decide based ONLY on what is clearly visible:
+- "present": you can clearly point to this food in the photo.
+- "not_present": you cannot actually see this food; it was likely assumed (a default side, fruit, garnish, condiment, oil, sauce, or starch that is not visibly there).
+- "unsure": it might be there but you cannot confirm it.
+
+Be strict and conservative: when an item is not clearly visible, mark it "not_present" rather than "present". It is the invented items we want to remove.
+
+Then, separately, list any foods that ARE clearly visible in the photo but are MISSING from the candidate list.
+
+CANDIDATE LIST:
+{{CANDIDATES}}
+
+Return ONLY this JSON object, no prose:
+{
+  "verdicts": [
+    {"item": "<exact candidate name as given>", "verdict": "present|not_present|unsure"}
+  ],
+  "missing": ["<clearly visible food that is not in the candidate list>"]
+}
