@@ -1,4 +1,5 @@
 from apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval import (
+    EmbeddingSimilarity,
     detect_prompt_leakage,
     dish_match_metrics,
     gate_decision,
@@ -103,3 +104,46 @@ def test_dish_match_metrics_exposes_deterministic_portion_score() -> None:
     # f25 = 0.5 -> score 3; key is present and integer.
     assert "portion_score_0_5" in m
     assert m["portion_score_0_5"] == 3
+
+
+def test_embedding_similarity_matches_semantically_with_fake_embedder() -> None:
+    # Fake, deterministic embedder: 2-D vectors keyed by a semantic concept, so a GT
+    # "cucumber" matches "salad with cucumber" (cos=1) that the token matcher would miss.
+    concepts = {
+        "cucumber": [1.0, 0.0],
+        "green salad with cucumber slices": [1.0, 0.0],
+        "chicken breast": [0.0, 1.0],
+    }
+
+    def fake_embed(texts):
+        return [concepts[t] for t in texts]
+
+    sim = EmbeddingSimilarity(fake_embed)
+    sim.warm(list(concepts.keys()))
+    pred_cuc = {"name": "green salad with cucumber slices", "matched_desc": None}
+    pred_chx = {"name": "chicken breast", "matched_desc": None}
+    gt_cuc = {"name": "cucumber"}
+    assert sim(pred_cuc, gt_cuc) == 1.0  # semantic match the token matcher would drop
+    assert sim(pred_chx, gt_cuc) == 0.0  # orthogonal concept -> no match
+    # unknown GT name (never warmed) -> 0.0, never raises
+    assert sim(pred_cuc, {"name": "totally unseen food"}) == 0.0
+
+
+def test_embedding_similarity_drives_dish_match_when_passed_as_similarity_fn() -> None:
+    concepts = {
+        "cucumber": [1.0, 0.0],
+        "sliced cucumber": [1.0, 0.0],
+    }
+
+    def fake_embed(texts):
+        return [concepts[t] for t in texts]
+
+    sim = EmbeddingSimilarity(fake_embed)
+    sim.warm(list(concepts.keys()))
+    pred = [{"name": "sliced cucumber", "weight_g": 95.0, "calories": 15.0}]
+    gt = [{"name": "cucumber", "weight_g": 100.0, "calories": 16.0}]
+    m = dish_match_metrics(pred, gt, similarity_fn=sim)
+    if m is None:  # scipy unavailable
+        return
+    assert m["matched"] == 1  # embeddings match it; token/char overlap would not
+    assert m["portion_score_0_5"] == 5  # 95 vs 100 -> within_10

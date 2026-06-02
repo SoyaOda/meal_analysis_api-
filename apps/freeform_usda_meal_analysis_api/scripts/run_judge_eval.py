@@ -27,7 +27,9 @@ from typing import Any, Dict, List, Optional
 import httpx
 
 from apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval import (
+    EmbeddingSimilarity,
     bootstrap_mean_ci,
+    build_embedding_fn,
     dish_match_metrics,
     load_label_items,
     load_label_nutrition,
@@ -98,7 +100,9 @@ def build_gt_view(image_index: int) -> Dict[str, Any]:
 
 
 def deterministic_portion_score(
-    candidate_view: Dict[str, Any], gt_view: Dict[str, Any]
+    candidate_view: Dict[str, Any],
+    gt_view: Dict[str, Any],
+    similarity_fn=None,
 ) -> Optional[int]:
     """Deterministic portion_plausibility (0-5) from Hungarian-matched weight bands.
 
@@ -106,11 +110,18 @@ def deterministic_portion_score(
     fast judge cannot execute the per-item rel_err arithmetic reliably (it swings 1<->5),
     whereas this metric has zero run-variance and tracks a careful Opus pass more closely.
     See lesson 20260602_rubric_v3_portion_should_be_deterministic.md. The LLM portion score
-    is kept in the per-image dimensions as advisory evidence only.
+    is kept in the per-image dimensions as advisory evidence only. `similarity_fn` upgrades
+    the pred-vs-GT matcher (e.g. an EmbeddingSimilarity); None = the token/char default.
     """
-    metrics = dish_match_metrics(
-        candidate_view.get("ingredients") or [], gt_view.get("items") or []
-    )
+    pred = candidate_view.get("ingredients") or []
+    gt = gt_view.get("items") or []
+    if isinstance(similarity_fn, EmbeddingSimilarity):
+        similarity_fn.warm(
+            [i.get("name") for i in pred]
+            + [i.get("matched_desc") for i in pred]
+            + [i.get("name") for i in gt]
+        )
+    metrics = dish_match_metrics(pred, gt, similarity_fn=similarity_fn)
     if metrics is None:
         raise RuntimeError(
             "dish_match_metrics returned None (scipy missing or empty GT); "
@@ -267,11 +278,32 @@ def main() -> int:
     ap.add_argument("--timeout-sec", type=int, default=120)
     ap.add_argument("--no-cache", action="store_true")
     ap.add_argument("--rubric-version", default=DEFAULT_RUBRIC_VERSION)
+    ap.add_argument(
+        "--match-embeddings",
+        action="store_true",
+        help="EXPERIMENTAL (currently WORSE than the default token/char matcher — do not "
+        "enable; see lesson 20260602_embedding_matcher_does_not_beat_token.md). Use "
+        "embedding similarity (Qwen3-Embedding via the app provider) for the deterministic "
+        "portion matcher. Needs the embedding provider's API key (e.g. DEEPINFRA_API_KEY).",
+    )
+    ap.add_argument(
+        "--embedding-provider",
+        default=None,
+        help="Override EMBEDDING_PROVIDER for --match-embeddings (default: env or deepinfra)",
+    )
     args = ap.parse_args()
 
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
         raise RuntimeError("OPENROUTER_API_KEY not set (judge calls OpenRouter)")
+
+    portion_matcher = None
+    match_mode = "token"
+    if args.match_embeddings:
+        portion_matcher = EmbeddingSimilarity(
+            build_embedding_fn(args.embedding_provider)
+        )
+        match_mode = "embedding"
 
     rubric_path = rubric_path_for(args.rubric_version)
     if not rubric_path.exists():
@@ -285,6 +317,7 @@ def main() -> int:
         "prompt_sha256": hashlib.sha256(rubric.encode()).hexdigest()[:16],
         "weights": DIMENSION_WEIGHTS,
         "n_samples": args.samples,
+        "portion_match_mode": match_mode,
     }
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -388,7 +421,9 @@ def main() -> int:
                 # Derive conviction from the DETERMINISTIC portion (not the LLM portion).
                 # Done after cache load so the conviction formula is independent of the
                 # cached raw judge result; the LLM portion stays as advisory evidence.
-                det_portion = deterministic_portion_score(cand_view, gt_view)
+                det_portion = deterministic_portion_score(
+                    cand_view, gt_view, similarity_fn=portion_matcher
+                )
                 judged["portion_deterministic"] = det_portion
                 dims = judged.get("dimensions") or {}
                 llm_portion = dims.get("portion_plausibility")

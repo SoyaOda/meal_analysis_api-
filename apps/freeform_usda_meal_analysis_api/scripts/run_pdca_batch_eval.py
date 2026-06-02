@@ -413,6 +413,79 @@ def _default_pred_gt_similarity(p: Dict[str, Any], g: Dict[str, Any]) -> float:
     )
 
 
+def _cosine(a: List[float], b: List[float]) -> float:
+    import numpy as _np
+
+    av = _np.asarray(a, dtype=float)
+    bv = _np.asarray(b, dtype=float)
+    na = float(_np.linalg.norm(av))
+    nb = float(_np.linalg.norm(bv))
+    if na == 0.0 or nb == 0.0:
+        return 0.0
+    return float(av @ bv / (na * nb))
+
+
+class EmbeddingSimilarity:
+    """Pluggable pred-vs-GT similarity for dish_match_metrics using sentence embeddings.
+
+    Closes the semantic gaps the dependency-free token/char matcher misses (e.g. GT
+    'cucumber' vs predicted 'green salad with cucumber slices', where char/token overlap
+    falls under the 0.75 threshold and the item drops to an unmatched 0). `embed_fn(texts)
+    -> list[vector]` is injected (default: the app's EmbeddingProviderFactory / Qwen3-
+    Embedding-8B — NO new dependency). Call warm(texts) once to batch-embed, then use the
+    instance AS the similarity_fn. Similarity = max(cos(pred.name, gt.name),
+    cos(pred.matched_desc, gt.name)).
+    """
+
+    def __init__(self, embed_fn) -> None:
+        self._embed = embed_fn
+        self._cache: Dict[str, List[float]] = {}
+
+    def warm(self, texts: List[str]) -> None:
+        miss = sorted({t for t in texts if t and t not in self._cache})
+        if not miss:
+            return
+        vecs = self._embed(miss)
+        if len(vecs) != len(miss):
+            raise RuntimeError(
+                f"embed_fn returned {len(vecs)} vectors for {len(miss)} texts"
+            )
+        for t, v in zip(miss, vecs):
+            self._cache[t] = v
+
+    def __call__(self, p: Dict[str, Any], g: Dict[str, Any]) -> float:
+        gv = self._cache.get(g.get("name"))
+        if gv is None:
+            return 0.0
+        best = 0.0
+        for key in ("name", "matched_desc"):
+            pv = self._cache.get(p.get(key))
+            if pv is not None:
+                best = max(best, _cosine(pv, gv))
+        return best
+
+
+def build_embedding_fn(provider_name: Optional[str] = None):
+    """Sync embed_fn backed by the app's existing embedding provider (no new dependency).
+
+    Reuses EmbeddingProviderFactory (env EMBEDDING_PROVIDER, default 'deepinfra' /
+    Qwen3-Embedding-8B). Safe to call from sync scripts (wraps the async provider in
+    asyncio.run). Names are embedded WITHOUT an instruction so pred and GT are symmetric.
+    """
+    import asyncio
+
+    from apps.freeform_usda_meal_analysis_api.services.embedding_providers import (
+        EmbeddingProviderFactory,
+    )
+
+    provider = EmbeddingProviderFactory.create(provider_name)
+
+    def _embed(texts: List[str]) -> List[List[float]]:
+        return asyncio.run(provider.generate_embeddings(texts))
+
+    return _embed
+
+
 # Plausible food energy-density range (kcal per gram); pure fat ~9, water/leafy ~0.1.
 _KCAL_PER_G_MIN = 0.1
 _KCAL_PER_G_MAX = 9.0
