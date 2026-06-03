@@ -146,3 +146,12 @@ D → A → B → C（A=精度A/Bの前提、Bの効果測定はAのゲートに
 - **🔴 ブロッカー: OpenRouter credit枯渇($160/$160)**。VLM eval/LLM-judge とも HTTP 402。**次セッションは OpenRouter を top-up**（or 別keyを供給）してから: (1)run 20260602_235020 の pro judge 再実行で conviction確認 (2)pro を full50+calibration で promote判定 (3)rerankerバグ修正のdeploy判断。DeepInfra(embedding/reranker)は別keyで残あり。
 - **次の現実的ロードマップ**: gemini-3.1-pro を generator に採用判定（recognition+slope+calibration で calibrated MAE ~14.7%目標, ~4x cost）。inference-timeパッチ(prompt/reranker/self-verify on flash)はconviction天井で頭打ちと実証済み。
 | 2026-06-03 | deep-review | **上位generator検証＋v17 promote判定**: gemini-3.1-pro vs flash(dev40)→ **pro が recog_F1 +30%(recall+precision両方)・tail改善＝認識天井を破る初のレバー(決定的・課金不要)**。v17 full50→**却下(cal_MAE 18.14→22.78, cooked-default回帰)**。**🔴OpenRouter credit枯渇($160/$160)でLLM-judgeブロック**→次回top-up後にpro judge再実行+pro full50+calibration。lessons: gemini31pro_breaks_recognition_ceiling / v17_full50_rejected。 |
+
+### 2026-06-03 続: pro full50 ＋ LLM-judge ＋ adversarial promote review → **HOLD（訂正含む）**
+- **full50(run 20260603_100421) + judge 完了**。**robust(artifact直): recog_F1 0.226→0.245(recall+precision両)・per-dish correct% 13.5→16.5%(42→55)・tail high30 18→14**。
+- **但し promote bar 未達**: conviction 30.22[25.5,35.1]→32.32[27.0,37.3]=**CI重複NS**、raw cal_MAE 19.54→17.32 だが **paired CI[-11,+3] p=0.56=NS**、**harness decision='hold'(両候補)**、stability未検証。
+- **🔧 自分のover-claim訂正(adversarial review 4 agentsが捕捉)**: ①slope優位は**この run で非確立**(artifact OLS slope flash0.55→pro0.51でpro低い; 私のTS ad-hocと矛盾; 過去sweepの0.67は非再現) ②calibrated MAE 15.15は私のad-hoc計算でartifact非存在=破棄。
+- **回帰**: naming 1.74→1.64(信頼次元κ0.67)・calorie bias +1.2%→**-5.3%(系統過小)**・halluc微増。
+- **結論=HOLD(要ユーザ判断, 4xコストのgenerator品質賭け)**。採用条件: stability ≥2反復 + calorie under-bias対処(calibration on disjoint) + 動機がcalorieなら**まずflashにcalibration有効化**(pro slope優位は本runで不在)。lesson: `20260603_gemini31pro_promote_hold_adversarial_verified.md`。
+- **訂正の教訓**: promote主張は run自身のartifactのみ引用。cross-run値は文脈であり証拠でない。
+| 2026-06-03 | deep-review | **pro full50+judge+adversarial review → HOLD**。robust(artifact): recog_F1 0.226→0.245/correct% 13.5→16.5%/tail高30 18→14。但し **conviction NS(CI重複)・raw cal NS(p=0.56)・harness=hold・stability未検証**。**🔧over-claim訂正(adversarial 4agentsが捕捉): slope優位は本run非確立(OLS pro低い)・calib MAE 15.15は破棄(ad-hoc)**。回帰: naming↓・cal bias→-5.3%過小。結論=HOLD(要ユーザ, 4xコスト)。採用前にstability×2+bias対処+flash calibration先行。lessons: gemini31pro_promote_hold_adversarial_verified。 |
