@@ -46,3 +46,4 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 | Date | Session | 作業内容 |
 |------|---------|---------|
 | 2026-06-03 | mozu-pivot | **mozu phase 開始**。pro を採用候補に決定（recognition 4/4再現・速度同等・コスト ~3.2x/+$16-28/ユーザー/年）。settings.py/config_manager 既定を pro に、model-focus doc 4箇所更新、決定記録 `docs/MOZU_MODEL_DECISION_20260603.md` 作成。前フェーズを `plans/done/` にアーカイブ。ブランチ `feature/mozu-api` 作成。 |
+| 2026-06-03 | mozu-pivot | **naming回復 A/B(#1) → 不成立**: pro+形態双方向reranker vs pro+現行(cache共有でreranker isolate, 39/40でレコード変化)。判定: **raw_vs_cooked 20→25悪化・correct% 19.1→16.4↓・conviction↓**で naming回復せず(over-steering)。但し**決定的cal_MAE 24.55→19.67(-4.9pt)改善**(主にfull-fat-default由来と推定)。**naming は reranker非対応(形態signalがVLMクエリに不在)→ VLMプロンプト側課題**。pro小回帰(-0.125)は据え置き。follow-up: full-fat-default単独でcal改善が残るか。lesson: `20260603_pro_naming_reranker_form_did_not_recover.md`。 |
