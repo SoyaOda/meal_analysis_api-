@@ -21,10 +21,12 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 | 本番 deploy | Firestore model=pro + calibration 配備 | 未（要明示指示・予算確認） |
 
 ## Roadmap（推奨順）
-1. **naming 回帰の回収（安価・先行）**: pro + 修正済み reranker instruction の A/B（reranker は bug 修正済。lesson `20260602_reranker_instruction_was_inert_bug_fixed`）。naming が回復すれば conviction も上振れ。
-2. **calorie calibration の本番化準備**: 外部（eval50 と disjoint な）ラベル付きデータを収集 →`fit_calorie_calibration.py` で fit → held-out 検証 → `config/calorie_calibration.json` を enable。
+1. ~~naming 回帰の回収（reranker）~~ → **実施済・不成立**（form-tuned reranker は naming 回復せず raw_vs_cooked 悪化。naming は VLM クエリに形態が無く reranker 非対応）。pro 小回帰(-0.125)は**据え置き許容**。lesson `20260603_pro_naming_reranker_form_did_not_recover`。
+2. **calorie calibration の本番化準備（次の本命）**: 外部（eval50 と disjoint な mozu 実データ等）ラベルを収集 →`fit_calorie_calibration.py` で fit → held-out 検証 → `config/calorie_calibration.json` を enable。pro の -5.3% under-bias 補正に必須。
 3. **judge golden 確定**: `evals/judge/golden_set.draft_claude_v2.jsonl` を人手レビュー → `golden_set.jsonl` → `run_judge_validation --golden` で κ。合格次第 conviction を採用ゲートに。
-4. **本番 deploy**: 上記が揃い次第、Firestore `config.vlm.model_id`=pro ＋ calibration を配備（要ユーザ明示指示）。
+4. **公開前: 多様な外部テストセット**（cuisine/パッケージ食品/実環境写真）で汎化検証。現状は狭い Western プレート50枚のみ＝公開分布未検証。
+5. **本番 deploy**: 上記が揃い次第、Firestore `config.vlm.model_id`=pro ＋ calibration を配備（要ユーザ明示指示・予算確認）。
+- 余技 follow-up: full-fat-default 単独 reranker で決定的 cal_MAE 改善（24.55→19.67 観測）が残るか isolate。
 
 ## 引き継ぎ済みの土台（前フェーズ成果, 全て利用可）
 - PDCA: paired BCa bootstrap CI ゲート + 強制 stability（`scripts/run_pdca_batch_eval.py` 他）。
