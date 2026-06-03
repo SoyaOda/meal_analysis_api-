@@ -36,5 +36,30 @@
 ## コスト/工数
 - DL は無料(Nutrition5k は俯瞰のみ抽出で軽量化, OFF/認識はサンプリング)。整形は各ソースのラベル→harness schema 変換が要(中程度)。**eval は ~300-600画像で OpenRouter ~\$10-25(pro+judge)**。現残 ~\$11 は全 tier 同時には不足 → 補充 or tier ごと。
 
+## Ready-to-run（2026-06-03 構築済・クレジット補充後にそのまま実行）
+Nutrition5k 250枚は構築済（`test_images_n5k/`, gitignore・seed7 再現可）。他PCでは先に再構築:
+```
+python -m apps.freeform_usda_meal_analysis_api.scripts.build_nutrition5k_evalset --limit 250 --workers 16 --seed 7
+```
+評価（ローカルサーバ起動後。pro は既定モデル。harness の dir 上書きで N5k を指す）:
+```
+# pro vs flash を N5k 250枚で（独立実測GTで calorie MAE / recognition F1 / paired CI）
+python -m apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval \
+  --config apps/freeform_usda_meal_analysis_api/evals/configs/pdca_gemini31pro_vs_flash_dev40_20260602.json \
+  --api-url http://localhost:8006 \
+  --images-dir test_images_n5k/images \
+  --labels-dir test_images_n5k/images_label_with_nutrition \
+  --limit 250 --no-use-vlm-cache
+```
+外部 calibration の fit/検証（N5k を FIT/TEST に分割。eval50 と disjoint）:
+```
+# run-dir = 上記 run の出力。candidate = pro_v13。FIT/TEST split は index ファイルで指定
+python -m apps.freeform_usda_meal_analysis_api.scripts.fit_calorie_calibration \
+  --run-dir <n5k_run_dir> --candidate pro_v13 \
+  --fit-split <n5k_fit.txt> --test-split <n5k_test.txt> \
+  --config-out apps/freeform_usda_meal_analysis_api/evals/calorie_calibration_pro_n5k.json
+```
+推定コスト: pro 250枚 ~\$5.5 + flash ~\$1.7 + judge(任意, recognitionは決定的で judge 不要) → カロリー検証だけなら ~\$7。判定後に lesson + baseline 追記。
+
 ## Fallback（方法を採らない場合）
 50枚据え置きは「in-distribution の相対比較」としてのみ妥当で、**pro の優位は公開分布で未証明**と明記必須。その場合でも**最低 Tier 1（多様 cuisine 認識チェック）だけは実施推奨**（安価・栄養GT不要・懸念を直接検証）。
