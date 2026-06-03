@@ -54,9 +54,13 @@ class Settings:
         """
 
         # ========== VLMモデル設定 ==========
-        # デフォルト: Gemini 3 Flash Preview (GPT-5.1より40-50%高速)
+        # デフォルト: Gemini 3.1 Pro Preview（mozu 採用候補, 2026-06-03）。
+        #   recognition F1 が flash 比で 4/4 run 再現的に向上（pro>flash, det F1 + per-dish
+        #   correct%）、レイテンシは flash とほぼ同等（170件で +0.2s）。calorie under-bias は
+        #   calibration で補正可（外部held-out fit後に有効化）。コストは ~3.2x（高単価アプリ
+        #   mozu では許容）。詳細: docs/MOZU_MODEL_DECISION_20260603.md。
         self.DEFAULT_VLM_MODEL_ID = os.getenv(
-            "VLM_MODEL_ID", "openrouter:google/gemini-3-flash-preview"
+            "VLM_MODEL_ID", "openrouter:google/gemini-3.1-pro-preview"
         )
 
         # デフォルト: v13 (= 本番稼働中のv11b+飲料対応。v11bとはcalorie MAE非劣性

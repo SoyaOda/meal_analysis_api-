@@ -11,9 +11,10 @@
 - reasoning / temperature / max_tokens
 - seed（ただし provider 側非決定性を前提に扱う）
 
-## Model Focus (as of 2026-02-24)
-当面は次の1モデルに集中する。
-- `openrouter:google/gemini-3-flash-preview`（default）
+## Model Focus (2026-06-03〜, mozu)
+このアプリは **mozu**（高単価 calorie tracker app）用 API。採用候補モデル:
+- **`openrouter:google/gemini-3.1-pro-preview`（default, 採用候補）** — recognition が flash 比 4/4 再現で向上・レイテンシ同等・コスト ~3.2x。決定根拠 `docs/MOZU_MODEL_DECISION_20260603.md`。
+- `openrouter:google/gemini-3-flash-preview`（安価代替）。
 
 重要な制約（OpenRouter models API確認済み）:
 - `gemini-3-flash-preview`: `input_modalities` に `image` を含む（画像解析に使用可）

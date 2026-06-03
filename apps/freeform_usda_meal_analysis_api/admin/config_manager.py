@@ -21,8 +21,8 @@ class VLMConfig(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
 
     model_id: str = Field(
-        default="openrouter:google/gemini-3-flash-preview",
-        description="VLM Model ID (e.g., 'openrouter:google/gemini-3-flash-preview', 'openrouter:openai/gpt-5.1')",
+        default="openrouter:google/gemini-3.1-pro-preview",
+        description="VLM Model ID (mozu default: 'openrouter:google/gemini-3.1-pro-preview'; alt: 'openrouter:google/gemini-3-flash-preview')",
     )
     prompt_file: str = Field(
         default="freeform_prompt_usda_format_ver_v13_beverage_subject_prodcapture_20260226.txt",

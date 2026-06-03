@@ -9,9 +9,10 @@
 - 過学習防止のため、promptに評価データ固有情報（`test_foodXX` や label値）を埋め込まない。
 - PDCA評価は原則 `use_vlm_cache=false` で実施し、キャッシュ混入を避ける。
 
-## Current Model Focus (2026-02-24)
-次の1モデルを優先的に最適化する。
-- `openrouter:google/gemini-3-flash-preview`（default）
+## Current Model Focus (2026-06-03〜, mozu)
+このアプリは **mozu**（Finch 型の高単価 calorie tracker app）用 API。採用候補モデルを最適化する。
+- **`openrouter:google/gemini-3.1-pro-preview`（default, 採用候補）** — flash 比で recognition が 4/4 run 再現的に向上、レイテンシ同等、コスト ~3.2x。calorie under-bias は calibration（外部held-out fit後に有効化）で補正。決定根拠: `docs/MOZU_MODEL_DECISION_20260603.md`。
+- `openrouter:google/gemini-3-flash-preview`（安価代替）— コスト優先時のフォールバック。
 
 ## First 5 Minutes Checklist
 1. `apps/freeform_usda_meal_analysis_api/AGENTS.md` を確認
