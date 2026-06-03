@@ -4,7 +4,7 @@
 前フェーズ（PDCA 土台整備＋モデル探索）は `plans/done/deep_review_improvements_20260601.md` にアーカイブ。
 
 ## 引き継ぎ（Handoff — 他PC / Codex 用, 2026-06-03 時点）
-**現在地**: pro(`gemini-3.1-pro-preview`) を mozu の採用候補に決定し、コード既定(settings.py/config_manager)とドキュメントを pro に更新済。本番(Cloud Run/Firestore)は未変更。直近で「naming 回復 reranker A/B(#1)」を実施し**不成立**（lesson 記録）。次は「公開分布への汎化検証用の外部データ取得が可能か」を調査中。
+**現在地**: pro を採用候補に決定(コード既定/doc 更新済, 本番未変更)。**🔴重要: frozen-50 GT は GPT-5-pro推定と判明→calorie系数値は実精度でなく一致度。両 calibration JSON は VOID, follow-up#1(bias補正)停止。TWO-GATE採用(N5k実測カロリー＋50画像)**。Nutrition5k 250枚評価済(独立GTで pro 有意, 但し cal_MAE 58%=50の~18%は過大評価)。**次=実ドメイン実測アンカー構築/N5k再現確認(credits)/recognition多様性(ISIA等)**。
 **最初に読む**: この `plans/current.md` → `docs/MOZU_MODEL_DECISION_20260603.md`（モデル決定の SSOT）→ `evals/lessons/`（特に `20260603_*` 5本: pro採用/stability/calorie-bias/naming-A-B、`20260602_reranker_instruction_was_inert_bug_fixed`）。
 **再開手順**: `git checkout feature/mozu-api && git pull`。セッション開始時 `pdca_session_bootstrap` で現行 baseline/config 確認。eval は `scripts/run_pdca_batch_eval` + 別途 `scripts/run_judge_eval`（judge は OpenRouter sonnet）。
 **鍵**: OpenRouter / DeepInfra キーは**リポジトリに無い**（env で渡す）。他PCでは `OPENROUTER_API_KEY` / `DEEPINFRA_API_KEY`(=`DEEPINFRA_TOKEN`) を設定。`evals/runs/` は gitignore（run artifact は転送されない＝結論は lesson に集約済）。
@@ -12,7 +12,7 @@
 - OpenRouter クレジット残 ~\$11（2026-06-03）。judge は1画像~\$0.02＋本日 rate-limit で低速。eval 多用前に補充推奨。
 - `run_judge_eval` を**複数同時起動しない**（OpenRouter rate-limit で全部低速化し判定ファイルが出ない事象あり）。**1本ずつ・完了を judge ファイルの存在で確認**（background の "completed" 通知が python 完了前に出ることがある）。env は**コマンド先頭にinline**で渡す（背景タスクで export が伝播しない事象あり）。
 - ローカルサーバ起動は `PORT=8006 python -m apps.freeform_usda_meal_analysis_api.main`（FAISS index は `data/faiss/` にローカル存在）。
-**直近の数値（pro vs flash, 同v13）**: recognition F1 pro>flash 4/4 run、conviction 4/4 で+方向(各NS)、latency 同等(+0.2s)、cost ~3.2x(+\$16-28/user/yr)。calorie は calibration(外部fit)前提で pro+calib 13.98%>flash+calib 15.61%(held-out n=10)。naming は pro -0.125(reranker で回復せず)。
+**直近の数値（pro vs flash, 同v13）**: recognition F1 pro>flash 4/4(決定的, 信頼), latency 同等(+0.2s), cost ~3.2x。**calorie: frozen-50 ~18%は GPT-5-pro一致度(実精度でない); 独立実測 Nutrition5k 250枚では flash 68.4/pro 58.4%(paired CI[-18.5,-1.3]=pro有意)**。conviction/naming は judge(advisory)。**OpenRouter は補充済**。
 
 ## Goal
 mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1-pro** を軸に本番投入できる品質まで仕上げる。
@@ -26,14 +26,14 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 ## Exit Criteria（本番投入の条件）
 | 項目 | 閾値 | 現在 |
 |------|------|------|
-| calorie accuracy（実世界） | 実ユーザー分布で許容MAE | **frozen-50 ~18% は過大評価; N5k(独立GT)では 58%**。bias分布依存(50=過小/N5k=過大)、affine calib は N5k で失敗。**要・実データ** |
+| calorie accuracy（実世界） | 実ドメイン実測アンカーで許容MAE | **frozen-50 GT=GPT-5-pro推定→「~18%」は一致度で実精度でない**。実精度レンジ 50~18%床/N5k~58%天井。bias符号反転(50過小=labeler artifact/N5k過大+31%)。**両calibration VOID**。要・実測アンカー構築 |
 | naming 回帰の解消/許容 | naming_db_match が flash 同等以上 or 許容判断 | pro -0.125（4/4, 未解消） |
 | judge を真のゲート化 | human golden κ≥0.6 | 未（draft 準備済） |
 | 本番 deploy | Firestore model=pro + calibration 配備 | 未（要明示指示・予算確認） |
 
 ## Roadmap（推奨順）
 1. ~~naming 回帰の回収（reranker）~~ → **実施済・不成立**（form-tuned reranker は naming 回復せず raw_vs_cooked 悪化。naming は VLM クエリに形態が無く reranker 非対応）。pro 小回帰(-0.125)は**据え置き許容**。lesson `20260603_pro_naming_reranker_form_did_not_recover`。
-2. **calorie calibration の本番化準備（次の本命）**: 外部（eval50 と disjoint な mozu 実データ等）ラベルを収集 →`fit_calorie_calibration.py` で fit → held-out 検証 → `config/calorie_calibration.json` を enable。pro の -5.3% under-bias 補正に必須。
+2. **🔴 calorie GT 戦略の是正（最優先・2026-06-03 GT妥当性レビュー）**: **frozen-50 GT は GPT-5-pro 推定**＝calorie系は「実精度」でなく「一致度」。**TWO-GATE 採用**: GATE A=Nutrition5k 総カロリー(独立実測・方向チェック, totals-only)／GATE B=frozen-50 **画像**(phone-angle現実性＋相対A/B, ラベルは真値扱いしない)。**両 calibration JSON は VOID**（50-fit=gemini→GPT-5-pro学習, N5k-fit=自前held-out 132%暴発）。**真のゲート=実ドメイン実測アンカー要構築**（Western eye-level phone 20-50枚を実測×USDA）→ そこで**乗算的(slope-only)に再 calibration**。lesson: `20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy`。
 3. **judge golden 確定**: `evals/judge/golden_set.draft_claude_v2.jsonl` を人手レビュー → `golden_set.jsonl` → `run_judge_validation --golden` で κ。合格次第 conviction を採用ゲートに。
 4. **外部テストセット（自律取得・一部実装済）**: 徹底リサーチ→`docs/EXTERNAL_TESTSET_PLAN_20260603.md`。**Nutrition5k（実測GT・CC BY 4.0・gsutil匿名DL）→ `scripts/build_nutrition5k_evalset.py` で harness形式に自動変換**（20枚で end-to-end検証済, loader互換確認）。harness に `--images-dir/--labels-dir` 追加。**実装済**: ダウンローダを ThreadPoolExecutor 並列化(`--workers`)、**本番250枚を構築完了**(test_images_n5k/, GT median 222kcal, loader 249/250 OK, gitignore・seed7 で再現可)。**残**: pro vs flash 評価＋外部calibration fit は OpenRouter credits 要。**限界**: Nutrition5k も Western/cafeteria＝多cuisineカロリーは依然未閉（公開後の実データが唯一の本物）。認識多様性は UEC-Food256(アジア)等で別途。
 5. **本番 deploy**: 上記が揃い次第、Firestore `config.vlm.model_id`=pro ＋ calibration を配備（要ユーザ明示指示・予算確認）。
@@ -63,3 +63,4 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 | 2026-06-03 | mozu-pivot | **外部データ取得 徹底リサーチ＋自律構築開始**: 結論=PARTIAL-YES。**Nutrition5k(実測GT・CC BY 4.0)が gsutil匿名DL可・schema が harnessに対応**と検証 → `build_nutrition5k_evalset.py`(CSV→harnessラベル+rgb.png DL)作成、harnessに`--images-dir/--labels-dir`追加、**20枚で end-to-end検証成功**(独立実測GT, loader互換)。残=本番N構築(gsutil -m並列化)+評価(credits)。限界=Nutrition5kもWestern/cafeteriaで多cuisineカロリーは未閉(公開後実データ必須)。doc: `EXTERNAL_TESTSET_PLAN_20260603.md`。58 tests passed。 |
 | 2026-06-03 | mozu-pivot | **(b)無料の本番構築＋並列化 完了**: `build_nutrition5k_evalset.py` を ThreadPoolExecutor 並列DL化(`--workers`, buffer選択でlimit到達)、**Nutrition5k 250枚 evalset を構築**(images+harnessラベル, GT median 222kcal/max1238, items/dish med4, loader 249/250 OK, 13MB, gitignore・seed7再現可)。harness `--images-dir/--labels-dir` で評価可能。残=評価(credits)＋外部calibration fit。 |
 | 2026-06-03 | mozu-pivot | **N5k外部評価(250, 独立実測GT) 完了**: cal_MAE flash 68.4/pro 58.4%（**frozen-50 ~18%の約3倍悪化＝50枚は実世界精度を大幅過大評価, 汎化懸念実証**）。**pro vs flash paired CI[-18.5,-1.3]＝pro有意に良い**(50ではNS→独立大Nで有意化)。bias反転(50過小/N5k過大+31%)。**外部calibration fit失敗**(held-out CAL 132%悪化, affine intercept が広レンジ破壊→乗算的・分布依存)。注: N5kは俯瞰角でpessimistic stress-test, 真値は50とN5kの間=要実データ。recognition/portionはname不一致で N5k では不可信(calorieが信頼軸)。**結論: pro維持(独立で有意)・calibrationは要実データ・精度はrange報告**。lesson: `20260603_nutrition5k_external_eval_generalization_gap.md`。 |
+| 2026-06-03 | mozu-pivot | **🔴 GT妥当性レビュー（4視点workflow）→ 重大訂正**: **frozen-50 GT は GPT-5-pro推定**(confidence/5g丸め重量で確定)。**「cal_MAE~18%」は実精度でなくGPT-5-pro一致度**、**pro「-5.3%過小」は labeler artifact**(実測GTで+30.7%過大に反転)→ **follow-up#1(calorie bias補正)とcalibration両JSONをVOID/停止**(適用で実精度悪化)。**pro採用は維持**(独立N5kで有意+recognition F1 4/4)だが根拠から50のcalorie数値を除外。**TWO-GATE採用**(GATE A=N5k総カロリー実測/GATE B=50画像のphone現実性・相対A/B、ラベルは真値扱いせず)。N5k全面切替はしない(分布違い)。**真のゲート=実測アンカー要構築**。生存=ranking/recognition/50画像/naming診断。lesson: `20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy`。 |
