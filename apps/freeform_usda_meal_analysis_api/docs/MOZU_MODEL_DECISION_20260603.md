@@ -6,7 +6,7 @@
 > **frozen-50 の GT は GPT-5-pro の推定値**（confidence フィールド・5g丸め重量で確定）。よって本書の **calorie 系の数値は「実精度」でなく「GPT-5-pro との一致度」**。訂正点（詳細・根拠: `evals/lessons/20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy.md`）:
 > - **「cal_MAE ~18%」は実精度でない**（=GPT-5-pro一致度）。**実精度はレンジで報告**（50: ~18% 楽観床 / Nutrition5k 実測GT: ~58% 悲観天井, 真値は中間）。
 > - **pro の「-5.3% 過小バイアス」は LABELER アーティファクト**（実測GTでは **+30.7% 過大**に反転）。→ **下記 follow-up #1（calorie under-bias 補正）は VOID／一旦停止**（適用すると実精度が悪化）。`calorie_calibration_pro_v13.json`（50-fit）も **VOID**（gemini→GPT-5-pro を学習しており実カロリーを保証しない）。
-> - **pro 採用は維持**（独立実測 N5k で paired CI[-18.5,-1.3]＝有意に良い、＋決定的 recognition F1 4/4）。**ただし採用根拠から frozen-50 の calorie 数値は外す**。
+> - **pro 採用は維持**（独立実測 N5k で calorie MAE が方向的に一貫して ~7pt 低い＋過大bias が小＋決定的 recognition F1 4/4）。**ただし採用根拠から frozen-50 の calorie 数値は外す**。⚠️ **2 run 目で再現確認: calorie 優位は「有意」でなく BORDERLINE**（denoised paired CI[-15.2,+0.9] p=0.076。run1単独 CI[-18.5,-1.3] は楽観 draw）。かつ **pro は run間再現性が flash より低い**（bit-identical 率 20% vs 52%, median |Δrun| 10pt vs 0pt）＝本番で同写真→kcal 揺れが大きいトレードオフ。詳細 `evals/lessons/20260603_n5k_pro_advantage_test_retest_borderline.md`。
 > - **eval 戦略 = TWO-GATE**: GATE A=Nutrition5k 総カロリー（独立実測・方向/回帰チェック, totals-only）／GATE B=frozen-50 **画像**（phone-angle 現実性＋相対A/B; ラベルは真値扱いしない）。**真のゲート=実ドメイン実測アンカー（要構築: Western・eye-level phone 写真 20-50枚を実測×USDA）**。
 > - **Nutrition5k へ全面切替はしない**（俯瞰/cafeteria＝分布違い・「general Western」でない・名前不一致で recognition 不可信・affine calib が自前 held-out で 132% に暴発）。tuning/calibration の対象にはしない。
 

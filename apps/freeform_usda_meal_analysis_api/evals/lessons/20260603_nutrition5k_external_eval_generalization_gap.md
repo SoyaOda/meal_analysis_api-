@@ -1,5 +1,8 @@
 # Lesson: Nutrition5k external eval (N=250, independent measured GT) — the frozen-50 MASSIVELY overstates calorie accuracy; pro beats flash SIGNIFICANTLY; affine calibration fit on N5k FAILS
 
+> ## ⚠️ 2026-06-03 UPDATE after re-run (read [[20260603_n5k_pro_advantage_test_retest_borderline]])
+> A second independent N5k-250 run (`20260603_191805`) does NOT reproduce the significance. Run-1's significant CI was an optimistic single draw. The ROBUST claim (denoised 2-run avg): pro lowers calorie MAE ~7pt (flash 67.4% / pro 60.2%) but the paired CI is **[-15.2, +0.9], p=0.076 → BORDERLINE, not significant**. Direction (pro better, less over-bias) is consistent across both runs; statistical significance is fragile to VLM sampling noise. Also: pro is **substantially less run-to-run reproducible** than flash (52% vs 20% of images bit-identical between runs). Treat every "SIGNIFICANT" below as "directionally consistent, borderline significant".
+
 - Date: 2026-06-03
 - First evaluation on an EXTERNAL, independent-ground-truth set: Nutrition5k 250 dishes (overhead RGB, lab-weighed calories/mass/macros, CC BY 4.0), built via `build_nutrition5k_evalset.py`, run on the harness with `--images-dir/--labels-dir`. Run `20260603_162853`. gemini-3.1-pro vs gemini-3-flash, same v13 prompt, cache off, no judge (calorie + recognition are deterministic).
 
