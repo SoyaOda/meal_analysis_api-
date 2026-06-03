@@ -3,6 +3,17 @@
 このアプリ（`freeform_usda_meal_analysis_api`）を **mozu**（Finch 型の高単価 calorie tracker app）用 API として開発するフェーズ。ブランチ `feature/mozu-api`。
 前フェーズ（PDCA 土台整備＋モデル探索）は `plans/done/deep_review_improvements_20260601.md` にアーカイブ。
 
+## 引き継ぎ（Handoff — 他PC / Codex 用, 2026-06-03 時点）
+**現在地**: pro(`gemini-3.1-pro-preview`) を mozu の採用候補に決定し、コード既定(settings.py/config_manager)とドキュメントを pro に更新済。本番(Cloud Run/Firestore)は未変更。直近で「naming 回復 reranker A/B(#1)」を実施し**不成立**（lesson 記録）。次は「公開分布への汎化検証用の外部データ取得が可能か」を調査中。
+**最初に読む**: この `plans/current.md` → `docs/MOZU_MODEL_DECISION_20260603.md`（モデル決定の SSOT）→ `evals/lessons/`（特に `20260603_*` 5本: pro採用/stability/calorie-bias/naming-A-B、`20260602_reranker_instruction_was_inert_bug_fixed`）。
+**再開手順**: `git checkout feature/mozu-api && git pull`。セッション開始時 `pdca_session_bootstrap` で現行 baseline/config 確認。eval は `scripts/run_pdca_batch_eval` + 別途 `scripts/run_judge_eval`（judge は OpenRouter sonnet）。
+**鍵**: OpenRouter / DeepInfra キーは**リポジトリに無い**（env で渡す）。他PCでは `OPENROUTER_API_KEY` / `DEEPINFRA_API_KEY`(=`DEEPINFRA_TOKEN`) を設定。`evals/runs/` は gitignore（run artifact は転送されない＝結論は lesson に集約済）。
+**Gotchas（実害あり, 注意）**:
+- OpenRouter クレジット残 ~\$11（2026-06-03）。judge は1画像~\$0.02＋本日 rate-limit で低速。eval 多用前に補充推奨。
+- `run_judge_eval` を**複数同時起動しない**（OpenRouter rate-limit で全部低速化し判定ファイルが出ない事象あり）。**1本ずつ・完了を judge ファイルの存在で確認**（background の "completed" 通知が python 完了前に出ることがある）。env は**コマンド先頭にinline**で渡す（背景タスクで export が伝播しない事象あり）。
+- ローカルサーバ起動は `PORT=8006 python -m apps.freeform_usda_meal_analysis_api.main`（FAISS index は `data/faiss/` にローカル存在）。
+**直近の数値（pro vs flash, 同v13）**: recognition F1 pro>flash 4/4 run、conviction 4/4 で+方向(各NS)、latency 同等(+0.2s)、cost ~3.2x(+\$16-28/user/yr)。calorie は calibration(外部fit)前提で pro+calib 13.98%>flash+calib 15.61%(held-out n=10)。naming は pro -0.125(reranker で回復せず)。
+
 ## Goal
 mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1-pro** を軸に本番投入できる品質まで仕上げる。
 
