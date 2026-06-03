@@ -123,7 +123,7 @@ def list_overhead_dishes() -> List[str]:
     return ids
 
 
-def download_rgb(dish_id: str, dest: Path) -> bool:
+def _download_one(dish_id: str, dest: Path) -> bool:
     r = subprocess.run(
         [GSUTIL, "-q", "cp", f"{OVERHEAD}/{dish_id}/rgb.png", str(dest)],
         capture_output=True,
@@ -133,6 +133,36 @@ def download_rgb(dish_id: str, dest: Path) -> bool:
     return r.returncode == 0 and dest.exists()
 
 
+def parallel_download(
+    dish_ids: List[str], stage_dir: Path, workers: int
+) -> Dict[str, Path]:
+    """Download each dish's rgb.png to stage_dir/{dish_id}.png in parallel (per-dish gsutil
+    subprocess has high startup overhead, so concurrency is the speedup). Returns the map
+    of dish_id -> local png path for successful downloads."""
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    ok: Dict[str, Path] = {}
+
+    def task(did: str):
+        dest = stage_dir / f"{did}.png"
+        if dest.exists() and dest.stat().st_size > 0:
+            return did, dest
+        return did, (dest if _download_one(did, dest) else None)
+
+    done = 0
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futures = [ex.submit(task, d) for d in dish_ids]
+        for fut in as_completed(futures):
+            did, path = fut.result()
+            done += 1
+            if path is not None:
+                ok[did] = path
+            if done % 25 == 0:
+                print(f"  downloaded {done}/{len(dish_ids)} ({len(ok)} ok)")
+    return ok
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build a Nutrition5k external eval set")
     ap.add_argument("--limit", type=int, default=200, help="Number of dishes to build")
@@ -140,6 +170,9 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument(
         "--min-ingredients", type=int, default=1, help="Skip dishes with fewer items"
+    )
+    ap.add_argument(
+        "--workers", type=int, default=12, help="Parallel gsutil download workers"
     )
     args = ap.parse_args()
 
@@ -171,34 +204,39 @@ def main() -> int:
     ]
     random.seed(args.seed)
     random.shuffle(usable)
-    selected = usable[: args.limit]
-    print(f"selected {len(selected)} dishes (limit {args.limit})")
+    # Over-select a buffer so download failures still let us reach --limit.
+    buffer = min(len(usable), int(args.limit * 1.2) + 5)
+    candidates = usable[:buffer]
+    print(f"selected {len(candidates)} candidate dishes (target {args.limit})")
 
     out = PROJECT_ROOT / args.out_dir
     img_dir = out / "images"
     lbl_dir = out / "images_label_with_nutrition"
+    stage_dir = out / "_stage"
     img_dir.mkdir(parents=True, exist_ok=True)
     lbl_dir.mkdir(parents=True, exist_ok=True)
     manifest: List[Dict] = []
 
+    print(f"downloading rgb.png in parallel ({args.workers} workers)...")
+    staged = parallel_download(candidates, stage_dir, args.workers)
+    print(f"  {len(staged)} dishes downloaded")
+
+    from PIL import Image
+
     built = 0
-    for dish_id in selected:
+    for dish_id in candidates:
+        if built >= args.limit:
+            break
+        png = staged.get(dish_id)
+        if png is None:
+            continue
         idx = built + 1
         jpg = img_dir / f"test_food{idx}.jpg"
-        png_tmp = img_dir / f"_{dish_id}.png"
-        if not download_rgb(dish_id, png_tmp):
-            print(f"  [skip] {dish_id}: rgb.png download failed")
-            continue
-        # Convert png -> jpg (the harness/pipeline expects jpg; use PIL)
         try:
-            from PIL import Image
-
-            Image.open(png_tmp).convert("RGB").save(jpg, "JPEG", quality=92)
+            Image.open(png).convert("RGB").save(jpg, "JPEG", quality=92)
         except Exception as e:  # noqa: BLE001
             print(f"  [skip] {dish_id}: jpg convert failed: {e}")
-            png_tmp.unlink(missing_ok=True)
             continue
-        png_tmp.unlink(missing_ok=True)
         label = to_harness_label(meta[dish_id])
         (lbl_dir / f"test_food{idx:02d}.json").write_text(
             json.dumps(label, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -213,7 +251,12 @@ def main() -> int:
         )
         built += 1
         if built % 25 == 0:
-            print(f"  built {built}/{len(selected)}")
+            print(f"  built {built}/{args.limit}")
+
+    # Remove the staging pngs (jpgs are kept under images/)
+    import shutil
+
+    shutil.rmtree(stage_dir, ignore_errors=True)
 
     (out / "manifest.json").write_text(
         json.dumps(
