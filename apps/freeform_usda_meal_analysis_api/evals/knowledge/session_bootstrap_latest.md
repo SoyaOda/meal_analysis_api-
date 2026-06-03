@@ -1,6 +1,6 @@
 # PDCA Session Bootstrap Snapshot
 
-- generated_at_utc: 2026-02-25T03:57:32.465966+00:00
+- generated_at_utc: 2026-06-03T12:48:40.660635+00:00
 - scope: apps/freeform_usda_meal_analysis_api
 
 ## Must Read (in order)
@@ -12,39 +12,39 @@
 
 ## Current Baseline
 - file: `apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json`
-- candidate: `gemini3_flash_v11b_component_density_temp03_full50_repeat`
+- candidate: `gemini3flash_preview`
 - model: `openrouter:google/gemini-3-flash-preview`
-- calorie_mae_percent: `11.3765`
-- high_error_rate_30_percent: `4.0`
-- avg_latency_sec: `14.2772`
-- avg_cost_usd: `0.007189`
-- source_run: `/Users/odasoya/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api/evals/runs/20260225_112102`
-- note: `Promoted after full50 gate pass (20260225_105950) and repeat stability confirmation (20260225_112102).`
+- calorie_mae_percent: `20.6506`
+- high_error_rate_30_percent: `22.0`
+- avg_latency_sec: `15.8077`
+- avg_cost_usd: `0.007159`
+- source_run: `apps/freeform_usda_meal_analysis_api/evals/runs/20260601_221426`
+- note: `Reality-reset 2026-06-01: the prior 11.38% baseline (v11b, 2026-02-25) NO LONGER reproduces; gemini-3-flash-preview + v13 + fixed retrieval now measures ~20.5% (corroborated: 20.27% remote run 20260601_204037, 20.65% local run 20260601_221426). Newer Gemini models do not recover (3.5-flash worse, 3.1-flash-lite equal+slower; lesson 20260601_model_drift_newer_gemini_no_recovery). Root cause not yet localized; recovery toward 11% is the goal once decomposed metrics localize it. Old baseline kept at baseline_20260225_gemini3_flash_v11b_component_density_temp03.json.`
 
 ## Latest Lessons (top 5)
-- file: `evals/lessons/20260225_v12_and_v11b_param_sweeps_no_promote.md`
-  - title: # PDCA Lesson: v12 Prompt + v11b Temp/Seed Sweeps (No New Promote)
-  - 2026-02-25
+- file: `evals/lessons/20260603_v17_full50_rejected_calorie_regression.md`
+  - title: # Lesson: v17 (describe-shape identity) REJECTED on full 50 — confirmed calorie-MAE regression (+4.6pt) from the bundled cooked-default
+  - 2026-06-03
   - -
   - -
-- file: `evals/lessons/20260225_gemini_v11b_temp03_full50_adoption.md`
-  - title: # Lesson: Gemini v11b temp03 adopted after full50 + repeat stability
-  - 2026-02-25
-  - -
-  - `freeform_prompt_usda_format_ver_v11b_gemini_component_density_20260225.txt`
-- file: `evals/lessons/20260225_gemini_v10_dev40_blocked_openrouter401.md`
-  - title: # Lesson: Gemini v10 dev40 blocked by OpenRouter 401
-  - 2026-02-25
+- file: `evals/lessons/20260603_pro_stability_confirmed_and_calorie_bias_calibrated.md`
+  - title: # Lesson: gemini-3.1-pro recognition gain is STABLE (pro>flash in 4/4 runs) and its calorie under-bias is FIXABLE by calibration (-13.5% -> -1.6% held-out). Promote case strengthened; naming regression persists.
+  - 2026-06-03
   - -
   - -
-- file: `evals/lessons/20260225_dev40_prompt_param_sweeps_no_promote.md`
-  - title: # Dev40 Prompt/Param Sweeps (No Promote)
-  - 2026-02-25
-  - Hold / Reject (no promotable candidate)
+- file: `evals/lessons/20260603_pro_naming_reranker_form_did_not_recover.md`
+  - title: # Lesson: form-tuned reranker instruction does NOT recover pro's naming regression (raw_vs_cooked got WORSE), though it improves deterministic calorie MAE (likely via full-fat default)
+  - 2026-06-03
   - -
-- file: `evals/lessons/20260224_seed_from_20251221.md`
-  - title: # Seed Lesson (from 2025-12-21 research)
   - -
+- file: `evals/lessons/20260603_nutrition5k_external_eval_generalization_gap.md`
+  - title: # Lesson: Nutrition5k external eval (N=250, independent measured GT) — the frozen-50 MASSIVELY overstates calorie accuracy; pro beats flash SIGNIFICANTLY; affine calibration fit on N5k FAILS
+  - 2026-06-03
+  - -
+  - -
+- file: `evals/lessons/20260603_n5k_pro_advantage_test_retest_borderline.md`
+  - title: # Lesson: N5k pro-vs-flash test-retest — pro's calorie advantage is DIRECTIONALLY consistent but only BORDERLINE significant; pro is less reproducible than flash
+  - 2026-06-03
   - -
   - -
 
@@ -53,17 +53,7 @@
 - `evals/repeat_runs/20260225_100132/repeated_summary.md`
 
 ## Remote Config Check
-- api_url: `https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app`
-- updated_at: `2026-02-25T03:44:00.597406`
-- updated_by: `admin`
-- vlm_model_id: `openrouter:google/gemini-3-flash-preview`
-- vlm_prompt_file: `freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt`
-- vlm_prompt_text_len: `2733`
-- vlm_temperature: `0.3`
-- vlm_max_tokens: `12288`
-- vlm_reasoning_effort: `medium`
-- search.stage1_top_k: `50`
-- warning: Prompt Text Override is active (Prompt File is ignored).
+- skipped/failed: timeout: The read operation timed out
 
 ## Guardrails
 - Never promote from dev-only split results. Promotion requires full50 coverage.

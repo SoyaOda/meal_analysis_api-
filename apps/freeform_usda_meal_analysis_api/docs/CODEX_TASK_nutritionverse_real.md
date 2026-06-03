@@ -2,6 +2,13 @@
 
 > この文書は **Codex（Computer Use 可）** 向けの自己完結タスク指示です。Claude Code 側は Kaggle 認証が無く取得できないため、**Kaggle からのダウンロードだけ** Codex に依頼します。変換スクリプトは既に用意した雛形に倣えば作れます。
 
+> ## ✅ 2026-06-03 完了 + 重大訂正（このタスクは実施済）
+> Codex が DL 完了、Claude 側で変換を**修正して再構築済**。**重大な落とし穴が判明**したので記録（詳細・根拠: `evals/lessons/20260603_nutritionverse_real_broken_id_mapping.md`）:
+> - **画像ファイル名の `dish_N` と metadata CSV の `dish_id N` は別番号体系**（image dish_2=リンゴ / metadata dish_id 2=bread+lobster）。**§3 で前提にした「id 等値 join」は誤りで、40% の GT が壊れる**。
+> - **正しい join キーは内容**: 各画像の **COCO ingredient multiset**（`_annotations.coco.json`）を metadata の ingredient multiset と照合し、**一意一致のみ採用**（曖昧/不一致は drop）。`build_nutritionverse_evalset.py` はこの方式に**修正済**。
+> - 結果: **104 content-verified dish**（image↔GT 整合 104/104, eye-level 複合料理中心）。`test_images_nvreal/` は再構築済。
+> - 教訓: **外部構築 eval set は必ず画像を目視スポットチェック**（schema/合計チェックは image↔label マッピング誤りを検出できない）。
+
 ## 0. 背景（なぜやるか）
 このリポジトリ（`/Users/odasoya/meal_analysis_api_2`, ブランチ `feature/mozu-api`）は **mozu**（高単価 calorie tracker app）用の「写真→カロリー推定 API」。
 判明した重大問題: 既存の評価用 50 枚の **GT は GPT-5-pro の推定値**で、「実精度」でなく「LLM との一致度」を測っていた（詳細 `evals/lessons/20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy.md`）。

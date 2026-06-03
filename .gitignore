@@ -123,3 +123,7 @@ test_scripts/output/*.md
 # Nutrition5k external eval set (rebuildable via build_nutrition5k_evalset.py)
 test_images_n5k/
 apps/freeform_usda_meal_analysis_api/data/nutrition5k/
+
+# NutritionVerse-Real external eval set (rebuildable via build_nutritionverse_evalset.py)
+data/nutritionverse_real/
+test_images_nvreal/
