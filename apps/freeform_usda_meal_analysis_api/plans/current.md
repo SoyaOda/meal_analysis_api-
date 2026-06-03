@@ -26,7 +26,7 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 ## Exit Criteria（本番投入の条件）
 | 項目 | 閾値 | 現在 |
 |------|------|------|
-| calorie under-bias 補正 | 外部held-out fit の calibration で signed≈0 | pro: eval内fitで -5.3%→-1.6%（**外部fit未**） |
+| calorie accuracy（実世界） | 実ユーザー分布で許容MAE | **frozen-50 ~18% は過大評価; N5k(独立GT)では 58%**。bias分布依存(50=過小/N5k=過大)、affine calib は N5k で失敗。**要・実データ** |
 | naming 回帰の解消/許容 | naming_db_match が flash 同等以上 or 許容判断 | pro -0.125（4/4, 未解消） |
 | judge を真のゲート化 | human golden κ≥0.6 | 未（draft 準備済） |
 | 本番 deploy | Firestore model=pro + calibration 配備 | 未（要明示指示・予算確認） |
@@ -62,3 +62,4 @@ mozu に組み込む写真カロリー推定 API を、採用候補 **gemini-3.1
 | 2026-06-03 | mozu-pivot | **naming回復 A/B(#1) → 不成立**: pro+形態双方向reranker vs pro+現行(cache共有でreranker isolate, 39/40でレコード変化)。判定: **raw_vs_cooked 20→25悪化・correct% 19.1→16.4↓・conviction↓**で naming回復せず(over-steering)。但し**決定的cal_MAE 24.55→19.67(-4.9pt)改善**(主にfull-fat-default由来と推定)。**naming は reranker非対応(形態signalがVLMクエリに不在)→ VLMプロンプト側課題**。pro小回帰(-0.125)は据え置き。follow-up: full-fat-default単独でcal改善が残るか。lesson: `20260603_pro_naming_reranker_form_did_not_recover.md`。 |
 | 2026-06-03 | mozu-pivot | **外部データ取得 徹底リサーチ＋自律構築開始**: 結論=PARTIAL-YES。**Nutrition5k(実測GT・CC BY 4.0)が gsutil匿名DL可・schema が harnessに対応**と検証 → `build_nutrition5k_evalset.py`(CSV→harnessラベル+rgb.png DL)作成、harnessに`--images-dir/--labels-dir`追加、**20枚で end-to-end検証成功**(独立実測GT, loader互換)。残=本番N構築(gsutil -m並列化)+評価(credits)。限界=Nutrition5kもWestern/cafeteriaで多cuisineカロリーは未閉(公開後実データ必須)。doc: `EXTERNAL_TESTSET_PLAN_20260603.md`。58 tests passed。 |
 | 2026-06-03 | mozu-pivot | **(b)無料の本番構築＋並列化 完了**: `build_nutrition5k_evalset.py` を ThreadPoolExecutor 並列DL化(`--workers`, buffer選択でlimit到達)、**Nutrition5k 250枚 evalset を構築**(images+harnessラベル, GT median 222kcal/max1238, items/dish med4, loader 249/250 OK, 13MB, gitignore・seed7再現可)。harness `--images-dir/--labels-dir` で評価可能。残=評価(credits)＋外部calibration fit。 |
+| 2026-06-03 | mozu-pivot | **N5k外部評価(250, 独立実測GT) 完了**: cal_MAE flash 68.4/pro 58.4%（**frozen-50 ~18%の約3倍悪化＝50枚は実世界精度を大幅過大評価, 汎化懸念実証**）。**pro vs flash paired CI[-18.5,-1.3]＝pro有意に良い**(50ではNS→独立大Nで有意化)。bias反転(50過小/N5k過大+31%)。**外部calibration fit失敗**(held-out CAL 132%悪化, affine intercept が広レンジ破壊→乗算的・分布依存)。注: N5kは俯瞰角でpessimistic stress-test, 真値は50とN5kの間=要実データ。recognition/portionはname不一致で N5k では不可信(calorieが信頼軸)。**結論: pro維持(独立で有意)・calibrationは要実データ・精度はrange報告**。lesson: `20260603_nutrition5k_external_eval_generalization_gap.md`。 |
