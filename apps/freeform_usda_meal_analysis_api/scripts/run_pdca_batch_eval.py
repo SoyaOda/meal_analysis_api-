@@ -1417,6 +1417,17 @@ def main() -> int:
     parser.add_argument("--api-url", default="http://localhost:8006")
     parser.add_argument("--limit", type=int, default=50)
     parser.add_argument(
+        "--images-dir",
+        default=None,
+        help="Override test images dir (default: test_images/images). For external eval "
+        "sets, e.g. Nutrition5k via build_nutrition5k_evalset.py.",
+    )
+    parser.add_argument(
+        "--labels-dir",
+        default=None,
+        help="Override labels dir (default: test_images/images_label_with_nutrition).",
+    )
+    parser.add_argument(
         "--start-index",
         type=int,
         default=1,
@@ -1524,9 +1535,15 @@ def main() -> int:
     if args.image_index_file:
         explicit_indices = load_image_indices(resolve_path(args.image_index_file))
 
+    images_dir = (
+        resolve_path(args.images_dir) if args.images_dir else DEFAULT_IMAGES_DIR
+    )
+    labels_dir = (
+        resolve_path(args.labels_dir) if args.labels_dir else DEFAULT_LABELS_DIR
+    )
     image_set_result = build_image_set(
-        DEFAULT_IMAGES_DIR,
-        DEFAULT_LABELS_DIR,
+        images_dir,
+        labels_dir,
         args.limit,
         start_index=args.start_index,
         end_index=args.end_index,
@@ -1536,8 +1553,8 @@ def main() -> int:
         items: List[Dict[str, Path]] = []
         present_indices: List[int] = []
         for idx in explicit_indices:
-            image_path = DEFAULT_IMAGES_DIR / f"test_food{idx}.jpg"
-            label_path = DEFAULT_LABELS_DIR / f"test_food{idx:02d}.json"
+            image_path = images_dir / f"test_food{idx}.jpg"
+            label_path = labels_dir / f"test_food{idx:02d}.json"
             if image_path.exists() and label_path.exists():
                 items.append({"image": image_path, "label": label_path})
                 present_indices.append(idx)
