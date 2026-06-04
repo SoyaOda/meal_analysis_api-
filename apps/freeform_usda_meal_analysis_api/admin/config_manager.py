@@ -46,6 +46,18 @@ class VLMConfig(BaseModel):
         default=True,
         description="Whether to use VLM response cache",
     )
+    self_consistency_k: int = Field(
+        default=1,
+        ge=1,
+        le=9,
+        description=(
+            "Self-consistency samples: run the analysis K times with K distinct "
+            "seeds and return the median-total-calorie result. 1 = off (single "
+            "call, default). K=3 cut realistic-range calorie MAE ~2pt (pooled "
+            "p=0.02); see evals/lessons/20260604_self_consistency_median_ensemble_"
+            "significant_calorie_win.md. Runs SEQUENTIALLY (latency ~Kx)."
+        ),
+    )
 
 
 class SearchConfig(BaseModel):

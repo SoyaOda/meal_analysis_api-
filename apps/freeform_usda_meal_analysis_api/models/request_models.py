@@ -57,6 +57,17 @@ class ModelConfig(BaseModel):
         example=False,
     )
 
+    self_consistency_k: Optional[int] = Field(
+        None,
+        description=(
+            "Self-consistency サンプル数。K回（seed違い）解析し median-total-calorie "
+            "の結果を返す。未指定時はサーバー設定。1=off。K=3 で本命カロリーMAE ~2pt 改善。"
+        ),
+        ge=1,
+        le=9,
+        example=3,
+    )
+
 
 class SearchConfig(BaseModel):
     """検索設定（Fullインデックスのみ使用）"""

@@ -56,6 +56,14 @@ To remove the temperature confound, ran flash at PRODUCTION temp 0.3 with K=3 DI
 - The vs-production-single (seed7) comparison is muddied by seed luck (seed7 is a good draw on N5k, a bad draw on NVReal) — that's exactly the per-image variance the ensemble reduces; compare ensemble to the EXPECTED single, not one lucky/unlucky seed.
 - **Recommended recipe: flash, temp 0.3, K=3 seeds, median(total_calorie).** Modest (~2pt) but real and distribution-robust. Adopt only if 3x inference (cost+latency, parallelizable) is justified for ~2pt — a product call. Needs a pipeline self-consistency wrapper.
 
+## Implementation (2026-06-04, shipped to code — opt-in, default OFF)
+Wrapper implemented in the pipeline:
+- `VLMConfig.self_consistency_k` (admin/config_manager.py) + `ModelConfig.self_consistency_k` (request_models.py) + router `self_consistency_k` Form param. Default **1 = off (single call, behavior unchanged)**.
+- `MealAnalysisPipeline.analyze_meal_from_image` is now a dispatcher: k<=1 → `_analyze_meal_once` (the original body, renamed); k>1 → runs `_analyze_meal_once` K times with seeds `base..base+K-1` and returns the result whose total-calorie is the median (`_select_median_calorie_result`). For odd K the median IS the middle sample, so foods/macros/total stay self-consistent.
+- Runs SEQUENTIALLY (the shared `vlm_service.prompt/model_id` mutation makes concurrent samples unsafe) → latency ~Kx. Parallelization would need per-sample vlm_service isolation (future work). Any sample error propagates (no silent fallback, per repo rules).
+- Tests: `tests/test_self_consistency_selection.py` (5 pass) + 63 existing pass. E2E smoke verified: K=3 seeds 123456-123458, sample calories [747.3, 760.2, 843.6] → selected median 760.2.
+- **To enable in production**: set `config.vlm.self_consistency_k = 3` (admin config) — or pass `self_consistency_k=3` per request. Recommend temp stays at 0.3 (seed diversity suffices). Decide if 3x latency/cost is worth ~2pt before flipping it on.
+
 ## Related
 - [[20260604_realistic_range_error_decomposition_grams_vs_density]] (showed the error is variance → motivated this; variance IS partly reducible after all, via diverse sampling + median)
 - [[20260604_v14_portion_scaling_helps_slope_but_not_realistic_range]] (prompt lever that failed — contrast)

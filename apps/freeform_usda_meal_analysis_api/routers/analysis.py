@@ -98,6 +98,10 @@ async def analyze_meal_from_image(
     seed: Optional[int] = Form(None, description="生成シード"),
     max_tokens: Optional[int] = Form(None, description="最大トークン数"),
     use_vlm_cache: Optional[bool] = Form(None, description="VLMキャッシュを利用するか"),
+    self_consistency_k: Optional[int] = Form(
+        None,
+        description="Self-consistency サンプル数(K回 seed違い解析→median total-calorie)。未指定時はサーバー設定。1=off",
+    ),
     # Search config overrides
     stage1_top_k: Optional[int] = Form(None, description="Stage1候補数"),
     bm25_weight: Optional[float] = Form(None, description="BM25検索の重み(0.0-1.0)"),
@@ -188,6 +192,7 @@ async def analyze_meal_from_image(
                 seed,
                 max_tokens,
                 use_vlm_cache is not None,
+                self_consistency_k,
             ]
         ):
             model_config_override = ModelConfig(
@@ -199,6 +204,7 @@ async def analyze_meal_from_image(
                 seed=seed,
                 max_tokens=max_tokens,
                 use_vlm_cache=use_vlm_cache,
+                self_consistency_k=self_consistency_k,
             )
 
         # 検索設定のオーバーライド処理

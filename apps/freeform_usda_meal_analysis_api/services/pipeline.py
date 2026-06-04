@@ -7,6 +7,7 @@ VLM画像解析 → クエリ抽出 → USDA検索 → 栄養素計算 の統合
 """
 
 import logging
+import statistics
 import time
 from typing import Dict, List, Any, Optional
 import asyncio
@@ -317,6 +318,28 @@ class MealAnalysisPipeline:
             },
         }
 
+    @staticmethod
+    def _result_calories(result: Dict[str, Any]) -> float:
+        """結果dictから総カロリーを取得（total_nutrition は NutritionInfo か dict）。"""
+        total = result.get("total_nutrition")
+        cal = getattr(total, "calories", None)
+        if cal is None and isinstance(total, dict):
+            cal = total.get("calories")
+        return float(cal or 0.0)
+
+    @classmethod
+    def _select_median_calorie_result(
+        cls, results: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
+        """K個の結果から総カロリーが median のものを返す。
+
+        奇数Kなら中央サンプルそのものを返すため、foods/macros/total が自己整合する。
+        """
+        if not results:
+            raise ValueError("self-consistency: no results to select from")
+        med = statistics.median(cls._result_calories(r) for r in results)
+        return min(results, key=lambda r: abs(cls._result_calories(r) - med))
+
     async def analyze_meal_from_image(
         self,
         image_bytes: bytes,
@@ -326,8 +349,85 @@ class MealAnalysisPipeline:
         include_debug_info: bool = False,
         enable_self_verification: bool = False,
     ) -> Dict[str, Any]:
+        """画像分析エンドポイント（self-consistency 対応のディスパッチャ）。
+
+        `self_consistency_k`（override > ConfigManager > 1）が >1 のとき、K回（seed違い）
+        解析して総カロリーが median の結果を返す（分散低減。検証: evals/lessons/
+        20260604_self_consistency_median_ensemble_significant_calorie_win.md）。K=1（既定）は
+        単一解析で挙動不変。共有 vlm_service 状態を変更するため逐次実行（latency ~Kx）。
         """
-        API用の画像分析エンドポイント(パラメータオーバーライド対応)
+        k = None
+        if model_config_override is not None:
+            k = getattr(model_config_override, "self_consistency_k", None)
+        if k is None:
+            k = getattr(get_config_manager().get_config().vlm, "self_consistency_k", 1)
+        k = int(k or 1)
+
+        if k <= 1:
+            return await self._analyze_meal_once(
+                image_bytes=image_bytes,
+                user_context=user_context,
+                model_config_override=model_config_override,
+                search_config_override=search_config_override,
+                include_debug_info=include_debug_info,
+                enable_self_verification=enable_self_verification,
+            )
+
+        base_seed = None
+        if model_config_override is not None:
+            base_seed = getattr(model_config_override, "seed", None)
+        if base_seed is None:
+            base_seed = get_config_manager().get_config().vlm.seed
+        base_seed = int(base_seed)
+
+        logger.info(
+            "🎲 [Self-Consistency] K=%d samples (seeds %d..%d), median-total-calorie",
+            k,
+            base_seed,
+            base_seed + k - 1,
+        )
+
+        from ..models.request_models import ModelConfig
+
+        results: List[Dict[str, Any]] = []
+        for i in range(k):
+            iter_seed = base_seed + i
+            if model_config_override is None:
+                iter_override = ModelConfig(seed=iter_seed, self_consistency_k=1)
+            else:
+                iter_override = model_config_override.model_copy(
+                    update={"seed": iter_seed, "self_consistency_k": 1}
+                )
+            results.append(
+                await self._analyze_meal_once(
+                    image_bytes=image_bytes,
+                    user_context=user_context,
+                    model_config_override=iter_override,
+                    search_config_override=search_config_override,
+                    include_debug_info=include_debug_info,
+                    enable_self_verification=enable_self_verification,
+                )
+            )
+
+        selected = self._select_median_calorie_result(results)
+        logger.info(
+            "🎲 [Self-Consistency] sample calories=%s -> selected median=%.1f",
+            [round(self._result_calories(r), 1) for r in results],
+            self._result_calories(selected),
+        )
+        return selected
+
+    async def _analyze_meal_once(
+        self,
+        image_bytes: bytes,
+        user_context: Optional[str] = None,
+        model_config_override: Optional[Any] = None,
+        search_config_override: Optional[Any] = None,
+        include_debug_info: bool = False,
+        enable_self_verification: bool = False,
+    ) -> Dict[str, Any]:
+        """
+        API用の画像分析エンドポイント(パラメータオーバーライド対応・単一サンプル)
 
         Args:
             image_bytes: 画像データ
