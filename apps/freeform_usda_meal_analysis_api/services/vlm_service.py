@@ -135,6 +135,7 @@ class VLMService:
         max_tokens: Optional[int] = None,
         reasoning_effort: Optional[str] = None,
         use_cache: bool = True,
+        user_context: Optional[str] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
@@ -177,6 +178,18 @@ class VLMService:
             else config.vlm.reasoning_effort
         )
 
+        # E8 (F1-a): inject user-provided context (e.g. "ate half", plate diameter,
+        # restaurant/menu, "large serving") into the prompt. It is prepended so the
+        # VLM can use it for portion/identity, and it is part of the cache key below
+        # so the same photo with different context is NOT served a stale cache hit.
+        effective_prompt = self.prompt
+        if user_context and user_context.strip():
+            effective_prompt = (
+                "USER-PROVIDED CONTEXT (authoritative; prefer it over visual guesses "
+                "where it applies to identity, preparation, portion, or amount eaten):\n"
+                f"{user_context.strip()}\n\n" + self.prompt
+            )
+
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
         logger.info(
             "Parameters: temperature=%s, seed=%s, max_tokens=%s, reasoning_effort=%s, use_cache=%s",
@@ -198,7 +211,7 @@ class VLMService:
         if use_cache:
             cached = await cache.get(
                 image_bytes=image_bytes,
-                prompt=self.prompt,
+                prompt=effective_prompt,
                 model_id=self.model_id,
                 cache_context=cache_context,
             )
@@ -223,7 +236,7 @@ class VLMService:
         api_params = {
             "image_bytes": image_bytes,
             "image_mime_type": image_mime_type,
-            "prompt": self.prompt,
+            "prompt": effective_prompt,
             "return_usage": True,
             "max_tokens": effective_max_tokens,
             "temperature": effective_temperature,
@@ -271,7 +284,7 @@ class VLMService:
         if use_cache:
             await cache.set(
                 image_bytes=image_bytes,
-                prompt=self.prompt,
+                prompt=effective_prompt,
                 model_id=self.model_id,
                 response=vlm_response,
                 usage=usage,

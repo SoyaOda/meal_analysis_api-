@@ -120,6 +120,8 @@ class MealAnalysisPipeline:
         search_reranker_top_n: Optional[int] = None,
         # デバッグオプション
         include_debug_info: bool = False,
+        # E8 (F1-a): ユーザー提供コンテキスト（皿径/食べ残し/店名/大盛り等）
+        user_context: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         画像から栄養素計算までのEnd-to-End処理
@@ -186,6 +188,7 @@ class MealAnalysisPipeline:
                 max_tokens=vlm_max_tokens,
                 reasoning_effort=vlm_reasoning_effort,
                 use_cache=vlm_use_cache,
+                user_context=user_context,
             )
         except Exception as e:
             logger.error(f"VLM analysis failed: {e}")
@@ -566,6 +569,7 @@ class MealAnalysisPipeline:
                 image_mime_type="image/jpeg",
                 include_debug_info=include_debug_info,
                 enable_self_verification=enable_self_verification,
+                user_context=user_context,
                 **vlm_kwargs,
                 **search_kwargs,
             )
