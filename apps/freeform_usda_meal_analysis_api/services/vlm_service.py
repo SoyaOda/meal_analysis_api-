@@ -81,7 +81,9 @@ class VLMService:
         # config からデフォルト値を取得
         settings = get_settings()
         if model_id is None:
-            model_id = settings.VLM_MODEL_ID
+            # NOTE(F1-c): settings.VLM_MODEL_ID は未定義（DEFAULT_VLM_MODEL_ID のみ）。
+            # model_id=None で VLMService を作る経路の AttributeError を防ぐ防御的修正。
+            model_id = settings.DEFAULT_VLM_MODEL_ID
 
         self.model_id = model_id
 
