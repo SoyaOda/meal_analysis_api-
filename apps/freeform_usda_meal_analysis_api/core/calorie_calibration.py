@@ -1,12 +1,20 @@
 """Post-hoc calorie calibration layer.
 
-General VLMs systematically under-estimate meal calories (measured calibration
-slope ~0.47, signed bias ~-6%). A held-out-fit affine map corrects the systematic
-component: corrected_total = slope * raw_total + intercept. This is the cheapest
-lever that removes the directional bias (held-out validation: MAE 18.7%->15.0%,
-signed -6.5%->-0.5%). It does NOT fix the weak pred-vs-true correlation (R^2~0.16)
-— that needs better portion estimation. Disabled by default; the (slope, intercept)
-MUST be fit on data DISJOINT from any benchmark used to judge it (anti-overfit).
+🔴 GLOBAL AFFINE CALIBRATION IS VOID (2026-06-04). The earlier "slope ~0.47,
+bias ~-6%, MAE 18.7%->15.0%" came from the frozen-50 set whose GT turned out to be
+GPT-5-pro ESTIMATES, not measurements; on independent MEASURED sets the calorie bias
+SIGN FLIPS by distribution (N5k over-estimates, NutritionVerse-Real under-estimates),
+so a single global (slope, intercept) is unsafe and over-fits one distribution. See
+evals/lessons/20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy.md and
+20260604_realistic_range_error_decomposition_grams_vs_density.md (realistic-range
+error is near-zero-bias VARIANCE, ~50/50 grams vs density).
+
+This module is therefore DISABLED and GUARDED (F1-e): it may only be enabled with a
+provenance string containing IN_DOMAIN_MEASURED_MARKER (a fit on real mozu measured
+data); enabling with any other provenance RAISES. A future correction should be
+CONDITIONAL/hierarchical (food-group x container x size x confidence), applied as a
+separate corrected-calorie field — NOT a global factor that scales displayed weights.
+corrected_total = slope * raw_total + intercept.
 """
 
 from __future__ import annotations
@@ -22,6 +30,10 @@ logger = logging.getLogger(__name__)
 DEFAULT_CONFIG_PATH = (
     Path(__file__).resolve().parents[1] / "config" / "calorie_calibration.json"
 )
+
+# F1-e: a calibration may only be enabled if its provenance marks an in-domain
+# MEASURED fit (real mozu data). Global affine fits on benchmark sets are VOID.
+IN_DOMAIN_MEASURED_MARKER = "mozu_measured"
 
 
 @dataclass(frozen=True)
@@ -75,6 +87,17 @@ def load_calibration(path: Optional[Path] = None) -> CalorieCalibration:
         provenance=str(data.get("provenance", "")),
     )
     if cal.enabled:
+        # F1-e guard: global affine calibration is VOID. Only an in-domain MEASURED
+        # fit (real mozu data) may be enabled; refuse loudly otherwise so the old
+        # frozen-50 / N5k fits cannot be silently re-enabled.
+        if IN_DOMAIN_MEASURED_MARKER not in cal.provenance.lower():
+            raise ValueError(
+                "Calorie calibration is enabled but its provenance "
+                f"({cal.provenance or 'empty'!r}) does not contain "
+                f"'{IN_DOMAIN_MEASURED_MARKER}'. Global affine calibration is VOID; "
+                "only a fit on in-domain MEASURED mozu data may be enabled. "
+                "See core/calorie_calibration.py module docstring."
+            )
         logger.info(
             "Calorie calibration ENABLED: corrected = %.4f*raw + %.2f (%s)",
             cal.slope,

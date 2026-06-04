@@ -58,16 +58,31 @@ def test_load_missing_file_returns_disabled(tmp_path) -> None:
     assert cal.scale_factor(1000.0) == 1.0
 
 
-def test_load_enabled_config(tmp_path) -> None:
+def test_load_enabled_config_requires_measured_provenance(tmp_path) -> None:
+    # F1-e: enabling with an in-domain MEASURED marker is allowed.
     p = tmp_path / "cal.json"
     p.write_text(
         json.dumps(
-            {"enabled": True, "slope": 0.5, "intercept": 100.0, "provenance": "test"}
+            {
+                "enabled": True,
+                "slope": 0.5,
+                "intercept": 100.0,
+                "provenance": f"{_cal.IN_DOMAIN_MEASURED_MARKER}_pilot_v1",
+            }
         )
     )
     cal = load_calibration(p)
     assert cal.enabled is True
     assert abs(cal.corrected_total(1000.0) - 600.0) < 1e-6
+
+
+def test_load_enabled_without_measured_marker_raises(tmp_path) -> None:
+    # F1-e guard: global affine calibration is VOID; enabling without an in-domain
+    # measured provenance must fail loudly (cannot re-enable the frozen-50/N5k fits).
+    p = tmp_path / "cal.json"
+    p.write_text(json.dumps({"enabled": True, "slope": 0.5, "provenance": "frozen50"}))
+    with pytest.raises(ValueError):
+        load_calibration(p)
 
 
 def test_pipeline_calibration_scales_consistently() -> None:

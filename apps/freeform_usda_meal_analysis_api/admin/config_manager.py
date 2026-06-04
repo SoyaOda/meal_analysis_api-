@@ -359,6 +359,21 @@ class ConfigManager:
                 served.vlm.prompt_text is not None,
                 defaults.vlm.prompt_text is not None,
             ),
+            # F1-f: drift must also cover retrieval/reranker/self-consistency, since
+            # these silently change benchmarked accuracy/latency just like the prompt.
+            "vlm.self_consistency_k": (
+                served.vlm.self_consistency_k,
+                defaults.vlm.self_consistency_k,
+            ),
+            "reranker.model": (served.reranker.model, defaults.reranker.model),
+            "search.bm25_weight": (
+                served.search.bm25_weight,
+                defaults.search.bm25_weight,
+            ),
+            "search.vector_weight": (
+                served.search.vector_weight,
+                defaults.search.vector_weight,
+            ),
         }
         fields: Dict[str, Any] = {}
         for name, (served_value, default_value) in checks.items():
