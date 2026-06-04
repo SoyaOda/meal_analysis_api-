@@ -3,13 +3,19 @@
 このアプリ（`freeform_usda_meal_analysis_api`）を **mozu**（Finch 型の高単価 calorie tracker app）用 API として開発するフェーズ。ブランチ `feature/mozu-api`。
 前フェーズ（PDCA 土台整備＋モデル探索）は `plans/done/deep_review_improvements_20260601.md` にアーカイブ。
 
-## 引き継ぎ（Handoff — 他PC / Codex 用, 2026-06-03 時点）
-**現在地**: pro を採用候補に決定(コード既定/doc 更新済, 本番未変更)。**🔴重要: frozen-50 GT は GPT-5-pro推定と判明→calorie系数値は実精度でなく一致度。両 calibration JSON は VOID, follow-up#1(bias補正)停止。TWO-GATE採用(N5k実測カロリー＋50画像)**。**🔴 pro 採用を撤回し flash 推奨（独立 GT 検証の最終結論, 2026-06-04）**: pro は **calorie でも recognition でも flash への頑健な優位なし**。calorie=3独立セットで pro−flash 符号 flip(frozen-50≈/N5k −7pt borderline/NVReal +2.2 NS)、本命レンジは両者 near-unbiased で誤差は純粋分散。recognition=唯一の砦だったが**クリーン独立GT(NVReal COCO 104画像)で pro 80.6 vs flash 82.5% recall＝pro やや劣**(frozen-50「pro 4/4」は GPT-5-pro命名一致度で実識別力でなかった)。**→ flash 推奨(同等精度・1/3コスト)。コード既定は現状 pro のまま=要 flash へ戻す(ユーザ明示指示待ち)**。残る本物 lever=実データ calibration / recognition 個別失敗(lobster/jam/cucumber)是正 / 分散低減。**次=ユーザ判断(flash へ戻すか)＋実 mozu データ取得設計**。
+## 引き継ぎ（Handoff — 他PC / 次セッション用, 2026-06-04 更新）
+**現在地（要点）**:
+- **モデル**: 既定 = **flash**（`gemini-3-flash-preview`）。pro は撤回済（独立 GT で calorie/recognition とも flash への頑健優位なし。frozen-50 の pro優位は GPT-5-pro推定GTのアーティファクト）。コード既定も flash へ戻し済（`8ba09e2`）。
+- **calorie の壁**: 実世界 ~40-60% MAE（本命 200-1500kcal で ~27%、**系統bias無しの純粋分散**、grams:density=50:50）。global calibration は VOID（分布で符号反転）。self-consistency(K=3 median, temp0.3)=唯一の robust lever だが ~2pt のみ（opt-in実装済・既定OFF）。
+- **🟢 現フェーズ = 3 AI 設計レビュー統合 PDCA ロードマップの実行**（承認済 `plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`）。3 AI 結論: 根本設計OK／27%壁は **入力情報・不確実性・候補分布・実測校正の設計問題**（prompt/modelでない）。
+- **完了（本セッション・全commit/push済）**: Phase0 基盤 = F1-c(VLM_MODEL_ID修正)/F1-e(calibration VOID guard)/F1-f(config-drift拡張)/F3(KPI SSOT二層化)/F4一部(harnessにPFC絶対・calorie-bucket MAE)/F5(stamp確認)。**E8(user_context をVLMに配線・paid smoke検証済)**。**E5基盤(embeddingをenv `EMBEDDING_MODEL` で差替可能化)**。E6 reranker は既にconfig駆動。65テストpass。
+- **次の一手（優先）**: ①**E5/E6 実A/B（paid）**= 13.5kを軽量embedding(bge-m3/embeddinggemma-300m/Qwen3-0.6B 全DeepInfra)で再index→`EMBEDDING_MODEL`+`USDA_INDEX_DIR`でserve→embedding latency(cold/warm 本丸~30s→<1-3s)+calorie MAE を8Bと比較／reranker は config.reranker.model で nemotron-1b A/B ②**E2(80g floor→20g, 安価)** ③**F2(stateless VLM refactor, 要1枚paid smoke, E12並列化の前提)** ④実mozu measured データ取得設計(E8精度A/B・E13/E14条件付き校正の前提=最終arbiter)。残バグ F1-a済/b(reranker top_k=1)=E7・d/g=設計結合。
 **最初に読む**: この `plans/current.md` → **`plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`（次フェーズの実行ロードマップ＝3AIレビュー統合・E1-E18+F1-F5・承認済）** → `docs/MOZU_PDCA_SUMMARY_20260604.md`（PDCA総括・結論）→ `docs/MOZU_MODEL_DECISION_20260603.md`（モデル決定の SSOT）→ `evals/lessons/`（特に `20260603_*` 5本: pro採用/stability/calorie-bias/naming-A-B、`20260602_reranker_instruction_was_inert_bug_fixed`）。
 **再開手順**: `git checkout feature/mozu-api && git pull`。セッション開始時 `pdca_session_bootstrap` で現行 baseline/config 確認。eval は `scripts/run_pdca_batch_eval` + 別途 `scripts/run_judge_eval`（judge は OpenRouter sonnet）。
 **鍵**: OpenRouter / DeepInfra キーは**リポジトリに無い**（env で渡す）。他PCでは `OPENROUTER_API_KEY` / `DEEPINFRA_API_KEY`(=`DEEPINFRA_TOKEN`) を設定。`evals/runs/` は gitignore（run artifact は転送されない＝結論は lesson に集約済）。
 **Gotchas（実害あり, 注意）**:
-- OpenRouter クレジット残 ~\$11（2026-06-03）。judge は1画像~\$0.02＋本日 rate-limit で低速。eval 多用前に補充推奨。
+- **OpenRouter/DeepInfra キーは 2026-06-04 に新キーへ更新済（`.env`）**。サーバ起動は **`env -u OPENROUTER_API_KEY -u DEEPINFRA_API_KEY -u DEEPINFRA_TOKEN` を付けて .env のキーを使う**（shell env に古い無効キーが残っており、`load_dotenv(override=False)` で .env が上書きされない事象あり）。401 が出たら大体これ。
+- **🔴 embedding が毎回 ~28-31s（全リクエストの最大レイテンシ）**: DeepInfra Qwen3-Embedding-8B の serverless コールドスタート。**E5 で軽量モデルへ差替が本丸**（`docs/EMBEDDING_RERANKER_RESEARCH_20260604.md`）。eval の latency 計測時はこれを念頭に。
 - `run_judge_eval` を**複数同時起動しない**（OpenRouter rate-limit で全部低速化し判定ファイルが出ない事象あり）。**1本ずつ・完了を judge ファイルの存在で確認**（background の "completed" 通知が python 完了前に出ることがある）。env は**コマンド先頭にinline**で渡す（背景タスクで export が伝播しない事象あり）。
 - ローカルサーバ起動は `PORT=8006 python -m apps.freeform_usda_meal_analysis_api.main`（FAISS index は `data/faiss/` にローカル存在）。
 **直近の数値（pro vs flash, 同v13）**: recognition F1 pro>flash 4/4(決定的, 信頼), latency 同等, cost ~3.2x。**calorie は 3 独立セットで pro 優位が非頑健**: frozen-50 ~18%(=GPT-5-pro一致度,実精度でない)／N5k 実測 2run flash66-68/pro58-62%(denoised -7.2pt, CI[-15.2,+0.9] borderline)／**NutritionVerse-Real eye-level実測 104 flash40.0/pro42.2%(pro−flash +2.2pt CI[-2.4,6.5] NS, flash わずか良)**。**符号 flip = pro に頑健な calorie 優位なし→採用根拠は recognition のみ**。conviction/naming は judge(advisory)。**OpenRouter キーは 2026-06-04 に新キーへ更新(.env)**。
