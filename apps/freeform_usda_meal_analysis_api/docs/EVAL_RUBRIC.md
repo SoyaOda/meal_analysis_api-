@@ -2,8 +2,12 @@
 
 正典ルーブリック。詳細な設計根拠・出典は `docs/JUDGE_EVAL_DESIGN_20260602.md`。`AGENTS.md` / `CLAUDE.md` はここにリンクし重複させない。
 
-## KPI
-最終KPIは総カロリー精度ではなく **USER CONVICTION**: ユーザが自分の写真とアプリ出力（認識した料理/食材・分量g・全栄養素）を見て「正しい、そのまま記録してよい」と納得するか。重要度順（JMIR 2025）: foods > names > portions > nutrients > total。
+## KPI — SSOT（2026-06-04 F3 で二層を明示・3AIレビュー反映）
+KPI を**二層に分離**する（混同が「README=総カロリーMAE主役」vs「最終KPI=conviction」の矛盾を生んでいた。両方必要だが役割が違う）:
+
+- **North Star（プロダクト・願望的）= USER CONVICTION**: ユーザが写真とアプリ出力（料理/食材・分量g・全栄養素）を見て「正しい、そのまま記録してよい」と納得するか。重要度順（JMIR 2025）: foods > names > portions > nutrients > total。**judge が人手golden で検証されるまで advisory**（`gate.use_judge` default OFF）。retention/correction-rate と並ぶ Product-KPI。
+- **Operational model-promotion gate（現運用・客観・実測GT）**: 実際に promote 判定に使うのは**決定的な実測カロリー指標**。`総kcal MAE% / paired BCa CI<0 / p90 APE / signed bias / slope / 30%+rate / PFC 絶対グラムMAE（%でなく: fat MAE%は分母小で爆発）/ density error(kcal/100g) / calorie-weighted recognition / subgroup別MAE（<300/300-700/700-1500/>1500・bowl/plate・fried・mixed）/ interval coverage`。**「間違った食品なのに総カロリーが合う」（PFC相殺）を落とすため、総カロリー単独で promote しない**（PFC絶対＋per-dimension floor＋subgroup ガードを AND 条件に）。
+- 新指標（PFC絶対・density error・subgroup・interval coverage）は **Phase0 F4 で `run_pdca_batch_eval.py` に追加**（`plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`）。それまでは既存の決定的指標＋calorie paired CI で運用。
 
 ## 2層構成
 - **Tier 0（決定論的・写真不要・コスト0・常時）** — `scripts/run_pdca_batch_eval.py` が算出、summary.json に追加キー:
