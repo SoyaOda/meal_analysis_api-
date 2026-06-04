@@ -54,13 +54,15 @@ class Settings:
         """
 
         # ========== VLMモデル設定 ==========
-        # デフォルト: Gemini 3.1 Pro Preview（mozu 採用候補, 2026-06-03）。
-        #   recognition F1 が flash 比で 4/4 run 再現的に向上（pro>flash, det F1 + per-dish
-        #   correct%）、レイテンシは flash とほぼ同等（170件で +0.2s）。calorie under-bias は
-        #   calibration で補正可（外部held-out fit後に有効化）。コストは ~3.2x（高単価アプリ
-        #   mozu では許容）。詳細: docs/MOZU_MODEL_DECISION_20260603.md。
+        # デフォルト: Gemini 3 Flash Preview（2026-06-04, pro 採用を撤回し flash に復帰）。
+        #   2026-06-03 に pro を採用候補としたが、独立 GT 検証で pro は calorie でも
+        #   recognition でも flash への頑健な優位が無いと判明（calorie=3独立セットで符号flip、
+        #   recognition=クリーンGT NVReal COCO で flash 82.5% > pro 80.6% recall）。frozen-50
+        #   の pro 優位は GPT-5-pro 命名との一致度で実性能でなかった。同等精度なら ~1/3 コストの
+        #   flash が合理的。詳細: docs/MOZU_MODEL_DECISION_20260603.md（冒頭 2026-06-04 最終結論）/
+        #   evals/lessons/20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational.md。
         self.DEFAULT_VLM_MODEL_ID = os.getenv(
-            "VLM_MODEL_ID", "openrouter:google/gemini-3.1-pro-preview"
+            "VLM_MODEL_ID", "openrouter:google/gemini-3-flash-preview"
         )
 
         # デフォルト: v13 (= 本番稼働中のv11b+飲料対応。v11bとはcalorie MAE非劣性

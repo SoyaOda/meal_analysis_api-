@@ -6,7 +6,7 @@
 > 独立・実測/クリーン GT での検証の結果、**pro は calorie でも recognition でも flash への頑健な優位が無い**:
 > - **calorie**: 3 独立セットで pro−flash の符号 flip（frozen-50≈／N5k −7pt borderline／NVReal +2.2 NS）＝頑健な優位なし。本命レンジ(200-1500kcal)は両モデルとも near-unbiased で誤差は純粋分散（lesson `20260604_realistic_range_error_decomposition_grams_vs_density`）。
 > - **recognition**: 唯一の砦だったが、**クリーン独立 GT（NVReal COCO, 104画像)で pro 80.6% vs flash 82.5% recall ＝ pro やや劣・誤認多・per-image 引き分け**。frozen-50 の「pro 4/4」は GPT-5-pro 命名との一致度で、実食材識別力ではなかった（lesson `20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational`）。
-> - **→ 推奨 = flash**（同等精度で ~1/3 コスト。pro は 3.2x を正当化できない）。**コード既定(settings.py/config_manager)は現状 pro のまま＝要 flash へ戻す（ユーザ明示指示待ち）**。本番 deploy も未実施。
+> - **→ 推奨 = flash**（同等精度で ~1/3 コスト。pro は 3.2x を正当化できない）。**コード既定(settings.py / admin/config_manager.py)は 2026-06-04 に flash へ戻し済**。本番 Cloud Run/Firestore の deploy は未実施（要明示指示）。
 > - 残る本物の改善 lever は **実 mozu measured データでの calibration** と **recognition の個別失敗（lobster/jam/cucumber）是正**、**分散低減**。pro/flash の選択でなく、これらが本質。
 > - 以下の旧記述（pro 採用前提）は上記により上書き。歴史的経緯として残す。
 
@@ -18,9 +18,9 @@
 > - **eval 戦略 = TWO-GATE**: GATE A=Nutrition5k 総カロリー（独立実測・方向/回帰チェック, totals-only）／GATE B=frozen-50 **画像**（phone-angle 現実性＋相対A/B; ラベルは真値扱いしない）。**真のゲート=実ドメイン実測アンカー（要構築: Western・eye-level phone 写真 20-50枚を実測×USDA）**。
 > - **Nutrition5k へ全面切替はしない**（俯瞰/cafeteria＝分布違い・「general Western」でない・名前不一致で recognition 不可信・affine calib が自前 held-out で 132% に暴発）。tuning/calibration の対象にはしない。
 
-## 決定
-- **採用候補モデル = `openrouter:google/gemini-3.1-pro-preview`**（既定。settings.py / config_manager 既定も更新済）。
-- `openrouter:google/gemini-3-flash-preview` は安価代替として残す。
+## 決定（2026-06-04 改訂: pro 撤回 → flash）
+- ~~採用候補 = gemini-3.1-pro~~ → **撤回。既定モデル = `openrouter:google/gemini-3-flash-preview`**（settings.py / admin/config_manager.py を 2026-06-04 に flash へ復帰）。
+- `openrouter:google/gemini-3.1-pro-preview` は alt として残す（実 mozu データで再評価の余地）。
 - 本番 Cloud Run / Firestore は本決定では未変更（deploy は別工程・要明示指示）。
 
 ## 根拠（gemini-3.1-pro vs gemini-3-flash, 同 v13 prompt の clean A/B）
