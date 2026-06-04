@@ -44,6 +44,14 @@
 - **「欧米料理で十分汎用的か」への答え**: 現状の v13 + USDA 検索パイプラインは、**実世界の欧米料理で総カロリー MAE ~40-60%**。frozen-50 が示した ~18% は楽観。大皿の portion 過小評価が主因で、これは **モデル選択でなくプロンプト/portion 設計の課題**。
 - **calorie の最終 arbiter は実 mozu ユーザーの measured データのみ**。3つの公開セットはいずれも lab/studio で、真の本番分布ではない。
 
+## 本命レンジ誤差の分解（2026-06-04・無料診断）
+現実的レンジ(200-1500kcal)の ~27% MAE を `calorie比 = grams比 × density比` に分解（NVReal+N5k で確認）:
+- **両セットで calorie bias ほぼゼロ**（NVReal 0.98 / N5k 1.02）＝**系統的に直せる偏りが無い純粋な分散**。
+- **誤差寄与 ~50:50（portion : 食材マッチング density）**（NVReal 50:50 / N5k 54:46）。
+- 個別偏り（NVReal の grams 0.88過小 / density 1.14過大）は**セット固有で相殺**＝一般 lever でない。片方だけ直すと相殺が崩れ悪化。
+- 反実仮想: grams 完璧でも 23.7% / density 完璧でも 19.7% 残る＝**写真推定の分散は本質的**。
+→ **calorie の残る lever は「分散低減（self-consistency / multi-view 平均）」か「実データでの per-food-type calibration」のみ**。prompt-tuning では本命レンジを動かせない（lesson `20260604_realistic_range_error_decomposition_grams_vs_density`）。
+
 ## 次の一手（優先順）
 1. **実 mozu ドメインの measured アンカー構築**（Western・eye-level phone 20-50枚を実測×USDA）→ ここで初めて calorie の本採用判定 & 乗算的 calibration が可能。
 2. ~~**portion 過小（大皿圧縮）の是正**~~ → **試行済・本命レンジに効かず（2026-06-04）**。v14（anchor を視覚量にスケール＋重量上限緩和）は **calib_slope 0.118→0.170 と圧縮を緩和したが、MAE 改善は非現実的な特大>1500kcal 巨大皿のみ由来で、現実的 200-1500kcal は 27.1→27.0% と改善ゼロ（全帯 NS）**。→ **本命レンジの ~27% 誤差は「圧縮」でなく per-item（グラム/マッチング）が要因**。prompt-portion は lever でない。不採用（v13維持）。lesson `20260604_v14_portion_scaling_helps_slope_but_not_realistic_range`。残: 小皿過大は weight floor 80→20 で別途試行可。
