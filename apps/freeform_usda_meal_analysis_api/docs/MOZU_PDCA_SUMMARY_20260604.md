@@ -42,7 +42,7 @@
 ## 結論 / 推奨（2026-06-04 最終）
 - 🔴 **pro 採用を撤回し flash を推奨**。pro は **calorie でも recognition でも、独立 GT に対し flash への頑健な優位が無い**（calorie=符号 flip／recognition=クリーン GT で flash 82.5 vs pro 80.6%）。**~3.2x のコストを正当化できない → flash（同等精度・1/3コスト）**。コード既定は現状 pro のまま＝**要 flash へ戻す（ユーザ明示指示待ち）**。
 - **「欧米料理で十分汎用的か」への答え**: 現状の v13 + USDA 検索パイプラインは、**実世界の欧米料理で総カロリー MAE ~40-60%**（本命 200-1500kcal で ~27%, near-unbiased）。frozen-50 が示した ~18% は楽観。誤差は**系統 bias でなく純粋分散**（portion:matching = 50:50）で、prompt-tuning では動かない。recognition は良好（~82%）。
-- **残る本物の lever**（モデル選択でなくこれが本質）: ①実 mozu measured データでの per-food-type calibration ②分散低減（self-consistency / multi-view）③recognition 個別失敗（lobster/jam/cucumber）の是正。
+- **残る本物の lever**（モデル選択でなくこれが本質）: ①**分散低減（self-consistency）= 検証済・有効**（flash temp0.5 K=3 median で本命 28.6→21.6%, 有意。採用候補）②実 mozu measured データでの per-food-type calibration ③recognition 個別失敗（lobster/jam/cucumber）の是正。
 - **calorie の最終 arbiter は実 mozu ユーザーの measured データのみ**。3つの公開セットはいずれも lab/studio で、真の本番分布ではない。
 
 ## 本命レンジ誤差の分解（2026-06-04・無料診断）
@@ -52,6 +52,13 @@
 - 個別偏り（NVReal の grams 0.88過小 / density 1.14過大）は**セット固有で相殺**＝一般 lever でない。片方だけ直すと相殺が崩れ悪化。
 - 反実仮想: grams 完璧でも 23.7% / density 完璧でも 19.7% 残る＝**写真推定の分散は本質的**。
 → **calorie の残る lever は「分散低減（self-consistency / multi-view 平均）」か「実データでの per-food-type calibration」のみ**。prompt-tuning では本命レンジを動かせない（lesson `20260604_realistic_range_error_decomposition_grams_vs_density`）。
+
+## ✅ 分散低減（self-consistency）が効いた — セッション初の本物 calorie lever（2026-06-04）
+分解診断で「本命誤差=純粋分散」と分かったので、flash を temp0.5・K sample し total-calorie を集約:
+- **本命 200-1500kcal: 本番 temp0.3 single 28.6% → K=3 median ensemble 21.6%（Δ−6.9pt, paired CI[-13.7,-0.7] 有意, n=40 NVReal）**。
+- **median > mean**、**K=3 が sweet spot**（K=4/5 頭打ち）、temp~0.5 の多様性（CV0.13）が必須（temp0.3 は再現的すぎて効かない）。
+- コスト 3×flash ≈ single pro だが精度は pro 超（21.6% vs pro ~27%+）。
+- **採用候補: flash, temp~0.5, K=3, median(total-calorie)**。要 pipeline に self-consistency wrapper／N5k で汎化確認／temp・K sweep。lesson `20260604_self_consistency_median_ensemble_significant_calorie_win`。
 
 ## 次の一手（優先順）
 1. **実 mozu ドメインの measured アンカー構築**（Western・eye-level phone 20-50枚を実測×USDA）→ ここで初めて calorie の本採用判定 & 乗算的 calibration が可能。
