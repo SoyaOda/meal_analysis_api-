@@ -1,4 +1,6 @@
-# Lesson: self-consistency (median-of-K ensemble) SIGNIFICANTLY cuts realistic-range calorie MAE — the first real-world calorie lever found
+# Lesson: self-consistency (median-of-K ensemble) — pure variance-reduction effect is REAL and generalizes (−3 to −4pt at fixed temp), but the NET win is temperature-confounded and did NOT replicate on N5k (NVReal-only at temp 0.5)
+
+> **TL;DR (read the N5k section below)**: median-of-K ensemble at FIXED temp reduces realistic-range MAE on both NVReal (−4.3pt) and N5k (−2.9pt). BUT the temp 0.5 needed for sample diversity hurts single-sample accuracy on N5k (+6pt), canceling the net gain there. So the headline "significant win" held only on NVReal and is NOT robust as-is. Needs a temp sweep to find a diversity setting that nets positive on both. Do NOT adopt temp-0.5 K=3 yet.
 
 - Date: 2026-06-04
 - After the decomposition showed the realistic-range (200-1500 kcal) error is near-zero-bias VARIANCE, tested variance reduction via self-consistency: sample flash K=5 times (temp 0.5, seeds 1-5, same v13) and aggregate the total-calorie estimate. Config `pdca_flash_selfconsistency_k5_20260604.json`, run `20260604_105446`, NVReal first 60 images (40 in the realistic range). Baseline = production temp-0.3 single (run `20260603_232505` flash, same images).
@@ -28,6 +30,19 @@
 - **Strong candidate for adoption**: flash, temp ~0.5, K=3 samples, take the MEDIAN total-calorie estimate. Needs a self-consistency wrapper in the pipeline (call VLM 3x, aggregate). Latency rises ~3x (parallelizable) — acceptable for a high-value tracker; confirm UX.
 - **Confirm before productionizing**: single set (NVReal eye-level), n=40, CI is significant but wide. Re-run on N5k (overhead) and/or more images to confirm the gain generalizes and to tune temp (sweep 0.4-0.7) and K.
 - Open question: does the gain hold for RECOGNITION too (median/union of foods across samples)? Worth checking — could also reduce the lobster/jam misses via sample coverage.
+
+## ⚠️ N5k generalization (2026-06-04) — the NET win did NOT replicate; temperature is a confound
+Same recipe (flash, temp 0.5, K=5 seeds 1-5) on N5k 100 imgs (run `20260604_124142`, 55 in realistic range), baseline = N5k production temp-0.3 single (run `191805`):
+| N5k realistic 200-1500 (n=55) | MAE |
+|---|---:|
+| production temp-0.3 single | 37.8% |
+| temp-0.5 single | 43.8% (temp 0.5 HURTS here) |
+| K=3 median ensemble | 40.9% |
+| K=3 median vs production single | **+3.2pt, CI[-3.1,9.8] NS (NOT better)** |
+
+- **Decompose**: the pure ENSEMBLE effect (same temp 0.5: single→K3-median) is POSITIVE on BOTH sets (NVReal −4.3pt, N5k −2.9pt) → variance reduction generalizes. BUT raising temp 0.3→0.5 to get diversity COSTS single-sample accuracy, and that cost is distribution-dependent: ~0 on NVReal (so net win), but **+6pt on N5k** (so it cancels the −2.9pt ensemble gain → net slightly worse).
+- **Revised conclusion**: self-consistency's NET benefit is NOT robust at temp 0.5 — it helped NVReal partly by temperature luck + small n. The ensemble (variance-reduction) effect is real and generalizes; the open problem is getting diversity WITHOUT a single-sample temp penalty. **Do NOT adopt temp-0.5 K=3 as-is.**
+- **Next to settle it**: a temp sweep — test K=3 median at temp 0.3 and 0.4 vs temp-0.3 single on BOTH sets. If a lower temp gives enough diversity for the ensemble to net-win on both, that is the robust recipe; if not, self-consistency is parked. (Alternatively diversify via prompt-paraphrase or seed-only at temp 0.3, decoupling diversity from the accuracy-hurting temp.)
 
 ## Related
 - [[20260604_realistic_range_error_decomposition_grams_vs_density]] (showed the error is variance → motivated this; variance IS partly reducible after all, via diverse sampling + median)
