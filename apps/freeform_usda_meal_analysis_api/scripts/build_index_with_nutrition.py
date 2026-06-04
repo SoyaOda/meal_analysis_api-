@@ -20,6 +20,7 @@ import sys
 import json
 import asyncio
 import argparse
+import os
 import numpy as np
 import faiss
 from pathlib import Path
@@ -28,12 +29,12 @@ from typing import List, Dict, Tuple, Optional
 
 # USDA栄養素ID → 内部キー名のマッピング
 NUTRIENT_IDS = {
-    1008: "calories",      # Energy (kcal) - Survey/SR Legacy
-    2047: "calories",      # Energy (Atwater General Factors) - Foundation
-    2048: "calories",      # Energy (Atwater Specific Factors) - Foundation (fallback)
-    1003: "protein_g",     # Protein (g)
-    1004: "fat_g",         # Total lipid (fat) (g)
-    1005: "carbs_g"        # Carbohydrate, by difference (g)
+    1008: "calories",  # Energy (kcal) - Survey/SR Legacy
+    2047: "calories",  # Energy (Atwater General Factors) - Foundation
+    2048: "calories",  # Energy (Atwater Specific Factors) - Foundation (fallback)
+    1003: "protein_g",  # Protein (g)
+    1004: "fat_g",  # Total lipid (fat) (g)
+    1005: "carbs_g",  # Carbohydrate, by difference (g)
 }
 
 # カロリー優先順位マップ（数値が小さいほど高優先）
@@ -50,10 +51,10 @@ def parse_usda_name(description: str) -> Tuple[str, str]:
 
     Example: "Milk, whole" -> ("Milk", "whole")
     """
-    if ',' not in description:
+    if "," not in description:
         return description.strip(), ""
 
-    parts = description.split(',', 1)
+    parts = description.split(",", 1)
     main_name = parts[0].strip()
     descriptors = parts[1].strip() if len(parts) > 1 else ""
 
@@ -73,21 +74,21 @@ def extract_nutrition(food_nutrients: List[Dict]) -> Dict[str, float]:
         Dict with keys: calories, protein_g, fat_g, carbs_g
     """
     nutrients = {}
-    calorie_priority_found = float('inf')  # 現在見つかったカロリーの優先順位
+    calorie_priority_found = float("inf")  # 現在見つかったカロリーの優先順位
 
     for food_nutrient in food_nutrients:
-        nutrient = food_nutrient.get('nutrient', {})
-        nutrient_id = nutrient.get('id')
+        nutrient = food_nutrient.get("nutrient", {})
+        nutrient_id = nutrient.get("id")
 
         if nutrient_id not in NUTRIENT_IDS:
             continue
 
-        amount = food_nutrient.get('amount', 0.0)
+        amount = food_nutrient.get("amount", 0.0)
         key = NUTRIENT_IDS[nutrient_id]
 
         # カロリーの場合は優先順位を考慮
         if key == "calories":
-            priority = CALORIE_PRIORITY.get(nutrient_id, float('inf'))
+            priority = CALORIE_PRIORITY.get(nutrient_id, float("inf"))
             if priority < calorie_priority_found:
                 nutrients[key] = round(float(amount), 1)
                 calorie_priority_found = priority
@@ -113,21 +114,20 @@ def extract_portions_from_survey(food_data: Dict) -> Optional[List[Dict]]:
     Returns:
         List of portion dicts or None if no portions
     """
-    food_portions = food_data.get('foodPortions', [])
+    food_portions = food_data.get("foodPortions", [])
 
     if not food_portions:
         return None
 
     portions = []
     for portion in food_portions:
-        gram_weight = portion.get('gramWeight', 0)
-        description = portion.get('portionDescription', '')
+        gram_weight = portion.get("gramWeight", 0)
+        description = portion.get("portionDescription", "")
 
         if gram_weight > 0 and description:
-            portions.append({
-                "description": description,
-                "gram_weight": round(gram_weight, 1)
-            })
+            portions.append(
+                {"description": description, "gram_weight": round(gram_weight, 1)}
+            )
 
     return portions if portions else None
 
@@ -142,17 +142,17 @@ def extract_portions_from_foundation(food_data: Dict) -> Optional[List[Dict]]:
     Returns:
         List of portion dicts or None if no portions
     """
-    food_portions = food_data.get('foodPortions', [])
+    food_portions = food_data.get("foodPortions", [])
 
     if not food_portions:
         return None
 
     portions = []
     for portion in food_portions:
-        gram_weight = portion.get('gramWeight', 0)
-        measure_unit = portion.get('measureUnit', {})
-        value = portion.get('value', portion.get('amount', 1))
-        unit_name = measure_unit.get('name', 'serving')
+        gram_weight = portion.get("gramWeight", 0)
+        measure_unit = portion.get("measureUnit", {})
+        value = portion.get("value", portion.get("amount", 1))
+        unit_name = measure_unit.get("name", "serving")
 
         # Build description
         if value and unit_name:
@@ -161,10 +161,9 @@ def extract_portions_from_foundation(food_data: Dict) -> Optional[List[Dict]]:
             description = unit_name
 
         if gram_weight > 0 and description:
-            portions.append({
-                "description": description,
-                "gram_weight": round(gram_weight, 1)
-            })
+            portions.append(
+                {"description": description, "gram_weight": round(gram_weight, 1)}
+            )
 
     return portions if portions else None
 
@@ -179,16 +178,16 @@ def extract_portions_from_sr_legacy(food_data: Dict) -> Optional[List[Dict]]:
     Returns:
         List of portion dicts or None if no portions
     """
-    food_portions = food_data.get('foodPortions', [])
+    food_portions = food_data.get("foodPortions", [])
 
     if not food_portions:
         return None
 
     portions = []
     for portion in food_portions:
-        gram_weight = portion.get('gramWeight', 0)
-        modifier = portion.get('modifier', '')
-        amount = portion.get('amount', portion.get('value', 1))
+        gram_weight = portion.get("gramWeight", 0)
+        modifier = portion.get("modifier", "")
+        amount = portion.get("amount", portion.get("value", 1))
 
         # Build description
         if amount and modifier:
@@ -199,10 +198,9 @@ def extract_portions_from_sr_legacy(food_data: Dict) -> Optional[List[Dict]]:
             description = "serving"
 
         if gram_weight > 0 and description:
-            portions.append({
-                "description": description,
-                "gram_weight": round(gram_weight, 1)
-            })
+            portions.append(
+                {"description": description, "gram_weight": round(gram_weight, 1)}
+            )
 
     return portions if portions else None
 
@@ -212,7 +210,7 @@ def load_usda_data_with_nutrition(
     foundation_path: str,
     sr_legacy_path: Optional[str] = None,
     max_items: Optional[int] = None,
-    include_portions: bool = True
+    include_portions: bool = True,
 ) -> List[Dict]:
     """
     Load USDA data with nutrition information and portions
@@ -234,20 +232,20 @@ def load_usda_data_with_nutrition(
 
     # Load Survey Foods (FNDDS)
     print(f"Loading Survey Foods from {survey_path}...")
-    with open(survey_path, 'r', encoding='utf-8') as f:
+    with open(survey_path, "r", encoding="utf-8") as f:
         survey_data = json.load(f)
-        survey_foods = survey_data.get('SurveyFoods', [])
+        survey_foods = survey_data.get("SurveyFoods", [])
 
         for item in survey_foods:
             if max_items and len(items) >= max_items:
                 break
 
-            description = item.get('description', '')
+            description = item.get("description", "")
             if not description:
                 continue
 
             # foodNutrientsが空配列の場合はスキップ
-            food_nutrients = item.get('foodNutrients', [])
+            food_nutrients = item.get("foodNutrients", [])
             if len(food_nutrients) == 0:
                 skipped_count += 1
                 print(f"  ⚠️  Skipped (no nutrients): {description}")
@@ -262,17 +260,19 @@ def load_usda_data_with_nutrition(
             # Extract portions (if enabled)
             portions = extract_portions_from_survey(item) if include_portions else None
 
-            items.append({
-                'id': f"survey_{item.get('fdcId', 'unknown')}",
-                'source': 'survey',
-                'fdc_id': item.get('fdcId'),
-                'food_code': item.get('foodCode'),
-                'description': description,
-                'main_name': main_name,
-                'descriptors': descriptors,
-                'nutrition': nutrition,
-                'portions': portions
-            })
+            items.append(
+                {
+                    "id": f"survey_{item.get('fdcId', 'unknown')}",
+                    "source": "survey",
+                    "fdc_id": item.get("fdcId"),
+                    "food_code": item.get("foodCode"),
+                    "description": description,
+                    "main_name": main_name,
+                    "descriptors": descriptors,
+                    "nutrition": nutrition,
+                    "portions": portions,
+                }
+            )
 
     print(f"✅ Loaded {len(items)} Survey Foods (skipped {skipped_count})")
 
@@ -281,20 +281,20 @@ def load_usda_data_with_nutrition(
         print(f"Loading Foundation Foods from {foundation_path}...")
         foundation_start = len(items)
         foundation_skipped = 0
-        with open(foundation_path, 'r', encoding='utf-8') as f:
+        with open(foundation_path, "r", encoding="utf-8") as f:
             foundation_data = json.load(f)
-            foundation_foods = foundation_data.get('FoundationFoods', [])
+            foundation_foods = foundation_data.get("FoundationFoods", [])
 
             for item in foundation_foods:
                 if max_items and len(items) >= max_items:
                     break
 
-                description = item.get('description', '')
+                description = item.get("description", "")
                 if not description:
                     continue
 
                 # foodNutrientsが空配列の場合はスキップ
-                food_nutrients = item.get('foodNutrients', [])
+                food_nutrients = item.get("foodNutrients", [])
                 if len(food_nutrients) == 0:
                     foundation_skipped += 1
                     print(f"  ⚠️  Skipped (no nutrients): {description}")
@@ -307,21 +307,27 @@ def load_usda_data_with_nutrition(
                 nutrition = extract_nutrition(food_nutrients)
 
                 # Extract portions (if enabled)
-                portions = extract_portions_from_foundation(item) if include_portions else None
+                portions = (
+                    extract_portions_from_foundation(item) if include_portions else None
+                )
 
-                items.append({
-                    'id': f"foundation_{item.get('fdcId', 'unknown')}",
-                    'source': 'foundation',
-                    'fdc_id': item.get('fdcId'),
-                    'ndb_number': item.get('ndbNumber'),
-                    'description': description,
-                    'main_name': main_name,
-                    'descriptors': descriptors,
-                    'nutrition': nutrition,
-                    'portions': portions
-                })
+                items.append(
+                    {
+                        "id": f"foundation_{item.get('fdcId', 'unknown')}",
+                        "source": "foundation",
+                        "fdc_id": item.get("fdcId"),
+                        "ndb_number": item.get("ndbNumber"),
+                        "description": description,
+                        "main_name": main_name,
+                        "descriptors": descriptors,
+                        "nutrition": nutrition,
+                        "portions": portions,
+                    }
+                )
 
-        print(f"✅ Loaded {len(items) - foundation_start} Foundation Foods (skipped {foundation_skipped})")
+        print(
+            f"✅ Loaded {len(items) - foundation_start} Foundation Foods (skipped {foundation_skipped})"
+        )
         skipped_count += foundation_skipped
 
     # Load SR Legacy Foods
@@ -329,20 +335,20 @@ def load_usda_data_with_nutrition(
         print(f"Loading SR Legacy Foods from {sr_legacy_path}...")
         sr_legacy_start = len(items)
         sr_legacy_skipped = 0
-        with open(sr_legacy_path, 'r', encoding='utf-8') as f:
+        with open(sr_legacy_path, "r", encoding="utf-8") as f:
             sr_legacy_data = json.load(f)
-            sr_legacy_foods = sr_legacy_data.get('SRLegacyFoods', [])
+            sr_legacy_foods = sr_legacy_data.get("SRLegacyFoods", [])
 
             for item in sr_legacy_foods:
                 if max_items and len(items) >= max_items:
                     break
 
-                description = item.get('description', '')
+                description = item.get("description", "")
                 if not description:
                     continue
 
                 # foodNutrientsが空配列の場合はスキップ
-                food_nutrients = item.get('foodNutrients', [])
+                food_nutrients = item.get("foodNutrients", [])
                 if len(food_nutrients) == 0:
                     sr_legacy_skipped += 1
                     print(f"  ⚠️  Skipped (no nutrients): {description}")
@@ -355,24 +361,32 @@ def load_usda_data_with_nutrition(
                 nutrition = extract_nutrition(food_nutrients)
 
                 # Extract portions (if enabled)
-                portions = extract_portions_from_sr_legacy(item) if include_portions else None
+                portions = (
+                    extract_portions_from_sr_legacy(item) if include_portions else None
+                )
 
-                items.append({
-                    'id': f"sr_legacy_{item.get('fdcId', 'unknown')}",
-                    'source': 'sr_legacy',
-                    'fdc_id': item.get('fdcId'),
-                    'ndb_number': item.get('ndbNumber'),
-                    'description': description,
-                    'main_name': main_name,
-                    'descriptors': descriptors,
-                    'nutrition': nutrition,
-                    'portions': portions
-                })
+                items.append(
+                    {
+                        "id": f"sr_legacy_{item.get('fdcId', 'unknown')}",
+                        "source": "sr_legacy",
+                        "fdc_id": item.get("fdcId"),
+                        "ndb_number": item.get("ndbNumber"),
+                        "description": description,
+                        "main_name": main_name,
+                        "descriptors": descriptors,
+                        "nutrition": nutrition,
+                        "portions": portions,
+                    }
+                )
 
-        print(f"✅ Loaded {len(items) - sr_legacy_start} SR Legacy Foods (skipped {sr_legacy_skipped})")
+        print(
+            f"✅ Loaded {len(items) - sr_legacy_start} SR Legacy Foods (skipped {sr_legacy_skipped})"
+        )
         skipped_count += sr_legacy_skipped
 
-    print(f"📊 Total: {len(items)} food items with nutrition data (total skipped: {skipped_count})")
+    print(
+        f"📊 Total: {len(items)} food items with nutrition data (total skipped: {skipped_count})"
+    )
 
     return items
 
@@ -391,6 +405,7 @@ async def build_embeddings_with_deepinfra(items: List[Dict]) -> np.ndarray:
     # Import shared service directly
     import sys
     from pathlib import Path
+
     repo_root = Path(__file__).parent.parent.parent.parent
     sys.path.insert(0, str(repo_root))
 
@@ -399,31 +414,38 @@ async def build_embeddings_with_deepinfra(items: List[Dict]) -> np.ndarray:
     print("\n🔨 Building embeddings with DeepInfra API...")
 
     # Prepare texts (full description)
-    texts = [item['description'] for item in items]
+    texts = [item["description"] for item in items]
 
-    # Initialize DeepInfra service
-    embedding_service = DeepInfraService(model_id="Qwen/Qwen3-Embedding-8B")
+    # Initialize DeepInfra service.
+    # E5: read EMBEDDING_MODEL env (same default as settings.DEFAULT_EMBEDDING_MODEL)
+    # so the DB index is built with the SAME model the query path uses — set
+    # EMBEDDING_MODEL once to A/B a candidate end-to-end (rebuild index + serve).
+    embedding_model = os.getenv("EMBEDDING_MODEL", "Qwen/Qwen3-Embedding-8B")
+    print(f"   embedding model: {embedding_model}")
+    embedding_service = DeepInfraService(model_id=embedding_model)
 
     # Process in batches (max 1024 per batch)
     batch_size = 1024
     all_embeddings = []
-    
+
     print(f"📍 Encoding {len(texts)} embeddings in batches of {batch_size}...")
-    
+
     for i in range(0, len(texts), batch_size):
-        batch = texts[i:i + batch_size]
+        batch = texts[i : i + batch_size]
         batch_num = i // batch_size + 1
         total_batches = (len(texts) + batch_size - 1) // batch_size
-        
-        print(f"  Batch {batch_num}/{total_batches}: {len(batch)} items (items {i+1}-{i+len(batch)})")
-        
+
+        print(
+            f"  Batch {batch_num}/{total_batches}: {len(batch)} items (items {i + 1}-{i + len(batch)})"
+        )
+
         batch_embeddings = await embedding_service.generate_embeddings(batch)
         all_embeddings.extend(batch_embeddings)
-        
+
         print(f"  ✓ Batch {batch_num}/{total_batches} completed")
 
     # Convert to numpy array
-    embeddings_array = np.array(all_embeddings).astype('float32')
+    embeddings_array = np.array(all_embeddings).astype("float32")
 
     print(f"✅ Embeddings shape: {embeddings_array.shape}")
 
@@ -458,9 +480,7 @@ def build_faiss_index(embeddings: np.ndarray) -> faiss.IndexFlatIP:
 
 
 def save_index_and_metadata(
-    index: faiss.IndexFlatIP,
-    items: List[Dict],
-    output_dir: str
+    index: faiss.IndexFlatIP, items: List[Dict], output_dir: str
 ):
     """
     Save FAISS index and metadata to disk
@@ -482,22 +502,20 @@ def save_index_and_metadata(
 
     # Save metadata with nutrition
     metadata_path = output_path / "usda_metadata.json"
-    with open(metadata_path, 'w', encoding='utf-8') as f:
+    with open(metadata_path, "w", encoding="utf-8") as f:
         json.dump(items, f, indent=2, ensure_ascii=False)
 
     # Calculate metadata size
     metadata_size_mb = metadata_path.stat().st_size / (1024 * 1024)
-    print(f"✅ Saved metadata: {metadata_path} ({len(items)} items, {metadata_size_mb:.1f}MB)")
+    print(
+        f"✅ Saved metadata: {metadata_path} ({len(items)} items, {metadata_size_mb:.1f}MB)"
+    )
 
     print("\n✅ All data saved successfully!")
 
 
-
-
 def load_portions_mapping_from_usda(
-    survey_path: str,
-    foundation_path: str,
-    sr_legacy_path: Optional[str] = None
+    survey_path: str, foundation_path: str, sr_legacy_path: Optional[str] = None
 ) -> Dict[int, Optional[List[Dict]]]:
     """
     Load portions mapping from original USDA data files
@@ -519,28 +537,32 @@ def load_portions_mapping_from_usda(
     # Load Survey (FNDDS)
     print(f"\n🔍 Loading Survey (FNDDS): {survey_path}")
     if Path(survey_path).exists():
-        with open(survey_path, 'r', encoding='utf-8') as f:
+        with open(survey_path, "r", encoding="utf-8") as f:
             survey_data = json.load(f)
-            for food in survey_data.get('SurveyFoods', []):
-                fdc_id = food.get('fdcId')
+            for food in survey_data.get("SurveyFoods", []):
+                fdc_id = food.get("fdcId")
                 if fdc_id:
                     portions = extract_portions_from_survey(food)
                     portions_map[fdc_id] = portions
-        print(f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions")
+        print(
+            f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions"
+        )
     else:
         print(f"   ⚠️ File not found: {survey_path}")
 
     # Load Foundation Food
     print(f"\n🔍 Loading Foundation Food: {foundation_path}")
     if Path(foundation_path).exists():
-        with open(foundation_path, 'r', encoding='utf-8') as f:
+        with open(foundation_path, "r", encoding="utf-8") as f:
             foundation_data = json.load(f)
-            for food in foundation_data.get('FoundationFoods', []):
-                fdc_id = food.get('fdcId')
+            for food in foundation_data.get("FoundationFoods", []):
+                fdc_id = food.get("fdcId")
                 if fdc_id:
                     portions = extract_portions_from_foundation(food)
                     portions_map[fdc_id] = portions
-        print(f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions (cumulative)")
+        print(
+            f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions (cumulative)"
+        )
     else:
         print(f"   ⚠️ File not found: {foundation_path}")
 
@@ -548,14 +570,16 @@ def load_portions_mapping_from_usda(
     if sr_legacy_path:
         print(f"\n🔍 Loading SR Legacy: {sr_legacy_path}")
         if Path(sr_legacy_path).exists():
-            with open(sr_legacy_path, 'r', encoding='utf-8') as f:
+            with open(sr_legacy_path, "r", encoding="utf-8") as f:
                 sr_data = json.load(f)
-                for food in sr_data.get('SRLegacyFoods', []):
-                    fdc_id = food.get('fdcId')
+                for food in sr_data.get("SRLegacyFoods", []):
+                    fdc_id = food.get("fdcId")
                     if fdc_id:
                         portions = extract_portions_from_sr_legacy(food)
                         portions_map[fdc_id] = portions
-            print(f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions (cumulative)")
+            print(
+                f"   ✅ Loaded {len([v for v in portions_map.values() if v])} foods with portions (cumulative)"
+            )
         else:
             print(f"   ⚠️ File not found: {sr_legacy_path}")
 
@@ -569,7 +593,7 @@ async def update_metadata_only(
     survey_path: str,
     foundation_path: str,
     sr_legacy_path: Optional[str],
-    metadata_path: Path
+    metadata_path: Path,
 ):
     """
     Update only metadata file with portions information (no FAISS rebuild)
@@ -596,7 +620,7 @@ async def update_metadata_only(
     portions_map = load_portions_mapping_from_usda(
         survey_path=survey_path,
         foundation_path=foundation_path,
-        sr_legacy_path=sr_legacy_path
+        sr_legacy_path=sr_legacy_path,
     )
 
     if not portions_map:
@@ -609,7 +633,7 @@ async def update_metadata_only(
     print("=" * 80)
 
     print(f"\n🔍 Loading metadata: {metadata_path}")
-    with open(metadata_path, 'r', encoding='utf-8') as f:
+    with open(metadata_path, "r", encoding="utf-8") as f:
         metadata = json.load(f)
 
     print(f"   ✅ Loaded {len(metadata)} food items")
@@ -619,27 +643,31 @@ async def update_metadata_only(
     null_count = 0
 
     for item in metadata:
-        fdc_id = item.get('fdc_id')
+        fdc_id = item.get("fdc_id")
         if fdc_id in portions_map:
-            item['portions'] = portions_map[fdc_id]
+            item["portions"] = portions_map[fdc_id]
             if portions_map[fdc_id] is not None:
                 updated_count += 1
             else:
                 null_count += 1
         else:
-            item['portions'] = None
+            item["portions"] = None
             null_count += 1
 
     # Save updated metadata
     print("\n💾 Saving updated metadata...")
-    with open(metadata_path, 'w', encoding='utf-8') as f:
+    with open(metadata_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
     print("   ✅ Metadata updated successfully!")
     print("\n📊 Statistics:")
     print(f"   - Total items: {len(metadata)}")
-    print(f"   - With portions: {updated_count} ({updated_count/len(metadata)*100:.1f}%)")
-    print(f"   - With null portions: {null_count} ({null_count/len(metadata)*100:.1f}%)")
+    print(
+        f"   - With portions: {updated_count} ({updated_count / len(metadata) * 100:.1f}%)"
+    )
+    print(
+        f"   - With null portions: {null_count} ({null_count / len(metadata) * 100:.1f}%)"
+    )
 
     print("\n" + "=" * 80)
     print("✅ Metadata-only update completed successfully!")
@@ -647,7 +675,10 @@ async def update_metadata_only(
     print("\n📝 Next steps:")
     print("   1. Restart the API to load updated metadata")
     print("   2. Test the retrieve endpoint to verify portions field")
-    print("   3. curl 'http://localhost:8006/api/v1/retrieve?q=chicken&mode=fast&top_k=1'\n")
+    print(
+        "   3. curl 'http://localhost:8006/api/v1/retrieve?q=chicken&mode=fast&top_k=1'\n"
+    )
+
 
 async def main_async():
     """Main async function"""
@@ -662,12 +693,12 @@ Examples:
 
   # Metadata-only update (only update portions, no FAISS rebuild)
   python build_index_with_nutrition.py --metadata-only
-        """
+        """,
     )
     parser.add_argument(
-        '--metadata-only',
-        action='store_true',
-        help='Update only metadata file with portions (no FAISS index rebuild)'
+        "--metadata-only",
+        action="store_true",
+        help="Update only metadata file with portions (no FAISS index rebuild)",
     )
 
     args = parser.parse_args()
@@ -682,8 +713,12 @@ Examples:
     usda_database_dir = project_root / "usda_database"
 
     survey_json = usda_database_dir / "surveyDownload.json"
-    foundation_json = usda_database_dir / "FoodData_Central_foundation_food_json_2025-04-24 2.json"
-    sr_legacy_json = usda_database_dir / "FoodData_Central_sr_legacy_food_json_2018-04 2.json"
+    foundation_json = (
+        usda_database_dir / "FoodData_Central_foundation_food_json_2025-04-24 2.json"
+    )
+    sr_legacy_json = (
+        usda_database_dir / "FoodData_Central_sr_legacy_food_json_2018-04 2.json"
+    )
     metadata_path = output_dir / "usda_metadata.json"
 
     # Check files exist
@@ -703,7 +738,7 @@ Examples:
             survey_path=str(survey_json),
             foundation_path=str(foundation_json),
             sr_legacy_path=str(sr_legacy_json),
-            metadata_path=metadata_path
+            metadata_path=metadata_path,
         )
         return
 
@@ -724,7 +759,7 @@ Examples:
         survey_path=str(survey_json),
         foundation_path=str(foundation_json),
         sr_legacy_path=str(sr_legacy_json),
-        include_portions=True  # Always include portions in full build
+        include_portions=True,  # Always include portions in full build
     )
 
     # Step 2: Build embeddings
@@ -743,8 +778,12 @@ Examples:
     print(f"  - Total items: {len(items)}")
     print(f"  - Index vectors: {index.ntotal}")
     print(f"  - Survey items: {sum(1 for item in items if item['source'] == 'survey')}")
-    print(f"  - Foundation items: {sum(1 for item in items if item['source'] == 'foundation')}")
-    print(f"  - SR Legacy items: {sum(1 for item in items if item['source'] == 'sr_legacy')}")
+    print(
+        f"  - Foundation items: {sum(1 for item in items if item['source'] == 'foundation')}"
+    )
+    print(
+        f"  - SR Legacy items: {sum(1 for item in items if item['source'] == 'sr_legacy')}"
+    )
     print(f"  - With portions: {sum(1 for item in items if item.get('portions'))}")
     print(f"  - Output: {output_dir}")
     print()

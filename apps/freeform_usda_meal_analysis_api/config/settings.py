@@ -157,6 +157,14 @@ class Settings:
         )
 
         # ========== Reranker設定 ==========
+        # Embeddingモデル設定（E5: A/B のため env で差し替え可能に。
+        # 既定は現行の Qwen3-Embedding-8B。query 側(usda_search)と DB 構築
+        # (build_index_with_nutrition) の双方が必ず同じモデルを使うこと=index と
+        # query の埋め込み空間を一致させるため。dim は埋め込みから自動。）
+        self.DEFAULT_EMBEDDING_MODEL = os.getenv(
+            "EMBEDDING_MODEL", "Qwen/Qwen3-Embedding-8B"
+        )
+
         # Rerankerモデル設定
         # NOTE: このデフォルト値はFirestore ConfigManagerのフォールバックとして使用
         # 本番環境ではFirestore (Admin Panel) の設定が優先される

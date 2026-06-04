@@ -25,12 +25,7 @@ class SimplifiedUSDASearcher:
     weight_main/fullの概念を削除し、fullインデックスのみで検索する簡素化版。
     """
 
-    def __init__(
-        self,
-        index_dir: str,
-        stage1_top_k: int = None,
-        device: str = "cpu"
-    ):
+    def __init__(self, index_dir: str, stage1_top_k: int = None, device: str = "cpu"):
         """
         Args:
             index_dir: FAISSインデックスディレクトリのパス
@@ -39,13 +34,14 @@ class SimplifiedUSDASearcher:
         """
         # 設定を取得 - ConfigManagerから動的設定
         from ..admin.config_manager import get_config_manager
+
         config_manager = get_config_manager()
         config = config_manager.get_config()
 
         # stage1_top_kが指定されていない場合はConfigManagerから取得
         if stage1_top_k is None:
             stage1_top_k = config.search.stage1_top_k
-            
+
         self.index_dir = Path(index_dir)
         self.stage1_top_k = stage1_top_k
         self.device = device
@@ -83,16 +79,23 @@ class SimplifiedUSDASearcher:
         if not metadata_path.exists():
             raise FileNotFoundError(f"Metadata not found: {metadata_path}")
 
-        with open(metadata_path, 'r', encoding='utf-8') as f:
+        with open(metadata_path, "r", encoding="utf-8") as f:
             self.items = json.load(f)
 
         logger.info(f"✅ Loaded metadata: {len(self.items)} items")
 
     def _load_embedding_model(self):
-        """埋め込みモデルをロード（DeepInfra API使用）"""
+        """埋め込みモデルをロード（DeepInfra API使用）。
+
+        E5: モデルは settings.DEFAULT_EMBEDDING_MODEL（env EMBEDDING_MODEL）で差し替え
+        可能。query 側と FAISS index 構築は同一モデルでなければならない。
+        """
         from .deepinfra_service import DeepInfraService
-        self.embedding_service = DeepInfraService(model_id="Qwen/Qwen3-Embedding-8B")
-        logger.info("✅ Embedding model initialized (DeepInfra API)")
+        from ..config import get_settings
+
+        model_id = get_settings().DEFAULT_EMBEDDING_MODEL
+        self.embedding_service = DeepInfraService(model_id=model_id)
+        logger.info(f"✅ Embedding model initialized (DeepInfra API): {model_id}")
 
     def _load_reranker(self):
         """リランカーをロード（DeepInfra API使用）
@@ -102,6 +105,7 @@ class SimplifiedUSDASearcher:
         取得され、rerank_batch()のmodelパラメータとして渡される。
         """
         from .deepinfra_service import DeepInfraService
+
         # Rerankerサービスをモデル非依存で初期化
         # 実際のモデルはAPI呼び出し時に指定される
         self.reranker_service = DeepInfraService(model_id="reranker-client")
@@ -113,7 +117,7 @@ class SimplifiedUSDASearcher:
         query_descriptors: str = "",
         return_top_k: int = 1,
         reranker_instruction: Optional[str] = None,
-        reranker_model: Optional[str] = None
+        reranker_model: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         検索を実行（Fullインデックスのみ使用、DeepInfra API）
@@ -142,7 +146,7 @@ class SimplifiedUSDASearcher:
         # Stage 1: FAISS検索（Fullインデックスのみ）
         # DeepInfra APIでembeddingを生成
         embeddings = await self.embedding_service.generate_embeddings([full_query])
-        query_vector = np.array(embeddings[0]).astype('float32').reshape(1, -1)
+        query_vector = np.array(embeddings[0]).astype("float32").reshape(1, -1)
 
         # FAISS検索
         distances, indices = self.index_full.search(query_vector, self.stage1_top_k)
@@ -152,15 +156,17 @@ class SimplifiedUSDASearcher:
         for idx, dist in zip(indices[0], distances[0]):
             if idx < len(self.items):
                 item = self.items[idx]
-                candidates.append({
-                    "fdc_id": item["fdc_id"],
-                    "description": item["description"],
-                    "main_name": item.get("main_name", ""),
-                    "descriptors": item.get("descriptors", ""),
-                    "source": item.get("source", "unknown"),
-                    "stage1_score": float(dist),
-                    "index": int(idx)
-                })
+                candidates.append(
+                    {
+                        "fdc_id": item["fdc_id"],
+                        "description": item["description"],
+                        "main_name": item.get("main_name", ""),
+                        "descriptors": item.get("descriptors", ""),
+                        "source": item.get("source", "unknown"),
+                        "stage1_score": float(dist),
+                        "index": int(idx),
+                    }
+                )
 
         logger.info(f"📊 Stage 1: Retrieved {len(candidates)} candidates")
 
@@ -173,6 +179,7 @@ class SimplifiedUSDASearcher:
 
         # ConfigManager（Firestore）を単一の設定ソースとして使用
         from ..admin.config_manager import get_config_manager
+
         config_manager = get_config_manager()
         config = config_manager.get_config()
 
@@ -185,14 +192,18 @@ class SimplifiedUSDASearcher:
             reranker_model = config.reranker.model
 
         logger.info(f"  Reranker model: {reranker_model} (from ConfigManager)")
-        logger.info(f"  Reranker instruction: {reranker_instruction[:100]}..." if len(reranker_instruction) > 100 else f"  Reranker instruction: {reranker_instruction}")
+        logger.info(
+            f"  Reranker instruction: {reranker_instruction[:100]}..."
+            if len(reranker_instruction) > 100
+            else f"  Reranker instruction: {reranker_instruction}"
+        )
 
         # リランキング実行（DeepInfra API）
         best_idx, reranked_scores = await self.reranker_service.rerank(
             query=full_query,
             documents=documents,
             model=reranker_model,
-            instruction=reranker_instruction
+            instruction=reranker_instruction,
         )
 
         # スコアを候補に追加
@@ -200,20 +211,21 @@ class SimplifiedUSDASearcher:
             candidates[i]["rerank_score"] = float(score)
 
         # スコア順にソート
-        candidates_sorted = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
+        candidates_sorted = sorted(
+            candidates, key=lambda x: x["rerank_score"], reverse=True
+        )
 
-        logger.info(f"✅ Best match: {candidates_sorted[0]['description']} (score: {candidates_sorted[0]['rerank_score']:.4f})")
+        logger.info(
+            f"✅ Best match: {candidates_sorted[0]['description']} (score: {candidates_sorted[0]['rerank_score']:.4f})"
+        )
 
         return {
             "best_match": candidates_sorted[0],
-            "all_candidates": candidates_sorted[:return_top_k]
+            "all_candidates": candidates_sorted[:return_top_k],
         }
 
     def search(
-        self,
-        query: str,
-        search_mode: str = "full_index_only",
-        stage1_top_k: int = 1
+        self, query: str, search_mode: str = "full_index_only", stage1_top_k: int = 1
     ) -> Dict[str, Any]:
         """
         検索を実行（同期ラッパー）
