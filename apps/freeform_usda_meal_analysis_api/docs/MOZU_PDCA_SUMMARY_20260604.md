@@ -46,6 +46,6 @@
 
 ## 次の一手（優先順）
 1. **実 mozu ドメインの measured アンカー構築**（Western・eye-level phone 20-50枚を実測×USDA）→ ここで初めて calorie の本採用判定 & 乗算的 calibration が可能。
-2. **portion 過小（大皿圧縮）の是正**：v13 の portion anchor / density 指示を大型マルチ品向けに改善（モデル非依存で効く本丸）。
+2. ~~**portion 過小（大皿圧縮）の是正**~~ → **試行済・本命レンジに効かず（2026-06-04）**。v14（anchor を視覚量にスケール＋重量上限緩和）は **calib_slope 0.118→0.170 と圧縮を緩和したが、MAE 改善は非現実的な特大>1500kcal 巨大皿のみ由来で、現実的 200-1500kcal は 27.1→27.0% と改善ゼロ（全帯 NS）**。→ **本命レンジの ~27% 誤差は「圧縮」でなく per-item（グラム/マッチング）が要因**。prompt-portion は lever でない。不採用（v13維持）。lesson `20260604_v14_portion_scaling_helps_slope_but_not_realistic_range`。残: 小皿過大は weight floor 80→20 で別途試行可。
 3. **recognition の多 cuisine 汎化チェック**（UEC-Food256 等）で pro の唯一の優位が保たれるか確認。
 4. 本番 deploy は上記が揃ってから（要ユーザ明示指示・予算確認）。
