@@ -42,7 +42,7 @@
 ## 結論 / 推奨（2026-06-04 最終）
 - 🔴 **pro 採用を撤回し flash を推奨**。pro は **calorie でも recognition でも、独立 GT に対し flash への頑健な優位が無い**（calorie=符号 flip／recognition=クリーン GT で flash 82.5 vs pro 80.6%）。**~3.2x のコストを正当化できない → flash（同等精度・1/3コスト）**。コード既定は現状 pro のまま＝**要 flash へ戻す（ユーザ明示指示待ち）**。
 - **「欧米料理で十分汎用的か」への答え**: 現状の v13 + USDA 検索パイプラインは、**実世界の欧米料理で総カロリー MAE ~40-60%**（本命 200-1500kcal で ~27%, near-unbiased）。frozen-50 が示した ~18% は楽観。誤差は**系統 bias でなく純粋分散**（portion:matching = 50:50）で、prompt-tuning では動かない。recognition は良好（~82%）。
-- **残る本物の lever**（モデル選択でなくこれが本質）: ①**分散低減（self-consistency）= 部分的に有望だが未確定**（同一temp の ensemble 効果は両セットで正＝分散低減は本物だが、多様性を得る temp 上げのコストが分布依存で、temp0.5 K=3 は NVReal だけ net 勝ち・N5k は net 改善せず。要 temp sweep）②実 mozu measured データでの per-food-type calibration ③recognition 個別失敗（lobster/jam/cucumber）の是正。
+- **残る本物の lever**（モデル選択でなくこれが本質）: ①**分散低減（self-consistency）= robust だが控えめ ~2pt**（flash temp0.3 K=3 seeds median が本命 MAE を pool で −2.1pt p=0.02 削る。3×推論コストの価値判断あり。最有力の calorie lever）②実 mozu measured データでの per-food-type calibration ③recognition 個別失敗（lobster/jam/cucumber）の是正。
 - **calorie の最終 arbiter は実 mozu ユーザーの measured データのみ**。3つの公開セットはいずれも lab/studio で、真の本番分布ではない。
 
 ## 本命レンジ誤差の分解（2026-06-04・無料診断）
@@ -58,7 +58,7 @@
 - **本命 200-1500kcal: 本番 temp0.3 single 28.6% → K=3 median ensemble 21.6%（Δ−6.9pt, paired CI[-13.7,-0.7] 有意, n=40 NVReal）**。
 - **median > mean**、**K=3 が sweet spot**（K=4/5 頭打ち）、temp~0.5 の多様性（CV0.13）が必須（temp0.3 は再現的すぎて効かない）。
 - コスト 3×flash ≈ single pro だが精度は pro 超（21.6% vs pro ~27%+）。
-- ⚠️ **N5k 汎化確認(2026-06-04)→net 改善は非頑健**: N5k 本命では temp0.3 single 37.8% → K=3 median 40.9%(+3.2pt NS=改善せず)。**同一temp の ensemble 効果は両セットで正(分散低減は汎化)**だが、多様性を得る temp0.5 が N5k の単一精度を +6pt 悪化させ相殺。NVReal の勝ちは temp 運。**temp0.5 K=3 は採用しない**。要 temp sweep(0.3/0.4)で diversity と単一精度の両立点を探す（or seed/paraphrase で diversity を temp から分離）。lesson `20260604_self_consistency_median_ensemble_significant_calorie_win`。
+- **決着(2026-06-04)**: temp0.5 は N5k で温度ペナルティが ensemble を相殺し net 改善せず。温度交絡を除いた **本番 temp0.3・seed違い K=3 median** で再評価→ **median-of-3 vs 期待単一: 両セット pool(n=128) −2.1pt CI[-3.94,-0.35] p=0.02 有意**(NVReal −2.8/N5k −1.1)。temp0.3 でも seed違いで CV~0.10 の多様性あり＝ペナルティ無し。**結論: self-consistency は robust だが控えめ(~2pt)**。推奨recipe **flash temp0.3 K=3 seeds median(total_calorie)**。先の temp0.5「−7pt」は temp運+小n の過大評価。採用は 3×推論コスト(並列化可)を ~2pt で正当化するか＝プロダクト判断。要 pipeline wrapper。lesson `20260604_self_consistency_median_ensemble_significant_calorie_win`。
 
 ## 次の一手（優先順）
 1. **実 mozu ドメインの measured アンカー構築**（Western・eye-level phone 20-50枚を実測×USDA）→ ここで初めて calorie の本採用判定 & 乗算的 calibration が可能。
