@@ -1,6 +1,14 @@
-# mozu モデル採用決定: gemini-3.1-pro（2026-06-03）
+# mozu モデル採用決定: gemini-3.1-pro（2026-06-03）→ 🔴 2026-06-04 撤回推奨（flash 推奨）
 
 このアプリ（`freeform_usda_meal_analysis_api`）は **mozu**（Finch 型の高単価 calorie tracker app）用 API。本ドキュメントは VLM 採用モデルの決定記録（SSOT）。
+
+> ## 🔴 2026-06-04 最終結論: pro 採用を撤回し flash を推奨（独立 GT 検証の帰結）
+> 独立・実測/クリーン GT での検証の結果、**pro は calorie でも recognition でも flash への頑健な優位が無い**:
+> - **calorie**: 3 独立セットで pro−flash の符号 flip（frozen-50≈／N5k −7pt borderline／NVReal +2.2 NS）＝頑健な優位なし。本命レンジ(200-1500kcal)は両モデルとも near-unbiased で誤差は純粋分散（lesson `20260604_realistic_range_error_decomposition_grams_vs_density`）。
+> - **recognition**: 唯一の砦だったが、**クリーン独立 GT（NVReal COCO, 104画像)で pro 80.6% vs flash 82.5% recall ＝ pro やや劣・誤認多・per-image 引き分け**。frozen-50 の「pro 4/4」は GPT-5-pro 命名との一致度で、実食材識別力ではなかった（lesson `20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational`）。
+> - **→ 推奨 = flash**（同等精度で ~1/3 コスト。pro は 3.2x を正当化できない）。**コード既定(settings.py/config_manager)は現状 pro のまま＝要 flash へ戻す（ユーザ明示指示待ち）**。本番 deploy も未実施。
+> - 残る本物の改善 lever は **実 mozu measured データでの calibration** と **recognition の個別失敗（lobster/jam/cucumber）是正**、**分散低減**。pro/flash の選択でなく、これらが本質。
+> - 以下の旧記述（pro 採用前提）は上記により上書き。歴史的経緯として残す。
 
 > ## ⚠️ 2026-06-03 重要訂正（GT 妥当性レビュー後）
 > **frozen-50 の GT は GPT-5-pro の推定値**（confidence フィールド・5g丸め重量で確定）。よって本書の **calorie 系の数値は「実精度」でなく「GPT-5-pro との一致度」**。訂正点（詳細・根拠: `evals/lessons/20260603_frozen50_gt_is_gpt5pro_estimate_two_gate_strategy.md`）:

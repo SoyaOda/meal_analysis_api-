@@ -30,18 +30,19 @@
 ### C. 共通の弱点 = 大皿の過小評価
 - 両モデルとも calib_slope ≈ 0.12-0.72：料理が大きいほど予測が圧縮され、大型マルチ品プレートを大幅過小評価。portion 推定が本質的弱点（モデル差より大きい）。
 
-### D. pro で生き残る根拠 = recognition のみ（ただし狭い）
-- frozen-50 で recognition F1 が flash 比 **4/4 run 再現的に向上**（決定的・信頼）。
-- ただし N5k/NVReal では成分名が USDA 形式と token 不一致で recognition を測れず、**外部での再確認ができていない**。
-- pro は run 間再現性が flash より低い（bit-identical 20% vs 52%）＝本番で「同写真→kcal 揺れ」が大きいトレードオフ。
+### D. pro の recognition 優位も独立 GT で消滅（最後の砦が崩れた・2026-06-04）
+- frozen-50 では recognition F1 が flash 比 4/4 向上に見えたが、それは **GPT-5-pro の命名との一致度**。
+- **クリーンな独立 GT（NutritionVerse-Real の COCO 食材ラベル, 104画像/309食材）で再測定**（既存 flash/pro 予測を Claude judge で意味採点, OpenRouter課金ゼロ）: **flash recall 82.5% vs pro 80.6%（pro やや劣・誤認多・per-image 引き分け75/104）**。→ **pro に recognition の実優位は無い**。
+- recognition 自体は良好（~82% recall）。token-F1 0.12 は名前形式のマッチング artifact だった。失敗モード=lobster見落とし/jam-toast果物誤認/cucumber。
+- pro は run 間再現性も flash より低い（bit-identical 20% vs 52%）。
 
 ### E. 運用上の落とし穴（記録済）
 - 外部 eval セットは **必ず画像を目視**：NutritionVerse-Real は image `dish_N` ≠ metadata `dish_id` で、naive id-join が **40% の GT を誤らせた**。schema/合計チェックでは検出不能。COCO 内容ベース join + 目視で 104 件に是正。
 
-## 結論 / 推奨
-- **pro 採用の calorie 根拠は崩れた**。calorie だけ見れば pro と flash は実測で互角〜分布次第で flash 優位もあり、**追加コスト ~3.2x を calorie 精度で正当化できない**。
-- **pro を採るなら根拠は recognition（4/4）に限定**し、それを実 mozu データで再確認することが前提。コスト優先なら **flash で十分**という判断も合理的。
-- **「欧米料理で十分汎用的か」への答え**: 現状の v13 + USDA 検索パイプラインは、**実世界の欧米料理で総カロリー MAE ~40-60%**。frozen-50 が示した ~18% は楽観。大皿の portion 過小評価が主因で、これは **モデル選択でなくプロンプト/portion 設計の課題**。
+## 結論 / 推奨（2026-06-04 最終）
+- 🔴 **pro 採用を撤回し flash を推奨**。pro は **calorie でも recognition でも、独立 GT に対し flash への頑健な優位が無い**（calorie=符号 flip／recognition=クリーン GT で flash 82.5 vs pro 80.6%）。**~3.2x のコストを正当化できない → flash（同等精度・1/3コスト）**。コード既定は現状 pro のまま＝**要 flash へ戻す（ユーザ明示指示待ち）**。
+- **「欧米料理で十分汎用的か」への答え**: 現状の v13 + USDA 検索パイプラインは、**実世界の欧米料理で総カロリー MAE ~40-60%**（本命 200-1500kcal で ~27%, near-unbiased）。frozen-50 が示した ~18% は楽観。誤差は**系統 bias でなく純粋分散**（portion:matching = 50:50）で、prompt-tuning では動かない。recognition は良好（~82%）。
+- **残る本物の lever**（モデル選択でなくこれが本質）: ①実 mozu measured データでの per-food-type calibration ②分散低減（self-consistency / multi-view）③recognition 個別失敗（lobster/jam/cucumber）の是正。
 - **calorie の最終 arbiter は実 mozu ユーザーの measured データのみ**。3つの公開セットはいずれも lab/studio で、真の本番分布ではない。
 
 ## 本命レンジ誤差の分解（2026-06-04・無料診断）
@@ -55,5 +56,6 @@
 ## 次の一手（優先順）
 1. **実 mozu ドメインの measured アンカー構築**（Western・eye-level phone 20-50枚を実測×USDA）→ ここで初めて calorie の本採用判定 & 乗算的 calibration が可能。
 2. ~~**portion 過小（大皿圧縮）の是正**~~ → **試行済・本命レンジに効かず（2026-06-04）**。v14（anchor を視覚量にスケール＋重量上限緩和）は **calib_slope 0.118→0.170 と圧縮を緩和したが、MAE 改善は非現実的な特大>1500kcal 巨大皿のみ由来で、現実的 200-1500kcal は 27.1→27.0% と改善ゼロ（全帯 NS）**。→ **本命レンジの ~27% 誤差は「圧縮」でなく per-item（グラム/マッチング）が要因**。prompt-portion は lever でない。不採用（v13維持）。lesson `20260604_v14_portion_scaling_helps_slope_but_not_realistic_range`。残: 小皿過大は weight floor 80→20 で別途試行可。
-3. **recognition の多 cuisine 汎化チェック**（UEC-Food256 等）で pro の唯一の優位が保たれるか確認。
-4. 本番 deploy は上記が揃ってから（要ユーザ明示指示・予算確認）。
+3. ~~**recognition で pro の優位が保たれるか確認**~~ → **実施済・pro優位なし（2026-06-04）**。クリーン独立 GT（NVReal COCO）で flash 82.5 vs pro 80.6% recall。recognition 自体は ~82% で良好。改善するなら個別失敗（lobster見落とし/jam-toast果物誤認/cucumber）を狙う。lesson `20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational`。
+4. **モデル既定を flash へ戻す**（settings.py/config_manager, 現状 pro）＝要ユーザ明示指示。
+5. 本番 deploy は上記が揃ってから（要ユーザ明示指示・予算確認）。
