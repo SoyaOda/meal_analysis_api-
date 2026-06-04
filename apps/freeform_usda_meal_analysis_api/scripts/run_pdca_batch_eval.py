@@ -235,6 +235,26 @@ def compute_decomposed_metrics(success_rows: List[Dict[str, Any]]) -> Dict[str, 
     abs_kcal: List[float] = []
     pairs: List[tuple] = []  # (label_cal, pred_cal)
     macro_errs: Dict[str, List[float]] = {"protein": [], "fat": [], "carbs": []}
+    # F4 (2026-06-04, 3-AI review): %-error explodes for low-denominator macros
+    # (fat MAE% is unstable), so track ABSOLUTE-gram macro MAE; and bucket the
+    # calorie abs%-error by meal size so a promotion can be guarded against
+    # subgroup regression (small/realistic/large). Additive keys only.
+    macro_abs: Dict[str, List[float]] = {"protein": [], "fat": [], "carbs": []}
+    bucket_errs: Dict[str, List[float]] = {
+        "lt_300": [],
+        "300_700": [],
+        "700_1500": [],
+        "gte_1500": [],
+    }
+
+    def _cal_bucket(lc: float) -> str:
+        if lc < 300:
+            return "lt_300"
+        if lc < 700:
+            return "300_700"
+        if lc < 1500:
+            return "700_1500"
+        return "gte_1500"
 
     for r in success_rows:
         label = r.get("label") or {}
@@ -245,9 +265,11 @@ def compute_decomposed_metrics(success_rows: List[Dict[str, Any]]) -> Dict[str, 
             signed.append((pc - lc) / lc * 100.0)
             abs_kcal.append(abs(pc - lc))
             pairs.append((lc, pc))
+            bucket_errs[_cal_bucket(lc)].append(abs(pc - lc) / lc * 100.0)
         for macro in macro_errs:
             lv = float(label.get(macro, 0) or 0)
             pv = float(pred.get(macro, 0) or 0)
+            macro_abs[macro].append(abs(pv - lv))  # absolute grams (denominator-free)
             if lv > 0:
                 macro_errs[macro].append(abs(pv - lv) / lv * 100.0)
 
@@ -260,6 +282,17 @@ def compute_decomposed_metrics(success_rows: List[Dict[str, Any]]) -> Dict[str, 
         "macro_mae_percent": {
             macro: (round(_mean(vals), 4) if vals else None)
             for macro, vals in macro_errs.items()
+        },
+        "macro_abs_gram_mae": {
+            macro: (round(_mean(vals), 4) if vals else None)
+            for macro, vals in macro_abs.items()
+        },
+        "calorie_bucket_mae_percent": {
+            bucket: {
+                "mae_percent": round(_mean(vals), 4) if vals else None,
+                "n": len(vals),
+            }
+            for bucket, vals in bucket_errs.items()
         },
         "n": len(pairs),
     }

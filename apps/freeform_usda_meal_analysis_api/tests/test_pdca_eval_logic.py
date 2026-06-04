@@ -1,10 +1,43 @@
 from apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval import (
     EmbeddingSimilarity,
+    compute_decomposed_metrics,
     detect_prompt_leakage,
     dish_match_metrics,
     gate_decision,
     portion_score_from_bands,
 )
+
+
+def test_decomposed_metrics_adds_macro_abs_and_calorie_buckets() -> None:
+    # F4: absolute-gram macro MAE (denominator-free) + per-size-bucket calorie MAE,
+    # added as NEW keys without removing the existing decomposition keys.
+    rows = [
+        {
+            "label": {"calories": 200, "protein": 10, "fat": 5, "carbs": 20},
+            "prediction": {"calories": 260, "protein": 8, "fat": 12, "carbs": 18},
+        },
+        {
+            "label": {"calories": 2000, "protein": 80, "fat": 90, "carbs": 150},
+            "prediction": {"calories": 900, "protein": 40, "fat": 30, "carbs": 80},
+        },
+    ]
+    m = compute_decomposed_metrics(rows)
+    # backward-compatible: existing keys still present
+    for k in ("signed_mean_error_percent", "macro_mae_percent", "abs_kcal_mae"):
+        assert k in m
+    # new absolute-gram macro MAE: fat |12-5|=7 and |30-90|=60 -> mean 33.5
+    assert abs(m["macro_abs_gram_mae"]["fat"] - 33.5) < 1e-6
+    # buckets route by true calories: 200 -> lt_300 (30%), 2000 -> gte_1500 (55%)
+    buckets = m["calorie_bucket_mae_percent"]
+    assert (
+        buckets["lt_300"]["n"] == 1
+        and abs(buckets["lt_300"]["mae_percent"] - 30.0) < 1e-6
+    )
+    assert (
+        buckets["gte_1500"]["n"] == 1
+        and abs(buckets["gte_1500"]["mae_percent"] - 55.0) < 1e-6
+    )
+    assert buckets["300_700"]["n"] == 0
 
 
 def _baseline() -> dict:
