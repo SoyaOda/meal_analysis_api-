@@ -192,11 +192,12 @@ Examples:
 Prioritize: Complete phrase match > Preparation method match > Ingredient name similarity""",
         )
 
-        # Reranker top_n (返す結果数、Noneの場合は全件)
+        # Reranker top_n。**E7 採用(2026-06-05)**: top_n>1 で top-k density mixture
+        # (E[kcal/100g] を rerank-softmax で混合) が有効化される。既定 5 は frozen-VLM A/B
+        # で calorie MAE を robust に改善（draw#1 −4.0pt p=0.042 / draw#2 −2.1pt 同方向 /
+        # k-sweep 単調改善、p90・high30 も改善。lesson 20260605_e7_*）。top_n=1 で従来 top-1。
         self.DEFAULT_RERANKER_TOP_N = (
-            int(os.getenv("RERANKER_TOP_N", "0"))
-            if os.getenv("RERANKER_TOP_N")
-            else None
+            int(os.getenv("RERANKER_TOP_N", "0")) if os.getenv("RERANKER_TOP_N") else 5
         )
 
         # ========== Thinkingモデル推奨設定 ==========

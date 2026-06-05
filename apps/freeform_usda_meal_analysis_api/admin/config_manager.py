@@ -109,10 +109,10 @@ Prioritize: Complete phrase match > Preparation method match > Ingredient name s
         description="Reranker instruction for USDA food matching",
     )
     top_n: Optional[int] = Field(
-        default=None,
+        default=5,
         ge=1,
         le=100,
-        description="Number of results to return (None = all)",
+        description="Reranker top-k. >1 で top-k density mixture(E7)を有効化（既定5）。1=従来top-1",
     )
 
 
