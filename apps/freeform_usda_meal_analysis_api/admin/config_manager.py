@@ -93,7 +93,7 @@ class RerankerConfig(BaseModel):
     model_config = ConfigDict(protected_namespaces=())
 
     model: str = Field(
-        default="Qwen/Qwen3-Reranker-4B", description="Reranker model name"
+        default="Qwen/Qwen3-Reranker-0.6B", description="Reranker model name"
     )
     instruction: str = Field(
         default="""Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.

@@ -49,6 +49,15 @@ Paired vs 8B+4B: **−3.45pt CI[−11.71,+3.41]**, win/tie/lose 25/3/22. p90 imp
 
 The cache=false (unpaired, independent VLM) result **−3.87pt MAE** corroborates the frozen-VLM paired result (−3.45pt) → the light-stack quality gain is **robust to VLM variation**, not a frozen-VLM artifact. End-to-end latency −7.1s (−27%) even with the 8B already partially warm; in low-traffic production where the 8B serverless goes fully cold (28-31s embedding), the latency win is far larger.
 
+## Stability repeat (2nd independent VLM draw, 2026-06-05) — CORRECTS the −3.45pt to a WASH
+Re-ran the combined light stack vs 8B+4B on a SECOND frozen VLM draw (fresh VLM_CACHE_DIR, real-VLM repopulate, then light arm cache-HIT 50/50 → paired retrieval isolation on a new draw):
+| draw | 8B+4B MAE% | 0.6B+0.6B MAE% | paired dMAE |
+|---|---|---|---|
+| draw#1 | 22.29 | 18.84 | −3.45 [−11.7,+3.4] |
+| **draw#2** | **18.28** | **19.24** | **+0.96 [−4.5,+6.1]** |
+
+The light-stack vs 8B+4B delta FLIPS sign between draws (−3.45 / +0.96), and the 8B+4B baseline itself swings 22.3→18.3 between draws. **VLM-draw variance dominates at n=50.** Honest conclusion: **the light stack is calorie-NEUTRAL (non-inferior within noise), NOT a −3.45pt improvement** — the earlier single-draw −3.45/−3.87pt were favorable draws. The reranker 0.6B does show a consistently better p90 tail across draws (vs 4B's 45→worst), and 0.6B embedding is non-inferior. → **Adoption rationale = the decisive latency/cost win (0.6B embedding ~9× faster, removes the 28-31s serverless cold-start; both 0.6B = cheaper/smaller) at calorie non-inferiority. Do NOT claim a calorie improvement.** (This is exactly why the non-negotiable stability repeat exists — it caught the over-optimistic single run.)
+
 ## Promotion gate (F3 AND-condition) verdict
 - MAE ≥2pt improvement: ✓ (point −3.45pt) — but **paired CI upper < 0: ✗** (+3.41 at n=50, heterogeneity-driven).
 - p90 non-degraded: ✓ (improved). bias non-degraded: ✓. 30%+ non-degraded: ✓ (~tie). dish_match non-degraded: ✓ (improved). latency/cost budget: ✓✓ (large win).

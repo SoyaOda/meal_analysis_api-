@@ -161,15 +161,20 @@ class Settings:
         # 既定は現行の Qwen3-Embedding-8B。query 側(usda_search)と DB 構築
         # (build_index_with_nutrition) の双方が必ず同じモデルを使うこと=index と
         # query の埋め込み空間を一致させるため。dim は埋め込みから自動。）
+        # 既定 = light スタック（0.6B）。8B 比で calorie 非劣性（2 draw で wash）かつ
+        # 埋め込み ~9× 低レイテンシ・28-31s serverless cold-start 解消（lesson
+        # 20260604_e5e6_lightweight_embedding_reranker_ab / 20260605_cross_provider_*）。
+        # NOTE: index(data/faiss) も同じ 0.6B(dim1024) でなければ dim mismatch。
         self.DEFAULT_EMBEDDING_MODEL = os.getenv(
-            "EMBEDDING_MODEL", "Qwen/Qwen3-Embedding-8B"
+            "EMBEDDING_MODEL", "Qwen/Qwen3-Embedding-0.6B"
         )
 
         # Rerankerモデル設定
         # NOTE: このデフォルト値はFirestore ConfigManagerのフォールバックとして使用
         # 本番環境ではFirestore (Admin Panel) の設定が優先される
+        # 既定 = 0.6B（4B 比で p90 tail 一貫改善・calorie 非劣性・安価/高速）。
         self.DEFAULT_RERANKER_MODEL = os.getenv(
-            "RERANKER_MODEL", "Qwen/Qwen3-Reranker-4B"
+            "RERANKER_MODEL", "Qwen/Qwen3-Reranker-0.6B"
         )
 
         # Reranker instruction (USDA食材マッチング用に最適化)
