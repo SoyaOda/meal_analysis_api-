@@ -1,6 +1,6 @@
 # PDCA Session Bootstrap Snapshot
 
-- generated_at_utc: 2026-06-04T13:23:20.404224+00:00
+- generated_at_utc: 2026-06-05T07:24:17.150809+00:00
 - scope: apps/freeform_usda_meal_analysis_api
 
 ## Must Read (in order)
@@ -22,28 +22,28 @@
 - note: `Reality-reset 2026-06-01: the prior 11.38% baseline (v11b, 2026-02-25) NO LONGER reproduces; gemini-3-flash-preview + v13 + fixed retrieval now measures ~20.5% (corroborated: 20.27% remote run 20260601_204037, 20.65% local run 20260601_221426). Newer Gemini models do not recover (3.5-flash worse, 3.1-flash-lite equal+slower; lesson 20260601_model_drift_newer_gemini_no_recovery). Root cause not yet localized; recovery toward 11% is the goal once decomposed metrics localize it. Old baseline kept at baseline_20260225_gemini3_flash_v11b_component_density_temp03.json.`
 
 ## Latest Lessons (top 5)
+- file: `evals/lessons/20260605_e7_topk_density_mixture_robust_calorie_win_adopted.md`
+  - title: # Lesson: E7 top-k density mixture is a ROBUST, significant calorie-MAE win (~−3pt) — the session's first real accuracy lever. ADOPTED as default (reranker.top_n=5). Frozen-VLM isolation made it measurable where VLM-draw noise killed E2/E12.
+  - 2026-06-05
+  - -
+  - -
+- file: `evals/lessons/20260605_e2_weight_floor20_inconclusive_50set_no_small_dish_data.md`
+  - title: # Lesson: E2 weight floor 80→20 — harmless overall (−0.68pt, NS) but the small-dish target (<300 kcal) is UNTESTABLE on the 50-set (no GT<300 images). Plus E12, this confirms the meta-finding: small data-independent levers cannot be validated on the 50-set; they need pooled N5k+NVReal.
+  - 2026-06-05
+  - -
+  - -
+- file: `evals/lessons/20260605_e12_self_consistency_v2_parallel_no_reproduce_at_n50.md`
+  - title: # Lesson: E12 self-consistency v2 — parallelization SHIPPED (latency ~1.15× not 3×), but K=3 median did NOT reproduce the −2pt calorie win at n=50 (a lucky-good single baseline draw → median regresses to mean). K=3's value is variance reduction (needs pooled large-N to show), not a single-run guarantee. K=1 kept as default.
+  - 2026-06-05
+  - -
+  - -
+- file: `evals/lessons/20260605_cross_provider_retrieval_no_clean_win.md`
+  - title: # Lesson: cross-provider "best regardless of provider" retrieval A/B — NO premium embedding or reranker cleanly beats the free open lightweight models for USDA calorie estimation. The retrieval slot is at its useful ceiling; the real levers are the VLM + input info (E8/E13/E14).
+  - 2026-06-05
+  - -
+  - -
 - file: `evals/lessons/20260604_v14_portion_scaling_helps_slope_but_not_realistic_range.md`
   - title: # Lesson: v14 portion-scaling raises the calorie slope but does NOT improve the realistic meal range — range-compression lives only in the unrealistic giant-plate tail
-  - 2026-06-04
-  - -
-  - -
-- file: `evals/lessons/20260604_self_consistency_median_ensemble_significant_calorie_win.md`
-  - title: # Lesson: self-consistency (median-of-K ensemble) — pure variance-reduction effect is REAL and generalizes (−3 to −4pt at fixed temp), but the NET win is temperature-confounded and did NOT replicate on N5k (NVReal-only at temp 0.5)
-  - 2026-06-04
-  - -
-  - -
-- file: `evals/lessons/20260604_recognition_union_self_consistency_not_clean_win.md`
-  - title: # Lesson: recognition self-consistency (union of K samples) trades recall for wrong-food — NOT a clean win; recognition misses are mostly SYSTEMATIC, not variance
-  - 2026-06-04
-  - -
-  - -
-- file: `evals/lessons/20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational.md`
-  - title: # Lesson: recognition on CLEAN independent GT (NVReal COCO) — pro has NO edge over flash (tie/slightly worse). The last pillar of the pro case collapses → flash is cost-rational.
-  - 2026-06-04
-  - -
-  - -
-- file: `evals/lessons/20260604_realistic_range_error_decomposition_grams_vs_density.md`
-  - title: # Lesson: realistic-range (200-1500 kcal) calorie error decomposed — near-ZERO bias, ~50/50 grams vs density, the two systematic edges CANCEL → single-lever fixes don't help
   - 2026-06-04
   - -
   - -

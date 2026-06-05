@@ -231,6 +231,10 @@ ENV_VARS="${ENV_VARS},ENVIRONMENT=${ENVIRONMENT}"
 # 必須APIキー
 ENV_VARS="${ENV_VARS},DEEPINFRA_API_KEY=${DEEPINFRA_API_KEY}"
 ENV_VARS="${ENV_VARS},OPENROUTER_API_KEY=${OPENROUTER_API_KEY}"
+# E7+light: embedding モデルを明示 pin（code 既定と同値）。
+# baked FAISS index(data/faiss, dim1024) と埋め込み空間を coupling 明示化し、
+# 将来 code 既定が変わった際の dim mismatch / 部分 rollback 事故を防ぐ。
+ENV_VARS="${ENV_VARS},EMBEDDING_MODEL=Qwen/Qwen3-Embedding-0.6B"
 
 # ALIBABA_API_KEY が設定されている場合は追加（オプション）
 if [ ! -z "$ALIBABA_API_KEY" ]; then
