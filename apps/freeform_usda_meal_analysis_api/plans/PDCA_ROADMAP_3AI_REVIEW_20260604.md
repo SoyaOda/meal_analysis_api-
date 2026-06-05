@@ -122,4 +122,45 @@ README「主役=総カロリーMAE」 vs EVAL_RUBRIC「最終KPI=USER CONVICTION
 **進め方の原則**（過去PDCA継続）: 1度に1機能・eval確認後に次へ・no fallback・過学習防止・結果保存なしに改善と言わない・promote主張はrun自身のartifactのみ。
 
 **最初の着手候補（ユーザー承認後）**: F1（確定バグ7件）+ F3（KPI分離）+ F4（eval拡張＋retrieval gold set 雛形）。これが全実験の土台。
+
+---
+
+## Part E: Provider-agnostic「最良モデル」前提への拡張（2026-06-04 ユーザー指示）
+
+**方針転換**: VLM / Embedding / Reranker の各スロットを **DeepInfra / OpenRouter に限定せず、provider 横断で最良モデルを採用する前提**で探索する。従来 E5/E6/E17 は DeepInfra/OpenRouter に事実上固定だったため、premium provider を正式候補に格上げする。オンボード合意済み provider（キー用意可）: **Voyage AI / Google AI(Gemini) / Cohere / OpenAI**。
+
+### F-PROV. Provider 抽象化の基盤（前提タスク）
+- **Embedding**: 現状 query 時は app-local `DeepInfraService` 直結で `services/embedding_providers.py` の factory を通っていない。query+build の両方を `EMBEDDING_PROVIDER`+`EMBEDDING_MODEL` で provider 選択できる**統一クライアント**に通す（provider 別の input_type/prompt 規約・dim・正規化を内包）。`format_embedding_query/document`（実装済）を provider 別に拡張。
+- **Reranker**: 既に `RerankerProviderFactory`+`RERANKER_PROVIDER` env で抽象化済。Cohere/Voyage provider クラスを追加。config に `reranker.provider` を追加。
+- **VLM**: `VLMProviderFactory`（deepinfra/openrouter）に **Google AI Studio native provider** を追加（E17 の native params: `thinking_level`/`media_resolution` を直叩き）。
+- 各 provider は `*_API_KEY` を env から読む（ハードコード禁止・`.env` 管理）。
+
+### E5'/E6'/E17' premium 候補マトリクス（要キー）
+| slot | provider | 候補モデル | 備考 |
+|---|---|---|---|
+| Embedding | Voyage | `voyage-3.5-lite` / `voyage-3.5` | research doc 本命・warm hosted・1024dim Matryoshka・$0.02/1M |
+| Embedding | Google | `gemini-embedding-001` | MMTEB 上位・MRL truncatable |
+| Embedding | OpenAI | `text-embedding-3-large` | ベースライン比較用 |
+| Embedding | Cohere | `embed-v4.0` | retrieval 定番 |
+| Reranker | Cohere | `rerank-v3.5` | retrieval 定番・高品質 |
+| Reranker | Voyage | `rerank-2.5` / `rerank-2.5-lite` | warm hosted・無料枠大 |
+| Reranker | (self-host) | `gte-reranker-modernbert-base` | research doc 本命(83% Hit@1) ただし self-host 要 |
+| VLM | Google native | `gemini-3-*`（AI Studio 直） | native params A/B（E17） |
+
+### 検証方法（E5/E6 と同一の厳密 isolation）
+- Embedding A/B: 各候補で 13,564 docs 再index（`build_embedding_ab_index.py` を provider 対応に拡張）→ `VLM_CACHE_DIR` 凍結で retrieval 単独分離 → calorie MAE + dense recall probe + latency(cold/warm)。
+- Reranker A/B: 同一 embedding・VLM 凍結で per-request override。
+- VLM A/B: native params は frozen 不可（VLM 自体を変える）→ 通常の paired eval。
+- 全て promotion gate（F3 AND条件）+ lesson 化。
+
+### 重要な留意（情報に基づく優先順位）
+- **Embedding は既に open SOTA 天井近く**: 現 Qwen3-Embedding-8B=MMTEB open #1 系、0.6B が非劣性確認済。premium closed prem の主利点は **warm-hosting（cold-start 解消）**であり cold-start は 0.6B 採用で既に解消済 → premium embedding の品質上振れは限定的の見込み（要検証）。
+- **3 AI レビューの最大レバーは retrieval モデルでなく E8(user_context)/E13/E14(実測校正)**。provider 横断探索と並行して、これらの 27%壁レバーも進める。
+
+### 進捗（2026-06-04〜05 セッション）
+- **E5/E6（DeepInfra 範囲）完了**: light スタック **Qwen3-Embedding-0.6B + Qwen3-Reranker-0.6B** が現行 8B+4B 比で calorie MAE −3.45pt(凍結)/−3.87pt(実VLM)・p90/dish_match 改善・~9×低レイテンシ（lesson `20260604_e5e6_lightweight_embedding_reranker_ab`）。bge-m3/gemma/4B は品質劣化 or bias反転で非クリーン。gate は paired CI 上限>0 で HOLD-for-significance（方向一貫・latency/cost 勝ちは無条件）。
+- **F-PROV 基盤 実装完了**: `services/extra_providers.py`（Voyage/Google/Cohere/OpenAI を `"provider:model"` 接頭辞で routing・429 retry・新規依存なし）+ query/build/rerank 経路に配線（DeepInfra 既定不変）。キー `.env` 登録済。
+- **E5'/E6'（cross-provider）完了**: Google `gemini-embedding-001`(MTEB#1)/Cohere `embed-v4.0`/OpenAI `text-embedding-3-large` 埋め込み + Cohere `rerank-v3.5` を凍結VLM・retrieval単独分離でA/B。**結論=premium はどれも free open にクリーン勝ちせず**（全 paired CI 0跨ぎ・強い埋め込みは平均MAE −2〜3pt だが bias を負反転）。**retrieval slot は天井**（lesson `20260605_cross_provider_retrieval_no_clean_win`）。Voyage は 403（キー要確認）。
+- **E17'（VLM native）完了**: `GoogleVLMProvider` 実装（factory に `"google"` 登録、native params を model-id suffix `|media=high|think=high` で per-candidate 指定）。A/B(cache=false 実VLM, 8B+4B固定): **Google-native も native params も calorie 改善せず**（OpenRouter baseline 18.2% が最良、google_native +7.0pt p=0.004 悪化／media=high +4.8／think=high +3.7、全て悪化）。caveat: n=50 cache=false の VLM draw 分散大だが「勝ち無し」は明確。lesson `20260605_cross_provider_retrieval_no_clean_win` に統合。
+- **全 cross-provider スロット結論**: embedding / reranker / VLM-native のいずれも free/現行スタックにクリーン勝ちせず＝**モデル選択は天井**。**次の本命レバー = E8(user_context)・E13/E14(実測校正)・E3/E9(不確実性/1問確認)**（3 AI レビューの核）。retrieval/VLMモデルの更なる探索は非優先。
 </content>

@@ -39,6 +39,36 @@ def format_reranker_query(query: str, instruction: Optional[str]) -> str:
     return query
 
 
+def format_embedding_query(
+    text: str, model_id: str, instruction: Optional[str] = None
+) -> str:
+    """埋め込みモデルごとの規約に従って QUERY を整形する。
+
+    - Qwen3-Embedding（instruct-aware）: instruction 指定時に
+      "Instruct: {instruction}\\nQuery: {text}"（document は素のまま＝Qwen の非対称規約）。
+    - EmbeddingGemma: Google の検索用プロンプト "task: search result | query: {text}"
+      （document は format_embedding_document を使用）。instruction 文字列は使わない。
+    - bge-m3 など（非 instruct）: 素のテキスト（Qwen 風接頭辞は recall を下げるため付けない）。
+    """
+    m = (model_id or "").lower()
+    if "embeddinggemma" in m:
+        return f"task: search result | query: {text}"
+    if "qwen3-embedding" in m and instruction and instruction.strip():
+        return f"Instruct: {instruction.strip()}\nQuery: {text}"
+    return text
+
+
+def format_embedding_document(text: str, model_id: str) -> str:
+    """埋め込みモデルごとの規約に従って DOCUMENT を整形する。
+
+    EmbeddingGemma のみ doc 用プロンプト "title: none | text: {text}" が必要。
+    Qwen3 / bge-m3 は document を素のテキストで埋め込む。
+    """
+    if "embeddinggemma" in (model_id or "").lower():
+        return f"title: none | text: {text}"
+    return text
+
+
 class DeepInfraService:
     """
     Deep Infraのオープンai互換APIと通信するためのサービス。
@@ -327,7 +357,7 @@ class DeepInfraService:
     async def generate_embeddings(
         self,
         texts: List[str],
-        model: str = "Qwen/Qwen3-Embedding-8B",
+        model: Optional[str] = None,
         instruction: Optional[str] = None,
         use_cache: bool = True,
     ) -> List[List[float]]:
@@ -356,15 +386,29 @@ class DeepInfraService:
         if not texts:
             return []
 
-        # Instruction形式を適用（Qwen3-Embedding-8B対応）
-        # キャッシュキーはinstruction適用後のテキストを使用
+        # E5: このサービスが設定されたモデル（env EMBEDDING_MODEL 由来の self.model_id）を
+        # 既定にする。旧実装は引数デフォルトの 8B を常用していたため、EMBEDDING_MODEL が
+        # query 側で無効になっていた（A/B のために根本修正）。
+        if model is None:
+            model = self.model_id
+
+        # F-PROV: 非 DeepInfra provider（google:/cohere:/openai:/voyage:）は外部APIへ委譲。
+        # query 規約（input_type=query / taskType=RETRIEVAL_QUERY 等）は extra_providers が内包。
+        from .extra_providers import is_external as _is_external
+
+        if _is_external(model):
+            import asyncio
+            from .extra_providers import embed_texts
+
+            return await asyncio.to_thread(embed_texts, model, list(texts), True)
+
+        # モデル別のクエリ整形（Qwen3=Instruct接頭辞 / EmbeddingGemma=task形式 / 他=素のまま）。
+        # キャッシュキーは整形後テキスト × モデルID の複合。
+        formatted_texts = [
+            format_embedding_query(text, model, instruction) for text in texts
+        ]
         if instruction:
-            formatted_texts = [
-                f"Instruct: {instruction}\nQuery: {text}" for text in texts
-            ]
             logger.debug(f"Embedding with instruction: '{instruction[:50]}...'")
-        else:
-            formatted_texts = texts
 
         # キャッシュを使用しない場合は直接API呼び出し
         if not use_cache:
@@ -434,6 +478,18 @@ class DeepInfraService:
         """
         # 共有HTTPクライアントを使用（コネクション再利用）
         from ..core.http_client import get_async_client
+        from .extra_providers import is_external, rerank as provider_rerank
+
+        # F-PROV: 非 DeepInfra provider はそのAPIへ委譲（bare query）。
+        if is_external(model):
+            import asyncio
+
+            scores = await asyncio.to_thread(provider_rerank, model, query, documents)
+            if not scores:
+                raise ValueError(
+                    f"[extra_providers] reranker '{model}' returned no scores"
+                )
+            return scores.index(max(scores)), scores
 
         api_key = os.getenv("DEEPINFRA_API_KEY") or os.getenv("DEEPINFRA_TOKEN")
         url = f"https://api.deepinfra.com/v1/inference/{model}"
@@ -494,7 +550,25 @@ class DeepInfraService:
             List of (best_index, scores) tuples for each query
         """
         import time as time_module
+        import asyncio
         from ..core.http_client import get_async_client
+        from .extra_providers import is_external, rerank as provider_rerank
+
+        # F-PROV: 非 DeepInfra provider（cohere:/voyage: 等）はそのAPI へ per-query で委譲。
+        # external reranker は Qwen の Instruct 形式を使わない（bare query）。
+        if is_external(model):
+            results: List[Tuple[int, List[float]]] = []
+            for item in queries_and_documents:
+                docs = item["documents"]
+                if not docs:
+                    results.append((0, []))
+                    continue
+                scores = await asyncio.to_thread(
+                    provider_rerank, model, item["query"], docs
+                )
+                best = scores.index(max(scores)) if scores else 0
+                results.append((best, scores))
+            return results
 
         start_time = time_module.time()
 

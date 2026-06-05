@@ -128,3 +128,6 @@ apps/freeform_usda_meal_analysis_api/data/nutrition5k/
 data/nutritionverse_real/
 test_images_nvreal/
 apps/freeform_usda_meal_analysis_api/reviews/
+
+# E5 embedding A/B candidate indexes (large build artifacts)
+apps/freeform_usda_meal_analysis_api/data/faiss_ab/

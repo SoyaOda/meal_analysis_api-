@@ -32,6 +32,8 @@ VLM 画像キャッシュ
 import hashlib
 import json
 import logging
+import os
+from pathlib import Path
 from typing import Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -64,11 +66,19 @@ class VLMCache:
     - 誤タップ防止: 重複リクエストをキャッシュヒットで処理
     """
 
-    def __init__(self, max_size: int = 1000, ttl_hours: int = 24):
+    def __init__(
+        self,
+        max_size: int = 1000,
+        ttl_hours: int = 24,
+        cache_dir: Optional[str] = None,
+    ):
         """
         Args:
             max_size: 最大キャッシュエントリ数
             ttl_hours: エントリの有効期限（時間）
+            cache_dir: 任意。指定（または env VLM_CACHE_DIR）時はディスクにも永続化し、
+                プロセス再起動を跨いで結果を共有する（embedding A/B のように同一 VLM 出力を
+                サーバ再起動越しに凍結したい用途で使う。本番では未設定＝従来のメモリのみ）。
         """
         self._cache: Dict[str, VLMCacheEntry] = {}
         self._max_size = max_size
@@ -79,7 +89,57 @@ class VLMCache:
         self._hits = 0
         self._misses = 0
 
-        logger.info(f"VLMCache initialized: max_size={max_size}, ttl={ttl_hours}h")
+        # ディスク永続層（opt-in）
+        self._cache_dir = cache_dir or os.getenv("VLM_CACHE_DIR")
+        if self._cache_dir:
+            Path(self._cache_dir).mkdir(parents=True, exist_ok=True)
+
+        logger.info(
+            f"VLMCache initialized: max_size={max_size}, ttl={ttl_hours}h, "
+            f"disk={'on:' + self._cache_dir if self._cache_dir else 'off'}"
+        )
+
+    def _disk_path(self, key: str) -> Path:
+        """キーをファイル名に変換（':' は安全な '_' に置換）。"""
+        return Path(self._cache_dir) / (key.replace(":", "_") + ".json")
+
+    def _load_from_disk(self, key: str) -> Optional[VLMCacheEntry]:
+        """ディスクからエントリを読む（無ければ None）。読み取り失敗はミス扱い。"""
+        path = self._disk_path(key)
+        if not path.exists():
+            return None
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return VLMCacheEntry(
+                response=data["response"],
+                usage=data["usage"],
+                model_id=data["model_id"],
+                created_at=datetime.fromisoformat(data["created_at"]),
+            )
+        except Exception as e:
+            logger.warning(f"VLM disk cache read failed for {path.name}: {e}")
+            return None
+
+    def _save_to_disk(self, key: str, entry: VLMCacheEntry) -> None:
+        """ディスクへエントリを書く（atomic: tmp→rename）。書き込み失敗は警告のみ。"""
+        path = self._disk_path(key)
+        try:
+            tmp = path.with_suffix(".json.tmp")
+            tmp.write_text(
+                json.dumps(
+                    {
+                        "response": entry.response,
+                        "usage": entry.usage,
+                        "model_id": entry.model_id,
+                        "created_at": entry.created_at.isoformat(),
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            tmp.replace(path)
+        except Exception as e:
+            logger.warning(f"VLM disk cache write failed for {path.name}: {e}")
 
     @staticmethod
     def _normalize_cache_context(cache_context: Optional[Dict[str, Any]]) -> str:
@@ -144,6 +204,12 @@ class VLMCache:
         async with self._lock:
             entry = self._cache.get(key)
 
+            # メモリミス時はディスク永続層を確認（embedding A/B の再起動越し共有用）
+            if entry is None and self._cache_dir:
+                entry = self._load_from_disk(key)
+                if entry is not None:
+                    self._cache[key] = entry
+
             if entry is None:
                 self._misses += 1
                 logger.debug(f"VLM Cache MISS: {key[:32]}...")
@@ -152,6 +218,8 @@ class VLMCache:
             # TTLチェック
             if datetime.now() - entry.created_at > self._ttl:
                 del self._cache[key]
+                if self._cache_dir:
+                    self._disk_path(key).unlink(missing_ok=True)
                 self._misses += 1
                 logger.debug(f"VLM Cache EXPIRED: {key[:32]}...")
                 return None
@@ -188,12 +256,15 @@ class VLMCache:
             if len(self._cache) >= self._max_size:
                 self._evict_old_entries()
 
-            self._cache[key] = VLMCacheEntry(
+            entry = VLMCacheEntry(
                 response=response,
                 usage=usage,
                 model_id=model_id,
                 created_at=datetime.now(),
             )
+            self._cache[key] = entry
+            if self._cache_dir:
+                self._save_to_disk(key, entry)
             logger.info(f"📦 VLM Cache SET: model={model_id} (size={len(self._cache)})")
 
     def _evict_old_entries(self) -> None:

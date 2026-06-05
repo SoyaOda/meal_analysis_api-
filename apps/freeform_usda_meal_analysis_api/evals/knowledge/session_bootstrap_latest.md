@@ -1,6 +1,6 @@
 # PDCA Session Bootstrap Snapshot
 
-- generated_at_utc: 2026-06-03T12:48:40.660635+00:00
+- generated_at_utc: 2026-06-04T13:23:20.404224+00:00
 - scope: apps/freeform_usda_meal_analysis_api
 
 ## Must Read (in order)
@@ -22,29 +22,29 @@
 - note: `Reality-reset 2026-06-01: the prior 11.38% baseline (v11b, 2026-02-25) NO LONGER reproduces; gemini-3-flash-preview + v13 + fixed retrieval now measures ~20.5% (corroborated: 20.27% remote run 20260601_204037, 20.65% local run 20260601_221426). Newer Gemini models do not recover (3.5-flash worse, 3.1-flash-lite equal+slower; lesson 20260601_model_drift_newer_gemini_no_recovery). Root cause not yet localized; recovery toward 11% is the goal once decomposed metrics localize it. Old baseline kept at baseline_20260225_gemini3_flash_v11b_component_density_temp03.json.`
 
 ## Latest Lessons (top 5)
-- file: `evals/lessons/20260603_v17_full50_rejected_calorie_regression.md`
-  - title: # Lesson: v17 (describe-shape identity) REJECTED on full 50 — confirmed calorie-MAE regression (+4.6pt) from the bundled cooked-default
-  - 2026-06-03
+- file: `evals/lessons/20260604_v14_portion_scaling_helps_slope_but_not_realistic_range.md`
+  - title: # Lesson: v14 portion-scaling raises the calorie slope but does NOT improve the realistic meal range — range-compression lives only in the unrealistic giant-plate tail
+  - 2026-06-04
   - -
   - -
-- file: `evals/lessons/20260603_pro_stability_confirmed_and_calorie_bias_calibrated.md`
-  - title: # Lesson: gemini-3.1-pro recognition gain is STABLE (pro>flash in 4/4 runs) and its calorie under-bias is FIXABLE by calibration (-13.5% -> -1.6% held-out). Promote case strengthened; naming regression persists.
-  - 2026-06-03
+- file: `evals/lessons/20260604_self_consistency_median_ensemble_significant_calorie_win.md`
+  - title: # Lesson: self-consistency (median-of-K ensemble) — pure variance-reduction effect is REAL and generalizes (−3 to −4pt at fixed temp), but the NET win is temperature-confounded and did NOT replicate on N5k (NVReal-only at temp 0.5)
+  - 2026-06-04
   - -
   - -
-- file: `evals/lessons/20260603_pro_naming_reranker_form_did_not_recover.md`
-  - title: # Lesson: form-tuned reranker instruction does NOT recover pro's naming regression (raw_vs_cooked got WORSE), though it improves deterministic calorie MAE (likely via full-fat default)
-  - 2026-06-03
+- file: `evals/lessons/20260604_recognition_union_self_consistency_not_clean_win.md`
+  - title: # Lesson: recognition self-consistency (union of K samples) trades recall for wrong-food — NOT a clean win; recognition misses are mostly SYSTEMATIC, not variance
+  - 2026-06-04
   - -
   - -
-- file: `evals/lessons/20260603_nutrition5k_external_eval_generalization_gap.md`
-  - title: # Lesson: Nutrition5k external eval (N=250, independent measured GT) — the frozen-50 MASSIVELY overstates calorie accuracy; pro beats flash SIGNIFICANTLY; affine calibration fit on N5k FAILS
-  - 2026-06-03
+- file: `evals/lessons/20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational.md`
+  - title: # Lesson: recognition on CLEAN independent GT (NVReal COCO) — pro has NO edge over flash (tie/slightly worse). The last pillar of the pro case collapses → flash is cost-rational.
+  - 2026-06-04
   - -
   - -
-- file: `evals/lessons/20260603_n5k_pro_advantage_test_retest_borderline.md`
-  - title: # Lesson: N5k pro-vs-flash test-retest — pro's calorie advantage is DIRECTIONALLY consistent but only BORDERLINE significant; pro is less reproducible than flash
-  - 2026-06-03
+- file: `evals/lessons/20260604_realistic_range_error_decomposition_grams_vs_density.md`
+  - title: # Lesson: realistic-range (200-1500 kcal) calorie error decomposed — near-ZERO bias, ~50/50 grams vs density, the two systematic edges CANCEL → single-lever fixes don't help
+  - 2026-06-04
   - -
   - -
 
@@ -53,7 +53,17 @@
 - `evals/repeat_runs/20260225_100132/repeated_summary.md`
 
 ## Remote Config Check
-- skipped/failed: timeout: The read operation timed out
+- api_url: `https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app`
+- updated_at: `2026-02-26T09:54:30.334035`
+- updated_by: `admin`
+- vlm_model_id: `openrouter:google/gemini-3-flash-preview`
+- vlm_prompt_file: `freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt`
+- vlm_prompt_text_len: `2841`
+- vlm_temperature: `0.3`
+- vlm_max_tokens: `12288`
+- vlm_reasoning_effort: `medium`
+- search.stage1_top_k: `50`
+- warning: Prompt Text Override is active (Prompt File is ignored).
 
 ## Guardrails
 - Never promote from dev-only split results. Promotion requires full50 coverage.

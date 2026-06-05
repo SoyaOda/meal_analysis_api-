@@ -7,6 +7,7 @@ from .base_provider import BaseVLMProvider
 from .deepinfra_provider import DeepInfraProvider
 from .alibaba_provider import AlibabaProvider
 from .openrouter_provider import OpenRouterProvider
+from .google_provider import GoogleVLMProvider
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,7 @@ class VLMProviderFactory:
         "deepinfra": DeepInfraProvider,
         "alibaba": AlibabaProvider,
         "openrouter": OpenRouterProvider,
+        "google": GoogleVLMProvider,
     }
 
     # デフォルトプロバイダー
@@ -34,10 +36,7 @@ class VLMProviderFactory:
 
     @classmethod
     def create_provider(
-        cls,
-        model_id: str,
-        model_version: Optional[str] = None,
-        **kwargs
+        cls, model_id: str, model_version: Optional[str] = None, **kwargs
     ) -> BaseVLMProvider:
         """
         model_id文字列から適切なVLMプロバイダーインスタンスを生成
@@ -74,12 +73,16 @@ class VLMProviderFactory:
 
                 # プロバイダー名が有効かチェック
                 if provider_name in cls.SUPPORTED_PROVIDERS:
-                    logger.info(f"🔧 Creating {provider_name} provider for model: {actual_model_id}")
+                    logger.info(
+                        f"🔧 Creating {provider_name} provider for model: {actual_model_id}"
+                    )
                     provider_class = cls.SUPPORTED_PROVIDERS[provider_name]
 
                     # DeepInfraの場合はmodel_versionも渡す
                     if provider_name == "deepinfra":
-                        return provider_class(actual_model_id, model_version=model_version, **kwargs)
+                        return provider_class(
+                            actual_model_id, model_version=model_version, **kwargs
+                        )
                     else:
                         return provider_class(actual_model_id, **kwargs)
                 else:
@@ -89,7 +92,9 @@ class VLMProviderFactory:
                     )
 
         # "provider:" がない場合はデフォルトプロバイダー（DeepInfra）を使用
-        logger.info(f"🔧 Using default provider ({cls.DEFAULT_PROVIDER}) for model: {model_id}")
+        logger.info(
+            f"🔧 Using default provider ({cls.DEFAULT_PROVIDER}) for model: {model_id}"
+        )
         provider_class = cls.SUPPORTED_PROVIDERS[cls.DEFAULT_PROVIDER]
         return provider_class(model_id, model_version=model_version, **kwargs)
 
