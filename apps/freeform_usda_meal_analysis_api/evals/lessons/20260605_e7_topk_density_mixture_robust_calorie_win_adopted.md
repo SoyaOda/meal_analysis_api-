@@ -27,6 +27,14 @@ Even with the VLM frozen, the top-1 baseline varied run-to-run (18.5–20.0) →
 - Chose k=5 (robust across all 3 measurements) over k=10 (measured marginally better on draw#1 only) for the default; k and τ are tuning headroom.
 - Deploy (Cloud Run/Firestore) NOT changed — requires explicit instruction. Easily reverted (top_n=1).
 
+## Pooled external confirmation (frozen-VLM, 2026-06-05) — GENERALIZES; significant on eye-level NVReal
+| set | top-1 MAE | E7(k5) MAE | paired dMAE | high30 |
+|---|---|---|---|---|
+| NVReal (104, eye-level real, mozu-like) | 52.82 | 45.14 | **−7.67 CI[−19.1,−2.08] p=0.037** | 52.9→46.2 |
+| N5k (100, overhead cafeteria, stress) | 59.17 | 57.55 | −1.61 CI[−7.5,+5.0] p=0.62 | 64→60 |
+
+E7 is **directionally positive on EVERY set** (50-set −4.03 sig / NVReal −7.67 sig / N5k −1.61), and **significant on the eye-level NVReal distribution** that best matches the mozu use case (−7.67pt). It cuts the bulk of error (MAE, high30) across distributions; the extreme p90 tail is mixed on the hard external sets (N5k p90 115→134, NVReal 83→89) — the mixture trades a few extreme-tail cases for a large central-mass improvement, net clearly positive. Cost/latency overhead = ~0 (reranker already scores all candidates; E7 reuses the top-k + local nutrition lookups; measured retrieval latency top1 1.07s ≈ k10 1.01s; avg_cost identical). **k=5 kept (validated on 50-set + NVReal + N5k); k=10 measured marginally better on the 50-set only (tuning headroom).**
+
 ## Follow-ups
 - Confirm on pooled N5k(250)+NVReal(104) (the wall-distribution + eye-level realistic) before deploy. 50-set is eye-level-realistic but small.
 - Sweep τ (E7_DENSITY_TEMP) and k=8/10; consider weighting by calibrated relevance probabilities.

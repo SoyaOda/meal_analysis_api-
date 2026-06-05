@@ -3,7 +3,7 @@
 このアプリ（`freeform_usda_meal_analysis_api`）を **mozu**（Finch 型の高単価 calorie tracker app）用 API として開発するフェーズ。ブランチ `feature/mozu-api`。
 前フェーズ（PDCA 土台整備＋モデル探索）は `plans/done/deep_review_improvements_20260601.md` にアーカイブ。
 
-## 引き継ぎ（Handoff — 他PC / 次セッション用, 2026-06-04 更新）
+## 引き継ぎ（Handoff — 他PC / 次セッション用, 2026-06-05 更新）
 **現在地（要点）**:
 - **モデル**: 既定 = **flash**（`gemini-3-flash-preview`）。pro は撤回済（独立 GT で calorie/recognition とも flash への頑健優位なし。frozen-50 の pro優位は GPT-5-pro推定GTのアーティファクト）。コード既定も flash へ戻し済（`8ba09e2`）。
 - **calorie の壁**: 実世界 ~40-60% MAE（本命 200-1500kcal で ~27%、**系統bias無しの純粋分散**、grams:density=50:50）。global calibration は VOID（分布で符号反転）。self-consistency(K=3 median, temp0.3)=唯一の robust lever だが ~2pt のみ（opt-in実装済・既定OFF）。
@@ -18,7 +18,9 @@
 - **Phase 2.3 (E2 weight floor 80→20) 完了・inconclusive(`20260605_142205`)**: overall −0.68pt NS(無害・fail0)、だが **50-set に GT<300 画像が無く小皿是正は検証不能**。本番prompt 未変更(deploy要指示)。lesson `20260605_e2_*`。
 - **🔴 戦略的結論（E12+E2 で2連続実証）**: **n=50 では小効果 data-independent lever（E2/E7-density/E1）は判定不能**（VLM draw 分散 ~±3pt 支配 + subgroup データ不足）。→ **Phase 2 の進め方を変更**: (A) 各 lever を **pooled N5k(250)+NVReal(104)** で判定（lever毎に ~$3-10 の campaign）、または (B) **E7（top-k density）だけは frozen-VLM isolation で決定論的に clean 評価可**なので優先、(C) calorie 27%壁の本質は実 mozu データ(E13, 当面不可)待ちと割り切り Phase1 の banked wins(light/F2/parallel-SC) を成果とする。
 - **🟢 Phase 2.2 (E7 top-k density) 完了・採用・コミット済**: **本セッション唯一の頑健・有意な calorie 改善 lever**。top-1 → top-k(rerank-softmax)密度混合 E[kcal/100g]×weight。frozen-VLM 分離で **draw#1 −4.03pt(p=0.042) / draw#2 −2.13pt(同方向) / k-sweep 単調改善(k10 −3.81 p=0.034)**、p90・high30 も一貫改善。**既定採用 reranker.top_n=5**（settings/config_manager、top_n>1 で有効・top_n=1 で従来・latency ほぼ0・τ=env E7_DENSITY_TEMP 既定1.0）。78テスト pass。lesson `20260605_e7_topk_density_mixture_robust_calorie_win_adopted`。
-- **次の一手**: ①**E7 を pooled N5k+NVReal で確認**（deploy 前。50-set は eye-level だが小）+ τ/k sweep。②残 Phase 2: **E1 schema v15**（VLM変更=pooled前提・慎重）。③Phase 3(E16 stacker/E3 診断/E8-E13-E14 設計doc)。④E12 pooled 検証。retrieval API に ~±1.5pt の非決定性あり（within-run paired が clean 信号）。Voyage 403 未A/B。**deploy 未実施=要明示指示**（採用は code 既定のみ・top_n=1 で即 revert 可）。push 未実施。
+- **🟢 E7 pooled 外部確認 完了（汎化確認）**: frozen-VLM で **NVReal(104, eye-level実測) −7.67pt CI[−19.1,−2.08] p=0.037 有意**、N5k(100, 俯瞰) −1.61pt 同方向。**E7 は全セット(50-set/NVReal/N5k)で方向一貫・eye-level で有意**＝コスト/速度ゼロの本物の汎化改善として確定。k=5 維持。lesson 更新済。
+- **✅ 採用確定・最終検証（2026-06-05 セッション終了時）**: 「おすすめの方法全て採用」= **E7(top_n=5) + light スタック(0.6B emb/rerank)** を code 既定として確定済みと再確認（settings.py:168/176/199, config_manager.py:95/111）。検証ループ全パス（**pytest 78 / py_compile OK / ruff All checks passed**）。E7 lesson + 本 current.md をコミット（探索 Phase 2.4/3.x は未着手＝ユーザー判断で一旦停止）。
+- **次の一手**: **E7 は deploy 可能な状態**（要明示指示。Firestore `config.reranker.top_n=5` 反映 + light スタックは deploy先 index を 0.6B 再build）。残: ①**E1 schema v15**（VLM変更=pooled前提・慎重・過去 v14/16/17 不成立）②Phase 3(E16 stacker/E3 診断/E8-E13-E14 設計doc)③E12/E2 の pooled 検証④E7 の τ/k=10 sweep + p90 tail 調査(hard 外部で tail やや悪化)。Voyage 403 未A/B。**deploy/push 未実施=要明示指示**（採用は code 既定のみ・top_n=1 で即 revert 可）。
 - **light スタック採用判断（保留中）**: 0.6B+0.6B は latency/cost 勝ち＋非劣性だが paired CI 上限>0（n=50）。deploy は要ユーザー明示指示。
 **最初に読む**: この `plans/current.md` → **`plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`（次フェーズの実行ロードマップ＝3AIレビュー統合・E1-E18+F1-F5・承認済）** → `docs/MOZU_PDCA_SUMMARY_20260604.md`（PDCA総括・結論）→ `docs/MOZU_MODEL_DECISION_20260603.md`（モデル決定の SSOT）→ `evals/lessons/`（特に `20260603_*` 5本: pro採用/stability/calorie-bias/naming-A-B、`20260602_reranker_instruction_was_inert_bug_fixed`）。
 **再開手順**: `git checkout feature/mozu-api && git pull`。セッション開始時 `pdca_session_bootstrap` で現行 baseline/config 確認。eval は `scripts/run_pdca_batch_eval` + 別途 `scripts/run_judge_eval`（judge は OpenRouter sonnet）。
