@@ -122,6 +122,9 @@ class MealAnalysisPipeline:
         include_debug_info: bool = False,
         # E8 (F1-a): ユーザー提供コンテキスト（皿径/食べ残し/店名/大盛り等）
         user_context: Optional[str] = None,
+        # F2: request-local な VLM prompt / model（共有 vlm_service を mutate しない）
+        vlm_prompt: Optional[str] = None,
+        vlm_model_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         画像から栄養素計算までのEnd-to-End処理
@@ -189,6 +192,8 @@ class MealAnalysisPipeline:
                 reasoning_effort=vlm_reasoning_effort,
                 use_cache=vlm_use_cache,
                 user_context=user_context,
+                prompt=vlm_prompt,
+                model_id=vlm_model_id,
             )
         except Exception as e:
             logger.error(f"VLM analysis failed: {e}")
@@ -227,6 +232,7 @@ class MealAnalysisPipeline:
                 seed=vlm_seed,
                 max_tokens=vlm_max_tokens,
                 reasoning_effort=vlm_reasoning_effort,
+                model_id=vlm_model_id,
             )
             vlm_response, n_dropped = apply_verification(
                 vlm_response, verify_result["verdicts"]
@@ -517,50 +523,42 @@ class MealAnalysisPipeline:
                     search_config_override.reranker_top_n
                 )
 
-        # プロンプトのオーバーライド
+        # プロンプトのオーバーライド（F2: 共有 vlm_service を mutate せず request-local に解決）
         # 優先順位: override.prompt_text > override.prompt_path > ConfigManager.prompt_text > ConfigManager.prompt_file > 初期設定
+        effective_prompt = self.vlm_service.prompt  # 既定 = 初期ロード済みプロンプト
         if model_config_override and (
             model_config_override.prompt_text or model_config_override.prompt_path
         ):
             if model_config_override.prompt_text:
-                self.vlm_service.prompt = model_config_override.prompt_text
+                effective_prompt = model_config_override.prompt_text
             elif model_config_override.prompt_path:
                 from ..config import get_settings
 
                 settings = get_settings()
-                prompt_full_path = settings.get_prompt_path(
-                    model_config_override.prompt_path
-                )
-                self.vlm_service.prompt = self.vlm_service._load_prompt(
-                    prompt_full_path
+                effective_prompt = self.vlm_service._load_prompt(
+                    settings.get_prompt_path(model_config_override.prompt_path)
                 )
         elif config.vlm.prompt_text:
-            self.vlm_service.prompt = config.vlm.prompt_text
+            effective_prompt = config.vlm.prompt_text
         elif config.vlm.prompt_file:
             from ..config import get_settings
 
             settings = get_settings()
-            prompt_full_path = settings.get_prompt_path(config.vlm.prompt_file)
-            self.vlm_service.prompt = self.vlm_service._load_prompt(prompt_full_path)
+            effective_prompt = self.vlm_service._load_prompt(
+                settings.get_prompt_path(config.vlm.prompt_file)
+            )
 
-        # モデルIDのオーバーライド
+        # モデルIDのオーバーライド（F2: request-local。provider は vlm_service._provider_for で解決）
         # 優先順位: override.vlm_model_id > ConfigManager > 初期設定
-        effective_model_id = None
+        effective_model_id = self.vlm_service.model_id
         if model_config_override and model_config_override.vlm_model_id:
             effective_model_id = model_config_override.vlm_model_id
         elif config.vlm.model_id:
             effective_model_id = config.vlm.model_id
 
-        if effective_model_id and effective_model_id != self.vlm_service.model_id:
-            self.vlm_service.model_id = effective_model_id
-            # プロバイダーも更新（VLMProviderFactoryを使用）
-            from .providers import VLMProviderFactory
-
-            self.vlm_service.provider = VLMProviderFactory.create_provider(
-                model_id=effective_model_id
-            )
-            # 後方互換性のため
-            self.vlm_service.deepinfra_service = self.vlm_service.provider
+        # F2: prompt/model を request-local に渡す（singleton 不変＝同時/並列リクエスト安全）。
+        vlm_kwargs["vlm_prompt"] = effective_prompt
+        vlm_kwargs["vlm_model_id"] = effective_model_id
 
         try:
             # 分析実行
@@ -803,8 +801,8 @@ class MealAnalysisPipeline:
                 carbs=result["total_nutrition"]["carbs_g"],
             )
 
-            # モデル情報（使用された実際の値を報告）
-            ai_model_used = self.vlm_service.model_id  # 一時的にオーバーライドされた値
+            # モデル情報（F2: request-local に解決した実際の値を報告）
+            ai_model_used = effective_model_id
             # プロンプト情報を取得
             if model_config_override and model_config_override.prompt_text:
                 prompt_file_used = "[Custom Prompt Text (API Override)]"
@@ -826,10 +824,8 @@ class MealAnalysisPipeline:
             # Usage情報とコスト計算
             from ..models.response_models import UsageInfo
 
-            # プロンプト内容を取得（デバッグ用）
-            prompt_content = (
-                self.vlm_service.prompt if hasattr(self.vlm_service, "prompt") else None
-            )
+            # プロンプト内容を取得（F2: request-local に解決した実際のプロンプト）
+            prompt_content = effective_prompt
             usage_info = None
             if result.get("usage"):
                 usage_data = result["usage"]

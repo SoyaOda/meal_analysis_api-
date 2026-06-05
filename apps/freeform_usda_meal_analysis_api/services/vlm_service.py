@@ -126,6 +126,19 @@ class VLMService:
         logger.info(f"Loaded prompt from: {prompt_file}")
         return prompt
 
+    def _provider_for(self, model_id: Optional[str]):
+        """F2: request-local な model_id に対応する provider を返す。
+
+        override が無い（None or 既定と同じ）なら共有の self.provider を再利用し、
+        異なる場合のみ request-local に provider を生成する（singleton を mutate しない＝
+        同時リクエストの race を排除）。戻り値: (provider, effective_model_id)。
+        """
+        if model_id is None or model_id == self.model_id:
+            return self.provider, self.model_id
+        from .providers import VLMProviderFactory
+
+        return VLMProviderFactory.create_provider(model_id), model_id
+
     async def analyze_image(
         self,
         image_bytes: bytes,
@@ -136,6 +149,8 @@ class VLMService:
         reasoning_effort: Optional[str] = None,
         use_cache: bool = True,
         user_context: Optional[str] = None,
+        prompt: Optional[str] = None,
+        model_id: Optional[str] = None,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         """
         画像を解析して食事情報を抽出
@@ -178,16 +193,21 @@ class VLMService:
             else config.vlm.reasoning_effort
         )
 
+        # F2: request-local な prompt / provider / model_id を解決（共有 singleton を
+        # mutate しない＝同時リクエストの race を排除。pipeline が override を引数で渡す）。
+        base_prompt = prompt if prompt is not None else self.prompt
+        provider, effective_model_id = self._provider_for(model_id)
+
         # E8 (F1-a): inject user-provided context (e.g. "ate half", plate diameter,
         # restaurant/menu, "large serving") into the prompt. It is prepended so the
         # VLM can use it for portion/identity, and it is part of the cache key below
         # so the same photo with different context is NOT served a stale cache hit.
-        effective_prompt = self.prompt
+        effective_prompt = base_prompt
         if user_context and user_context.strip():
             effective_prompt = (
                 "USER-PROVIDED CONTEXT (authoritative; prefer it over visual guesses "
                 "where it applies to identity, preparation, portion, or amount eaten):\n"
-                f"{user_context.strip()}\n\n" + self.prompt
+                f"{user_context.strip()}\n\n" + base_prompt
             )
 
         logger.info(f"Analyzing image ({len(image_bytes)} bytes, {image_mime_type})")
@@ -212,7 +232,7 @@ class VLMService:
             cached = await cache.get(
                 image_bytes=image_bytes,
                 prompt=effective_prompt,
-                model_id=self.model_id,
+                model_id=effective_model_id,
                 cache_context=cache_context,
             )
             if cached:
@@ -228,8 +248,8 @@ class VLMService:
             logger.debug("VLM cache bypassed")
 
         # ✅ 追加: VLM呼び出し直前にpromptの内容をログ出力
-        logger.info(f"📝 Using prompt (length: {len(self.prompt)} chars)")
-        prompt_preview = self.prompt[:300] if len(self.prompt) > 300 else self.prompt
+        logger.info(f"📝 Using prompt (length: {len(base_prompt)} chars)")
+        prompt_preview = base_prompt[:300] if len(base_prompt) > 300 else base_prompt
         logger.info(f"📝 Prompt preview (first 300 chars):\n{prompt_preview}")
 
         # API呼び出しパラメータ構築（Noneは渡さない）
@@ -244,9 +264,9 @@ class VLMService:
             "reasoning_effort": effective_reasoning_effort,
         }
 
-        # VLM呼び出し（providerを使用）
+        # VLM呼び出し（request-local provider を使用）
         try:
-            raw_response, usage = await self.provider.analyze_image(**api_params)
+            raw_response, usage = await provider.analyze_image(**api_params)
         except Exception as e:
             logger.error(f"VLM API call failed: {e}")
             raise RuntimeError(f"[VLM Service] API call failed: {e}") from e
@@ -285,7 +305,7 @@ class VLMService:
             await cache.set(
                 image_bytes=image_bytes,
                 prompt=effective_prompt,
-                model_id=self.model_id,
+                model_id=effective_model_id,
                 response=vlm_response,
                 usage=usage,
                 cache_context=cache_context,
@@ -309,6 +329,7 @@ class VLMService:
         seed: Optional[int] = None,
         max_tokens: Optional[int] = None,
         reasoning_effort: Optional[str] = None,
+        model_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Second-pass self-verification: re-show the image with the candidate food list
         and ask which items are actually visible. Returns {"verdicts": [...], "missing":
@@ -334,8 +355,12 @@ class VLMService:
         numbered = "\n".join(f"{i + 1}. {n}" for i, n in enumerate(candidate_names))
         prompt = self._verify_prompt.replace("{{CANDIDATES}}", numbered)
 
+        # F2: verifier も request-local provider を使う（override model 指定時に singleton を
+        # mutate せず override モデルで検証する＝従来の mutate 挙動を保つ）。
+        provider, _ = self._provider_for(model_id)
+
         try:
-            raw_response, _usage = await self.provider.analyze_image(
+            raw_response, _usage = await provider.analyze_image(
                 image_bytes=image_bytes,
                 image_mime_type=image_mime_type,
                 prompt=prompt,
