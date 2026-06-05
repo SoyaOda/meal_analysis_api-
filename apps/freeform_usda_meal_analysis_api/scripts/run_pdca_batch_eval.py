@@ -896,6 +896,9 @@ async def call_complete_api(
         data["reranker_top_n"] = str(candidate["reranker_top_n"])
     if candidate.get("enable_self_verification"):
         data["enable_self_verification"] = "true"
+    # E12: server-side self-consistency (K>1 → parallel K samples, median-total-calorie)
+    if candidate.get("self_consistency_k") is not None:
+        data["self_consistency_k"] = str(candidate["self_consistency_k"])
 
     start = time.perf_counter()
     try:
@@ -1164,6 +1167,10 @@ def build_candidate_list(
             "enable_self_verification": c.get(
                 "enable_self_verification",
                 defaults.get("enable_self_verification", False),
+            ),
+            # E12: server-side self-consistency K（candidate > defaults; 未指定なら None=K1）
+            "self_consistency_k": c.get(
+                "self_consistency_k", defaults.get("self_consistency_k")
             ),
         }
         for key in SEARCH_OVERRIDE_KEYS:

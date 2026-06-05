@@ -363,7 +363,7 @@ class MealAnalysisPipeline:
         `self_consistency_k`（override > ConfigManager > 1）が >1 のとき、K回（seed違い）
         解析して総カロリーが median の結果を返す（分散低減。検証: evals/lessons/
         20260604_self_consistency_median_ensemble_significant_calorie_win.md）。K=1（既定）は
-        単一解析で挙動不変。共有 vlm_service 状態を変更するため逐次実行（latency ~Kx）。
+        単一解析で挙動不変。F2(stateless VLM)後は K 回を並列実行（latency ~Kx → ~1x）。
         """
         k = None
         if model_config_override is not None:
@@ -398,8 +398,7 @@ class MealAnalysisPipeline:
 
         from ..models.request_models import ModelConfig
 
-        results: List[Dict[str, Any]] = []
-        for i in range(k):
+        async def _one_sample(i: int) -> Dict[str, Any]:
             iter_seed = base_seed + i
             if model_config_override is None:
                 iter_override = ModelConfig(seed=iter_seed, self_consistency_k=1)
@@ -407,16 +406,20 @@ class MealAnalysisPipeline:
                 iter_override = model_config_override.model_copy(
                     update={"seed": iter_seed, "self_consistency_k": 1}
                 )
-            results.append(
-                await self._analyze_meal_once(
-                    image_bytes=image_bytes,
-                    user_context=user_context,
-                    model_config_override=iter_override,
-                    search_config_override=search_config_override,
-                    include_debug_info=include_debug_info,
-                    enable_self_verification=enable_self_verification,
-                )
+            return await self._analyze_meal_once(
+                image_bytes=image_bytes,
+                user_context=user_context,
+                model_config_override=iter_override,
+                search_config_override=search_config_override,
+                include_debug_info=include_debug_info,
+                enable_self_verification=enable_self_verification,
             )
+
+        # F2(stateless VLM)後は vlm_service を mutate しないため K 回を並列実行できる
+        # （seed 違いの独立サンプル。latency ~Kx → ~1x）。
+        results: List[Dict[str, Any]] = await asyncio.gather(
+            *[_one_sample(i) for i in range(k)]
+        )
 
         selected = self._select_median_calorie_result(results)
         logger.info(
