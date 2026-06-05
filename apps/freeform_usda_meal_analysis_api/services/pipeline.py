@@ -978,7 +978,8 @@ class MealAnalysisPipeline:
                 queries_and_candidates=queries_and_candidates,
                 reranker_model=effective_reranker_model,
                 reranker_instruction=effective_reranker_instruction,
-                top_k=1,
+                # E7/F1-b: top_n>1 で top-k 候補を density-mixture 用に保持（既定 1=top-1 不変）
+                top_k=effective_reranker_top_n or 1,
             )
 
             reranker_time = time_module.time() - reranker_start
@@ -1218,7 +1219,17 @@ class MealAnalysisPipeline:
             fdc_id = usda_match["fdc_id"]
             weight_g = query["weight_g"]
 
-            nutrition = self.nutrition_calculator.calculate(fdc_id, weight_g)
+            # E7: top-k 候補があれば density-mixture（E[kcal/100g]×weight）、無ければ top-1。
+            topk = usda_match.get("topk_candidates")
+            if topk and len(topk) > 1:
+                import os
+
+                temp = float(os.getenv("E7_DENSITY_TEMP", "1.0"))
+                nutrition = self.nutrition_calculator.calculate_mixture(
+                    topk, weight_g, temperature=temp
+                )
+            else:
+                nutrition = self.nutrition_calculator.calculate(fdc_id, weight_g)
             enriched["nutrition"] = nutrition
         else:
             enriched["usda_match"] = None

@@ -23,10 +23,7 @@ class LocalUSDANutritionService:
     各食材のFDC IDに対して、calories, protein_g, fat_g, carbs_g を返す。
     """
 
-    def __init__(
-        self,
-        metadata_file: str
-    ):
+    def __init__(self, metadata_file: str):
         """
         Args:
             metadata_file: usda_metadata.json のパス (栄養素データを含む)
@@ -41,19 +38,21 @@ class LocalUSDANutritionService:
 
     def _load_from_metadata(self):
         """metadata.jsonから栄養素データをロード"""
-        logger.info(f"📂 Loading USDA nutrition data from metadata: {self.metadata_file}")
-        
-        with open(self.metadata_file, 'r', encoding='utf-8') as f:
+        logger.info(
+            f"📂 Loading USDA nutrition data from metadata: {self.metadata_file}"
+        )
+
+        with open(self.metadata_file, "r", encoding="utf-8") as f:
             metadata = json.load(f)
-        
+
         # FDC ID → nutrition のマップを作成
         for item in metadata:
-            fdc_id = item.get('fdc_id')
-            nutrition = item.get('nutrition')
-            
+            fdc_id = item.get("fdc_id")
+            nutrition = item.get("nutrition")
+
             if fdc_id and nutrition:
                 self.nutrition_db[fdc_id] = nutrition
-        
+
         logger.info(f"✅ Loaded {len(self.nutrition_db)} foods with nutrition data")
 
     def get_nutrition_per_100g(self, fdc_id: int) -> Optional[Dict[str, float]]:
@@ -124,7 +123,52 @@ class NutritionCalculator:
             "calories": round(nutrition_per_100g["calories"] * factor, 1),
             "protein_g": round(nutrition_per_100g["protein_g"] * factor, 1),
             "fat_g": round(nutrition_per_100g["fat_g"] * factor, 1),
-            "carbs_g": round(nutrition_per_100g["carbs_g"] * factor, 1)
+            "carbs_g": round(nutrition_per_100g["carbs_g"] * factor, 1),
+        }
+
+    def calculate_mixture(
+        self,
+        topk_candidates: List[Dict],
+        weight_g: float,
+        temperature: float = 1.0,
+    ) -> Optional[Dict[str, float]]:
+        """E7: top-k 候補の密度(per-100g)を rerank-score の softmax で混合して重量を掛ける。
+
+        E[nutrition] = E[kcal/100g] × (weight_g/100)。grams は VLM 由来で固定し、density のみ
+        top-k 分布で期待値化する（密度誤差は総カロリー誤差の ~50%）。栄養が引けた候補のみで
+        重みを再正規化。1件も引けなければ None（呼び出し側は top-1 計算にフォールバックしない＝
+        その時は None のまま＝従来の「該当なし」と同じ扱い）。
+        """
+        import math
+
+        per100: List[Dict[str, float]] = []
+        scores: List[float] = []
+        for c in topk_candidates or []:
+            n = self.nutrition_service.get_nutrition_per_100g(c.get("fdc_id"))
+            if n is not None:
+                per100.append(n)
+                scores.append(float(c.get("rerank_score", 0.0)))
+        if not per100:
+            return None
+
+        keys = ("calories", "protein_g", "fat_g", "carbs_g")
+        if len(per100) == 1:
+            mixed = {k: per100[0][k] for k in keys}
+        else:
+            t = temperature if temperature and temperature > 0 else 1.0
+            m = max(scores)
+            exps = [math.exp((s - m) / t) for s in scores]
+            z = sum(exps) or 1.0
+            w = [e / z for e in exps]
+            mixed = {k: sum(wi * p[k] for wi, p in zip(w, per100)) for k in keys}
+
+        factor = weight_g / 100.0
+        return {
+            "weight_g": round(weight_g, 1),
+            "calories": round(mixed["calories"] * factor, 1),
+            "protein_g": round(mixed["protein_g"] * factor, 1),
+            "fat_g": round(mixed["fat_g"] * factor, 1),
+            "carbs_g": round(mixed["carbs_g"] * factor, 1),
         }
 
     def calculate_total(self, items: List[Dict]) -> Dict[str, float]:
@@ -142,25 +186,17 @@ class NutritionCalculator:
                 "carbs_g": float
             }
         """
-        total = {
-            "calories": 0.0,
-            "protein_g": 0.0,
-            "fat_g": 0.0,
-            "carbs_g": 0.0
-        }
+        total = {"calories": 0.0, "protein_g": 0.0, "fat_g": 0.0, "carbs_g": 0.0}
 
         for item in items:
-            nutrition = item.get('nutrition', {})
+            nutrition = item.get("nutrition", {})
             for key in total:
                 total[key] += nutrition.get(key, 0.0)
 
         # 丸め処理
         return {k: round(v, 1) for k, v in total.items()}
 
-    def calculate_batch(
-        self,
-        food_items: List[Dict[str, any]]
-    ) -> List[Dict]:
+    def calculate_batch(self, food_items: List[Dict[str, any]]) -> List[Dict]:
         """
         複数の食材に対して一括で栄養素を計算
 
@@ -181,14 +217,14 @@ class NutritionCalculator:
         results = []
 
         for item in food_items:
-            fdc_id = item.get('fdc_id')
-            weight_g = item.get('weight_g', 0)
+            fdc_id = item.get("fdc_id")
+            weight_g = item.get("weight_g", 0)
 
             nutrition = self.calculate(fdc_id, weight_g)
 
             # 元のitemをコピーして栄養素を追加
             result = item.copy()
-            result['nutrition'] = nutrition
+            result["nutrition"] = nutrition
             results.append(result)
 
         return results

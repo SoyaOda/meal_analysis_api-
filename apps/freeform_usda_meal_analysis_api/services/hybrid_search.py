@@ -1251,7 +1251,19 @@ class HybridSearchEngine:
 
             # スコアでソート
             reranked = sorted(candidates, key=lambda x: x["rerank_score"], reverse=True)
-            final_results[valid_idx] = reranked[0] if reranked else None
+            best = reranked[0] if reranked else None
+            # E7 (F1-b): top_k>1 のとき上位候補を density-mixture 用に添付（best は naming/
+            # provenance 用に top-1 のまま。fdc_id + rerank_score のみ＝軽量）。
+            if best is not None and top_k and top_k > 1:
+                best["topk_candidates"] = [
+                    {
+                        "fdc_id": c["fdc_id"],
+                        "description": c.get("description", ""),
+                        "rerank_score": float(c.get("rerank_score", 0.0)),
+                    }
+                    for c in reranked[:top_k]
+                ]
+            final_results[valid_idx] = best
 
         total_elapsed = time_module.time() - batch_start_time
         logger.info(
