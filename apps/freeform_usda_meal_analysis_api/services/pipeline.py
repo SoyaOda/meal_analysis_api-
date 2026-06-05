@@ -349,6 +349,27 @@ class MealAnalysisPipeline:
         med = statistics.median(cls._result_calories(r) for r in results)
         return min(results, key=lambda r: abs(cls._result_calories(r) - med))
 
+    @classmethod
+    def _select_resilient(cls, settled: List[Any]) -> Dict[str, Any]:
+        """`asyncio.gather(return_exceptions=True)` の混在結果から、成功サンプル
+        （dict）だけで median-total-calorie を選ぶ耐障害 ensembling。
+
+        K>1 のとき1サンプルの transient 失敗で解析全体を落とさないための層。
+        K=1 単発より失敗露出を下げる（K個中1個でも成功すれば結果を返す）。
+        - 協調キャンセル(CancelledError)は握りつぶさず再送出する。
+        - 成功サンプルが皆無のときのみ hard-fail（最初の例外を送出。fallback はしない）。
+        """
+        for r in settled:
+            if isinstance(r, asyncio.CancelledError):
+                raise r
+        results = [r for r in settled if isinstance(r, dict)]
+        if not results:
+            errors = [r for r in settled if isinstance(r, BaseException)]
+            if errors:
+                raise errors[0]
+            raise ValueError("self-consistency: no samples to select from")
+        return cls._select_median_calorie_result(results)
+
     async def analyze_meal_from_image(
         self,
         image_bytes: bytes,
@@ -417,14 +438,25 @@ class MealAnalysisPipeline:
 
         # F2(stateless VLM)後は vlm_service を mutate しないため K 回を並列実行できる
         # （seed 違いの独立サンプル。latency ~Kx → ~1x）。
-        results: List[Dict[str, Any]] = await asyncio.gather(
-            *[_one_sample(i) for i in range(k)]
+        # 耐障害 ensembling: 一部サンプルの transient 失敗は許容し、成功サンプルだけで
+        # median を取る（K=1 より失敗露出を下げる）。全滅時のみ hard-fail（fallback なし）。
+        raw = await asyncio.gather(
+            *[_one_sample(i) for i in range(k)], return_exceptions=True
         )
-
-        selected = self._select_median_calorie_result(results)
+        selected = self._select_resilient(raw)
+        oks = [r for r in raw if isinstance(r, dict)]
+        n_fail = len(raw) - len(oks)
+        if n_fail:
+            logger.warning(
+                "🎲 [Self-Consistency] %d/%d samples failed (transient); "
+                "ensembling over %d survivors",
+                n_fail,
+                k,
+                len(oks),
+            )
         logger.info(
             "🎲 [Self-Consistency] sample calories=%s -> selected median=%.1f",
-            [round(self._result_calories(r), 1) for r in results],
+            [round(self._result_calories(r), 1) for r in oks],
             self._result_calories(selected),
         )
         return selected

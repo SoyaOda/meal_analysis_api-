@@ -47,15 +47,19 @@ class VLMConfig(BaseModel):
         description="Whether to use VLM response cache",
     )
     self_consistency_k: int = Field(
-        default=1,
+        default=3,
         ge=1,
         le=9,
         description=(
             "Self-consistency samples: run the analysis K times with K distinct "
             "seeds and return the median-total-calorie result. 1 = off (single "
-            "call, default). K=3 cut realistic-range calorie MAE ~2pt (pooled "
-            "p=0.02); see evals/lessons/20260604_self_consistency_median_ensemble_"
-            "significant_calorie_win.md. Runs SEQUENTIALLY (latency ~Kx)."
+            "call). DEFAULT 3: median-of-3 cuts calorie MAE ~2.5pt vs single, "
+            "robust across 3 sets at pooled N=253 (E3, 2026-06-05); K=3->K=5 adds "
+            "only ~0.3pt (K=3 is the sweet spot). Samples run CONCURRENTLY "
+            "(latency ~1.15x, not Kx) since E12-v2; a transient single-sample "
+            "failure no longer fails the request (ensemble over survivors). "
+            "Cost = Kx VLM. See evals/lessons/20260605_e3_uncertainty_no_error_"
+            "signal_but_sc_median_robust_at_pooled_N.md."
         ),
     )
 

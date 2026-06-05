@@ -10,7 +10,7 @@
   - `apps/freeform_usda_meal_analysis_api/AGENTS.md`
   - `apps/freeform_usda_meal_analysis_api/CLAUDE.md`
   - `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md`
-- freeform_usda（= mozu 用 API）の採用候補モデルは `openrouter:google/gemini-3.1-pro-preview`（2026-06-03〜, 既定）。`gemini-3-flash-preview` は安価代替。決定根拠は `apps/freeform_usda_meal_analysis_api/docs/MOZU_MODEL_DECISION_20260603.md`
+- freeform_usda（= mozu 用 API）の採用モデルは `openrouter:google/gemini-3-flash-preview`（2026-06-05〜, code 既定・本番とも flash）。pro（`gemini-3.1-pro-preview`）は撤回済（独立実測 GT で flash への頑健優位なし・3 セットで符号 flip）。決定根拠は `apps/freeform_usda_meal_analysis_api/docs/MOZU_MODEL_DECISION_20260603.md`
 - freeform_usda の採用判定は「原則50例フル評価（Ground truth総カロリー比較）」を必須とする
 - freeform_usda のPDCAでは過学習防止を必須化（評価データ固有情報をpromptへ埋め込まない）
 - freeform_usda のPDCA評価は原則 `use_vlm_cache=false` を維持する

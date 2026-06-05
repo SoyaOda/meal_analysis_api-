@@ -59,3 +59,36 @@ def test_median_returns_an_actual_sample_object() -> None:
 def test_empty_raises() -> None:
     with pytest.raises(ValueError):
         Pipeline._select_median_calorie_result([])
+
+
+# --- resilient ensembling over gather(return_exceptions=True) results ---
+
+
+def test_resilient_skips_failed_samples() -> None:
+    # one sample raised; median taken over the 3 survivors (420/610/515 -> 515)
+    settled = [_r(420, 7), RuntimeError("transient VLM 503"), _r(610, 8), _r(515, 9)]
+    sel = Pipeline._select_resilient(settled)
+    assert Pipeline._result_calories(sel) == 515
+    assert sel["tag"] == 9
+
+
+def test_resilient_all_failed_hard_raises() -> None:
+    # zero survivors -> hard-fail with the first exception (no fallback)
+    err = RuntimeError("all samples failed")
+    with pytest.raises(RuntimeError):
+        Pipeline._select_resilient([err, ValueError("x")])
+
+
+def test_resilient_reraises_cancellation() -> None:
+    import asyncio
+
+    # cooperative cancellation must propagate, not be swallowed as a "failure"
+    settled = [_r(500, 1), asyncio.CancelledError()]
+    with pytest.raises(asyncio.CancelledError):
+        Pipeline._select_resilient(settled)
+
+
+def test_resilient_all_success_matches_plain_selection() -> None:
+    results = [_r(300, 0), _r(500, 1), _r(400, 2)]
+    sel = Pipeline._select_resilient(results)
+    assert sel["tag"] == 2

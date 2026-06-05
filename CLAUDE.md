@@ -27,7 +27,7 @@
 - 全体レビュー & 改善ロードマップ: `apps/freeform_usda_meal_analysis_api/docs/DEEP_REVIEW_20260601.md`
 
 精度PDCAに着手する前に `/pdca-bootstrap`（または `scripts/pdca_session_bootstrap`）を実行し、`evals/knowledge/session_bootstrap_latest.md` を確認する。
-- **採用候補モデル（mozu, 2026-06-03〜）: `openrouter:google/gemini-3.1-pro-preview`**（recognition が flash 比 4/4 再現で向上・レイテンシ同等・コスト ~3.2x。詳細 `apps/freeform_usda_meal_analysis_api/docs/MOZU_MODEL_DECISION_20260603.md`）。flash は安価代替として残す。
+- **採用モデル（mozu, 2026-06-05〜）: `openrouter:google/gemini-3-flash-preview`**（code 既定・本番(Cloud Run/Firestore)とも flash）。pro（`gemini-3.1-pro-preview`）は撤回済（独立実測 GT で calorie/recognition とも flash への頑健優位なし・3 セットで符号 flip、frozen-50 の優位は GPT-5-pro 推定 GT のアーティファクト）。詳細 `apps/freeform_usda_meal_analysis_api/docs/MOZU_MODEL_DECISION_20260603.md`。
 - 採用判定は原則50例フル評価 + Ground truth総カロリー比較 + 安定性確認
 - 過学習防止: prompt に評価データ固有情報（test image id / label値 / ground truth）を含めない
 - PDCA評価は原則 `use_vlm_cache=false`

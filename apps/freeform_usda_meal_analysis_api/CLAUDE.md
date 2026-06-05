@@ -9,10 +9,12 @@
 - 過学習防止のため、promptに評価データ固有情報（`test_foodXX` や label値）を埋め込まない。
 - PDCA評価は原則 `use_vlm_cache=false` で実施し、キャッシュ混入を避ける。
 
-## Current Model Focus (2026-06-03〜, mozu)
-このアプリは **mozu**（Finch 型の高単価 calorie tracker app）用 API。採用候補モデルを最適化する。
-- **`openrouter:google/gemini-3.1-pro-preview`（default, 採用候補）** — flash 比で recognition が 4/4 run 再現的に向上、レイテンシ同等、コスト ~3.2x。calorie under-bias は calibration（外部held-out fit後に有効化）で補正。決定根拠: `docs/MOZU_MODEL_DECISION_20260603.md`。
-- `openrouter:google/gemini-3-flash-preview`（安価代替）— コスト優先時のフォールバック。
+## Current Model Focus (2026-06-05〜, mozu)
+このアプリは **mozu**（Finch 型の高単価 calorie tracker app）用 API。
+- **`openrouter:google/gemini-3-flash-preview`（default, 採用済み）** — code 既定・本番(Cloud Run/Firestore)とも flash。
+- **pro は撤回済**（`openrouter:google/gemini-3.1-pro-preview`）: 独立実測 GT（N5k 俯瞰 / NutritionVerse-Real eye-level / NVReal COCO 食材クリーン GT）で **calorie も recognition も flash への頑健優位なし**（3 セットで pro−flash 符号 flip、recognition clean-GT は pro やや劣）。frozen-50 の pro 優位は GPT-5-pro 推定 GT のアーティファクト。→ **同等精度・約1/3コストの flash を採用**。
+  - 経緯: `docs/MOZU_MODEL_DECISION_20260603.md`（pro 採用時の根拠・後に撤回）+ lessons `20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational` / `20260604_nutritionverse_real_eyelevel_eval_pro_calorie_edge_not_robust`。
+- 高単価モデル(pro 等)は将来 **tiered routing の不確実性検知器**（E18・設計のみ凍結）として再評価の余地あり。
 
 ## First 5 Minutes Checklist
 1. `apps/freeform_usda_meal_analysis_api/AGENTS.md` を確認
