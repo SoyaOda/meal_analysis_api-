@@ -24,6 +24,7 @@
 4. `evals/knowledge/session_bootstrap_latest.md` を確認（baseline / latest lessons / remote config）
 5. 実験configを `evals/configs/` に作成/更新
 6. チューニング時は `evals/splits/dev_40_v1.txt` を使用し、採用時は50件を必ず評価（中断時は分割実行して全件を揃える）
+   - **小lever の採用判定は pooled rotation で行う**（n=50 単独は draw-noise ±3pt）。rotation = frozen-50 / NVReal-104 / N5k-100 / **JFB-100（実 eye-level ユーザー写真・in-domain proxy, `build_jfb_evalset.py` で再構築）**。詳細・コマンド・各 baseline は `docs/EXTERNAL_TESTSET_PLAN_20260603.md`
 7. 実験後に `evals/runs/` と `evals/lessons/` を更新し、必要に応じて `evals/knowledge/` を再生成
 8. 昇格候補は `scripts/run_pdca_repeated_eval.py` で最低2反復の安定性を確認
 

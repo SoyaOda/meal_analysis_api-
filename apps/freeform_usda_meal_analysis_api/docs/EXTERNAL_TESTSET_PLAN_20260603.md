@@ -63,3 +63,19 @@ python -m apps.freeform_usda_meal_analysis_api.scripts.fit_calorie_calibration \
 
 ## Fallback（方法を採らない場合）
 50枚据え置きは「in-distribution の相対比較」としてのみ妥当で、**pro の優位は公開分布で未証明**と明記必須。その場合でも**最低 Tier 1（多様 cuisine 認識チェック）だけは実施推奨**（安価・栄養GT不要・懸念を直接検証）。
+
+## 更新（2026-06-06）: JFB を in-domain eval として統合（rotation 追加）
+このdocが「自律取得不可」とした**「公開分布×実ユーザー phone 写真」が JFB で部分的に実現**した。
+- **JFB (January Food Benchmark, arXiv 2508.09966, CC-BY-4.0)**: 1,000枚の**実 eye-level モバイルユーザー写真**＋人手検証の meal/ingredients/macros。mozu 配備分布に最も近い公開セット。
+- **再構築**: `python -m apps.freeform_usda_meal_analysis_api.scripts.build_jfb_evalset --split-size 100`（公開 unsigned S3 から DL→harness 化、`test_images_jfb/` gitignore・`jfb_test_100` split）。
+- **eval（rotation 標準コマンド）**:
+  ```
+  python -m apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval --config <cfg> \
+    --api-url http://localhost:8006 \
+    --images-dir test_images_jfb/images --labels-dir test_images_jfb/images_label_with_nutrition \
+    --image-index-file apps/freeform_usda_meal_analysis_api/evals/splits/jfb_test_100.txt \
+    --required-image-count 100 --no-use-vlm-cache
+  ```
+- **v13 baseline（JFB-100, 2026-06-06）**: calorie MAE **53.8%** / high30 56% / signed **+43.9%（系統 OVER）** / macro P/F/C 54/79/106。curated frozen-50(~16%)を大きく超過＝実ドメイン bias を露呈。
+- **役割と限界**: in-domain な calorie/macro/recognition の**eval・promotion proxy**として rotation に追加（frozen-50/NVReal/N5k と横並び）。ただし **JFB GT は専門家推定（weighed でない）→ E14 calibration の FIT には使えない**（fit は weighed mozu-domain set=E13 が必須、`docs/E13_DATA_COLLECTION_PLAN_20260606.md`）。lesson `evals/lessons/20260606_jfb_*`。
+- **rotation の現行構成**: frozen-50(eye-level, in-dist) / NVReal-104(eye-level, weighed) / N5k-100(overhead, weighed) / **JFB-100(eye-level, real-user, estimated-GT)**。小lever は pooled で判定（n=50 単独は draw-noise ±3pt）。

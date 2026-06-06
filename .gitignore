@@ -129,5 +129,12 @@ data/nutritionverse_real/
 test_images_nvreal/
 apps/freeform_usda_meal_analysis_api/reviews/
 
+# JFB (January Food Benchmark) external eval set — CC-BY-4.0, rebuildable from public S3
+# (s3://january-food-image-dataset-public/food-scan-benchmark-dataset.tar.gz -> /tmp/jfb_convert.py)
+test_images_jfb/
+
+# E13 collected mozu-domain eval sets (ingested via scripts/ingest_e13_collection.py)
+test_images_e13*/
+
 # E5 embedding A/B candidate indexes (large build artifacts)
 apps/freeform_usda_meal_analysis_api/data/faiss_ab/
