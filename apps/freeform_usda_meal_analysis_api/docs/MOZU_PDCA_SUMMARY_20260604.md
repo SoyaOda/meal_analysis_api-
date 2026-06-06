@@ -1,5 +1,8 @@
 # mozu PDCA サマリ & 結論（2026-06-03〜06-04）
 
+> **⚠️ 2026-06-06 更新: この doc は 06-04 時点のスナップショット。PDCA 全経過(Feb〜06-06)・全実験・現状の最新かつ包括的な総括は `docs/MOZU_PDCA_COMPLETE_20260606.md` を参照（pro はその後撤回・flash 採用、E7/light/SC K=3/E2 を本番 deploy 済）。本 doc は歴史的記録として保持。**
+
+
 このアプリ（`freeform_usda_meal_analysis_api` = mozu 用「写真→カロリー推定」API）の、モデル採用（gemini-3.1-pro vs gemini-3-flash）と「欧米料理で十分汎用的か」を巡る PDCA の総括。詳細根拠は各 `evals/lessons/` と `MOZU_MODEL_DECISION_20260603.md`（SSOT）。
 
 ## 問い

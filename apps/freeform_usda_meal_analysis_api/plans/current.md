@@ -39,7 +39,7 @@ frozen-50(eye-level, in-dist) / NVReal-104(eye-level, weighed) / N5k-100(overhea
 ### 次の一手
 ①**E13 weighed 物理収集の実行**（ユーザー/委託＝唯一の律速。ingestion infra 完備・E14 は fit 待ちで実ドメイン ~18pt 改善見込み）。②残探索は概ね出尽くし（prompt/schema/retrieval/モデルは天井）。**本番反映済み**: E7/light/SC K=3/E2。
 
-**最初に読む**: 本 `current.md` → `docs/E13_DATA_COLLECTION_PLAN_20260606.md`（本命 lever への道）→ `docs/EXTERNAL_TESTSET_PLAN_20260603.md`（rotation）→ `evals/lessons/`（特に `20260606_*` 5本=e3/e1v18/e2/jfb/e14、`20260605_e7_*`、`20260605_e3_*`）→ `docs/MOZU_MODEL_DECISION_20260603.md`（pro 撤回の SSOT）→ `plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`（E1-E18+F1-F5 承認済ロードマップ）。
+**最初に読む**: 本 `current.md`（運用 SSOT）→ **`docs/MOZU_PDCA_COMPLETE_20260606.md`（PDCA 全経過・全実験・現状の包括ドキュメント＝最も詳しい総括）** → `docs/E13_DATA_COLLECTION_PLAN_20260606.md`（本命 lever への道）→ `docs/EXTERNAL_TESTSET_PLAN_20260603.md`（rotation）→ `docs/MOZU_MODEL_DECISION_20260603.md`（pro 撤回の SSOT）→ `evals/lessons/`（特に `20260606_*` / `20260605_e7_*` / `20260605_e3_*`）→ `plans/PDCA_ROADMAP_3AI_REVIEW_20260604.md`（E1-E18+F1-F5 承認済ロードマップ）。
 **再開手順**: `git checkout feature/mozu-api && git pull`。`pdca_session_bootstrap` で現行 baseline/config 確認。eval は `scripts/run_pdca_batch_eval`（rotation コマンドは EXTERNAL_TESTSET doc）。
 **鍵/起動**: OpenRouter/DeepInfra キーは **repo に無し**（env で渡す）。ローカル eval/server は venv-with-space + env unsets（`memory` の `freeform-local-eval-env`）。`evals/runs/` ・ `test_images_*` は gitignore。
 
