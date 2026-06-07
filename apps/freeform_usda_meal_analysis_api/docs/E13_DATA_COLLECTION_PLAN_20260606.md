@@ -4,6 +4,8 @@
 - status: PLAN (design SSOT). No collection started. Decisions for the user are in §12.
 - author: PDCA session `mozu-e13`. Grounded by a 3-agent research workflow (GT methods + public-dataset landscape + internal-findings implications); key sources cited inline.
 
+> 📎 **将来 mozu アプリ UI/UX を実装する人向けのハンドオフ（このプランをアプリ機能仕様 + 画面要件 + E14 fit パイプラインに落とし込んだもの）は `docs/MOZU_APP_E13_E14_UIUX_HANDOFF_20260607.md`。** 本書は設計根拠(なぜ/層化/n)の SSOT、ハンドオフ書は実装着手用。
+
 ## 1. Why E13 exists (the one remaining real lever)
 The 2026-06 PDCA cycle proved that **prompt / schema / retrieval / model selection are at the ceiling** for photo calorie estimation:
 - **E3**: no available uncertainty signal predicts calorie error (pooled N=253, AUC 0.51) → E9/E18 cheap versions dead. Error is *systematic portion/density bias*, invisible to sample variance ("confidently wrong").
