@@ -84,7 +84,9 @@ service-account-key.json
 *.json
 !package.json
 !tsconfig.json
-!openapi.json 
+!openapi.json
+# model-refresh の既テスト集合レジストリは SSOT として版管理する
+!apps/freeform_usda_meal_analysis_api/evals/knowledge/tested_models.json
 
 # Sensitive analysis files that may contain credentials
 test_advanced_elasticsearch_architecture_*.txt

@@ -1,3 +1,10 @@
+from apps.freeform_usda_meal_analysis_api.scripts.pool_paired_rotation import (
+    VERDICT_NO_WIN,
+    VERDICT_POOLED_WIN,
+    VERDICT_SET_SPECIFIC,
+    classify_verdict,
+    paired_deltas_from_errors,
+)
 from apps.freeform_usda_meal_analysis_api.scripts.run_pdca_batch_eval import (
     EmbeddingSimilarity,
     compute_decomposed_metrics,
@@ -180,3 +187,32 @@ def test_embedding_similarity_drives_dish_match_when_passed_as_similarity_fn() -
         return
     assert m["matched"] == 1  # embeddings match it; token/char overlap would not
     assert m["portion_score_0_5"] == 5  # 95 vs 100 -> within_10
+
+
+def test_pooled_rotation_verdict_distinguishes_set_specific_from_consistent_win() -> (
+    None
+):
+    # pooled CI 全体 < 0 かつ 全setのΔ < 0 → 方向一貫の WIN
+    verdict, _ = classify_verdict(-1.1, [-2.0, -3.5, -0.4])
+    assert verdict == VERDICT_POOLED_WIN
+    # E1 v18 の教訓: pooled CI < 0 でも set間で符号 flip → SET-SPECIFIC（REJECT相当）
+    verdict, _ = classify_verdict(-1.1, [+0.46, -1.69, -14.26])
+    assert verdict == VERDICT_SET_SPECIFIC
+    # pooled CI が 0 を跨ぐ → 方向一貫でも NO WIN
+    verdict, _ = classify_verdict(+0.5, [-2.0, -3.5, -0.4])
+    assert verdict == VERDICT_NO_WIN
+    # Δ=0 ちょうどのsetは「全set負」とはみなさない（flat は一貫した改善でない）
+    verdict, _ = classify_verdict(-1.1, [-2.0, 0.0])
+    assert verdict == VERDICT_SET_SPECIFIC
+
+
+def test_pooled_rotation_pairing_uses_common_successes_and_keeps_candidate_order() -> (
+    None
+):
+    # baseline 側で失敗した img2 は除外。順序は candidate dict の挿入順（=評価順）を
+    # 保持する（run_pdca_batch_eval の paired CI を同一seedで再現するための前提）。
+    candidate = {"img3.jpg": 10.0, "img1.jpg": 30.0, "img2.jpg": 99.0}
+    baseline = {"img1.jpg": 20.0, "img3.jpg": 25.0}
+    deltas, images = paired_deltas_from_errors(candidate, baseline)
+    assert images == ["img3.jpg", "img1.jpg"]
+    assert deltas == [-15.0, 10.0]

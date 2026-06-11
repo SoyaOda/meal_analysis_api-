@@ -1,0 +1,318 @@
+{
+  "_note": "既テストモデルレジストリ。model_watch.py が新モデル検知時の突合に使う。verdict 語彙: adopted / rejected / withdrawn / no_clean_win / replaced / untested_blocked",
+  "updated_at": "2026-06-11",
+  "models": [
+    {
+      "model_id": "openrouter:google/gemini-3-flash-preview",
+      "slot": "vlm",
+      "verdict": "adopted",
+      "date": "2026-06-04",
+      "evidence": "settings.py default; docs/MOZU_MODEL_DECISION_20260603.md",
+      "notes": "現行default・本番(Cloud Run/Firestore)とも flash"
+    },
+    {
+      "model_id": "openrouter:google/gemini-3.1-pro-preview",
+      "slot": "vlm",
+      "verdict": "withdrawn",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational",
+      "notes": "独立GTでcalorie符号flip・recognition劣・3.2xコスト"
+    },
+    {
+      "model_id": "openrouter:openai/gpt-5-mini",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-02-24",
+      "evidence": "full50 MAE 29.73% vs gemini 21.98%, latency 42s",
+      "notes": ""
+    },
+    {
+      "model_id": "openrouter:moonshotai/kimi-k2.5",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-02",
+      "evidence": "lesson 20260602_broad_vlm_sweep",
+      "notes": "dev40 MAE 55.04% / slope 0.00"
+    },
+    {
+      "model_id": "openrouter:google/gemini-3.5-flash",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-02",
+      "evidence": "lesson 20260601_model_drift_newer_gemini_no_recovery",
+      "notes": "24.95% 全軸悪化"
+    },
+    {
+      "model_id": "openrouter:google/gemini-3.1-flash-lite",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-01",
+      "evidence": "lesson 20260601_model_drift_newer_gemini_no_recovery（20.86% 統計同等で2倍遅）",
+      "notes": "gemini-3.1-flash-lite-preview として評価"
+    },
+    {
+      "model_id": "openrouter:z-ai/glm-4.6v",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-02",
+      "evidence": "lesson 20260602_broad_vlm_sweep（21.24% / high30 35% / latency 75s）",
+      "notes": ""
+    },
+    {
+      "model_id": "openrouter:openai/gpt-5.1",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-02",
+      "evidence": "lesson 20260602_broad_vlm_sweep（22.80% mediocre / high30 35%）",
+      "notes": ""
+    },
+    {
+      "model_id": "openrouter:qwen/qwen3-vl-235b-a22b-thinking",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-02",
+      "evidence": "lesson 20260602_broad_vlm_sweep（29.51% / +15.6% 系統過大）",
+      "notes": ""
+    },
+    {
+      "model_id": "google:gemini-3-flash-preview",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win E17'",
+      "notes": "native +7.03pt p=0.004 悪化、|media=high・|think=high も負け"
+    },
+    {
+      "model_id": "Qwen/Qwen3-Embedding-8B",
+      "slot": "embedding",
+      "verdict": "replaced",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": "旧default。0.6B が統計同等のため軽量側へ置換"
+    },
+    {
+      "model_id": "Qwen/Qwen3-Embedding-0.6B",
+      "slot": "embedding",
+      "verdict": "adopted",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": "現行default（light スタック）"
+    },
+    {
+      "model_id": "Qwen/Qwen3-Embedding-4B",
+      "slot": "embedding",
+      "verdict": "no_clean_win",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": ""
+    },
+    {
+      "model_id": "BAAI/bge-m3",
+      "slot": "embedding",
+      "verdict": "rejected",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": ""
+    },
+    {
+      "model_id": "google/embeddinggemma-300m",
+      "slot": "embedding",
+      "verdict": "rejected",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": ""
+    },
+    {
+      "model_id": "google:gemini-embedding-001",
+      "slot": "embedding",
+      "verdict": "no_clean_win",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": ""
+    },
+    {
+      "model_id": "cohere:embed-v4.0",
+      "slot": "embedding",
+      "verdict": "no_clean_win",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": ""
+    },
+    {
+      "model_id": "openai:text-embedding-3-large",
+      "slot": "embedding",
+      "verdict": "no_clean_win",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": ""
+    },
+    {
+      "model_id": "voyage:voyage-3.x",
+      "slot": "embedding",
+      "verdict": "untested_blocked",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": "APIキー403（al-… が拒否、pa-… 形式が必要な可能性）。embed/rerank とも未テスト"
+    },
+    {
+      "model_id": "Qwen/Qwen3-Reranker-4B",
+      "slot": "reranker",
+      "verdict": "replaced",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": "旧default。0.6B が統計同等のため軽量側へ置換"
+    },
+    {
+      "model_id": "Qwen/Qwen3-Reranker-0.6B",
+      "slot": "reranker",
+      "verdict": "adopted",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": "現行default（light スタック）"
+    },
+    {
+      "model_id": "nvidia/llama-nemotron-rerank-vl-1b-v2",
+      "slot": "reranker",
+      "verdict": "rejected",
+      "date": "2026-06-04",
+      "evidence": "lesson 20260604_e5e6_lightweight_embedding_reranker_ab",
+      "notes": ""
+    },
+    {
+      "model_id": "cohere:rerank-v3.5",
+      "slot": "reranker",
+      "verdict": "no_clean_win",
+      "date": "2026-06-05",
+      "evidence": "lesson 20260605_cross_provider_retrieval_no_clean_win",
+      "notes": ""
+    },
+    {
+      "model_id": "openrouter:x-ai/grok-4.3",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 paired dMAE +3.30 [-1.71,+8.79] NS悪化, lat 27.1s, hi30 22.5"
+    },
+    {
+      "model_id": "openrouter:x-ai/grok-4.20",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +4.94 [-0.18,+10.46], lat 24.2s"
+    },
+    {
+      "model_id": "openrouter:openai/gpt-5.4-mini",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +5.11 [-0.49,+11.01]"
+    },
+    {
+      "model_id": "openrouter:minimax/minimax-m3",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +10.86 [+4.67,+17.47] 有意悪化（cost最安$0.0015/imgだが精度不足）"
+    },
+    {
+      "model_id": "openrouter:anthropic/claude-haiku-4.5",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +13.68 [+6.50,+22.40] 有意悪化"
+    },
+    {
+      "model_id": "openrouter:openai/gpt-5.2",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +1.90 [-3.26,+6.35] NS（今回最接近・lat 13.6sはflashより高速・hi30同等だが点推定+1.9で基準外、cost 1.7x。ensemble素材としてはflash+grok4.3+gpt5.2 median=13.71 vs flash15.42）"
+    },
+    {
+      "model_id": "openrouter:qwen/qwen3.7-plus",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +5.27, lat 68.3s（>2x制約で失格）"
+    },
+    {
+      "model_id": "openrouter:qwen/qwen3.5-397b-a17b",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +4.99, lat 67.5s"
+    },
+    {
+      "model_id": "openrouter:moonshotai/kimi-k2.6",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +1.94 NS だが lat 116.4s + fail15 = latency失格（smoke n=5ではMAE12.5と最良だった点は記録）（fail15の一部はクレジット枯渇402交絡の可能性。ただしlatency 116sは成功25件での実測であり失格判定は不変）"
+    },
+    {
+      "model_id": "openrouter:stepfun/step-3.7-flash",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "dev40 +6.65 [+0.09,+12.39] p=0.047 有意悪化 + fail12（kimi失敗起因のcircuit breaker交絡の可能性あり、ただしMAE劣勢は成功38件でも明確）（fail12は402交絡の可能性。paired有意悪化は成功28件のpaired共通集合での値）"
+    },
+    {
+      "model_id": "openrouter:qwen/qwen3.6-plus",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 MAE22.6 + lat 53.3s（latency失格・Qwen系は3.7-plus/3.5-397bで代表評価済み）"
+    },
+    {
+      "model_id": "openrouter:qwen/qwen3.6-flash",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 MAE28.3 + lat 83.3s"
+    },
+    {
+      "model_id": "openrouter:bytedance-seed/seed-2.0-lite",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 MAE28.4 + lat 77.1s"
+    },
+    {
+      "model_id": "openrouter:baidu/ernie-4.5-vl-424b-a47b",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 lat 128.0s（latency即失格）"
+    },
+    {
+      "model_id": "openrouter:amazon/nova-2-lite-v1",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 MAE21.2 + lat 30.4s borderline・上位候補に劣後"
+    },
+    {
+      "model_id": "openrouter:perceptron/perceptron-mk1",
+      "slot": "vlm",
+      "verdict": "rejected",
+      "date": "2026-06-11",
+      "evidence": "lesson 20260611_model_refresh_sweep（予定）; runs 20260611_164346(smoke)/171546(dev40 A)/171558(dev40 B)",
+      "notes": "smoke5 MAE29.7 + lat 41.1s + ctx32k制約"
+    }
+  ]
+}
