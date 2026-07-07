@@ -184,18 +184,31 @@ rsync -avh --progress \
 
 ## 6. Claude Code 開発環境の移行
 
-### 6-1. プロジェクト内設定（git clone で入る）
-- `CLAUDE.md` / `AGENTS.md`（ルート＋各アプリ）
-- `.claude/settings.json`（hooks定義、`.env` 読取禁止ルール。`$CLAUDE_PROJECT_DIR` 変数使用でパス非依存）
+### 6-1. プロジェクト内設定（git clone で入る＝追跡済み）
+git 追跡されているのは **以下4つのみ**（`git ls-files .claude/` で確認）:
+- `CLAUDE.md` / `AGENTS.md`（ルート＋各アプリ）※`.claude/`外だが追跡
 - `.claude/hooks/format-python.sh`（Write|Edit 後に `ruff format` + `py_compile`）
 - `.claude/agents/pdca-runner.md`（PDCA隔離実行subagent）
-- `.claude/skills/handoff/`（`/handoff` スキル）
+- `.claude/skills/handoff/SKILL.md`（`/handoff` スキル）
+- `.claude/scheduled_tasks.lock`
 
-### 6-2. プロジェクト内ローカル設定（git管理外・手動コピー＆パス修正）
-`.claude/settings.local.json`（許可リスト約300行）は **git管理外** なので旧機から手動コピーする。内部に旧機固有の絶対パスが埋まっているため置換が必要:
+> ⚠️ これら追跡ファイルは、移行ガイドを含むブランチ（`docs/mozu-dataset-inventory-e13-uiux-handoff` 等）には存在するが、**古い作業ブランチ（例: `feature/admin-config-panel`）には無い**場合がある。その場合は取り込む:
+> ```bash
+> git checkout docs/mozu-dataset-inventory-e13-uiux-handoff -- .claude/agents .claude/hooks .claude/skills
+> ```
+
+### 6-2. プロジェクト内ローカル設定（git管理外・旧機から手動コピー必須）
+**`.claude/settings.json` と `.claude/settings.local.json` はどちらも git 未追跡**（ローカル専用）。旧機から両方を手動コピーする。
+
+- `settings.json`: PostToolUse フック定義（`ruff format`+`py_compile`）＋`.env` 読取禁止ルール。`$CLAUDE_PROJECT_DIR` 変数使用でパス非依存 → **コピーのみでOK（パス置換不要）**
+- `settings.local.json`: 許可リスト約300行。旧機固有の絶対パスが埋まっているため **コピー後にパス置換が必要**
 
 ```bash
-# 旧機の settings.local.json をコピー後、パスを新機に合わせる
+# 旧機から両ファイルをコピー（例）
+scp "$OLD:/Users/odasoya/meal_analysis_api_2/.claude/settings.json"       .claude/
+scp "$OLD:/Users/odasoya/meal_analysis_api_2/.claude/settings.local.json" .claude/
+
+# settings.local.json のパスを新機に合わせる
 #   /Users/odasoya                 → $HOME（新機ユーザー名が違う場合）
 #   /Users/odasoya/google-cloud-sdk → 新機の gcloud SDK パス
 #   /Users/odasoya/meal_analysis_api_2 → 新機のリポジトリパス
