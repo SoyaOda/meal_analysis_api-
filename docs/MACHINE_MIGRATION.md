@@ -132,6 +132,17 @@ cp .env.example .env
 
 旧機と新機を同一LAN上に置くか、外付けSSD経由で以下を丸ごとコピーする。**FAISSインデックスと `normalized_portions.json` は freeform 起動に必須**（再構築はembedding再計算で長時間）。
 
+> 💡 **旧機側で1コマンド書き出し**: `scripts/export_migration_bundle.sh` を使うと、必須資産（＋フラグ指定で任意資産）を移行先へ repo 相対構造を保って rsync し、受け取り側の展開コマンドまで表示する。
+> ```bash
+> # 旧機で: 外付けSSDへ必須＋任意資産を書き出し
+> bash scripts/export_migration_bundle.sh /Volumes/EXTSSD/meal_migration --all
+> # 新機で: git clone 後に展開
+> rsync -ah --info=progress2 /Volumes/EXTSSD/meal_migration/repo/ ~/meal_analysis_api_2/
+> ```
+> 秘密情報 `.env`（`--with-env` で任意同梱）と `~/.claude` は対象外＝安全経路で別途運ぶ。
+
+以下は手動 rsync の個別コマンド（上記スクリプトを使わない場合）。
+
 ```bash
 # 旧機 → 新機（LAN経由 rsync の例。OLD=旧機ホスト, DST=新機の配置先）
 OLD=odasoya@OLD-MAC.local
