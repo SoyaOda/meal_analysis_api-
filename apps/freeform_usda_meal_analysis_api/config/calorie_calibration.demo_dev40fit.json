@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "slope": 0.332164,
+  "intercept": 469.1657,
+  "min_factor": 0.5,
+  "max_factor": 2.5,
+  "provenance": "DEMO fit on dev_40 (part of eval-50, NOT external) for mechanism validation only; replace with an EXTERNAL held-out fit before enabling in production.",
+  "fitted_at": "2026-06-02T00:11:34.296885",
+  "fit_set": "apps/freeform_usda_meal_analysis_api/evals/splits/dev_40_v1.txt"
+}

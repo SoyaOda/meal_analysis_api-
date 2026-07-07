@@ -1,0 +1,97 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef stew",
+        "description": "cooked, with vegetables",
+        "weight_g": 380,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 456.0,
+          "protein_g": 30.4,
+          "fat_g": 22.8,
+          "carbs_g": 30.4
+        }
+      },
+      "extras": [
+        {
+          "search_name": "sour cream",
+          "description": "nfs",
+          "weight_g": 20,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 40.0,
+            "protein_g": 0.6,
+            "fat_g": 4.0,
+            "carbs_g": 0.9
+          }
+        }
+      ]
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 12.0,
+            "protein_g": 1.2,
+            "fat_g": 0.2,
+            "carbs_g": 2.4
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 9.0,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 2.2
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 80,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 14.4,
+            "protein_g": 0.7,
+            "fat_g": 0.2,
+            "carbs_g": 3.1
+          }
+        },
+        {
+          "search_name": "avocado",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 96.0,
+            "protein_g": 1.2,
+            "fat_g": 8.8,
+            "carbs_g": 5.1
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 54.0,
+            "protein_g": 0.1,
+            "fat_g": 5.0,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

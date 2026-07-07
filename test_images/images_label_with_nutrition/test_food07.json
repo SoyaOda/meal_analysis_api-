@@ -1,0 +1,49 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef steak",
+        "description": "grilled, home recipe",
+        "weight_g": 170,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 425.0,
+          "protein_g": 44.2,
+          "fat_g": 28.9,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "broccoli",
+        "description": "steamed",
+        "weight_g": 120,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 42.0,
+          "protein_g": 2.9,
+          "fat_g": 0.5,
+          "carbs_g": 8.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "potato salad",
+        "description": "ready-to-serve",
+        "weight_g": 150,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 255.0,
+          "protein_g": 3.8,
+          "fat_g": 15.0,
+          "carbs_g": 25.5
+        }
+      },
+      "extras": []
+    }
+  ]
+}

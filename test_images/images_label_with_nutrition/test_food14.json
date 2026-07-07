@@ -1,0 +1,90 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken thigh",
+        "description": "boneless, skinless, baked",
+        "weight_g": 140,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 292.6,
+          "protein_g": 36.4,
+          "fat_g": 15.3,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "mexican rice",
+        "description": "cooked, home recipe",
+        "weight_g": 160,
+        "confidence": 0.75,
+        "nutrition": {
+          "calorie": 240.0,
+          "protein_g": 4.8,
+          "fat_g": 5.6,
+          "carbs_g": 43.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "mashed sweet potato",
+        "description": "cooked, home recipe",
+        "weight_g": 140,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 140.0,
+          "protein_g": 2.8,
+          "fat_g": 0.3,
+          "carbs_g": 32.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 8.0,
+            "protein_g": 0.8,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        },
+        {
+          "search_name": "broccoli",
+          "description": "steamed",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 14.0,
+            "protein_g": 1.0,
+            "fat_g": 0.2,
+            "carbs_g": 2.8
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.65,
+          "nutrition": {
+            "calorie": 54.8,
+            "protein_g": 0.0,
+            "fat_g": 5.4,
+            "carbs_g": 1.2
+          }
+        }
+      ]
+    }
+  ]
+}

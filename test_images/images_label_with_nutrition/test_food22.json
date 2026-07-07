@@ -1,0 +1,125 @@
+{
+  "dishes": [
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "spaghetti",
+          "description": "cooked, boiled",
+          "weight_g": 180,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 282.6,
+            "protein_g": 10.4,
+            "fat_g": 1.6,
+            "carbs_g": 55.6
+          }
+        },
+        {
+          "search_name": "shrimp",
+          "description": "cooked",
+          "weight_g": 70,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 69.3,
+            "protein_g": 16.8,
+            "fat_g": 0.2,
+            "carbs_g": 0.1
+          }
+        },
+        {
+          "search_name": "broccoli",
+          "description": "steamed",
+          "weight_g": 80,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 28.0,
+            "protein_g": 1.9,
+            "fat_g": 0.3,
+            "carbs_g": 5.8
+          }
+        },
+        {
+          "search_name": "olive oil",
+          "description": null,
+          "weight_g": 20,
+          "confidence": 0.75,
+          "nutrition": {
+            "calorie": 176.8,
+            "protein_g": 0.0,
+            "fat_g": 20.0,
+            "carbs_g": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 90,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 15.3,
+            "protein_g": 1.6,
+            "fat_g": 0.3,
+            "carbs_g": 2.7
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 7.2,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        },
+        {
+          "search_name": "carrot",
+          "description": "fresh",
+          "weight_g": 25,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 10.3,
+            "protein_g": 0.2,
+            "fat_g": 0.1,
+            "carbs_g": 2.4
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 56.0,
+            "protein_g": 0.1,
+            "fat_g": 5.6,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "water",
+        "description": null,
+        "weight_g": 300,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 0.0,
+          "protein_g": 0.0,
+          "fat_g": 0.0,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    }
+  ]
+}

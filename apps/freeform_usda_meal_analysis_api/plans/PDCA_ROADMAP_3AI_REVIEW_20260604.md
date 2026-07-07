@@ -1,5 +1,7 @@
 # mozu パイプライン PDCA 再設計プラン — 3 AI レビューの全アイデアを検証可能にする
 
+> **STATUS（2026-07-08 追記）**: 本ロードマップの探索系項目（Phase 0 / E1-E12 / E17 / F-PROV / cross-provider）は**実行済み・決着済み**。結論と採用/棄却は `plans/current.md`（採用 lever・天井マップ）と `evals/knowledge/negative_results.json` に集約済み。残存する本命は E13/E14/E8（current.md 参照）。本書は**設計根拠の歴史文書**として保存（内容の再 litigate はしない）。
+
 ## Context（なぜこの計画か）
 3つの AI（ai1/ai2/ai3）に現行パイプライン一式をレビューさせた。結論は**強く収束**:
 1. 根本設計（VLM→食材/重量JSON→USDA RAG→栄養集計）は2026でも妥当。VLM直接カロリーより堅い。

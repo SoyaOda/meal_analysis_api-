@@ -1,0 +1,81 @@
+{
+  "dishes": [
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 80,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 13.6,
+            "protein_g": 1.4,
+            "fat_g": 0.2,
+            "carbs_g": 2.4
+          }
+        },
+        {
+          "search_name": "chicken breast",
+          "description": "cooked, skinless, boneless",
+          "weight_g": 120,
+          "confidence": 0.86,
+          "nutrition": {
+            "calorie": 198.0,
+            "protein_g": 37.2,
+            "fat_g": 4.3,
+            "carbs_g": 0.0
+          }
+        },
+        {
+          "search_name": "teriyaki sauce",
+          "description": "ready-to-serve",
+          "weight_g": 35,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 45.5,
+            "protein_g": 0.7,
+            "fat_g": 0.1,
+            "carbs_g": 9.8
+          }
+        },
+        {
+          "search_name": "sesame seeds",
+          "description": null,
+          "weight_g": 5,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 28.7,
+            "protein_g": 0.9,
+            "fat_g": 2.5,
+            "carbs_g": 1.2
+          }
+        },
+        {
+          "search_name": "boiled egg",
+          "description": "cooked",
+          "weight_g": 50,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 77.5,
+            "protein_g": 6.5,
+            "fat_g": 5.5,
+            "carbs_g": 0.6
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.86,
+          "nutrition": {
+            "calorie": 7.2,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

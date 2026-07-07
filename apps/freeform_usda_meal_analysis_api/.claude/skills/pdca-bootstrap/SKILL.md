@@ -25,6 +25,15 @@ allowed-tools: Bash, Read
    - 現行 baseline 指標（`calorie_mae_percent` / `high_error_rate_30_percent` / `avg_latency_sec` / `avg_cost_usd`）
    - **Remote Config Check**: 本番が配信中の `vlm_model_id` / `vlm_prompt_file` と、`current_baseline.json` の構成が一致しているか（不一致なら config ドリフトを警告する）
    - 直近 lesson の decision（worked / did-not-work）
+   - **Negative Registry Summary**: check the verdict counts and entry id list (do-not-retry
+     hypotheses). Before starting any new experiment, run `check_prior_art --query "<keyword>"`
+     for its lever/topic (read-before-write, required per `ssot/DEVELOPMENT_OS.md` §5).
+   - **Lessons Index Freshness**: confirm the status. If it says "regenerated", the
+     `evals/lessons/INDEX.md` was stale and has just been auto-rebuilt this run — note that
+     in your session summary.
+   - **Branch Consistency**: if a WARNING line is present (current branch does not match
+     the `plans/current.md` resume branch), surface it to the user before proceeding —
+     do not silently continue on the wrong branch.
 
 3. `apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json` を読み、baseline の出所runと採用条件を確認する。
 
@@ -33,6 +42,9 @@ allowed-tools: Bash, Read
 - 現行baselineの1行サマリー（mae / high30 / latency / cost）
 - 本番configとbaselineの一致/不一致（ドリフトの有無）
 - 直近lessonの要点（次に試すべき仮説）
+- Negative registry のverdict別件数 + check_prior_art 必須の確認
+- lessons INDEX freshness の状態（regenerated であればその旨）
+- branch consistency の WARNING の有無
 
 ## 参照
 - `apps/freeform_usda_meal_analysis_api/docs/PDCA_SESSION_START_CHECKLIST.md`

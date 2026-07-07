@@ -1,0 +1,62 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef fajita tacos with peppers and onions",
+        "description": "pan-fried, home recipe",
+        "weight_g": 270,
+        "confidence": 0.78,
+        "nutrition": {
+          "calorie": 445.5,
+          "protein_g": 27.0,
+          "fat_g": 18.9,
+          "carbs_g": 45.9
+        }
+      },
+      "extras": [
+        {
+          "search_name": "sour cream",
+          "description": "ready-to-serve",
+          "weight_g": 30,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 58.8,
+            "protein_g": 0.7,
+            "fat_g": 6.0,
+            "carbs_g": 1.1
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "corn on the cob",
+        "description": "boiled",
+        "weight_g": 80,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 76.8,
+          "protein_g": 2.7,
+          "fat_g": 1.2,
+          "carbs_g": 16.8
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "red grapes",
+        "description": "fresh",
+        "weight_g": 90,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 62.1,
+          "protein_g": 0.6,
+          "fat_g": 0.2,
+          "carbs_g": 16.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

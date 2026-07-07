@@ -1,0 +1,99 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "cod fillet",
+        "description": "pan-fried, cooked",
+        "weight_g": 150,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 225.0,
+          "protein_g": 34.5,
+          "fat_g": 9.0,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "sweet potatoes",
+        "description": "roasted, cooked",
+        "weight_g": 160,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 184.0,
+          "protein_g": 3.2,
+          "fat_g": 4.8,
+          "carbs_g": 33.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 10.0,
+            "protein_g": 1.0,
+            "fat_g": 0.1,
+            "carbs_g": 2.0
+          }
+        },
+        {
+          "search_name": "strawberries",
+          "description": "fresh",
+          "weight_g": 70,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 22.4,
+            "protein_g": 0.5,
+            "fat_g": 0.2,
+            "carbs_g": 5.4
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 35,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 5.2,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 1.3
+          }
+        },
+        {
+          "search_name": "pecans",
+          "description": "raw",
+          "weight_g": 15,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 108.0,
+            "protein_g": 1.4,
+            "fat_g": 10.8,
+            "carbs_g": 2.1
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 54.0,
+            "protein_g": 0.1,
+            "fat_g": 5.0,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef lasagna",
+        "description": "baked, home recipe",
+        "weight_g": 240,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 384.0,
+          "protein_g": 21.6,
+          "fat_g": 19.2,
+          "carbs_g": 33.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 8.0,
+            "protein_g": 0.8,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 6.0,
+            "protein_g": 0.3,
+            "fat_g": 0.0,
+            "carbs_g": 1.4
+          }
+        },
+        {
+          "search_name": "avocado",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 64.0,
+            "protein_g": 0.8,
+            "fat_g": 6.0,
+            "carbs_g": 3.6
+          }
+        },
+        {
+          "search_name": "prosciutto",
+          "description": "ready-to-serve",
+          "weight_g": 15,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 37.1,
+            "protein_g": 3.9,
+            "fat_g": 2.1,
+            "carbs_g": 0.0
+          }
+        }
+      ]
+    }
+  ]
+}

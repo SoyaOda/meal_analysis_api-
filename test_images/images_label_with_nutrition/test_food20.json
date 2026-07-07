@@ -1,0 +1,85 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef stew",
+        "description": "home recipe",
+        "weight_g": 350,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 350.0,
+          "protein_g": 24.5,
+          "fat_g": 17.5,
+          "carbs_g": 24.5
+        }
+      },
+      "extras": [
+        {
+          "search_name": "sour cream",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 39.2,
+            "protein_g": 0.5,
+            "fat_g": 4.0,
+            "carbs_g": 0.7
+          }
+        }
+      ]
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 70,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 14.0,
+            "protein_g": 1.4,
+            "fat_g": 0.2,
+            "carbs_g": 2.8
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 7.5,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 1.8
+          }
+        },
+        {
+          "search_name": "figs",
+          "description": "fresh",
+          "weight_g": 80,
+          "confidence": 0.95,
+          "nutrition": {
+            "calorie": 59.2,
+            "protein_g": 0.6,
+            "fat_g": 0.2,
+            "carbs_g": 15.2
+          }
+        },
+        {
+          "search_name": "prosciutto",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 49.4,
+            "protein_g": 5.2,
+            "fat_g": 2.8,
+            "carbs_g": 0.0
+          }
+        }
+      ]
+    }
+  ]
+}

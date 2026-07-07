@@ -1,0 +1,75 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "pork ribs with barbecue sauce",
+        "description": "baked, home recipe",
+        "weight_g": 180,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 576.0,
+          "protein_g": 36.0,
+          "fat_g": 45.0,
+          "carbs_g": 10.8
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "sweet corn kernels",
+        "description": "boiled",
+        "weight_g": 100,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 96.0,
+          "protein_g": 3.4,
+          "fat_g": 1.5,
+          "carbs_g": 21.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 12.0,
+            "protein_g": 1.1,
+            "fat_g": 0.1,
+            "carbs_g": 2.2
+          }
+        },
+        {
+          "search_name": "figs",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 44.4,
+            "protein_g": 0.5,
+            "fat_g": 0.2,
+            "carbs_g": 11.5
+          }
+        },
+        {
+          "search_name": "prosciutto",
+          "description": "nfs",
+          "weight_g": 20,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 43.0,
+            "protein_g": 5.2,
+            "fat_g": 2.4,
+            "carbs_g": 0.0
+          }
+        }
+      ]
+    }
+  ]
+}

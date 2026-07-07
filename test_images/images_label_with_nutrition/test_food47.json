@@ -1,0 +1,59 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "cheeseburger",
+        "description": "restaurant",
+        "weight_g": 200,
+        "confidence": 0.86,
+        "nutrition": {
+          "calorie": 520.0,
+          "protein_g": 32.0,
+          "fat_g": 24.0,
+          "carbs_g": 46.0
+        }
+      },
+      "extras": [
+        {
+          "search_name": "tomato",
+          "description": "raw, sliced",
+          "weight_g": 20,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 3.6,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 0.8
+          }
+        },
+        {
+          "search_name": "onion",
+          "description": "raw, chopped",
+          "weight_g": 10,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 4.0,
+            "protein_g": 0.1,
+            "fat_g": 0.0,
+            "carbs_g": 0.9
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "potato wedges",
+        "description": "baked",
+        "weight_g": 170,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 255.0,
+          "protein_g": 4.2,
+          "fat_g": 10.2,
+          "carbs_g": 39.1
+        }
+      },
+      "extras": []
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef stew",
+        "description": "home recipe, cooked",
+        "weight_g": 200,
+        "confidence": 0.78,
+        "nutrition": {
+          "calorie": 240.0,
+          "protein_g": 16.0,
+          "fat_g": 12.0,
+          "carbs_g": 16.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "white rice",
+        "description": "cooked",
+        "weight_g": 180,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 234.0,
+          "protein_g": 4.3,
+          "fat_g": 0.5,
+          "carbs_g": 50.4
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "cucumber salad",
+        "description": "ready-to-serve",
+        "weight_g": 90,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 72.0,
+          "protein_g": 2.5,
+          "fat_g": 4.5,
+          "carbs_g": 5.4
+        }
+      },
+      "extras": []
+    }
+  ]
+}

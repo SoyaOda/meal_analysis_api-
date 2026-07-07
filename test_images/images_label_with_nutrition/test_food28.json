@@ -1,0 +1,72 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "pizza with cheese and olives",
+        "description": "baked",
+        "weight_g": 300,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 840.0,
+          "protein_g": 33.0,
+          "fat_g": 33.0,
+          "carbs_g": 99.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 120,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 20.4,
+            "protein_g": 2.2,
+            "fat_g": 0.4,
+            "carbs_g": 3.6
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 7.2,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 6.0,
+            "protein_g": 0.3,
+            "fat_g": 0.0,
+            "carbs_g": 1.4
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 25,
+          "confidence": 0.82,
+          "nutrition": {
+            "calorie": 70.0,
+            "protein_g": 0.1,
+            "fat_g": 7.0,
+            "carbs_g": 2.0
+          }
+        }
+      ]
+    }
+  ]
+}

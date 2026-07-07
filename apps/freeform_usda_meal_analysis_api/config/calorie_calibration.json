@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "slope": 1.0,
+  "intercept": 0.0,
+  "min_factor": 0.5,
+  "max_factor": 2.5,
+  "provenance": "DISABLED no-op default. Fit (slope, intercept) with scripts/fit_calorie_calibration.py on an EXTERNAL held-out set (NOT the eval-50), validate the corrected slope/bias on the frozen 50, then set enabled=true. corrected_total = slope*raw + intercept.",
+  "fitted_at": null,
+  "fit_set": null
+}

@@ -1,0 +1,33 @@
+{
+  "description": "Exp1 (matching PDCA): reranker instruction A/B, AFTER fixing the DeepInfra instruction bug (instruction is now baked into the query; the top-level 'instruction' field was ignored, so config.reranker.instruction had been a no-op in production). 3 arms, SAME VLM (gemini-3-flash, server default v13 prompt), use_vlm_cache=true so all arms share identical food names and the reranker is the ONLY variable (justified exception to the cache=false default: this isolates a post-VLM component; cache=false would confound the reranker delta with VLM non-determinism). reranker_instruction passed per-request (production Firestore NOT touched). Arms: rerank_raw = whitespace instruction -> NO baking = current production behavior (instruction inert); rerank_default = the current settings.py default instruction, now actually applied; rerank_hardened = default + 2 GENERIC rule blocks (anti-lean-variant + complete-dish-over-base + cooked-by-default), examples deliberately NOT the eval's known failures (anti-overfit). Measure: per-dish status / naming_db_match via judge; guardrail = total-calorie MAE + high30. dev40.",
+  "defaults": {
+    "reasoning_effort": "medium",
+    "temperature": 0.3,
+    "seed": 7,
+    "max_tokens": 12288,
+    "use_vlm_cache": true,
+    "concurrency": 3
+  },
+  "baseline_file": "apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json",
+  "paired_baseline_candidate": "rerank_raw",
+  "budget": {
+    "max_avg_cost_usd_per_image": 0.03
+  },
+  "candidates": [
+    {
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "name": "rerank_raw",
+      "reranker_instruction": " "
+    },
+    {
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "name": "rerank_default",
+      "reranker_instruction": "Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.\n\nNutritional values (calories, protein, fat, carbs per 100g) vary significantly based on preparation method, so precise matching is essential for accurate nutrition calculation.\n\nExamples:\n- 'grilled chicken' → 'Chicken, grilled' NOT 'Chicken, raw'\n- 'caesar salad' → 'Caesar salad, with romaine' NOT 'Caesar dressing'\n- 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'\n\nPrioritize: Complete phrase match > Preparation method match > Ingredient name similarity"
+    },
+    {
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "name": "rerank_hardened",
+      "reranker_instruction": "Match USDA food database entries that exactly match the query's food name, cooking/preparation method, and form.\n\nNutritional values (calories, protein, fat, carbs per 100g) vary significantly based on preparation method, so precise matching is essential for accurate nutrition calculation.\n\nExamples:\n- 'grilled chicken' → 'Chicken, grilled' NOT 'Chicken, raw'\n- 'caesar salad' → 'Caesar salad, with romaine' NOT 'Caesar dressing'\n- 'fried rice' → 'Rice, fried' NOT 'Rice, white, cooked'\n\nFAT/VARIANT DEFAULT: Unless the query explicitly says low-fat, fat-free, light, reduced, nonfat, skim, diet, vegan, or imitation, prefer the STANDARD regular full-fat product, NOT a reduced or fat-free variant. Plated real food is normally the regular version.\n- 'milk' → 'Milk, whole' NOT 'Milk, nonfat'\n- 'ground beef' → a regular-fat ground beef NOT a 'fat free' ground beef\n\nCOMPLETE DISH OVER BARE BASE: When the query names a prepared or composite dish (with a sauce, topping, cheese, dressing, gravy, or a named style), prefer the record for the COMPLETE dish, not a plain base ingredient. Do not strip a named component.\n- 'chicken sandwich' → 'Chicken sandwich' NOT 'Chicken, cooked'\n- 'beef stew' → 'Beef stew with vegetables' NOT 'Beef, cooked'\n\nCOOKED BY DEFAULT: Food in a finished meal photo is normally cooked. Prefer a cooked/prepared record over a raw one unless the query clearly indicates raw.\n\nPrioritize: Complete phrase match > Preparation method match (cooked, regular full-fat, complete dish) > Ingredient name similarity"
+    }
+  ]
+}

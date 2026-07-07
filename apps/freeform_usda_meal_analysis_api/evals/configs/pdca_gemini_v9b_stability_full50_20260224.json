@@ -1,0 +1,23 @@
+{
+  "description": "Gemini 3 Flash stability confirmation run for v9b (full 50 images).",
+  "baseline_file": "apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json",
+  "budget": {
+    "max_avg_cost_usd_per_image": 0.05
+  },
+  "defaults": {
+    "reasoning_effort": "medium",
+    "temperature": 0.3,
+    "max_tokens": 12288,
+    "stage1_top_k": 50,
+    "concurrency": 1
+  },
+  "candidates": [
+    {
+      "name": "gemini3_flash_v9b_recall_balance",
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "prompt_path": "freeform_prompt_usda_format_ver_v9b_gemini_recall_balance_20260224.txt",
+      "temperature": 0.3,
+      "max_tokens": 12288
+    }
+  ]
+}

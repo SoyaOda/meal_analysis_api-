@@ -1,0 +1,64 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "white rice",
+        "description": "cooked",
+        "weight_g": 200,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 260.0,
+          "protein_g": 5.4,
+          "fat_g": 0.6,
+          "carbs_g": 56.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "beef with peppers and onions",
+        "description": "stir-fried",
+        "weight_g": 150,
+        "confidence": 0.78,
+        "nutrition": {
+          "calorie": 270.0,
+          "protein_g": 21.0,
+          "fat_g": 15.0,
+          "carbs_g": 9.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "pork with cabbage",
+        "description": "stir-fried",
+        "weight_g": 170,
+        "confidence": 0.72,
+        "nutrition": {
+          "calorie": 289.0,
+          "protein_g": 20.4,
+          "fat_g": 18.7,
+          "carbs_g": 8.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "mayonnaise salad",
+        "description": "nfs",
+        "weight_g": 100,
+        "confidence": 0.6,
+        "nutrition": {
+          "calorie": 250.0,
+          "protein_g": 4.0,
+          "fat_g": 20.0,
+          "carbs_g": 12.0
+        }
+      },
+      "extras": []
+    }
+  ]
+}

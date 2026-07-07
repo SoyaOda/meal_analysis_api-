@@ -1,0 +1,84 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "spaghetti with ham and asparagus",
+        "description": "cooked, stir-fried",
+        "weight_g": 280,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 532.0,
+          "protein_g": 22.4,
+          "fat_g": 19.6,
+          "carbs_g": 70.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 12.0,
+            "protein_g": 1.2,
+            "fat_g": 0.2,
+            "carbs_g": 2.4
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 7.5,
+            "protein_g": 0.3,
+            "fat_g": 0.1,
+            "carbs_g": 1.8
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 10.8,
+            "protein_g": 0.5,
+            "fat_g": 0.1,
+            "carbs_g": 2.3
+          }
+        },
+        {
+          "search_name": "avocado",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 80.0,
+            "protein_g": 1.0,
+            "fat_g": 7.3,
+            "carbs_g": 4.2
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 54.0,
+            "protein_g": 0.1,
+            "fat_g": 5.0,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

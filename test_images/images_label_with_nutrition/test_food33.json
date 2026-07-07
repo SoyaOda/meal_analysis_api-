@@ -1,0 +1,49 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken thigh",
+        "description": "pan-fried, cooked",
+        "weight_g": 130,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 279.5,
+          "protein_g": 23.4,
+          "fat_g": 19.5,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "pearl couscous",
+        "description": "cooked",
+        "weight_g": 150,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 180.0,
+          "protein_g": 5.7,
+          "fat_g": 0.3,
+          "carbs_g": 37.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "ratatouille",
+        "description": "cooked, with vegetables",
+        "weight_g": 160,
+        "confidence": 0.75,
+        "nutrition": {
+          "calorie": 112.0,
+          "protein_g": 2.4,
+          "fat_g": 6.4,
+          "carbs_g": 11.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

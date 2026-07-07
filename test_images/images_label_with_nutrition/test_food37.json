@@ -1,0 +1,77 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken thigh",
+        "description": "pan-fried, cooked",
+        "weight_g": 140,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 301.0,
+          "protein_g": 25.2,
+          "fat_g": 21.0,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": [
+        {
+          "search_name": "pine nuts",
+          "description": "raw",
+          "weight_g": 10,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 67.3,
+            "protein_g": 1.4,
+            "fat_g": 6.8,
+            "carbs_g": 1.3
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "penne with pesto",
+        "description": "cooked",
+        "weight_g": 180,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 414.0,
+          "protein_g": 10.8,
+          "fat_g": 19.8,
+          "carbs_g": 52.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "tomato",
+        "description": "fresh",
+        "weight_g": 100,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 18.0,
+          "protein_g": 0.9,
+          "fat_g": 0.2,
+          "carbs_g": 3.9
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "coleslaw",
+        "description": "ready-to-serve",
+        "weight_g": 120,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 180.0,
+          "protein_g": 1.2,
+          "fat_g": 12.0,
+          "carbs_g": 16.8
+        }
+      },
+      "extras": []
+    }
+  ]
+}

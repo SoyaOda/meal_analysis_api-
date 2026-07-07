@@ -1,0 +1,99 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken thigh",
+        "description": "pan-fried, thigh, home recipe",
+        "weight_g": 160,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 366.4,
+          "protein_g": 40.0,
+          "fat_g": 24.0,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "macaroni and cheese",
+        "description": "home recipe",
+        "weight_g": 150,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 285.0,
+          "protein_g": 10.5,
+          "fat_g": 12.0,
+          "carbs_g": 36.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 70,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 14.0,
+            "protein_g": 1.3,
+            "fat_g": 0.1,
+            "carbs_g": 2.5
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 6.4,
+            "protein_g": 0.3,
+            "fat_g": 0.0,
+            "carbs_g": 1.5
+          }
+        },
+        {
+          "search_name": "red bell pepper",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 15.5,
+            "protein_g": 0.5,
+            "fat_g": 0.2,
+            "carbs_g": 3.0
+          }
+        },
+        {
+          "search_name": "red onion",
+          "description": "fresh",
+          "weight_g": 15,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 6.0,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 1.4
+          }
+        },
+        {
+          "search_name": "carrots",
+          "description": "fresh",
+          "weight_g": 20,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 8.2,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 2.0
+          }
+        }
+      ]
+    }
+  ]
+}

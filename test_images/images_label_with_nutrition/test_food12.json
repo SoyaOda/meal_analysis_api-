@@ -1,0 +1,102 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "omelet",
+        "description": "pan-fried, home recipe",
+        "weight_g": 180,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 270.0,
+          "protein_g": 18.9,
+          "fat_g": 19.8,
+          "carbs_g": 2.7
+        }
+      },
+      "extras": [
+        {
+          "search_name": "salsa",
+          "description": "ready-to-serve",
+          "weight_g": 50,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 17.5,
+            "protein_g": 0.8,
+            "fat_g": 0.1,
+            "carbs_g": 3.5
+          }
+        }
+      ]
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 50,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 10.0,
+            "protein_g": 1.0,
+            "fat_g": 0.2,
+            "carbs_g": 2.0
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 30,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 5.4,
+            "protein_g": 0.3,
+            "fat_g": 0.1,
+            "carbs_g": 1.2
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 25,
+          "confidence": 0.65,
+          "nutrition": {
+            "calorie": 68.5,
+            "protein_g": 0.0,
+            "fat_g": 6.8,
+            "carbs_g": 1.5
+          }
+        }
+      ]
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "broccoli",
+          "description": "steamed",
+          "weight_g": 90,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 31.5,
+            "protein_g": 2.2,
+            "fat_g": 0.4,
+            "carbs_g": 6.3
+          }
+        },
+        {
+          "search_name": "corn kernels",
+          "description": "cooked",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 38.4,
+            "protein_g": 1.4,
+            "fat_g": 0.6,
+            "carbs_g": 8.4
+          }
+        }
+      ]
+    }
+  ]
+}

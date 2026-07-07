@@ -1,0 +1,72 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "baked pasta with cheese",
+        "description": "baked, with vegetables, home recipe",
+        "weight_g": 250,
+        "confidence": 0.84,
+        "nutrition": {
+          "calorie": 475.0,
+          "protein_g": 20.0,
+          "fat_g": 17.5,
+          "carbs_g": 65.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "cabbage",
+          "description": "raw, shredded",
+          "weight_g": 80,
+          "confidence": 0.75,
+          "nutrition": {
+            "calorie": 20.0,
+            "protein_g": 1.0,
+            "fat_g": 0.1,
+            "carbs_g": 4.8
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "raw, sliced",
+          "weight_g": 30,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 4.5,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 1.1
+          }
+        },
+        {
+          "search_name": "red onion",
+          "description": "raw, sliced",
+          "weight_g": 15,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 6.0,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 1.4
+          }
+        },
+        {
+          "search_name": "corn",
+          "description": "cooked",
+          "weight_g": 15,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 12.9,
+            "protein_g": 0.5,
+            "fat_g": 0.2,
+            "carbs_g": 2.9
+          }
+        }
+      ]
+    }
+  ]
+}

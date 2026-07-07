@@ -63,6 +63,10 @@
 
 | 情報 | SSOT |
 |---|---|
+| repo 全体の開発 OS・ガバナンス（2026-07-08 制定） | `ssot/DEVELOPMENT_OS.md`（repo root） |
+| 棄却済み仮説 / 天井マップ（do-not-retry, 2026-07-08〜） | `evals/knowledge/negative_results.json` |
+| lesson 索引（自動生成, 2026-07-08〜） | `evals/lessons/INDEX.md` |
+| データセット / GT 台帳（2026-07-08〜） | `ssot/DATASETS.md`（repo root） |
 | 運用全体・現状・次の一手 | `plans/current.md` |
 | model-refresh のゲート・手順・教訓 | `docs/MODEL_REFRESH_PROTOCOL_20260611.md` |
 | 第1サイクルの全数値・incident | `evals/lessons/20260611_model_refresh_sweep_no_new_model_beats_flash.md` |

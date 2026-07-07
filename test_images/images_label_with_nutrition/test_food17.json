@@ -1,0 +1,93 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "fried rice with ground beef and corn",
+        "description": "stir-fried, home recipe",
+        "weight_g": 220,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 396.0,
+          "protein_g": 13.2,
+          "fat_g": 13.2,
+          "carbs_g": 57.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "fried egg",
+        "description": "pan-fried",
+        "weight_g": 60,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 117.6,
+          "protein_g": 7.8,
+          "fat_g": 9.0,
+          "carbs_g": 0.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "broccoli",
+          "description": "steamed",
+          "weight_g": 90,
+          "confidence": 0.95,
+          "nutrition": {
+            "calorie": 31.5,
+            "protein_g": 2.2,
+            "fat_g": 0.4,
+            "carbs_g": 6.3
+          }
+        },
+        {
+          "search_name": "mayonnaise",
+          "description": "ready-to-serve",
+          "weight_g": 15,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 102.0,
+            "protein_g": 0.0,
+            "fat_g": 11.3,
+            "carbs_g": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "tomato",
+        "description": "fresh",
+        "weight_g": 80,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 14.4,
+          "protein_g": 0.7,
+          "fat_g": 0.2,
+          "carbs_g": 3.1
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "stewed potatoes and carrots with mushrooms",
+        "description": "cooked, home recipe",
+        "weight_g": 120,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 84.0,
+          "protein_g": 1.8,
+          "fat_g": 0.6,
+          "carbs_g": 18.0
+        }
+      },
+      "extras": []
+    }
+  ]
+}

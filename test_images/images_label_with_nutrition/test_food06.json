@@ -1,0 +1,34 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "cream of chicken soup with vegetables",
+        "description": "ready-to-serve, home recipe",
+        "weight_g": 400,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 280.0,
+          "protein_g": 18.0,
+          "fat_g": 14.0,
+          "carbs_g": 24.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "dinner roll",
+        "description": "baked",
+        "weight_g": 80,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 224.0,
+          "protein_g": 7.2,
+          "fat_g": 3.6,
+          "carbs_g": 41.6
+        }
+      },
+      "extras": []
+    }
+  ]
+}

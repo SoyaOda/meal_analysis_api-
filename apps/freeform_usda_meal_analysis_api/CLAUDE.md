@@ -22,7 +22,7 @@
 3. セッションbootstrapを実行して現行状態を取得
    - `python -m apps.freeform_usda_meal_analysis_api.scripts.pdca_session_bootstrap --api-url https://freeform-usda-meal-analysis-api-1077966746907.us-central1.run.app`
 4. `evals/knowledge/session_bootstrap_latest.md` を確認（baseline / latest lessons / remote config）
-5. 実験configを `evals/configs/` に作成/更新
+5. 実験configを `evals/configs/` に作成/更新 — **その前に** `python -m apps.freeform_usda_meal_analysis_api.scripts.check_prior_art --query "<lever名>"` で既知照合（read-before-write）。`evals/knowledge/negative_results.json` / `evals/lessons/INDEX.md` にヒットしたら当該 lesson を読み、`ssot/DEVELOPMENT_OS.md` §5 に従う
 6. チューニング時は `evals/splits/dev_40_v1.txt` を使用し、採用時は50件を必ず評価（中断時は分割実行して全件を揃える）
    - **小lever の採用判定は pooled rotation で行う**（n=50 単独は draw-noise ±3pt）。rotation = frozen-50 / NVReal-104 / N5k-100 / **JFB-100（実 eye-level ユーザー写真・in-domain proxy, `build_jfb_evalset.py` で再構築）**。詳細・コマンド・各 baseline は `docs/EXTERNAL_TESTSET_PLAN_20260603.md`
 7. 実験後に `evals/runs/` と `evals/lessons/` を更新し、必要に応じて `evals/knowledge/` を再生成

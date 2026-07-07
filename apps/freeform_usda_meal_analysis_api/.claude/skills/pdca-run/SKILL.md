@@ -16,6 +16,22 @@ allowed-tools: Bash, Read
 - 過学習防止: prompt に評価データ固有情報（`test_foodXX` / label値 / ground truth）を埋め込まない。
 
 ## 手順
+0. **Prior-art check (required before creating/editing an experiment config)**: run
+   `check_prior_art` with the lever's name and key terms as keywords, e.g.:
+
+   ```bash
+   PYTHONPATH=/Users/odasoya/meal_analysis_api_2 python -m \
+     apps.freeform_usda_meal_analysis_api.scripts.check_prior_art \
+     --query "<lever name>" "<key term>"
+   ```
+
+   If it reports any hits (in `negative_results.json`, `tested_models.json`, the
+   lessons INDEX, or `docs/*.md`), read the matching lesson(s) in full before
+   proceeding, then explicitly state one of:
+   - (a) do not run this experiment — it is already a settled do-not-retry finding, or
+   - (b) proceed anyway, citing new evidence that satisfies the entry's `reopen_when`
+     condition (see `ssot/DEVELOPMENT_OS.md` §5 — never re-litigate without this).
+
 1. `$ARGUMENTS` の先頭を config パスとして受け取り、`evals/configs/` に存在することを確認する。
 2. リポジトリルートから実行する（split未指定なら full50）:
 

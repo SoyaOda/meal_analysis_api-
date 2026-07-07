@@ -1,0 +1,84 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "pizza with prosciutto and olives",
+        "description": "baked, restaurant",
+        "weight_g": 280,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 784.0,
+          "protein_g": 33.6,
+          "fat_g": 33.6,
+          "carbs_g": 84.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 12.0,
+            "protein_g": 1.2,
+            "fat_g": 0.2,
+            "carbs_g": 2.4
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 6.0,
+            "protein_g": 0.3,
+            "fat_g": 0.0,
+            "carbs_g": 1.4
+          }
+        },
+        {
+          "search_name": "avocado",
+          "description": "fresh",
+          "weight_g": 70,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 112.0,
+            "protein_g": 1.4,
+            "fat_g": 10.3,
+            "carbs_g": 5.9
+          }
+        },
+        {
+          "search_name": "carrot",
+          "description": "fresh",
+          "weight_g": 15,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 6.1,
+            "protein_g": 0.1,
+            "fat_g": 0.0,
+            "carbs_g": 1.5
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "ready-to-serve",
+          "weight_g": 20,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 54.0,
+            "protein_g": 0.1,
+            "fat_g": 5.0,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

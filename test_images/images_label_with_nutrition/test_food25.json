@@ -1,0 +1,59 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "hot dog with bun",
+        "description": "ready-to-serve",
+        "weight_g": 120,
+        "confidence": 0.83,
+        "nutrition": {
+          "calorie": 348.0,
+          "protein_g": 13.2,
+          "fat_g": 19.2,
+          "carbs_g": 28.8
+        }
+      },
+      "extras": [
+        {
+          "search_name": "beef chili",
+          "description": "cooked",
+          "weight_g": 90,
+          "confidence": 0.8,
+          "nutrition": {
+            "calorie": 105.3,
+            "protein_g": 6.6,
+            "fat_g": 3.4,
+            "carbs_g": 11.3
+          }
+        },
+        {
+          "search_name": "cheddar cheese",
+          "description": null,
+          "weight_g": 20,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 80.4,
+            "protein_g": 5.0,
+            "fat_g": 6.6,
+            "carbs_g": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "potato chips",
+        "description": "ready-to-serve",
+        "weight_g": 40,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 214.4,
+          "protein_g": 2.8,
+          "fat_g": 14.0,
+          "carbs_g": 21.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

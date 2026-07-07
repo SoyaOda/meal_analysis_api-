@@ -1,0 +1,49 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "asparagus",
+        "description": "roasted",
+        "weight_g": 140,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 35.0,
+          "protein_g": 4.1,
+          "fat_g": 0.6,
+          "carbs_g": 6.4
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "chicken breast",
+        "description": "grilled, skinless, boneless, breast, home recipe",
+        "weight_g": 130,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 214.5,
+          "protein_g": 40.3,
+          "fat_g": 4.7,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "garlic bread",
+        "description": "baked",
+        "weight_g": 80,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 280.0,
+          "protein_g": 6.4,
+          "fat_g": 12.8,
+          "carbs_g": 35.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

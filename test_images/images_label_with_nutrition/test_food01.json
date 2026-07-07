@@ -1,0 +1,114 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "beef steak",
+        "description": "grilled, home recipe",
+        "weight_g": 170,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 425.0,
+          "protein_g": 44.2,
+          "fat_g": 28.9,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "zucchini and yellow squash",
+        "description": "cooked, pan-fried",
+        "weight_g": 130,
+        "confidence": 0.78,
+        "nutrition": {
+          "calorie": 65.0,
+          "protein_g": 2.6,
+          "fat_g": 3.9,
+          "carbs_g": 7.8
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "macaroni and cheese",
+        "description": "home recipe",
+        "weight_g": 140,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 266.0,
+          "protein_g": 9.8,
+          "fat_g": 11.2,
+          "carbs_g": 33.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "mixed salad greens",
+          "description": "fresh",
+          "weight_g": 80,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 16.0,
+            "protein_g": 1.4,
+            "fat_g": 0.2,
+            "carbs_g": 2.9
+          }
+        },
+        {
+          "search_name": "cherry tomatoes",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 10.8,
+            "protein_g": 0.5,
+            "fat_g": 0.1,
+            "carbs_g": 2.3
+          }
+        },
+        {
+          "search_name": "cucumber",
+          "description": "fresh",
+          "weight_g": 25,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 4.0,
+            "protein_g": 0.2,
+            "fat_g": 0.0,
+            "carbs_g": 1.0
+          }
+        },
+        {
+          "search_name": "carrots",
+          "description": "fresh",
+          "weight_g": 25,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 10.3,
+            "protein_g": 0.2,
+            "fat_g": 0.1,
+            "carbs_g": 2.5
+          }
+        },
+        {
+          "search_name": "vinaigrette dressing",
+          "description": "nfs",
+          "weight_g": 20,
+          "confidence": 0.6,
+          "nutrition": {
+            "calorie": 94.0,
+            "protein_g": 0.0,
+            "fat_g": 9.4,
+            "carbs_g": 0.8
+          }
+        }
+      ]
+    }
+  ]
+}

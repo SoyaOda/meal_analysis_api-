@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-06-01T22:32:49",
+  "source_run": "apps/freeform_usda_meal_analysis_api/evals/runs/20260601_221426",
+  "summary": {
+    "name": "gemini3flash_preview",
+    "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+    "prompt_path": null,
+    "calorie_mae_percent": 20.6506,
+    "calorie_p50_percent": 16.3804,
+    "calorie_p90_percent": 38.0587,
+    "high_error_rate_30_percent": 22.0,
+    "avg_latency_sec": 15.8077,
+    "avg_cost_usd": 0.007159,
+    "total_cost_usd": 0.357953,
+    "success_count": 50,
+    "failure_count": 0,
+    "cache_hit_rate_percent": 0.0,
+    "evaluated_image_count": 50,
+    "expected_image_count": 50,
+    "coverage_complete": true,
+    "all_success": true,
+    "calorie_mae_ci": {
+      "point": 20.6506,
+      "ci_low": 16.5722,
+      "ci_high": 26.6322,
+      "n": 50,
+      "n_resamples": 10000,
+      "alpha": 0.05,
+      "method": "bca"
+    }
+  },
+  "notes": "Reality-reset 2026-06-01: the prior 11.38% baseline (v11b, 2026-02-25) NO LONGER reproduces; gemini-3-flash-preview + v13 + fixed retrieval now measures ~20.5% (corroborated: 20.27% remote run 20260601_204037, 20.65% local run 20260601_221426). Newer Gemini models do not recover (3.5-flash worse, 3.1-flash-lite equal+slower; lesson 20260601_model_drift_newer_gemini_no_recovery). Root cause not yet localized; recovery toward 11% is the goal once decomposed metrics localize it. Old baseline kept at baseline_20260225_gemini3_flash_v11b_component_density_temp03.json.",
+  "model_id": "openrouter:google/gemini-3-flash-preview",
+  "prompt": "freeform_prompt_usda_format_ver_v13_beverage_subject_prodcapture_20260226.txt",
+  "retrieval": "Track B fixed fusion (direct cosine similarity + query L2-normalize)"
+}

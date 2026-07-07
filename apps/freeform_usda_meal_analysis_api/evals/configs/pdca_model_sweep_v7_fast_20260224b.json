@@ -1,0 +1,41 @@
+{
+  "description": "Fast model sweep on v7 prompt (5-image shortlist, 2026-02-24)",
+  "baseline_file": "apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json",
+  "budget": {
+    "max_avg_cost_usd_per_image": 0.05
+  },
+  "defaults": {
+    "reasoning_effort": "medium",
+    "temperature": 0.6,
+    "max_tokens": 16384,
+    "stage1_top_k": 50,
+    "concurrency": 2
+  },
+  "candidates": [
+    {
+      "name": "gemini3_flash_v7",
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    },
+    {
+      "name": "gemini25_flash_v7",
+      "vlm_model_id": "openrouter:google/gemini-2.5-flash",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    },
+    {
+      "name": "gemini25_flash_lite_v7",
+      "vlm_model_id": "openrouter:google/gemini-2.5-flash-lite",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    },
+    {
+      "name": "qwen3_vl_235b_thinking_v7",
+      "vlm_model_id": "openrouter:qwen/qwen3-vl-235b-a22b-thinking",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    },
+    {
+      "name": "grok4_fast_v7",
+      "vlm_model_id": "openrouter:x-ai/grok-4-fast",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    }
+  ]
+}

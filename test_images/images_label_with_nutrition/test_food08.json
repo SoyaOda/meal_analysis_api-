@@ -1,0 +1,64 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "breaded fish fillet",
+        "description": "baked",
+        "weight_g": 150,
+        "confidence": 0.82,
+        "nutrition": {
+          "calorie": 330.0,
+          "protein_g": 30.0,
+          "fat_g": 15.0,
+          "carbs_g": 22.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "pearl couscous",
+        "description": "cooked",
+        "weight_g": 180,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 201.6,
+          "protein_g": 6.8,
+          "fat_g": 0.5,
+          "carbs_g": 41.4
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "broccoli",
+        "description": "steamed",
+        "weight_g": 120,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 42.0,
+          "protein_g": 2.9,
+          "fat_g": 0.5,
+          "carbs_g": 8.6
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "carrots",
+        "description": "roasted",
+        "weight_g": 120,
+        "confidence": 0.88,
+        "nutrition": {
+          "calorie": 60.0,
+          "protein_g": 1.1,
+          "fat_g": 1.2,
+          "carbs_g": 12.0
+        }
+      },
+      "extras": []
+    }
+  ]
+}

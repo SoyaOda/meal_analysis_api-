@@ -1,0 +1,64 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "breaded chicken breast",
+        "description": "baked, breast",
+        "weight_g": 150,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 322.5,
+          "protein_g": 34.5,
+          "fat_g": 13.5,
+          "carbs_g": 16.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "pearl couscous",
+        "description": "cooked",
+        "weight_g": 150,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 168.0,
+          "protein_g": 5.7,
+          "fat_g": 0.6,
+          "carbs_g": 34.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "carrots",
+        "description": "cooked",
+        "weight_g": 150,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 60.0,
+          "protein_g": 1.2,
+          "fat_g": 0.3,
+          "carbs_g": 13.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "broccoli",
+        "description": "steamed",
+        "weight_g": 90,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 31.5,
+          "protein_g": 2.2,
+          "fat_g": 0.4,
+          "carbs_g": 6.3
+        }
+      },
+      "extras": []
+    }
+  ]
+}

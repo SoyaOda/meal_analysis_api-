@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-02-24T10:54:26Z",
+  "source_run": "apps/freeform_usda_meal_analysis_api/evals/runs/20260224_192722",
+  "summary": {
+    "name": "gemini3_flash_v7_exp_meal_title",
+    "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+    "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt",
+    "calorie_mae_percent": 21.9784,
+    "calorie_p50_percent": 18.9345,
+    "calorie_p90_percent": 45.4723,
+    "high_error_rate_30_percent": 24.0,
+    "avg_latency_sec": 21.5895,
+    "avg_cost_usd": 0.01063,
+    "total_cost_usd": 0.531481,
+    "success_count": 50,
+    "failure_count": 0
+  },
+  "notes": "Baseline selected from full 50-image top2 eval (2026-02-24)."
+}

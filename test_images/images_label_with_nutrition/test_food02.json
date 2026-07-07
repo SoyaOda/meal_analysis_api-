@@ -1,0 +1,64 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken breast",
+        "description": "grilled, skinless, boneless, breast, home recipe",
+        "weight_g": 150,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 247.5,
+          "protein_g": 46.5,
+          "fat_g": 5.4,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "macaroni and cheese",
+        "description": "home recipe",
+        "weight_g": 180,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 342.0,
+          "protein_g": 12.6,
+          "fat_g": 14.4,
+          "carbs_g": 43.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "broccoli",
+        "description": "steamed",
+        "weight_g": 100,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 35.0,
+          "protein_g": 2.4,
+          "fat_g": 0.4,
+          "carbs_g": 7.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "yellow squash",
+        "description": "cooked, pan-fried",
+        "weight_g": 120,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 60.0,
+          "protein_g": 2.4,
+          "fat_g": 3.6,
+          "carbs_g": 7.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

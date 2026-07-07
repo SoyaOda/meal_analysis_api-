@@ -1,0 +1,32 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "cheese pizza",
+        "description": "restaurant",
+        "weight_g": 220,
+        "confidence": 0.86,
+        "nutrition": {
+          "calorie": 585.2,
+          "protein_g": 24.2,
+          "fat_g": 22.0,
+          "carbs_g": 72.6
+        }
+      },
+      "extras": [
+        {
+          "search_name": "black olives",
+          "description": "sliced",
+          "weight_g": 15,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 17.2,
+            "protein_g": 0.1,
+            "fat_g": 1.6,
+            "carbs_g": 0.9
+          }
+        }
+      ]
+    }
+  ]
+}

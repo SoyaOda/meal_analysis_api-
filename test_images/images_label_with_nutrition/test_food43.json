@@ -1,0 +1,77 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "chicken breast",
+        "description": "cooked, pan-fried, boneless, skinless",
+        "weight_g": 130,
+        "confidence": 0.78,
+        "nutrition": {
+          "calorie": 214.5,
+          "protein_g": 40.3,
+          "fat_g": 4.7,
+          "carbs_g": 0.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "macaroni and cheese",
+        "description": "home recipe, cooked",
+        "weight_g": 160,
+        "confidence": 0.86,
+        "nutrition": {
+          "calorie": 264.0,
+          "protein_g": 11.2,
+          "fat_g": 11.2,
+          "carbs_g": 32.0
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "mixed salad greens",
+        "description": "fresh",
+        "weight_g": 60,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 12.0,
+          "protein_g": 1.2,
+          "fat_g": 0.2,
+          "carbs_g": 2.2
+        }
+      },
+      "extras": [
+        {
+          "search_name": "carrot",
+          "description": "raw, shredded",
+          "weight_g": 30,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 12.3,
+            "protein_g": 0.3,
+            "fat_g": 0.1,
+            "carbs_g": 2.9
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "zucchini",
+        "description": "stir-fried",
+        "weight_g": 90,
+        "confidence": 0.82,
+        "nutrition": {
+          "calorie": 63.0,
+          "protein_g": 1.4,
+          "fat_g": 4.5,
+          "carbs_g": 4.5
+        }
+      },
+      "extras": []
+    }
+  ]
+}

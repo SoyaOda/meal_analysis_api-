@@ -1,0 +1,49 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "shepherd's pie with beef",
+        "description": "baked, home recipe",
+        "weight_g": 250,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 400.0,
+          "protein_g": 22.5,
+          "fat_g": 21.3,
+          "carbs_g": 32.5
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "broccoli",
+        "description": "steamed",
+        "weight_g": 90,
+        "confidence": 0.95,
+        "nutrition": {
+          "calorie": 31.5,
+          "protein_g": 2.2,
+          "fat_g": 0.4,
+          "carbs_g": 6.3
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "stewed bell peppers and tomatoes",
+        "description": "cooked",
+        "weight_g": 80,
+        "confidence": 0.6,
+        "nutrition": {
+          "calorie": 56.0,
+          "protein_g": 1.2,
+          "fat_g": 2.4,
+          "carbs_g": 7.2
+        }
+      },
+      "extras": []
+    }
+  ]
+}

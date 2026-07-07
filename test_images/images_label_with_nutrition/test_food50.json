@@ -1,0 +1,74 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "blt sandwich",
+        "description": "restaurant",
+        "weight_g": 180,
+        "confidence": 0.85,
+        "nutrition": {
+          "calorie": 486.0,
+          "protein_g": 23.4,
+          "fat_g": 25.2,
+          "carbs_g": 41.4
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "carrot soup",
+        "description": "ready-to-serve",
+        "weight_g": 240,
+        "confidence": 0.65,
+        "nutrition": {
+          "calorie": 120.0,
+          "protein_g": 2.4,
+          "fat_g": 4.8,
+          "carbs_g": 19.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "mixed salad greens",
+        "description": "fresh",
+        "weight_g": 70,
+        "confidence": 0.8,
+        "nutrition": {
+          "calorie": 14.0,
+          "protein_g": 1.4,
+          "fat_g": 0.2,
+          "carbs_g": 2.5
+        }
+      },
+      "extras": [
+        {
+          "search_name": "avocado",
+          "description": "fresh",
+          "weight_g": 60,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 96.0,
+            "protein_g": 1.2,
+            "fat_g": 9.0,
+            "carbs_g": 5.4
+          }
+        },
+        {
+          "search_name": "sesame seeds",
+          "description": "nfs",
+          "weight_g": 3,
+          "confidence": 0.7,
+          "nutrition": {
+            "calorie": 17.2,
+            "protein_g": 0.5,
+            "fat_g": 1.5,
+            "carbs_g": 0.7
+          }
+        }
+      ]
+    }
+  ]
+}

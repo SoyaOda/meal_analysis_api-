@@ -1,0 +1,166 @@
+{
+  "_note": "Do-not-retry registry (manually curated, same philosophy as tested_models.json but for hypotheses/levers rather than individual VLM candidates). Read this BEFORE starting a new experiment (see scripts/check_prior_art.py). Changing a verdict requires citing lesson/doc evidence for the new finding; do not flip a verdict on argument alone. `reopen_when` states the concrete condition under which the claim is eligible to be re-tested.",
+  "updated_at": "2026-07-08",
+  "entries": [
+    {
+      "id": "prompt_schema_ceiling_v9c_v18",
+      "scope": "prompt",
+      "claim": "Prompt/schema redesign (the v9c–v18 lineage, including E1 v15/v18 identity-first schema separation) delivers a distribution-robust calorie-MAE win.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260606_e1_v18_identity_separation_set_specific_deflation_not_generalizing.md",
+        "apps/freeform_usda_meal_analysis_api/docs/MOZU_PDCA_COMPLETE_20260606.md"
+      ],
+      "reopen_when": "A new prompt/schema variant shows a pooled (>=3-set) calorie-MAE win with consistent sign across all sets, not just a set-specific deflation (e.g. the N5k-only small-dish fix v18 produced).",
+      "recorded_at": "2026-06-06"
+    },
+    {
+      "id": "portion_scaling_v14",
+      "scope": "prompt",
+      "claim": "The v14 weight-cap relaxation + scale-anchor prompt change improves calorie MAE in the realistic 200-1500kcal meal range.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260604_v14_portion_scaling_helps_slope_but_not_realistic_range.md"
+      ],
+      "reopen_when": "A portion-scaling change is evaluated specifically against the giant-plate (>1500kcal) tail where the slope effect was found, with a separate promotion gate for that segment.",
+      "recorded_at": "2026-06-04"
+    },
+    {
+      "id": "model_selection_ceiling_pro_withdrawn",
+      "scope": "model",
+      "claim": "gemini-3.1-pro-preview (or a larger/premium VLM in general) has a robust calorie or recognition edge over flash that justifies adoption.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/docs/MOZU_MODEL_DECISION_20260603.md",
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260604_recognition_clean_gt_pro_no_edge_flash_cost_rational.md"
+      ],
+      "reopen_when": "A new, independently verified ground truth (not a GPT-5-pro estimate) shows the candidate with a consistent-sign advantage across at least 2 independent eval sets.",
+      "recorded_at": "2026-06-04"
+    },
+    {
+      "id": "cross_provider_retrieval_no_win",
+      "scope": "retrieval",
+      "claim": "A premium (paid) embedding model, reranker, or native VLM-side retrieval path cleanly beats the free open lightweight stack (0.6B embedding + 0.6B reranker) for USDA calorie estimation.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260605_cross_provider_retrieval_no_clean_win.md"
+      ],
+      "reopen_when": "A new premium provider slot is paired-tested and its CI does not cross 0 on a pooled multi-set rotation.",
+      "recorded_at": "2026-06-05"
+    },
+    {
+      "id": "e3_uncertainty_signal_not_predictive",
+      "scope": "uncertainty",
+      "claim": "Available uncertainty signals (free output-based proxies or self-consistency dispersion) predict per-image calorie error well enough to drive E9 (ask-a-question-when-uncertain) or E18 (tiered routing) cheap-signal versions.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260605_e3_uncertainty_no_error_signal_but_sc_median_robust_at_pooled_N.md"
+      ],
+      "reopen_when": "A new uncertainty signal (e.g. cross-model disagreement rather than same-model sample variance) shows pooled AUC clearly above 0.5 with a CI that excludes 0.5 for error prediction.",
+      "recorded_at": "2026-06-05"
+    },
+    {
+      "id": "e7_selective_tail_ineffective",
+      "scope": "retrieval",
+      "claim": "Selective-E7 (routing single/dominant-item images to top-1 instead of the top-k density mixture) reduces the E7 hard-set p90 tail without hurting the mean.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260605_e7_topk_density_mixture_robust_calorie_win_adopted.md"
+      ],
+      "reopen_when": "A different tail-detection heuristic (not single/dominant-item routing) is tested and shows p90 improvement without mean regression.",
+      "recorded_at": "2026-06-06"
+    },
+    {
+      "id": "n50_single_run_judges_small_levers",
+      "scope": "data",
+      "claim": "A single 50-image run is sufficient to promote or reject a small-effect, data-independent lever.",
+      "verdict": "VOID",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260605_e12_self_consistency_v2_parallel_no_reproduce_at_n50.md"
+      ],
+      "reopen_when": "Never for small-effect levers — pooled rotation across multiple sets is a standing Non-Negotiable (plans/current.md), not a per-lever finding that can be reopened.",
+      "recorded_at": "2026-06-05"
+    },
+    {
+      "id": "global_lab_calibration_void",
+      "scope": "calibration",
+      "claim": "A calorie calibration fit on global data or on weighed lab sets (NVReal+N5k) can be enabled in production for real (JFB-domain) user photos.",
+      "verdict": "VOID",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260606_e14_conditional_calibration_poc_works_indomain_but_lab_data_does_not_transfer.md"
+      ],
+      "reopen_when": "E13 in-domain (mozu real-user, weighed) labeled data is collected and used to fit the conditional calibration; only an in-domain fit is eligible for production (lab/global fits are not).",
+      "recorded_at": "2026-06-06"
+    },
+    {
+      "id": "heterogeneous_model_ensemble_hold",
+      "scope": "ensemble",
+      "claim": "A heterogeneous-model median ensemble (e.g. flash+grok+gpt) beats same-model SC K=3 median for calorie accuracy at a viable cost.",
+      "verdict": "HOLD",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/docs/MODEL_REFRESH_OS_20260611.md",
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260611_model_refresh_sweep_no_new_model_beats_flash.md"
+      ],
+      "reopen_when": "A model with flash-equivalent accuracy and decorrelated (not merely independent) errors becomes available at reasonable cost/latency (per docs/MODEL_REFRESH_OS_20260611.md §3 reopen condition).",
+      "recorded_at": "2026-06-11"
+    },
+    {
+      "id": "scraped_styled_recipe_data_not_e13_substitute",
+      "scope": "data",
+      "claim": "Scraped/styled recipe-photo datasets (e.g. oishi-kenko Scraping_Data, allrecipes.com) can substitute for E13 real-domain weighed calibration/eval data.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/docs/DRIVE_DATASET_INVENTORY_20260607.md"
+      ],
+      "reopen_when": "Never as a calibration/eval substitute for E13 — usage stays scoped to recognition / density-prior / language-specific calorie sanity checks only (per DRIVE_DATASET_INVENTORY_20260607.md).",
+      "recorded_at": "2026-06-07"
+    },
+    {
+      "id": "model_refresh_cycle1_17_candidates_all_failed",
+      "scope": "model",
+      "claim": "Any of the 17 next-generation candidates screened in model-refresh cycle 1 (2026-06-11: qwen3.5/3.6/3.7, grok-4.3/4.20, kimi-k2.6, haiku-4.5, sonnet-4.6, gpt-5.2/5.4-mini, seed-2.0, minimax-m3, ernie-4.5vl, step-3.7, nova-2, perceptron) beats flash on calorie accuracy within budget.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260611_model_refresh_sweep_no_new_model_beats_flash.md"
+      ],
+      "reopen_when": "The next scheduled model-refresh cycle (monthly or major-release trigger, per docs/MODEL_REFRESH_PROTOCOL_20260611.md) re-screens these or newer candidates against the current flash baseline.",
+      "recorded_at": "2026-06-11"
+    },
+    {
+      "id": "recognition_union_self_consistency_not_clean_win",
+      "scope": "sc",
+      "claim": "Union-of-K self-consistency for recognition (merging items across K samples) is a clean recognition win: recall improves (+5.4pt) but wrong-food items triple (13->37, phantom items) and calorie accuracy worsens; recognition misses are bimodal (0/5 or 5/5) i.e. systematic, not sampling variance.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260604_recognition_union_self_consistency_not_clean_win.md",
+        "apps/freeform_usda_meal_analysis_api/docs/MOZU_PDCA_COMPLETE_20260606.md"
+      ],
+      "reopen_when": "A union variant is paired with an effective phantom-suppression mechanism, or a new domain shows recognition misses that are sampling-variance-driven (not bimodal/systematic).",
+      "recorded_at": "2026-06-04"
+    },
+    {
+      "id": "same_tier_self_verification_ineffective",
+      "scope": "sc",
+      "claim": "A same-tier self-verification 2nd pass (flash verifying flash) improves recognition/conviction: the same-bias verifier rubber-stamps the first pass and net conviction stays flat (mechanism is implemented and works, opt-in, default OFF).",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260602_self_verification_implemented_same_tier_verifier_ineffective.md",
+        "apps/freeform_usda_meal_analysis_api/docs/MOZU_PDCA_COMPLETE_20260606.md"
+      ],
+      "reopen_when": "A materially stronger or differently-biased verifier tier becomes affordable for the 2nd pass (relates to the frozen E18 tiered-routing design).",
+      "recorded_at": "2026-06-02"
+    },
+    {
+      "id": "embedding_matcher_pred_gt_matching_loses_to_token",
+      "scope": "data",
+      "claim": "An embedding-based matcher for eval-side pred<->GT dish matching beats the token/char matcher: it loses badly (kappa 0.50 -> 0.12); the token/char matcher stays the eval-harness default.",
+      "verdict": "REJECTED",
+      "evidence": [
+        "apps/freeform_usda_meal_analysis_api/evals/lessons/20260602_embedding_matcher_does_not_beat_token.md",
+        "apps/freeform_usda_meal_analysis_api/docs/MOZU_PDCA_COMPLETE_20260606.md"
+      ],
+      "reopen_when": "A new matcher variant is validated against golden-labeled matching data and reaches kappa at least equal to the token/char baseline (0.50).",
+      "recorded_at": "2026-06-02"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "description": "Full 50-image eval: Gemini 3 Flash vs Kimi K2.5 (no explicit cost gate)",
+  "baseline_file": "apps/freeform_usda_meal_analysis_api/evals/baselines/current_baseline.json",
+  "defaults": {
+    "reasoning_effort": "medium",
+    "temperature": 0.6,
+    "max_tokens": 16384,
+    "stage1_top_k": 50,
+    "concurrency": 2
+  },
+  "candidates": [
+    {
+      "name": "gemini3_flash_v7",
+      "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    },
+    {
+      "name": "kimi_k25_v7",
+      "vlm_model_id": "openrouter:moonshotai/kimi-k2.5",
+      "prompt_path": "freeform_prompt_usda_format_ver_v7_experimental_with_meal_title_20251207.txt"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "prosciutto and mozzarella sandwich",
+        "description": "with vegetables, home recipe",
+        "weight_g": 220,
+        "confidence": 0.74,
+        "nutrition": {
+          "calorie": 550.0,
+          "protein_g": 26.4,
+          "fat_g": 24.2,
+          "carbs_g": 57.2
+        }
+      },
+      "extras": []
+    },
+    {
+      "main_food": {
+        "search_name": "potato chips",
+        "description": "ready-to-serve",
+        "weight_g": 45,
+        "confidence": 0.9,
+        "nutrition": {
+          "calorie": 241.2,
+          "protein_g": 3.1,
+          "fat_g": 15.8,
+          "carbs_g": 22.9
+        }
+      },
+      "extras": []
+    }
+  ]
+}

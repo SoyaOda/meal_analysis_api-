@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-02-24T23:50:08.104179",
+  "source_run": "/Users/odasoya/meal_analysis_api_2/apps/freeform_usda_meal_analysis_api/evals/runs/20260224_234407",
+  "summary": {
+    "name": "gemini3_flash_v9b_recall_balance",
+    "vlm_model_id": "openrouter:google/gemini-3-flash-preview",
+    "prompt_path": "freeform_prompt_usda_format_ver_v9b_gemini_recall_balance_20260224.txt",
+    "calorie_mae_percent": 12.51,
+    "calorie_p50_percent": 11.4982,
+    "calorie_p90_percent": 26.4931,
+    "high_error_rate_30_percent": 6.0,
+    "avg_latency_sec": 25.5451,
+    "avg_cost_usd": 0.007762,
+    "total_cost_usd": 0.388095,
+    "success_count": 50,
+    "failure_count": 0
+  },
+  "notes": "Promoted after full-50 merged eval and repeat stability check on 2026-02-24."
+}

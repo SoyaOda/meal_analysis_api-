@@ -1,0 +1,81 @@
+{
+  "dishes": [
+    {
+      "main_food": null,
+      "extras": [
+        {
+          "search_name": "flour tortilla",
+          "description": "ready-to-serve",
+          "weight_g": 80,
+          "confidence": 0.86,
+          "nutrition": {
+            "calorie": 240.0,
+            "protein_g": 6.4,
+            "fat_g": 6.4,
+            "carbs_g": 39.2
+          }
+        },
+        {
+          "search_name": "ground beef",
+          "description": "cooked, pan-fried",
+          "weight_g": 120,
+          "confidence": 0.86,
+          "nutrition": {
+            "calorie": 304.8,
+            "protein_g": 31.2,
+            "fat_g": 20.4,
+            "carbs_g": 0.0
+          }
+        },
+        {
+          "search_name": "cheddar cheese",
+          "description": null,
+          "weight_g": 30,
+          "confidence": 0.82,
+          "nutrition": {
+            "calorie": 120.6,
+            "protein_g": 7.5,
+            "fat_g": 9.9,
+            "carbs_g": 0.4
+          }
+        },
+        {
+          "search_name": "sour cream",
+          "description": null,
+          "weight_g": 25,
+          "confidence": 0.82,
+          "nutrition": {
+            "calorie": 48.3,
+            "protein_g": 0.6,
+            "fat_g": 4.8,
+            "carbs_g": 0.9
+          }
+        },
+        {
+          "search_name": "lettuce",
+          "description": "fresh",
+          "weight_g": 30,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 4.5,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 0.9
+          }
+        },
+        {
+          "search_name": "tomato",
+          "description": "fresh",
+          "weight_g": 40,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 7.2,
+            "protein_g": 0.4,
+            "fat_g": 0.1,
+            "carbs_g": 1.6
+          }
+        }
+      ]
+    }
+  ]
+}

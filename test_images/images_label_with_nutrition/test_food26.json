@@ -1,0 +1,59 @@
+{
+  "dishes": [
+    {
+      "main_food": {
+        "search_name": "spaghetti with tomato sauce",
+        "description": "with vegetables",
+        "weight_g": 280,
+        "confidence": 0.84,
+        "nutrition": {
+          "calorie": 392.0,
+          "protein_g": 13.4,
+          "fat_g": 7.0,
+          "carbs_g": 70.0
+        }
+      },
+      "extras": [
+        {
+          "search_name": "italian sausage",
+          "description": "cooked, pan-fried",
+          "weight_g": 100,
+          "confidence": 0.85,
+          "nutrition": {
+            "calorie": 301.0,
+            "protein_g": 12.0,
+            "fat_g": 26.0,
+            "carbs_g": 2.0
+          }
+        },
+        {
+          "search_name": "parmesan cheese",
+          "description": "ready-to-serve",
+          "weight_g": 10,
+          "confidence": 0.9,
+          "nutrition": {
+            "calorie": 43.1,
+            "protein_g": 3.8,
+            "fat_g": 2.9,
+            "carbs_g": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "main_food": {
+        "search_name": "bean sprout salad",
+        "description": "with dressing",
+        "weight_g": 100,
+        "confidence": 0.7,
+        "nutrition": {
+          "calorie": 50.0,
+          "protein_g": 3.0,
+          "fat_g": 1.0,
+          "carbs_g": 8.0
+        }
+      },
+      "extras": []
+    }
+  ]
+}
