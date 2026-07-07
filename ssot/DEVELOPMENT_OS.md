@@ -123,11 +123,13 @@ FROZEN-LEGACY = 新機能・リファクタをしない。触る場合は「専�
 
 ## 11. Pending owner decisions（未決・ユーザー判断待ち）
 
-1. **main への統合**: 現ブランチを main へ merge（FF 可能）することを推奨。指示待ち。
-2. **旧ブランチ ~48 本の削除**: `docs/maintenance/BRANCH_AUDIT_20260708.md` の候補リスト。指示待ち。
-3. **barcode FDC 月次 refresh の自動化方式**（手動 SOP は runbook 化済み。cron / CI 化するか）。
+0. **⚠️[SECURITY] git 履歴の秘密混入（既存・要対応）**: 旧 main 履歴（`4752759`, 2025-12-07・**本セッション前から remote 上**）と一部旧ブランチ履歴に `.env`（API keys 想定）が commit されている。2026-07-08 のブランチ整理で archive タグ2本の push を GitHub secret scanning がブロックして発覚。現 HEAD には追跡 `.env` 無し（`.gitignore` 済み）。**要対応（優先順）: (a) 露出した鍵のローテーション＝最優先・ユーザーのみ可（OpenRouter / DeepInfra / Google 等）、(b) 必要なら `git filter-repo`/BFG で履歴 purge + force-push＝破壊的・全 clone 影響・別途明示批准**。ブランチ整理で参照 ref は削減済み。archive タグ2本（`archive/apps-usda_meal_analysis_api_backup`・`archive/elasticsearch2-mynetdiary-tier-gemma`）は secret のため remote 未 push・**ローカルタグのみで保全**（この clone 消失で復元不可）。
+1. ~~**main への統合**~~ ✅ **2026-07-08 完了**（FF merge 済み・`origin/main` 反映済み）。
+2. ~~**旧ブランチ54本の削除**~~ ✅ **2026-07-08 完了**（local/remote とも KEEP 5本に。未含有20本は `archive/*` タグ保全＝`BRANCH_AUDIT_20260708.md` §5）。
+3. **barcode FDC 月次 refresh の実行 + 自動化方式**（本番 DB は **2025-12-14 版＝約7ヶ月 stale** と実測。runbook 化済み・実走はユーザー許可要。cron / CI 化するか）。
 4. **CI（GitHub Actions 等）導入の要否**: 現状はローカル検証 + verifier agent で運用。
 5. **E13 物理収集の実行判断**（build vs partner / scale / privacy — freeform `plans/current.md` 参照）。
+6. **DB レーン P1（FNDDS portions prior two-pass）の着手**: 着手許可済み・$10-30 の PDCA 実験（専用セッション推奨。`check_prior_art` で `portion_scaling_v14` 教訓を確認済みの上、two-pass は未試行＝reopen 妥当）。
 
 ## 12. 変更履歴
 
