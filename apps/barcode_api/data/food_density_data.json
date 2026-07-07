@@ -1,0 +1,133 @@
+{
+  "food_categories": {
+    "beverages": {
+      "density_g_per_ml": 1.0,
+      "keywords": ["juice", "drink", "soda", "water", "milk", "tea", "coffee", "beer", "wine"],
+      "specific_densities": {
+        "milk": 1.03,
+        "orange_juice": 1.05,
+        "apple_juice": 1.04,
+        "cranberry_juice": 1.04,
+        "soda": 1.04,
+        "beer": 1.01,
+        "wine": 0.99
+      }
+    },
+    "oils_fats": {
+      "density_g_per_ml": 0.92,
+      "keywords": ["oil", "butter", "margarine", "lard", "shortening"],
+      "specific_densities": {
+        "olive_oil": 0.915,
+        "vegetable_oil": 0.92,
+        "coconut_oil": 0.924,
+        "butter": 0.911
+      }
+    },
+    "syrups_honey": {
+      "density_g_per_ml": 1.4,
+      "keywords": ["syrup", "honey", "molasses", "corn syrup"],
+      "specific_densities": {
+        "honey": 1.45,
+        "maple_syrup": 1.37,
+        "corn_syrup": 1.48,
+        "molasses": 1.4
+      }
+    },
+    "flour_powders": {
+      "density_g_per_ml": 0.59,
+      "keywords": ["flour", "powder", "cocoa", "baking powder", "baking soda"],
+      "specific_densities": {
+        "all_purpose_flour": 0.59,
+        "whole_wheat_flour": 0.61,
+        "cocoa_powder": 0.51,
+        "powdered_sugar": 0.56,
+        "baking_powder": 0.72
+      }
+    },
+    "sugars": {
+      "density_g_per_ml": 0.85,
+      "keywords": ["sugar", "brown sugar", "granulated"],
+      "specific_densities": {
+        "granulated_sugar": 0.85,
+        "brown_sugar": 0.90,
+        "powdered_sugar": 0.56
+      }
+    },
+    "cereals_grains": {
+      "density_g_per_ml": 0.65,
+      "keywords": ["cereal", "rice", "oats", "quinoa", "barley"],
+      "specific_densities": {
+        "rice_uncooked": 0.75,
+        "oats_rolled": 0.31,
+        "quinoa": 0.74,
+        "pasta_dry": 0.68
+      }
+    },
+    "nuts_seeds": {
+      "density_g_per_ml": 0.55,
+      "keywords": ["nuts", "seeds", "almond", "walnut", "peanut"],
+      "specific_densities": {
+        "almonds": 0.54,
+        "walnuts": 0.47,
+        "peanuts": 0.64,
+        "sunflower_seeds": 0.52
+      }
+    }
+  },
+  "volume_to_weight_common": {
+    "1_cup": {
+      "all_purpose_flour": 120,
+      "granulated_sugar": 200,
+      "brown_sugar": 213,
+      "butter": 227,
+      "milk": 244,
+      "water": 237,
+      "vegetable_oil": 218,
+      "honey": 336,
+      "rolled_oats": 80,
+      "rice_uncooked": 185,
+      "shredded_cheese": 113
+    },
+    "1_tablespoon": {
+      "all_purpose_flour": 7.5,
+      "granulated_sugar": 12.5,
+      "butter": 14.2,
+      "vegetable_oil": 13.6,
+      "honey": 21,
+      "water": 14.8
+    },
+    "1_teaspoon": {
+      "salt": 6,
+      "baking_powder": 3.6,
+      "baking_soda": 4.8,
+      "vanilla_extract": 4.2,
+      "ground_cinnamon": 2.3
+    }
+  },
+  "estimation_rules": [
+    {
+      "condition": "contains_liquid_keywords",
+      "keywords": ["juice", "milk", "water", "soda", "drink"],
+      "density": 1.04
+    },
+    {
+      "condition": "contains_oil_keywords",
+      "keywords": ["oil", "butter", "margarine"],
+      "density": 0.92
+    },
+    {
+      "condition": "contains_flour_keywords",
+      "keywords": ["flour", "powder"],
+      "density": 0.59
+    },
+    {
+      "condition": "contains_sugar_keywords",
+      "keywords": ["sugar", "sweetener"],
+      "density": 0.85
+    },
+    {
+      "condition": "default_solid",
+      "density": 0.6
+    }
+  ]
+}

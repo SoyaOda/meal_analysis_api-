@@ -1,5 +1,9 @@
 # Barcode API - FoodData Central (FDC) バーコード検索API
 
+- 運用 SSOT: [`plans/current.md`](plans/current.md)
+- データ更新: [`docs/DATA_REFRESH_RUNBOOK.md`](docs/DATA_REFRESH_RUNBOOK.md)
+- repo 全体規約: [`/ssot/DEVELOPMENT_OS.md`](../../ssot/DEVELOPMENT_OS.md)
+
 FoodData Central (FDC) データベースとOpen Food Factsを使用したバーコード検索APIです。多様な単位での栄養価表示とスマートな単位生成に対応しています。
 
 ## 本番環境

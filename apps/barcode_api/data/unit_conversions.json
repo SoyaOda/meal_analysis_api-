@@ -1,0 +1,174 @@
+{
+  "volume_units": {
+    "ml": {
+      "name": "milliliter",
+      "category": "volume",
+      "base_ml": 1.0
+    },
+    "mL": {
+      "name": "milliliter",
+      "category": "volume",
+      "base_ml": 1.0
+    },
+    "cup": {
+      "name": "cup (US)",
+      "category": "volume",
+      "base_ml": 236.588
+    },
+    "fl oz": {
+      "name": "fluid ounce (US)",
+      "category": "volume",
+      "base_ml": 29.5735
+    },
+    "fl.oz": {
+      "name": "fluid ounce (US)",
+      "category": "volume",
+      "base_ml": 29.5735
+    },
+    "tbsp": {
+      "name": "tablespoon (US)",
+      "category": "volume",
+      "base_ml": 14.7868
+    },
+    "tsp": {
+      "name": "teaspoon (US)",
+      "category": "volume",
+      "base_ml": 4.92892
+    },
+    "pint": {
+      "name": "pint (US)",
+      "category": "volume",
+      "base_ml": 473.176
+    },
+    "quart": {
+      "name": "quart (US)",
+      "category": "volume",
+      "base_ml": 946.353
+    },
+    "gallon": {
+      "name": "gallon (US)",
+      "category": "volume",
+      "base_ml": 3785.41
+    },
+    "liter": {
+      "name": "liter",
+      "category": "volume",
+      "base_ml": 1000.0
+    }
+  },
+  "weight_units": {
+    "g": {
+      "name": "gram",
+      "category": "weight",
+      "base_g": 1.0
+    },
+    "kg": {
+      "name": "kilogram",
+      "category": "weight",
+      "base_g": 1000.0
+    },
+    "mg": {
+      "name": "milligram",
+      "category": "weight",
+      "base_g": 0.001
+    },
+    "oz": {
+      "name": "ounce (US)",
+      "category": "weight",
+      "base_g": 28.3495
+    },
+    "lb": {
+      "name": "pound (US)",
+      "category": "weight",
+      "base_g": 453.592
+    }
+  },
+  "count_units": {
+    "piece": {
+      "name": "piece",
+      "category": "count",
+      "singular": "piece",
+      "plural": "pieces"
+    },
+    "item": {
+      "name": "item",
+      "category": "count",
+      "singular": "item",
+      "plural": "items"
+    },
+    "bar": {
+      "name": "bar",
+      "category": "count",
+      "singular": "bar",
+      "plural": "bars"
+    },
+    "slice": {
+      "name": "slice",
+      "category": "count",
+      "singular": "slice",
+      "plural": "slices"
+    },
+    "cookie": {
+      "name": "cookie",
+      "category": "count",
+      "singular": "cookie",
+      "plural": "cookies"
+    },
+    "cracker": {
+      "name": "cracker",
+      "category": "count",
+      "singular": "cracker",
+      "plural": "crackers"
+    },
+    "chip": {
+      "name": "chip",
+      "category": "count",
+      "singular": "chip",
+      "plural": "chips"
+    },
+    "link": {
+      "name": "link",
+      "category": "count",
+      "singular": "link",
+      "plural": "links"
+    },
+    "pastry": {
+      "name": "pastry",
+      "category": "count",
+      "singular": "pastry",
+      "plural": "pastries"
+    },
+    "pizza": {
+      "name": "pizza",
+      "category": "count",
+      "singular": "pizza",
+      "plural": "pizzas"
+    },
+    "waffle": {
+      "name": "waffle",
+      "category": "count",
+      "singular": "waffle",
+      "plural": "waffles"
+    }
+  },
+  "density_estimates": {
+    "default_liquid": 1.0,
+    "default_solid": 0.6,
+    "specific_foods": {
+      "flour": 0.59,
+      "sugar": 0.85,
+      "milk": 1.03,
+      "oil": 0.92,
+      "water": 1.0,
+      "juice": 1.05,
+      "syrup": 1.4,
+      "honey": 1.45
+    }
+  },
+  "parsing_patterns": {
+    "volume_regex": "\\b(\\d*\\.?\\d*)\\s*(cup|cups|tbsp|tsp|fl\\s*oz|fl\\.oz|oz|ml|mL|liter|liters|gallon|gallons|pint|pints|quart|quarts)\\b",
+    "count_regex": "\\b(\\d+)\\s*(piece|pieces|item|items|bar|bars|slice|slices|link|links|cookie|cookies|cracker|crackers|chip|chips|pastry|pastries|pizza|pizzas|waffle|waffles)\\b",
+    "fraction_regex": "\\b(\\d+)\\s*(\\d+)/(\\d+)\\b|\\b(\\d+)/(\\d+)\\b",
+    "weight_in_parens": "\\((\\d*\\.?\\d+)\\s*(g|kg|mg|oz|lb)\\)"
+  }
+}
