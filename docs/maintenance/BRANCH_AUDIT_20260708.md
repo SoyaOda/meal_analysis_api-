@@ -1,7 +1,8 @@
 # ブランチ棚卸しレポート（2026-07-08）
 
-> **⚠️ 削除はユーザー明示指示があるまで実行しない（report-only）。**
-> 本レポートは現況の可視化のみを目的とし、削除コマンドはすべてコメントアウトで提示する。
+> **✅ 2026-07-08 実行済み**（ユーザー明示指示）。削除候補54本を削除・KEEP5本を維持。
+> 未含有の固有コミットを持つ20本は削除前に `archive/*` タグで永久保全した（§5 実行記録）。
+> §4 のコマンドは棚卸し時の叩き台（report-only）としてそのまま残す。
 
 ## 1. 現状サマリ
 
@@ -240,3 +241,66 @@ git branch --merged main
 # git push origin --delete feature/search-ux-improvements
 # git push origin --delete feature/voice-input-support
 ```
+
+## 5. 実行記録（2026-07-08 実施）
+
+ユーザー明示指示により削除候補54本を削除。**HEAD に未含有の固有コミットを持つ20本は削除前に `archive/<name>` タグで永久保全**（objects は GC されない・完全復元可能）。残り34本はトランク(HEAD)に100%含有済みで無損失。
+
+| ブランチ | tip SHA | HEAD含有 | 保全タグ |
+|---|---|---|---|
+| `v3_deploy` | 59c4be6 | ✓ 含有 | — |
+| `freeform_usda_meal_analysis_deploy` | 52bb5f2 | ✓ 含有 | — |
+| `feature/cloud-run-phase1-implementation` | 568482d | ✓ 含有 | — |
+| `query_api_deploy` | ef7ec46 | 固有あり | `archive/query_api_deploy` |
+| `meal_analysis_api_deploy2` | 947bf7e | ✓ 含有 | — |
+| `meal_analysis_api_deploy` | 30de090 | ✓ 含有 | — |
+| `api_deploy3` | 5894636 | 固有あり | `archive/api_deploy3` |
+| `api_deploy2` | 395afff | 固有あり | `archive/api_deploy2` |
+| `api_deploy` | 1fbc0e0 | 固有あり | `archive/api_deploy` |
+| `qwen2.5-vl-32b-integration` | bb66e7a | ✓ 含有 | — |
+| `elasticsearch2-mynetdiary-tier-gemma-clean` | 326adf4 | ✓ 含有 | — |
+| `mynetdiary_conversion_final` | 6c10c6d | 固有あり | `archive/mynetdiary_conversion_final` |
+| `elasticsearch2-mynetdiary-tier-gemma` | 5282c63 | 固有あり | `archive/elasticsearch2-mynetdiary-tier-gemma` |
+| `elasticsearch2-mynetdiary-tier` | 8b79c19 | ✓ 含有 | — |
+| `elasticsearch2-mynetdiary` | d5dfcd2 | ✓ 含有 | — |
+| `elasticsearch_exact_match-recursive` | 505e3d6 | 固有あり | `archive/elasticsearch_exact_match-recursive` |
+| `elasticsearch_exact_match` | 9430287 | 固有あり | `archive/elasticsearch_exact_match` |
+| `elasticsearch2` | ab28456 | ✓ 含有 | — |
+| `local_db` | af0dd73 | ✓ 含有 | — |
+| `elasticsearch` | 0845d96 | 固有あり | `archive/elasticsearch` |
+| `barcode` | a2f9cfd | ✓ 含有 | — |
+| `word_query_demo` | 20d1aeb | ✓ 含有 | — |
+| `unified_api_management` | 5523ad9 | ✓ 含有 | — |
+| `voice_input1` | 1f4587f | ✓ 含有 | — |
+| `simple_query_phase` | e55cddc | ✓ 含有 | — |
+| `query_system_demo` | d67a2f4 | 固有あり | `archive/query_system_demo` |
+| `usda_dynamic_query` | ffd391d | 固有あり | `archive/usda_dynamic_query` |
+| `recursive-query-generation` | 62abf99 | 固有あり | `archive/recursive-query-generation` |
+| `usda_dynamic_query2` | b3aa342 | ✓ 含有 | — |
+| `develop` | 2f7301b | ✓ 含有 | — |
+| `feature/vertex-ai-integration` | ce1a857 | ✓ 含有 | — |
+| `feature/phase2-usda-integration` | 88e026c | ✓ 含有 | — |
+| `feature/usda-specification-implementation` | b3aa342 | ✓ 含有 | — |
+| `feature/nutrition-calculation-dynamic-strategy` | b3aa342 | ✓ 含有 | — |
+| `feature/modular-refactor-v2` | b3aa342 | ✓ 含有 | — |
+| `feature/local-nutrition-db-migration` | 056b2fb | 固有あり | `archive/feature-local-nutrition-db-migration` |
+| `feature/local-db-migration` | 763675f | 固有あり | `archive/feature-local-db-migration` |
+| `feature/phase1-preparation-method-enhancement` | 4dc01d9 | 固有あり | `archive/feature-phase1-preparation-method-enhancement` |
+| `enhanced-cooking-state-validation` | 187ffe2 | 固有あり | `archive/enhanced-cooking-state-validation` |
+| `feature/modular-architecture` | 8374a47 | 固有あり | `archive/feature-modular-architecture` |
+| `feature/modular-component-architecture` | b4f291d | ✓ 含有 | — |
+| `feature/module-architecture` | f14aeb5 | ✓ 含有 | — |
+| `dev` | dd066fe | ✓ 含有 | — |
+| `apps/usda_meal_analysis_api_backup` | fee8f76 | 固有あり | `archive/apps-usda_meal_analysis_api_backup` |
+| `apps/usda_meal_analysis_api` | 331f5fb | ✓ 含有 | — |
+| `web_scraping` | 0e7fd2d | 固有あり | `archive/web_scraping` |
+| `llm_name_processor` | 3dc8c69 | 固有あり | `archive/llm_name_processor` |
+| `feature/sse-streaming-progress` | 3a7f223 | ✓ 含有 | — |
+| `feature/api-resilience-improvements` | 693ab56 | ✓ 含有 | — |
+| `feature/config-driven-providers` | 37c2105 | ✓ 含有 | — |
+| `feature/freeform-api-optimization` | c8b508f | ✓ 含有 | — |
+| `feature/admin-config-panel` | bcfa438 | ✓ 含有 | — |
+| `feature/search-ux-improvements` | 84b0337 | ✓ 含有 | — |
+| `feature/voice-input-support` | 8d281ed | ✓ 含有 | — |
+
+復元例: `git checkout -b <name> archive/<name>`（タグ保全した20本）／ 含有34本は現トランクに存在。
