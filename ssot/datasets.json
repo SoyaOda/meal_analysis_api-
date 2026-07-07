@@ -1,0 +1,119 @@
+{
+  "_note": "Machine-verifiable dataset registry. Human SSOT = ssot/DATASETS.md. Consumed by scripts/verify_datasets.py (called from /os-audit and setup flows). Paths are repo-root relative.",
+  "version": 1,
+  "updated_at": "2026-07-08",
+  "assets": [
+    {
+      "id": "faiss_serving_index",
+      "path": "apps/freeform_usda_meal_analysis_api/data/faiss/usda_index_full.faiss",
+      "kind": "file",
+      "required_for": ["freeform-serving"],
+      "note": "0.6B/dim1024 serving index (55.6MB)"
+    },
+    {
+      "id": "usda_metadata",
+      "path": "apps/freeform_usda_meal_analysis_api/data/faiss/usda_metadata.json",
+      "kind": "file",
+      "required_for": ["freeform-serving"],
+      "note": "nutrition metadata for 13,564 foods"
+    },
+    {
+      "id": "normalized_portions",
+      "path": "apps/freeform_usda_meal_analysis_api/data/normalized_portions.json",
+      "kind": "file",
+      "required_for": ["freeform-serving"],
+      "note": "portion normalization dictionary (8MB)"
+    },
+    {
+      "id": "bm25_index",
+      "path": "apps/freeform_usda_meal_analysis_api/data/faiss/usda_bm25_index",
+      "kind": "image_dir",
+      "min_count": 5,
+      "glob": "*.index.*",
+      "required_for": ["freeform-serving"],
+      "note": "bm25s index dir for hybrid search (loaded from {USDA_INDEX_DIR}/usda_bm25_index, see services/hybrid_search.py)"
+    },
+    {
+      "id": "frozen50_images",
+      "path": "test_images/images",
+      "kind": "image_dir",
+      "min_count": 50,
+      "glob": "*.jpg",
+      "required_for": ["freeform-pdca"],
+      "note": "frozen-50 eval images (T4 GT — no tie-break)"
+    },
+    {
+      "id": "frozen50_labels",
+      "path": "test_images/images_label_with_nutrition",
+      "kind": "image_dir",
+      "min_count": 50,
+      "glob": "*.json",
+      "required_for": ["freeform-pdca"],
+      "note": "frozen-50 GT labels (git-tracked since 2026-07-08)"
+    },
+    {
+      "id": "nvreal_104",
+      "path": "test_images_nvreal",
+      "kind": "image_dir",
+      "min_count": 104,
+      "glob": "*.jpg",
+      "required_for": ["freeform-pdca"],
+      "note": "NutritionVerse-Real eye-level weighed set (T1). Manual Kaggle rebuild"
+    },
+    {
+      "id": "n5k",
+      "path": "test_images_n5k",
+      "kind": "image_dir",
+      "min_count": 100,
+      "glob": "*.jpg",
+      "required_for": ["freeform-pdca"],
+      "note": "Nutrition5k overhead weighed set (T1). Rebuild via build_nutrition5k_evalset.py"
+    },
+    {
+      "id": "jfb",
+      "path": "test_images_jfb",
+      "kind": "image_dir",
+      "min_count": 100,
+      "glob": "*.jpg",
+      "required_for": ["freeform-pdca"],
+      "note": "JFB real-user eye-level set (T2). Rebuild via build_jfb_evalset.py"
+    },
+    {
+      "id": "eval_splits",
+      "path": "apps/freeform_usda_meal_analysis_api/evals/splits",
+      "kind": "image_dir",
+      "min_count": 5,
+      "glob": "*.txt",
+      "required_for": ["freeform-pdca"],
+      "note": "immutable split definitions (git-tracked)"
+    },
+    {
+      "id": "barcode_unit_conversions",
+      "path": "apps/barcode_api/data/unit_conversions.json",
+      "kind": "file",
+      "required_for": ["barcode"],
+      "note": "unit conversion reference (git-tracked since 2026-07-08)"
+    },
+    {
+      "id": "barcode_food_density",
+      "path": "apps/barcode_api/data/food_density_data.json",
+      "kind": "file",
+      "required_for": ["barcode"],
+      "note": "food density reference (git-tracked since 2026-07-08)"
+    },
+    {
+      "id": "barcode_fdc_unit_analysis",
+      "path": "apps/barcode_api/data/fdc_unit_analysis.json",
+      "kind": "file",
+      "required_for": ["barcode"],
+      "note": "FDC unit pattern analysis (regenerable via analyze_fdc_units.py)"
+    },
+    {
+      "id": "fdc_barcode_db",
+      "path": "db/FoodData_Central/fdc_barcode.db",
+      "kind": "file",
+      "required_for": [],
+      "note": "OPTIONAL locally: production source of truth is gs://new-snap-calorie-data/fdc/fdc_barcode.db. Rebuild via setup_fdc_database.py"
+    }
+  ]
+}

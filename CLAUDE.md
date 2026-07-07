@@ -4,6 +4,8 @@
 
 @AGENTS.md
 
+**開発OS憲法 = `ssot/DEVELOPMENT_OS.md`**（2026-07-08 制定。SSOT 階層・read-before-write・採用ゲート・自己改善ループ台帳・ガードレール変更管理。迷ったらまずここ）。データ資産の台帳は `ssot/DATASETS.md`。
+
 ## 応答・MCP
 - 必ず**日本語**で応答すること。
 - serena MCP も日本語で対応すること。
@@ -20,6 +22,8 @@
 | `usda_meal_analysis_api` | 8005 | USDA FNDDS版 食事分析（8004必須） |
 | `freeform_usda_meal_analysis_api` | 8006 | USDA版 自由形式・写真カロリー推定（PDCA運用あり） |
 
+主成果物は `freeform_usda_meal_analysis_api`（ACTIVE-PDCA）と `barcode_api`（MAINTENANCE）。両者の運用 SSOT は各 `plans/current.md`（barcode は `docs/DATA_REFRESH_RUNBOOK.md` も）。他 4 app は FROZEN-LEGACY（`ssot/DEVELOPMENT_OS.md` §1/§10）。
+
 ## freeform_usda_meal_analysis_api のPDCA運用（重要）
 このアプリを触る場合は先に読むこと:
 - `apps/freeform_usda_meal_analysis_api/AGENTS.md` / `CLAUDE.md`
@@ -33,10 +37,11 @@
 - PDCA評価は原則 `use_vlm_cache=false`
 
 ## Tooling（Claude Code）
-- Skills: `/pdca-bootstrap` `/pdca-run` `/pdca-check`（freeform）, `/handoff`（`plans/current.md` 更新）
+- Skills: `/pdca-bootstrap` `/pdca-run` `/pdca-check` `/model-refresh`（freeform・model-refresh はユーザー起動のみ=課金）, `/handoff`（`plans/current.md` 更新 + 知識再生成）, `/os-audit`（repo の SSOT/pointer 自己点検・月1目安）
 - Subagent: `pdca-runner`（50画像evalを隔離実行し要約のみ返す）
-- Hooks: `Write|Edit` 後に *.py を `ruff format` + `python -m py_compile`（`.claude/settings.json`）
+- Hooks: `Write|Edit` 後に *.py を `ruff format` + `python -m py_compile`（`.claude/settings.json`・git 追跡）
 - 引き継ぎSSOT: 各アプリの `plans/current.md`
+- 車輪の再発明防止: 新実験・調査の前に `scripts/check_prior_art`（freeform）で `evals/knowledge/negative_results.json`（do-not-retry registry）+ `evals/lessons/INDEX.md` と照合（read-before-write, `ssot/DEVELOPMENT_OS.md` §5）
 
 ## 実装の上でのポイント
 - 一度に複数の機能を同時実装しない。機能ごとにテスト・確認してから次へ進む。

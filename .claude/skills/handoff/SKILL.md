@@ -18,6 +18,11 @@ allowed-tools: Read, Edit, Bash
    - 未完了タスク・既知の問題・次の一手があればメモを追記。
    - Exit Criteria の「現在」列を実態に合わせて更新。
 3. 必要なら関連docの同期（例: traceability や baseline 更新の有無）を確認する。
+4. 今回のセッションで `apps/freeform_usda_meal_analysis_api/evals/` を変更した場合は、知識を再生成する:
+   - `python -m apps.freeform_usda_meal_analysis_api.scripts.build_lessons_index`
+   - `python -m apps.freeform_usda_meal_analysis_api.scripts.export_pdca_knowledge`
+5. `plans/current.md` 内のブランチ記載（`git checkout <branch>` 等）が `git rev-parse --abbrev-ref HEAD` の実際のブランチと一致するか確認し、ずれていれば更新する。
+6. 月1目安で `/os-audit` の実行を提案する（未実行が長い、または SSOT ポインタに不安がある場合）。
 
 ## 原則
 - 事実のみ記録する（未検証の「改善した」は書かない）。

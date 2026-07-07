@@ -88,6 +88,16 @@ service-account-key.json
 # model-refresh の既テスト集合レジストリは SSOT として版管理する
 !apps/freeform_usda_meal_analysis_api/evals/knowledge/tested_models.json
 
+# --- allowlist exceptions to the blanket *.json ignore (policy: ssot/DEVELOPMENT_OS.md §10) ---
+!.claude/settings.json
+!ssot/*.json
+!apps/freeform_usda_meal_analysis_api/evals/configs/*.json
+!apps/freeform_usda_meal_analysis_api/evals/baselines/*.json
+!apps/freeform_usda_meal_analysis_api/evals/knowledge/negative_results.json
+!apps/freeform_usda_meal_analysis_api/config/*.json
+!apps/barcode_api/data/*.json
+!test_images/images_label_with_nutrition/*.json
+
 # Sensitive analysis files that may contain credentials
 test_advanced_elasticsearch_architecture_*.txt
 

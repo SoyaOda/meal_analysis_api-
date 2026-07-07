@@ -2,6 +2,8 @@
 
 統合コンポーネントベースパイプラインによる高度な食事分析システム
 
+> **開発の入口**: 開発OS憲法 = [`ssot/DEVELOPMENT_OS.md`](ssot/DEVELOPMENT_OS.md)（SSOT 階層・ガバナンス）/ 起動手順 = [`docs/API_QUICKSTART.md`](docs/API_QUICKSTART.md) / 主成果物の運用 SSOT = `apps/freeform_usda_meal_analysis_api/plans/current.md`・`apps/barcode_api/plans/current.md`
+
 ## 🏗️ アーキテクチャ概要
 
 ```
