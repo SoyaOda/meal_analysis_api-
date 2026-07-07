@@ -30,6 +30,9 @@ google-cloud-storage==2.14.0
 faiss-cpu==1.7.4
 sentence-transformers==2.3.1
 torch==2.1.2
+# transformers must be pinned: unpinned pulls latest (4.57+) which requires torch>=2.2
+# and breaks import with torch==2.1.2. 4.52.4 is the known-good version in production/dev.
+transformers==4.52.4
 numpy==1.24.3
 
 # FlagEmbedding (for BGE models)
