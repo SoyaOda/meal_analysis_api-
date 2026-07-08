@@ -7,6 +7,17 @@
 - **本番 URL**: `https://barcode-api-1077966746907.us-central1.run.app`（プロジェクト番号ベース、Flutter 側で使用）／`https://barcode-api-x27n75dvja-uc.a.run.app`（リビジョンIDベース）
 - **現行バージョン**: v3.3.0（2025-12-26、GTINバリエーション対応・OFF API v2移行）— `README.md` 更新履歴より
 
+## 🔴 本番アラート（2026-07-08 検出・FDC refresh 実行時に発覚）
+
+FDC refresh（ユーザー指示）を実行しようとして、本番側の複数ブロッカーを検出。**refresh は未完（本番反映は一切していない）**。要ユーザー対応（GCP コンソール）:
+
+1. **barcode 本番がダウン**: `https://barcode-api-1077966746907.us-central1.run.app/api/v1/barcode/health` および `/` が **HTTP 000（40s タイムアウト・無応答）**。cold start では説明できない（prod は min-instances=1 のはず）。→ Cloud Run のログ調査が必要（entrypoint の GCS DB ダウンロード失敗など要確認）。
+2. **本番 GCS バケットへの書き込み不可**: `gs://new-snap-calorie-data/fdc/` への `gsutil cp` が **403「The billing account for the owning project is disabled in state absent」**。読み取り（objectViewer）は可。→ バケット所有プロジェクトの billing 状態を確認要（`new-snap-calorie` 自体は `billingEnabled: true`・billing account `01DA39-E816D2-F72DEC` は `open: true` なので、バケット所有プロジェクトが別 or リンク不整合の可能性）。
+3. **ローカルディスク逼迫**: 空き 13GB/99%。FDC フルビルド（459MB zip 展開 + 2.8GB SQLite 構築）はピーク ~10GB で**安全マージン不足**。→ 数GB の空け（例: 未追跡の `web_scraping/` 6.4GB 等）が必要。
+
+参考: freeform 本番（同一プロジェクト番号 1077966746907）は `/health` 正常 → プロジェクト全体の Cloud Run billing は生存。barcode 固有のダウンと、バケット書き込みの billing ブロックは別事象の可能性。
+最新 FDC データ自体は入手可能（`FoodData_Central_csv_2026-04-30.zip`, 459MB・現行 prod 2025-12-14 版より約4ヶ月新しい）。上記3点が解消され次第 `docs/DATA_REFRESH_RUNBOOK.md` の手順で実行可能。
+
 ## 🟢 本番の現状（authoritative）
 
 - **デプロイ構成**: Cloud Run 2環境。`barcode-api-dev`（min-instances=0, max=5, 4Gi/2CPU, concurrency=80, コールドスタートあり）／`barcode-api`（production, min-instances=1, max=3, 同スペック）。デプロイは `apps/barcode_api/deploy.sh`（`ENVIRONMENT=production` で本番切替）。
@@ -44,4 +55,5 @@
 
 | Date | Session | 作業内容 |
 |------|---------|---------|
+| 2026-07-08 | fdc-refresh-blocked | FDC refresh 着手 → 本番3ブロッカー検出で中断（本番反映なし）: ①barcode 本番 HTTP 000 ダウン ②GCS 書込 403 billing disabled ③local disk 13GB逼迫。最新データ2026-04-30は入手可。詳細は「🔴 本番アラート」節。 |
 | 2026-07-08 | os-founding | plans/docs/CLAUDE.md 新設・参照データ git 追跡化・runbook 制定（コード変更なし）。`plans/current.md` / `docs/DATA_REFRESH_RUNBOOK.md` / `CLAUDE.md` / `AGENTS.md` を新設し、`README.md` 先頭に SSOT ポインタを追加。GCS 上の FDC DB 鮮度（2025-12-14, 2.79GiB）を実測確認。参照データ3JSONの git 追跡方針は `ssot/DATASETS.md` で決定済みだが `.gitignore` 側の allowlist 追加は別レーン（root do-not-touch）として未実施であることを明記。 |
