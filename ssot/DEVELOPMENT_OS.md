@@ -117,7 +117,8 @@ FROZEN-LEGACY = 新機能・リファクタをしない。触る場合は「専�
 - **legacy 4 app のコード重複**（`usda_meal_analysis_api` が `meal_analysis_api` の models を丸コピー等）: 凍結中につき統合しない。直すなら「専用レーン + 回帰確認手段の確立」が前提。
 - **venv がパス空白付きの旧ディレクトリ**（`/Users/odasoya/meal_analysis_api /venv`）: 動作中につき現状維持（memory `freeform-local-eval-env` 参照）。
 - **`evals/runs/`・大容量データ（FAISS / test images / DB）の gitignore**: 設計どおり（結論は lesson に集約・移送は migration bundle）。
-- **`.git` が ~821MB**（過去に ES バイナリ等を追跡）: 履歴書き換えはしない（リスク > 益）。今後バイナリを新規追跡しない。
+- **`.git` が ~821MB**（過去に ES バイナリ等を追跡）: 履歴書き換えはしない（リスク > 益）。今後バイナリを新規追跡しない。2026-07-08 に `elasticsearch-8.10.4/`（1033 追跡ファイル）を working tree から削除・追跡解除したが、`.git` 履歴には残る（サイズ削減は working tree のみ）。
+- **再構築ソースの大容量ローカル dir は削除禁止**（`ssot/DATASETS.md` §3.5）: `usda_database/`（FNDDS 索引ソース）・`data/nutritionverse_real/`（NVReal eval ソース）・`db/FoodData_Central/`（barcode FDC）。`deploy.sh` のビルド除外リストに入るのは「Cloud Run に不要」の意味で、削除可の意味ではない。
 - **`.gitignore` の `*.json` blanket ignore は維持**: 例外 allowlist 方式で運用（監査済み例外のみ `!` で追跡）。設定・eval configs・小型参照データは allowlist 済み。
 - **Serena memories（`.serena/`, 2026-03 で停止）**: 歴史的参考。SSOT ではない。
 
@@ -134,3 +135,4 @@ FROZEN-LEGACY = 新機能・リファクタをしない。触る場合は「専�
 ## 12. 変更履歴
 
 - **1.0.0（2026-07-08）**: 制定。背景 = 全リポジトリ棚卸し（9 並列調査）+ 外部ベストプラクティス調査（eval 運用 / agent-repo ガバナンス / Claude Code 公式機能）。既存の freeform PDCA 資産（lessons 56 本・rotation ゲート・model-refresh OS）を土台に、repo-wide の SSOT / registry / 監査ループを制度化。
+- **1.0.1（2026-07-08）**: 統合フェーズ実施 — 4分割コミット→main へ FF 統合、旧ブランチ 54 本削除（未含有 20 本は `archive/*` タグ保全）。git 履歴の秘密混入を §11-0 に SECURITY 記録。無関係な大容量ローカル dir 12 個（~10.5GB: web_scraping / raw_nutrition_data / test_scripts / usda_data_processing / core_food_processing / elasticsearch-8.10.4 / analysis_results / nutrition_db_experiment / MyNetDiary_json_builder / web_scraping_2 / app_backup / dataset）を依存精査の上で削除（主成果物・再構築ソース = `usda_database` / `data/nutritionverse_real` / `db` / `shared` は KEEP と確定・DATASETS §3.5）。DATASETS リスク#3（FNDDS 元データ所在）・#7（重複 FAISS）を解消。

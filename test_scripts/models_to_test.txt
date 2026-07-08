@@ -1,8 +1,0 @@
-# VLMモデルリスト
-# 1行につき1つのモデルIDを記載
-# '#' で始まる行はコメント（スキップされる）
-
-google/gemma-3-27b-it
-meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8
-mistralai/Mistral-Small-3.2-24B-Instruct-2506
-Qwen/Qwen3-VL-235B-A22B-Thinking

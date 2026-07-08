@@ -45,15 +45,25 @@
 | 参照データ 3 本（unit_conversions / food_density_data / fdc_unit_analysis） | `apps/barcode_api/data/*.json` | `scripts/analyze_fdc_units.py`（fdc_unit_analysis）/ 手動 curated（他 2 本） | **追跡**（2026-07-08〜。fresh clone で壊れないため） |
 | Open Food Facts | 外部 API（fallback, world.openfoodfacts.net/api/v2） | — | — |
 
+## 3.5 再構築ソース資産（⚠️ 削除禁止 — serving/eval の再構築に必須）
+
+2026-07-08 のクリーンアップで依存を精査し確定。**これらはローカル大容量だが主成果物の再構築に load-bearing**。将来のクリーンアップで消さないこと（`deploy.sh` のビルド除外リストには入るが、それは Cloud Run に不要なだけで削除可の意味ではない）。
+
+| ソース | 場所 | 用途 | 消失時 |
+|--------|------|------|--------|
+| FNDDS/USDA 原本 JSON | `usda_database/`（`surveyDownload.json` 63MB + `FoodData_Central_foundation_food_json_*.json` + `..._sr_legacy_food_json_*.json`, 計 ~289MB, 一部 git 追跡） | freeform FAISS serving 索引の再構築元（`scripts/build_index_with_nutrition.py` が読む） | serving index は残るが**再構築不可**になる |
+| NVReal 原本 | `data/nutritionverse_real/`（~1.1GB, gitignore） | NVReal-104 eval セットの再構築元（`scripts/build_nutritionverse_evalset.py` の DEFAULT_SOURCE_DIR） | 手動 Kaggle 再取得が必要（下記リスク#1） |
+| barcode FDC csv/db | `db/FoodData_Central/`（gitignore） | barcode の SQLite ソース | `setup_fdc_database.py` で再取得可 |
+
 ## 4. リスク台帳（fresh-machine / 消失リスク）
 
-1. **NVReal は自律再構築不可**（手動 Kaggle DL 前提）— 消失時は Kaggle 再取得が必要。
+1. **NVReal は自律再構築不可**（手動 Kaggle DL 前提）— 原本は `data/nutritionverse_real/`（§3.5・削除禁止）。消失時は Kaggle 再取得が必要。
 2. **build_nutrition5k_evalset.py の gsutil パスがハードコード**（`/Users/odasoya/google-cloud-sdk/bin/gsutil`）— 他マシンで要修正。
-3. **FAISS rebuild の FNDDS 元データ所在が未確認**（`usda_metadata.json` 併設だが CSV 原本の登記なし）— 実運用は Docker image / migration bundle が正。次回 index 再構築時に原本パスを本 doc に追記すること。
+3. ✅ **解決（2026-07-08）**: FAISS rebuild の FNDDS 元データは **`usda_database/surveyDownload.json`（+ foundation / sr_legacy JSON）**と確定（§3.5）。`build_index_with_nutrition.py:711-720` が参照。
 4. **frozen-50 は T4**（GPT-5-pro 推定 GT）— tie-break 禁止を厳守。
 5. **E13 未収集** — 本命 lever のデータが存在しない（product 側依存）。
 6. **Drive-only 資産は repo から検証不可**（下記 §5）。
-7. 旧重複 FAISS が `test_scripts/query_system/data/` に 444MB 残置（2025-10 版・SSOT ではない・削除候補）。
+7. ✅ **解消（2026-07-08）**: 旧重複 FAISS を含む `test_scripts/`（581MB, 2025-10 版・SSOT でない）はクリーンアップで削除済み。
 8. `VLM_CACHE_DIR`（opt-in の VLM 凍結キャッシュ）は台帳外の一時資産 — A/B 分離実験の再現はキャッシュではなく手順で担保する。
 
 ## 5. 外部・Drive 資産（参照のみ・T3 中心）
