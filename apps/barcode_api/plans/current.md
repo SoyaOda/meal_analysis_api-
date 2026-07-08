@@ -11,7 +11,7 @@
 
 FDC refresh（ユーザー指示）を実行しようとして、本番側の複数ブロッカーを検出。**refresh は未完（本番反映は一切していない）**。要ユーザー対応（GCP コンソール）:
 
-1. **barcode 本番がダウン**: `https://barcode-api-1077966746907.us-central1.run.app/api/v1/barcode/health` および `/` が **HTTP 000（40s タイムアウト・無応答）**。cold start では説明できない（prod は min-instances=1 のはず）。→ Cloud Run のログ調査が必要（entrypoint の GCS DB ダウンロード失敗など要確認）。
+1. **barcode 本番が無応答**: `/api/v1/barcode/health` と `/` が **HTTP 000（40s タイムアウト・無応答）**。Cloud Run ログ上は **本日 2026-07-08 00:06:31 UTC に正常起動（"Application startup complete" + health 200）**したのが最後で、以降ログが途絶。直近3日に ERROR/CRITICAL ログは無し。→ アプリのクラッシュではなく **cold-start / 起動タイムアウト系**の疑い（entrypoint が起動時に GCS から 2.8GB DB を DL する設計 → 再 DL がタイムアウトすると 000 になりうる）。要 Cloud Run 調査（リビジョン `barcode-api-00018-x2z`・min-instances 実値・起動 timeout・GCS DL 所要）。
 2. **本番 GCS バケットへの書き込み不可**: `gs://new-snap-calorie-data/fdc/` への `gsutil cp` が **403「The billing account for the owning project is disabled in state absent」**。読み取り（objectViewer）は可。→ バケット所有プロジェクトの billing 状態を確認要（`new-snap-calorie` 自体は `billingEnabled: true`・billing account `01DA39-E816D2-F72DEC` は `open: true` なので、バケット所有プロジェクトが別 or リンク不整合の可能性）。
 3. **ローカルディスク逼迫**: 空き 13GB/99%。FDC フルビルド（459MB zip 展開 + 2.8GB SQLite 構築）はピーク ~10GB で**安全マージン不足**。→ 数GB の空け（例: 未追跡の `web_scraping/` 6.4GB 等）が必要。
 
